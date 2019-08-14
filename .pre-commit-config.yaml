@@ -1,0 +1,48 @@
+# See https://pre-commit.com/ for usage and config
+repos:
+- repo: local
+  hooks:
+  - id: isort
+    name: isort
+    stages: [commit]
+    language: system
+    entry: poetry run isort
+    types: [python]
+
+  - id: black
+    name: black
+    stages: [commit]
+    language: system
+    entry: poetry run black
+    types: [python]
+
+  - id: flake8
+    name: flake8
+    stages: [commit]
+    language: system
+    entry: poetry run flake8
+    types: [python]
+    exclude: setup.py
+
+  - id: mypy
+    name: mypy
+    stages: [commit]
+    language: system
+    entry: poetry run mypy
+    types: [python]
+    pass_filenames: false
+
+  - id: pytest
+    name: pytest
+    stages: [commit]
+    language: system
+    entry: poetry run pytest
+    types: [python]
+
+  - id: pytest-cov
+    name: pytest
+    stages: [push]
+    language: system
+    entry: poetry run pytest --cov --cov-fail-under=100
+    types: [python]
+    pass_filenames: false
