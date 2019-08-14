@@ -8,6 +8,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.7"
+pyscreenshot = "^0.5.1"
+pillow = "^6.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
