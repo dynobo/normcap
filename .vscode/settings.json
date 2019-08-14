@@ -1,7 +1,17 @@
 {
-    "python.pythonPath": ".venv/bin/python3",
-    "python.testing.pytestArgs": [],
-    "python.testing.unittestEnabled": false,
-    "python.testing.nosetestsEnabled": false,
-    "python.testing.pytestEnabled": true
+  "python.pythonPath": ".venv/bin/python3",
+  "python.testing.pytestArgs": [],
+  "python.testing.unittestEnabled": false,
+  "python.testing.nosetestsEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "files.exclude": {
+    ".pytest_cache": true,
+    ".venv": true,
+    ".vscode": true,
+    "normcap.egg-info": true,
+    "normcap/__pycache__": true,
+    ".gitignore": true,
+    ".markdownlint.json": true,
+    ".pre-commit-config.yaml": true
+  }
 }
