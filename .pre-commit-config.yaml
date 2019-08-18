@@ -44,6 +44,6 @@ repos:
     name: pytest
     stages: [push]
     language: system
-    entry: poetry run pytest --cov --cov-fail-under=10
+    entry: poetry run pytest --cov --cov-fail-under=1
     types: [python]
     pass_filenames: false
