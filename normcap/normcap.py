@@ -12,6 +12,3 @@ if __name__ == "__main__":
     rect = cap.getRectangle()
     print(rect)
     cap.captureScreen(rect)
-#    cap.drawRegion()
-#    bmp = cap.captureScreen();
-#    pass

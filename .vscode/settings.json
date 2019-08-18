@@ -11,7 +11,6 @@
     "normcap.egg-info": true,
     "normcap/__pycache__": true,
     ".gitignore": true,
-    ".markdownlint.json": true,
-    ".pre-commit-config.yaml": true
+    ".markdownlint.json": true
   }
 }

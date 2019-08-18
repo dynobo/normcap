@@ -38,11 +38,12 @@ repos:
     language: system
     entry: poetry run pytest
     types: [python]
+    pass_filenames: false    
 
   - id: pytest-cov
     name: pytest
     stages: [push]
     language: system
-    entry: poetry run pytest --cov --cov-fail-under=100
+    entry: poetry run pytest --cov --cov-fail-under=10
     types: [python]
     pass_filenames: false
