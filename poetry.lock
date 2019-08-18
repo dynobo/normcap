@@ -335,6 +335,19 @@ version = "1.0.7"
 
 [[package]]
 category = "main"
+description = "Monitor and control user input devices"
+name = "pynput"
+optional = false
+python-versions = "*"
+version = "1.4.2"
+
+[package.dependencies]
+pyobjc-framework-Quartz = ">=3.0"
+python-xlib = ">=0.17"
+six = "*"
+
+[[package]]
+category = "main"
 description = "Python<->ObjC Interoperability Module"
 marker = "platform_system == \"Darwin\""
 name = "pyobjc"
@@ -448,7 +461,7 @@ pyobjc-framework-libdispatch = "5.2"
 [[package]]
 category = "main"
 description = "Python<->ObjC Interoperability Module"
-marker = "platform_system == \"Darwin\" and platform_release < \"12.0\" or platform_system == \"Darwin\" or platform_system == \"Darwin\" and platform_release < \"13.0\" or platform_system == \"Darwin\" and platform_release >= \"10.0\" or platform_release >= \"10.0\" and platform_release < \"13.0\" and platform_system == \"Darwin\" or platform_system == \"Darwin\" and platform_release >= \"11.0\" or platform_system == \"Darwin\" and platform_release >= \"12.0\" or platform_system == \"Darwin\" and platform_release >= \"13.0\" or platform_system == \"Darwin\" and platform_release >= \"14.0\" or platform_system == \"Darwin\" and platform_release >= \"15.0\" or platform_system == \"Darwin\" and platform_release >= \"16.0\" or platform_system == \"Darwin\" and platform_release >= \"17.0\" or platform_system == \"Darwin\" and platform_release >= \"18.0\" or platform_system == \"Darwin\" and platform_release >= \"9.0\" or platform_release >= \"9.0\" and platform_release < \"11.0\" and platform_system == \"Darwin\""
+marker = "platform_system == \"Darwin\" and platform_release < \"12.0\" or platform_system == \"Darwin\" or platform_system == \"Darwin\" and platform_release < \"13.0\" or platform_system == \"Darwin\" and platform_release >= \"10.0\" or platform_release >= \"10.0\" and platform_release < \"13.0\" and platform_system == \"Darwin\" or platform_system == \"Darwin\" and platform_release >= \"11.0\" or platform_system == \"Darwin\" and platform_release >= \"12.0\" or platform_system == \"Darwin\" and platform_release >= \"13.0\" or platform_system == \"Darwin\" and platform_release >= \"14.0\" or platform_system == \"Darwin\" and platform_release >= \"15.0\" or platform_system == \"Darwin\" and platform_release >= \"16.0\" or platform_system == \"Darwin\" and platform_release >= \"17.0\" or platform_system == \"Darwin\" and platform_release >= \"18.0\" or platform_system == \"Darwin\" and platform_release >= \"9.0\" or platform_release >= \"9.0\" and platform_release < \"11.0\" and platform_system == \"Darwin\" or sys_platform == \"darwin\""
 name = "pyobjc-core"
 optional = false
 python-versions = "*"
@@ -632,7 +645,7 @@ pyobjc-framework-CoreLocation = ">=5.2"
 [[package]]
 category = "main"
 description = "Wrappers for the Cocoa frameworks on macOS"
-marker = "platform_system == \"Darwin\" and platform_release < \"12.0\" or platform_system == \"Darwin\" or platform_system == \"Darwin\" and platform_release < \"13.0\" or platform_system == \"Darwin\" and platform_release >= \"10.0\" or platform_release >= \"10.0\" and platform_release < \"13.0\" and platform_system == \"Darwin\" or platform_system == \"Darwin\" and platform_release >= \"11.0\" or platform_system == \"Darwin\" and platform_release >= \"12.0\" or platform_system == \"Darwin\" and platform_release >= \"13.0\" or platform_system == \"Darwin\" and platform_release >= \"14.0\" or platform_system == \"Darwin\" and platform_release >= \"15.0\" or platform_system == \"Darwin\" and platform_release >= \"16.0\" or platform_system == \"Darwin\" and platform_release >= \"17.0\" or platform_system == \"Darwin\" and platform_release >= \"18.0\" or platform_system == \"Darwin\" and platform_release >= \"9.0\" or platform_release >= \"9.0\" and platform_release < \"11.0\" and platform_system == \"Darwin\""
+marker = "platform_system == \"Darwin\" and platform_release < \"12.0\" or platform_system == \"Darwin\" or platform_system == \"Darwin\" and platform_release < \"13.0\" or platform_system == \"Darwin\" and platform_release >= \"10.0\" or platform_release >= \"10.0\" and platform_release < \"13.0\" and platform_system == \"Darwin\" or platform_system == \"Darwin\" and platform_release >= \"11.0\" or platform_system == \"Darwin\" and platform_release >= \"12.0\" or platform_system == \"Darwin\" and platform_release >= \"13.0\" or platform_system == \"Darwin\" and platform_release >= \"14.0\" or platform_system == \"Darwin\" and platform_release >= \"15.0\" or platform_system == \"Darwin\" and platform_release >= \"16.0\" or platform_system == \"Darwin\" and platform_release >= \"17.0\" or platform_system == \"Darwin\" and platform_release >= \"18.0\" or platform_system == \"Darwin\" and platform_release >= \"9.0\" or platform_release >= \"9.0\" and platform_release < \"11.0\" and platform_system == \"Darwin\" or sys_platform == \"darwin\""
 name = "pyobjc-framework-cocoa"
 optional = false
 python-versions = "*"
@@ -1487,7 +1500,7 @@ pyobjc-framework-Quartz = ">=5.2"
 [[package]]
 category = "main"
 description = "Wrappers for the Quartz frameworks on macOS"
-marker = "platform_system == \"Darwin\" and platform_release >= \"11.0\" or platform_system == \"Darwin\" or platform_system == \"Darwin\" and platform_release >= \"12.0\" or platform_system == \"Darwin\" and platform_release >= \"13.0\" or platform_system == \"Darwin\" and platform_release >= \"15.0\" or platform_system == \"Darwin\" and platform_release >= \"16.0\" or platform_system == \"Darwin\" and platform_release >= \"17.0\" or platform_system == \"Darwin\" and platform_release >= \"9.0\""
+marker = "platform_system == \"Darwin\" and platform_release >= \"11.0\" or platform_system == \"Darwin\" or platform_system == \"Darwin\" and platform_release >= \"12.0\" or platform_system == \"Darwin\" and platform_release >= \"13.0\" or platform_system == \"Darwin\" and platform_release >= \"15.0\" or platform_system == \"Darwin\" and platform_release >= \"16.0\" or platform_system == \"Darwin\" and platform_release >= \"17.0\" or platform_system == \"Darwin\" and platform_release >= \"9.0\" or sys_platform == \"darwin\""
 name = "pyobjc-framework-quartz"
 optional = false
 python-versions = "*"
@@ -1838,6 +1851,17 @@ pytest = ">=3.6"
 
 [[package]]
 category = "main"
+description = "Python X Library"
+name = "python-xlib"
+optional = false
+python-versions = "*"
+version = "0.25"
+
+[package.dependencies]
+six = ">=1.10.0"
+
+[[package]]
+category = "main"
 description = "Python3 X Library"
 marker = "platform_system == \"Linux\" and python_version >= \"3.0\""
 name = "python3-xlib"
@@ -1852,6 +1876,17 @@ name = "pytweening"
 optional = false
 python-versions = "*"
 version = "1.0.3"
+
+[[package]]
+category = "main"
+description = "A simple, cross-platform module for mouse and keyboard control"
+name = "pyuserinput"
+optional = false
+python-versions = "*"
+version = "0.1.11"
+
+[package.dependencies]
+python-xlib = "*"
 
 [[package]]
 category = "dev"
@@ -1934,7 +1969,7 @@ python-versions = ">=2.7"
 version = "0.5.2"
 
 [metadata]
-content-hash = "8e92d0f784b2b0cd9fc69688624f9b161ea6908cc955f27fcbe46d94ad9ce5c5"
+content-hash = "f126090a6278ae80ffac0b020d330e0ba6bb5c26c47e75d1e2f25ba9890248cd"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -1971,6 +2006,7 @@ pyflakes = ["17dbeb2e3f4d772725c777fabc446d5634d1038f234e77343108ce445ea69ce0", 
 pygame = ["0480fe82cd41a43e3eea497fa2c059c72ac54cb5d003d5aa2ed06a04541c384e", "136a3b5711d9ec369a0407e4e08ffced3ba61aa41059e9280ffffa79c8614f65", "2622b9dd95f445c887a36a57eade42c672598589f69a8052ccdb8eeeffa4dbb1", "301c6428c0880ecd4a9e3951b80e539c33863b6ff356a443db1758de4f297957", "398c42b605ecc514e62f68f1944a2d21e247938309f598de6cb0ad3c207324a8", "4aaff572a273a32e70ec3593d213e59ab11c183a9916616562247930f17a5447", "4e1065577f1b29111113be5deb2ea88553551a5e1cf33e0c08fa32768f285809", "5f052dc2975a399aa1830c1f04c5f72856aa416bf3cd4b31375a058015a5c620", "68ea43e51150316b9fb08e251209d4e2b4e76a340b5b6fc8cdf1a898c78f7e5b", "698433a9fcefca0527244dc44dff9503eb26157494730b1cc80e6e4dbb246e92", "6f714986f7987f10cb94f1be0753318e341a7ea6b12d66f37a4d5d6dd4695023", "73cd9df328c7e72638dbcc1d18e7155225faed880a53db6bad90d1d7c0a71dfd", "7876d1f29f66d3d7cac46479503891ee1ef409b0fbce54b0d74f3a6b33a46dba", "854e87b8b2b76e3ed11d64985fcfdd7af919659503de99fc2b0a717b314c3cf0", "8da13704ad45b7d5de8a8cca135a7f44c7fc6aa9f691abe7b0392468a34a8013", "9ce22fb72298ea33dbb3a1c6c60a4a4e19d9698df6f3f5782eba4dada7b7736d", "a37b6c59e7b8feadc51db5197052b86ceb6443f9fb2a6f7d6527620e707c558c", "a6e8d2f99dbe1dfe72d0c019693c14d93c410f702d0b04ec9a81b36dacd55a23", "a9ac862dd7159861f2c6443b0029089e1c0c4ec762a8074022914ec52fe4dfac", "ae1bc3e78ed28f20878e7ca2c98663a6634e9c00d7746d39413fc18e907dc162", "be7e70f91bd4eb35ae081062f16bf434619b3292358d9b061f8159ddc570c7f0", "c895cf9c1b6d1cbba8cb8cc3f5427febcf8aa41a9333697741abeea1c537a350", "f1f5714d2c23f6a64ef2ac4fcd36a2dd2689da85978d951a99a6ae5dfdf9bdbc", "fa788f775680fc5d268ab00a2da29c9a22830032cfab732730298a2952cd87f3"]
 pygetwindow = ["e012c13e3845044f7a3cfba77bd83ee558ba5df450c3b6da04a011bb92cf9b96"]
 pymsgbox = ["7df5ed66c8a80fd36b83b278ba164e7a1d135c8fb8bdf38b291e46bf31d28085"]
+pynput = ["0149d2adf13573e6f88345de747b06cd5fcac8c35fb90f0d1560d6970d4a7bcd", "6afd47beb438cdc9fa250647b2abd6786b7ef2c7bf9b1ff1e3b7cbb797fa6d7a", "92fdd578407433219e63626fb4f1b415b54de5a9b0a2a8fddcb62b690c37a7b6"]
 pyobjc = ["273ca91aab8a7cec9eae6050a69cfc49e6860137df6507b592fe59754098f51e", "441bc2a4d5930383d68e92610a152a157636ac42551c5942293d0112cd13be4d", "cd66de64fc590ee9a524a15d524861d63448da6b2862387d940c8b3fefcd37d7"]
 pyobjc-core = ["046449f510c1f33d41bdd0d4c8eb2f084593a2ee4573a25d604bdccabb7a909e", "5ae84984fa4967a6b6962ae25997de954d110efeea69ff1f09e128675f86dc80", "66651923eb225d3ad2a07c0b3530842c06b8f35e5adf30c74ea378697691bb09", "6be4631868b36dde9a771707f325b7ea7616f5ca1ad38eafe8435f4757193419", "6f3dd8e20119d5c75ea5ac548734fef2702c457b66aa66059b6e037129467f95", "9c79ab63ec48f195a5c07bbb7bc73378b6a45b1d7893f911ff51c918dae13538", "a6f65fb313e5e1efab5c4b4591142a73af4ca52a2c39d98f540f42fc774e262e", "b551af26c21883a6e27c0ce58e5e9f3ae9027388686ae978d134afa102164045", "cd13a2e9be890064a6dd11db7790bbf38502350c532a9a9d05511abb8683b8ea"]
 pyobjc-framework-accounts = ["132823fe10a50b1ce7c05475778e8660c7b46054f55beb890a7127054ee0e5fd", "d3eeb414bea1bf1627b6867f52f0095f4bf827aec88339242122bafe154cee98"]
@@ -2078,8 +2114,10 @@ pyrect = ["3b2fa7353ce32a11aa6b0a15495968d2a763423c8947ae248b92c037def4e202"]
 pyscreeze = ["b3754827173421ed73a374be3fda649d52826b57e063cb1b97be67b3c220e9b6"]
 pytest = ["3f193df1cfe1d1609d4c583838bea3d532b18d6160fd3f55c9447fdca30848ec", "e246cf173c01169b9617fc07264b7b1316e78d7a650055235d6d897bc80d9660"]
 pytest-cov = ["2b097cde81a302e1047331b48cadacf23577e431b61e9c6f49a1170bbe3d3da6", "e00ea4fdde970725482f1f35630d12f074e121a23801aabf2ae154ec6bdd343a"]
+python-xlib = ["204f280b549352af6cbdaff43405186822ae05749518dd9be209bd88a0088f99", "cdc806892f28fcd2c52e22a646c2ae3af3f0539cbbacfe7b344231d75eb96095"]
 python3-xlib = ["dc4245f3ae4aa5949c1d112ee4723901ade37a96721ba9645f2bfa56e5b383f8"]
 pytweening = ["4b608a570f4dccf2201e898f643c2a12372eb1d71a3dbc7e778771b603ca248b"]
+pyuserinput = ["006b5ed06cf740eeeb2c7221e1cb8dc5ae35f16267e41262bfb0e7cfdca7fb2b", "61d9c0e81331b02efa5c62c6fb9416675ae79fbd00a3e12eaa8274b103446857"]
 pyyaml = ["0113bc0ec2ad727182326b61326afa3d1d8280ae1122493553fd6f4397f33df9", "01adf0b6c6f61bd11af6e10ca52b7d4057dd0be0343eb9283c878cf3af56aee4", "5124373960b0b3f4aa7df1707e63e9f109b5263eca5976c66e08b1c552d4eaf8", "5ca4f10adbddae56d824b2c09668e91219bb178a1eee1faa56af6f99f11bf696", "7907be34ffa3c5a32b60b95f4d95ea25361c951383a894fec31be7252b2b6f34", "7ec9b2a4ed5cad025c2278a1e6a19c011c80a3caaac804fd2d329e9cc2c287c9", "87ae4c829bb25b9fe99cf71fbb2140c448f534e24c998cc60f39ae4f94396a73", "9de9919becc9cc2ff03637872a440195ac4241c80536632fffeb6a1e25a74299", "a5a85b10e450c66b49f98846937e8cfca1db3127a9d5d1e31ca45c3d0bef4c5b", "b0997827b4f6a7c286c01c5f60384d218dca4ed7d9efa945c3e1aa623d5709ae", "b631ef96d3222e62861443cc89d6563ba3eeb816eeb96b2629345ab795e53681", "bf47c0607522fdbca6c9e817a6e81b08491de50f3766a7a0e6a5be7905961b41", "f81025eddd0327c7d4cfe9b62cf33190e1e736cc6e97502b3ec425f574b3e7a8"]
 six = ["3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c", "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"]
 toml = ["229f81c57791a41d65e399fc06bf0848bab550a9dfd5ed66df18ce5f05e73d5c", "235682dd292d5899d361a811df37e04a8828a5b1da3115886b73cf81ebc9100e", "f1db651f9657708513243e61e6cc67d101a39bad662eaa9b5546f789338e07a3"]

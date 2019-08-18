@@ -9,7 +9,9 @@ from normcap.capture import Capture
 
 if __name__ == "__main__":
     cap = Capture()
-    print(cap.getMousePos())
+    rect = cap.getRectangle()
+    print(rect)
+    cap.captureScreen(rect)
 #    cap.drawRegion()
 #    bmp = cap.captureScreen();
 #    pass

@@ -1,5 +1,5 @@
 [run]
-source = NormCap
+source = normcap
 
 [report]
 exclude_lines =

@@ -14,6 +14,8 @@ mss = "^4.0"
 pillow = "^6.1"
 pygame = "^1.9"
 wxPython = "^4.0"
+PyUserInput = "^0.1.11"
+pynput = "^1.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
