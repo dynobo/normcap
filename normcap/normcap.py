@@ -8,19 +8,19 @@ from logging.config import fileConfig
 from normcap.capture import Capture
 from normcap.data_model import Selection
 from normcap.ocr import Ocr
+from normcap.utils import log_dataclass
 
 # Extra
+import pyperclip
 
 
 if __name__ == "__main__":
     # Setup logging
     fileConfig("logging.ini")
-    logger = logging.getLogger()
+    logger = logging.getLogger(__name__)
 
     selection = Selection()
     cap = Capture()
-    # rect = cap.getRectangle()
-    # print(rect)
     cap.capture_screen()
     cap.select_region_with_gui()
     cap.crop_shot()
@@ -29,9 +29,6 @@ if __name__ == "__main__":
     ocr = Ocr()
     selection.line_boxes = ocr.recognize(selection.image)
 
-    print("+" * 30)
-    print(selection.text())
-    print("+" * 30)
-    for k, v in vars(cap.selection).items():
-        if not k.startswith("_"):
-            print(f"{k}:{v}")
+    log_dataclass(selection)
+
+    pyperclip.copy(selection.text)

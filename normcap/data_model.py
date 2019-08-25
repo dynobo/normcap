@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from PIL import Image
 
 
-@dataclass
+@dataclass()
 class Selection:
     image: Image = None
     image_full: Image = None
@@ -19,8 +19,10 @@ class Selection:
     monitor: int = 0
     line_boxes: list = field(default_factory=list)
 
+    @property
     def text(self) -> str:
-        return " ".join([l.content for l in self.line_boxes])
+        return " ".join([l.content for l in self.line_boxes]).strip()
 
+    @property
     def lines(self) -> str:
-        return os.linesep.join([l.content for l in self.line_boxes])
+        return os.linesep.join([l.content.strip() for l in self.line_boxes])

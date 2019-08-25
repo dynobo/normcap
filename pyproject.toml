@@ -12,6 +12,7 @@ mss = "^4.0"
 pillow = "^6.1"
 PyUserInput = "^0.1.11"
 pyocr = "^0.7.2"
+pyperclip = "^1.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"

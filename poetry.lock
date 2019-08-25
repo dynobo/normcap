@@ -259,6 +259,14 @@ version = "0.7.2"
 Pillow = "*"
 
 [[package]]
+category = "main"
+description = "A cross-platform clipboard module for Python. (Only handles plain text for now.)"
+name = "pyperclip"
+optional = false
+python-versions = "*"
+version = "1.7.0"
+
+[[package]]
 category = "dev"
 description = "pytest: simple powerful testing with Python"
 name = "pytest"
@@ -378,7 +386,7 @@ python-versions = ">=2.7"
 version = "0.5.2"
 
 [metadata]
-content-hash = "90cb0151229647573a8c597f66f3e6d4b5f8d929dea424f3cdb2a1d5f14b1a91"
+content-hash = "aadc6d169348e0459db0e3157c5b8bf6153f44b85cd185b065935a4389de8b82"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -409,6 +417,7 @@ py = ["64f65755aee5b381cea27766a3a147c3f15b9b6b9ac88676de66ba2ae36793fa", "dc639
 pycodestyle = ["95a2219d12372f05704562a14ec30bc76b05a5b297b21a5dfe3f6fac3491ae56", "e40a936c9a450ad81df37f549d676d127b1b66000a6c500caa2b085bc0ca976c"]
 pyflakes = ["17dbeb2e3f4d772725c777fabc446d5634d1038f234e77343108ce445ea69ce0", "d976835886f8c5b31d47970ed689944a0262b5f3afa00a5a7b4dc81e5449f8a2"]
 pyocr = ["fa15adc7e1cf0d345a2990495fe125a947c6e09a60ddba0256a1c14b2e603179"]
+pyperclip = ["979325468ccf682104d5dcaf753f869868100631301d3e72f47babdea5700d1c"]
 pytest = ["3f193df1cfe1d1609d4c583838bea3d532b18d6160fd3f55c9447fdca30848ec", "e246cf173c01169b9617fc07264b7b1316e78d7a650055235d6d897bc80d9660"]
 pytest-cov = ["2b097cde81a302e1047331b48cadacf23577e431b61e9c6f49a1170bbe3d3da6", "e00ea4fdde970725482f1f35630d12f074e121a23801aabf2ae154ec6bdd343a"]
 python-xlib = ["204f280b549352af6cbdaff43405186822ae05749518dd9be209bd88a0088f99", "cdc806892f28fcd2c52e22a646c2ae3af3f0539cbbacfe7b344231d75eb96095"]
