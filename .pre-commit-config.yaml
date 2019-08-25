@@ -2,13 +2,6 @@
 repos:
 - repo: local
   hooks:
-  - id: isort
-    name: isort
-    stages: [commit]
-    language: system
-    entry: poetry run isort
-    types: [python]
-
   - id: black
     name: black
     stages: [commit]

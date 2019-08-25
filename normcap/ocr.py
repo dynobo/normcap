@@ -1,33 +1,33 @@
-import sys
+"""
+"""
 
+# Default
+import logging
+
+# Extra
 import pyocr
-import pyocr.builders
-from PIL import Image
-
-tools = pyocr.get_available_tools()
-if len(tools) == 0:
-    print("No OCR tool found")
-    sys.exit(1)
-# The tools are returned in the recommended order of usage
-tool = tools[0]
-print("Will use tool '%s'" % (tool.get_name()))
-# Ex: Will use tool 'libtesseract'
-
-langs = tool.get_available_languages()
-print("Available languages: %s" % ", ".join(langs))
-lang = langs[0]
-print("Will use lang '%s'" % (lang))
-# Ex: Will use lang 'fra'
-# Note that languages are NOT sorted in any way. Please refer
-# to the system locale settings for the default language
-# to use.
 
 
-line_and_word_boxes = tool.image_to_string(
-    Image.open("temp.png"), lang="deu", builder=pyocr.builders.LineBoxBuilder()
-)
+class Ocr:
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.ocr_tools = pyocr.get_available_tools()
+        if len(self.ocr_tools) == 0:
+            self.logger.error("No OCR tool found!")
+            raise RuntimeError
 
-for lb in line_and_word_boxes:
-    print(lb.word_boxes)
-    print(lb.content)
-    print(lb.position)
+        # The ocr tools are returned in the recommended order
+        self.tool = self.ocr_tools[0]
+        self.logger.info(f"Selecting '{self.tool.get_name()}' to perform ocr")
+
+        langs = self.tool.get_available_languages()
+        self.logger.debug(f"Available languages for ocr: { {*langs} }")
+
+        lang = langs[0]  # Not sorted!
+        self.logger.info(f"Using language '{lang}' for ocr")
+
+    def recognize(self, image):
+        line_and_word_boxes = self.tool.image_to_string(
+            image, lang="deu", builder=pyocr.builders.LineBoxBuilder()
+        )
+        return line_and_word_boxes

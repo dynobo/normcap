@@ -8,8 +8,11 @@ from collections import namedtuple
 import mss
 from PIL import Image, ImageTk
 
+# Own
+from normcap.data_model import Selection
 
-class Fullscreen_Window:
+
+class _FullscreenWindow:
     def __init__(self, root_window, current_window, shot):
         self.root_window = root_window
         self.tk = current_window
@@ -97,33 +100,41 @@ class Capture:
         self.clicks = []
         self.Shot = namedtuple("Shot", "mon img pos")
         self.shots = []
+        self.selection = Selection()
         return super().__init__(*args, **kwargs)
 
-    def show_window(self):
+    def select_region_with_gui(self):
         root = tkinter.Tk()
-        for idx, shot in enumerate(self.shots[:2]):
+        for idx, shot in enumerate(self.shots):
             if idx == 0:
-                Fullscreen_Window(root, root, shot)
+                _FullscreenWindow(root, root, shot)
             else:
                 top = tkinter.Toplevel()
-                Fullscreen_Window(root, top, shot)
+                _FullscreenWindow(root, top, shot)
         root.mainloop()
-        print(root.result)
-        self.crop_shot(root.result)
 
-    def crop_shot(self, crop_args):
-        crop_mon = self.shots[crop_args["monitor"]]
+        # Store result in selection class
+        self.selection.bottom = root.result["lower"]
+        self.selection.top = root.result["upper"]
+        self.selection.left = root.result["left"]
+        self.selection.right = root.result["right"]
+        self.selection.monitor = root.result["monitor"]
+
+    def crop_shot(self):
+        crop_mon = self.shots[self.selection.monitor]
         cropped_img = crop_mon.img.crop(
             (
-                crop_args["left"],
-                crop_args["upper"],
-                crop_args["right"],
-                crop_args["lower"],
+                self.selection.left,
+                self.selection.top,
+                self.selection.right,
+                self.selection.bottom,
             )
         )
-        cropped_img.save("cropped.png")
+        self.selection.image_full = crop_mon.img
+        self.selection.image = cropped_img
+        print(self.selection)
 
-    def capture_screen(self, rectangle):
+    def capture_screen(self):
         with mss.mss() as sct:
             # Grab all screens
             for idx, position in enumerate(sct.monitors[1:]):
@@ -137,8 +148,8 @@ class Capture:
                 temp_shot = self.Shot(mon=idx, img=temp_img, pos=position)
                 self.shots.append(temp_shot)
 
-            # Save shots
-            for idx, shot in enumerate(self.shots):
-                shot.img.save(f"temp_m{idx}.png")
+            # Save shots (used for debugging)
+            # for idx, shot in enumerate(self.shots):
+            #    shot.img.save(f"temp_m{idx}.png")
 
         return
