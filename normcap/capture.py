@@ -11,8 +11,8 @@ import mss
 from PIL import Image, ImageTk
 
 # Own
-from normcap.data_model import Selection
-from normcap.utils import log_dataclass
+from data_model import Selection
+from utils import log_dataclass
 
 
 class _FullscreenWindow:

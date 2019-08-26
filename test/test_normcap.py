@@ -1,8 +1,4 @@
-from normcap import __version__, normcap
-
-
-def test_version():
-    assert __version__ == "0.1.0"
+from normcap import normcap
 
 
 def test_normcap():

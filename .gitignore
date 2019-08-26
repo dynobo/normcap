@@ -1,6 +1,8 @@
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
 
+.vscode/
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -47,6 +49,7 @@ htmlcov/
 .nox/
 .coverage
 .coverage.*
+.coveragerc
 .cache
 nosetests.xml
 coverage.xml

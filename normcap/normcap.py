@@ -2,21 +2,25 @@
 """
 # Default
 import logging
-from logging.config import fileConfig
 
 # Own
-from normcap.capture import Capture
-from normcap.data_model import Selection
-from normcap.ocr import Ocr
-from normcap.utils import log_dataclass
+from capture import Capture
+from data_model import Selection
+from ocr import Ocr
+from utils import log_dataclass
 
 # Extra
 import pyperclip
 
 
 if __name__ == "__main__":
-    # Setup logging
-    fileConfig("logging.ini")
+    # Setup loggingurxvt
+
+    logging.basicConfig(
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        datefmt="%H:%M:%S",
+        level=logging.DEBUG,
+    )
     logger = logging.getLogger(__name__)
 
     selection = Selection()

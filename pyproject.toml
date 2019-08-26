@@ -21,6 +21,7 @@ flake8 = "*"
 isort = "*"
 mypy = "*"
 pre-commit = "*"
+pyinstaller = "^3.5"
 
 [build-system]
 requires = ["poetry>=0.12"]
