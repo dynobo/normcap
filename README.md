@@ -17,18 +17,14 @@ Because...
 
 ### Dependencies
 
-For OCR you'll need one of the following tools setup on your machine:
+On all platforms, you'll need *one* of the following tools setup on your machine for OCR:
 
+- Tesseract ([see downloads](https://github.com/tesseract-ocr/tesseract/wiki/Downloads)) *(recommended)*
 - Libtesseract
-- Tesseract ([see downloads](https://github.com/tesseract-ocr/tesseract/wiki/Downloads))
 - Cuneiform ([see downloads](https://www.cuneiform-lang.org/download/))
 
-For clipboard support in Linux you'll need on of the following packages:
-
-- xclip
-- xsel
-- gtk
-- PyQt4
+On Linux you'll need *one* of the following packages for clipboard support:
+- `xclip` *(recommended)*, `xsel`, `gtk`, `PyQt4`
 
 #### Installing Tesseract on Windows
 
@@ -56,5 +52,6 @@ This projected uses the following non-standard libraries:
 - [pillow](https://pypi.org/project/Pillow/) *- manipulating images*
 - [pyocr](https://pypi.org/project/pyocr/) *- interfacing various OCR tools*
 - [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard*
+- [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms*
 
 Thanks to the maintainers of those!
