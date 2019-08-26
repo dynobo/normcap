@@ -20,7 +20,7 @@ class _FullscreenWindow:
         self.logger = logging.getLogger(__name__)
         self.root_window = root_window
         self.tk = current_window
-        self.tk.attributes("-fullscreen", True)
+        # self.tk.attributes("-fullscreen", True)
         self.tk.configure(bg="black")  # To hide top border on i3
         self.shot = shot
         self.area_thres = 400
@@ -68,7 +68,7 @@ class _FullscreenWindow:
             f"{shot.position['width']}x{shot.position['height']}"
             + f"+{shot.position['left']}+{shot.position['top']}"
         )
-        self.root_window.overrideredirect(True)
+        self.tk.overrideredirect(1)
 
     def draw_border(self):
         self.canvas.create_rectangle(
