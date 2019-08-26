@@ -22,6 +22,7 @@ isort = "*"
 mypy = "*"
 pre-commit = "*"
 pyinstaller = "^3.5"
+vprof = "^0.37.6"
 
 [build-system]
 requires = ["poetry>=0.12"]

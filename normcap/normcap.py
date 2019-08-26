@@ -13,15 +13,15 @@ from utils import log_dataclass
 import pyperclip
 
 
-if __name__ == "__main__":
-    # Setup loggingurxvt
-
+def main():
+    # Setup logging
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         datefmt="%H:%M:%S",
         level=logging.DEBUG,
     )
     logger = logging.getLogger(__name__)
+    logger.info("Starting normcap...")
 
     selection = Selection()
     cap = Capture()
@@ -36,3 +36,7 @@ if __name__ == "__main__":
     log_dataclass(selection)
 
     pyperclip.copy(selection.text)
+
+
+if __name__ == "__main__":
+    main()
