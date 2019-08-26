@@ -1,16 +1,17 @@
 # NormCap
 
-***Intelligent screen-capture tool to capture information instead of images*** by dynobo <dynobo@mailbox.org>
+***Intelligent screen-capture tool to capture information instead of images*** by [dynobo](https://github.com/dynobo)
 
 ![XKCD norm files](https://imgs.xkcd.com/comics/norm_normal_file_format.png)  
-[Source](https://xkcd.com/2116/)
+[Comic Source](https://xkcd.com/2116/)
 
 ## Why?
 
-Because
+Because...
 
-- People like to annoy other people by sending URLs, address information, (...) as screenshots instead of text.
-- There are still some sadistic coders out there, implementing pop-up boxes with not selectable error messages.
+- people like to annoy other people by sending URLs, address information, (...) as screenshots instead of text.
+- there are still some sadistic coders out there, implementing pop-up boxes with not selectable error messages.
+- in rare situations it's really useful to capture text from video stills, hover pop-ups, program menu entries, ...
 
 ## Install
 
