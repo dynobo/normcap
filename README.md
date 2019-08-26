@@ -29,11 +29,18 @@ For clipboard support in Linux you'll need on of the following packages:
 - gtk
 - PyQt4
 
+#### Installing Tesseract on Windows
+
+1. Download the latest 32bit version from [Tesseract Installer by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
+2. Follow the installer (which allows you to download additional languages)
+3. Append the path to tesseract.exe to the `PATH` environment variable
+4. Create a new environment variable called `TESSDATA_PREFIX` and set it to the `YOUR_TESSERACT_DIR\tessdata`, which should contain the language data files
+
 ## Setup Development
 
 ```sh
 # Install dependencies
-`poetry install`
+poetry install
 
 # Setup pre-commit and pre-push hooks
 pipenv run pre-commit install -t pre-commit
