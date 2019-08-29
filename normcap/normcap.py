@@ -5,6 +5,7 @@ import logging
 
 # Own
 from capture import Capture
+from crop import Crop
 from data_model import Selection
 from ocr import Ocr
 from utils import log_dataclass
@@ -24,11 +25,16 @@ def main():
     logger.info("Starting normcap...")
 
     selection = Selection()
-    cap = Capture()
-    cap.capture_screen()
-    cap.select_region_with_gui()
-    cap.crop_shot()
-    selection = cap.selection
+
+    selection = Capture().capture_screen(selection)
+
+    selection = Crop().select_and_crop(selection)
+
+    log_dataclass(selection)
+    return
+    # cap.select_region_with_gui()
+    # cap.crop_shot()
+    # selection = cap.selection
 
     ocr = Ocr()
     selection.line_boxes = ocr.recognize(selection.image)
