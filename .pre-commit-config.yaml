@@ -2,13 +2,6 @@
 repos:
 - repo: local
   hooks:
-  - id: isort
-    name: isort
-    stages: [commit]
-    language: system
-    entry: poetry run isort
-    types: [python]
-
   - id: black
     name: black
     stages: [commit]
@@ -38,11 +31,12 @@ repos:
     language: system
     entry: poetry run pytest
     types: [python]
+    pass_filenames: false    
 
   - id: pytest-cov
     name: pytest
     stages: [push]
     language: system
-    entry: poetry run pytest --cov --cov-fail-under=100
+    entry: poetry run pytest --cov --cov-fail-under=1
     types: [python]
     pass_filenames: false
