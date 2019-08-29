@@ -5,6 +5,7 @@
 import logging
 import tkinter
 import sys
+import os
 
 # Extra
 from PIL import ImageTk
@@ -39,6 +40,7 @@ class Crop:
             selection.left = result["left"]
             selection.right = result["right"]
             selection.monitor = result["monitor"]
+            selection.mode = result["mode"]
         else:
             self.logger.info("Exiting. No selection available.")
             sys.exit(0)
@@ -55,31 +57,80 @@ class Crop:
 
 
 class _FullscreenWindow:
-    def __init__(self, root_window, current_window, shot):
+    def __init__(self, root, current_window, shot):
         self.logger = logging.getLogger(__name__)
-        self.root_window = root_window
         self.tk = current_window
-        # self.tk.attributes("-fullscreen", True)
+        self.root = root
+
+        if root == current_window:
+            self.init_root_vars()
+
         self.tk.configure(bg="black")  # To hide top border on i3
         self.shot = shot
-        self.area_thres = 400
-
-        # Init rectangle vars
-        self.rect = None
-        self.start_x = None
-        self.start_y = None
-        self.x = 0
-        self.y = 0
 
         self.show_windows()
         self.draw_border()
         self.set_bindings()
+        self.set_window_geometry()
+        self.set_fullscreen()
+
+    def init_root_vars(self):
+        self.root.active_canvas = None
+
+        self.root.rect = None
+        self.root.start_x = 0
+        self.root.start_y = 0
+        self.root.x = 0
+        self.root.y = 0
+
+        self.root.mode_indicator = None
+        self.root.modes = ("raw", "parse", "trigger")
+        # "☷" https://en.wikipedia.org/wiki/Miscellaneous_Symbols
+        self.root.modes_chars = ("☰", "⚙", "★")
+        self.root.current_mode = self.root.modes[0]
+
+        self.root.area_thres = 400
+
+    def set_fullscreen(self):
+        # Set Fullscreen
+        #    Behave different per OS, because:
+        #    - with tk.attributes I couldn't move the windows to the correct screen on MS Windows
+        #    - with overrideredirect I couldn't get the keybindings working on Linux
+        if os.name == "nt":
+            self.tk.overrideredirect(1)
+        else:
+            self.tk.attributes("-fullscreen", True)
+
+    def next_mode(self):
+        idx = self.root.modes.index(self.root.current_mode)
+        idx += 1
+        if idx >= len(self.root.modes):
+            idx = 0
+        self.root.current_mode = self.root.modes[idx]
+
+    def get_mode_char(self):
+        idx = self.root.modes.index(self.root.current_mode)
+        return self.root.modes_chars[idx]
+
+    def set_window_geometry(self):
+        self.tk.geometry(
+            f"{self.shot['position']['width']}x{self.shot['position']['height']}"
+            + f"+{self.shot['position']['left']}+{self.shot['position']['top']}"
+        )
 
     def set_bindings(self):
-        self.root_window.bind_all("<Escape>", self.on_escape_press)
+        self.root.bind_all("<Escape>", self.on_escape_press)
+        self.root.bind_all("<space>", self.on_space_press)
         self.canvas.bind("<B1-Motion>", self.on_move_press)
         self.canvas.bind("<ButtonPress-1>", self.on_button_press)
         self.canvas.bind("<ButtonRelease-1>", self.on_button_release)
+
+    def on_space_press(self, event):
+        self.next_mode()
+        if self.root.mode_indicator:
+            self.root.active_canvas.itemconfig(
+                self.root.mode_indicator, text=self.get_mode_char()
+            )
 
     def show_windows(self):
         # Produces frame, useful for debug
@@ -103,13 +154,6 @@ class _FullscreenWindow:
         tkimage = ImageTk.PhotoImage(self.shot["image"])
         self.screen_gc = tkimage  # Prevent img being garbage collected
         self.canvas.create_image(0, 0, anchor="nw", image=tkimage)
-
-        # Set size & pos
-        self.tk.geometry(
-            f"{self.shot['position']['width']}x{self.shot['position']['height']}"
-            + f"+{self.shot['position']['left']}+{self.shot['position']['top']}"
-        )
-        self.tk.overrideredirect(1)
 
     def draw_border(self):
         self.canvas.create_rectangle(
@@ -135,51 +179,79 @@ class _FullscreenWindow:
             area = 0
 
         # Check for threshold
-        if area >= self.area_thres:
+        if area >= self.root.area_thres:
             large_enough = True
         else:
             large_enough = False
             self.logger.warn(
-                f"Selection area of {area:.0f} px² is below threshold of {self.area_thres} px²]"
+                f"Selection area of {area:.0f} px² is below threshold of {self.root.area_thres} px²]"
             )
 
         return large_enough
 
     def end_fullscreen(self, result=None):
         if self.is_valid_selected_area(result):
-            self.root_window.result = result
+            self.root.result = result
         else:
-            self.root_window.result = None
-        self.root_window.destroy()
+            self.root.result = None
+        self.root.destroy()
+
+    def get_top_right(self):
+        top = min([self.root.start_y, self.root.y])
+        right = max([self.root.start_x, self.root.x])
+        return top, right
 
     def on_button_press(self, event):
         # save mouse start position
-        self.start_x = self.canvas.canvasx(event.x)
-        self.start_y = self.canvas.canvasy(event.y)
+        self.root.start_x = self.canvas.canvasx(event.x)
+        self.root.start_y = self.canvas.canvasy(event.y)
 
         # create rectangle
-        if not self.rect:
-            self.rect = self.canvas.create_rectangle(
-                self.x, self.y, 1, 1, outline="red"
+        if not self.root.rect:
+            # Draw outline
+            self.root.rect = self.canvas.create_rectangle(
+                self.root.x, self.root.y, 1, 1, outline="red"
             )
+            # Draw indicator
+            self.root.mode_indicator = self.canvas.create_text(
+                self.root.start_x,
+                self.root.start_y,
+                anchor="se",
+                text=self.get_mode_char(),
+                fill="red",
+                font=("Sans", 18),
+            )
+            self.root.active_canvas = self.canvas
 
     def on_move_press(self, event):
-        cur_x = self.canvas.canvasx(event.x)
-        cur_y = self.canvas.canvasy(event.y)
+        self.root.x = self.canvas.canvasx(event.x)
+        self.root.y = self.canvas.canvasy(event.y)
 
         # expand rectangle as you drag the mouse
-        self.canvas.coords(self.rect, self.start_x, self.start_y, cur_x, cur_y)
+        self.canvas.coords(
+            self.root.rect,
+            self.root.start_x,
+            self.root.start_y,
+            self.root.x,
+            self.root.y,
+        )
+        # self.canvas.itemconfig(self.root.mode_indicator, text=self.get_mode_char())
+
+        # Move indicator
+        top, right = self.get_top_right()
+        self.canvas.coords(self.root.mode_indicator, right, top)
 
     def on_button_release(self, event):
-        cur_x = self.canvas.canvasx(event.x)
-        cur_y = self.canvas.canvasy(event.y)
+        self.root.x = self.canvas.canvasx(event.x)
+        self.root.y = self.canvas.canvasy(event.y)
 
         crop_args = {
             "monitor": self.shot["monitor"],
-            "upper": min([cur_y, self.start_y]),
-            "lower": max([cur_y, self.start_y]),
-            "left": min([cur_x, self.start_x]),
-            "right": max([cur_x, self.start_x]),
+            "upper": min([self.root.y, self.root.start_y]),
+            "lower": max([self.root.y, self.root.start_y]),
+            "left": min([self.root.x, self.root.start_x]),
+            "right": max([self.root.x, self.root.start_x]),
+            "mode": self.root.current_mode,
         }
 
         self.end_fullscreen(result=crop_args)

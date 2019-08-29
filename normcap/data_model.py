@@ -18,6 +18,7 @@ class Selection:
     monitor: int = 0
     line_boxes: list = field(default_factory=list)
     shots: list = field(default_factory=list)
+    mode: str = ""
 
     @property
     def text(self) -> str:
