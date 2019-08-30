@@ -26,10 +26,10 @@ class Crop:
         root = tkinter.Tk()
         for idx, shot in enumerate(selection.shots):
             if idx == 0:
-                _FullscreenWindow(root, root, shot)
+                _CropWindow(root, root, shot, selection.cli_args)
             else:
                 top = tkinter.Toplevel()
-                _FullscreenWindow(root, top, shot)
+                _CropWindow(root, top, shot, selection.cli_args)
         root.mainloop()
 
         # Store result in selection class
@@ -56,42 +56,47 @@ class Crop:
         return selection
 
 
-class _FullscreenWindow:
-    def __init__(self, root, current_window, shot):
+class _CropWindow:
+    def __init__(self, root, current_window, shot, cli_args):
         self.logger = logging.getLogger(__name__)
         self.tk = current_window
         self.root = root
+        self.cli_args = cli_args
 
         if root == current_window:
-            self.init_root_vars()
+            self.root = self._init_root_vars(self.root)
 
         self.tk.configure(bg="black")  # To hide top border on i3
         self.shot = shot
 
-        self.show_windows()
-        self.draw_border()
-        self.set_bindings()
-        self.set_window_geometry()
-        self.set_fullscreen()
+        self._show_window()
+        self._draw_border()
+        self._set_bindings()
+        self._set_window_geometry()
+        self._set_fullscreen()
 
-    def init_root_vars(self):
-        self.root.active_canvas = None
+    def _init_root_vars(self, root):
+        root.active_canvas = None
 
-        self.root.rect = None
-        self.root.start_x = 0
-        self.root.start_y = 0
-        self.root.x = 0
-        self.root.y = 0
+        root.rect = None
+        root.start_x = 0
+        root.start_y = 0
+        root.x = 0
+        root.y = 0
 
-        self.root.mode_indicator = None
-        self.root.modes = ("raw", "parse", "trigger")
+        root.mode_indicator = None
+        root.modes = ("raw", "parse", "trigger")
         # "☷" https://en.wikipedia.org/wiki/Miscellaneous_Symbols
-        self.root.modes_chars = ("☰", "⚙", "★")
-        self.root.current_mode = self.root.modes[0]
+        root.modes_chars = ("☰", "⚙", "★")
+        root.current_mode = self.cli_args.mode
 
-        self.root.area_thres = 400
+        root.color = self.cli_args.color
+        root.img_path = self.cli_args.path
 
-    def set_fullscreen(self):
+        root.area_thres = 400
+        return root
+
+    def _set_fullscreen(self):
         # Set Fullscreen
         #    Behave different per OS, because:
         #    - with tk.attributes I couldn't move the windows to the correct screen on MS Windows
@@ -101,38 +106,7 @@ class _FullscreenWindow:
         else:
             self.tk.attributes("-fullscreen", True)
 
-    def next_mode(self):
-        idx = self.root.modes.index(self.root.current_mode)
-        idx += 1
-        if idx >= len(self.root.modes):
-            idx = 0
-        self.root.current_mode = self.root.modes[idx]
-
-    def get_mode_char(self):
-        idx = self.root.modes.index(self.root.current_mode)
-        return self.root.modes_chars[idx]
-
-    def set_window_geometry(self):
-        self.tk.geometry(
-            f"{self.shot['position']['width']}x{self.shot['position']['height']}"
-            + f"+{self.shot['position']['left']}+{self.shot['position']['top']}"
-        )
-
-    def set_bindings(self):
-        self.root.bind_all("<Escape>", self.on_escape_press)
-        self.root.bind_all("<space>", self.on_space_press)
-        self.canvas.bind("<B1-Motion>", self.on_move_press)
-        self.canvas.bind("<ButtonPress-1>", self.on_button_press)
-        self.canvas.bind("<ButtonRelease-1>", self.on_button_release)
-
-    def on_space_press(self, event):
-        self.next_mode()
-        if self.root.mode_indicator:
-            self.root.active_canvas.itemconfig(
-                self.root.mode_indicator, text=self.get_mode_char()
-            )
-
-    def show_windows(self):
+    def _show_window(self):
         # Produces frame, useful for debug
         self.frame = tkinter.Frame(self.tk)
         self.frame.pack()
@@ -140,7 +114,7 @@ class _FullscreenWindow:
         # Create canvas
         self.canvas = tkinter.Canvas(
             self.tk,
-            bg="red",
+            bg=self.root.color,
             width=self.shot["position"]["width"],
             height=self.shot["position"]["height"],
             highlightthickness=0,
@@ -155,20 +129,37 @@ class _FullscreenWindow:
         self.screen_gc = tkimage  # Prevent img being garbage collected
         self.canvas.create_image(0, 0, anchor="nw", image=tkimage)
 
-    def draw_border(self):
+    def _draw_border(self):
         self.canvas.create_rectangle(
             0,
             0,
             self.shot["position"]["width"] - 1,
             self.shot["position"]["height"] - 2,
             width=3,
-            outline="red",
+            outline=self.root.color,
         )
 
-    def on_escape_press(self, event):
-        self.logger.info("ESC pressed: Aborting screen capture")
-        self.end_fullscreen()
+    def _set_window_geometry(self):
+        self.tk.geometry(
+            f"{self.shot['position']['width']}x{self.shot['position']['height']}"
+            + f"+{self.shot['position']['left']}+{self.shot['position']['top']}"
+        )
 
+    def _set_bindings(self):
+        self.root.bind_all("<Escape>", self._on_escape_press)
+        self.root.bind_all("<space>", self._on_space_press)
+        self.canvas.bind("<B1-Motion>", self._on_move_press)
+        self.canvas.bind("<ButtonPress-1>", self._on_button_press)
+        self.canvas.bind("<ButtonRelease-1>", self._on_button_release)
+
+    def _end_fullscreen(self, result=None):
+        if self.is_valid_selected_area(result):
+            self.root.result = result
+        else:
+            self.root.result = None
+        self.root.destroy()
+
+    # TODO: Outsource to intermediate checker
     def is_valid_selected_area(self, position):
         # Calculate selected area
         if position is not None:
@@ -189,41 +180,56 @@ class _FullscreenWindow:
 
         return large_enough
 
-    def end_fullscreen(self, result=None):
-        if self.is_valid_selected_area(result):
-            self.root.result = result
-        else:
-            self.root.result = None
-        self.root.destroy()
+    def _next_mode(self):
+        idx = self.root.modes.index(self.root.current_mode)
+        idx += 1
+        if idx >= len(self.root.modes):
+            idx = 0
+        self.root.current_mode = self.root.modes[idx]
 
-    def get_top_right(self):
+    def _get_mode_char(self):
+        idx = self.root.modes.index(self.root.current_mode)
+        return self.root.modes_chars[idx]
+
+    def _get_top_right(self):
         top = min([self.root.start_y, self.root.y])
         right = max([self.root.start_x, self.root.x])
         return top, right
 
-    def on_button_press(self, event):
+    def _on_escape_press(self, event):
+        self.logger.info("ESC pressed: Aborting screen capture")
+        self._end_fullscreen()
+
+    def _on_space_press(self, event):
+        self._next_mode()
+        if self.root.mode_indicator:
+            self.root.active_canvas.itemconfig(
+                self.root.mode_indicator, text=self._get_mode_char()
+            )
+
+    def _on_button_press(self, event):
         # save mouse start position
         self.root.start_x = self.canvas.canvasx(event.x)
         self.root.start_y = self.canvas.canvasy(event.y)
 
-        # create rectangle
+        # initially create rectangle
         if not self.root.rect:
             # Draw outline
             self.root.rect = self.canvas.create_rectangle(
-                self.root.x, self.root.y, 1, 1, outline="red"
+                self.root.x, self.root.y, 1, 1, outline=self.root.color
             )
             # Draw indicator
             self.root.mode_indicator = self.canvas.create_text(
                 self.root.start_x,
                 self.root.start_y,
                 anchor="se",
-                text=self.get_mode_char(),
-                fill="red",
+                text=self._get_mode_char(),
+                fill=self.root.color,
                 font=("Sans", 18),
             )
             self.root.active_canvas = self.canvas
 
-    def on_move_press(self, event):
+    def _on_move_press(self, event):
         self.root.x = self.canvas.canvasx(event.x)
         self.root.y = self.canvas.canvasy(event.y)
 
@@ -235,13 +241,12 @@ class _FullscreenWindow:
             self.root.x,
             self.root.y,
         )
-        # self.canvas.itemconfig(self.root.mode_indicator, text=self.get_mode_char())
 
         # Move indicator
-        top, right = self.get_top_right()
+        top, right = self._get_top_right()
         self.canvas.coords(self.root.mode_indicator, right, top)
 
-    def on_button_release(self, event):
+    def _on_button_release(self, event):
         self.root.x = self.canvas.canvasx(event.x)
         self.root.y = self.canvas.canvasy(event.y)
 
@@ -254,4 +259,4 @@ class _FullscreenWindow:
             "mode": self.root.current_mode,
         }
 
-        self.end_fullscreen(result=crop_args)
+        self._end_fullscreen(result=crop_args)

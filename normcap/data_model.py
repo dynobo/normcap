@@ -19,6 +19,7 @@ class Selection:
     line_boxes: list = field(default_factory=list)
     shots: list = field(default_factory=list)
     mode: str = ""
+    cli_args: dict = field(default_factory=dict)
 
     @property
     def text(self) -> str:
