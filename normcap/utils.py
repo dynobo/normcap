@@ -10,3 +10,15 @@ def log_dataclass(data_class):
             string += f"{key}: {getattr(data_class, key)}\n"
     string += f"{'='*10} </dataclass> {'='*9}"
     logger.debug(string)
+
+
+def store_images(path, images):
+    import pathlib
+    import datetime
+
+    storage_path = pathlib.Path(path)
+    now = datetime.datetime.now()
+
+    for idx, image in enumerate(images):
+        name = f"{now:%Y-%m-%d_%H:%M}_{idx}.png"
+        image.save(storage_path / name)

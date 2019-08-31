@@ -22,6 +22,10 @@ class Selection:
     cli_args: dict = field(default_factory=dict)
 
     @property
+    def selected_area(self) -> int:
+        return (self.bottom - self.top) * (self.right - self.left)
+
+    @property
     def text(self) -> str:
         return " ".join([l.content for l in self.line_boxes]).strip()
 

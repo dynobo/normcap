@@ -3,8 +3,6 @@
 # Default
 import logging
 import argparse
-import pathlib
-import datetime
 
 # Extra
 import pyperclip
@@ -14,7 +12,7 @@ from capture import Capture
 from crop import Crop
 from data_model import Selection
 from ocr import Ocr
-from utils import log_dataclass
+from utils import log_dataclass, store_images
 
 
 def parse_cli_args():
@@ -65,15 +63,6 @@ def init_logging(log_level):
     return logger
 
 
-def _store_images(path, images):
-    storage_path = pathlib.Path(path)
-    now = datetime.datetime.now()
-
-    for idx, image in enumerate(images):
-        name = f"{now:%Y-%m-%d_%H:%M}_{idx}.png"
-        image.save(storage_path / name)
-
-
 def main():
     args = parse_cli_args()
 
@@ -92,10 +81,14 @@ def main():
     logger.info("Launching gui for selection...")
     selection = Crop().select_and_crop(selection)
 
+    if selection.selected_area() < 400:
+        logger.warn("Selected area is unreasonable small. Aborting...")
+        return
+
     if selection.cli_args.path:
         logger.info("Saving images to {selection.cli_args.path}...")
         images = [selection.image] + [s["image"] for s in selection.shots]
-        _store_images(selection.cli_args.path, images)
+        store_images(selection.cli_args.path, images)
 
     log_dataclass(selection)
     return
