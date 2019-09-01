@@ -10,7 +10,7 @@ import pyperclip
 # Own
 from capture import Capture
 from crop import Crop
-from data_model import Selection
+from data_model import NormcapData
 from ocr import Ocr
 from utils import log_dataclass, store_images
 
@@ -73,32 +73,32 @@ def main():
         logger = init_logging(logging.WARN)
 
     logger.info("Creating data object...")
-    selection = Selection(cli_args=args)
+    normcap_data = NormcapData(cli_args=args)
 
     logger.info("Taking screenshot(s)...")
-    selection = Capture().capture_screen(selection)
+    normcap_data = Capture().capture_screen(normcap_data)
 
     logger.info("Launching gui for selection...")
-    selection = Crop().select_and_crop(selection)
+    normcap_data = Crop().select_and_crop(normcap_data)
 
-    if selection.selected_area() < 400:
+    if normcap_data.selected_area() < 400:
         logger.warn("Selected area is unreasonable small. Aborting...")
         return
 
-    if selection.cli_args.path:
+    if normcap_data.cli_args.path:
         logger.info("Saving images to {selection.cli_args.path}...")
-        images = [selection.image] + [s["image"] for s in selection.shots]
-        store_images(selection.cli_args.path, images)
+        images = [normcap_data.image] + [s["image"] for s in normcap_data.shots]
+        store_images(normcap_data.cli_args.path, images)
 
-    log_dataclass(selection)
+    log_dataclass(normcap_data)
     return
 
     ocr = Ocr()
-    selection.line_boxes = ocr.recognize(selection.image)
+    normcap_data.line_boxes = ocr.recognize(normcap_data.image)
 
-    log_dataclass(selection)
+    log_dataclass(normcap_data)
 
-    pyperclip.copy(selection.text)
+    pyperclip.copy(normcap_data.text)
 
 
 if __name__ == "__main__":
