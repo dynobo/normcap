@@ -1,6 +1,5 @@
 """
 """
-
 # Extra
 import mss
 from PIL import Image
@@ -8,12 +7,14 @@ from PIL import Image
 # Own
 from handler import AbstractHandler
 from data_model import NormcapData
+from utils import log_dataclass
 
 
 class CaptureHandler(AbstractHandler):
     def handle(self, request: NormcapData) -> NormcapData:
-        with mss.mss() as sct:
+        self._logger.info("Taking Screenshot(s)...")
 
+        with mss.mss() as sct:
             # Grab all screens
             for idx, position in enumerate(sct.monitors[1:]):
                 # Capture
@@ -28,4 +29,10 @@ class CaptureHandler(AbstractHandler):
                 shot = {"monitor": idx, "image": img, "position": position}
                 request.shots.append(shot)
 
-        return request
+        self._logger.debug("Dataclass after screenshot added:")
+        log_dataclass(request)
+
+        if self._next_handler:
+            return super().handle(request)
+        else:
+            return request

@@ -10,18 +10,29 @@ import os
 # Extra
 from PIL import ImageTk
 
+# Own
+from handler import AbstractHandler
+from data_model import NormcapData
+from utils import log_dataclass
 
-class Crop:
-    def __init__(self):
-        self.logger = logging.getLogger(__name__)
 
-    def select_and_crop(self, selection):
-        selection = self._select_region_with_gui(selection)
-        selection = self._crop_image(selection)
-        return selection
+class CropHandler(AbstractHandler):
+    def handle(self, request: NormcapData) -> NormcapData:
+        self._logger.info("Starting GUI for area selection...")
+        request = self._select_region_with_gui(request)
 
-    def _select_region_with_gui(self, selection):
+        self._logger.info("Cropping image...")
+        request = self._crop_image(request)
 
+        self._logger.debug("Dataclass after image cropped:")
+        log_dataclass(request)
+
+        if self._next_handler:
+            return super().handle(request)
+        else:
+            return request
+
+    def _select_region_with_gui(self, selection: NormcapData):
         # Create window for every monitor
         root = tkinter.Tk()
         for idx, shot in enumerate(selection.shots):
@@ -42,7 +53,7 @@ class Crop:
             selection.monitor = result["monitor"]
             selection.mode = result["mode"]
         else:
-            self.logger.info("Exiting. No selection available.")
+            self._logger.info("Exiting. No selection available.")
             sys.exit(0)
 
         return selection

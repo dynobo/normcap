@@ -9,7 +9,7 @@ import pyperclip
 
 # Own
 from capture import CaptureHandler
-from crop import Crop
+from crop import CropHandler
 from data_model import NormcapData
 from ocr import Ocr
 from utils import log_dataclass, store_images
@@ -87,14 +87,16 @@ def main():
     normcap_data = NormcapData(cli_args=args)
 
     capture = CaptureHandler()
-    logger.info("Taking screenshot(s)...")
+    crop = CropHandler()
+
+    capture.set_next(crop)
+
     normcap_data = client_code(capture, normcap_data)
 
-    logger.info("Launching gui for selection...")
-    normcap_data = Crop().select_and_crop(normcap_data)
+    # normcap_data = Crop().select_and_crop(normcap_data)
 
     if normcap_data.selected_area < 400:
-        logger.warn("Selected area is unreasonable small. Aborting...")
+        logger.warning("Selected area is unreasonable small. Aborting...")
         return
 
     if normcap_data.cli_args.path:
