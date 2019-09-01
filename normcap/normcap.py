@@ -70,6 +70,7 @@ def client_code(handler: Handler, normcap_data) -> NormcapData:
     cases, it is not even aware that the handler is part of a chain.
     """
     result = handler.handle(normcap_data)
+    log_dataclass(result)
     return result
 
 
