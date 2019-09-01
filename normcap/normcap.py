@@ -86,14 +86,15 @@ def main():
     logger.info("Creating data object...")
     normcap_data = NormcapData(cli_args=args)
 
+    # Define Handlers
     capture = CaptureHandler()
     crop = CropHandler()
 
+    # Define Chain of Responsibilities
     capture.set_next(crop)
 
+    # Run chain
     normcap_data = client_code(capture, normcap_data)
-
-    # normcap_data = Crop().select_and_crop(normcap_data)
 
     if normcap_data.selected_area < 400:
         logger.warning("Selected area is unreasonable small. Aborting...")
