@@ -8,11 +8,12 @@ import argparse
 import pyperclip
 
 # Own
-from capture import Capture
+from capture import CaptureHandler
 from crop import Crop
 from data_model import NormcapData
 from ocr import Ocr
 from utils import log_dataclass, store_images
+from handler import Handler
 
 
 def parse_cli_args():
@@ -63,6 +64,15 @@ def init_logging(log_level):
     return logger
 
 
+def client_code(handler: Handler, normcap_data) -> NormcapData:
+    """
+    The client code is usually suited to work with a single handler. In most
+    cases, it is not even aware that the handler is part of a chain.
+    """
+    result = handler.handle(normcap_data)
+    return result
+
+
 def main():
     args = parse_cli_args()
 
@@ -75,13 +85,14 @@ def main():
     logger.info("Creating data object...")
     normcap_data = NormcapData(cli_args=args)
 
+    capture = CaptureHandler()
     logger.info("Taking screenshot(s)...")
-    normcap_data = Capture().capture_screen(normcap_data)
+    normcap_data = client_code(capture, normcap_data)
 
     logger.info("Launching gui for selection...")
     normcap_data = Crop().select_and_crop(normcap_data)
 
-    if normcap_data.selected_area() < 400:
+    if normcap_data.selected_area < 400:
         logger.warn("Selected area is unreasonable small. Aborting...")
         return
 

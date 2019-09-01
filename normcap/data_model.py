@@ -38,7 +38,7 @@ class NormcapData:
         Returns:
             int -- Area of this.image in px²
         """
-        return (self.bottom - self.top) * (self.right - self.left)
+        return int((self.bottom - self.top) * (self.right - self.left))
 
     @property
     def text(self) -> str:

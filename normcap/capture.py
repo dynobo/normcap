@@ -1,18 +1,17 @@
 """
 """
-# Default
-import logging
 
 # Extra
 import mss
 from PIL import Image
 
+# Own
+from handler import AbstractHandler
+from data_model import NormcapData
 
-class Capture:
-    def __init__(self):
-        self.logger = logging.getLogger(__name__)
 
-    def capture_screen(self, selection):
+class CaptureHandler(AbstractHandler):
+    def handle(self, request: NormcapData) -> NormcapData:
         with mss.mss() as sct:
 
             # Grab all screens
@@ -27,6 +26,6 @@ class Capture:
 
                 # Append list with screenshots
                 shot = {"monitor": idx, "image": img, "position": position}
-                selection.shots.append(shot)
+                request.shots.append(shot)
 
-        return selection
+        return request
