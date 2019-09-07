@@ -11,6 +11,7 @@ from capture import CaptureHandler
 from crop import CropHandler
 from store import StoreHandler
 from ocr import OcrHandler
+from magic import MagicHandler
 from clipboard import ClipboardHandler
 from utils import log_dataclass
 
@@ -97,9 +98,12 @@ def main():
     store = StoreHandler()
     ocr = OcrHandler()
     clipboard = ClipboardHandler()
+    magics = MagicHandler()
 
     # Define Chain of Responsibilities
-    capture.set_next(crop).set_next(store).set_next(ocr).set_next(clipboard)
+    capture.set_next(crop).set_next(store).set_next(ocr).set_next(magics).set_next(
+        clipboard
+    )
 
     # Run chain
     normcap_data = client_code(capture, normcap_data)

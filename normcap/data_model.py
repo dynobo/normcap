@@ -28,8 +28,10 @@ class NormcapData:
     monitor: int = 0  # Screen of cropped image
     line_boxes: list = field(default_factory=list)  # Detected OCR boxes
     shots: list = field(default_factory=list)  # Full images & position of all screens
-    mode: str = ""  # Selected capture mode during crop
+    mode: str = ""  # Selected capture mode during crop ["raw","parsed", "trigger"]
     cli_args: dict = field(default_factory=dict)  # normcap was called with those args
+    transformed: str = ""  # Transformed result
+    scores: dict = field(default_factory=dict)  # magics with scores
 
     @property
     def selected_area(self) -> int:
