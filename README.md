@@ -44,6 +44,9 @@ pipenv run pre-commit install -t pre-commit
 pipenv run pre-commit install -t pre-push
 ```
 
+Main Design Pattern: [Chain of Responsibility](https://refactoring.guru/design-patterns/chain-of-responsibility)
+
+
 ## Credits
 
 This projected uses the following non-standard libraries:

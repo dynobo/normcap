@@ -10,18 +10,29 @@ import os
 # Extra
 from PIL import ImageTk
 
+# Own
+from handler import AbstractHandler
+from data_model import NormcapData
+from utils import log_dataclass
 
-class Crop:
-    def __init__(self):
-        self.logger = logging.getLogger(__name__)
 
-    def select_and_crop(self, selection):
-        selection = self._select_region_with_gui(selection)
-        selection = self._crop_image(selection)
-        return selection
+class CropHandler(AbstractHandler):
+    def handle(self, request: NormcapData) -> NormcapData:
+        self._logger.info("Starting GUI for area selection...")
+        request = self._select_region_with_gui(request)
 
-    def _select_region_with_gui(self, selection):
+        self._logger.info("Cropping image...")
+        request = self._crop_image(request)
 
+        self._logger.debug("Dataclass after image cropped:")
+        log_dataclass(request)
+
+        if self._next_handler:
+            return super().handle(request)
+        else:
+            return request
+
+    def _select_region_with_gui(self, selection: NormcapData):
         # Create window for every monitor
         root = tkinter.Tk()
         for idx, shot in enumerate(selection.shots):
@@ -42,7 +53,7 @@ class Crop:
             selection.monitor = result["monitor"]
             selection.mode = result["mode"]
         else:
-            self.logger.info("Exiting. No selection available.")
+            self._logger.info("Exiting. No selection available.")
             sys.exit(0)
 
         return selection
@@ -93,7 +104,6 @@ class _CropWindow:
         root.color = self.cli_args.color
         root.img_path = self.cli_args.path
 
-        root.area_thres = 400
         return root
 
     def _set_fullscreen(self):
@@ -153,32 +163,8 @@ class _CropWindow:
         self.canvas.bind("<ButtonRelease-1>", self._on_button_release)
 
     def _end_fullscreen(self, result=None):
-        if self.is_valid_selected_area(result):
-            self.root.result = result
-        else:
-            self.root.result = None
+        self.root.result = result
         self.root.destroy()
-
-    # TODO: Outsource to intermediate checker
-    def is_valid_selected_area(self, position):
-        # Calculate selected area
-        if position is not None:
-            area = (position["lower"] - position["upper"]) * (
-                position["right"] - position["left"]
-            )
-        else:
-            area = 0
-
-        # Check for threshold
-        if area >= self.root.area_thres:
-            large_enough = True
-        else:
-            large_enough = False
-            self.logger.warn(
-                f"Selection area of {area:.0f} px² is below threshold of {self.root.area_thres} px²]"
-            )
-
-        return large_enough
 
     def _next_mode(self):
         idx = self.root.modes.index(self.root.current_mode)

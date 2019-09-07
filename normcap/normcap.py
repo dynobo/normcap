@@ -3,17 +3,16 @@
 # Default
 import logging
 import argparse
-import pathlib
-import datetime
-
-# Extra
-import pyperclip
 
 # Own
-from capture import Capture
-from crop import Crop
-from data_model import Selection
-from ocr import Ocr
+from data_model import NormcapData
+from handler import Handler
+from capture import CaptureHandler
+from crop import CropHandler
+from store import StoreHandler
+from ocr import OcrHandler
+from magic import MagicHandler
+from clipboard import ClipboardHandler
 from utils import log_dataclass
 
 
@@ -36,6 +35,13 @@ def parse_cli_args():
         type=str,
         default="raw",
         help="set default mode to [raw, parse, trigger]",
+    )
+    arg_parser.add_argument(
+        "-l",
+        "--language",
+        type=str,
+        default="eng",
+        help="set language for ocr tool (must be installed!)",
     )
     arg_parser.add_argument(
         "-c",
@@ -65,13 +71,13 @@ def init_logging(log_level):
     return logger
 
 
-def _store_images(path, images):
-    storage_path = pathlib.Path(path)
-    now = datetime.datetime.now()
-
-    for idx, image in enumerate(images):
-        name = f"{now:%Y-%m-%d_%H:%M}_{idx}.png"
-        image.save(storage_path / name)
+def client_code(handler: Handler, normcap_data) -> NormcapData:
+    """
+    The client code is usually suited to work with a single handler. In most
+    cases, it is not even aware that the handler is part of a chain.
+    """
+    result = handler.handle(normcap_data)
+    return result
 
 
 def main():
@@ -84,28 +90,26 @@ def main():
         logger = init_logging(logging.WARN)
 
     logger.info("Creating data object...")
-    selection = Selection(cli_args=args)
+    normcap_data = NormcapData(cli_args=args)
 
-    logger.info("Taking screenshot(s)...")
-    selection = Capture().capture_screen(selection)
+    # Define Handlers
+    capture = CaptureHandler()
+    crop = CropHandler()
+    store = StoreHandler()
+    ocr = OcrHandler()
+    clipboard = ClipboardHandler()
+    magics = MagicHandler()
 
-    logger.info("Launching gui for selection...")
-    selection = Crop().select_and_crop(selection)
+    # Define Chain of Responsibilities
+    capture.set_next(crop).set_next(store).set_next(ocr).set_next(magics).set_next(
+        clipboard
+    )
 
-    if selection.cli_args.path:
-        logger.info("Saving images to {selection.cli_args.path}...")
-        images = [selection.image] + [s["image"] for s in selection.shots]
-        _store_images(selection.cli_args.path, images)
+    # Run chain
+    normcap_data = client_code(capture, normcap_data)
 
-    log_dataclass(selection)
-    return
-
-    ocr = Ocr()
-    selection.line_boxes = ocr.recognize(selection.image)
-
-    log_dataclass(selection)
-
-    pyperclip.copy(selection.text)
+    logger.info("Final data object:")
+    log_dataclass(normcap_data)
 
 
 if __name__ == "__main__":
