@@ -13,9 +13,14 @@ class MagicHandler(AbstractHandler):
             # Import magics here (to only load, when needed)!
             from magics.single_line_magic import SingleLineMagic
             from magics.email_magic import EmailMagic
+            from magics.url_magic import UrlMagic
 
             # Load Magics
-            self._magics = {"email": EmailMagic(), "single_line": SingleLineMagic()}
+            self._magics = {
+                "email": EmailMagic(),
+                "url_magic": UrlMagic(),
+                "single_line": SingleLineMagic(),
+            }
 
             # Calculate scores
             scores = self._calc_scores(request)
