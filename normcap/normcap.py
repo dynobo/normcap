@@ -33,8 +33,8 @@ def parse_cli_args():
         "-m",
         "--mode",
         type=str,
-        default="raw",
-        help="set default mode to [raw, parse, trigger]",
+        default="trigger",
+        help="set default mode [raw, parse, trigger]",
     )
     arg_parser.add_argument(
         "-l",
