@@ -12,14 +12,16 @@ class MagicHandler(AbstractHandler):
         if request.mode != "raw":  # Skip all magics, if raw mode enabled
             # Import magics here (to only load, when needed)!
             from magics.single_line_magic import SingleLineMagic
+            from magics.paragraph_magic import ParagraphMagic
             from magics.email_magic import EmailMagic
             from magics.url_magic import UrlMagic
 
             # Load Magics
             self._magics = {
+                "single_line": SingleLineMagic(),
+                "paragraph_magic": ParagraphMagic(),
                 "email": EmailMagic(),
                 "url_magic": UrlMagic(),
-                "single_line": SingleLineMagic(),
             }
 
             # Calculate scores
