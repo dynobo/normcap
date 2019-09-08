@@ -22,6 +22,7 @@ class LineBoxStats:
     def __init__(self):
         self._logger = logging.getLogger(self.__class__.__name__)
 
+    # TODO: Move stats to data_model?
     def get_line_heights(self, request):
         line_boxes = request.line_boxes  # shorthand
         line_heights = [l.position[1][1] - l.position[0][1] for l in line_boxes]

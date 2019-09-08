@@ -14,6 +14,7 @@ from handlers.store_handler import StoreHandler
 from handlers.ocr_handler import OcrHandler
 from handlers.clipboard_handler import ClipboardHandler
 from handlers.magic_handler import MagicHandler
+from handlers.enhance_img_handler import EnhanceImgHandler
 
 
 def parse_cli_args():
@@ -96,14 +97,20 @@ def main():
     capture = CaptureHandler()
     crop = CropHandler()
     store = StoreHandler()
+    enhance_img = EnhanceImgHandler()
     ocr = OcrHandler()
     clipboard = ClipboardHandler()
     magics = MagicHandler()
 
     # Define Chain of Responsibilities
-    capture.set_next(crop).set_next(store).set_next(ocr).set_next(magics).set_next(
-        clipboard
-    )
+    # fmt: off
+    capture.set_next(crop) \
+           .set_next(store) \
+           .set_next(enhance_img) \
+           .set_next(ocr) \
+           .set_next(magics) \
+           .set_next(clipboard)
+    # fmt: on
 
     # Run chain
     normcap_data = client_code(capture, normcap_data)

@@ -17,6 +17,7 @@ class NormcapData:
         - Position information
         - OCR information
         - Runtime information
+        - CLI arguments
         - Additional meta data
     """
 
