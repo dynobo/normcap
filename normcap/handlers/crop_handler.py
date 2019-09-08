@@ -11,7 +11,7 @@ import os
 from PIL import ImageTk
 
 # Own
-from handler import AbstractHandler
+from handlers.abstract_handler import AbstractHandler
 from data_model import NormcapData
 from utils import log_dataclass
 

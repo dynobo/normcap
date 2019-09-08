@@ -6,14 +6,14 @@ import argparse
 
 # Own
 from data_model import NormcapData
-from handler import Handler
-from capture import CaptureHandler
-from crop import CropHandler
-from store import StoreHandler
-from ocr import OcrHandler
-from magic import MagicHandler
-from clipboard import ClipboardHandler
 from utils import log_dataclass
+from handlers.abstract_handler import Handler
+from handlers.capture_handler import CaptureHandler
+from handlers.crop_handler import CropHandler
+from handlers.store_handler import StoreHandler
+from handlers.ocr_handler import OcrHandler
+from handlers.clipboard_handler import ClipboardHandler
+from handlers.magic_handler import MagicHandler
 
 
 def parse_cli_args():

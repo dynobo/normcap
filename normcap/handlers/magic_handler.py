@@ -3,16 +3,16 @@
 
 
 # Own
-from handler import AbstractHandler
+from handlers.abstract_handler import AbstractHandler
 from data_model import NormcapData
 
 
 class MagicHandler(AbstractHandler):
     def handle(self, request: NormcapData) -> NormcapData:
         if request.mode != "raw":  # Skip all magics, if raw mode enabled
-            # Import magics
-            from magics.single_line import SingleLineMagic
-            from magics.email import EmailMagic
+            # Import magics here (to only load, when needed)!
+            from magics.single_line_magic import SingleLineMagic
+            from magics.email_magic import EmailMagic
 
             # Load Magics
             self._magics = {"email": EmailMagic(), "single_line": SingleLineMagic()}

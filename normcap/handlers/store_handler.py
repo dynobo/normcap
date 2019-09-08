@@ -5,7 +5,7 @@ import pathlib
 import datetime
 
 # Own
-from handler import AbstractHandler
+from handlers.abstract_handler import AbstractHandler
 from data_model import NormcapData
 
 
