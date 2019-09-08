@@ -21,18 +21,27 @@ class NormcapData:
         - Additional meta data
     """
 
+    # Result of start
+    cli_args: dict = field(default_factory=dict)  # normcap was called with those args
+
+    # Result of screenshot
+    shots: list = field(default_factory=list)  # Full images & position of all screens
+
+    # Results of cropping
+    mode: str = ""  # Selected capture mode during crop ["raw","parsed", "trigger"]
     image: Image = None  # Cropped image
+    monitor: int = 0  # Screen of cropped image
     left: int = 0  # Position of cropped section
     right: int = 0
     top: int = 0
     bottom: int = 0
-    monitor: int = 0  # Screen of cropped image
+
+    # Result of OCR
     line_boxes: list = field(default_factory=list)  # Detected OCR boxes
-    shots: list = field(default_factory=list)  # Full images & position of all screens
-    mode: str = ""  # Selected capture mode during crop ["raw","parsed", "trigger"]
-    cli_args: dict = field(default_factory=dict)  # normcap was called with those args
-    transformed: str = ""  # Transformed result
+
+    # Result of ragics
     scores: dict = field(default_factory=dict)  # magics with scores
+    transformed: str = ""  # Transformed result
 
     @property
     def selected_area(self) -> int:

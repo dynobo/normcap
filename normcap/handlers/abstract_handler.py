@@ -1,43 +1,41 @@
-"""[summary]
-"""
+"""Define Abstract (base) handler for Chain of Responsibility Handlers."""
 
-from abc import ABC, abstractmethod
-from typing import Any, Optional
+# Default
+import abc
 import logging
+from typing import Any, Optional
 
 
-class Handler(ABC):
+class Handler(abc.ABC):
     """
     The Handler interface declares a method for building the chain of handlers.
     It also declares a method for executing a request.
     """
 
-    @abstractmethod
+    @abc.abstractmethod
     def set_next(self, handler: "Handler") -> "Handler":
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def handle(self, request) -> Any:
         pass
 
 
 class AbstractHandler(Handler):
     """
-    The default chaining behavior can be implemented inside a base handler
-    class.
+    Implementing he default chaining behavior.
     """
 
     _next_handler: Optional[Handler] = None
-    _logger = logging.getLogger(__name__)
+
+    def __init__(self):
+        self._logger = logging.getLogger(self.__class__.__name__)
 
     def set_next(self, handler: Handler) -> Handler:
         self._next_handler = handler
-        # Returning a handler from here will let us link handlers in a
-        # convenient way like this:
-        # monkey.set_next(squirrel).set_next(dog)
         return handler
 
-    @abstractmethod
+    @abc.abstractmethod
     def handle(self, request: Any) -> Any:
         if self._next_handler:
             return self._next_handler.handle(request)

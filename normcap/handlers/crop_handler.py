@@ -1,6 +1,5 @@
-"""
+"""Handler to show screenshots and gui to select region of interest."""
 
-"""
 # Default
 import logging
 import tkinter
@@ -18,56 +17,86 @@ from utils import log_dataclass
 
 class CropHandler(AbstractHandler):
     def handle(self, request: NormcapData) -> NormcapData:
+        """Show GUI to select region and return selected image.
+
+        Arguments:
+            AbstractHandler {class} -- self
+            request {NormcapData} -- NormCap's session data
+
+        Returns:
+            NormcapData -- Enriched NormCap's session data
+        """
         self._logger.info("Starting GUI for area selection...")
         request = self._select_region_with_gui(request)
 
         self._logger.info("Cropping image...")
         request = self._crop_image(request)
 
-        self._logger.debug("Dataclass after image cropped:")
-        log_dataclass(request)
+        log_dataclass("Dataclass after image cropped:", request)
 
         if self._next_handler:
             return super().handle(request)
         else:
             return request
 
-    def _select_region_with_gui(self, selection: NormcapData):
+    def _select_region_with_gui(self, request: NormcapData) -> dict:
+        """Show window(s) with screenshots and select region.
+
+        Arguments:
+            request {NormcapData} -- NormCap's session data
+
+        Returns:
+            dict -- Selected region {"bottom": <int>,
+                                     "top": <int>,
+                                     "left": <int>,
+                                     "right": <int>,
+                                     "monitor": <int>,
+                                     "mode": <int>}
+        """
         # Create window for every monitor
         root = tkinter.Tk()
-        for idx, shot in enumerate(selection.shots):
+        for idx, shot in enumerate(request.shots):
             if idx == 0:
-                _CropWindow(root, root, shot, selection.cli_args)
+                _CropWindow(root, root, shot, request.cli_args)
             else:
                 top = tkinter.Toplevel()
-                _CropWindow(root, top, shot, selection.cli_args)
+                _CropWindow(root, top, shot, request.cli_args)
         root.mainloop()
 
-        # Store result in selection class
+        # Store result in request class
         result = root.result
         if result:
-            selection.bottom = result["lower"]
-            selection.top = result["upper"]
-            selection.left = result["left"]
-            selection.right = result["right"]
-            selection.monitor = result["monitor"]
-            selection.mode = result["mode"]
+            request.bottom = result["lower"]
+            request.top = result["upper"]
+            request.left = result["left"]
+            request.right = result["right"]
+            request.monitor = result["monitor"]
+            request.mode = result["mode"]
         else:
-            self._logger.info("Exiting. No selection available.")
+            self._logger.info("Exiting. No selection done.")
             sys.exit(0)
 
-        return selection
+        return request
 
-    def _crop_image(self, selection):
-        crop_monitor = selection.shots[selection.monitor]
-        cropped_image = crop_monitor["image"].crop(
-            (selection.left, selection.top, selection.right, selection.bottom)
+    def _crop_image(self, request: NormcapData) -> NormcapData:
+        """Crop monitor's image and append to session data.
+
+        Arguments:
+            request {NormcapData} -- NormCap's session data
+
+        Returns:
+            NormcapData -- Enriched NormCap's session data
+        """
+        img = request.shots[request.monitor]
+        cropped_img = img["image"].crop(
+            (request.left, request.top, request.right, request.bottom)
         )
-        selection.image = cropped_image
-        return selection
+        request.image = cropped_img
+        return request
 
 
 class _CropWindow:
+    # TODO: Docstrings
     def __init__(self, root, current_window, shot, cli_args):
         self.logger = logging.getLogger(__name__)
         self.tk = current_window
@@ -97,7 +126,6 @@ class _CropWindow:
 
         root.mode_indicator = None
         root.modes = ("raw", "parse", "trigger")
-        # "☷" https://en.wikipedia.org/wiki/Miscellaneous_Symbols
         root.modes_chars = ("☰", "⚙", "★")
         root.current_mode = self.cli_args.mode
 

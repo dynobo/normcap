@@ -1,3 +1,5 @@
+"""Magic to handle URL(s) in selection."""
+
 # Default
 import re
 import os
@@ -5,10 +7,20 @@ import webbrowser
 
 # Own
 from magics.base_magic import BaseMagic
+from data_model import NormcapData
 
 
 class UrlMagic(BaseMagic):
-    def score(self, request):
+    def score(self, request: NormcapData) -> float:
+        """Calculate score based on chars in URLs vs. overall chars.
+
+        Arguments:
+            BaseMagic {class} -- Base class for magics
+            request {NormcapData} -- NormCap's session data
+
+        Returns:
+            float -- score between 0-100 (100 = more likely)
+        """
         # Get concatenated lines
         text = request.text
 
@@ -35,7 +47,15 @@ class UrlMagic(BaseMagic):
 
         return self._final_score
 
-    def transform(self, request):
+    def transform(self, request: NormcapData) -> str:
+        """Parse URLs and return as newline separated string.
+
+        Arguments:
+            request {NormcapData} -- NormCap's session data
+
+        Returns:
+            str -- URL(s), separated bye newline
+        """
         self._logger.info("Transforming with URL magic...")
 
         # www. often is falsly ocr-ed as WWW. (capitals). Let's fix that:
@@ -44,9 +64,13 @@ class UrlMagic(BaseMagic):
         # Return as line separated list
         return os.linesep.join(self.urls)
 
-    def trigger(self, request):
+    def trigger(self, request: NormcapData):
+        """Open URL(s) in new tab(s) with default browser.
+
+        Arguments:
+            request {NormcapData} -- NormCap's session data
+        """
         self._logger.info("Open URL(s) in Browser...")
         urls = request.transformed.split(os.linesep)  # TODO: Better use self.urls?
         for url in urls:
             webbrowser.open_new_tab(f"{url}")
-        return

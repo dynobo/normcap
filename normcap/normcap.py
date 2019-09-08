@@ -1,5 +1,5 @@
-"""
-"""
+"""Main program logic."""
+
 # Default
 import logging
 import argparse
@@ -17,7 +17,12 @@ from handlers.magic_handler import MagicHandler
 from handlers.enhance_img_handler import EnhanceImgHandler
 
 
-def parse_cli_args():
+def parse_cli_args() -> argparse.Namespace:
+    """Parse command line arguments.
+
+    Returns:
+        argparse.Namespace -- CLI switches and (default) values
+    """
     # Parse cli args
     arg_parser = argparse.ArgumentParser(
         prog="normcap",
@@ -61,7 +66,15 @@ def parse_cli_args():
     return arg_parser.parse_args()
 
 
-def init_logging(log_level):
+def init_logging(log_level: int) -> logging.Logger:
+    """Initialize Logger with formatting and desired level.
+
+    Arguments:
+        log_level {logging._Level} -- Desired loglevel
+
+    Returns:
+        logging.Logger -- Formatted logger with desired level
+    """
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         datefmt="%H:%M:%S",
@@ -73,9 +86,14 @@ def init_logging(log_level):
 
 
 def client_code(handler: Handler, normcap_data) -> NormcapData:
-    """
-    The client code is usually suited to work with a single handler. In most
-    cases, it is not even aware that the handler is part of a chain.
+    """Wrapper around Chain of Responsibility classes.
+
+    Arguments:
+        handler {Handler} -- Most outer handler
+        normcap_data {NormcapData} -- NormCap's session data
+
+    Returns:
+        NormcapData -- Enriched NormCap's session data
     """
     result = handler.handle(normcap_data)
     return result
@@ -115,8 +133,7 @@ def main():
     # Run chain
     normcap_data = client_code(capture, normcap_data)
 
-    logger.info("Final data object:")
-    log_dataclass(normcap_data)
+    log_dataclass("Final data object:", normcap_data)
 
 
 if __name__ == "__main__":
