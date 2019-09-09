@@ -2,6 +2,8 @@
 
 ***Intelligent OCR powered screen-capture tool to capture information instead of images***
 
+TODO: Alpha Version Disclaimer
+
 <p align="center">
 <br>
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
@@ -28,16 +30,16 @@
 
 **Features:**
 
-- Extract textual information from screen or images via OCR
-- Intelligently format the text
-- Automatically trigger action fitting to the extract text
+- Extract textual information from screen or images via Optical Character Recognition (OCR).
+- Intelligently format the text.
+- Automatically trigger action fitting to the extract text.
 
 **Usage examples:**
 
 - Extract URLs, tables, etc. that have been sent to you in screenshot.
 - Copy non-selectable error messages from alert windows.
-- Capture subtitles from video stills
-- Easily extract text from menu entries or hover messages
+- Capture subtitles from video stills.
+- Easily extract text from menu entries or hover messages.
 
 **Why "NormCap":**
 
@@ -59,8 +61,11 @@ sudo apt-get install tesseract-ocr tesseract-ocr-eng xclip
 ## on Arch:
 sudo pacman -S tesseract tesseract-data-eng xclip
 
-# Download and extract released binary package
+## others:
+TODO:
 
+# Download and extract released binary package
+TODO:
 
 # make executable
 cd normcap
@@ -86,25 +91,25 @@ After the requirements are installed, continue with **NormCap**:
 2. Unpack the archive to any directory
 3. Run `normcap.exe` to start the program (no installation needed)
 
-### On Mac
+### TODO: On Mac
 
 ## Usage
 
-### Basics
+### TODO: Basics
 
-### Command line options
+### TODO: Command line options
 
-### Magics
+### TODO: Magics
 
 ## Contribute
 
-### Design principles
+### TODO: Design principles
 
 - Main design pattern: [Chain of Responsibility](https://refactoring.guru/design-patterns/chain-of-responsibility)
 
 ### Setup Environment
 
-This requires an installation of Python, Tesseract (incl. language data) and on Linux also XClip.
+This requires an installation of **Python**, **Tesseract** (incl. **language data**) and on Linux also **XClip**.
 
 ```sh
 # Clone repository
@@ -135,6 +140,7 @@ This projected uses the following non-standard libraries:
 - [pyocr](https://pypi.org/project/pyocr/) *- interfacing various OCR tools*
 - [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard*
 - [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms*
+- TODO: tesseract
 
 Thanks to the maintainers of those!
 
