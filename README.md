@@ -1,6 +1,8 @@
+<!-- markdownlint-disable MD013 MD026 MD033 -->
+
 # NormCap
 
-***Intelligent OCR powered screen-capture tool to capture information instead of images***
+***Intelligent OCR powered screen-capture tool to capture information instead of images.***
 
 TODO: Alpha Version Disclaimer
 

@@ -13,6 +13,6 @@ PyInstaller.__main__.run(
         "--hidden-import=%s" % "PIL",
         "--hidden-import=%s" % "PIL._imagingtk",
         "--hidden-import=%s" % "PIL._tkinter_finder",
-        os.path.join("normcap", "normcap.py"),
+        os.path.join("..", "normcap", "normcap.py"),
     ]
 )
