@@ -2,8 +2,6 @@
 
 ***Intelligent OCR powered screen-capture tool to capture information instead of images***
 
----
-
 <p align="center">
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 <a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="License: MIT" src="https://black.readthedocs.io/en/stable/_static/license.svg"></a>
@@ -18,84 +16,110 @@
 
 ## Introduction
 
-Features:
+**Features:**
 
 - Extract textual information from screen or images via OCR
 - Intelligently format the text
 - Automatically trigger action fitting to the extract text
 
-Usage examples:
+**Usage examples:**
 
 - Extract URLs, tables, etc. that have been sent to you in screenshot.
 - Copy non-selectable error messages from alert windows.
 - Capture subtitles from video stills
 - Easily extract text from menu entries or hover messages
 
-Why "NormCap":
+**Why "NormCap":**
 
+- See following [XKCD Comic:](https://xkcd.com/2116/)  
 ![XKCD norm files](https://imgs.xkcd.com/comics/norm_normal_file_format.png)  
-[Comic Source](https://xkcd.com/2116/)
 
-## Install Prerequisites
+## Installation
 
 ### On Linux
 
-**Install Tesseract and XClip:**
+NormCap on Linux requires **Tesseract** (incl. **language data**) and **XClip**.
 
-Debian/Ubuntu:  
-`sudo apt-get install tesseract tesseract-data-eng xclip`
+```sh
+# Install requirements
 
-Arch:  
-`sudo pacman -S tesseract tesseract-data-eng xclip`
+## on Debian/Ubuntu  
+sudo apt-get install tesseract-ocr tesseract-ocr-eng xclip
+
+## on Arch:
+sudo pacman -S tesseract tesseract-data-eng xclip
+
+# Download and extract released binary package
+
+
+# make executable
+cd normcap
+chmod +x ./normcap
+
+# Run
+./normcap
+```
 
 ### On Windows
 
-**Install Tesseract:**
+NormCap on Windows requires **Tesseract** (incl. **language data**):
 
 1. Download the latest 32bit version from [Tesseract Installer by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
 2. Follow the installer (which allows you to download additional languages).
 3. Append the path to tesseract.exe to the `PATH` environment variable.
 4. Create a new environment variable called `TESSDATA_PREFIX` and set it to the `YOUR_TESSERACT_DIR\tessdata`, which should contain the language data files.
+5. Reboot, and execute `tesseract.exe` in command prompt. If everything worked well, you should see an output describing the command line options.
+
+After the requirements are installed, continue with **NormCap**:
+
+1. Download the windows binary from the [release page](https://github.com/dynobo/normcap/releases)
+2. Unpack the archive to any directory
+3. Run `normcap.exe` to start the program (no installation needed)
 
 ### On Mac
-
-## "Install" & Run NormCap
-
-NormCap itself currently get shipped as Binary, it doesn't need any installation an can be executed directly.
-
-Download the appropriate archive file for your platform from the [release page](https://github.com/dynobo/normcap/releases), unpack and run the `normcap` executable.
-
-If you feel uncomfortable running arbitrary binaries, feel free to execute NormCap from source or build your own binaries (see section "Development" below)
 
 ## Usage
 
 ### Basics
 
-### CLI Arguments
+### Command line options
 
 ### Magics
 
-## Development
+## Contribute
 
-### Run from Source
+### Design principles
 
-(Additionally to the prerequisites above, you'll need a valid Python installation)
+- Main design pattern: [Chain of Responsibility](https://refactoring.guru/design-patterns/chain-of-responsibility)
 
-1. Download Source of [release version](https://github.com/dynobo/normcap/releases) or [master](https://github.com/dynobo/normcap/archive/master.zip)
-2. Unpack and open project folder terminal
-3. Install poetry: `pip install poetry`
-4. Install project dependencies: `poetry install`
-5. Run in poetry environment:  `poetry run python normcap/normcap.py`
+### Setup Environment
+
+This requires an installation of Python, Tesseract (incl. language data) and on Linux also XClip.
+
+```sh
+# Clone repository
+git clone https://github.com/dynobo/normcap.git
+
+# Change into project directory
+cd normcap
+
+# Install poetry (if not already installed)
+pip install poetry
+
+# Install project dependencies
+poetry install
+
+# Run normcap in poetry environment
+poetry run python normcap/normcap.py
+```
 
 ### Pre-Commit Hook
 
 Please setup pre-commit hook if you intend to contribute. It runs tests and linter to catch some issue upfront committing:
 
-`pipenv run pre-commit install -t pre-commit`
-
-### Design Patterns
-
-[Chain of Responsibility](https://refactoring.guru/design-patterns/chain-of-responsibility) pattern is used for the main logic.
+```sh
+pipenv run pre-commit install -t pre-commit
+```
 
 ## Credits
 
