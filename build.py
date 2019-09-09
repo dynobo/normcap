@@ -1,6 +1,8 @@
 import PyInstaller.__main__
 import os
 
+# TODO: Switch based on platform
+
 PyInstaller.__main__.run(
     [
         "--name=%s" % "normcap",
