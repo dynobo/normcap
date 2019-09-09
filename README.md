@@ -3,15 +3,25 @@
 ***Intelligent OCR powered screen-capture tool to capture information instead of images***
 
 <p align="center">
+<br>
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 <a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="License: MIT" src="https://black.readthedocs.io/en/stable/_static/license.svg"></a>
 </p>
 
 <p align="center">
-<a href="https://github.com/dynobo/normcap/releases">Releases</a> |
+<strong>Links:</strong> <a href="https://github.com/dynobo/normcap/releases">Releases</a> |
 <a href="https://github.com/dynobo/normcap/blob/master/CHANGELOG.md">Changelog</a> |
 <a href="https://github.com/dynobo/normcap/labels/backlog">Roadmap</a> |
 <a href="https://github.com/dynobo/normcap/">Repo</a>
+</p>
+
+<p align="center">
+<strong>Content:</strong> <a href="#Introduction">Introduction</a> |
+<a href="#Installation">Installation</a> |
+<a href="#Usage">Usage</a> |
+<a href="#Contribute">Contribute</a> |
+<a href="#Contribute">Credits</a>
+<br><br>
 </p>
 
 ## Introduction
@@ -109,16 +119,11 @@ pip install poetry
 # Install project dependencies
 poetry install
 
+# Register pre-commit hook
+pipenv run pre-commit install -t pre-commit
+
 # Run normcap in poetry environment
 poetry run python normcap/normcap.py
-```
-
-### Pre-Commit Hook
-
-Please setup pre-commit hook if you intend to contribute. It runs tests and linter to catch some issue upfront committing:
-
-```sh
-pipenv run pre-commit install -t pre-commit
 ```
 
 ## Credits
