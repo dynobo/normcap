@@ -67,10 +67,13 @@ sudo apt-get install tesseract-ocr tesseract-ocr-eng xclip
 sudo pacman -S tesseract tesseract-data-eng xclip
 
 ## others:
+
 TODO:
 ```
+
 ```sh
 # Download and extract released binary package
+
 TODO:
 
 # make executable
@@ -103,17 +106,17 @@ After the requirements are installed, continue with **NormCap**:
 
 ### Basics
 
-1. Run the `normcap` executable. This will instantly screenshot your monitor(s) and present the screenshots fullscreen (which is indicated by a red border).
+1. Run the `normcap` executable. This will instantly screenshot your monitor(s) and present the screenshots full-screen (which is indicated by a red border).
 2. Select your region of interest, from which you want to extract text, by holding down your primary mouse button.
-3. Before letting go the mouse button, you optionally can press `space`-key to switch through different Normcap's modes of operation, which are indicated by a symbol:
+3. Before letting go the mouse button, you optionally can press `space`-key to switch through different NormCap's modes of operation, which are indicated by a symbol:
    - **☰ (raw):** Copy detected text line by line, without further modification.
-   - **⚙ (parse):** Try to autodetect type of text using [magics](#Magics) and format the text accordingly, before copying.
+   - **⚙ (parse):** Try to auto-detect type of text using [magics](#Magics) and format the text accordingly, before copying.
    - **★ (trigger):** "Parse" the text *and* trigger an action corresponding to the detected [magic](#Magics).
 4. After letting the mouse button go, character recognition will be triggered an the text will be copied to the system's clipboard.
 5. (optional) in case you used *trigger* mode, an action will be performed depending on the detected content.
 6. Paste the text from clipboard where ever you like using your systems keybinding (e.g. `ctrl` + `p`).
 
-NormCap is intended to be executed via a custom keybinding or desktop shortcut, so it doesn't run as daemon and won't use memory while not in use. 
+NormCap is intended to be executed via a custom keybinding or desktop shortcut, so it doesn't run as daemon and won't use memory while not in use.
 
 By default NormCap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk.
 
@@ -129,12 +132,16 @@ TODO: Add cli printout
 
 ## Contribute
 
-### Design principles
+### Design Principles
 
-- **Don't run as service:** As NormCap is (hopefully) not used too often, it shouldn't consume ressources in the background, even if it leads to a slower start-up time.
+- **Don't run as service:** As NormCap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to a slower start-up time.
+  
 - **Avoid text in UI:** This just avoids translations ;-) And I think it is feasible in such an simple application.
-- **Avoid config file or settings UI:** Focus on simplicity and core functionality.
+  
+- **Avoid config-file or settings UI:** Focus on simplicity and core functionality.
+
 - **Dependencies:** The less dependencies, the better. Of course I have to compromise, but I'm always open to suggestions on how to further reduce dependencies.
+
 - **Main design pattern:** [Chain of Responsibility](https://refactoring.guru/design-patterns/chain-of-responsibility)
 
 ### Setup Environment
@@ -170,9 +177,11 @@ This projected uses the following non-standard libraries:
 - [pyocr](https://pypi.org/project/pyocr/) *- interfacing various OCR tools* (GPLv3)
 - [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard* (BSD3)
 - [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms* (GPL, but free usage)
-- TODO: tesseract
 
-Thanks to the maintainers of those!
+And it depends on external software
+- [tesseract](https://github.com/tesseract-ocr/tesseract) - *OCR engine* (Apache)
+
+Thanks to the maintainers of those nice libraries!
 
 ## Certification
 
