@@ -1,27 +1,39 @@
-"""
-"""
+"""Main program logic."""
+
 # Default
 import logging
 import argparse
 
 # Own
 from data_model import NormcapData
-from handler import Handler
-from capture import CaptureHandler
-from crop import CropHandler
-from store import StoreHandler
-from ocr import OcrHandler
-from magic import MagicHandler
-from clipboard import ClipboardHandler
 from utils import log_dataclass
+from handlers.abstract_handler import Handler
+from handlers.capture_handler import CaptureHandler
+from handlers.crop_handler import CropHandler
+from handlers.store_handler import StoreHandler
+from handlers.ocr_handler import OcrHandler
+from handlers.clipboard_handler import ClipboardHandler
+from handlers.magic_handler import MagicHandler
+from handlers.enhance_img_handler import EnhanceImgHandler
 
 
-def parse_cli_args():
-    # Parse cli args
+def parse_cli_args() -> argparse.Namespace:
+    """Parse command line arguments.
+
+    Returns:
+        argparse.Namespace -- CLI switches and (default) values
+    """
+
+    class ArgFormatter(argparse.ArgumentDefaultsHelpFormatter):
+        def __init__(self, prog):
+            super().__init__(prog, max_help_position=30)
+
     arg_parser = argparse.ArgumentParser(
         prog="normcap",
-        description="Intelligent screencapture tool to capture information instead of images",
+        description="Intelligent OCR-powered screen-capture tool to capture information instead of images.",
+        formatter_class=ArgFormatter,
     )
+
     arg_parser.add_argument(
         "-v",
         "--verbose",
@@ -32,35 +44,32 @@ def parse_cli_args():
     arg_parser.add_argument(
         "-m",
         "--mode",
+        #
         type=str,
-        default="raw",
-        help="set default mode to [raw, parse, trigger]",
+        default="trigger",
+        help="startup mode [raw,parse,trigger]",
     )
     arg_parser.add_argument(
-        "-l",
-        "--language",
-        type=str,
-        default="eng",
-        help="set language for ocr tool (must be installed!)",
+        "-l", "--lang", type=str, default="eng", help="set language for ocr tool"
     )
     arg_parser.add_argument(
-        "-c",
-        "--color",
-        type=str,
-        default="red",
-        help="set color for border and selection tool",
+        "-c", "--color", type=str, default="#FF0000", help="set primary color for UI"
     )
     arg_parser.add_argument(
-        "-p",
-        "--path",
-        type=str,
-        default="",
-        help="set a path to store cropped and original images",
+        "-p", "--path", type=str, default=None, help="set a path for storing images"
     )
     return arg_parser.parse_args()
 
 
-def init_logging(log_level):
+def init_logging(log_level: int) -> logging.Logger:
+    """Initialize Logger with formatting and desired level.
+
+    Arguments:
+        log_level {logging._Level} -- Desired loglevel
+
+    Returns:
+        logging.Logger -- Formatted logger with desired level
+    """
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         datefmt="%H:%M:%S",
@@ -72,9 +81,14 @@ def init_logging(log_level):
 
 
 def client_code(handler: Handler, normcap_data) -> NormcapData:
-    """
-    The client code is usually suited to work with a single handler. In most
-    cases, it is not even aware that the handler is part of a chain.
+    """Wrapper around Chain of Responsibility classes.
+
+    Arguments:
+        handler {Handler} -- Most outer handler
+        normcap_data {NormcapData} -- NormCap's session data
+
+    Returns:
+        NormcapData -- Enriched NormCap's session data
     """
     result = handler.handle(normcap_data)
     return result
@@ -96,20 +110,25 @@ def main():
     capture = CaptureHandler()
     crop = CropHandler()
     store = StoreHandler()
+    enhance_img = EnhanceImgHandler()
     ocr = OcrHandler()
     clipboard = ClipboardHandler()
     magics = MagicHandler()
 
     # Define Chain of Responsibilities
-    capture.set_next(crop).set_next(store).set_next(ocr).set_next(magics).set_next(
-        clipboard
-    )
+    # fmt: off
+    capture.set_next(crop) \
+           .set_next(store) \
+           .set_next(enhance_img) \
+           .set_next(ocr) \
+           .set_next(magics) \
+           .set_next(clipboard)
+    # fmt: on
 
     # Run chain
     normcap_data = client_code(capture, normcap_data)
 
-    logger.info("Final data object:")
-    log_dataclass(normcap_data)
+    log_dataclass("Final data object:", normcap_data)
 
 
 if __name__ == "__main__":

@@ -1,49 +1,80 @@
+"""Base class for templating magics."""
+
+# Default
 import logging
-from statistics import variance
+
+# Own
+from data_model import NormcapData
 
 
 class BaseMagic:
     def __init__(self):
         self._logger = logging.getLogger(self.__class__.__name__)
-        self._final_score = 0
-        self._stats = LineBoxStats()
+        self._final_score = 0  # Initial score
 
-    def score(self, request):
-        pass
+    def score(self, request: NormcapData) -> float:
+        """Calculate the score of a magic.
 
-    def transform(self, request):
-        pass
+        Score should be between 0-100, where 0 means 'should never be handled
+        by this magic' and 100 mean 'should certainly handled by this magic'.
 
-    def trigger(self, request):
-        pass
+        Arguments:
+            request {NormcapData} -- NormCap's session data
+
+        Returns:
+            float -- score between 0-100 (100 = more likely)
+        """
+        return 0.0
+
+    def transform(self, request: NormcapData) -> str:
+        """Transform detected lineboxes into single(!) string.
+
+        Arguments:
+            request {NormcapData} -- NormCap's session data
+
+        Returns:
+            str -- String to be copied to clipboard
+        """
+        return ""
+
+    def trigger(self, request: NormcapData):
+        """(External) action to perform in case this magic is scored highest.
+
+        Arguments:
+            request {NormcapData} -- NormCap's session data
+        """
+        return
 
 
-class LineBoxStats:
-    def __init__(self):
-        self._logger = logging.getLogger(self.__class__.__name__)
+# from statistics import variance
 
-    def get_line_heights(self, request):
-        line_boxes = request.line_boxes  # shorthand
-        line_heights = [l.position[1][1] - l.position[0][1] for l in line_boxes]
-        self._logger.info(f"{line_heights}, {variance(line_heights)}")
-        return line_heights
+# class LineBoxStats:
+#     def __init__(self):
+#         self._logger = logging.getLogger(self.__class__.__name__)
 
-    def get_line_distances(self, request):
-        line_boxes = request.line_boxes  # shorthand
+#     # TODO: Move stats to data_model?
+#     def get_line_heights(self, request):
+#         line_boxes = request.line_boxes  # shorthand
+#         line_heights = [l.position[1][1] - l.position[0][1] for l in line_boxes]
+#         self._logger.info(f"{line_heights}, {variance(line_heights)}")
+#         return line_heights
 
-        positions_top = [l.position[0][1] for l in line_boxes]
-        positions_bottom = [l.position[1][1] for l in line_boxes]
-        positions_left = [l.position[0][0] for l in line_boxes]
-        positions_right = [l.position[1][0] for l in line_boxes]
+#     def get_line_distances(self, request):
+#         line_boxes = request.line_boxes  # shorthand
 
-        line_distances = list(
-            map(float.__sub__, positions_top[1:], positions_bottom[:-1])
-        )
+#         positions_top = [l.position[0][1] for l in line_boxes]
+#         positions_bottom = [l.position[1][1] for l in line_boxes]
+#         positions_left = [l.position[0][0] for l in line_boxes]
+#         positions_right = [l.position[1][0] for l in line_boxes]
 
-        self._logger.info(f"{line_distances}, {variance(line_distances)}")
-        self._logger.info(positions_top)
-        self._logger.info(positions_bottom)
-        self._logger.info(f"{positions_left}, {variance(positions_left)}")
-        self._logger.info(f"{positions_right}, {variance(positions_right)}")
+#         line_distances = list(
+#             map(float.__sub__, positions_top[1:], positions_bottom[:-1])
+#         )
 
-        return line_distances
+#         self._logger.info(f"{line_distances}, {variance(line_distances)}")
+#         self._logger.info(positions_top)
+#         self._logger.info(positions_bottom)
+#         self._logger.info(f"{positions_left}, {variance(positions_left)}")
+#         self._logger.info(f"{positions_right}, {variance(positions_right)}")
+
+#         return line_distances

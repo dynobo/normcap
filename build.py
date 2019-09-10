@@ -1,13 +1,15 @@
 import PyInstaller.__main__
 import os
 
+# TODO: Switch based on platform
+
 PyInstaller.__main__.run(
     [
         "--name=%s" % "normcap",
         "--clean",
         "--noconfirm",
-        "--onefile",
-        # "--onedir",
+        #"--onefile",
+        "--onedir",
         "--windowed",
         # "--icon=%s" % os.path.join("ressource", "normcap.ico"),
         "--hidden-import=%s" % "PIL",
