@@ -8,6 +8,7 @@ TODO: Alpha Version Disclaimer
 
 <p align="center">
 <br>
+<a href="https://saythanks.io/to/dynobo"><img alt="Say thanks!" src="https://camo.githubusercontent.com/33e33e9c0c5907ade76ad21b385bbc4ddeadd7f6/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f7361792d7468616e6b732d6666363962342e737667"></a>
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 <a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="License: MIT" src="https://black.readthedocs.io/en/stable/_static/license.svg"></a>
 </p>
@@ -35,6 +36,8 @@ TODO: Alpha Version Disclaimer
 - Extract textual information from screen or images via Optical Character Recognition (OCR).
 - Intelligently format the text.
 - Automatically trigger action fitting to the extract text.
+- Works on Linux, Mac & Windows
+- Support multi monitor setups
 
 **Usage examples:**
 
@@ -45,8 +48,8 @@ TODO: Alpha Version Disclaimer
 
 **Why "NormCap":**
 
-- See following [XKCD Comic:](https://xkcd.com/2116/)  
-![XKCD norm files](https://imgs.xkcd.com/comics/norm_normal_file_format.png)  
+- See [XKCD](https://xkcd.com)  
+<a href="https://xkcd.com/2116/"><img src="https://imgs.xkcd.com/comics/norm_normal_file_format.png" style="width: 250px;"></a>
 
 ## Installation
 
@@ -97,9 +100,31 @@ After the requirements are installed, continue with **NormCap**:
 
 ## Usage
 
-### TODO: Basics
+### Basics
 
-### TODO: Command line options
+NormCap is intended to be executed by custom keybinding or desktop shortcut, so it doesn't run as daemon and won't use memory while not in use. 
+
+By default NormCap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk.
+
+1. Run `normcap`. This will instantly screenshot your monitor(s) and present the screenshots fullscreen (which is indicated by a red border)
+2. Select your region of interest, from which you want to extract text, by holding down your primary mouse button.
+3. Before letting go the mouse button, you optionally can press `space`-key to switch through different modes of normcap, indicated by a symbol:
+   - Raw: Copy detected text line by line, without further modification.
+   - Parse: Try to autodetect type of text using [magics](#Magics) and format the text accordingly, before copying
+   - Trigger: "Parse" the text *and* additionally trigger the action corresponding to the detected [magic](#Magics) (e.g. URLs are opened in new browser tabs).
+4. After letting the mouse button go, characte recognition will be triggered an the text will be copied to your system clipboard
+5. (optional) in case you used *trigger* mode, an action will be performed depending on the detected content.
+6. Paste the text from clipboard where ever you like using your systems keybinding (e.g. `ctrl` + `p`).
+
+
+
+### Command line options
+
+NormCap doesn't have a configuration file, instead it's behavior can be customized using command line arguments:
+
+```sh
+TODO: Add cli printout
+```
 
 ### TODO: Magics
 
@@ -137,11 +162,11 @@ poetry run python normcap/normcap.py
 
 This projected uses the following non-standard libraries:
 
-- [mss](https://pypi.org/project/mss/) *- taking screenshots*
-- [pillow](https://pypi.org/project/Pillow/) *- manipulating images*
-- [pyocr](https://pypi.org/project/pyocr/) *- interfacing various OCR tools*
-- [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard*
-- [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms*
+- [mss](https://pypi.org/project/mss/) *- taking screenshots* (MIT)
+- [pillow](https://pypi.org/project/Pillow/) *- manipulating images* (OSI appr.)
+- [pyocr](https://pypi.org/project/pyocr/) *- interfacing various OCR tools* (GPLv3)
+- [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard* (BSD3)
+- [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms* (GPL, but free usage)
 - TODO: tesseract
 
 Thanks to the maintainers of those!
