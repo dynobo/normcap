@@ -6,8 +6,8 @@
 
 <p align="center"><br>
 <a href="https://saythanks.io/to/dynobo"><img alt="Say thanks!" src="https://camo.githubusercontent.com/33e33e9c0c5907ade76ad21b385bbc4ddeadd7f6/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f7361792d7468616e6b732d6666363962342e737667" height="20"></a>
+<a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPLv3" src="https://img.shields.io/badge/License-GPLv3-blue.svg" height="20"></a>
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" height="20"></a>
-<a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="License: MIT" src="https://black.readthedocs.io/en/stable/_static/license.svg" height="20"></a>
 </p>
 
 <p align="center">
