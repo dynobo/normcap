@@ -4,7 +4,9 @@
 
 ***Intelligent OCR powered screen-capture tool to capture information instead of images.***
 
-TODO: Alpha Version Disclaimer
+<p align="center">
+<strong>&#x1F53A; &#x1F53A; &#x1F53A; Warning! Early Alpha! &#x1F53A;&#x1F53A;&#x1F53A;</strong>
+</p>
 
 <p align="center">
 <br>
@@ -49,7 +51,7 @@ TODO: Alpha Version Disclaimer
 **Why "NormCap":**
 
 - See [XKCD](https://xkcd.com)  
-<a href="https://xkcd.com/2116/"><img src="https://imgs.xkcd.com/comics/norm_normal_file_format.png" style="width: 250px;"></a>
+<a href="https://xkcd.com/2116/"><img src="https://imgs.xkcd.com/comics/norm_normal_file_format.png" width="250px;"></a>
 
 ## Installation
 
