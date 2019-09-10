@@ -124,15 +124,39 @@ By default NormCap is "stateless": it copies recognized text to the systems clip
 
 NormCap doesn't have a configuration file, instead it's behavior can be customized using command line arguments:
 
-```sh
-TODO: Add cli printout
+```plain
+[holger@cioran normcap]$ poetry run python normcap/normcap.py --help
+usage: normcap [-h] [-v] [-m MODE] [-l LANG] [-c COLOR] [-p PATH]
+
+Intelligent OCR-powered screen-capture tool to capture information instead of
+images.
+
+optional arguments:
+  -h, --help               show this help message and exit
+  -v, --verbose            print debug information to console (default: False)
+  -m MODE, --mode MODE     startup mode [raw,parse,trigger] (default: trigger)
+  -l LANG, --lang LANG     set language for ocr tool (default: eng)
+  -c COLOR, --color COLOR  set primary color for UI (default: #FF0000)
+  -p PATH, --path PATH     set a path for storing images (default: None)
 ```
 
 ### Magics
 
-Magics are like built-in add-ons to add automated fuctionality. They get loaded in "parse" and "trigger" mode and perform tasks specific to the type of text, that was captured. This is done in three steps:
+"Magics" are like built-in addons to add automated functionality. They get loaded in "parse" and "trigger" mode and perform tasks specific to the type of text, that was captured.
 
-1. Score: calculate the probabilty 
+Each "magic" can perform three steps:
+
+1. **Score:** Determine the likelihood of the detected text's type.
+2. **Parse:** Format the text according to its type.
+3. **Trigger:** Activate a built-in action to handle the detected text.
+
+While Step 1 is performed with every magic, Step 2+3 are performed only for the most likely magic.
+
+#### Single Line Magic
+
+#### E-Mail Magic
+
+#### URL Magic
 
 ## Contribute
 
@@ -183,6 +207,7 @@ This projected uses the following non-standard libraries:
 - [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms* (GPL, but free usage)
 
 And it depends on external software
+
 - [tesseract](https://github.com/tesseract-ocr/tesseract) - *OCR engine* (Apache)
 
 Thanks to the maintainers of those nice libraries!
