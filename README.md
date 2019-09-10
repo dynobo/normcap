@@ -5,10 +5,6 @@
 ***Intelligent OCR powered screen-capture tool to capture information instead of images.***
 
 <p align="center">
-<strong>&#x1F53A; &#x1F53A; &#x1F53A; Warning! Early Alpha! &#x1F53A;&#x1F53A;&#x1F53A;</strong>
-</p>
-
-<p align="center">
 <br>
 <a href="https://saythanks.io/to/dynobo"><img alt="Say thanks!" src="https://camo.githubusercontent.com/33e33e9c0c5907ade76ad21b385bbc4ddeadd7f6/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f7361792d7468616e6b732d6666363962342e737667"></a>
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
@@ -29,6 +25,10 @@
 <a href="#Contribute">Contribute</a> |
 <a href="#Contribute">Credits</a>
 <br><br>
+</p>
+
+<p align="center">
+<strong>&#x1F53A; &#x1F53A; &#x1F53A; Warning! Early Alpha! &#x1F53A;&#x1F53A;&#x1F53A;</strong>
 </p>
 
 ## Introduction
