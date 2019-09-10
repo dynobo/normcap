@@ -128,7 +128,11 @@ NormCap doesn't have a configuration file, instead it's behavior can be customiz
 TODO: Add cli printout
 ```
 
-### TODO: Magics
+### Magics
+
+Magics are like built-in add-ons to add automated fuctionality. They get loaded in "parse" and "trigger" mode and perform tasks specific to the type of text, that was captured. This is done in three steps:
+
+1. Score: calculate the probabilty 
 
 ## Contribute
 
