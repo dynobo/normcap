@@ -36,7 +36,7 @@ TODO: Alpha Version Disclaimer
 - Works on Linux, Mac & Windows.
 - Supports multi monitor setups.
 - Extracts textual information from screen or images via Optical Character Recognition (OCR).
-- (Optionally) Format the text intelligently depending on content type.
+- (Optionally) Formats the text intelligently depending on content type.
 - (Optionally) Automatically triggers an action fitting to the detected content type.
 
 **Usage examples:**
