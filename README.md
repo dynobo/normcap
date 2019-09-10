@@ -106,13 +106,13 @@ NormCap is intended to be executed by custom keybinding or desktop shortcut, so 
 
 By default NormCap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk.
 
-1. Run `normcap`. This will instantly screenshot your monitor(s) and present the screenshots fullscreen (which is indicated by a red border)
+1. Run `normcap`. This will instantly screenshot your monitor(s) and present the screenshots fullscreen (which is indicated by a red border).
 2. Select your region of interest, from which you want to extract text, by holding down your primary mouse button.
 3. Before letting go the mouse button, you optionally can press `space`-key to switch through different modes of normcap, indicated by a symbol:
-   - Raw: Copy detected text line by line, without further modification.
-   - Parse: Try to autodetect type of text using [magics](#Magics) and format the text accordingly, before copying
-   - Trigger: "Parse" the text *and* additionally trigger the action corresponding to the detected [magic](#Magics) (e.g. URLs are opened in new browser tabs).
-4. After letting the mouse button go, characte recognition will be triggered an the text will be copied to your system clipboard
+   - **☰ (raw):** Copy detected text line by line, without further modification.
+   - **⚙ (parse):** Try to autodetect type of text using [magics](#Magics) and format the text accordingly, before copying.
+   - **★ (trigger):** "Parse" the text *and* trigger an action corresponding to the detected [magic](#Magics) (e.g. URLs are opened in new browser tabs).
+4. After letting the mouse button go, character recognition will be triggered an the text will be copied to the system's clipboard.
 5. (optional) in case you used *trigger* mode, an action will be performed depending on the detected content.
 6. Paste the text from clipboard where ever you like using your systems keybinding (e.g. `ctrl` + `p`).
 
