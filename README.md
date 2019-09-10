@@ -57,26 +57,24 @@
 
 NormCap on Linux requires **Tesseract** (incl. **language data**) and **XClip**.
 
-```sh
-# Install requirements
+1\. Install requirements:
 
-## on Debian/Ubuntu  
+```sh
+
+## on Debian/Ubuntu/Mint
 sudo apt-get install tesseract-ocr tesseract-ocr-eng xclip
 
 ## on Arch:
 sudo pacman -S tesseract tesseract-data-eng xclip
 
-## others:
-
-TODO:
+## on Fedora:
+sudo dnf install tesseract xclip
 ```
 
+2\.  Download and extract [released binary package](https://github.com/dynobo/normcap/releases), then:
+
 ```sh
-# Download and extract released binary package
-
-TODO:
-
-# make executable
+# make binary executable
 cd normcap
 chmod +x ./normcap
 
@@ -100,7 +98,9 @@ After the requirements are installed, continue with **NormCap**:
 2. Unpack the archive to any directory
 3. Run `normcap.exe` to start the program (no installation needed)
 
-### TODO: On Mac
+### On Mac
+
+TODO: Describe installation on Mac
 
 ## Usage
 
@@ -154,9 +154,27 @@ While Step 1 is performed with every magic, Step 2+3 are performed only for the 
 
 #### Single Line Magic
 
+- **Score:** If single line is detected
+- **Parse:** Trim unnecessary whitespace
+- **Trigger:** Nothing (copy to clipboard only).
+
+TODO: Screencast Single Line Magic
+
 #### E-Mail Magic
 
+- **Score:** Number of chars in email addresses vs. overall chars
+- **Parse:** Transform to comma separated list
+- **Trigger:** Open with default application for mailto-links
+
+TODO: Screencast E-Mail Magic
+
 #### URL Magic
+
+- **Score:** Number of chars in URLs vs. overall chars
+- **Parse:** Transform to line-break separated URLs
+- **Trigger:** Open URLs in new tabs of default browser
+
+TODO: Screencast URL Magic
 
 ## Contribute
 
