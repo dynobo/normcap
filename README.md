@@ -4,11 +4,10 @@
 
 ***Intelligent OCR powered screen-capture tool to capture information instead of images.***
 
-<p align="center">
-<br>
-<a href="https://saythanks.io/to/dynobo"><img alt="Say thanks!" src="https://camo.githubusercontent.com/33e33e9c0c5907ade76ad21b385bbc4ddeadd7f6/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f7361792d7468616e6b732d6666363962342e737667"></a>
-<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
-<a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="License: MIT" src="https://black.readthedocs.io/en/stable/_static/license.svg"></a>
+<p align="center"><br>
+<a href="https://saythanks.io/to/dynobo"><img alt="Say thanks!" src="https://camo.githubusercontent.com/33e33e9c0c5907ade76ad21b385bbc4ddeadd7f6/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f7361792d7468616e6b732d6666363962342e737667" height="20"></a>
+<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" height="20"></a>
+<a href="https://github.com/psf/black/blob/master/LICENSE"><img alt="License: MIT" src="https://black.readthedocs.io/en/stable/_static/license.svg" height="20"></a>
 </p>
 
 <p align="center">
@@ -24,8 +23,7 @@
 <a href="#Usage">Usage</a> |
 <a href="#Contribute">Contribute</a> |
 <a href="#Contribute">Credits</a>
-<br><br>
-</p>
+<br><br></p>
 
 <p align="center">
 <strong>&#x1F53A; &#x1F53A; &#x1F53A; Warning! Early Alpha! &#x1F53A;&#x1F53A;&#x1F53A;</strong>
@@ -70,7 +68,8 @@ sudo pacman -S tesseract tesseract-data-eng xclip
 
 ## others:
 TODO:
-
+```
+```sh
 # Download and extract released binary package
 TODO:
 
@@ -104,20 +103,19 @@ After the requirements are installed, continue with **NormCap**:
 
 ### Basics
 
-NormCap is intended to be executed by custom keybinding or desktop shortcut, so it doesn't run as daemon and won't use memory while not in use. 
-
-By default NormCap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk.
-
-1. Run `normcap`. This will instantly screenshot your monitor(s) and present the screenshots fullscreen (which is indicated by a red border).
+1. Run the `normcap` executable. This will instantly screenshot your monitor(s) and present the screenshots fullscreen (which is indicated by a red border).
 2. Select your region of interest, from which you want to extract text, by holding down your primary mouse button.
 3. Before letting go the mouse button, you optionally can press `space`-key to switch through different Normcap's modes of operation, which are indicated by a symbol:
    - **☰ (raw):** Copy detected text line by line, without further modification.
    - **⚙ (parse):** Try to autodetect type of text using [magics](#Magics) and format the text accordingly, before copying.
-   - **★ (trigger):** "Parse" the text *and* trigger an action corresponding to the detected [magic](#Magics) (e.g. URLs are opened in new browser tabs).
+   - **★ (trigger):** "Parse" the text *and* trigger an action corresponding to the detected [magic](#Magics).
 4. After letting the mouse button go, character recognition will be triggered an the text will be copied to the system's clipboard.
 5. (optional) in case you used *trigger* mode, an action will be performed depending on the detected content.
 6. Paste the text from clipboard where ever you like using your systems keybinding (e.g. `ctrl` + `p`).
 
+NormCap is intended to be executed via a custom keybinding or desktop shortcut, so it doesn't run as daemon and won't use memory while not in use. 
+
+By default NormCap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk.
 
 ### Command line options
 
@@ -131,9 +129,13 @@ TODO: Add cli printout
 
 ## Contribute
 
-### TODO: Design principles
+### Design principles
 
-- Main design pattern: [Chain of Responsibility](https://refactoring.guru/design-patterns/chain-of-responsibility)
+- **Don't run as service:** As NormCap is (hopefully) not used too often, it shouldn't consume ressources in the background, even if it leads to a slower start-up time.
+- **Avoid text in UI:** This just avoids translations ;-) And I think it is feasible in such an simple application.
+- **Avoid config file or settings UI:** Focus on simplicity and core functionality.
+- **Dependencies:** The less dependencies, the better. Of course I have to compromise, but I'm always open to suggestions on how to further reduce dependencies.
+- **Main design pattern:** [Chain of Responsibility](https://refactoring.guru/design-patterns/chain-of-responsibility)
 
 ### Setup Environment
 
