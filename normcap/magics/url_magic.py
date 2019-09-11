@@ -36,7 +36,7 @@ class UrlMagic(BaseMagic):
 
         # Calc chars & ratio
         url_chars = sum([len(e) for e in self.urls])
-        overall_chars = len(text)
+        overall_chars = max([len(text), 1])
         ratio = url_chars / overall_chars
         self._logger.info(
             f"{url_chars} of {overall_chars} chars in emails (ratio: {ratio})"
