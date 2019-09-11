@@ -3,12 +3,15 @@ import os
 
 # TODO: Switch based on platform
 
+os.chdir("./normcap")
+
 PyInstaller.__main__.run(
     [
         "--name=normcap",
         "--clean",
         "--noconfirm",
-        #"--onefile",
+        "-OO",  # Bytecode Optimization
+        # "--onefile",
         "--onedir",
         #"--windowed",
         "-D", # debug

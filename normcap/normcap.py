@@ -23,11 +23,17 @@ def parse_cli_args() -> argparse.Namespace:
     Returns:
         argparse.Namespace -- CLI switches and (default) values
     """
-    # Parse cli args
+
+    class ArgFormatter(argparse.ArgumentDefaultsHelpFormatter):
+        def __init__(self, prog):
+            super().__init__(prog, max_help_position=30)
+
     arg_parser = argparse.ArgumentParser(
         prog="normcap",
-        description="Intelligent screencapture tool to capture information instead of images",
+        description="Intelligent OCR-powered screen-capture tool to capture information instead of images.",
+        formatter_class=ArgFormatter,
     )
+
     arg_parser.add_argument(
         "-v",
         "--verbose",
@@ -38,30 +44,19 @@ def parse_cli_args() -> argparse.Namespace:
     arg_parser.add_argument(
         "-m",
         "--mode",
+        #
         type=str,
         default="trigger",
-        help="set default mode [raw, parse, trigger]",
+        help="startup mode [raw,parse,trigger]",
     )
     arg_parser.add_argument(
-        "-l",
-        "--language",
-        type=str,
-        default="eng",
-        help="set language for ocr tool (must be installed!)",
+        "-l", "--lang", type=str, default="eng", help="set language for ocr tool"
     )
     arg_parser.add_argument(
-        "-c",
-        "--color",
-        type=str,
-        default="red",
-        help="set color for border and selection tool",
+        "-c", "--color", type=str, default="#FF0000", help="set primary color for UI"
     )
     arg_parser.add_argument(
-        "-p",
-        "--path",
-        type=str,
-        default="",
-        help="set a path to store cropped and original images",
+        "-p", "--path", type=str, default=None, help="set a path for storing images"
     )
     return arg_parser.parse_args()
 
