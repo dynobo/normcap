@@ -23,12 +23,12 @@ class OcrHandler(AbstractHandler):
         self._logger.info("Applying OCR...")
 
         tool = self.get_tool()
-        request.cli_args.language = self.get_language(request.cli_args.language, tool)
+        request.cli_args.lang = self.get_language(request.cli_args.lang, tool)
 
         # Actual OCR
         request.line_boxes = tool.image_to_string(
             request.image,
-            lang=request.cli_args.language,
+            lang=request.cli_args.lang,
             builder=pyocr.builders.LineBoxBuilder(),
         )
 
