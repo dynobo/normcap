@@ -22,7 +22,14 @@ class OcrHandler(AbstractHandler):
         """
         self._logger.info("Applying OCR...")
 
-        tool = self.get_tool()
+        # Workaround for PyInstaller + pyocr issue.
+        # (already fixed in pyocr master)
+        import sys
+        if getattr(sys, 'frozen', False):
+            sys.path.append(sys._MEIPASS)
+
+        # tool = self.get_tool()
+        tool = pyocr.tesseract
         request.cli_args.lang = self.get_language(request.cli_args.lang, tool)
 
         # Actual OCR
