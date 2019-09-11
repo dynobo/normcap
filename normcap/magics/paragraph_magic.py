@@ -15,7 +15,7 @@ class ParagraphMagic(BaseMagic):
         Returns:
             float -- score between 0-100 (100 = more likely)
         """
-        lines = len(request.line_boxes)
+        lines = max([len(request.line_boxes), 1])
         self._final_score = 100 - (1 / lines * 100)
 
         # TODO: Handle Paragraphs
