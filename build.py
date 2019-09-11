@@ -8,12 +8,11 @@ PyInstaller.__main__.run(
         "--name=normcap",
         "--clean",
         "--noconfirm",
-        # "-OO",  # Bytecode Optimization
         # "--onefile",
         "--onedir",
         # "--windowed",
-        "-D",  # debug
-        # f"--icon={os.path.join('ressource', 'normcap.ico')}",
+        # "--debug=all",
+        f"--icon={os.path.join('ressource', 'normcap.ico')}",
         f"--paths={os.path.join('.', 'normcap')}",
         "--hidden-import=PIL",
         "--hidden-import=PIL._imagingtk",

@@ -1,5 +1,14 @@
 """Main program logic."""
 
+# Workaround for PyInstaller + pyocr issue.
+# (already fixed in pyocr master)
+# TODO: Remove, after release, to avoid problems with real missing path
+import sys, os, pathlib
+if getattr(sys, 'frozen', False):
+    os.environ["PATH"] += os.pathsep + sys._MEIPASS  
+    dummy_dir = os.path.join(sys._MEIPASS, "data", "tessdata")
+    pathlib.Path(dummy_dir).mkdir(parents=True, exist_ok=True) 
+            
 # Default
 import logging
 import argparse
