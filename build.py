@@ -5,16 +5,19 @@ import os
 
 PyInstaller.__main__.run(
     [
-        "--name=%s" % "normcap",
+        "--name=normcap",
         "--clean",
         "--noconfirm",
         #"--onefile",
         "--onedir",
-        "--windowed",
+        #"--windowed",
+        "-D", # debug
         # "--icon=%s" % os.path.join("ressource", "normcap.ico"),
-        "--hidden-import=%s" % "PIL",
-        "--hidden-import=%s" % "PIL._imagingtk",
-        "--hidden-import=%s" % "PIL._tkinter_finder",
-        os.path.join("normcap", "normcap.py"),
+        "--paths=./normcap",
+        "--hidden-import=PIL", 
+        "--hidden-import=PIL._imagingtk",
+        "--hidden-import=PIL._tkinter_finder",
+        "--hidden-import=utils.log_dataclass",
+        os.path.join("normcap","normcap.py"),
     ]
 )
