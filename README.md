@@ -25,10 +25,6 @@
 <a href="#Contribute">Credits</a>
 <br><br></p>
 
-<p align="center">
-<strong>&#x1F53A; &#x1F53A; &#x1F53A; Warning! Early Alpha! &#x1F53A;&#x1F53A;&#x1F53A;</strong>
-</p>
-
 ## Introduction
 
 **Features:**
