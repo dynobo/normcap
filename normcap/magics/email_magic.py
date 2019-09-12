@@ -31,7 +31,7 @@ class EmailMagic(BaseMagic):
 
         # Calc chars & ratio
         email_chars = sum([len(e) for e in self.emails])
-        all_chars = len(text)
+        all_chars = max([len(text), 1])
         ratio = email_chars / all_chars
 
         self._logger.info(f"{email_chars}/{all_chars} chars in emails. Ratio: {ratio})")

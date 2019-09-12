@@ -25,10 +25,6 @@
 <a href="#Contribute">Credits</a>
 <br><br></p>
 
-<p align="center">
-<strong>&#x1F53A; &#x1F53A; &#x1F53A; Warning! Early Alpha! &#x1F53A;&#x1F53A;&#x1F53A;</strong>
-</p>
-
 ## Introduction
 
 **Features:**
@@ -60,7 +56,6 @@ NormCap on Linux requires **Tesseract** (incl. **language data**) and **XClip**.
 1\. Install requirements:
 
 ```sh
-
 ## on Debian/Ubuntu/Mint
 sudo apt-get install tesseract-ocr tesseract-ocr-eng xclip
 
@@ -100,7 +95,19 @@ After the requirements are installed, continue with **NormCap**:
 
 ### On Mac
 
-TODO: Describe installation on Mac
+***TODO: Test and document installation on Mac***
+
+1\. Install requirements:
+
+```sh
+brew install tesseract tesseract-lang
+```
+
+2\.  Download and extract [released binary package](https://github.com/dynobo/normcap/releases), then:
+
+```sh
+# TO BE DONE
+```
 
 ## Usage
 

@@ -14,11 +14,12 @@ class SingleLineMagic(BaseMagic):
 
         Returns:
             float -- score between 0-100 (100 = more likely)
-        """
-        lines = len(request.line_boxes)
-        if lines == 1:
+        """      
+        if len(request.line_boxes) == 1:
             self._final_score = 50
-
+        if len(request.text) == 0:
+            self._final_score = 1
+            
         return self._final_score
 
     def transform(self, request: NormcapData) -> str:

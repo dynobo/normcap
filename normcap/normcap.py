@@ -1,5 +1,15 @@
 """Main program logic."""
 
+# Workaround for PyInstaller + pyocr issue.
+# (already fixed in pyocr master)
+# TODO: Remove, after release, to avoid problems with real missing path
+# import sys, os, pathlib
+
+# if getattr(sys, "frozen", False):
+#     os.environ["PATH"] += os.pathsep + sys._MEIPASS
+#     dummy_dir = os.path.join(sys._MEIPASS, "data", "tessdata")
+#    pathlib.Path(dummy_dir).mkdir(parents=True, exist_ok=True)
+
 # Default
 import logging
 import argparse
@@ -61,11 +71,12 @@ def parse_cli_args() -> argparse.Namespace:
     return arg_parser.parse_args()
 
 
-def init_logging(log_level: int) -> logging.Logger:
+def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
     """Initialize Logger with formatting and desired level.
 
     Arguments:
         log_level {logging._Level} -- Desired loglevel
+        to_file {bool} -- Log also to file on disk
 
     Returns:
         logging.Logger -- Formatted logger with desired level
@@ -76,6 +87,12 @@ def init_logging(log_level: int) -> logging.Logger:
         level=log_level,
     )
     logger = logging.getLogger(__name__)
+
+    if to_file:
+        file_handler = logging.FileHandler("normcap.log")
+        file_handler.setLevel(log_level)
+        logger.addHandler(file_handler)
+
     logger.info("Starting normcap...")
     return logger
 
@@ -99,9 +116,9 @@ def main():
 
     # Setup logging
     if args.verbose:
-        logger = init_logging(logging.DEBUG)
+        logger = init_logging(logging.DEBUG, to_file=True)
     else:
-        logger = init_logging(logging.WARN)
+        logger = init_logging(logging.WARN, to_file=False)
 
     logger.info("Creating data object...")
     normcap_data = NormcapData(cli_args=args)
