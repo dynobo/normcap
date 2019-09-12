@@ -40,7 +40,7 @@
 - Extract URLs, tables, etc. that have been sent to you in screenshot.
 - Copy non-selectable error messages from alert windows.
 - Capture subtitles from video stills.
-- Easily extract text from menu entries or hover messages.
+- Extract text from menu entries or hover messages.
 
 **Why "NormCap":**
 
@@ -66,7 +66,7 @@ sudo pacman -S tesseract tesseract-data-eng xclip
 sudo dnf install tesseract xclip
 ```
 
-2\.  Download and extract [released binary package](https://github.com/dynobo/normcap/releases), then:
+2\.  Download and extract a [released binary package](https://github.com/dynobo/normcap/releases), then:
 
 ```sh
 # make binary executable
@@ -81,15 +81,15 @@ chmod +x ./normcap
 
 NormCap on Windows requires **Tesseract** (incl. **language data**):
 
-1. Download the latest 32bit version from [Tesseract Installer by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
+1. Download the latest **32bit** version from [Tesseract Installer by University Library Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
 2. Follow the installer (which allows you to download additional languages).
-3. Append the path to tesseract.exe to the `PATH` environment variable.
+3. Append the path to tesseract.exe to the `PATH` [environment variable](https://duckduckgo.com/?q=edit+environment+variable+windows+10).
 4. Create a new environment variable called `TESSDATA_PREFIX` and set it to the `YOUR_TESSERACT_DIR\tessdata`, which should contain the language data files.
-5. Reboot, and execute `tesseract.exe` in command prompt. If everything worked well, you should see an output describing the command line options.
+5. Reboot, and execute `tesseract.exe` in command prompt. If everything worked well, you should see an output describing its command line options.
 
 After the requirements are installed, continue with **NormCap**:
 
-1. Download the windows binary from the [release page](https://github.com/dynobo/normcap/releases)
+1. Download the windows binary package from the [release page](https://github.com/dynobo/normcap/releases)
 2. Unpack the archive to any directory
 3. Run `normcap.exe` to start the program (no installation needed)
 
@@ -113,17 +113,17 @@ brew install tesseract tesseract-lang
 
 ### Basics
 
-1. Run the `normcap` executable. This will instantly screenshot your monitor(s) and present the screenshots full-screen (which is indicated by a red border).
-2. Select your region of interest, from which you want to extract text, by holding down your primary mouse button.
-3. Before letting go the mouse button, you optionally can press `space`-key to switch through different NormCap's modes of operation, which are indicated by a symbol:
+1. Run the `normcap` executable. A red border around your screen(s) will appear.
+2. Select a region containing text using your mouse. Or press `<esc>` to quit program.
+3. (Optional) Before letting go the mouse button, you can press `<space>`-key to switch through different NormCap's modes of operation, which are indicated by a symbol:
    - **☰ (raw):** Copy detected text line by line, without further modification.
    - **⚙ (parse):** Try to auto-detect type of text using [magics](#Magics) and format the text accordingly, before copying.
    - **★ (trigger):** "Parse" the text *and* trigger an action corresponding to the detected [magic](#Magics).
-4. After letting the mouse button go, character recognition will be triggered an the text will be copied to the system's clipboard.
-5. (optional) in case you used *trigger* mode, an action will be performed depending on the detected content.
-6. Paste the text from clipboard where ever you like using your systems keybinding (e.g. `ctrl` + `p`).
+4. Paste the text from clipboard using your systems keybinding (e.g. `<ctrl> + p`).
 
-NormCap is intended to be executed via a custom keybinding or desktop shortcut, so it doesn't run as daemon and won't use memory while not in use.
+### Hints
+
+NormCap is intended to be executed via a custom keybinding or desktop shortcut, so it doesn't run as daemon and won't use memory while not in use. On the downside, this makes NormCap a little bit slower
 
 By default NormCap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk.
 
@@ -225,15 +225,15 @@ poetry run python normcap/normcap.py
 
 This projected uses the following non-standard libraries:
 
-- [mss](https://pypi.org/project/mss/) *- taking screenshots* (MIT)
-- [pillow](https://pypi.org/project/Pillow/) *- manipulating images* (OSI appr.)
-- [pyocr](https://pypi.org/project/pyocr/) *- interfacing various OCR tools* (GPLv3)
-- [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard* (BSD3)
-- [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms* (GPL, but free usage)
+- [mss](https://pypi.org/project/mss/) *- taking screenshots*
+- [pillow](https://pypi.org/project/Pillow/) *- manipulating images* 
+- [pyocr](https://pypi.org/project/pyocr/) *- interfacing various OCR tools*
+- [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard*
+- [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms*
 
 And it depends on external software
 
-- [tesseract](https://github.com/tesseract-ocr/tesseract) - *OCR engine* (Apache)
+- [tesseract](https://github.com/tesseract-ocr/tesseract) - *OCR engine*
 
 Thanks to the maintainers of those nice libraries!
 
