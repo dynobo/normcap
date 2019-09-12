@@ -81,18 +81,24 @@ def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
     Returns:
         logging.Logger -- Formatted logger with desired level
     """
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        datefmt="%H:%M:%S",
-        level=log_level,
-    )
-    logger = logging.getLogger(__name__)
 
     if to_file:
-        file_handler = logging.FileHandler("normcap.log")
-        file_handler.setLevel(log_level)
-        logger.addHandler(file_handler)
+        logging.basicConfig(
+            filename="normcap.log",
+            filemode="w",
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            datefmt="%H:%M:%S",
+            level=log_level,
+        )
+    else:
+        logging.basicConfig(
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            datefmt="%H:%M:%S",
+            level=log_level,
+        )    
 
+    logger = logging.getLogger(__name__)
+    
     logger.info("Starting normcap...")
     return logger
 
