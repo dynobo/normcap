@@ -14,6 +14,7 @@
 import logging
 import argparse
 
+
 # Own
 from data_model import NormcapData
 from utils import log_dataclass
@@ -25,6 +26,9 @@ from handlers.ocr_handler import OcrHandler
 from handlers.clipboard_handler import ClipboardHandler
 from handlers.magic_handler import MagicHandler
 from handlers.enhance_img_handler import EnhanceImgHandler
+
+
+_VERSION = "0.1alpha"
 
 
 def parse_cli_args() -> argparse.Namespace:
@@ -95,10 +99,10 @@ def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             datefmt="%H:%M:%S",
             level=log_level,
-        )    
+        )
 
     logger = logging.getLogger(__name__)
-    
+
     logger.info("Starting normcap...")
     return logger
 
@@ -126,6 +130,7 @@ def main():
     else:
         logger = init_logging(logging.WARN, to_file=False)
 
+    logger.info(f"Starting NormCap {_VERSION}...")
     logger.info("Creating data object...")
     normcap_data = NormcapData(cli_args=args)
 

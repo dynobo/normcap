@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "NormCap"
-version = "0.1.0"
+version = "0.1alpha"
 description = "Intelligent OCR powered screen-capture tool to capture information instead of images."
 license = "MIT"
 authors = ["Dynobo <dynobo@mailbox.org>"]
