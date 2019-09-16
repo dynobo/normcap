@@ -82,16 +82,16 @@ chmod +x ./normcap
 NormCap on Windows requires **Tesseract** (incl. **language data**):
 
 1. Download the latest **32bit** version from [Tesseract Installer by University Library Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
-2. Follow the installer (which allows you to download additional languages).
-3. Append the path to tesseract.exe to the `PATH` [environment variable](https://duckduckgo.com/?q=edit+environment+variable+windows+10).
-4. Create a new environment variable called `TESSDATA_PREFIX` and set it to the `YOUR_TESSERACT_DIR\tessdata`, which should contain the language data files.
-5. Reboot, and execute `tesseract.exe` in command prompt. If everything worked well, you should see an output describing its command line options.
+2. Follow the installer (incl. downloading some languages).
+3. Append the path of `tesseract.exe` to the `PATH` [environment variable](https://duckduckgo.com/?q=edit+environment+variable+windows+10).
+4. Create a new environment variable called `TESSDATA_PREFIX` and set it to `YOUR_TESSERACT_DIR\tessdata`
+5. Reboot, and execute `tesseract.exe` in command prompt (If everything worked well, you should see an output describing its command line options).
 
 After the requirements are installed, continue with **NormCap**:
 
-1. Download the windows binary package from the [release page](https://github.com/dynobo/normcap/releases)
-2. Unpack the archive to any directory
-3. Run `normcap.exe` to start the program (no installation needed)
+1. Download binary package from the [release page](https://github.com/dynobo/normcap/releases).
+2. Unpack the archive.
+3. Run `normcap.exe` to start the program (no installation needed).
 
 ### On Mac
 
@@ -113,13 +113,13 @@ brew install tesseract tesseract-lang
 
 ### Basics
 
-1. Run the `normcap` executable. A red border around your screen(s) will appear.
-2. Select a region containing text using your mouse. Or press `<esc>` to quit program.
-3. (Optional) Before letting go the mouse button, you can press `<space>`-key to switch through different NormCap's modes of operation, which are indicated by a symbol:
+1. Run the `normcap` executable. A red border will appear around your screen.
+2. Select a region with text using your mouse. Or press `<esc>` to quit program.
+3. (Optional) Before letting go the mouse button, press `<space>`-key to switch through different modes of operation, as indicated by a symbol:
    - **☰ (raw):** Copy detected text line by line, without further modification.
-   - **⚙ (parse):** Try to auto-detect type of text using [magics](#Magics) and format the text accordingly, before copying.
+   - **⚙ (parse):** Try to auto-detect type of text using [magics](#Magics) and format the text accordingly, then copy.
    - **★ (trigger):** "Parse" the text *and* trigger an action corresponding to the detected [magic](#Magics).
-4. Paste the text from clipboard using your systems keybinding (e.g. `<ctrl> + p`).
+4. Paste the text from clipboard (e.g. `<ctrl> + p`).
 
 ### Hints
 
@@ -149,15 +149,13 @@ optional arguments:
 
 ### Magics
 
-"Magics" are like built-in addons to add automated functionality. They get loaded in "parse" and "trigger" mode and perform tasks specific to the type of text, that was captured.
+"Magics" are like addons providing automated functionality. They get loaded in "parse" or "trigger" mode and perform tasks specific to the type of text, that was captured.
 
 Each "magic" can perform three steps:
 
 1. **Score:** Determine the likelihood of the detected text's type.
 2. **Parse:** Format the text according to its type.
 3. **Trigger:** Activate a built-in action to handle the detected text.
-
-While Step 1 is performed with every magic, Step 2+3 are performed only for the most likely magic.
 
 #### Single Line Magic
 
