@@ -15,6 +15,7 @@ black = "*"
 pywin32-ctypes = "*"
 pyinstaller = "*"
 pylint = "*"
+pefile = "*"
 
 [packages]
 mss = "*"
