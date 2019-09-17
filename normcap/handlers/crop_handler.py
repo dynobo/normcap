@@ -139,9 +139,19 @@ class _CropWindow:
         #    Behave different per OS, because:
         #    - with tk.attributes I couldn't move the windows to the correct screen on MS Windows
         #    - with overrideredirect I couldn't get the keybindings working on Linux
-        if os.name == "nt":
+        # TODO: Move platform detection to beginning, add to dataclass
+        if sys.platform in ["win32", "win64"]:
             self.tk.overrideredirect(1)
-        else:
+        
+        if sys.platform == "darwin":
+            self.tk.overrideredirect(1)
+            self.tk.attributes("-fullscreen", 1)
+            self.tk.attributes("-topmost", 1)
+            #os.system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "python" to true' ''')
+            #self.tk.focus_force()
+            #self.tk.call("::tk::unsupported::MacWindowStyle", "style", self.tk._w, "plain", "none")
+
+        if sys.platform == "linux":
             self.tk.attributes("-fullscreen", True)
 
     def _show_window(self):
