@@ -21,15 +21,15 @@ class OcrHandler(AbstractHandler):
             NormcapData -- Enriched NormCap's session data
         """
         self._logger.info("Applying OCR...")
-    
+
         # tool = self.get_tool()
         tool = pyocr.tesseract
-        request.cli_args.lang = self.get_language(request.cli_args.lang, tool)
+        request.cli_args["lang"] = self.get_language(request.cli_args["lang"], tool)
 
         # Actual OCR
         request.line_boxes = tool.image_to_string(
             request.image,
-            lang=request.cli_args.lang,
+            lang=request.cli_args["lang"],
             builder=pyocr.builders.LineBoxBuilder(),
         )
 

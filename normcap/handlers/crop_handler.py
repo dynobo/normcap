@@ -39,7 +39,7 @@ class CropHandler(AbstractHandler):
         else:
             return request
 
-    def _select_region_with_gui(self, request: NormcapData) -> dict:
+    def _select_region_with_gui(self, request: NormcapData) -> NormcapData:
         """Show window(s) with screenshots and select region.
 
         Arguments:

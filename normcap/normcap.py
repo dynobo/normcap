@@ -31,7 +31,7 @@ from handlers.enhance_img_handler import EnhanceImgHandler
 _VERSION = "0.1alpha"
 
 
-def parse_cli_args() -> argparse.Namespace:
+def parse_cli_args() -> dict:
     """Parse command line arguments.
 
     Returns:
@@ -72,7 +72,7 @@ def parse_cli_args() -> argparse.Namespace:
     arg_parser.add_argument(
         "-p", "--path", type=str, default=None, help="set a path for storing images"
     )
-    return arg_parser.parse_args()
+    return dict(arg_parser.parse_args().keyvalues)
 
 
 def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
@@ -125,7 +125,7 @@ def main():
     args = parse_cli_args()
 
     # Setup logging
-    if args.verbose:
+    if args["verbose"]:
         logger = init_logging(logging.DEBUG, to_file=True)
     else:
         logger = init_logging(logging.WARN, to_file=False)

@@ -20,10 +20,10 @@ class StoreHandler(AbstractHandler):
         Returns:
             NormcapData -- Enriched NormCap's session data
         """
-        if request.cli_args.path:
-            self._logger.info(f"Saving images to {request.cli_args.path}...")
+        if request.cli_args["path"]:
+            self._logger.info(f"Saving images to {request.cli_args['path']}...")
             all_images = [request.image] + [s["image"] for s in request.shots]
-            self.store_images(request.cli_args.path, all_images)
+            self.store_images(request.cli_args["path"], all_images)
 
         if self._next_handler:
             return super().handle(request)

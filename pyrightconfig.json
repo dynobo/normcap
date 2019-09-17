@@ -1,0 +1,11 @@
+{
+    "exclude": [
+        ".venv"
+    ],
+    "executionEnvironments": [{
+        "root": "normcap",
+        "extraPaths": [
+            "normcap"
+        ]
+    }]
+}
