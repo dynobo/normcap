@@ -81,17 +81,16 @@ chmod +x ./normcap
 
 NormCap on Windows requires **Tesseract** (incl. **language data**):
 
-1. Download the latest **32bit** version from [Tesseract Installer by University Library Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
-2. Follow the installer (incl. downloading some languages).
-3. Append the path of `tesseract.exe` to the `PATH` [environment variable](https://duckduckgo.com/?q=edit+environment+variable+windows+10).
-4. Create a new environment variable called `TESSDATA_PREFIX` and set it to `YOUR_TESSERACT_DIR\tessdata`
-5. Reboot, and execute `tesseract.exe` in command prompt (If everything worked well, you should see an output describing its command line options).
+1. Download the latest **32bit** version from [Tesseract Installer by University Library Mannheim](https://github.com/UB-Mannheim/tesseract/wiki) and execute it.
+2. Append the path of `tesseract.exe` to the `PATH` [environment variable](https://duckduckgo.com/?q=edit+environment+variable+windows+10).
+3. Create a new environment variable called `TESSDATA_PREFIX` and set it to `YOUR_TESSERACT_DIR\tessdata`
+
+To test successful installation, reboot windows and execute `tesseract.exe` in command prompt. If everything worked well, you should see an output describing its command line options.
 
 After the requirements are installed, continue with **NormCap**:
 
-1. Download binary package from the [release page](https://github.com/dynobo/normcap/releases).
-2. Unpack the archive.
-3. Run `normcap.exe` to start the program (no installation needed).
+1. Download and extract binary package from the [release page](https://github.com/dynobo/normcap/releases).
+2. Run `normcap.exe` to start the program (no installation needed).
 
 ### On Mac
 
