@@ -1,12 +1,17 @@
-# Changelog
+# Changelog 
 
-## 0.1 alpha (2019-09-TODO:)
+## v0.1a0 (2019-09-17)
 
-Initial release intended for testing within closed circle of users.
+**Please help testing and provide feedback!** 
 
-- Basic functionality
-- Basic configuration via CLI arguments
-- Magics to handle
-  - Emails
-  - URLs
-  - Single Lines of text
+Any feedback is useful, whether you find bugs or everything works for you. Thank you!
+
+**Changes:** 
+
+- Initial working release
+- Multi monitor support
+- Support Linux, Windows, Mac
+- Add Magics for
+  - Single Lines (unformatted text) 
+  - Email addresses
+  - URLs.
