@@ -127,10 +127,10 @@ class _CropWindow:
         root.mode_indicator = None
         root.modes = ("raw", "parse", "trigger")
         root.modes_chars = ("☰", "⚙", "★")
-        root.current_mode = self.cli_args.mode
+        root.current_mode = self.cli_args["mode"]
 
-        root.color = self.cli_args.color
-        root.img_path = self.cli_args.path
+        root.color = self.cli_args["color"]
+        root.img_path = self.cli_args["path"]
 
         return root
 
