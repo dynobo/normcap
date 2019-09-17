@@ -4,7 +4,6 @@
 import logging
 import tkinter
 import sys
-import os
 
 # Extra
 from PIL import ImageTk
@@ -142,14 +141,14 @@ class _CropWindow:
         # TODO: Move platform detection to beginning, add to dataclass
         if sys.platform in ["win32", "win64"]:
             self.tk.overrideredirect(1)
-        
+
         if sys.platform == "darwin":
             self.tk.overrideredirect(1)
             self.tk.attributes("-fullscreen", 1)
             self.tk.attributes("-topmost", 1)
-            #os.system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "python" to true' ''')
-            #self.tk.focus_force()
-            #self.tk.call("::tk::unsupported::MacWindowStyle", "style", self.tk._w, "plain", "none")
+            # os.system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "python" to true' ''')
+            # self.tk.focus_force()
+            # self.tk.call("::tk::unsupported::MacWindowStyle", "style", self.tk._w, "plain", "none")
 
         if sys.platform == "linux":
             self.tk.attributes("-fullscreen", True)
