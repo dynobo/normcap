@@ -28,7 +28,7 @@ from handlers.magic_handler import MagicHandler
 from handlers.enhance_img_handler import EnhanceImgHandler
 
 
-_VERSION = "0.1alpha"
+_VERSION = "0.1a0"
 
 
 def parse_cli_args() -> dict:
@@ -44,7 +44,8 @@ def parse_cli_args() -> dict:
 
     arg_parser = argparse.ArgumentParser(
         prog="normcap",
-        description="Intelligent OCR-powered screen-capture tool to capture information instead of images.",
+        description="Intelligent OCR-powered screen-capture tool "
+        + "to capture information instead of images.",
         formatter_class=ArgFormatter,
     )
 
