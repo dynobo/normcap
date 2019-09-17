@@ -95,7 +95,7 @@ After the requirements are installed, continue with **NormCap**:
 
 ### On Mac
 
-***TODO: Test and document installation on Mac***
+*On Mac, some issues occure. [Help needed](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).*
 
 1\. Install requirements:
 
@@ -103,11 +103,7 @@ After the requirements are installed, continue with **NormCap**:
 brew install tesseract tesseract-lang
 ```
 
-2\.  Download and extract [released binary package](https://github.com/dynobo/normcap/releases), then:
-
-```sh
-# TO BE DONE
-```
+2\.  Download and extract [released binary package](https://github.com/dynobo/normcap/releases), then execute `normcap.app`
 
 ## Usage
 
@@ -206,17 +202,20 @@ git clone https://github.com/dynobo/normcap.git
 # Change into project directory
 cd normcap
 
-# Install poetry (if not already installed)
-pip install poetry
+# Install pipenv (if not already installed)
+pip install pipenv
 
 # Install project dependencies
-poetry install
+pipenv install
+
+# Install project development dependencies
+pipenv install --dev
 
 # Register pre-commit hook
 pipenv run pre-commit install -t pre-commit
 
-# Run normcap in poetry environment
-poetry run python normcap/normcap.py
+# Run normcap in pipenv environment
+pipenv run python normcap/normcap.py
 ```
 
 ## Credits
