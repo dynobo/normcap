@@ -73,7 +73,7 @@ def parse_cli_args() -> dict:
     arg_parser.add_argument(
         "-p", "--path", type=str, default=None, help="set a path for storing images"
     )
-    return dict(arg_parser.parse_args().keyvalues)
+    return vars(arg_parser.parse_args())
 
 
 def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
