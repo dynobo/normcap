@@ -1,0 +1,31 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+pytest-cov = "*"
+flake8 = "*"
+isort = "*"
+mypy = "*"
+pre-commit = "*"
+vprof = "*"
+black = "*"
+pywin32-ctypes = "*"
+pyinstaller = "*"
+pylint = "*"
+pefile = "*"
+
+[packages]
+mss = "*"
+pillow = "*"
+pyocr = "*"
+pyperclip = "*"
+black = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

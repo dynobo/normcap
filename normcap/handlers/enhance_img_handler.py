@@ -43,6 +43,6 @@ class EnhanceImgHandler(AbstractHandler):
         factor = 3
         width, height = img.size
         img = img.resize((width * factor, height * factor))
-        self._logger.info(f"Resized screenshot by factor {factor}")
+        self._logger.info("Resized screenshot by factor %s", factor)
 
         return img

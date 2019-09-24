@@ -10,6 +10,8 @@ from utils import log_dataclass
 
 
 class OcrHandler(AbstractHandler):
+    """Handles the text recognition task."""
+
     def handle(self, request: NormcapData) -> NormcapData:
         """Apply OCR on selected image section.
 
@@ -21,15 +23,15 @@ class OcrHandler(AbstractHandler):
             NormcapData -- Enriched NormCap's session data
         """
         self._logger.info("Applying OCR...")
-    
+
         # tool = self.get_tool()
         tool = pyocr.tesseract
-        request.cli_args.lang = self.get_language(request.cli_args.lang, tool)
+        request.cli_args["lang"] = self.get_language(request.cli_args["lang"], tool)
 
         # Actual OCR
         request.line_boxes = tool.image_to_string(
             request.image,
-            lang=request.cli_args.lang,
+            lang=request.cli_args["lang"],
             builder=pyocr.builders.LineBoxBuilder(),
         )
 
@@ -57,7 +59,7 @@ class OcrHandler(AbstractHandler):
 
         # The ocr tools are returned in the recommended order
         tool = ocr_tools[0]
-        self._logger.info(f"Selecting '{tool.get_name()}' to perform ocr")
+        self._logger.info("Selecting %s to perform ocr", tool.get_name())
         return tool
 
     def get_language(self, lang, tool) -> str:
@@ -73,10 +75,10 @@ class OcrHandler(AbstractHandler):
         # Check Language
         langs = tool.get_available_languages()
         if lang not in langs:
-            self._logger.warn(f"Language {lang} for ocr not found!")
-            self._logger.warn(f"Available languages: { {*langs} }.")
-            self._logger.warn(f"Fallback to {langs[0]}.")
+            self._logger.warning("Language %s for ocr not found!", langs)
+            self._logger.warning("Available languages: %s.", f"{ {*langs} }")
+            self._logger.warning("Fallback to %s.", langs[0])
             lang = langs[0]
 
-        self._logger.info(f"Using language '{lang}' for ocr")
+        self._logger.info("Using language %s for ocr...", lang)
         return lang

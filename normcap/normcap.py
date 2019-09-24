@@ -28,10 +28,10 @@ from handlers.magic_handler import MagicHandler
 from handlers.enhance_img_handler import EnhanceImgHandler
 
 
-_VERSION = "0.1alpha"
+_VERSION = "0.1a0"
 
 
-def parse_cli_args() -> argparse.Namespace:
+def parse_cli_args() -> dict:
     """Parse command line arguments.
 
     Returns:
@@ -39,12 +39,19 @@ def parse_cli_args() -> argparse.Namespace:
     """
 
     class ArgFormatter(argparse.ArgumentDefaultsHelpFormatter):
+        """Custom formatter to increase intendation of help output.
+
+        Arguments:
+            argparse -- argpase object
+        """
+
         def __init__(self, prog):
             super().__init__(prog, max_help_position=30)
 
     arg_parser = argparse.ArgumentParser(
         prog="normcap",
-        description="Intelligent OCR-powered screen-capture tool to capture information instead of images.",
+        description="Intelligent OCR-powered screen-capture tool "
+        + "to capture information instead of images.",
         formatter_class=ArgFormatter,
     )
 
@@ -72,7 +79,7 @@ def parse_cli_args() -> argparse.Namespace:
     arg_parser.add_argument(
         "-p", "--path", type=str, default=None, help="set a path for storing images"
     )
-    return arg_parser.parse_args()
+    return vars(arg_parser.parse_args())
 
 
 def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
@@ -90,20 +97,18 @@ def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
         logging.basicConfig(
             filename="normcap.log",
             filemode="w",
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
             datefmt="%H:%M:%S",
             level=log_level,
         )
     else:
         logging.basicConfig(
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
             datefmt="%H:%M:%S",
             level=log_level,
         )
 
     logger = logging.getLogger(__name__)
-
-    logger.info("Starting normcap...")
     return logger
 
 
@@ -122,15 +127,17 @@ def client_code(handler: Handler, normcap_data) -> NormcapData:
 
 
 def main():
+    """Main program logic."""
+
     args = parse_cli_args()
 
     # Setup logging
-    if args.verbose:
+    if args["verbose"]:
         logger = init_logging(logging.DEBUG, to_file=True)
     else:
         logger = init_logging(logging.WARN, to_file=False)
 
-    logger.info(f"Starting NormCap {_VERSION}...")
+    logger.info("Starting NormCap %s...", _VERSION)
     logger.info("Creating data object...")
     normcap_data = NormcapData(cli_args=args)
 

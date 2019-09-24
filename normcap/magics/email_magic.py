@@ -10,6 +10,10 @@ from data_model import NormcapData
 
 
 class EmailMagic(BaseMagic):
+    """Detect and extract email adress(es) in the OCR results."""
+
+    _emails = []
+
     def score(self, request: NormcapData) -> float:
         """Calc score based on chars in email adresses vs. overall chars.
 
@@ -25,16 +29,18 @@ class EmailMagic(BaseMagic):
 
         # Search email addresses in line
         reg_email = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+"
-        self.emails = re.findall(reg_email, text)
+        self._emails = re.findall(reg_email, text)
 
-        self._logger.info(f"{len(self.emails)} emails found:\n{self.emails}")
+        self._logger.info("%s", f"{len(self._emails)} emails found:\n{self._emails}")
 
         # Calc chars & ratio
-        email_chars = sum([len(e) for e in self.emails])
+        email_chars = sum([len(e) for e in self._emails])
         all_chars = max([len(text), 1])
         ratio = email_chars / all_chars
 
-        self._logger.info(f"{email_chars}/{all_chars} chars in emails. Ratio: {ratio})")
+        self._logger.info(
+            "%s", f"{email_chars}/{all_chars} chars in emails. Ratio: {ratio})"
+        )
 
         # Return final score as 100 * (email_chars / all_chars)
         return round(100 * ratio, 2)
@@ -50,7 +56,7 @@ class EmailMagic(BaseMagic):
             str -- comma separated email adresses
         """
         self._logger.info("Transforming with Email magic...")
-        concat_emails = ", ".join(self.emails)
+        concat_emails = ", ".join(self._emails)
         return concat_emails
 
     def trigger(self, request: NormcapData):
