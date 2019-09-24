@@ -39,6 +39,12 @@ def parse_cli_args() -> dict:
     """
 
     class ArgFormatter(argparse.ArgumentDefaultsHelpFormatter):
+        """Custom formatter to increase intendation of help output.
+
+        Arguments:
+            argparse -- argpase object
+        """
+
         def __init__(self, prog):
             super().__init__(prog, max_help_position=30)
 
@@ -121,6 +127,8 @@ def client_code(handler: Handler, normcap_data) -> NormcapData:
 
 
 def main():
+    """Main program logic."""
+
     args = parse_cli_args()
 
     # Setup logging
@@ -129,7 +137,7 @@ def main():
     else:
         logger = init_logging(logging.WARN, to_file=False)
 
-    logger.info(f"Starting NormCap {_VERSION}...")
+    logger.info("Starting NormCap %s...", _VERSION)
     logger.info("Creating data object...")
     normcap_data = NormcapData(cli_args=args)
 

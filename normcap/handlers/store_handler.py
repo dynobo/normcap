@@ -10,6 +10,8 @@ from data_model import NormcapData
 
 
 class StoreHandler(AbstractHandler):
+    """Saves results (e.g images) on disk. Not active by default."""
+
     def handle(self, request: NormcapData) -> NormcapData:
         """Store all screenshots and selection on harddrive.
 
@@ -21,7 +23,7 @@ class StoreHandler(AbstractHandler):
             NormcapData -- Enriched NormCap's session data
         """
         if request.cli_args["path"]:
-            self._logger.info(f"Saving images to {request.cli_args['path']}...")
+            self._logger.info("Saving images to %s...", request.cli_args["path"])
             all_images = [request.image] + [s["image"] for s in request.shots]
             self.store_images(request.cli_args["path"], all_images)
 

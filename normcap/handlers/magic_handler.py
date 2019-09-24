@@ -6,6 +6,17 @@ from data_model import NormcapData
 
 
 class MagicHandler(AbstractHandler):
+    """Loads available magics, scores, and trigger magic with highest score.
+
+    Arguments:
+        AbstractHandler {[type]} -- [description]
+
+    Returns:
+        [type] -- [description]
+    """
+
+    _magics = {}
+
     def handle(self, request: NormcapData) -> NormcapData:
         """Load magics, calculate score, execture magic with highest score.
 
@@ -62,7 +73,7 @@ class MagicHandler(AbstractHandler):
         scores = {}
         for name, magic in self._magics.items():
             scores[name] = magic.score(request)
-        self._logger.info(f"All scores: {scores}")
+        self._logger.info("All scores: %s", scores)
         return scores
 
     def _get_best_magic(self, scores) -> str:
@@ -78,6 +89,6 @@ class MagicHandler(AbstractHandler):
 
         best_magic = sorted_scores[0][0]
         best_score = sorted_scores[0][1]
-        self._logger.info(f"Highest scored magic: {best_magic} ({best_score})")
+        self._logger.info("Highest scored magic: %s", f"{best_magic} ({best_score})")
 
         return best_magic

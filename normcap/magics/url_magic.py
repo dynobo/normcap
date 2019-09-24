@@ -11,6 +11,10 @@ from data_model import NormcapData
 
 
 class UrlMagic(BaseMagic):
+    """Detect and extract urls adress(es) in the OCR results."""
+
+    _urls = []
+
     def score(self, request: NormcapData) -> float:
         """Calculate score based on chars in URLs vs. overall chars.
 
@@ -31,15 +35,15 @@ class UrlMagic(BaseMagic):
             r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*"  # Handling parenthesis
             r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])"
         )
-        self.urls = re.findall(reg_url, text, flags=re.IGNORECASE)
-        self._logger.info(f"{len(self.urls)} URLs found:\n{self.urls}")
+        self._urls = re.findall(reg_url, text, flags=re.IGNORECASE)
+        self._logger.info("%s", f"{len(self._urls)} URLs found:\n{self._urls}")
 
         # Calc chars & ratio
-        url_chars = sum([len(e) for e in self.urls])
+        url_chars = sum([len(e) for e in self._urls])
         overall_chars = max([len(text), 1])
         ratio = url_chars / overall_chars
         self._logger.info(
-            f"{url_chars} of {overall_chars} chars in emails (ratio: {ratio})"
+            "%s", f"{url_chars} of {overall_chars} chars in emails (ratio: {ratio})"
         )
 
         # Map to score
@@ -59,10 +63,10 @@ class UrlMagic(BaseMagic):
         self._logger.info("Transforming with URL magic...")
 
         # www. often is falsly ocr-ed as WWW. (capitals). Let's fix that:
-        self.urls = [u.replace("WWW.", "www.") for u in self.urls]
+        self._urls = [u.replace("WWW.", "www.") for u in self._urls]
 
         # Return as line separated list
-        return os.linesep.join(self.urls)
+        return os.linesep.join(self._urls)
 
     def trigger(self, request: NormcapData):
         """Open URL(s) in new tab(s) with default browser.
