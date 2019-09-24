@@ -78,5 +78,5 @@ class OcrHandler(AbstractHandler):
             self._logger.warn(f"Fallback to {langs[0]}.")
             lang = langs[0]
 
-        self._logger.info(f"Using language '{lang}' for ocr")
+        self._logger.info(f"Using language '{lang}' for ocr...")
         return lang
