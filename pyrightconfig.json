@@ -5,7 +5,7 @@
     "executionEnvironments": [{
         "root": "normcap",
         "extraPaths": [
-            "normcap"
+            "normcap", "normcap/handlers"
         ]
     }]
 }
