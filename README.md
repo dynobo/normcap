@@ -214,7 +214,7 @@ pipenv install --dev
 pipenv run pre-commit install -t pre-commit
 
 # Run normcap in pipenv environment
-pipenv run python normcap/normcap.py
+pipenv run python -m normcap.normcap
 ```
 
 ## Credits
