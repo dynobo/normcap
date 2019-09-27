@@ -16,16 +16,16 @@ import argparse
 
 
 # Own
-from data_model import NormcapData
-from utils import log_dataclass
-from handlers.abstract_handler import Handler
-from handlers.capture_handler import CaptureHandler
-from handlers.crop_handler import CropHandler
-from handlers.store_handler import StoreHandler
-from handlers.ocr_handler import OcrHandler
-from handlers.clipboard_handler import ClipboardHandler
-from handlers.magic_handler import MagicHandler
-from handlers.enhance_img_handler import EnhanceImgHandler
+from .data_model import NormcapData
+from .utils import log_dataclass
+from .handlers.abstract_handler import Handler
+from .handlers.capture_handler import CaptureHandler
+from .handlers.crop_handler import CropHandler
+from .handlers.store_handler import StoreHandler
+from .handlers.ocr_handler import OcrHandler
+from .handlers.clipboard_handler import ClipboardHandler
+from .handlers.magic_handler import MagicHandler
+from .handlers.enhance_img_handler import EnhanceImgHandler
 
 
 _VERSION = "0.1a0"

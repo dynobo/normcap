@@ -5,9 +5,9 @@ import mss
 from PIL import Image
 
 # Own
-from handlers.abstract_handler import AbstractHandler
-from data_model import NormcapData
-from utils import log_dataclass
+from normcap.data_model import NormcapData
+from normcap.utils import log_dataclass
+from .abstract_handler import AbstractHandler
 
 
 class CaptureHandler(AbstractHandler):

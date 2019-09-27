@@ -5,8 +5,8 @@ import re
 import webbrowser
 
 # Own
-from magics.base_magic import BaseMagic
-from data_model import NormcapData
+from .base_magic import BaseMagic
+from normcap.data_model import NormcapData
 
 
 class EmailMagic(BaseMagic):

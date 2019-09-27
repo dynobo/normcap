@@ -5,8 +5,8 @@ import pathlib
 import datetime
 
 # Own
-from handlers.abstract_handler import AbstractHandler
-from data_model import NormcapData
+from normcap.data_model import NormcapData
+from .abstract_handler import AbstractHandler
 
 
 class StoreHandler(AbstractHandler):

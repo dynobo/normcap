@@ -4,7 +4,7 @@
 import logging
 
 # Own
-from data_model import NormcapData
+from normcap.data_model import NormcapData
 
 
 class BaseMagic:

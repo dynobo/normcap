@@ -1,7 +1,7 @@
 """Magic Class to handle paragraph(s) of text."""
 
-from magics.base_magic import BaseMagic
-from data_model import NormcapData
+from .base_magic import BaseMagic
+from normcap.data_model import NormcapData
 
 
 class ParagraphMagic(BaseMagic):
