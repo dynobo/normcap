@@ -222,7 +222,7 @@ pipenv run python -m normcap.normcap
 This projected uses the following non-standard libraries:
 
 - [mss](https://pypi.org/project/mss/) *- taking screenshots*
-- [pillow](https://pypi.org/project/Pillow/) *- manipulating images* 
+- [pillow](https://pypi.org/project/Pillow/) *- manipulating images*
 - [pyocr](https://pypi.org/project/pyocr/) *- interfacing various OCR tools*
 - [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard*
 - [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms*
