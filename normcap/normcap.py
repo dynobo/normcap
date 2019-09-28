@@ -28,7 +28,7 @@ from .handlers.magic_handler import MagicHandler
 from .handlers.enhance_img_handler import EnhanceImgHandler
 
 
-_VERSION = "0.1a0"
+VERSION = "0.1a0"
 
 
 def create_argparser() -> argparse.ArgumentParser:
@@ -138,7 +138,7 @@ def main():
     else:
         logger = init_logging(logging.WARN, to_file=False)
 
-    logger.info("Starting NormCap %s...", _VERSION)
+    logger.info("Starting NormCap %s...", VERSION)
     logger.info("Creating data object...")
     normcap_data = NormcapData(cli_args=args)
 
