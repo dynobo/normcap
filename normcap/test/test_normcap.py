@@ -8,6 +8,7 @@ import pytest
 
 # Own
 from normcap import normcap
+from normcap.handlers.abstract_handler import AbstractHandler
 
 # PyLint can't handle fixtures correctly. Ignore.
 # pylint: disable=redefined-outer-name
@@ -24,7 +25,26 @@ def test_version():
 
 def test_client_code_handler():
     """CaptureHandler should be loaded and not None."""
-    assert normcap.CaptureHandler() is not None
+
+    class AddOneHandler(AbstractHandler):
+        """Dummy handler for testing."""
+
+        def handle(self, request: int) -> int:
+            """Add 1 to input and return."""
+            request += 1
+            if self._next_handler:
+                return super().handle(request)
+            else:
+                return request
+
+    test_handler_1 = AddOneHandler()
+    test_handler_2 = AddOneHandler()
+    test_handler_3 = AddOneHandler()
+
+    test_handler_1.set_next(test_handler_2).set_next(test_handler_3)
+
+    result = normcap.client_code(test_handler_1, 1)
+    assert result == 4
 
 
 # TESTING init_logging()
