@@ -1,7 +1,7 @@
 """Unit tests for main normcap logic."""
 
 # Default
-import logging  #
+import logging
 
 # Extra
 import pytest
@@ -12,22 +12,34 @@ from normcap import normcap
 # PyLint can't handle fixtures correctly. Ignore.
 # pylint: disable=redefined-outer-name
 
-# For Docstrings in pytests, see:
-# https://stackoverflow.com/questions/28898919/use-docstrings-to-list-tests-in-py-test
+
+def test_version():
+    """Are we testing right version?"""
+    assert normcap.VERSION == "0.1a0"
 
 
-def test_normcap():
+# TESTING client_code()
+# ==========================
+
+
+def test_client_code_handler():
     """CaptureHandler should be loaded and not None."""
     assert normcap.CaptureHandler() is not None
 
 
-def test_init_logging_returns_logger():
+# TESTING init_logging()
+# ==========================
+
+
+@pytest.mark.parametrize("to_file", [True, False])
+def test_init_logging_returns_logger(to_file):
     """init_logging() should return a logger."""
-    logger = normcap.init_logging(logging.WARNING)
+    logger = normcap.init_logging(logging.WARNING, to_file=to_file)
     assert isinstance(logger, logging.Logger)
 
 
 # TESTING create_argparser()
+# ==========================
 
 
 @pytest.fixture(scope="session")
