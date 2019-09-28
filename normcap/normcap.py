@@ -31,11 +31,11 @@ from .handlers.enhance_img_handler import EnhanceImgHandler
 _VERSION = "0.1a0"
 
 
-def parse_cli_args() -> dict:
+def create_argparser() -> argparse.ArgumentParser:
     """Parse command line arguments.
 
     Returns:
-        argparse.Namespace -- CLI switches and (default) values
+        ArgumentParser
     """
 
     class ArgFormatter(argparse.ArgumentDefaultsHelpFormatter):
@@ -65,7 +65,6 @@ def parse_cli_args() -> dict:
     arg_parser.add_argument(
         "-m",
         "--mode",
-        #
         type=str,
         default="trigger",
         help="startup mode [raw,parse,trigger]",
@@ -79,7 +78,7 @@ def parse_cli_args() -> dict:
     arg_parser.add_argument(
         "-p", "--path", type=str, default=None, help="set a path for storing images"
     )
-    return vars(arg_parser.parse_args())
+    return arg_parser
 
 
 def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
@@ -129,7 +128,9 @@ def client_code(handler: Handler, normcap_data) -> NormcapData:
 def main():
     """Main program logic."""
 
-    args = parse_cli_args()
+    # Parse CLI args
+    arg_parser = create_argparser()
+    args = vars(arg_parser.parse_args())
 
     # Setup logging
     if args["verbose"]:
