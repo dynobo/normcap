@@ -16,6 +16,7 @@ pywin32-ctypes = "*"
 pyinstaller = "*"
 pylint = "*"
 pefile = "*"
+rope = "*"
 
 [packages]
 mss = "*"
