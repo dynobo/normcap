@@ -60,7 +60,10 @@ class NormcapData:
             str -- stripped OCR lines concatenated to single string
         """
         return " ".join(
-            [l.content for l in self.line_boxes]  # pylint: disable=not-an-iterable
+            [
+                l.content.strip()
+                for l in self.line_boxes  # pylint: disable=not-an-iterable
+            ]
         ).strip()
 
     @property
