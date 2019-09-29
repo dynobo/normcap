@@ -14,11 +14,11 @@ class Handler(abc.ABC):
 
     @abc.abstractmethod
     def set_next(self, handler: "Handler") -> "Handler":
-        pass
+        """Define handler that is exectued next."""
 
     @abc.abstractmethod
     def handle(self, request) -> Any:
-        pass
+        """Execute handler logic."""
 
 
 class AbstractHandler(Handler):
