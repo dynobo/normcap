@@ -22,7 +22,6 @@ def test_data():
     data.left = 0
     data.right = 20
     LineBox = namedtuple("LineBox", "content")
-
     data.line_boxes = [
         LineBox(" one"),
         LineBox("two three "),
