@@ -7,7 +7,7 @@ import logging
 from .data_model import NormcapData
 
 
-def log_dataclass(desc: str, data_class: NormcapData):
+def log_dataclass(desc: str, data_class: NormcapData, return_string: bool = True):
     """Debug output of NormCap's session data.
 
     Arguments:
@@ -21,3 +21,6 @@ def log_dataclass(desc: str, data_class: NormcapData):
             string += f"{key}: {getattr(data_class, key)}\n"
     string += f"{'='*10} </dataclass> {'='*9}"
     logger.debug(string)
+
+    if return_string:  # Mainly used for testing
+        return string
