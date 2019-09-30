@@ -5,6 +5,9 @@ from normcap.data_model import NormcapData
 
 
 class SingleLineMagic(BaseMagic):
+
+    name = "single_line"
+    
     def score(self, request: NormcapData) -> float:
         """Calc score based on amount of lines
 

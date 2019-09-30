@@ -8,6 +8,7 @@ from normcap.data_model import NormcapData
 
 
 class BaseMagic:
+    name = "base"
     def __init__(self):
         self._logger = logging.getLogger(self.__class__.__name__)
         self._final_score = 0  # Initial score

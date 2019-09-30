@@ -13,6 +13,7 @@ from normcap.data_model import NormcapData
 class UrlMagic(BaseMagic):
     """Detect and extract urls adress(es) in the OCR results."""
 
+    name = "url"
     _urls = []
 
     def score(self, request: NormcapData) -> float:
