@@ -41,6 +41,7 @@ class NormcapData:
 
     # Result of ragics
     scores: dict = field(default_factory=dict)  # magics with scores
+    best_magic: str = ""  # Highest scored magic
     transformed: str = ""  # Transformed result
 
     @property
