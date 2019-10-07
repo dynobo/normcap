@@ -149,6 +149,7 @@ def data_test_image(test_params):
 
 @pytest.mark.parametrize("test_params", get_test_params())
 def test_normcap_main(test_params):
+    """Load various images and apply OCR pipeline."""
     test_data = data_test_image(test_params)
     result = normcap.main(test_data)
 
