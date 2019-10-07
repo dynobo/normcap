@@ -125,22 +125,28 @@ def client_code(handler: Handler, normcap_data) -> NormcapData:
     return result
 
 
-def main():
+def main(test_data: NormcapData = None):
     """Main program logic."""
+
+    # Init Logger
+    logger = init_logging(logging.WARN, to_file=False)
+    logger.info("Starting NormCap %s...", VERSION)
 
     # Parse CLI args
     arg_parser = create_argparser()
-    args = vars(arg_parser.parse_args())
 
-    # Setup logging
+    if test_data:
+        logger.info("Running in test mode...")
+        args = test_data.cli_args
+        normcap_data = test_data
+    else:
+        logger.info("Parsing args and creating data object...")
+        args = vars(arg_parser.parse_args())
+        normcap_data = NormcapData(cli_args=args)
+
+    # Set logging to verbose
     if args["verbose"]:
         logger = init_logging(logging.DEBUG, to_file=True)
-    else:
-        logger = init_logging(logging.WARN, to_file=False)
-
-    logger.info("Starting NormCap %s...", VERSION)
-    logger.info("Creating data object...")
-    normcap_data = NormcapData(cli_args=args)
 
     # Define Handlers
     capture = CaptureHandler()
@@ -166,6 +172,8 @@ def main():
 
     log_dataclass("Final data object:", normcap_data)
 
+    return normcap_data
+
 
 if __name__ == "__main__":
-    main()
+    _ = main()
