@@ -1,1 +1,37 @@
-{"images":[{"filename":"test_email_magic.png","expected_result":"", "expected_magic":"email","section":{"left":0, "right":0, "top":0, "bottom":0}}]}
+{
+    "images": [{
+        "filename": "test_email_magic.png",
+        "expected_result": "parker@test.com, HArDToReAd@test.com, 0815@test.com",
+        "expected_accuracy": 1,
+        "expected_magic": "email",
+        "position": {
+            "left": 388,
+            "right": 777,
+            "top": 464,
+            "bottom": 500
+        },
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": true,
+            "path": null
+        }
+    }, {
+        "filename": "test_email_magic.png",
+        "expected_result": "To: Peter Parker <peter parker@test.com>, HArD To ReAd <HArDToReAd@test.com>; 0815 <0815@test.com>; Invalid_one <notvalid@test>; Invalid_two <also/not/valid/@test.com>; Invalid_three <@test.com> Subject: OCR testing image",
+        "expected_accuracy": 0.9,
+        "expected_magic": "paragraph",
+        "position": {
+            "left": 388,
+            "right": 1000,
+            "top": 464,
+            "bottom": 521
+        },
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": true,
+            "path": null
+        }
+    }]
+}
