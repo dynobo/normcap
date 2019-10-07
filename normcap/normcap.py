@@ -135,7 +135,7 @@ def main(test_data: NormcapData = None):
     # Parse CLI args
     arg_parser = create_argparser()
 
-    if test_data:
+    if test_data and test_data.test_mode:
         logger.info("Running in test mode...")
         args = test_data.cli_args
         normcap_data = test_data
