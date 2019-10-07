@@ -2,6 +2,7 @@
 
 # Extra
 import PIL
+from PIL import Image, ImageOps
 
 # Own
 from normcap.data_model import NormcapData
@@ -23,7 +24,8 @@ class EnhanceImgHandler(AbstractHandler):
 
         # Currently, the image is only enlarged
         request.image = self._enlarge_dpi(request.image)
-        # request.image = self._grayscale(request.image)
+        request.image = self._grayscale(request.image)
+        request.image = self._strech_contrast(request.image)
 
         if self._next_handler:
             return super().handle(request)
@@ -31,7 +33,11 @@ class EnhanceImgHandler(AbstractHandler):
             return request
 
     def _grayscale(self, img: PIL.Image) -> PIL.Image:
-        img = img.convert("LA")
+        img = img.convert("L")
+        return img
+
+    def _strech_contrast(self, img: PIL.Image) -> PIL.Image:
+        img = ImageOps.autocontrast(img, 5)
         return img
 
     def _enlarge_dpi(self, img: PIL.Image) -> PIL.Image:
