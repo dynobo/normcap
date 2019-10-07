@@ -35,26 +35,28 @@ class MagicHandler(AbstractHandler):
             from normcap.magics.url_magic import UrlMagic
 
             # Load Magics
-            self._magics = {
-                "single_line": SingleLineMagic(),
-                "paragraph_magic": ParagraphMagic(),
-                "email": EmailMagic(),
-                "url_magic": UrlMagic(),
-            }
+            magics_classes = [SingleLineMagic, ParagraphMagic, EmailMagic, UrlMagic]
+
+            for magic in magics_classes:
+                self._magics[magic.name] = magic()
+
+            print(self._magics)
 
             # Calculate scores
             scores = self._calc_scores(request)
             request.scores = scores
 
             # Select winning magic
-            best_magic = self._get_best_magic(scores)
+            best_magic_name = self._get_best_magic(scores)
 
             # Transform with best magic
-            request.transformed = self._magics[best_magic].transform(request)
+            best_magic = self._magics[best_magic_name]
+            request.best_magic = best_magic_name
+            request.transformed = best_magic.transform(request)
 
             # In trigger mode, run magics action
             if request.mode == "trigger":
-                self._magics[best_magic].trigger(request)
+                best_magic.trigger(request)
 
         if self._next_handler:
             return super().handle(request)
@@ -73,6 +75,7 @@ class MagicHandler(AbstractHandler):
         scores = {}
         for name, magic in self._magics.items():
             scores[name] = magic.score(request)
+
         self._logger.info("All scores: %s", scores)
         return scores
 
