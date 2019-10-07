@@ -2,13 +2,20 @@
 
 # Default
 import logging
+import json
+import os
 
 # Extra
 import pytest
+from PIL import Image
+import Levenshtein
 
 # Own
 from normcap import normcap
+from normcap.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
+
+# from normcap import utils
 
 # PyLint can't handle fixtures correctly. Ignore.
 # pylint: disable=redefined-outer-name
@@ -99,3 +106,50 @@ def test_argparser_default_color(argparser_defaults):
 def test_argparser_default_path(argparser_defaults):
     """Check path to store images."""
     assert argparser_defaults["path"] is None
+
+
+# TESTING main():
+# ==========================
+
+
+def get_test_params():
+    """Load test parameters from json."""
+    test_img_folder = os.path.dirname(os.path.abspath(__file__)) + "/images/"
+    json_file = test_img_folder + "test_images.json"
+
+    with open(json_file) as f:
+        data = json.load(f)
+        test_params_list = data["images"]
+
+    return test_params_list
+
+
+def data_test_image(test_params):
+    """Create NormcapData instance for testing."""
+    data = NormcapData()
+    data.test_mode = True
+    data.cli_args = test_params["cli_args"]
+    data.top = test_params["position"]["top"]
+    data.bottom = test_params["position"]["bottom"]
+    data.left = test_params["position"]["left"]
+    data.right = test_params["position"]["right"]
+    data.mode = test_params["cli_args"]["mode"]
+
+    test_img_folder = os.path.dirname(os.path.abspath(__file__)) + "/images/"
+    img = Image.open(test_img_folder + test_params["filename"])
+    data.shots = [{"monitor": 0, "image": img}]
+    return data
+
+
+@pytest.mark.parametrize("test_params", get_test_params())
+def test_normcap_main(test_params):
+    test_data = data_test_image(test_params)
+    result = normcap.main(test_data)
+
+    # print(utils.log_dataclass("Test output", result, return_string=True))
+
+    rel_lev = Levenshtein.ratio(result.transformed, test_params["expected_result"])
+
+    assert (rel_lev >= test_params["expected_accuracy"]) and (
+        result.best_magic == test_params["expected_magic"]
+    )
