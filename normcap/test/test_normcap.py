@@ -118,8 +118,8 @@ def get_test_params():
     test_img_folder = os.path.dirname(os.path.abspath(__file__)) + "/images/"
     json_file = test_img_folder + "test_images.json"
 
-    with open(json_file) as f:
-        data = json.load(f)
+    with open(json_file) as data_file:
+        data = json.load(data_file)
         test_params_list = data["images"]
 
     return test_params_list
