@@ -37,7 +37,7 @@ class EnhanceImgHandler(AbstractHandler):
         return img
 
     def _strech_contrast(self, img: PIL.Image) -> PIL.Image:
-        img = ImageOps.autocontrast(img, 5)
+        img = ImageOps.autocontrast(img)
         return img
 
     def _enlarge_dpi(self, img: PIL.Image) -> PIL.Image:
