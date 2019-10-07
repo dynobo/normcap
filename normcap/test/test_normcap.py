@@ -4,6 +4,7 @@
 import logging
 import json
 import os
+import tempfile
 
 # Extra
 import pytest
@@ -135,9 +136,14 @@ def data_test_image(test_params):
     data.right = test_params["position"]["right"]
     data.mode = test_params["cli_args"]["mode"]
 
+    # Prep images
     test_img_folder = os.path.dirname(os.path.abspath(__file__)) + "/images/"
     img = Image.open(test_img_folder + test_params["filename"])
     data.shots = [{"monitor": 0, "image": img}]
+
+    # Set tempfolder for storing
+    data.cli_args["path"] = tempfile.gettempdir()
+
     return data
 
 
