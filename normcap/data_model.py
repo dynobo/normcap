@@ -21,6 +21,9 @@ class NormcapData:
         - Additional meta data
     """
 
+    # Set to true during unit tests only
+    test_mode: bool = False
+
     # Result of start
     cli_args: dict = field(default_factory=dict)  # normcap was called with those args
 
