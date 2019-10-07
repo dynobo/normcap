@@ -23,11 +23,16 @@ class EnhanceImgHandler(AbstractHandler):
 
         # Currently, the image is only enlarged
         request.image = self._enlarge_dpi(request.image)
+        # request.image = self._grayscale(request.image)
 
         if self._next_handler:
             return super().handle(request)
         else:
             return request
+
+    def _grayscale(self, img: PIL.Image) -> PIL.Image:
+        img = img.convert("LA")
+        return img
 
     def _enlarge_dpi(self, img: PIL.Image) -> PIL.Image:
         """Resize image to get equivalent of 300dpi.
@@ -40,7 +45,7 @@ class EnhanceImgHandler(AbstractHandler):
             PIL.Image -- Enlarged image
         """
         # TODO: adapt factor based on actual screen resolution
-        factor = 3
+        factor = 4
         width, height = img.size
         img = img.resize((width * factor, height * factor))
         self._logger.info("Resized screenshot by factor %s", factor)
