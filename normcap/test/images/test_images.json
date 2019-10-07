@@ -33,5 +33,22 @@
             "verbose": true,
             "path": null
         }
+    }, {
+        "filename": "test_email_magic_unscaled.png",
+        "expected_result": "dynobo@mailbox.org",
+        "expected_accuracy": 1,
+        "expected_magic": "email",
+        "position": {
+            "left": 150,
+            "right": 281,
+            "top": 92,
+            "bottom": 106
+        },
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": true,
+            "path": null
+        }
     }]
 }

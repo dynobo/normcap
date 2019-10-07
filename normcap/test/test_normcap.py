@@ -15,8 +15,7 @@ import Levenshtein
 from normcap import normcap
 from normcap.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
-
-# from normcap import utils
+from normcap import utils
 
 # PyLint can't handle fixtures correctly. Ignore.
 # pylint: disable=redefined-outer-name
@@ -153,7 +152,7 @@ def test_normcap_main(test_params):
     test_data = data_test_image(test_params)
     result = normcap.main(test_data)
 
-    # print(utils.log_dataclass("Test output", result, return_string=True))
+    print(utils.log_dataclass("Test output", result, return_string=True))
 
     rel_lev = Levenshtein.ratio(result.transformed, test_params["expected_result"])
 
