@@ -160,8 +160,8 @@ def main(test_data: NormcapData = None):
     # Define Chain of Responsibilities
     # fmt: off
     capture.set_next(crop) \
-           .set_next(store) \
            .set_next(enhance_img) \
+           .set_next(store) \
            .set_next(ocr) \
            .set_next(magics) \
            .set_next(clipboard)
