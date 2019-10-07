@@ -25,11 +25,14 @@ class CropHandler(AbstractHandler):
         Returns:
             NormcapData -- Enriched NormCap's session data
         """
-        self._logger.info("Starting GUI for area selection...")
-        request = self._select_region_with_gui(request)
+        if not request.test_mode:
+            self._logger.info("Starting GUI for area selection...")
+            request = self._select_region_with_gui(request)
+        else:
+            self._logger.info("Test mode. Skipping gui selection...")
 
         self._logger.info("Cropping image...")
-        request = self._crop_image(request)
+        request = self._crop_image(request)  # Test should jump in here
 
         log_dataclass("Dataclass after image cropped:", request)
 
