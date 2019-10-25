@@ -8,6 +8,7 @@
 <a href="https://saythanks.io/to/dynobo"><img alt="Say thanks!" src="https://img.shields.io/badge/Say-thanks-%23ff69b4"></a>
 <a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPLv3" src="https://img.shields.io/badge/License-GPLv3-blue.svg"></a>
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/Code%20style-black-%23000000"></a>
+<a href='https://coveralls.io/github/dynobo/normcap'><img src='https://coveralls.io/repos/github/dynobo/normcap/badge.svg' alt='Coverage Status' /></a>
 </p>
 
 <p align="center">
