@@ -1,34 +1,24 @@
 """Main program logic."""
 
-# Workaround for PyInstaller + pyocr issue.
-# (already fixed in pyocr master)
-# TODO: Remove, after release, to avoid problems with real missing path
-# import sys, os, pathlib
-
-# if getattr(sys, "frozen", False):
-#     os.environ["PATH"] += os.pathsep + sys._MEIPASS
-#     dummy_dir = os.path.join(sys._MEIPASS, "data", "tessdata")
-#    pathlib.Path(dummy_dir).mkdir(parents=True, exist_ok=True)
-
 # Default
 import logging
 import argparse
 
 
 # Own
-from .data_model import NormcapData
-from .utils import log_dataclass
-from .handlers.abstract_handler import Handler
-from .handlers.capture_handler import CaptureHandler
-from .handlers.crop_handler import CropHandler
-from .handlers.store_handler import StoreHandler
-from .handlers.ocr_handler import OcrHandler
-from .handlers.clipboard_handler import ClipboardHandler
-from .handlers.magic_handler import MagicHandler
-from .handlers.enhance_img_handler import EnhanceImgHandler
+from normcap.common.data_model import NormcapData
+from common.utils import log_dataclass
+from handlers.abstract_handler import Handler
+from handlers.capture_handler import CaptureHandler
+from handlers.crop_handler import CropHandler
+from handlers.store_handler import StoreHandler
+from handlers.ocr_handler import OcrHandler
+from handlers.clipboard_handler import ClipboardHandler
+from handlers.magic_handler import MagicHandler
+from handlers.enhance_img_handler import EnhanceImgHandler
 
 
-VERSION = "0.1a0"
+VERSION = "0.1a1"
 
 
 def create_argparser() -> argparse.ArgumentParser:

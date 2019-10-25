@@ -1,13 +1,14 @@
 """Magic Class to handle very simple single line text selection."""
 
-from .base_magic import BaseMagic
-from normcap.data_model import NormcapData
+# Own
+from magics.base_magic import BaseMagic
+from common.data_model import NormcapData
 
 
 class SingleLineMagic(BaseMagic):
 
     name = "single_line"
-    
+
     def score(self, request: NormcapData) -> float:
         """Calc score based on amount of lines
 

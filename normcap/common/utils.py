@@ -4,7 +4,7 @@
 import logging
 
 # Own
-from .data_model import NormcapData
+from normcap.common.data_model import NormcapData
 
 
 def log_dataclass(desc: str, data_class: NormcapData, return_string: bool = True):

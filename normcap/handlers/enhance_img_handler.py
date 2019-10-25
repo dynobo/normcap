@@ -5,8 +5,8 @@ import PIL
 from PIL import Image, ImageOps
 
 # Own
-from normcap.data_model import NormcapData
-from .abstract_handler import AbstractHandler
+from common.data_model import NormcapData
+from handlers.abstract_handler import AbstractHandler
 
 
 class EnhanceImgHandler(AbstractHandler):

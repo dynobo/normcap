@@ -7,8 +7,8 @@ from collections import namedtuple
 import pytest
 
 # Own
-from normcap import utils
-from normcap.data_model import NormcapData
+from normcap.common import utils
+from normcap.common.data_model import NormcapData
 
 # PyLint can't handle fixtures correctly. Ignore.
 # pylint: disable=redefined-outer-name

@@ -12,10 +12,11 @@ from PIL import Image
 import Levenshtein
 
 # Own
-from normcap import normcap
-from normcap.data_model import NormcapData
-from normcap.handlers.abstract_handler import AbstractHandler
-from normcap import utils
+import app as normcap
+from common.data_model import NormcapData
+from common import utils
+from handlers.abstract_handler import AbstractHandler
+
 
 # PyLint can't handle fixtures correctly. Ignore.
 # pylint: disable=redefined-outer-name

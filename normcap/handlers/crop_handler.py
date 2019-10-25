@@ -9,9 +9,9 @@ import sys
 from PIL import ImageTk
 
 # Own
-from normcap.data_model import NormcapData
-from normcap.utils import log_dataclass
-from .abstract_handler import AbstractHandler
+from common.data_model import NormcapData
+from common.utils import log_dataclass
+from handlers.abstract_handler import AbstractHandler
 
 
 class CropHandler(AbstractHandler):

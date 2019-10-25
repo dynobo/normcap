@@ -1,14 +1,15 @@
 """Magic Class to handle paragraph(s) of text."""
 
-from .base_magic import BaseMagic
-from normcap.data_model import NormcapData
+# Own
+from magics.base_magic import BaseMagic
+from common.data_model import NormcapData
 
 
 class ParagraphMagic(BaseMagic):
     """Detect and extract plain text formatted in paragraphs."""
 
     name = "paragraph"
-    
+
     def score(self, request: NormcapData) -> float:
         """Calc score based on layout of word boxes.
 

@@ -1,8 +1,8 @@
 """Handler to load available magics, get scores for every magic and takes appropriate action."""
 
 # Own
-from normcap.data_model import NormcapData
-from .abstract_handler import AbstractHandler
+from common.data_model import NormcapData
+from handlers.abstract_handler import AbstractHandler
 
 
 class MagicHandler(AbstractHandler):
@@ -29,10 +29,10 @@ class MagicHandler(AbstractHandler):
         """
         if request.mode != "raw":  # Skip all magics, if raw mode enabled
             # Import magics here (to only load, when needed)!
-            from normcap.magics.single_line_magic import SingleLineMagic
-            from normcap.magics.paragraph_magic import ParagraphMagic
-            from normcap.magics.email_magic import EmailMagic
-            from normcap.magics.url_magic import UrlMagic
+            from magics.single_line_magic import SingleLineMagic
+            from magics.paragraph_magic import ParagraphMagic
+            from magics.email_magic import EmailMagic
+            from magics.url_magic import UrlMagic
 
             # Load Magics
             magics_classes = [SingleLineMagic, ParagraphMagic, EmailMagic, UrlMagic]
