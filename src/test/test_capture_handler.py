@@ -4,8 +4,8 @@
 from PIL import Image
 
 # Own
-from common.data_model import NormcapData
-from handlers.capture_handler import CaptureHandler
+from normcap.common.data_model import NormcapData
+from normcap.handlers.capture_handler import CaptureHandler
 
 
 def test_capture_handler():

@@ -7,15 +7,15 @@ import argparse
 
 # Own
 from normcap.common.data_model import NormcapData
-from common.utils import log_dataclass
-from handlers.abstract_handler import Handler
-from handlers.capture_handler import CaptureHandler
-from handlers.crop_handler import CropHandler
-from handlers.store_handler import StoreHandler
-from handlers.ocr_handler import OcrHandler
-from handlers.clipboard_handler import ClipboardHandler
-from handlers.magic_handler import MagicHandler
-from handlers.enhance_img_handler import EnhanceImgHandler
+from normcap.common.utils import log_dataclass
+from normcap.handlers.abstract_handler import Handler
+from normcap.handlers.capture_handler import CaptureHandler
+from normcap.handlers.crop_handler import CropHandler
+from normcap.handlers.store_handler import StoreHandler
+from normcap.handlers.ocr_handler import OcrHandler
+from normcap.handlers.clipboard_handler import ClipboardHandler
+from normcap.handlers.magic_handler import MagicHandler
+from normcap.handlers.enhance_img_handler import EnhanceImgHandler
 
 
 VERSION = "0.1a1"

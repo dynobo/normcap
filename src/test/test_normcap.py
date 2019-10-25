@@ -12,10 +12,10 @@ from PIL import Image
 import Levenshtein
 
 # Own
-import app as normcap
-from common.data_model import NormcapData
-from common import utils
-from handlers.abstract_handler import AbstractHandler
+from normcap import app
+from normcap.common.data_model import NormcapData
+from normcap.common import utils
+from normcap.handlers.abstract_handler import AbstractHandler
 
 
 # PyLint can't handle fixtures correctly. Ignore.
@@ -24,7 +24,7 @@ from handlers.abstract_handler import AbstractHandler
 
 def test_version():
     """Are we testing right version?"""
-    assert normcap.VERSION == "0.1a0"
+    assert app.VERSION == "0.1a1"
 
 
 # TESTING client_code()
@@ -51,7 +51,7 @@ def test_client_code_handler():
 
     test_handler_1.set_next(test_handler_2).set_next(test_handler_3)
 
-    result = normcap.client_code(test_handler_1, 1)
+    result = app.client_code(test_handler_1, 1)
     assert result == 4
 
 
@@ -62,7 +62,7 @@ def test_client_code_handler():
 @pytest.mark.parametrize("to_file", [True, False])
 def test_init_logging_returns_logger(to_file):
     """init_logging() should return a logger."""
-    logger = normcap.init_logging(logging.WARNING, to_file=to_file)
+    logger = app.init_logging(logging.WARNING, to_file=to_file)
     assert isinstance(logger, logging.Logger)
 
 
@@ -73,7 +73,7 @@ def test_init_logging_returns_logger(to_file):
 @pytest.fixture(scope="session")
 def argparser_defaults():
     """Create argparser and provide its default values."""
-    argparser = normcap.create_argparser()
+    argparser = app.create_argparser()
     return vars(argparser.parse_args([]))
 
 
@@ -151,7 +151,7 @@ def data_test_image(test_params):
 def test_normcap_main(test_params):
     """Load various images and apply OCR pipeline."""
     test_data = data_test_image(test_params)
-    result = normcap.main(test_data)
+    result = app.main(test_data)
 
     print(utils.log_dataclass("Test output", result, return_string=True))
 

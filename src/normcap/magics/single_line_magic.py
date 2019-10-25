@@ -1,8 +1,8 @@
 """Magic Class to handle very simple single line text selection."""
 
 # Own
-from magics.base_magic import BaseMagic
-from common.data_model import NormcapData
+from normcap.magics.base_magic import BaseMagic
+from normcap.common.data_model import NormcapData
 
 
 class SingleLineMagic(BaseMagic):
