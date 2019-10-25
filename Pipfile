@@ -17,6 +17,8 @@ pyinstaller = "*"
 pylint = "*"
 pefile = "*"
 rope = "*"
+python-coveralls = "*"
+coverage = "==5.0a4"
 
 [packages]
 mss = "*"

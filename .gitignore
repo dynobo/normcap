@@ -5,6 +5,7 @@
 .vscode/
 cov.xml
 coverage
+.coveralls.yml
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
@@ -50,7 +51,7 @@ pip-delete-this-directory.txt
 htmlcov/
 .tox/
 .nox/
-.coverage
+#.coverage
 .coverage.*
 .coveragerc
 .cache
