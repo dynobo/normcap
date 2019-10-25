@@ -21,6 +21,9 @@ class NormcapData:
         - Additional meta data
     """
 
+    # Set to true during unit tests only
+    test_mode: bool = False
+
     # Result of start
     cli_args: dict = field(default_factory=dict)  # normcap was called with those args
 
@@ -41,6 +44,7 @@ class NormcapData:
 
     # Result of ragics
     scores: dict = field(default_factory=dict)  # magics with scores
+    best_magic: str = ""  # Highest scored magic
     transformed: str = ""  # Transformed result
 
     @property
@@ -59,7 +63,12 @@ class NormcapData:
         Returns:
             str -- stripped OCR lines concatenated to single string
         """
-        return " ".join([l.content for l in self.line_boxes]).strip()
+        return " ".join(
+            [
+                l.content.strip()
+                for l in self.line_boxes  # pylint: disable=not-an-iterable
+            ]
+        ).strip()
 
     @property
     def lines(self) -> str:
@@ -68,4 +77,9 @@ class NormcapData:
         Returns:
             str -- stripped OCR lines concatenated using newline as separater
         """
-        return os.linesep.join([l.content.strip() for l in self.line_boxes])
+        all_lines = [
+            l.content.strip()
+            for l in self.line_boxes  # pylint: disable=not-an-iterable
+        ]
+        all_lines = list(filter(None, all_lines))  # Remove empty
+        return os.linesep.join(all_lines)

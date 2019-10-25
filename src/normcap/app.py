@@ -1,41 +1,31 @@
 """Main program logic."""
 
-# Workaround for PyInstaller + pyocr issue.
-# (already fixed in pyocr master)
-# TODO: Remove, after release, to avoid problems with real missing path
-# import sys, os, pathlib
-
-# if getattr(sys, "frozen", False):
-#     os.environ["PATH"] += os.pathsep + sys._MEIPASS
-#     dummy_dir = os.path.join(sys._MEIPASS, "data", "tessdata")
-#    pathlib.Path(dummy_dir).mkdir(parents=True, exist_ok=True)
-
 # Default
 import logging
 import argparse
 
 
 # Own
-from data_model import NormcapData
-from utils import log_dataclass
-from handlers.abstract_handler import Handler
-from handlers.capture_handler import CaptureHandler
-from handlers.crop_handler import CropHandler
-from handlers.store_handler import StoreHandler
-from handlers.ocr_handler import OcrHandler
-from handlers.clipboard_handler import ClipboardHandler
-from handlers.magic_handler import MagicHandler
-from handlers.enhance_img_handler import EnhanceImgHandler
+from normcap.common.data_model import NormcapData
+from normcap.common.utils import log_dataclass
+from normcap.handlers.abstract_handler import Handler
+from normcap.handlers.capture_handler import CaptureHandler
+from normcap.handlers.crop_handler import CropHandler
+from normcap.handlers.store_handler import StoreHandler
+from normcap.handlers.ocr_handler import OcrHandler
+from normcap.handlers.clipboard_handler import ClipboardHandler
+from normcap.handlers.magic_handler import MagicHandler
+from normcap.handlers.enhance_img_handler import EnhanceImgHandler
 
 
-_VERSION = "0.1a0"
+VERSION = "0.1a1"
 
 
-def parse_cli_args() -> dict:
+def create_argparser() -> argparse.ArgumentParser:
     """Parse command line arguments.
 
     Returns:
-        argparse.Namespace -- CLI switches and (default) values
+        ArgumentParser
     """
 
     class ArgFormatter(argparse.ArgumentDefaultsHelpFormatter):
@@ -65,7 +55,6 @@ def parse_cli_args() -> dict:
     arg_parser.add_argument(
         "-m",
         "--mode",
-        #
         type=str,
         default="trigger",
         help="startup mode [raw,parse,trigger]",
@@ -79,7 +68,7 @@ def parse_cli_args() -> dict:
     arg_parser.add_argument(
         "-p", "--path", type=str, default=None, help="set a path for storing images"
     )
-    return vars(arg_parser.parse_args())
+    return arg_parser
 
 
 def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
@@ -126,20 +115,28 @@ def client_code(handler: Handler, normcap_data) -> NormcapData:
     return result
 
 
-def main():
+def main(test_data: NormcapData = None):
     """Main program logic."""
 
-    args = parse_cli_args()
+    # Init Logger
+    logger = init_logging(logging.WARN, to_file=False)
+    logger.info("Starting NormCap %s...", VERSION)
 
-    # Setup logging
+    # Parse CLI args
+    arg_parser = create_argparser()
+
+    if test_data and test_data.test_mode:
+        logger.info("Running in test mode...")
+        args = test_data.cli_args
+        normcap_data = test_data
+    else:
+        logger.info("Parsing args and creating data object...")
+        args = vars(arg_parser.parse_args())
+        normcap_data = NormcapData(cli_args=args)
+
+    # Set logging to verbose
     if args["verbose"]:
         logger = init_logging(logging.DEBUG, to_file=True)
-    else:
-        logger = init_logging(logging.WARN, to_file=False)
-
-    logger.info("Starting NormCap %s...", _VERSION)
-    logger.info("Creating data object...")
-    normcap_data = NormcapData(cli_args=args)
 
     # Define Handlers
     capture = CaptureHandler()
@@ -153,8 +150,8 @@ def main():
     # Define Chain of Responsibilities
     # fmt: off
     capture.set_next(crop) \
-           .set_next(store) \
            .set_next(enhance_img) \
+           .set_next(store) \
            .set_next(ocr) \
            .set_next(magics) \
            .set_next(clipboard)
@@ -165,6 +162,8 @@ def main():
 
     log_dataclass("Final data object:", normcap_data)
 
+    return normcap_data
+
 
 if __name__ == "__main__":
-    main()
+    _ = main()

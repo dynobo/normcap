@@ -5,13 +5,14 @@ import re
 import webbrowser
 
 # Own
-from magics.base_magic import BaseMagic
-from data_model import NormcapData
+from normcap.magics.base_magic import BaseMagic
+from normcap.common.data_model import NormcapData
 
 
 class EmailMagic(BaseMagic):
     """Detect and extract email adress(es) in the OCR results."""
 
+    name = "email"
     _emails = []
 
     def score(self, request: NormcapData) -> float:

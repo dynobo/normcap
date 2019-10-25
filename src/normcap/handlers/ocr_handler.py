@@ -4,9 +4,9 @@
 import pyocr
 
 # Own
-from handlers.abstract_handler import AbstractHandler
-from data_model import NormcapData
-from utils import log_dataclass
+from normcap.common.data_model import NormcapData
+from normcap.common.utils import log_dataclass
+from normcap.handlers.abstract_handler import AbstractHandler
 
 
 class OcrHandler(AbstractHandler):
@@ -24,7 +24,6 @@ class OcrHandler(AbstractHandler):
         """
         self._logger.info("Applying OCR...")
 
-        # tool = self.get_tool()
         tool = pyocr.tesseract
         request.cli_args["lang"] = self.get_language(request.cli_args["lang"], tool)
 
@@ -41,26 +40,6 @@ class OcrHandler(AbstractHandler):
             return super().handle(request)
         else:
             return request
-
-    def get_tool(self):
-        """Check availability of OCR tools and return best.
-
-        Raises:
-            RuntimeError: No supported OCR tool found
-
-        Returns:
-            pyocr.TOOL -- Best available tool for OCR
-        """
-        # Check available OCR
-        ocr_tools = pyocr.get_available_tools()
-        if len(ocr_tools) == 0:
-            self._logger.error("No OCR tool found!")
-            raise RuntimeError
-
-        # The ocr tools are returned in the recommended order
-        tool = ocr_tools[0]
-        self._logger.info("Selecting %s to perform ocr", tool.get_name())
-        return tool
 
     def get_language(self, lang, tool) -> str:
         """Select language to use for OCR.

@@ -4,8 +4,8 @@
 import pyperclip
 
 # Own
-from handlers.abstract_handler import AbstractHandler
-from data_model import NormcapData
+from normcap.common.data_model import NormcapData
+from normcap.handlers.abstract_handler import AbstractHandler
 
 
 class ClipboardHandler(AbstractHandler):

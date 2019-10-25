@@ -1,8 +1,8 @@
 """Handler to load available magics, get scores for every magic and takes appropriate action."""
 
 # Own
-from handlers.abstract_handler import AbstractHandler
-from data_model import NormcapData
+from normcap.common.data_model import NormcapData
+from normcap.handlers.abstract_handler import AbstractHandler
 
 
 class MagicHandler(AbstractHandler):
@@ -29,32 +29,34 @@ class MagicHandler(AbstractHandler):
         """
         if request.mode != "raw":  # Skip all magics, if raw mode enabled
             # Import magics here (to only load, when needed)!
-            from magics.single_line_magic import SingleLineMagic
-            from magics.paragraph_magic import ParagraphMagic
-            from magics.email_magic import EmailMagic
-            from magics.url_magic import UrlMagic
+            from normcap.magics.single_line_magic import SingleLineMagic
+            from normcap.magics.paragraph_magic import ParagraphMagic
+            from normcap.magics.email_magic import EmailMagic
+            from normcap.magics.url_magic import UrlMagic
 
             # Load Magics
-            self._magics = {
-                "single_line": SingleLineMagic(),
-                "paragraph_magic": ParagraphMagic(),
-                "email": EmailMagic(),
-                "url_magic": UrlMagic(),
-            }
+            magics_classes = [SingleLineMagic, ParagraphMagic, EmailMagic, UrlMagic]
+
+            for magic in magics_classes:
+                self._magics[magic.name] = magic()
+
+            print(self._magics)
 
             # Calculate scores
             scores = self._calc_scores(request)
             request.scores = scores
 
             # Select winning magic
-            best_magic = self._get_best_magic(scores)
+            best_magic_name = self._get_best_magic(scores)
 
             # Transform with best magic
-            request.transformed = self._magics[best_magic].transform(request)
+            best_magic = self._magics[best_magic_name]
+            request.best_magic = best_magic_name
+            request.transformed = best_magic.transform(request)
 
             # In trigger mode, run magics action
             if request.mode == "trigger":
-                self._magics[best_magic].trigger(request)
+                best_magic.trigger(request)
 
         if self._next_handler:
             return super().handle(request)
@@ -73,6 +75,7 @@ class MagicHandler(AbstractHandler):
         scores = {}
         for name, magic in self._magics.items():
             scores[name] = magic.score(request)
+
         self._logger.info("All scores: %s", scores)
         return scores
 

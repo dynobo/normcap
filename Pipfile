@@ -16,6 +16,7 @@ pywin32-ctypes = "*"
 pyinstaller = "*"
 pylint = "*"
 pefile = "*"
+rope = "*"
 
 [packages]
 mss = "*"
@@ -23,6 +24,7 @@ pillow = "*"
 pyocr = "*"
 pyperclip = "*"
 black = "*"
+python-levenshtein = "*"
 
 [requires]
 python_version = "3.7"

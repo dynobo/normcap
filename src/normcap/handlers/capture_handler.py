@@ -5,9 +5,9 @@ import mss
 from PIL import Image
 
 # Own
-from handlers.abstract_handler import AbstractHandler
-from data_model import NormcapData
-from utils import log_dataclass
+from normcap.common.data_model import NormcapData
+from normcap.common.utils import log_dataclass
+from normcap.handlers.abstract_handler import AbstractHandler
 
 
 class CaptureHandler(AbstractHandler):
@@ -23,6 +23,17 @@ class CaptureHandler(AbstractHandler):
         """
         self._logger.info("Taking Screenshot(s)...")
 
+        if not request.test_mode:
+            request = self._take_screeshot(request)
+        else:
+            self._logger.info("Test mode. Using existing screenshot...")
+
+        if self._next_handler:
+            return super().handle(request)
+        else:
+            return request
+
+    def _take_screeshot(self, request):
         with mss.mss() as sct:
             # Grab screens of all monitors
             for idx, position in enumerate(sct.monitors[1:]):
@@ -37,8 +48,4 @@ class CaptureHandler(AbstractHandler):
                 request.shots.append(shot)
 
         log_dataclass("Dataclass after screenshot added:", request)
-
-        if self._next_handler:
-            return super().handle(request)
-        else:
-            return request
+        return request
