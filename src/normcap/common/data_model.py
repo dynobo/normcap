@@ -41,7 +41,6 @@ class NormcapData:
 
     # Result of OCR
     words: list = field(default_factory=list)  # Words+metadata detected by OCR
-    line_boxes: list = field(default_factory=list)  # Detected OCR boxes
 
     # Result of ragics
     scores: dict = field(default_factory=dict)  # magics with scores
@@ -64,12 +63,7 @@ class NormcapData:
         Returns:
             str -- stripped OCR lines concatenated to single string
         """
-        return " ".join(
-            [
-                l.content.strip()
-                for l in self.line_boxes  # pylint: disable=not-an-iterable
-            ]
-        ).strip()
+        return " ".join([w["text"].strip() for w in self.words]).strip()
 
     @property
     def lines(self) -> str:
@@ -78,9 +72,14 @@ class NormcapData:
         Returns:
             str -- stripped OCR lines concatenated using newline as separater
         """
-        all_lines = [
-            l.content.strip()
-            for l in self.line_boxes  # pylint: disable=not-an-iterable
-        ]
+        current_line_num = 0
+        all_lines = []
+        for word in self.words:
+            if word["line_num"] != current_line_num:
+                current_line_num = word["line_num"]
+                all_lines.append(word["text"])
+            else:
+                all_lines[-1] += " " + word["text"]
+
         all_lines = list(filter(None, all_lines))  # Remove empty
         return os.linesep.join(all_lines)
