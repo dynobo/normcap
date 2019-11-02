@@ -24,8 +24,8 @@ class EnhanceImgHandler(AbstractHandler):
 
         # Currently, the image is only enlarged
         request.image = self._enlarge_dpi(request.image)
-        request.image = self._grayscale(request.image)
-        request.image = self._strech_contrast(request.image)
+        # request.image = self._grayscale(request.image)
+        # request.image = self._strech_contrast(request.image)
 
         if self._next_handler:
             return super().handle(request)
