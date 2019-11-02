@@ -40,6 +40,7 @@ class NormcapData:
     bottom: int = 0
 
     # Result of OCR
+    words: list = field(default_factory=list)  # Words+metadata detected by OCR
     line_boxes: list = field(default_factory=list)  # Detected OCR boxes
 
     # Result of ragics
