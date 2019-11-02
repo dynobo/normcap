@@ -1,0 +1,8 @@
+{
+    "include": [
+        "src"
+    ],
+    "executionEnvironments": [{
+        "root": "src"
+    }]
+}
