@@ -68,20 +68,22 @@ def main(test_data: NormcapData = None, args=None):
     """Main program logic."""
 
     # Init Logger
-    logger = init_logging(logging.WARN, to_file=False)
+    logger = init_logging(logging.INFO, to_file=False)
     logger.info("Starting NormCap %s...", VERSION)
 
+    # Init Normcap Data
     if test_data and test_data.test_mode:
         logger.info("Running in test mode...")
         args = test_data.cli_args
         normcap_data = test_data
     else:
-        logger.info("Parsing args and creating data object...")
         normcap_data = NormcapData(cli_args=args)
 
-    # Set logging to verbose
+    # Set adjust loglevel
     if args["verbose"]:
-        logger = init_logging(logging.DEBUG, to_file=True)
+        logging.getLogger().setLevel(logging.DEBUG)
+    else:
+        logging.getLogger().setLevel(logging.WARN)
 
     # Define Handlers
     capture = CaptureHandler()
