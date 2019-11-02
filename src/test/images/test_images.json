@@ -1,6 +1,6 @@
 {
     "images": [{
-        "filename": "test_email_magic.png",
+        "filename": "test_email_magic.jpg",
         "expected_result": "parker@test.com, HArDToReAd@test.com, 0815@test.com",
         "expected_accuracy": 1,
         "expected_magic": "email",
@@ -17,7 +17,7 @@
             "path": null
         }
     }, {
-        "filename": "test_email_magic.png",
+        "filename": "test_email_magic.jpg",
         "expected_result": "To: Peter Parker <peter parker@test.com>, HArD To ReAd <HArDToReAd@test.com>; 0815 <0815@test.com>; Invalid_one <notvalid@test>; Invalid_two <also/not/valid/@test.com>; Invalid_three <@test.com> Subject: OCR testing image",
         "expected_accuracy": 0.9,
         "expected_magic": "paragraph",
@@ -34,7 +34,7 @@
             "path": null
         }
     }, {
-        "filename": "test_email_magic_unscaled.png",
+        "filename": "test_email_magic_unscaled.jpg",
         "expected_result": "dynobo@mailbox.org",
         "expected_accuracy": 1,
         "expected_magic": "email",
