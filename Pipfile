@@ -19,6 +19,7 @@ rope = "*"
 python-coveralls = "*"
 coverage = "==5.0a4"
 black = "*"
+bumpversion = "*"
 
 [packages]
 mss = "*"

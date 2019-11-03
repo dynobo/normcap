@@ -28,25 +28,18 @@
 
 ## Introduction
 
-**Features:**
+**Basic usage:**
 
-- Works on Linux, Mac & Windows.
-- Supports multi monitor setups.
-- Extracts textual information from screen or images via Optical Character Recognition (OCR).
-- (Optionally) Formats the text intelligently depending on content type.
-- (Optionally) Automatically triggers an action fitting to the detected content type.
+1. Launch `normcap`
+2. Select region of interest on screen
+3. Retrieve recognized text in clipboard
 
-**Usage examples:**
+**Example use cases:**
 
 - Extract URLs, tables, etc. that have been sent to you in screenshot.
 - Copy non-selectable error messages from alert windows.
 - Capture subtitles from video stills.
 - Extract text from menu entries or hover messages.
-
-**Why "NormCap":**
-
-- See [XKCD](https://xkcd.com)  
-<a href="https://xkcd.com/2116/"><img src="https://imgs.xkcd.com/comics/norm_normal_file_format.png" width="250px;"></a>
 
 ## Installation
 
@@ -177,19 +170,13 @@ TODO: Screencast E-Mail Magic
 
 TODO: Screencast URL Magic
 
+### Why "NormCap"?
+
+See [XKCD](https://xkcd.com):
+
+<a href="https://xkcd.com/2116/"><img src="https://imgs.xkcd.com/comics/norm_normal_file_format.png" width="250px;"></a>
+
 ## Contribute
-
-### Design Principles
-
-- **Don't run as service:** As NormCap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to a slower start-up time.
-  
-- **Avoid text in UI:** This just avoids translations ;-) And I think it is feasible in such an simple application.
-  
-- **Avoid configuration file or settings UI:** Focus on simplicity and core functionality.
-
-- **Dependencies:** The less dependencies, the better. Of course I have to compromise, but I'm always open to suggestions on how to further reduce dependencies.
-
-- **Main design pattern:** [Chain of Responsibility](https://refactoring.guru/design-patterns/chain-of-responsibility)
 
 ### Setup Environment
 
@@ -214,6 +201,16 @@ pipenv run pre-commit install -t pre-commit
 # Run normcap in pipenv environment
 pipenv run python -m normcap
 ```
+
+### Design Principles
+
+- **Multi-Platform**<br>Should work on on Linux, Mac & Windows.
+- **Don't run as service**<br>As NormCap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to a slower start-up time.
+- **Avoid text in UI**<br>This just avoids translations ;-) And I think it is feasible in such an simple application.
+- **Avoid configuration file or settings UI**<br>Focus on simplicity and core functionality.
+- **Dependencies**<br>The less dependencies, the better. Of course I have to compromise, but I'm always open to suggestions on how to further reduce dependencies.
+- **Chain of Responsibility as main design pattern**<br>[See description on refactoring.guru](https://refactoring.guru/design-patterns/chain-of-responsibility)
+- **Multi-Monitors**<br>Supports setups with two or more display.
 
 ## Credits
 
