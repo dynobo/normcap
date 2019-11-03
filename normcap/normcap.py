@@ -1,10 +1,11 @@
 """Main program logic."""
 
-# Default
+# Standard
 import logging
-
+import argparse
 
 # Own
+from normcap import __version__
 from normcap.common.data_model import NormcapData
 from normcap.common.utils import log_dataclass
 from normcap.handlers.abstract_handler import Handler
@@ -17,7 +18,54 @@ from normcap.handlers.magic_handler import MagicHandler
 from normcap.handlers.enhance_img_handler import EnhanceImgHandler
 
 
-VERSION = "0.1a1"
+def create_argparser() -> argparse.ArgumentParser:
+    """Parse command line arguments.
+
+    Returns:
+        ArgumentParser
+    """
+
+    class ArgFormatter(argparse.ArgumentDefaultsHelpFormatter):
+        """Custom formatter to increase intendation of help output.
+
+        Arguments:
+            argparse -- argpase object
+        """
+
+        def __init__(self, prog):
+            super().__init__(prog, max_help_position=30)
+
+    parser = argparse.ArgumentParser(
+        prog="normcap",
+        description="Intelligent OCR-powered screen-capture tool "
+        + "to capture information instead of images.",
+        formatter_class=ArgFormatter,
+    )
+
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="print debug information to console",
+        default=False,
+    )
+    parser.add_argument(
+        "-m",
+        "--mode",
+        type=str,
+        default="trigger",
+        help="startup mode [raw,parse,trigger]",
+    )
+    parser.add_argument(
+        "-l", "--lang", type=str, default="eng", help="set language for ocr tool"
+    )
+    parser.add_argument(
+        "-c", "--color", type=str, default="#FF0000", help="set primary color for UI"
+    )
+    parser.add_argument(
+        "-p", "--path", type=str, default=None, help="set a path for storing images"
+    )
+    return parser
 
 
 def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
@@ -64,12 +112,12 @@ def client_code(handler: Handler, normcap_data) -> NormcapData:
     return result
 
 
-def main(test_data: NormcapData = None, args=None):
+def main(test_data: NormcapData = None):
     """Main program logic."""
 
     # Init Logger
     logger = init_logging(logging.INFO, to_file=False)
-    logger.info("Starting NormCap %s...", VERSION)
+    logger.info("Starting NormCap %s...", __version__)
 
     # Init Normcap Data
     if test_data and test_data.test_mode:
@@ -77,6 +125,8 @@ def main(test_data: NormcapData = None, args=None):
         args = test_data.cli_args
         normcap_data = test_data
     else:
+        arg_parser = create_argparser()
+        args = vars(arg_parser.parse_args())
         normcap_data = NormcapData(cli_args=args)
 
     # Set adjust loglevel

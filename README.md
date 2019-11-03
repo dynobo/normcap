@@ -205,17 +205,14 @@ cd normcap
 # Install pipenv (if not already installed)
 pip install pipenv
 
-# Install project dependencies
-pipenv install
-
-# Install project development dependencies
+# Install project development incl. dependencies
 pipenv install --dev
 
 # Register pre-commit hook
 pipenv run pre-commit install -t pre-commit
 
 # Run normcap in pipenv environment
-pipenv run python -m normcap.normcap
+pipenv run python -m normcap
 ```
 
 ## Credits

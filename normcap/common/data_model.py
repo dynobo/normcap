@@ -5,7 +5,7 @@ import os
 from dataclasses import dataclass, field
 
 # Extra
-from PIL import Image
+from PIL import Image  # type: ignore
 
 
 @dataclass()

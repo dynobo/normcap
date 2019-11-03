@@ -6,7 +6,7 @@ import tkinter
 import sys
 
 # Extra
-from PIL import ImageTk
+from PIL import ImageTk  # type: ignore
 
 # Own
 from normcap.common.data_model import NormcapData
