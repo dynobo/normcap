@@ -95,7 +95,7 @@ After the requirements are installed, continue with **NormCap**:
 
 ### On Mac
 
-*On Mac, some issues occure. [Help needed](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).*
+*On Mac, some issues occur. [Help needed](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).*
 
 1\. Install requirements:
 
@@ -185,7 +185,7 @@ TODO: Screencast URL Magic
   
 - **Avoid text in UI:** This just avoids translations ;-) And I think it is feasible in such an simple application.
   
-- **Avoid config-file or settings UI:** Focus on simplicity and core functionality.
+- **Avoid configuration file or settings UI:** Focus on simplicity and core functionality.
 
 - **Dependencies:** The less dependencies, the better. Of course I have to compromise, but I'm always open to suggestions on how to further reduce dependencies.
 
@@ -224,7 +224,7 @@ This projected uses the following non-standard libraries:
 
 - [mss](https://pypi.org/project/mss/) *- taking screenshots*
 - [pillow](https://pypi.org/project/Pillow/) *- manipulating images*
-- [pyocr](https://pypi.org/project/pyocr/) *- interfacing various OCR tools*
+- [tesserocr](https://pypi.org/project/tesserocr/) *- interfacing various OCR tools*
 - [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard*
 - [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms*
 
