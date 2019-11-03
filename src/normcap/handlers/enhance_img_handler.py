@@ -2,7 +2,7 @@
 
 # Extra
 import PIL
-from PIL import Image, ImageOps
+from PIL import ImageOps
 
 # Own
 from normcap.common.data_model import NormcapData
