@@ -1,8 +1,5 @@
 """Unit tests for utils functions."""
 
-# Default
-from collections import namedtuple
-
 # Extras
 import pytest
 
@@ -22,8 +19,12 @@ def test_data():
     data.bottom = 10
     data.left = 0
     data.right = 20
-    LineBox = namedtuple("LineBox", "content")
-    data.line_boxes = [LineBox(" one"), LineBox("two three "), LineBox(" four   ")]
+    data.words = [
+        {"line_num": 1, "text": "one"},
+        {"line_num": 2, "text": "two"},
+        {"line_num": 2, "text": "three"},
+        {"line_num": 3, "text": "four"},
+    ]
     return data
 
 

@@ -2,7 +2,6 @@
 
 # Default
 import logging
-import argparse
 
 
 # Own
@@ -19,56 +18,6 @@ from normcap.handlers.enhance_img_handler import EnhanceImgHandler
 
 
 VERSION = "0.1a1"
-
-
-def create_argparser() -> argparse.ArgumentParser:
-    """Parse command line arguments.
-
-    Returns:
-        ArgumentParser
-    """
-
-    class ArgFormatter(argparse.ArgumentDefaultsHelpFormatter):
-        """Custom formatter to increase intendation of help output.
-
-        Arguments:
-            argparse -- argpase object
-        """
-
-        def __init__(self, prog):
-            super().__init__(prog, max_help_position=30)
-
-    arg_parser = argparse.ArgumentParser(
-        prog="normcap",
-        description="Intelligent OCR-powered screen-capture tool "
-        + "to capture information instead of images.",
-        formatter_class=ArgFormatter,
-    )
-
-    arg_parser.add_argument(
-        "-v",
-        "--verbose",
-        action="store_true",
-        help="print debug information to console",
-        default=False,
-    )
-    arg_parser.add_argument(
-        "-m",
-        "--mode",
-        type=str,
-        default="trigger",
-        help="startup mode [raw,parse,trigger]",
-    )
-    arg_parser.add_argument(
-        "-l", "--lang", type=str, default="eng", help="set language for ocr tool"
-    )
-    arg_parser.add_argument(
-        "-c", "--color", type=str, default="#FF0000", help="set primary color for UI"
-    )
-    arg_parser.add_argument(
-        "-p", "--path", type=str, default=None, help="set a path for storing images"
-    )
-    return arg_parser
 
 
 def init_logging(log_level: int, to_file: bool = False) -> logging.Logger:
@@ -115,28 +64,26 @@ def client_code(handler: Handler, normcap_data) -> NormcapData:
     return result
 
 
-def main(test_data: NormcapData = None):
+def main(test_data: NormcapData = None, args=None):
     """Main program logic."""
 
     # Init Logger
-    logger = init_logging(logging.WARN, to_file=False)
+    logger = init_logging(logging.INFO, to_file=False)
     logger.info("Starting NormCap %s...", VERSION)
 
-    # Parse CLI args
-    arg_parser = create_argparser()
-
+    # Init Normcap Data
     if test_data and test_data.test_mode:
         logger.info("Running in test mode...")
         args = test_data.cli_args
         normcap_data = test_data
     else:
-        logger.info("Parsing args and creating data object...")
-        args = vars(arg_parser.parse_args())
         normcap_data = NormcapData(cli_args=args)
 
-    # Set logging to verbose
+    # Set adjust loglevel
     if args["verbose"]:
-        logger = init_logging(logging.DEBUG, to_file=True)
+        logging.getLogger().setLevel(logging.DEBUG)
+    else:
+        logging.getLogger().setLevel(logging.WARN)
 
     # Define Handlers
     capture = CaptureHandler()

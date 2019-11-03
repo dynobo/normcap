@@ -51,7 +51,7 @@ class EnhanceImgHandler(AbstractHandler):
             PIL.Image -- Enlarged image
         """
         # TODO: adapt factor based on actual screen resolution
-        factor = 4
+        factor = 5
         width, height = img.size
         img = img.resize((width * factor, height * factor))
         self._logger.info("Resized screenshot by factor %s", factor)
