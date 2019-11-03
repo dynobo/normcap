@@ -1,5 +1,0 @@
-[MASTER]
-init-hook='import sys; sys.path.append("normcap")'
-
-[MESSAGES CONTROL]
-disable=logging-fstring-interpolation
