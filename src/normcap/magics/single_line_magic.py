@@ -19,7 +19,7 @@ class SingleLineMagic(BaseMagic):
         Returns:
             float -- score between 0-100 (100 = more likely)
         """
-        if len(request.line_boxes) == 1:
+        if request.num_lines == 1:
             self._final_score = 50
         if len(request.text) == 0:
             self._final_score = 1
