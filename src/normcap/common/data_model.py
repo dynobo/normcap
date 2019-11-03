@@ -83,3 +83,16 @@ class NormcapData:
 
         all_lines = list(filter(None, all_lines))  # Remove empty
         return os.linesep.join(all_lines)
+
+    @property
+    def num_lines(self) -> int:
+        """Helper to return number of lines.
+
+        Returns:
+            int -- number of detected lines
+        """
+        line_nums = set()
+        for word in self.words:
+            line_nums.add(word["line_num"])
+
+        return len(line_nums)
