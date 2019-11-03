@@ -1,7 +1,7 @@
 """Handler responsible for copying the result to clipboard."""
 
 # Extra
-import pyperclip
+import pyperclip  # type: ignore
 
 # Own
 from normcap.common.data_model import NormcapData

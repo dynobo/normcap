@@ -1,8 +1,8 @@
 """Handler responsible for attaching screenshot(s) to session data."""
 
 # Extra
-import mss
-from PIL import Image
+import mss  # type: ignore
+from PIL import Image  # type: ignore
 
 # Own
 from normcap.common.data_model import NormcapData

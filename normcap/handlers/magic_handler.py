@@ -1,4 +1,6 @@
 """Handler to load available magics, get scores for every magic and takes appropriate action."""
+# Standard
+from typing import Dict
 
 # Own
 from normcap.common.data_model import NormcapData
@@ -15,7 +17,7 @@ class MagicHandler(AbstractHandler):
         [type] -- [description]
     """
 
-    _magics = {}
+    _magics: Dict = {}
 
     def handle(self, request: NormcapData) -> NormcapData:
         """Load magics, calculate score, execture magic with highest score.

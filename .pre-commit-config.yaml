@@ -6,14 +6,14 @@ repos:
     name: black
     stages: [commit]
     language: system
-    entry: poetry run black
+    entry: pipenv run black
     types: [python]
 
   - id: flake8
     name: flake8
     stages: [commit]
     language: system
-    entry: poetry run flake8
+    entry: pipenv run flake8
     types: [python]
     exclude: setup.py
 
@@ -21,7 +21,7 @@ repos:
     name: mypy
     stages: [commit]
     language: system
-    entry: poetry run mypy
+    entry: pipenv run mypy
     types: [python]
     pass_filenames: false
 
@@ -29,7 +29,7 @@ repos:
     name: pytest
     stages: [commit]
     language: system
-    entry: poetry run pytest
+    entry: pipenv run pytest
     types: [python]
     pass_filenames: false    
 
@@ -37,6 +37,6 @@ repos:
     name: pytest
     stages: [push]
     language: system
-    entry: poetry run pytest --cov --cov-fail-under=1
+    entry: pipenv run pytest --cov --cov-fail-under=1
     types: [python]
     pass_filenames: false

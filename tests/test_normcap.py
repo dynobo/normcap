@@ -12,7 +12,7 @@ from PIL import Image
 import Levenshtein
 
 # Own
-from normcap import app
+from normcap import normcap
 from normcap.common.data_model import NormcapData
 from normcap.common import utils
 from normcap.handlers.abstract_handler import AbstractHandler
@@ -24,7 +24,7 @@ from normcap.handlers.abstract_handler import AbstractHandler
 
 def test_version():
     """Are we testing right version?"""
-    assert app.VERSION == "0.1a1"
+    assert normcap.__version__ == "0.1a1"
 
 
 # TESTING client_code()
@@ -51,8 +51,51 @@ def test_client_code_handler():
 
     test_handler_1.set_next(test_handler_2).set_next(test_handler_3)
 
-    result = app.client_code(test_handler_1, 1)
+    result = normcap.client_code(test_handler_1, 1)
     assert result == 4
+
+
+# TESTING CLi arguments
+# ==========================
+
+
+@pytest.fixture(scope="session")
+def argparser_defaults():
+    """Create argparser and provide its default values."""
+    argparser = normcap.create_argparser()
+    return vars(argparser.parse_args([]))
+
+
+def test_argparser_defaults_complete(argparser_defaults):
+    """Check if all default options are available."""
+    args_keys = set(argparser_defaults.keys())
+    expected_options = set(["verbose", "mode", "lang", "color", "path"])
+    assert args_keys == expected_options
+
+
+def test_argparser_default_verbose(argparser_defaults):
+    """Check verbose (for loglevel)."""
+    assert argparser_defaults["verbose"] is False
+
+
+def test_argparser_default_mode(argparser_defaults):
+    """Check default capture mode."""
+    assert argparser_defaults["mode"] == "trigger"
+
+
+def test_argparser_default_lang(argparser_defaults):
+    """Check OCR language."""
+    assert argparser_defaults["lang"] == "eng"
+
+
+def test_argparser_default_color(argparser_defaults):
+    """Check accent color."""
+    assert argparser_defaults["color"] == "#FF0000"
+
+
+def test_argparser_default_path(argparser_defaults):
+    """Check path to store images."""
+    assert argparser_defaults["path"] is None
 
 
 # TESTING init_logging()
@@ -62,7 +105,7 @@ def test_client_code_handler():
 @pytest.mark.parametrize("to_file", [True, False])
 def test_init_logging_returns_logger(to_file):
     """init_logging() should return a logger."""
-    logger = app.init_logging(logging.WARNING, to_file=to_file)
+    logger = normcap.init_logging(logging.WARNING, to_file=to_file)
     assert isinstance(logger, logging.Logger)
 
 
@@ -108,11 +151,13 @@ def data_test_image(test_params):
 def test_normcap_main(test_params):
     """Load various images and apply OCR pipeline."""
     test_data = data_test_image(test_params)
-    result = app.main(test_data)
+    result = normcap.main(test_data)
 
     print(utils.log_dataclass("Test output", result, return_string=True))
 
-    rel_lev = Levenshtein.ratio(result.transformed, test_params["expected_result"])
+    rel_lev = Levenshtein.ratio(  # pylint: disable=no-member
+        result.transformed, test_params["expected_result"]
+    )
 
     assert (rel_lev >= test_params["expected_accuracy"]) and (
         result.best_magic == test_params["expected_magic"]

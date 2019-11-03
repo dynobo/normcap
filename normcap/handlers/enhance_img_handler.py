@@ -1,8 +1,7 @@
 """Handler responsible to optimize the captured image for OCR."""
 
 # Extra
-import PIL
-from PIL import Image, ImageOps
+import PIL  # type: ignore
 
 # Own
 from normcap.common.data_model import NormcapData
@@ -37,7 +36,7 @@ class EnhanceImgHandler(AbstractHandler):
         return img
 
     def _strech_contrast(self, img: PIL.Image) -> PIL.Image:
-        img = ImageOps.autocontrast(img)
+        img = PIL.ImageOps.autocontrast(img)
         return img
 
     def _enlarge_dpi(self, img: PIL.Image) -> PIL.Image:

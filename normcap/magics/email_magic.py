@@ -3,6 +3,7 @@
 # Default
 import re
 import webbrowser
+from typing import List
 
 # Own
 from normcap.magics.base_magic import BaseMagic
@@ -13,7 +14,7 @@ class EmailMagic(BaseMagic):
     """Detect and extract email adress(es) in the OCR results."""
 
     name = "email"
-    _emails = []
+    _emails: List[str] = []
 
     def score(self, request: NormcapData) -> float:
         """Calc score based on chars in email adresses vs. overall chars.

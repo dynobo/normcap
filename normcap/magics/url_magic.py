@@ -4,6 +4,7 @@
 import re
 import os
 import webbrowser
+from typing import List
 
 # Own
 from normcap.magics.base_magic import BaseMagic
@@ -14,7 +15,7 @@ class UrlMagic(BaseMagic):
     """Detect and extract urls adress(es) in the OCR results."""
 
     name = "url"
-    _urls = []
+    _urls: List[str] = []
 
     def score(self, request: NormcapData) -> float:
         """Calculate score based on chars in URLs vs. overall chars.
@@ -33,7 +34,7 @@ class UrlMagic(BaseMagic):
         # (Creds to http://www.regexguru.com/2008/11/detecting-urls-in-a-block-of-text/)
         reg_url = (
             r"(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)"  # Prefix
-            r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*"  # Handling parenthesis
+            r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*"  # Handle parenthesis
             r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])"
         )
         self._urls = re.findall(reg_url, text, flags=re.IGNORECASE)
