@@ -16,11 +16,11 @@ INSTALL_REQUIRES = ["mss", "Pillow", "tesserocr", "pyperclip", "python-Levenshte
 # https://github.com/simonflueckiger/tesserocr-windows_build/releases
 TESSEROCR_PYPI = "tesserocr"
 TESSEROCR_WIN32 = (
-    "git+https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
+    "tesserocr@git+https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
     "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win32.whl"
 )
 TESSEROCR_WIN64 = (
-    "git+https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
+    "tesserocr@git+https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
     "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl"
 )
 
