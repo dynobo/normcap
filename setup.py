@@ -30,7 +30,7 @@ class install_tesserocr(install):
             tess_version = "win32"
  
     print("RUNNING PIP")
-    pip(['install', TESSEROCR[tess_version]])
+    pip._internal.main(['install', TESSEROCR[tess_version]])
     
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
