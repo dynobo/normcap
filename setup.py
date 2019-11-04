@@ -7,7 +7,8 @@ from setuptools.command.install import install as _install
 
 class install_tesserocr(_install):
   def run(self):
-    _install.do_egg_install(self)
+    print("RUNNING POST")
+    _install.run(self)
     
     # If Platform is window, exchange tesserocr with pre compiled wheel from
     # https://github.com/simonflueckiger/tesserocr-windows_build/releases
@@ -28,6 +29,7 @@ class install_tesserocr(_install):
         if platform.machine().endswith("86"):
             tess_version = "win32"
  
+    print("RUNNING PIP")
     pip.main(['install', TESSEROCR[tess_version]])
     
 # The directory containing this file
