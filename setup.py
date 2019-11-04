@@ -31,7 +31,7 @@ class install_tesserocr(install):
             tess_version = "win32"
  
     print("RUNNING PIP")
-    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'my_package'])
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', TESSEROCR[tess_version]])
     
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
