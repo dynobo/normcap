@@ -51,7 +51,7 @@ NormCap on Linux requires **Tesseract** (incl. **language data**) and **XClip**.
 
 ```sh
 ## on Debian/Ubuntu/Mint
-sudo apt-get install tesseract-ocr tesseract-ocr-eng xclip
+sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip python3-tk
 
 ## on Arch:
 sudo pacman -S tesseract tesseract-data-eng xclip
@@ -218,7 +218,7 @@ This projected uses the following non-standard libraries:
 
 - [mss](https://pypi.org/project/mss/) *- taking screenshots*
 - [pillow](https://pypi.org/project/Pillow/) *- manipulating images*
-- [tesserocr](https://pypi.org/project/tesserocr/) *- interfacing various OCR tools*
+- [tesserocr](https://pypi.org/project/tesserocr/) *- wrapper for tesseract's API*
 - [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard*
 - [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms*
 
