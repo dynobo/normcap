@@ -47,28 +47,30 @@
 
 NormCap on Linux requires **Tesseract** (incl. **language data**) and **XClip**.
 
-1\. Install requirements:
+#### Ubuntu/Debian:
 
 ```sh
-## on Debian/Ubuntu/Mint
-sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip python3-tk
+## install dependencies
+sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip python3-tk python3-pil.imagetk
 
-## on Arch:
-sudo pacman -S tesseract tesseract-data-eng xclip
+# download & install
+pip3 install normcap
 
-## on Fedora:
-sudo dnf install tesseract xclip
+# run
+normcap
 ```
 
-2\.  Download and extract a [released binary package](https://github.com/dynobo/normcap/releases), then:
+#### Arch
 
 ```sh
-# make binary executable
-cd normcap
-chmod +x ./normcap
+## on Arch:
+sudo pacman -S tesseract tesseract-data-eng xclip
+```
 
-# Run
-./normcap
+#### Fedora
+
+```sh
+sudo dnf install tesseract xclip
 ```
 
 ### On Windows
