@@ -3,12 +3,12 @@ import pathlib
 import platform
 import pip
 from setuptools import setup, find_packages
-from setuptools.command.install import install as _install
+from setuptools.command.install import install
 
-class install_tesserocr(_install):
+class install_tesserocr(install):
   def run(self):
     print("RUNNING POST")
-    _install.run(self)
+    install.run(self)
     
     # If Platform is window, exchange tesserocr with pre compiled wheel from
     # https://github.com/simonflueckiger/tesserocr-windows_build/releases
@@ -30,7 +30,7 @@ class install_tesserocr(_install):
             tess_version = "win32"
  
     print("RUNNING PIP")
-    pip.main(['install', TESSEROCR[tess_version]])
+    pip(['install', TESSEROCR[tess_version]])
     
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
