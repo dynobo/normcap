@@ -6,7 +6,7 @@ import sys
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 
-class install_tesserocr(install):
+class InstallTesserocr(install):
   def run(self):
     print("Choosing tesserocr version depending on platform...")
     install.run(self)
@@ -68,5 +68,5 @@ setup(
     python_requires=">=3.7.0",
     install_requires=["mss", "Pillow", "pyperclip", "python-Levenshtein"],
     entry_points={"console_scripts": ["normcap=normcap.normcap:main",]},
-    cmdclass={'install': install_tesserocr}
+    cmdclass={'install': InstallTesserocr}
 )
