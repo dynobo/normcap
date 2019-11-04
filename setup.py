@@ -6,33 +6,66 @@ import sys
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 
-class InstallTesserocr(install):
-  def run(self):
-    print("Choosing tesserocr version depending on platform...")
-    install.run(self)
-    
-    # If Platform is window, exchange tesserocr with pre compiled wheel from
-    # https://github.com/simonflueckiger/tesserocr-windows_build/releases
-    TESSEROCR = { "pypi package": "tesserocr",
-                  "prebuild wheel for win32" : (
-                                "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
-                                "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win32.whl"
-                            ),
-                  "prebuild wheel for win64": (
-                                "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
-                                "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl"
-                            )
-                }
-    tess_version = "pypi package"
-    if platform.system().lower() == "windows":
+
+class InstallWinDeps(install):
+    def run(self):
+        install.run(self)
+
+        if platform.system().lower() != "windows":
+            print("Not on Windows. Skipping platform specific dependencies.")
+            return
+
+        print("Installing windows specific python packages...")
+
+        # For windows use pre compiled wheel for tesserocr from
+        # https://github.com/simonflueckiger/tesserocr-windows_build/releases
+        TESSEROCR = {
+            "win32": (
+                "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
+                "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win32.whl"
+            ),
+            "win64": (
+                "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
+                "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl"
+            ),
+        }
+
+        # For windows use pre compiled wheel for python-levenshtein from
+        # https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-levenshtein
+        # (This C++ version of levenshtein is necessary, because it is _fast_)
+        LEVENSHTEIN = {
+            "win32": (
+                "https://download.lfd.uci.edu/pythonlibs/"
+                "g5apjq5m/python_Levenshtein-0.12.0-cp37-cp37m-win32.whl"
+            ),
+            "win64": (
+                "https://download.lfd.uci.edu/pythonlibs/"
+                "g5apjq5m/python_Levenshtein-0.12.0-cp37-cp37m-win_amd64.whl"
+            ),
+        }
+
+        win_version = "win32"
         if platform.machine().endswith("64"):
-            tess_version = "prebuild wheel for win64"
-        if platform.machine().endswith("86"):
-            tess_version = "prebuild wheel for win32"
-    print(f"Installing tesserocr from {tess_version}: {TESSEROCR[tess_version]}...")  
-    subprocess.check_call([sys.executable, '-m', 'pip', 'install', TESSEROCR[tess_version], "--trusted-host", "github-production-release-asset-2e65be.s3.amazonaws.com"])
-    print("Done.")
-    
+            win_version = "win64"
+
+        print(
+            f"Tesserocr: {TESSEROCR[win_version]}...\n"
+            f"python-Levenshtein: {TESSEROCR[win_version]}..."
+        )
+
+        subprocess.check_call(
+            [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                TESSEROCR[win_version],
+                LEVENSHTEIN[win_version],
+            ]
+        )
+        print("Done.")
+
+
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
 
@@ -66,7 +99,13 @@ setup(
     packages=find_packages(exclude=("tests",)),
     include_package_data=False,
     python_requires=">=3.7.0",
-    install_requires=["mss", "Pillow", "pyperclip", "python-Levenshtein"],
+    install_requires=[
+        "mss",
+        "Pillow",
+        "pyperclip",
+        "tesserocr; platform_system!='Windows'",
+        "python-Levenshtein; platform_system!='Windows'",
+    ],
     entry_points={"console_scripts": ["normcap=normcap.normcap:main",]},
-    cmdclass={'install': InstallTesserocr}
+    cmdclass={"install": InstallWinDeps},
 )
