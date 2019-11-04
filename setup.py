@@ -15,7 +15,7 @@ class InstallWinDeps(install):
             print("Not on Windows. Skipping platform specific dependencies.")
             return
 
-        print("Installing windows specific python packages...")
+        print("Installed Windows specific python packages:")
 
         # For windows use pre compiled wheel for tesserocr from
         # https://github.com/simonflueckiger/tesserocr-windows_build/releases
