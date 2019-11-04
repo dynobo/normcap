@@ -7,13 +7,15 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 
 
-class InstallTesserocr(install):
+class InstallWinDeps(install):
     def run(self):
+        install.run(self)
+
         if platform.system().lower() != "windows":
+            print("Not on Windows. Skipping platform specific dependencies.")
             return
 
         print("Installing windows specific python packages...")
-        install.run(self)
 
         # For windows use pre compiled wheel for tesserocr from
         # https://github.com/simonflueckiger/tesserocr-windows_build/releases
@@ -105,5 +107,5 @@ setup(
         "python-Levenshtein; platform_system!='Windows'",
     ],
     entry_points={"console_scripts": ["normcap=normcap.normcap:main",]},
-    cmdclass={"install": InstallTesserocr},
+    cmdclass={"install": InstallWinDeps},
 )
