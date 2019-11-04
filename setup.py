@@ -8,30 +8,30 @@ from setuptools.command.install import install
 
 class install_tesserocr(install):
   def run(self):
-    print("RUNNING POST")
+    print("Choosing tesserocr version depending on platform...")
     install.run(self)
     
     # If Platform is window, exchange tesserocr with pre compiled wheel from
     # https://github.com/simonflueckiger/tesserocr-windows_build/releases
-    TESSEROCR = { "pypi": "tesserocr",
-                  "win32" : (
+    TESSEROCR = { "pypi package": "tesserocr",
+                  "prebuild wheel for win32" : (
                                 "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
                                 "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win32.whl"
                             ),
-                  "win64": (
+                  "prebuild wheel for win64": (
                                 "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
                                 "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl"
                             )
                 }
-    tess_version = "pypi"
+    tess_version = "pypi package"
     if platform.system().lower() == "windows":
         if platform.machine().endswith("64"):
-            tess_version = "win64"
+            tess_version = "prebuild wheel for win64"
         if platform.machine().endswith("86"):
-            tess_version = "win32"
- 
-    print("RUNNING PIP")
+            tess_version = "prebuild wheel for win32"
+    print(f"Installing tesserocr from {tess_version}: {TESSEROCR[tess_version]}...")  
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', TESSEROCR[tess_version], "--trusted-host", "github-production-release-asset-2e65be.s3.amazonaws.com"])
+    print("Done.")
     
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
