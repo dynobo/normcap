@@ -1,6 +1,7 @@
 # Standard
 import pathlib
 import platform
+import pip
 from setuptools import setup, find_packages
 from setuptools.command.install import install as _install
 
