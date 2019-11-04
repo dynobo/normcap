@@ -1,7 +1,8 @@
 # Standard
 import pathlib
 import platform
-from pip._internal import main as pip_main
+import subprocess
+import sys
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 
@@ -30,7 +31,7 @@ class install_tesserocr(install):
             tess_version = "win32"
  
     print("RUNNING PIP")
-    pip_main(['install', TESSEROCR[tess_version]])
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'my_package'])
     
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
