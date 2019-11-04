@@ -14,7 +14,7 @@ class install_tesserocr(_install):
                   "win32" : (
                                 "tesserocr@git+https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
                                 "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win32.whl"
-                            )
+                            ),
                   "win64": (
                                 "tesserocr@git+https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
                                 "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl"
