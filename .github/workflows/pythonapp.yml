@@ -11,13 +11,16 @@ jobs:
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
-        python-version: 3.7
+        python-version: 3.7        
+    - name: Install system dependencies
+      run: | 
+        sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip python3-tk python3-pil.imagetk
     - name: Install pipenv
       run: |
         sudo pip3 install pipenv
-    - name: Install dependencies
+    - name: Install python dependencies
       run: | 
-        pipenv install --dev
+        pipenv --bare install --dev
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
