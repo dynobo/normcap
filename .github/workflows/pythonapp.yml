@@ -14,7 +14,7 @@ jobs:
         python-version: 3.7        
     - name: Install system dependencies
       run: | 
-        sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip python3-tk python3-pil.imagetk tk-dev
+        sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip python3-tk python3-pil.imagetk tk8.6
     - name: Install pipenv
       run: |
         sudo pip3 install pipenv
