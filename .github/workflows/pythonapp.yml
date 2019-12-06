@@ -16,15 +16,16 @@ jobs:
       run: > 
         sudo apt-get install 
         tesseract-ocr libtesseract-dev libleptonica-dev 
-        pkg-config xclip python3-tk python3-pil.imagetk tk8.6 tk8.6-dev tk tk-dev
+        pkg-config xclip python3-tk python3-pil.imagetk 
+        tk8.6 tk8.6-dev tk tk-dev
     - name: Install pipenv
       run: |
-        sudo pip3 install pipenv
-        dpkg -s python3-tk
-        python -v
+        pip3 install --upgrade pip 
+        pip3 install pipenv
+        export PIPENV_VENV_IN_PROJECT=true
     - name: Install python dependencies
       run: | 
-        pipenv --bare install --dev
+        pipenv install --dev
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
