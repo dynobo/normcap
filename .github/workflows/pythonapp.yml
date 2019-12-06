@@ -32,6 +32,10 @@ jobs:
         pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. 
         pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+    - name: Test tkinter import
+      run: >   
+        printf 'import tikinter\ntkinter._test()\n' > test.py
+        pipenv run python test.py
     - name: Test with pytest
       run: |
         pipenv run pytest
