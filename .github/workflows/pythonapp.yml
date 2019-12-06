@@ -34,7 +34,7 @@ jobs:
         pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
     - name: Test tkinter import
       run: >   
-        printf 'import tikinter\ntkinter._test()\n' > test.py
+        printf 'import tkinter\ntkinter._test()\n' > test.py
         pipenv run python test.py
     - name: Test with pytest
       run: |
