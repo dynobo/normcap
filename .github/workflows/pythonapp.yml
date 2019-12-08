@@ -31,4 +31,4 @@ jobs:
         $HOME/.local/bin/pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
     - name: Test with pytest
       run: |
-        $HOME/.local/bin/pipenv run xvfb-run python3.7 -m pytest
+        startx && $HOME/.local/bin/pipenv run python3.7 -m pytest
