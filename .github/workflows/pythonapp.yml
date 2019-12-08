@@ -25,6 +25,7 @@ jobs:
         export PIPENV_VENV_IN_PROJECT=true
     - name: Install python dependencies
       run: | 
+        cd /home/runner/work/normcap
         pipenv install --dev
     - name: Lint with flake8
       run: |
