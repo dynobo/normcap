@@ -23,9 +23,8 @@ jobs:
         # && sudo rm -r /var/lib/apt/lists/*
     - name: Install pipenv
       run: |
-        pip3 install --upgrade pip 
-        pip3 install pipenv
-        export PIPENV_VENV_IN_PROJECT=true
+        python -m pip install --upgrade pip
+        python -m pip install pipenv
     - name: Install python dependencies
       run: | 
         pipenv --help
