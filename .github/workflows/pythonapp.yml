@@ -25,6 +25,8 @@ jobs:
         $HOME/.local/bin/pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. 
         $HOME/.local/bin/pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+    - name: Test X Server
+      run: xinit -geometry =80x65+10+10 -fn 8x13 -j -fg white -bg navy
     - name: Test with pytest
       run: |
-        startx $HOME/.local/bin/pipenv run python3.7 -m pytest
+        $HOME/.local/bin/pipenv run python3.7 -m pytest
