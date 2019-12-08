@@ -11,9 +11,7 @@ jobs:
     # PREPARE
     - name: Install Python 3.7 
       # Because GitHub Actions' python isn't build against tkinter!
-      run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk python3-pil.imagetk
-    - name: Install build dependencies
-      run: sudo ./configure --enable-static --sysconfdir=/etc --localstatedir=/var
+      run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk python3-pil pyton3-pyqt5
     - name: Install normcap dependencies
       run: sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip 
     - name: Install pipenv
