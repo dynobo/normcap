@@ -13,7 +13,7 @@ jobs:
       # Because GitHub Actions' python isn't build against tkinter!
       run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk python3-pil tk tcl tk-dev fontconfig
     - name: show info
-      run: sudo apt-show-versions fontconfig fontconfig-config
+      run: sudo apt-get -s install fontconfig fontconfig-config
     - name: downgrade
       run:  sudo apt-get -y install fontconfig=2.12
     - name: Install normcap dependencies
