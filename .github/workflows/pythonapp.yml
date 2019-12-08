@@ -15,10 +15,12 @@ jobs:
         architecture: 'x64' 
     - name: Install system dependencies
       run: > 
+        sudo apt-get install &&
         sudo apt-get install 
         tesseract-ocr libtesseract-dev libleptonica-dev 
         pkg-config xclip python3-tk python3-pil
-        tk8.6 tk8.6-dev tk tk-dev python3-tk-dbg
+        tk tk-dev tcl python3-tk-dbg 
+        # && sudo rm -r /var/lib/apt/lists/*
     - name: Install pipenv
       run: |
         pip3 install --upgrade pip 
