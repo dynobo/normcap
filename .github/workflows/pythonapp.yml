@@ -20,16 +20,16 @@ jobs:
         tk8.6 tk8.6-dev tk tk-dev python3-tk-dbg
     - name: Install pipenv
       run: |
-        pip3 install --upgrade pip 
+        # pip3 install --upgrade pip 
         pip3 install pipenv
         # export PIPENV_VENV_IN_PROJECT=true
     - name: Install python dependencies
       run: | 
-        cd /home/runner/work/normcap
+        # cd /home/runner/work/normcap
         pipenv install --dev
     - name: Lint with flake8
       run: |
-        cd /home/runner/work/normcap
+        # cd /home/runner/work/normcap
         # stop the build if there are Python syntax errors or undefined names
         pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. 
