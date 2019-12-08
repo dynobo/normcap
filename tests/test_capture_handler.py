@@ -23,7 +23,7 @@ def test_capture_handler():
     except ScreenShotError:
         # We expect this error if no Xserver is available:
         x_available = False
-        print("=" * 30, os.environ["DESKTOP"])
-        if os.environ["DESKTOP"]:
+        if "DISPLAY" in os.environ:
+            print("\nWARNING: Exception, but X seems running!\n")
             x_available = True
         assert x_available is False
