@@ -8,26 +8,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master    
-    # - name: Set up Python 3.7
-    #   uses: actions/setup-python@v1
-    #   with:
-    #     python-version: '3.7'
-    #     architecture: 'x64' 
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.7'
+        architecture: 'x64' 
+    - name: Setup Pipenv
+      uses: dschep/install-pipenv-action@v1        
     - name: Install system dependencies
       run: > 
         sudo apt-get update &&
         sudo apt-get install 
         tesseract-ocr libtesseract-dev libleptonica-dev 
         pkg-config xclip
-        python3-all python3-pip python3-psutil
-        python3.7-tk python3-pil python3.7
+        python3.7-tk 
         tk tk-dev tcl
-    - name: Install pipenv
-      run: |
-        pip3 install --user pipenv
-    - name: Install python dependencies
-      run: | 
-        $HOME/.local/bin/pipenv install --dev --ignore-pipfile
+        # python3-all python3-pip python3-psutil python3-pil python3.7
+    # - name: Install pipenv
+    #   run: |
+    #     pip3 install --user pipenv
+    #- name: Install python dependencies
+    #  run: | 
+    #     pipenv install --dev --ignore-pipfile
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
