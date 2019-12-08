@@ -1,4 +1,6 @@
 """Unit tests for screenshot capture handler."""
+# Default
+import os
 
 # Extra
 from PIL import Image
@@ -12,18 +14,16 @@ from normcap.handlers.capture_handler import CaptureHandler
 def test_capture_handler():
     """Test if screenshots are added to data object."""
     data = NormcapData()
+    capture = CaptureHandler()
     try:
-        capture = CaptureHandler()
         result = capture.handle(data)
         assert (len(result.shots) > 0) and (
             isinstance(result.shots[0]["image"], Image.Image)
         )
     except ScreenShotError:
-        # We get this error if e.g. no Xserver is available.
-        # Fallback to test_mode, as needed by github actions
-        capture = CaptureHandler()
-        data.test_mode = True
-        result = capture.handle(data)
-        assert (len(result.shots) > 0) and (
-            isinstance(result.shots[0]["image"], Image.Image)
-        )
+        # We expect this error if no Xserver is available:
+        x_available = False
+        print("=" * 30, os.environ["DESKTOP"])
+        if os.environ["DESKTOP"]:
+            x_available = True
+        assert x_available is False
