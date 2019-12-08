@@ -16,7 +16,7 @@ jobs:
       run: > 
         sudo apt-get install 
         tesseract-ocr libtesseract-dev libleptonica-dev 
-        pkg-config xclip python3-tk python3-pil 
+        pkg-config xclip python3.7 python3-tk python3-pil 
         tk8.6 tk8.6-dev tk tk-dev python3-tk-dbg
     - name: Install pipenv
       run: |
