@@ -24,7 +24,7 @@ jobs:
         tk tk-dev tcl
     - name: Install pipenv
       run: |
-        pip3 install --upgrade pip
+        #pip3 install --upgrade pip
         pip3 install pipenv
     - name: Install python dependencies
       run: | 
