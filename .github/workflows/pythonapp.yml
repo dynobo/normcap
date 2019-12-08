@@ -19,13 +19,13 @@ jobs:
         sudo apt-get install 
         tesseract-ocr libtesseract-dev libleptonica-dev 
         pkg-config xclip
-        python3-all python3-pip python3-setuptools python3-psutil python3-regex
+        python3-all python3-pip
         python3.7-tk python3-pil python3.7
         tk tk-dev tcl
     - name: Install pipenv
       run: |
-        sudo python3.7 -m pip install --upgrade pip
-        sudo python3.7 -m pip install pipenv
+        python3.7 -m pip install --upgrade pip
+        python3.7 -m pip install pipenv
     - name: Install python dependencies
       run: | 
         pipenv --bare install --dev
