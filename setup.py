@@ -106,6 +106,6 @@ setup(
         "tesserocr; platform_system!='Windows'",
         "python-Levenshtein; platform_system!='Windows'",
     ],
-    entry_points={"console_scripts": ["normcap=normcap.normcap:main",]},
+    entry_points={"console_scripts": ["normcap=normcap.normcap:main"]},
     cmdclass={"install": InstallWinDeps},
 )
