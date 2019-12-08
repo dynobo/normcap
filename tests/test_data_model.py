@@ -14,6 +14,7 @@ from normcap.common.data_model import NormcapData
 def test_data():
     """Create NormcapData instance for testing."""
     data = NormcapData()
+    data.test_mode = True
     data.top = 0
     data.bottom = 10
     data.left = 0

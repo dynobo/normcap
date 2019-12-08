@@ -37,19 +37,11 @@ class CaptureHandler(AbstractHandler):
         with mss.mss() as sct:
             # Grab screens of all monitors
             for idx, position in enumerate(sct.monitors[1:]):
-                # Capture
-                try:
-                    raw = sct.grab(position)
 
-                    # Convert to Pil
-                    img = Image.frombytes("RGB", raw.size, raw.bgra, "raw", "BGRX")
-                except mss.exception.ScreenShotError as e:
-                    # This exception is thrown when executed headless with xvfb-run
-                    # during github action tests
-                    self._logger.error("Couldn't grab screenshot\n")
-                    self._logger.error(e)
-                    self._logger.info("Using empty image instead...")
-                    img = Image.new("RGB", (60, 30), color="red")
+                raw = sct.grab(position)
+
+                # Convert to Pil
+                img = Image.frombytes("RGB", raw.size, raw.bgra, "raw", "BGRX")
 
                 # Append list with screenshots
                 shot = {"monitor": idx, "image": img, "position": position}
