@@ -24,6 +24,6 @@ def test_capture_handler():
         # We expect this error if no Xserver is available:
         x_available = False
         if "DISPLAY" in os.environ:
-            print("\nWARNING: Exception, but X seems running!\n")
+            print(f"\nWARNING: Exception, but Display set to {os.environ['DISLAY']}\n")
             x_available = True
         assert x_available is False
