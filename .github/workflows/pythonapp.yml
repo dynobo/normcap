@@ -22,9 +22,9 @@ jobs:
         tk tk-dev tcl
     - name: Install pipenv
       run: |
-        python3.7 -m pip install --upgrade pip
-        python3.7 -m pip install pipenv
-        python3.7 --version
+        sudo python3.7 -m pip install --upgrade pip
+        sudo python3.7 -m pip install pipenv
+        sudo python3.7 --version
     - name: Install python dependencies
       run: | 
         pipenv --bare install --dev
