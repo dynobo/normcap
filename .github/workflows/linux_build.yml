@@ -1,4 +1,4 @@
-name: linux_x64_build
+name: linux64 dev build
 
 on: [push]
 
@@ -34,5 +34,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: $GITHUB_REF-normcap
+        name: ${{ GITHUB_REF }}-normcap
         path: dist/normcap
