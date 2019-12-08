@@ -4,18 +4,30 @@ on: [push]
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master    
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: '3.7'
-        architecture: 'x64' 
     - name: Install system dependencies
-      run: sudo apt-get install python3-tk tk tk-dev tcl
-      #     ^^^ not sure, which pkgs are necessary...
-    - name: Testing tkinter import
+      run: > 
+        sudo apt-get update &&
+        sudo apt-get install 
+        tesseract-ocr libtesseract-dev libleptonica-dev 
+        pkg-config xclip
+    - name: Install Python 3.7 
+      # GitHub Actions' python isn't build against tkinter!
+      run: sudo apt-get install python3.7 python3-pip python3.7-tk 
+        # python3-apt python3-psutil python3-all python3-pil
+    - name: Install pipenv
+      run: python3.7 -m pip install --user pipenv
+    - name: Install virtual env
+      run: $HOME/.local/bin/pipenv install --dev
+    - name: Lint with flake8
       run: |
-        printf 'import tkinter\ntkinter._test()\n' > test.py
-        python test.py
+        # stop the build if there are Python syntax errors or undefined names
+        pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. 
+        pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+    - name: Test with pytest
+      run: |
+        pipenv run xvfb-run python3.7 -m pytest
