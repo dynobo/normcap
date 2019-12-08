@@ -27,7 +27,7 @@ jobs:
         pip3 install --user pipenv
     - name: Install python dependencies
       run: | 
-        $HOME/.local/bin/pipenv install --dev --system --ignore-pipfile
+        $HOME/.local/bin/pipenv install --dev --ignore-pipfile
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
