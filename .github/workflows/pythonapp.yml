@@ -25,8 +25,9 @@ jobs:
     - name: Install pipenv
       run: |
         pip3 install --user pipenv
+        ls -la $HOME/.local/bin
         export PATH="$PATH:$HOME/.local/bin"
-        echo PATH
+        echo $PATH
     - name: Install python dependencies
       run: | 
         pipenv install --dev
