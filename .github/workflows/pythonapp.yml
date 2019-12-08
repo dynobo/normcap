@@ -18,12 +18,12 @@ jobs:
     - name: Install system dependencies
       run: > 
         sudo apt-get update &&
-        sudo apt-get install 
+        sudo apt-get install  
         tesseract-ocr libtesseract-dev libleptonica-dev 
         pkg-config xclip
         python3.7-tk 
         tk tk-dev tcl
-        # python3-all python3-pip python3-psutil python3-pil python3.7
+        # python3-all  python3-pip python3-psutil python3-pil python3.7
     # - name: Install pipenv
     #   run: |
     #     pip3 install --user pipenv
