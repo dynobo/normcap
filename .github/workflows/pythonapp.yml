@@ -26,7 +26,7 @@ jobs:
     - name: Install python dependencies
       run: | 
         # cd /home/runner/work/normcap
-        pipenv install --dev
+        pipenv --bare install --dev
     - name: Lint with flake8
       run: |
         # cd /home/runner/work/normcap
@@ -36,7 +36,6 @@ jobs:
         pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
     - name: Test tkinter import
       run: |
-        cd /home/runner/work/normcap
         pipenv run python -m normcap
         # printf 'import tkinter\ntkinter._test()\n' > test.py
         # pipenv run python test.py
