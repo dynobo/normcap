@@ -20,4 +20,4 @@ jobs:
     - name: Lint with flake8
       run: $HOME/.local/bin/pipenv run flake8 . --count --show-source --statistics
     - name: Test with pytest
-      run: $HOME/.local/bin/pipenv run xvfb-run python3.7 -m pytest
+      run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-pixdepths 32" python3.7 -m pytest
