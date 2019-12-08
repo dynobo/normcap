@@ -13,7 +13,7 @@ jobs:
       with:
         python-version: '3.7'
         architecture: 'x64' 
-    - name: Setup Pipenv
+    - name: Set up Pipenv
       uses: dschep/install-pipenv-action@v1        
     - name: Install system dependencies
       run: > 
@@ -27,9 +27,9 @@ jobs:
     # - name: Install pipenv
     #   run: |
     #     pip3 install --user pipenv
-    #- name: Install python dependencies
-    #  run: | 
-    #     pipenv install --dev --ignore-pipfile
+    - name: Install python dependencies
+      run: | 
+        pipenv install --dev --ignore-pipfile
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
