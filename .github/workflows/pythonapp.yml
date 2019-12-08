@@ -12,7 +12,7 @@ jobs:
       # Because GitHub Actions' python isn't build against tkinter!
       run: |
         sudo apt-get update
-        sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk
+        sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk python3-pil python3-pil.imagetk
         # python3-apt python3-psutil python3-all python3-pil
     - name: Install normcap dependencies
       run: > 
