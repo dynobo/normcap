@@ -25,10 +25,10 @@ jobs:
     - name: Install pipenv
       run: |
         #pip3 install --upgrade pip
-        sudo pip3 install pipenv
+        pip3 install --user pipenv
     - name: Install python dependencies
       run: | 
-        pipenv --bare install --dev
+        pipenv install --dev
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
