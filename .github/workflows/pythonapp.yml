@@ -14,7 +14,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk python3-pil python3-pil.imagetk
     - name: Install normcap's dependencies
-      run: sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip xserver-xorg xorg jwm
+      run: sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip xserver-xorg xorg jwm xterm
     - name: Install pipenv
       run: python3.7 -m pip install --user pipenv
     - name: Create virtual env
@@ -26,7 +26,8 @@ jobs:
         # exit-zero treats all errors as warnings. 
         $HOME/.local/bin/pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
     - name: Test X Server
-      run: xinit -geometry =80x65+10+10 -fn 8x13 -j -fg white -bg navy
+      run: startx -- :1
+      # xinit -geometry =80x65+10+10 -fn 8x13 -j -fg white -bg navy
     - name: Test with pytest
       run: |
         $HOME/.local/bin/pipenv run python3.7 -m pytest
