@@ -18,10 +18,15 @@ jobs:
         sudo apt-get update &&
         sudo apt-get install 
         tesseract-ocr libtesseract-dev libleptonica-dev 
-        pkg-config xclip pipenv
+        pkg-config xclip
         python3-all python3-pip
         python3.7-tk python3-pil python3.7
         tk tk-dev tcl
+    - name: Install pipenv
+      run: |
+        pip3 install --user pipenv
+        export PATH="$PATH:$HOME/.local/bin"
+        echo PATH
     - name: Install python dependencies
       run: | 
         pipenv install --dev
