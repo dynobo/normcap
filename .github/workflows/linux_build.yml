@@ -1,4 +1,4 @@
-name: Linux x64 - lint, test & build
+name: linux_x64_build
 
 on: [push]
 
