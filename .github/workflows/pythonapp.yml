@@ -8,21 +8,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master    
-    #- name: Set up Python 3.7
-    #  uses: actions/setup-python@v1
-    #  with:
-    #    python-version: 3.7           
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.7'
+        architecture: 'x64' 
     - name: Install system dependencies
       run: > 
         sudo apt-get install 
         tesseract-ocr libtesseract-dev libleptonica-dev 
-        pkg-config xclip python3.7 python3-tk python3-pil 
+        pkg-config xclip python3-tk python3-pil
         tk8.6 tk8.6-dev tk tk-dev python3-tk-dbg
     - name: Install pipenv
       run: |
-        # pip3 install --upgrade pip 
+        pip3 install --upgrade pip 
         pip3 install pipenv
-        # export PIPENV_VENV_IN_PROJECT=true
+        export PIPENV_VENV_IN_PROJECT=true
     - name: Install python dependencies
       run: | 
         pipenv --help
