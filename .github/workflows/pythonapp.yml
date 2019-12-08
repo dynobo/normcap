@@ -18,4 +18,5 @@ jobs:
     - name: Testing tkinter import
       run: |
         printf 'import tkinter\ntkinter._test()\n' > test.py
-        pipenv run python test.py
+        python test.py
+        #pipenv run python test.py
