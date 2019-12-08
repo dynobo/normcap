@@ -21,4 +21,4 @@ jobs:
       run: $HOME/.local/bin/pipenv run flake8 . --count --show-source --statistics
     - name: Test with pytest
       # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
-      run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x32 -pixdepths 32" python3.7 -m pytest
+      run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest
