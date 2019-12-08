@@ -1,4 +1,4 @@
-name: linux64 dev build
+name: linux64 dev
 
 on: [push]
 
