@@ -11,7 +11,6 @@ PyInstaller.__main__.run(
         "--windowed",
         # "-d=all",
         f"--icon={os.path.join('ressource', 'normcap.ico')}",
-        # f"--paths={os.path.join('.', 'normcap')}",
         "--hidden-import=PIL",
         "--hidden-import=PIL._imagingtk",
         "--hidden-import=PIL._tkinter_finder",
