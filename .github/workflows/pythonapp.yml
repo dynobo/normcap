@@ -1,4 +1,4 @@
-name: Python application
+name: Install, Lint and Test
 
 on: [push]
 
@@ -13,12 +13,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk python3-pil python3-pil.imagetk
-        # python3-apt python3-psutil python3-all python3-pil
-    - name: Install normcap dependencies
-      run: > 
-        sudo apt-get install 
-        tesseract-ocr libtesseract-dev libleptonica-dev 
-        pkg-config xclip
+    - name: Install normcap's dependencies
+      run: sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip xserver-xorg xorg jwm
     - name: Install pipenv
       run: python3.7 -m pip install --user pipenv
     - name: Create virtual env
@@ -31,4 +27,4 @@ jobs:
         $HOME/.local/bin/pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
     - name: Test with pytest
       run: |
-        startx && $HOME/.local/bin/pipenv run python3.7 -m pytest
+        xinit $HOME/.local/bin/pipenv run python3.7 -m pytest
