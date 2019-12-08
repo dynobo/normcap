@@ -12,10 +12,10 @@ jobs:
     - name: Install Python 3.7 
       # Because GitHub Actions' python isn't build against tkinter!
       run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk python3-pil tk tcl tk-dev fontconfig
-    - name: upgrade
-      run: sudo apt-get -y upgrade
-    - name: fix fontconfig
-      run:  sudo dpkg -S /etc/fonts/font.conf
+    - name: show info
+      run: sudo apt-show-versions fontconfig fontconfig-config
+    - name: downgrade
+      run:  sudo apt-get -y install fontconfig=2.12
     - name: Install normcap dependencies
       run: sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip 
     - name: Install pipenv
