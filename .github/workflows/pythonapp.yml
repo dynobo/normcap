@@ -25,7 +25,7 @@ jobs:
     - name: Install pipenv
       run: |
         #pip3 install --upgrade pip
-        pip3 install pipenv
+        sudo pip3 install pipenv
     - name: Install python dependencies
       run: | 
         pipenv --bare install --dev
