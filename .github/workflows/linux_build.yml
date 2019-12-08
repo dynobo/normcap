@@ -34,5 +34,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: ${{ GITHUB_REF }}-normcap
+        name: normcap
         path: dist/normcap
