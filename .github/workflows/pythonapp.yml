@@ -25,12 +25,15 @@ jobs:
     - name: Install pipenv
       run: |
         pip3 install --user pipenv
+        echo "======================================"
+        python3.7 -m site --user-base
+        echo "======================================"
         ls -la $HOME/.local/bin
         export PATH="$PATH:$HOME/.local/bin"
         echo $PATH
     - name: Install python dependencies
       run: | 
-        pipenv install --dev
+        $HOME/.local/bin/pipenv install --dev
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
