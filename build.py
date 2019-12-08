@@ -6,7 +6,7 @@ PyInstaller.__main__.run(
         "--name=normcap",
         "--clean",
         "--noconfirm",
-        "--onefile",
+        # "--onefile",
         "--onedir",
         "--windowed",
         # "-d=all",
