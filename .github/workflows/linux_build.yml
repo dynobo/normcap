@@ -1,4 +1,4 @@
-name: Install, lint & test
+name: Linux x64 - lint, test & build
 
 on: [push]
 
@@ -22,5 +22,15 @@ jobs:
     - name: Test with pytest
       # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
       run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest
+    - name: Upload test coverage
+      uses: actions/upload-artifact@v1
+      with:
+        name: .coverage
+        path: .coverage          
     - name: Build executable
       run:  $HOME/.local/bin/pipenv run python3.7 build.py      
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: dist
+        path: dist/normcap      
