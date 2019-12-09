@@ -19,8 +19,8 @@ PyInstaller.__main__.run(
         "--hidden-import=PIL",
         "--hidden-import=PIL._imagingtk",
         "--hidden-import=PIL._tkinter_finder",
-        # "--add-data=/etc/fonts:fonts",
-        # "--runtime-hook=rthook.py",
+        "--add-data=/etc/fonts:fonts",
+        "--runtime-hook=rthook.py",
         os.path.join("normcap", "__main__.py"),
     ]
 )
