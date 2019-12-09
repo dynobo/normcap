@@ -38,33 +38,29 @@
 
 ### On Linux
 
-1\. Install prerequisites **Tesseract** (incl. **language data**) and **XClip**.
+1\. Install dependencies:
 
 ```sh
 ## on Ubuntu/Debian:
 sudo apt-get install tesseract-ocr xclip
-```
 
-```sh
 # on Arch:
 sudo pacman -S tesseract tesseract-data-eng xclip
-```
 
-```sh
 # on Fedora
 sudo dnf install tesseract xclip
 ```
 
 2\. Download and extract binary package from the [latest release](
-https://github.com/dynobo/normcap/releases),
+https://github.com/dynobo/normcap/releases).
 
-3\. Execute `NormCap`.
+3\. Execute `./NormCap`.
 
 ### On Windows
 
 1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases).
 
-2\. Run `NormCap.exe` to start the program (no installation needed).
+2\. Execute `NormCap.exe` to start the program (no installation needed).
 
 3\. (Optional) NormCap comes with language files for English and German. Please [file an issue](https://github.com/dynobo/normcap/issues), if I should include other languages.
 
@@ -72,14 +68,16 @@ https://github.com/dynobo/normcap/releases),
 
 *On Mac, some issues occur. [Help needed](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).*
 
-1\. Install requirements:
+1\. Install dependencies:
 
 ```sh
 brew install tesseract tesseract-lang
 ```
 
 2\.  Download and extract binary package from the [latest release](
-https://github.com/dynobo/normcap/releases), then execute `normcap.app`
+https://github.com/dynobo/normcap/releases)
+
+3\. Execute `normcap.app`.
 
 ## Usage
 
