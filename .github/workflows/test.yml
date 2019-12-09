@@ -1,12 +1,14 @@
 name: Test
 
-on: [push]
+on: 
+  push:
+    branches:
+      - dev
 
 jobs:
   test_linux:
     name: Test on Linux64
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/branches/')
     steps:
     - uses: actions/checkout@master    
     
