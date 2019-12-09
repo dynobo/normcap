@@ -3,7 +3,8 @@ name: Test
 on: 
   push:
     branches:
-      - dev
+      - master
+      # - dev
 
 jobs:
   test_linux:
@@ -16,7 +17,6 @@ jobs:
     - name: Install Python 3.7 
       # Because GitHub Actions' python isn't build against tkinter!
       run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk 
-      # python3-pil python-fontconfig
     - name: Install normcap dependencies
       run: sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip 
     - name: Install pipenv
