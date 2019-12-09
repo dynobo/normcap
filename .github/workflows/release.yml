@@ -99,7 +99,7 @@ jobs:
     
     # PREPARE
     - name: try static linking
-      run: vcpkg install tesseract:x86-windows-static
+      run: vcpkg install tesseract:x64-windows-static
     - name: Download normcap dependencies
       run: Invoke-WebRequest -Uri https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.0-alpha.20191030.exe -OutFile C:\tesseract_setup.exe
     - name: List
