@@ -24,7 +24,7 @@ ARGS = [
 if sys.platform.lower().startswith("linux"):
     ARGS.extend(["--add-data=/etc/fonts:fonts", "--runtime-hook=rthook.py"])
 
-if sys.platform.lower().startswith("windows"):
+if sys.platform.lower().startswith("win"):
     ARGS.extend(
         [
             "--add-data=D:\\a\\normcap\\normcap\\tessdata:tessdata",

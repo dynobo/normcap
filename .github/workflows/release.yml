@@ -1,6 +1,6 @@
 name: Release
 
-on: [push]
+on: [create]
 
 jobs:
   # build_linux:
@@ -92,7 +92,7 @@ jobs:
 
   build_windows:
     name: Build release on Windows
-    #if: startsWith(github.ref, 'refs/tags/r')      
+    if: startsWith(github.ref, 'refs/tags/r')      
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@master    
