@@ -8,7 +8,7 @@ mss = "*"
 pyperclip = "*"
 python-Levenshtein = "*"
 Pillow = "*"
-tesserocr = {version="*", platform_system="== 'Linux'"}
+tesserocr = {version="*", platform_system="in ['Linux', 'Darwin']"}
 
 [dev-packages]
 pytest = "*"
