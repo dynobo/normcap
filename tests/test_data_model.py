@@ -1,5 +1,8 @@
 """Unit tests for main normcap logic."""
 
+# Default
+import os
+
 # Extra
 import pytest
 
@@ -40,4 +43,4 @@ def test_data_model_text(test_data):
 
 def test_data_model_lines(test_data):
     """Check if lines are concatinated correctely with linebreaks."""
-    assert test_data.lines == "\n".join(["one", "two three", "four"])
+    assert test_data.lines == os.linesep.join(["one", "two three", "four"])
