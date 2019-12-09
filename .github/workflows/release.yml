@@ -57,7 +57,6 @@ jobs:
     
     # PREPARE
     - name: Install normcap dependencies
-      # libtesseract-dev libleptonica-dev pkg-config
       run: brew install pkg-config tesseract-lang
     - name: Install pipenv
       run: python3.7 -m pip install --user pipenv
