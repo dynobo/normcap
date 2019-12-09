@@ -1,6 +1,6 @@
 name: linux64_release
 
-on: [push]
+on: [release]
 
 jobs:
   release:
