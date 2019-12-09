@@ -42,8 +42,7 @@ class OcrHandler(AbstractHandler):
         return request
 
     def img_to_dict(self, img, lang):
-        # with PyTessBaseAPI(oem=OEM.LSTM_ONLY) as api:
-        img.format = "PNG"
+        img.format = "PNG"  # WORKAROUND for a pyinstaller bug on Win
         with PyTessBaseAPI(lang=lang, oem=OEM.DEFAULT) as api:
             api.SetImage(img)
             tsv_data = api.GetTSVText(0)
