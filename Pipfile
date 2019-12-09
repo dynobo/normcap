@@ -26,7 +26,7 @@ mss = "*"
 Pillow = "*"
 pyperclip = "*"
 python-Levenshtein = "*"
-tesserocr = {version="*", platform_system="Linux"}
+#tesserocr = {version="*", platform_system="Linux"}
 
 [requires]
 python_version = "3.7"
