@@ -103,11 +103,17 @@ jobs:
     - name: Create virtual env
       run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv install --dev
     - name: Install tesserocr
-      run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
-    - name: Download tessdata
-      run: git clone https://github.com/tesseract-ocr/tessdata.git; cd tessdata; git checkout tags/4.0.0; cd..
-    - name: Cleanup tessdata
-      run: cd tessdata; Remove-Item *.traineddata -exclude eng.traineddata,deu.traineddata,fra.traineddata; cd..
+      run: >
+        C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv 
+        run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
+    - name: Download and clean tessdata
+      run: >
+        git clone https://github.com/tesseract-ocr/tessdata.git; 
+        cd tessdata; 
+        git checkout tags/4.0.0; 
+        Remove-Item *.traineddata -exclude eng.traineddata,deu.traineddata,fra.traineddata;
+        Remove-Item script -Force -Recurse -ErrorAction SilentlyContinue; 
+        cd..
 
     # TEST
     - name: Test with pytest
