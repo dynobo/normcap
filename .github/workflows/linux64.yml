@@ -1,6 +1,6 @@
 name: linux64
 
-on: [push, create]
+on: [push]
 
 jobs:
   build:
@@ -27,28 +27,4 @@ jobs:
     # TEST
     - name: Test with pytest
       # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
-      run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest  
-    
-    # BUILD
-    - name: Build executable
-      run:  $HOME/.local/bin/pipenv run python3.7 build.py      
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: NormCap
-        path: dist/NormCap
-     
-    # RELEASE
-    - name: Archive build files
-      run: tar -czvf NormCap_linux64.tar.gz -C dist NormCap    
-      if: startsWith(github.ref, 'refs/tags/')      
-    - name: Draft release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: NormCap_linux64.tar.gz
-        body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
-        draft: true
-        prerelease: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+      run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest
