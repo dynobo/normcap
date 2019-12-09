@@ -3,24 +3,24 @@ import os
 
 PyInstaller.__main__.run(
     [
-        "--name=normcap",
+        "--name=NormCap",
         "--clean",
         "--noconfirm",
         # "--onefile",
         "--onedir",
         "--windowed",
-        "--debug=all",
+        # "--debug=all",
+        "--log-level=DEBUG",
         f"--icon={os.path.join('ressource', 'normcap.ico')}",
-        f"--paths={os.path.join('.', 'normcap')}",
-        # "--hidden-import=tkinter",
-        # "--hidden-import=mss",
-        # "--hidden-import=distutils",
-        # "--hidden-import=pyperclip",
+        f"--paths={os.path.join('.venv', 'lib', 'python3.7', 'site-packages')}",
+        "--hidden-import=tkinter",
+        "--hidden-import=mss",
+        "--hidden-import=pyperclip",
         "--hidden-import=PIL",
         "--hidden-import=PIL._imagingtk",
         "--hidden-import=PIL._tkinter_finder",
         # "--add-data=/etc/fonts:fonts",
         # "--runtime-hook=rthook.py",
-        os.path.join("normcap", "normcap.py"),
+        os.path.join("normcap", "__main__.py"),
     ]
 )

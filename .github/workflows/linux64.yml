@@ -36,5 +36,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: normcap
-        path: dist/normcap
+        name: NormCap
+        path: dist/NormCap
