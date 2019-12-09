@@ -1,4 +1,4 @@
-name: linux64
+name: Release
 
 on: [create]
 

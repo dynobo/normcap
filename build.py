@@ -1,11 +1,6 @@
 import PyInstaller.__main__
 import os
 
-# import normcap
-
-# print(normcap.__version__)
-# exit()
-
 PyInstaller.__main__.run(
     [
         "--name=NormCap",
