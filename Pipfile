@@ -7,11 +7,8 @@ verify_ssl = true
 mss = "*"
 pyperclip = "*"
 python-Levenshtein = "*"
+Pillow = "*"
 tesserocr = {version="*", platform_system="== 'Linux'"}
-Pillow = {version="*", platform_system="== 'Linux'"}
-# ^^ The two libs above somehow need to be installed 
-# via pip instead pipenv, otherwise binary created by
-# pyinstaller will throw error on Windows
 
 [dev-packages]
 pytest = "*"
