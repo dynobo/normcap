@@ -30,63 +30,43 @@
 
 **Basic usage:**
 
-1. Launch `normcap`
+1. Launch `NormCap`
 2. Select region of interest on screen
 3. Retrieve recognized text in clipboard
-
-**Example use cases:**
-
-- Extract URLs, tables, etc. that have been sent to you in screenshot.
-- Copy non-selectable error messages from alert windows.
-- Capture subtitles from video stills.
-- Extract text from menu entries or hover messages.
 
 ## Installation
 
 ### On Linux
 
-NormCap on Linux requires **Tesseract** (incl. **language data**) and **XClip**.
-
-#### Ubuntu/Debian:
+1\. Install prerequisites **Tesseract** (incl. **language data**) and **XClip**.
 
 ```sh
-## install dependencies
-sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip python3-tk python3-pil.imagetk
-
-# download & install
-pip3 install normcap
-
-# run
-normcap
+## on Ubuntu/Debian:
+sudo apt-get install tesseract-ocr xclip
 ```
 
-#### Arch
-
 ```sh
-## on Arch:
+# on Arch:
 sudo pacman -S tesseract tesseract-data-eng xclip
 ```
 
-#### Fedora
-
 ```sh
+# on Fedora
 sudo dnf install tesseract xclip
 ```
 
+2\. Download and extract binary package from the [latest release](
+https://github.com/dynobo/normcap/releases),
+
+3\. Execute `NormCap`.
+
 ### On Windows
 
-NormCap on Windows requires **Tesseract** (incl. **language data**):
+1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases).
 
-1. Download the latest **32bit** version from [Tesseract Installer by University Library Mannheim](https://github.com/UB-Mannheim/tesseract/wiki) and execute it.
-2. Append the path of `tesseract.exe` to the `PATH` [environment variable](https://duckduckgo.com/?q=edit+environment+variable+windows+10).
-3. Create a new environment variable called `TESSDATA_PREFIX` and set it to `YOUR_TESSERACT_DIR\tessdata`
+2\. Run `NormCap.exe` to start the program (no installation needed).
 
-To test successful installation, reboot windows and execute `tesseract.exe` in command prompt. If everything worked well, you should see an output describing its command line options.
-
-After the requirements are installed, continue with **NormCap**:
-
-1. Download and extract binary package from the [release page](https://github.com/dynobo/normcap/releases).
-2. Run `normcap.exe` to start the program (no installation needed).
+3\. (Optional) NormCap comes with language files for English and German. Please [file an issue](https://github.com/dynobo/normcap/issues), if I should include other languages.
 
 ### On Mac
 
@@ -98,13 +78,14 @@ After the requirements are installed, continue with **NormCap**:
 brew install tesseract tesseract-lang
 ```
 
-2\.  Download and extract [released binary package](https://github.com/dynobo/normcap/releases), then execute `normcap.app`
+2\.  Download and extract binary package from the [latest release](
+https://github.com/dynobo/normcap/releases), then execute `normcap.app`
 
 ## Usage
 
 ### Basics
 
-1. Run the `normcap` executable. A red border will appear around your screen.
+1. Run the `NormCap` executable. A red border will appear around your screen.
 2. Select a region with text using your mouse. Or press `<esc>` to quit program.
 3. (Optional) Before letting go the mouse button, press `<space>`-key to switch through different modes of operation, as indicated by a symbol:
    - **☰ (raw):** Copy detected text line by line, without further modification.
