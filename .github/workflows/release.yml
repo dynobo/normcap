@@ -5,6 +5,7 @@ on: [create]
 jobs:
   build_linux:
     name: Build release on Linux64
+    if: startsWith(github.ref, 'refs/tags/r')      
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master    
@@ -36,11 +37,9 @@ jobs:
      
     # RELEASE
     - name: Archive build files
-      run: tar -czvf NormCap_linux64.tar.gz -C dist NormCap    
-      if: startsWith(github.ref, 'refs/tags/')      
+      run: tar -czvf NormCap_linux64.tar.gz -C dist NormCap        
     - name: Draft release
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: NormCap_linux64.tar.gz
         body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
