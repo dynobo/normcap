@@ -32,11 +32,11 @@ jobs:
      
     # RELEASE
     - name: Compress build files
-      run: tar -czvf NormCap_linux64.tar.gz -C dist NormCap        
+      run: tar -czvf NormCap_Linux64.tar.gz -C dist NormCap        
     - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
-        files: NormCap_linux64.tar.gz
+        files: NormCap_Linux64.tar.gz
         body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
         draft: true
         prerelease: true
@@ -68,7 +68,7 @@ jobs:
      
     # RELEASE
     - name: Compress build files
-      run: tar -czvf NormCap_macOS.tar.gz -C dist NormCap        
+      run: tar -czvf NormCap_MacOS.tar.gz -C dist NormCap        
     - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
@@ -123,7 +123,7 @@ jobs:
     
     # RELEASE
     - name: Compress build files
-      run: cd dist; 7z a -tzip ..\NormCap_win64.zip NormCap; cd ..
+      run: cd dist; 7z a -tzip ..\NormCap_Win64.zip NormCap; cd ..
     - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
