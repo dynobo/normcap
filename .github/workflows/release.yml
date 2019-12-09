@@ -67,7 +67,7 @@ jobs:
     # TEST
     - name: Test with pytest
       # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
-      run: $HOME/Library/Python/3.7/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest  
+      run: $HOME/Library/Python/3.7/bin/pipenv run python3.7 -m pytest  
     
     # BUILD
     - name: Build executable
