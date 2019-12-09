@@ -105,7 +105,7 @@ jobs:
 
     # TEST
     - name: Download tessdata
-      run: git clone https://github.com/tesseract-ocr/tessdata.git && git checkout tags/4.0.0
+      run: git clone https://github.com/tesseract-ocr/tessdata.git; cd tessdata; git checkout tags/4.0.0; cd..
     - name: list tessdata
       run: dir
     - name: list tessdata
