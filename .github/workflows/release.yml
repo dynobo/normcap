@@ -113,12 +113,16 @@ jobs:
     - name: list tessdata
       run: dir tessdata\
     - name: set env var
-      run: set TESSDATA_PREFIX=D:\a\normcap\normcap\tessdata
+      run: setx TESSDATA_PREFIX=D:\a\normcap\normcap\tessdata
     - name: print env var
       run: echo %TESSDATA_PREFIX%
-         
+      env:
+        TESSDATA_PREFIX: D:\a\normcap\normcap\tessdata
+                 
     - name: Test with pytest
       run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run python -m pytest  
+      env:
+        TESSDATA_PREFIX: D:\a\normcap\normcap\tessdata
 
     # BUILD
     - name: Build executable
