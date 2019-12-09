@@ -1,65 +1,107 @@
 name: Release
 
-on: [create]
+on: [push]
 
 jobs:
-  build_linux:
-    name: Build release on Linux64
-    if: startsWith(github.ref, 'refs/tags/r')      
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master    
+  # build_linux:
+  #   name: Build release on Linux64
+  #   if: startsWith(github.ref, 'refs/tags/r')      
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@master    
     
-    # PREPARE
-    - name: Install Python 3.7 
-      # Because GitHub Actions' python isn't build against tkinter!
-      run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk
-    - name: Install normcap dependencies
-      run: sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip 
-    - name: Install pipenv
-      run: python3.7 -m pip install --user pipenv
-    - name: Create virtual env
-      run: $HOME/.local/bin/pipenv install --dev
+  #   # PREPARE
+  #   - name: Install Python 3.7 
+  #     # Because GitHub Actions' python isn't build against tkinter!
+  #     run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3-pip python3.7-tk
+  #   - name: Install normcap dependencies
+  #     run: sudo apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config xclip 
+  #   - name: Install pipenv
+  #     run: python3.7 -m pip install --user pipenv
+  #   - name: Create virtual env
+  #     run: $HOME/.local/bin/pipenv install --dev
     
-    # TEST
-    - name: Test with pytest
-      # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
-      run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest  
+  #   # TEST
+  #   - name: Test with pytest
+  #     # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
+  #     run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest  
     
-    # BUILD
-    - name: Build executable
-      run:  $HOME/.local/bin/pipenv run python3.7 build.py      
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: NormCap
-        path: dist/NormCap
+  #   # BUILD
+  #   - name: Build executable
+  #     run:  $HOME/.local/bin/pipenv run python3.7 build.py      
+  #   - name: Upload artifacts
+  #     uses: actions/upload-artifact@v1
+  #     with:
+  #       name: NormCap
+  #       path: dist/NormCap
      
-    # RELEASE
-    - name: Archive build files
-      run: tar -czvf NormCap_linux64.tar.gz -C dist NormCap        
-    - name: Draft release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: NormCap_linux64.tar.gz
-        body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
-        draft: true
-        prerelease: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+  #   # RELEASE
+  #   - name: Archive build files
+  #     run: tar -czvf NormCap_linux64.tar.gz -C dist NormCap        
+  #   - name: Draft release
+  #     uses: softprops/action-gh-release@v1
+  #     with:
+  #       files: NormCap_linux64.tar.gz
+  #       body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
+  #       draft: true
+  #       prerelease: true
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
 
-  build_macos:
-    name: Build release on MacOS
-    if: startsWith(github.ref, 'refs/tags/r')      
-    runs-on: macos-latest
+  # build_macos:
+  #   name: Build release on MacOS
+  #   if: startsWith(github.ref, 'refs/tags/r')      
+  #   runs-on: macos-latest
+  #   steps:
+  #   - uses: actions/checkout@master    
+    
+  #   # PREPARE
+  #   - name: Install normcap dependencies
+  #     run: brew install pkg-config tesseract-lang
+  #   - name: Install pipenv
+  #     run: python3.7 -m pip install --user pipenv
+  #   - name: Create virtual env
+  #     run: $HOME/Library/Python/3.7/bin/pipenv install --dev
+    
+  #   # TEST
+  #   - name: Test with pytest
+  #     run: $HOME/Library/Python/3.7/bin/pipenv run python3.7 -m pytest  
+    
+  #   # BUILD
+  #   - name: Build executable
+  #     run:  $HOME/Library/Python/3.7/bin/pipenv run python3.7 build.py      
+  #   - name: Upload artifacts
+  #     uses: actions/upload-artifact@v1
+  #     with:
+  #       name: NormCap
+  #       path: dist/NormCap
+     
+  #   # RELEASE
+  #   - name: Archive build files
+  #     run: tar -czvf NormCap_MacOS.tar.gz -C dist NormCap        
+  #   - name: Draft release
+  #     uses: softprops/action-gh-release@v1
+  #     with:
+  #       files: NormCap_MacOS.tar.gz
+  #       body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
+  #       draft: true
+  #       prerelease: true        
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}              
+
+
+build_windows:
+    name: Build release on Windows
+    #if: startsWith(github.ref, 'refs/tags/r')      
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@master    
     
     # PREPARE
-    - name: Install normcap dependencies
-      run: brew install pkg-config tesseract-lang
+    #- name: Install normcap dependencies
+    #  run: brew install pkg-config tesseract-lang
     - name: Install pipenv
-      run: python3.7 -m pip install --user pipenv
+      run: python -m pip install --user pipenv
     - name: Create virtual env
       run: $HOME/Library/Python/3.7/bin/pipenv install --dev
     
@@ -87,4 +129,4 @@ jobs:
         draft: true
         prerelease: true        
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}              
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}                      
