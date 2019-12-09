@@ -127,11 +127,11 @@ jobs:
     
     # RELEASE
     - name: Compress build files
-      run: cd dist\NormCap; 7z a -tzip NormCap_Win64.zip *; cd ..\..
+      run: cd dist; 7z a -tzip ..\NormCap_Win64.zip NormCap; cd ..
     - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
-        files: dist\NormCap\NormCap_Win64.zip
+        files: NormCap_Win64.zip
         body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
         draft: true
         prerelease: true        
