@@ -116,16 +116,16 @@ jobs:
       run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run python build.py      
     
     # RELEASE
-#    - name: Compress build files
-      #run: 7za a -tzip NormCap_Winws64.zip dist\NormCap\*
-#      run: Compress-Archive -Path dist\NormCap\* -DestinationPath NormCap_Win64.zip
     - name: Compress build files
-      uses: thedoctor0/zip-release@master
-      with:
-        filename: 'release.zip'
-        exclusions: '*.git* /*node_modules/* .editorconfig'
-        path: 'dist\NormCap'
-      - name: Draft release
+      run: 7z a -tzip NormCap_Winws64.zip dist\NormCap\*
+#      run: Compress-Archive -Path dist\NormCap\* -DestinationPath NormCap_Win64.zip
+#    - name: Compress build files
+#      uses: thedoctor0/zip-release@master
+#      with:
+#        filename: 'release.zip'
+#        exclusions: '*.git* /*node_modules/* .editorconfig'
+#        path: 'dist\NormCap'
+    - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
         files: NormCap_Win64.zip
