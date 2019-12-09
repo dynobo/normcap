@@ -33,14 +33,14 @@ jobs:
       run:  $HOME/.local/bin/pipenv run python3.7 build.py      
       
     # RELEASE
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            LICENSE.md     
-            build/Normcap
-          body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
-          draft: true
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          LICENSE.md     
+          build/Normcap
+        body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
+        draft: true
+        prerelease: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
