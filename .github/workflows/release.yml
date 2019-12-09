@@ -126,7 +126,7 @@ jobs:
     - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
-        files: NormCap_Win64.zip
+        files: dist\NormCap\NormCap_Win64.zip
         body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
         draft: true
         prerelease: true        
