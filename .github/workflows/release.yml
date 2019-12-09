@@ -86,10 +86,6 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@master    
-    
-    # test 7
-    - name: Compress build files
-      run: 7z a -tzip test.zip *.*
 
     # RELEASE
     - name: Install pipenv
@@ -100,13 +96,24 @@ jobs:
       run: >
         C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv 
         run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
-    - name: Download and clean tessdata
+    # - name: Download and clean tessdata
+    #   run: >
+    #     git clone https://github.com/tesseract-ocr/tessdata.git; 
+    #     cd tessdata; 
+    #     git checkout tags/4.0.0; 
+    #     dir
+    #     Remove-Item *.traineddata -exclude eng.traineddata,deu.traineddata,fra.traineddata;
+    #     Remove-Item script -Force -Recurse -ErrorAction SilentlyContinue; 
+    #     dir
+    #     cd..
+    - name: Download tessdata
       run: >
-        git clone https://github.com/tesseract-ocr/tessdata.git; 
+        new-item -Name tessdata -ItemType directory;  
         cd tessdata; 
-        git checkout tags/4.0.0; 
-        Remove-Item *.traineddata -exclude eng.traineddata,deu.traineddata,fra.traineddata;
-        Remove-Item script -Force -Recurse -ErrorAction SilentlyContinue; 
+        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/README.md -OutFile README.md;
+        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/eng.traineddata -OutFile eng.traineddata;
+        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/COPYING;
+        dir;
         cd..
 
     # TEST
@@ -122,13 +129,6 @@ jobs:
     # RELEASE
     - name: Compress build files
       run: 7z a -tzip NormCap_Winws64.zip dist\NormCap\*
-#      run: Compress-Archive -Path dist\NormCap\* -DestinationPath NormCap_Win64.zip
-#    - name: Compress build files
-#      uses: thedoctor0/zip-release@master
-#      with:
-#        filename: 'release.zip'
-#        exclusions: '*.git* /*node_modules/* .editorconfig'
-#        path: 'dist\NormCap'
     - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
