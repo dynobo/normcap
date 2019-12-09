@@ -1,6 +1,9 @@
 name: linux64_release
 
-on: [release]
+on:
+  push:
+    tags:
+      - 'r*.*'
 
 jobs:
   release:
@@ -39,10 +42,12 @@ jobs:
         path: dist/NormCap
     
     # RELEASE
-    - name: Release
-      uses: fnkr/github-action-ghr@v1
-      # if: startsWith(github.ref, 'refs/tags/')
-      env:
-        GHR_COMPRESS: xz
-        GHR_PATH: dist/NormCap/
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Release.txt      
+          body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
+          draft: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
