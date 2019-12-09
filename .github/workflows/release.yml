@@ -126,7 +126,8 @@ jobs:
     
     # RELEASE
     - name: Archive build files
-      run: 7za a -tzip NormCap_Windows64.zip dist\NormCap\*
+      #run: 7za a -tzip NormCap_Windows64.zip dist\NormCap\*
+      run: Compress-Archive -Path dist\NormCap\* -DestinationPath NormCap_Windows64.zip
     - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
