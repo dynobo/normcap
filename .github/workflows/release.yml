@@ -122,7 +122,7 @@ jobs:
     
     # RELEASE
     - name: Compress build files
-      run: 7z a -tzip NormCap_Win64.zip dist\NormCap\*
+      run: cd dist\NormCap; 7z a -tzip NormCap_Win64.zip *; cd ..\..
     - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
