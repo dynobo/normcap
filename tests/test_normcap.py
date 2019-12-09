@@ -10,7 +10,6 @@ import tempfile
 import pytest
 from PIL import Image
 import Levenshtein
-import tesserocr
 
 # Own
 from normcap import normcap
@@ -25,8 +24,6 @@ from normcap.handlers.abstract_handler import AbstractHandler
 
 def test_version():
     """Are we testing right version?"""
-    print(os.environ)
-    print(tesserocr.get_languages())
     assert normcap.__version__ == "0.1a1"
 
 
