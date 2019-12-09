@@ -1,6 +1,6 @@
 name: linux64
 
-on: [push]
+on: [push, create]
 
 jobs:
   build:
@@ -42,7 +42,7 @@ jobs:
     - name: Archive build files
       run: tar -czvf NormCap_linux64.tar.gz -C dist NormCap    
       if: startsWith(github.ref, 'refs/tags/')      
-    - name: Release
+    - name: Draft release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
