@@ -43,6 +43,7 @@ class OcrHandler(AbstractHandler):
 
     def img_to_dict(self, img, lang):
         # with PyTessBaseAPI(oem=OEM.LSTM_ONLY) as api:
+        img.format = "PNG"
         with PyTessBaseAPI(lang=lang, oem=OEM.DEFAULT) as api:
             api.SetImage(img)
             tsv_data = api.GetTSVText(0)
