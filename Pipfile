@@ -19,7 +19,7 @@ isort = "*"
 mypy = "*"
 pre-commit = "*"
 vprof = "*"
-pywin32-ctypes = "*"
+pywin32-ctypes = {version="*", platform_system="== 'Windows'"}
 PyInstaller = "*"
 pylint = "*"
 pefile = "*"
