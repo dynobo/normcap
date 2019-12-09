@@ -78,14 +78,11 @@ jobs:
         path: dist/NormCap
      
     # RELEASE
-    # - name: Archive build files
-    #   run: tar -czvf NormCap_linux64.tar.gz -C dist NormCap        
+    - name: Archive build files
+      run: tar -czvf NormCap_linux64.tar.gz -C dist NormCap        
     # - name: Draft release
     #   uses: softprops/action-gh-release@v1
     #   with:
-    #     files: NormCap_linux64.tar.gz
-    #     body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
-    #     draft: true
-    #     prerelease: true
+    #     files: NormCap_MacOS.tar.gz
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}              

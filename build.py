@@ -1,5 +1,10 @@
-import PyInstaller.__main__
+# Default
 import os
+import sys
+
+# Extra
+import PyInstaller.__main__
+
 
 ARGS = [
     "--name=NormCap",
@@ -16,7 +21,7 @@ ARGS = [
     "--hidden-import=PIL._tkinter_finder",
 ]
 
-if False:
+if sys.platform.lower().startswith("linux"):
     ARGS.extend(["--add-data=/etc/fonts:fonts", "--runtime-hook=rthook.py"])
 
 ARGS.append(os.path.join("normcap", "__main__.py"))
