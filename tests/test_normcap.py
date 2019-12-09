@@ -24,6 +24,7 @@ from normcap.handlers.abstract_handler import AbstractHandler
 
 def test_version():
     """Are we testing right version?"""
+    print(os.environ)
     assert normcap.__version__ == "0.1a1"
 
 

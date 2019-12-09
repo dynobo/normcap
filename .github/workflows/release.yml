@@ -97,34 +97,26 @@ jobs:
     steps:
     - uses: actions/checkout@master    
     
-    # PREPARE
-    #- name: Build tesseract from source
-    #  run: vcpkg install tesseract:x64-windows
-    #- name: Download normcap dependencies
-    #  run: Invoke-WebRequest -Uri https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.0-alpha.20191030.exe -OutFile C:\tesseract_setup.exe
-    #- name: List
-    #  run: vcpkg list            
-    #- name: Install normcap dependencies
-    #  run: vcpkg integrate install   
-    #- name: Install normcap dependencies
-    #  run: vcpkg export tesseract:x64-windows --zip       
+    # PREPARE 
     - name: Install pipenv
       run: python -m pip install --user pipenv
     - name: Create virtual env
       run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv install --dev
-#    - name: Install tesserocr
-#      run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
+
     # TEST
     - name: Download tessdata
       run: git clone https://github.com/tesseract-ocr/tessdata.git
     - name: list tessdata
       run: dir
+    - name: list tessdata
+      run: dir tessdata\
     - name: set env var
       run: set TESSDATA_PREFIX=D:\a\normcap\normcap\tessdata
     - name: print env var
-      run: echo TESSDATA_PREFIX
+      run: echo $TESSDATA_PREFIX
     - name: Test with pytest
       run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run python -m pytest  
+
     # BUILD
     - name: Build executable
       run:  C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run python build.py      
@@ -136,7 +128,7 @@ jobs:
     
     # RELEASE
     - name: Archive build files
-      run: tar -czvf NormCap_MacOS.tar.gz -C dist NormCap        
+      run: 7za a -tzip NormCap_Windows64.zip dist\NormCap\*
     - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
