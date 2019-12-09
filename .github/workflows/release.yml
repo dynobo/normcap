@@ -98,21 +98,22 @@ jobs:
     - uses: actions/checkout@master    
     
     # PREPARE
-    - name: Build tesseract from source
-      run: vcpkg install tesseract:x64-windows
+    #- name: Build tesseract from source
+    #  run: vcpkg install tesseract:x64-windows
     #- name: Download normcap dependencies
     #  run: Invoke-WebRequest -Uri https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.0-alpha.20191030.exe -OutFile C:\tesseract_setup.exe
-    - name: List
-      run: vcpkg list            
-    - name: Install normcap dependencies
-      run: vcpkg integrate install   
-    - name: Install normcap dependencies
-      run: vcpkg export tesseract:x64-windows --zip       
+    #- name: List
+    #  run: vcpkg list            
+    #- name: Install normcap dependencies
+    #  run: vcpkg integrate install   
+    #- name: Install normcap dependencies
+    #  run: vcpkg export tesseract:x64-windows --zip       
     - name: Install pipenv
       run: python -m pip install --user pipenv
     - name: Create virtual env
       run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv install --dev
-    
+    - name: Install tesserocr
+      run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
     # TEST
     - name: Test with pytest
       run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run python3.7 -m pytest  
