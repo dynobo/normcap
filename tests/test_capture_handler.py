@@ -1,5 +1,4 @@
 """Unit tests for screenshot capture handler."""
-
 # Extra
 from PIL import Image
 

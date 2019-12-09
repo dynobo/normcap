@@ -6,6 +6,7 @@
 cov.xml
 coverage
 .coveralls.yml
+*.spec
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

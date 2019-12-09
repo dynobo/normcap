@@ -3,6 +3,13 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
+[packages]
+mss = "*"
+pyperclip = "*"
+python-Levenshtein = "*"
+Pillow = "*"
+tesserocr = {version="*", platform_system="!= 'Windows'"}
+
 [dev-packages]
 pytest = "*"
 pytest-cov = "*"
@@ -11,7 +18,7 @@ isort = "*"
 mypy = "*"
 pre-commit = "*"
 vprof = "*"
-pywin32-ctypes = "*"
+pywin32-ctypes = {version="*", platform_system="== 'Windows'"}
 PyInstaller = "*"
 pylint = "*"
 pefile = "*"
@@ -20,13 +27,6 @@ python-coveralls = "*"
 coverage = "==5.0a4"
 black = "*"
 bumpversion = "*"
-
-[packages]
-mss = "*"
-Pillow = "*"
-pyperclip = "*"
-python-Levenshtein = "*"
-tesserocr = "*"
 
 [requires]
 python_version = "3.7"
