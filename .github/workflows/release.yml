@@ -96,6 +96,11 @@ jobs:
       run: >
         C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv 
         run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
+    - name: Install Pillow
+      run: >
+        C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv 
+        run pip install Pillow
+
     - name: Download tessdata
       run: >
         new-item -Name tessdata -ItemType directory;  

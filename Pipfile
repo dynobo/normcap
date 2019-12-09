@@ -5,10 +5,10 @@ verify_ssl = true
 
 [packages]
 mss = "*"
-Pillow = "*"
 pyperclip = "*"
 python-Levenshtein = "*"
 tesserocr = {version="*", platform_system="== 'Linux'"}
+Pillow = {version="*", platform_system="== 'Linux'"}
 
 [dev-packages]
 pytest = "*"
