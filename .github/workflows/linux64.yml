@@ -3,7 +3,8 @@ name: linux64
 on: [push]
 
 jobs:
-  build:
+  test_linux:
+    name: Test on Linux64
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master    
