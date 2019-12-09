@@ -29,14 +29,9 @@ jobs:
   #   # BUILD
   #   - name: Build executable
   #     run:  $HOME/.local/bin/pipenv run python3.7 build.py      
-  #   #- name: Upload artifacts
-  #   #  uses: actions/upload-artifact@v1
-  #   #  with:
-  #   #    name: NormCap
-  #   #    path: dist/NormCap
      
   #   # RELEASE
-  #   - name: Archive build files
+  #   - name: Compress build files
   #     run: tar -czvf NormCap_linux64.tar.gz -C dist NormCap        
   #   - name: Draft release
   #     uses: softprops/action-gh-release@v1
@@ -70,14 +65,9 @@ jobs:
   #   # BUILD
   #   - name: Build executable
   #     run:  $HOME/Library/Python/3.7/bin/pipenv run python3.7 build.py      
-  #   #- name: Upload artifacts
-  #   #  uses: actions/upload-artifact@v1
-  #   #  with:
-  #   #    name: NormCap
-  #   #    path: dist/NormCap
      
   #   # RELEASE
-  #   - name: Archive build files
+  #   - name: Compress build files
   #     run: tar -czvf NormCap_MacOS.tar.gz -C dist NormCap        
   #   - name: Draft release
   #     uses: softprops/action-gh-release@v1
@@ -124,20 +114,15 @@ jobs:
     # BUILD
     - name: Build executable
       run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run python build.py      
-    #- name: Upload artifacts
-    #  uses: actions/upload-artifact@v1
-    #  with:
-    #    name: NormCap
-    #    path: dist/NormCap
     
     # RELEASE
-    - name: Archive build files
-      #run: 7za a -tzip NormCap_Windows64.zip dist\NormCap\*
-      run: Compress-Archive -Path dist\NormCap\* -DestinationPath NormCap_Windows64.zip
+    - name: Compress build files
+      #run: 7za a -tzip NormCap_Winws64.zip dist\NormCap\*
+      run: Compress-Archive -Path dist\NormCap\* -DestinationPath NormCap_Win64.zip
     - name: Draft release
       uses: softprops/action-gh-release@v1
       with:
-        files: NormCap_Windows64.zip
+        files: NormCap_Win64.zip
         body: See [CHANGELOG.md](https://github.com/dynobo/normcap/blob/dev/CHANGELOG.md) for details.
         draft: true
         prerelease: true        
