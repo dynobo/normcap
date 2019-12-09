@@ -26,7 +26,13 @@ if sys.platform.lower().startswith("linux"):
     ARGS.extend(["--add-data=/etc/fonts:fonts", "--runtime-hook=rthook.py"])
 
 if sys.platform.lower().startswith("win"):
-    ARGS.extend(["--add-data=tessdata;tessdata", "--runtime-hook=rthook.py"])
+    ARGS.extend(
+        [
+            "--add-data=tessdata;tessdata",
+            "--runtime-hook=rthook.py",
+            "--win-private-assemblies",
+        ]
+    )
 
 ARGS.append(os.path.join("normcap", "__main__.py"))
 
