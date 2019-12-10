@@ -42,8 +42,6 @@ class MagicHandler(AbstractHandler):
             for magic in magics_classes:
                 self._magics[magic.name] = magic()
 
-            print(self._magics)
-
             # Calculate scores
             scores = self._calc_scores(request)
             request.scores = scores

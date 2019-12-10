@@ -100,16 +100,12 @@ jobs:
       run: >
         new-item -Name tessdata -ItemType directory;  
         cd tessdata; 
-        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/README.md -OutFile README.md;
-        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/COPYING -OutFile COPYING;        
-        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/eng.traineddata -OutFile eng.traineddata;
-        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/deu.traineddata -OutFile deu.traineddata;
+        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/README.md -OutFile README.md;
+        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/COPYING -OutFile COPYING;        
+        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/eng.traineddata -OutFile eng.traineddata;
+        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/deu.traineddata -OutFile deu.traineddata;
         dir;
         cd..;
-        
-        #iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/fra.traineddata -OutFile fra.traineddata;
-        #iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/rus.traineddata -OutFile rus.traineddata;
-        #iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/spa.traineddata -OutFile spa.traineddata;
 
     # TEST
     - name: Test with pytest
