@@ -33,7 +33,7 @@ jobs:
       # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
       run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest
 
- test_macos:
+  test_macos:
     name: Test on MacOS
     runs-on: macos-latest
     steps:
