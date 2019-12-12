@@ -155,7 +155,7 @@ def test_normcap_main(test_params):
 
     print(utils.log_dataclass("Test output", result, return_string=True))
 
-    rel_lev = Levenshtein.ratio(  # pylint: disable=no-member
+    rel_lev = Levenshtein.ratio(  # type: ignore # pylint: disable=no-member
         result.transformed, test_params["expected_result"]
     )
 

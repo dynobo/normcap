@@ -64,7 +64,7 @@ https://github.com/dynobo/normcap/releases)
 
 ### On Mac
 
-***On Mac, some issues occur. [Help needed](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)***
+***Attention! On Mac, some issues occur. [Help needed](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)***
 
 1\. Install dependencies:
 
