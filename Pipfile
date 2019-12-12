@@ -6,7 +6,6 @@ verify_ssl = true
 [packages]
 mss = "*"
 pyperclip = "*"
-python-Levenshtein = "*"
 Pillow = "*"
 tesserocr = {version="*", platform_system="!= 'Windows'"}
 

@@ -11,7 +11,7 @@ class InstallWinDeps(install):
     def run(self):
         install.run(self)
 
-        if platform.system().lower() != "windows":
+        if not platform.system().startswith("win"):
             print("Not on Windows. Skipping platform specific dependencies.")
             return
 
@@ -30,38 +30,14 @@ class InstallWinDeps(install):
             ),
         }
 
-        # For windows use pre compiled wheel for python-levenshtein from
-        # https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-levenshtein
-        # (This C++ version of levenshtein is necessary, because it is _fast_)
-        LEVENSHTEIN = {
-            "win32": (
-                "https://download.lfd.uci.edu/pythonlibs/"
-                "g5apjq5m/python_Levenshtein-0.12.0-cp37-cp37m-win32.whl"
-            ),
-            "win64": (
-                "https://download.lfd.uci.edu/pythonlibs/"
-                "g5apjq5m/python_Levenshtein-0.12.0-cp37-cp37m-win_amd64.whl"
-            ),
-        }
-
         win_version = "win32"
         if platform.machine().endswith("64"):
             win_version = "win64"
 
-        print(
-            f"Tesserocr: {TESSEROCR[win_version]}...\n"
-            f"python-Levenshtein: {TESSEROCR[win_version]}..."
-        )
+        print(f"Tesserocr: {TESSEROCR[win_version]}...\n")
 
         subprocess.check_call(
-            [
-                sys.executable,
-                "-m",
-                "pip",
-                "install",
-                TESSEROCR[win_version],
-                LEVENSHTEIN[win_version],
-            ]
+            [sys.executable, "-m", "pip", "install", TESSEROCR[win_version],]
         )
         print("Done.")
 
@@ -104,7 +80,6 @@ setup(
         "Pillow",
         "pyperclip",
         "tesserocr; platform_system!='Windows'",
-        "python-Levenshtein; platform_system!='Windows'",
     ],
     entry_points={"console_scripts": ["normcap=normcap.normcap:main"]},
     cmdclass={"install": InstallWinDeps},
