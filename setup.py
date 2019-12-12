@@ -80,7 +80,10 @@ setup(
         "Pillow",
         "pyperclip",
         "tesserocr; platform_system!='Windows'",
+        "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
+        + "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl"
+        + "; platform_system=='Windows'",
     ],
     entry_points={"console_scripts": ["normcap=normcap.normcap:main"]},
-    cmdclass={"install": InstallWinDeps},
+    # cmdclass={"install": InstallWinDeps},
 )
