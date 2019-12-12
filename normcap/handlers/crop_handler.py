@@ -127,8 +127,8 @@ class _CropWindow:
         root.y = 0
 
         root.mode_indicator = None
-        root.modes = ("raw", "parse", "trigger")
-        root.modes_chars = ("☰", "⚙", "★")
+        root.modes = ("raw", "parse")
+        root.modes_chars = ("☰", "☶")
         root.current_mode = self.cli_args["mode"]
 
         root.color = self.cli_args["color"]
@@ -142,10 +142,10 @@ class _CropWindow:
         #    - with tk.attributes I couldn't move the windows to the correct screen on MS Windows
         #    - with overrideredirect I couldn't get the keybindings working on Linux
         # TODO: Move platform detection to beginning, add to dataclass
-        if sys.platform in ["win32", "win64"]:
+        if sys.platform.startswith("win"):
             self.tk.overrideredirect(1)
 
-        if sys.platform == "darwin":
+        if sys.platform.startswith("darwin"):
             self.tk.overrideredirect(1)
             self.tk.attributes("-fullscreen", 1)
             self.tk.attributes("-topmost", 1)
@@ -153,7 +153,7 @@ class _CropWindow:
             # self.tk.focus_force()
             # self.tk.call("::tk::unsupported::MacWindowStyle", "style", self.tk._w, "plain", "none")
 
-        if sys.platform == "linux":
+        if sys.platform.startswith("linux"):
             self.tk.attributes("-fullscreen", True)
 
     def _show_window(self):

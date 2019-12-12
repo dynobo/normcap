@@ -3,7 +3,6 @@
 # Default
 import re
 import os
-import webbrowser
 from typing import List
 
 # Own
@@ -69,14 +68,3 @@ class UrlMagic(BaseMagic):
 
         # Return as line separated list
         return os.linesep.join(self._urls)
-
-    def trigger(self, request: NormcapData):
-        """Open URL(s) in new tab(s) with default browser.
-
-        Arguments:
-            request {NormcapData} -- NormCap's session data
-        """
-        self._logger.info("Open URL(s) in Browser...")
-        urls = request.transformed.split(os.linesep)  # TODO: Better use self.urls?
-        for url in urls:
-            webbrowser.open_new_tab(f"{url}")

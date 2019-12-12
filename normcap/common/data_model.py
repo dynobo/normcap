@@ -31,7 +31,7 @@ class NormcapData:
     shots: list = field(default_factory=list)  # Full images & position of all screens
 
     # Results of cropping
-    mode: str = ""  # Selected capture mode during crop ["raw","parsed", "trigger"]
+    mode: str = ""  # Selected capture mode during crop ["raw","parsed"]
     image: Image = None  # Cropped image
     monitor: int = 0  # Screen of cropped image
     left: int = 0  # Position of cropped section

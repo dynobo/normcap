@@ -80,7 +80,7 @@ def test_argparser_default_verbose(argparser_defaults):
 
 def test_argparser_default_mode(argparser_defaults):
     """Check default capture mode."""
-    assert argparser_defaults["mode"] == "trigger"
+    assert argparser_defaults["mode"] == "parse"
 
 
 def test_argparser_default_lang(argparser_defaults):
@@ -155,7 +155,7 @@ def test_normcap_main(test_params):
 
     print(utils.log_dataclass("Test output", result, return_string=True))
 
-    rel_lev = Levenshtein.ratio(  # pylint: disable=no-member
+    rel_lev = Levenshtein.ratio(  # type: ignore # pylint: disable=no-member
         result.transformed, test_params["expected_result"]
     )
 
