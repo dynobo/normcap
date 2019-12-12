@@ -80,7 +80,7 @@ def test_argparser_default_verbose(argparser_defaults):
 
 def test_argparser_default_mode(argparser_defaults):
     """Check default capture mode."""
-    assert argparser_defaults["mode"] == "trigger"
+    assert argparser_defaults["mode"] == "parse"
 
 
 def test_argparser_default_lang(argparser_defaults):

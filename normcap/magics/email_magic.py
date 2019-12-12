@@ -2,7 +2,6 @@
 
 # Default
 import re
-import webbrowser
 from typing import List
 
 # Own
@@ -60,12 +59,3 @@ class EmailMagic(BaseMagic):
         self._logger.info("Transforming with Email magic...")
         concat_emails = ", ".join(self._emails)
         return concat_emails
-
-    def trigger(self, request: NormcapData):
-        """Open adresses as mailto: link.
-
-        Arguments:
-            request {NormcapData} -- NormCap's session data
-        """
-        self._logger.info("Open mailto link...")
-        webbrowser.open(f"mailto:{request.transformed}")

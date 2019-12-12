@@ -50,11 +50,7 @@ def create_argparser() -> argparse.ArgumentParser:
         default=False,
     )
     parser.add_argument(
-        "-m",
-        "--mode",
-        type=str,
-        default="trigger",
-        help="startup mode [raw,parse,trigger]",
+        "-m", "--mode", type=str, default="parse", help="startup mode [raw,parse]",
     )
     parser.add_argument(
         "-l", "--lang", type=str, default="eng", help="set language for ocr tool"

@@ -31,7 +31,7 @@
 **Basic usage:**
 
 1. Launch `NormCap`
-2. Select region of interest on screen
+2. Select region on screen
 3. Retrieve recognized text in clipboard
 
 ## Installation
@@ -43,30 +43,28 @@
 ```sh
 ## on Ubuntu/Debian:
 sudo apt-get install tesseract-ocr xclip
-
 # on Arch:
 sudo pacman -S tesseract tesseract-data-eng xclip
-
 # on Fedora
 sudo dnf install tesseract xclip
 ```
 
 2\. Download and extract binary package from the [latest release](
-https://github.com/dynobo/normcap/releases).
+https://github.com/dynobo/normcap/releases)
 
-3\. Execute `./NormCap`.
+3\. Execute `./NormCap`
 
 ### On Windows
 
-1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases).
+1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation is required)
 
-2\. Execute `NormCap.exe` to start the program (no installation needed).
+2\. Execute `NormCap.exe`
 
-3\. (Optional) NormCap comes with language files for English and German. Please [file an issue](https://github.com/dynobo/normcap/issues), if I should include other languages.
+3\. (Optional) NormCap out-of-the-box supports English and German. Please [file an issue](https://github.com/dynobo/normcap/issues), if other languages should be included.
 
 ### On Mac
 
-*On Mac, some issues occur. [Help needed](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).*
+***On Mac, some issues occur. [Help needed](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)***
 
 1\. Install dependencies:
 
@@ -77,29 +75,28 @@ brew install tesseract tesseract-lang
 2\.  Download and extract binary package from the [latest release](
 https://github.com/dynobo/normcap/releases)
 
-3\. Execute `normcap.app`.
+3\. Execute `normcap.app`
 
 ## Usage
 
 ### Basics
 
-1. Run the `NormCap` executable. A red border will appear around your screen.
-2. Select a region with text using your mouse. Or press `<esc>` to quit program.
+1. Run the `NormCap` executable (A red border will appear around your screen)
+2. Select a region with text using your mouse (Or press `<esc>` to quit program)
 3. (Optional) Before letting go the mouse button, press `<space>`-key to switch through different modes of operation, as indicated by a symbol:
-   - **☰ (raw):** Copy detected text line by line, without further modification.
-   - **⚙ (parse):** Try to auto-detect type of text using [magics](#Magics) and format the text accordingly, then copy.
-   - **★ (trigger):** "Parse" the text *and* trigger an action corresponding to the detected [magic](#Magics).
-4. Paste the text from clipboard (e.g. `<ctrl> + p`).
+   - **☰ (raw):** Copy detected text line by line, without further modification
+   - **☶ (parse):** Try to auto-detect type of text using [magics](#Magics) and format the text accordingly, then copy
+4. Paste the text from clipboard (e.g. `<ctrl> + v`)
 
 ### Hints
 
-NormCap is intended to be executed via a custom keybinding or desktop shortcut, so it doesn't run as daemon and won't use memory while not in use. On the downside, this makes NormCap a little bit slower
+NormCap is intended to be executed on demand via keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but it's startup is a bit slower.
 
-By default NormCap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk.
+By default NormCap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
 
 ### Command line options
 
-NormCap doesn't have a configuration file, instead it's behavior can be customized using command line arguments:
+NormCap has no settings, just a set of command line arguments:
 
 ```plain
 [holger@cioran normcap]$ poetry run python normcap/normcap.py --help
@@ -111,7 +108,7 @@ images.
 optional arguments:
   -h, --help               show this help message and exit
   -v, --verbose            print debug information to console (default: False)
-  -m MODE, --mode MODE     startup mode [raw,parse,trigger] (default: trigger)
+  -m MODE, --mode MODE     startup mode [raw,parse] (default: parse)
   -l LANG, --lang LANG     set language for ocr tool (default: eng)
   -c COLOR, --color COLOR  set primary color for UI (default: #FF0000)
   -p PATH, --path PATH     set a path for storing images (default: None)
@@ -119,19 +116,14 @@ optional arguments:
 
 ### Magics
 
-"Magics" are like addons providing automated functionality. They get loaded in "parse" or "trigger" mode and perform tasks specific to the type of text, that was captured.
+"Magics" are like addons providing automated functionality to intelligently detect and format the captured input.
 
-Each "magic" can perform three steps:
-
-1. **Score:** Determine the likelihood of the detected text's type.
-2. **Parse:** Format the text according to its type.
-3. **Trigger:** Activate a built-in action to handle the detected text.
+First, every "magic" calculates a **"score"** to determine the likelihood of the magic being responsible for this type of text. Second, the "magic" which achieved the highest "score" take the necessary actions to **"parse"** the input text according to its type
 
 #### Single Line Magic
 
 - **Score:** If single line is detected
 - **Parse:** Trim unnecessary whitespace
-- **Trigger:** Nothing (copy to clipboard only).
 
 TODO: Screencast Single Line Magic
 
@@ -139,7 +131,6 @@ TODO: Screencast Single Line Magic
 
 - **Score:** Number of chars in email addresses vs. overall chars
 - **Parse:** Transform to comma separated list
-- **Trigger:** Open with default application for mailto-links
 
 TODO: Screencast E-Mail Magic
 
@@ -147,7 +138,6 @@ TODO: Screencast E-Mail Magic
 
 - **Score:** Number of chars in URLs vs. overall chars
 - **Parse:** Transform to line-break separated URLs
-- **Trigger:** Open URLs in new tabs of default browser
 
 TODO: Screencast URL Magic
 
@@ -161,7 +151,7 @@ See [XKCD](https://xkcd.com):
 
 ### Setup Environment
 
-This requires an installation of **Python**, **Tesseract** (incl. **language data**) and on Linux also **XClip**.
+Prerequisites are **Python**, **Tesseract** (incl. **language data**) and on Linux also **XClip**.
 
 ```sh
 # Clone repository
@@ -187,6 +177,7 @@ pipenv run python -m normcap
 
 - **Multi-Platform**<br>Should work on on Linux, Mac & Windows.
 - **Don't run as service**<br>As NormCap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to a slower start-up time.
+- **No network connection**<br>Everything should run locally without any network communication.
 - **Avoid text in UI**<br>This just avoids translations ;-) And I think it is feasible in such an simple application.
 - **Avoid configuration file or settings UI**<br>Focus on simplicity and core functionality.
 - **Dependencies**<br>The less dependencies, the better. Of course I have to compromise, but I'm always open to suggestions on how to further reduce dependencies.

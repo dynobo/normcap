@@ -54,10 +54,6 @@ class MagicHandler(AbstractHandler):
             request.best_magic = best_magic_name
             request.transformed = best_magic.transform(request)
 
-            # In trigger mode, run magics action
-            if request.mode == "trigger":
-                best_magic.trigger(request)
-
         if self._next_handler:
             return super().handle(request)
         else:

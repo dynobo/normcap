@@ -39,14 +39,6 @@ class BaseMagic:
         """
         return ""
 
-    def trigger(self, request: NormcapData):
-        """(External) action to perform in case this magic is scored highest.
-
-        Arguments:
-            request {NormcapData} -- NormCap's session data
-        """
-        return
-
 
 # from statistics import variance
 
