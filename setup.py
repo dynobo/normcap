@@ -10,36 +10,27 @@ from setuptools.command.install import install
 class InstallWinDeps(install):
     def run(self):
         install.run(self)
+        if platform.system() == "Windows":
+            self.install_tesserocr_for_windows()
 
-        if not platform.system().startswith("win"):
-            print("Not on Windows. Skipping platform specific dependencies.")
-            return
+    def install_tesserocr_for_windows(self):
+        """Installing Windows specific python packages.
 
-        print("Installed Windows specific python packages:")
-
-        # For windows use pre compiled wheel for tesserocr from
-        # https://github.com/simonflueckiger/tesserocr-windows_build/releases
-        TESSEROCR = {
-            "win32": (
-                "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
-                "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win32.whl"
-            ),
-            "win64": (
-                "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
-                "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl"
-            ),
-        }
-
-        win_version = "win32"
-        if platform.machine().endswith("64"):
-            win_version = "win64"
-
-        print(f"Tesserocr: {TESSEROCR[win_version]}...\n")
-
-        subprocess.check_call(
-            [sys.executable, "-m", "pip", "install", TESSEROCR[win_version],]
+        To avoid the cumbersome installation process of Tesseract on Windows,
+        we install a wheel that contains the pre-compiled tesseract lib.
+        Thanks to: https://github.com/simonflueckiger/tesserocr-windows_build/releases
+        """
+        url = (
+            "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
+            "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-"
         )
-        print("Done.")
+        if platform.machine().endswith("32"):
+            url += "win32.whl"
+        else:
+            url += "win_amd64.whl"
+
+        print(f"Downloading Windows specific 'tesserocr': {url} ...\n")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", url])
 
 
 # The directory containing this file
@@ -61,7 +52,7 @@ setup(
     author_email="dynobo@mailbox.org",
     license="GPLv3",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 3 - Beta",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
@@ -80,10 +71,7 @@ setup(
         "Pillow",
         "pyperclip",
         "tesserocr; platform_system!='Windows'",
-        "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
-        + "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl"
-        + "; platform_system=='Windows'",
     ],
     entry_points={"console_scripts": ["normcap=normcap.normcap:main"]},
-    # cmdclass={"install": InstallWinDeps},
+    cmdclass={"install": InstallWinDeps},
 )
