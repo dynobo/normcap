@@ -23,7 +23,7 @@ from normcap.handlers.abstract_handler import AbstractHandler
 
 def test_version():
     """Are we testing right version?"""
-    assert normcap.__version__ == "0.1a1"
+    assert normcap.__version__ == "0.0.15"
 
 
 # TESTING client_code()
