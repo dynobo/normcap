@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.0.15 (2019-12-13)
+
+**Changes:**
+
+- Switched to simple semantic versioning
+- Prepared for publishing to pypi
+
 ## v0.1a1 (2019-12-09)
 
 **Changes:**
