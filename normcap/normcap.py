@@ -113,7 +113,7 @@ def main(test_data: NormcapData = None):
 
     # Init Logger
     logger = init_logging(logging.INFO, to_file=False)
-    logger.info("Starting NormCap %s...", __version__)
+    logger.info("Starting NormCap v%s ...", __version__)
 
     # Init Normcap Data
     if test_data and test_data.test_mode:

@@ -6,33 +6,6 @@ import sys
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 
-
-class InstallWinDeps(install):
-    def run(self):
-        install.run(self)
-        if platform.system() == "Windows":
-            self.install_tesserocr_for_windows()
-
-    def install_tesserocr_for_windows(self):
-        """Installing Windows specific python packages.
-
-        To avoid the cumbersome installation process of Tesseract on Windows,
-        we install a wheel that contains the pre-compiled tesseract lib.
-        Thanks to: https://github.com/simonflueckiger/tesserocr-windows_build/releases
-        """
-        url = (
-            "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/"
-            "tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-"
-        )
-        if platform.machine().endswith("32"):
-            url += "win32.whl"
-        else:
-            url += "win_amd64.whl"
-
-        print(f"Downloading Windows specific 'tesserocr': {url} ...\n")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", url])
-
-
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
 
@@ -66,12 +39,6 @@ setup(
     packages=find_packages(exclude=("tests",)),
     include_package_data=False,
     python_requires=">=3.7.0",
-    install_requires=[
-        "mss",
-        "Pillow",
-        "pyperclip",
-        "tesserocr; platform_system!='Windows'",
-    ],
+    install_requires=["mss", "Pillow", "pyperclip", "tesserocr",],
     entry_points={"console_scripts": ["normcap=normcap.__main__:run"]},
-    cmdclass={"install": InstallWinDeps},
 )
