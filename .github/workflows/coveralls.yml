@@ -1,11 +1,11 @@
 on: ["push"]
 
-name: Test Coveralls
+name: Coveralls
 
 jobs:
 
   build:
-    name: Build
+    name: Test
     runs-on: ubuntu-latest
     steps:
 
