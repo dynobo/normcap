@@ -1,4 +1,9 @@
 from normcap.normcap import main
 
-if __name__ == "__main__":
+
+def run():
     _ = main()
+
+
+if __name__ == "__main__":
+    run()

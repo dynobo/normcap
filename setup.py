@@ -72,6 +72,6 @@ setup(
         "pyperclip",
         "tesserocr; platform_system!='Windows'",
     ],
-    entry_points={"console_scripts": ["normcap=normcap.__main__"]},
+    entry_points={"console_scripts": ["normcap=normcap.__main__:run"]},
     cmdclass={"install": InstallWinDeps},
 )
