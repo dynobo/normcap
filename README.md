@@ -43,24 +43,39 @@
 ```sh
 ## on Ubuntu/Debian:
 sudo apt-get install tesseract-ocr xclip
+
 # on Arch:
 sudo pacman -S tesseract tesseract-data-eng xclip
+
 # on Fedora
 sudo dnf install tesseract xclip
 ```
 
-2\. Download and extract binary package from the [latest release](
-https://github.com/dynobo/normcap/releases)
+2\. Run `pip install normcap` (***OR*** download and extract binary package from the [latest release](
+https://github.com/dynobo/normcap/releases))
 
 3\. Execute `./normcap`
 
 ### On Windows
 
+**Recommended method:**
+
 1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation is required)
 
 2\. Execute `normcap.exe`
 
-3\. (Optional) normcap out-of-the-box supports English and German. Please [file an issue](https://github.com/dynobo/normcap/issues), if other languages should be included.
+**Alternative method:**
+
+1\. Install "Tesseract", e.g. by using the [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
+
+2\. Install [tesserocr](https://pypi.org/project/tesserocr/), e.g. by using the [Windows specific wheel](https://github.com/simonflueckiger/tesserocr-windows_build):
+```
+pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
+```
+
+3\. Run `pip install normcap`
+
+4\. Execute `normcap`
 
 ### On Mac
 
@@ -90,6 +105,8 @@ https://github.com/dynobo/normcap/releases)
 
 ### Hints
 
+The [Windows release](https://github.com/dynobo/normcap/releases) of normcap supports English and German out of the box. Please [file an issue](https://github.com/dynobo/normcap/issues), if other languages should be included permanently, or download additional language files from [the tesseract repo](https://github.com/tesseract-ocr/tessdata_best) yourself and place them in the `/normcap/tessdata/` folder.
+
 normcap is intended to be executed on demand via keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but it's startup is a bit slower.
 
 By default normcap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
@@ -102,8 +119,7 @@ normcap has no settings, just a set of command line arguments:
 [holger@cioran normcap]$ poetry run python normcap/normcap.py --help
 usage: normcap [-h] [-v] [-m MODE] [-l LANG] [-c COLOR] [-p PATH]
 
-Intelligent OCR-powered screen-capture tool to capture information instead of
-images.
+Intelligent OCR-powered screen-capture tool to capture information instead of images.
 
 optional arguments:
   -h, --help               show this help message and exit
