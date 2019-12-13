@@ -27,7 +27,6 @@ coverage = "==5.0a4"
 black = "*"
 bumpversion = "*"
 twine = "*"
-tesserocr = {platform_system = "== 'Windows'",version = "*"}
 
 [requires]
 python_version = "3.7"
