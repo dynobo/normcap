@@ -68,15 +68,21 @@ https://github.com/dynobo/normcap/releases))
 
 1\. Install "Tesseract", e.g. by using the [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
 
-2\. Install [tesserocr](https://pypi.org/project/tesserocr/), e.g. by using the [Windows specific wheel](https://github.com/simonflueckiger/tesserocr-windows_build):
+2\. Set the environment variable `TESSDATA_PREFIX` to Tesseract's data folder, e.g.:
+
+```cmd
+setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"
+```
+
+3\. Install [tesserocr](https://pypi.org/project/tesserocr/), e.g. by using the [Windows specific wheel](https://github.com/simonflueckiger/tesserocr-windows_build):
 
 ```bash
 pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
 ```
 
-3\. Run `pip install normcap`
+4\. Run `pip install normcap`
 
-4\. Execute `normcap`
+5\. Execute `normcap`
 
 ### On Mac
 
