@@ -7,7 +7,7 @@ verify_ssl = true
 mss = "*"
 pyperclip = "*"
 Pillow = "*"
-tesserocr = {version="*", platform_system="!= 'Windows'"}
+tesserocr = {platform_system = "!= 'Windows'",version = "*"}
 
 [dev-packages]
 pytest = "*"
@@ -17,7 +17,7 @@ isort = "*"
 mypy = "*"
 pre-commit = "*"
 vprof = "*"
-pywin32-ctypes = {version="*", platform_system="== 'Windows'"}
+pywin32-ctypes = {platform_system = "== 'Windows'",version = "*"}
 PyInstaller = "*"
 pylint = "*"
 pefile = "*"
@@ -26,6 +26,7 @@ python-coveralls = "*"
 coverage = "==5.0a4"
 black = "*"
 bumpversion = "*"
+twine = "*"
 
 [requires]
 python_version = "3.7"
