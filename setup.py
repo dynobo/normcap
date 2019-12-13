@@ -1,10 +1,6 @@
 # Standard
 import pathlib
-import platform
-import subprocess
-import sys
 from setuptools import setup, find_packages
-from setuptools.command.install import install
 
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
@@ -39,6 +35,6 @@ setup(
     packages=find_packages(exclude=("tests",)),
     include_package_data=False,
     python_requires=">=3.7.0",
-    install_requires=["mss", "Pillow", "pyperclip", "tesserocr",],
+    install_requires=["mss", "Pillow", "pyperclip", "tesserocr"],
     entry_points={"console_scripts": ["normcap=normcap.__main__:run"]},
 )
