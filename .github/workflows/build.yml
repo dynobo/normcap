@@ -101,7 +101,7 @@ jobs:
         new-item -Name tessdata -ItemType directory;  
         cd tessdata; 
         iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/README.md -OutFile README.md;
-        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/COPYING -OutFile COPYING;        
+        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/LICENSE -OutFile LICENSE;        
         iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/eng.traineddata -OutFile eng.traineddata;
         iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/deu.traineddata -OutFile deu.traineddata;
         dir;
