@@ -21,14 +21,19 @@ jobs:
       run: python3.7 -m pip install --user pipenv
     - name: Create virtual env
       run: $HOME/.local/bin/pipenv install --dev
-    
+    - name: Create virtual env
+      run: $HOME/.local/bin/pipenv run pip install coveralls
+
     # TEST
     - name: Test with pytest
       # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
       run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest
 
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: .coverage
+    # Publish
+    - name: Publish
+      run: $HOME/.local/bin/pipenv run coveralls
+#    - name: Coveralls
+#      uses: coverallsapp/github-action@master
+#      with:
+#        github-token: ${{ secrets.GITHUB_TOKEN }}
+#        path-to-lcov: .coverage
