@@ -152,8 +152,6 @@ def test_normcap_main(test_params):
     test_data = data_test_image(test_params)
     result = normcap.main(test_data)
 
-    print(utils.log_dataclass("Test output", result, return_string=True))
-
     similarity = utils.get_jaccard_sim(
         result.transformed.split(), test_params["expected_result"].split()
     )
