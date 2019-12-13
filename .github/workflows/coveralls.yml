@@ -28,12 +28,9 @@ jobs:
     - name: Test with pytest
       # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
       run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest
+      env:
+         COVERALLS_REPO_TOKEN: {{ secrets.COVERALLS_TOKEN }}
 
-    # Publish
+    # PUBLISH
     - name: Publish
       run: $HOME/.local/bin/pipenv run coveralls
-#    - name: Coveralls
-#      uses: coverallsapp/github-action@master
-#      with:
-#        github-token: ${{ secrets.GITHUB_TOKEN }}
-#        path-to-lcov: .coverage
