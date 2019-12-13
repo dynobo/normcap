@@ -10,7 +10,7 @@ Pillow = "*"
 tesserocr = {platform_system = "!= 'Windows'",version = "*"}
 
 [dev-packages]
-pytest = "5.3.0"
+pytest = "==5.3.0"
 pytest-cov = "*"
 flake8 = "*"
 isort = "*"
