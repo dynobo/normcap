@@ -7,7 +7,7 @@ import PyInstaller.__main__
 
 
 ARGS = [
-    "--name=NormCap",
+    "--name=normcap",
     "--clean",
     "--noconfirm",
     # "--onefile",

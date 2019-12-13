@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD013 MD026 MD033 -->
 
-# NormCap
+# normcap
 
 ***Intelligent OCR powered screen-capture tool to capture information instead of images.***
 
@@ -30,7 +30,7 @@
 
 **Basic usage:**
 
-1. Launch `NormCap`
+1. Launch `normcap`
 2. Select region on screen
 3. Retrieve recognized text in clipboard
 
@@ -52,15 +52,15 @@ sudo dnf install tesseract xclip
 2\. Download and extract binary package from the [latest release](
 https://github.com/dynobo/normcap/releases)
 
-3\. Execute `./NormCap`
+3\. Execute `./normcap`
 
 ### On Windows
 
 1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation is required)
 
-2\. Execute `NormCap.exe`
+2\. Execute `normcap.exe`
 
-3\. (Optional) NormCap out-of-the-box supports English and German. Please [file an issue](https://github.com/dynobo/normcap/issues), if other languages should be included.
+3\. (Optional) normcap out-of-the-box supports English and German. Please [file an issue](https://github.com/dynobo/normcap/issues), if other languages should be included.
 
 ### On Mac
 
@@ -81,7 +81,7 @@ https://github.com/dynobo/normcap/releases)
 
 ### Basics
 
-1. Run the `NormCap` executable (A red border will appear around your screen)
+1. Run the `normcap` executable (A red border will appear around your screen)
 2. Select a region with text using your mouse (Or press `<esc>` to quit program)
 3. (Optional) Before letting go the mouse button, press `<space>`-key to switch through different modes of operation, as indicated by a symbol:
    - **☰ (raw):** Copy detected text line by line, without further modification
@@ -90,13 +90,13 @@ https://github.com/dynobo/normcap/releases)
 
 ### Hints
 
-NormCap is intended to be executed on demand via keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but it's startup is a bit slower.
+normcap is intended to be executed on demand via keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but it's startup is a bit slower.
 
-By default NormCap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
+By default normcap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
 
 ### Command line options
 
-NormCap has no settings, just a set of command line arguments:
+normcap has no settings, just a set of command line arguments:
 
 ```plain
 [holger@cioran normcap]$ poetry run python normcap/normcap.py --help
@@ -141,7 +141,7 @@ TODO: Screencast E-Mail Magic
 
 TODO: Screencast URL Magic
 
-### Why "NormCap"?
+### Why "normcap"?
 
 See [XKCD](https://xkcd.com):
 
@@ -176,7 +176,7 @@ pipenv run python -m normcap
 ### Design Principles
 
 - **Multi-Platform**<br>Should work on on Linux, Mac & Windows.
-- **Don't run as service**<br>As NormCap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to a slower start-up time.
+- **Don't run as service**<br>As normcap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to a slower start-up time.
 - **No network connection**<br>Everything should run locally without any network communication.
 - **Avoid text in UI**<br>This just avoids translations ;-) And I think it is feasible in such an simple application.
 - **Avoid configuration file or settings UI**<br>Focus on simplicity and core functionality.
