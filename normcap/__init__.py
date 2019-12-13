@@ -1,3 +1,3 @@
-__author__ = "Dynobo"
-__email__ = "Dynobo@mailbox.org"
-__version__ = "0.1a1"
+__author__ = "dynobo"
+__email__ = "dynobo@mailbox.org"
+__version__ = "0.0.15"

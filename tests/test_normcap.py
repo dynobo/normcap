@@ -9,7 +9,6 @@ import tempfile
 # Extra
 import pytest
 from PIL import Image
-import Levenshtein
 
 # Own
 from normcap import normcap
@@ -24,7 +23,7 @@ from normcap.handlers.abstract_handler import AbstractHandler
 
 def test_version():
     """Are we testing right version?"""
-    assert normcap.__version__ == "0.1a1"
+    assert normcap.__version__ == "0.0.15"
 
 
 # TESTING client_code()
@@ -153,12 +152,10 @@ def test_normcap_main(test_params):
     test_data = data_test_image(test_params)
     result = normcap.main(test_data)
 
-    print(utils.log_dataclass("Test output", result, return_string=True))
-
-    rel_lev = Levenshtein.ratio(  # type: ignore # pylint: disable=no-member
-        result.transformed, test_params["expected_result"]
+    similarity = utils.get_jaccard_sim(
+        result.transformed.split(), test_params["expected_result"].split()
     )
 
-    assert (rel_lev >= test_params["expected_accuracy"]) and (
+    assert (similarity >= test_params["expected_similarity"]) and (
         result.best_magic == test_params["expected_magic"]
     )

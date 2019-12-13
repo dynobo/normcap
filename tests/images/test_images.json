@@ -1,54 +1,113 @@
 {
-    "images": [{
-        "filename": "test_email_magic.jpg",
-        "expected_result": "parker@test.com, HArDToReAd@test.com, 0815@test.com",
-        "expected_accuracy": 1,
-        "expected_magic": "email",
-        "position": {
-            "left": 388,
-            "right": 777,
-            "top": 464,
-            "bottom": 500
+    "images": [
+        {
+            "filename": "test_email_magic.jpg",
+            "expected_result": "parker@test.com, HArDToReAd@test.com, 0815@test.com",
+            "expected_similarity": 1,
+            "expected_magic": "email",
+            "position": {
+                "left": 388,
+                "right": 777,
+                "top": 464,
+                "bottom": 500
+            },
+            "cli_args": {
+                "lang": "eng",
+                "mode": "parse",
+                "verbose": true,
+                "path": null
+            }
         },
-        "cli_args": {
-            "lang": "eng",
-            "mode": "parse",
-            "verbose": true,
-            "path": null
-        }
-    }, {
-        "filename": "test_email_magic.jpg",
-        "expected_result": "To: Peter Parker <peter parker@test.com>, HArD To ReAd <HArDToReAd@test.com>; 0815 <0815@test.com>; Invalid_one <notvalid@test>; Invalid_two <also/not/valid/@test.com>; Invalid_three <@test.com> Subject: OCR testing image",
-        "expected_accuracy": 0.9,
-        "expected_magic": "paragraph",
-        "position": {
-            "left": 388,
-            "right": 1000,
-            "top": 464,
-            "bottom": 521
+        {
+            "filename": "test_email_magic.jpg",
+            "expected_result": "To: Peter Parker <peter parker@test.com>, HArD To ReAd <HArDToReAd@test.com>; 0815 <0815@test.com>; Invalid_one <notvalid@test>; Invalid_two <also/not/valid/@test.com>; Invalid_three <@test.com> Subject: OCR testing image",
+            "expected_similarity": 0.75,
+            "expected_magic": "paragraph",
+            "position": {
+                "left": 388,
+                "right": 1000,
+                "top": 464,
+                "bottom": 540
+            },
+            "cli_args": {
+                "lang": "eng",
+                "mode": "parse",
+                "verbose": true,
+                "path": null
+            }
         },
-        "cli_args": {
-            "lang": "eng",
-            "mode": "parse",
-            "verbose": true,
-            "path": null
-        }
-    }, {
-        "filename": "test_email_magic_unscaled.jpg",
-        "expected_result": "dynobo@mailbox.org",
-        "expected_accuracy": 1,
-        "expected_magic": "email",
-        "position": {
-            "left": 150,
-            "right": 281,
-            "top": 92,
-            "bottom": 106
+        {
+            "explanation": "Numbers and punctuation",
+            "filename": "test_email_magic.jpg",
+            "expected_result": "Sent: Tuesday, September 2, 2019 1:38 AM",
+            "expected_similarity": 1,
+            "expected_magic": "single_line",
+            "position": {
+                "left": 388,
+                "right": 750,
+                "top": 446,
+                "bottom": 465
+            },
+            "cli_args": {
+                "lang": "eng",
+                "mode": "parse",
+                "verbose": true,
+                "path": null
+            }
         },
-        "cli_args": {
-            "lang": "eng",
-            "mode": "parse",
-            "verbose": true,
-            "path": null
+        {
+            "filename": "test_email_magic_unscaled.jpg",
+            "expected_result": "screenshot content",
+            "expected_similarity": 1,
+            "expected_magic": "single_line",
+            "position": {
+                "left": 272,
+                "right": 376,
+                "top": 11,
+                "bottom": 37
+            },
+            "cli_args": {
+                "lang": "eng",
+                "mode": "parse",
+                "verbose": true,
+                "path": null
+            }
+        },
+        {
+            "filename": "test_email_magic_unscaled.jpg",
+            "expected_result": "dynobo@mailbox.org",
+            "expected_similarity": 1,
+            "expected_magic": "email",
+            "position": {
+                "left": 150,
+                "right": 281,
+                "top": 92,
+                "bottom": 106
+            },
+            "cli_args": {
+                "lang": "eng",
+                "mode": "parse",
+                "verbose": true,
+                "path": null
+            }
+        },
+        {
+            "filename": "test_email_magic_unscaled.jpg",
+            "expected_result": "Dynobo",
+            "expected_similarity": 1,
+            "expected_magic": "single_line",
+            "position": {
+                "left": 74,
+                "right": 160,
+                "top": 235,
+                "bottom": 258
+            },
+            "cli_args": {
+                "lang": "eng",
+                "mode": "parse",
+                "verbose": true,
+                "path": null
+            }
         }
-    }]
+    ]
 }

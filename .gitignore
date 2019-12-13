@@ -5,6 +5,7 @@
 .vscode/
 cov.xml
 coverage
+.coverage
 .coveralls.yml
 *.spec
 

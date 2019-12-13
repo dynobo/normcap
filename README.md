@@ -1,11 +1,11 @@
 <!-- markdownlint-disable MD013 MD026 MD033 -->
 
-# NormCap
+# normcap
 
 ***Intelligent OCR powered screen-capture tool to capture information instead of images.***
 
 <p align="center"><br>
-<a href="https://saythanks.io/to/dynobo"><img alt="Say thanks!" src="https://img.shields.io/badge/Say-thanks-%23ff69b4"></a>
+<a href="https://github.com/dynobo/normcap/releases"><img alt="Build passing" src="https://github.com/dynobo/normcap/workflows/Build/badge.svg"></a>
 <a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPLv3" src="https://img.shields.io/badge/License-GPLv3-blue.svg"></a>
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/Code%20style-black-%23000000"></a>
 <a href='https://coveralls.io/github/dynobo/normcap'><img src='https://coveralls.io/repos/github/dynobo/normcap/badge.svg' alt='Coverage Status' /></a>
@@ -30,7 +30,7 @@
 
 **Basic usage:**
 
-1. Launch `NormCap`
+1. Launch `normcap`
 2. Select region on screen
 3. Retrieve recognized text in clipboard
 
@@ -43,24 +43,46 @@
 ```sh
 ## on Ubuntu/Debian:
 sudo apt-get install tesseract-ocr xclip
+
 # on Arch:
 sudo pacman -S tesseract tesseract-data-eng xclip
+
 # on Fedora
 sudo dnf install tesseract xclip
 ```
 
-2\. Download and extract binary package from the [latest release](
-https://github.com/dynobo/normcap/releases)
+2\. Run `pip install normcap` (***OR*** download and extract binary package from the [latest release](
+https://github.com/dynobo/normcap/releases))
 
-3\. Execute `./NormCap`
+3\. Execute `./normcap`
 
 ### On Windows
 
+**Recommended method:**
+
 1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation is required)
 
-2\. Execute `NormCap.exe`
+2\. Execute `normcap.exe`
 
-3\. (Optional) NormCap out-of-the-box supports English and German. Please [file an issue](https://github.com/dynobo/normcap/issues), if other languages should be included.
+**Alternative method:**
+
+1\. Install "Tesseract", e.g. by using the [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
+
+2\. Set the environment variable `TESSDATA_PREFIX` to Tesseract's data folder, e.g.:
+
+```cmd
+setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"
+```
+
+3\. Install [tesserocr](https://pypi.org/project/tesserocr/), e.g. by using the [Windows specific wheel](https://github.com/simonflueckiger/tesserocr-windows_build):
+
+```bash
+pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
+```
+
+4\. Run `pip install normcap`
+
+5\. Execute `normcap`
 
 ### On Mac
 
@@ -81,7 +103,7 @@ https://github.com/dynobo/normcap/releases)
 
 ### Basics
 
-1. Run the `NormCap` executable (A red border will appear around your screen)
+1. Run the `normcap` executable (A red border will appear around your screen)
 2. Select a region with text using your mouse (Or press `<esc>` to quit program)
 3. (Optional) Before letting go the mouse button, press `<space>`-key to switch through different modes of operation, as indicated by a symbol:
    - **☰ (raw):** Copy detected text line by line, without further modification
@@ -90,20 +112,21 @@ https://github.com/dynobo/normcap/releases)
 
 ### Hints
 
-NormCap is intended to be executed on demand via keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but it's startup is a bit slower.
+The [Windows release](https://github.com/dynobo/normcap/releases) of normcap supports English and German out of the box. Please [file an issue](https://github.com/dynobo/normcap/issues), if other languages should be included permanently, or download additional language files from [the tesseract repo](https://github.com/tesseract-ocr/tessdata_best) yourself and place them in the `/normcap/tessdata/` folder.
 
-By default NormCap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
+normcap is intended to be executed on demand via keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but it's startup is a bit slower.
+
+By default normcap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
 
 ### Command line options
 
-NormCap has no settings, just a set of command line arguments:
+normcap has no settings, just a set of command line arguments:
 
 ```plain
 [holger@cioran normcap]$ poetry run python normcap/normcap.py --help
 usage: normcap [-h] [-v] [-m MODE] [-l LANG] [-c COLOR] [-p PATH]
 
-Intelligent OCR-powered screen-capture tool to capture information instead of
-images.
+Intelligent OCR-powered screen-capture tool to capture information instead of images.
 
 optional arguments:
   -h, --help               show this help message and exit
@@ -141,7 +164,7 @@ TODO: Screencast E-Mail Magic
 
 TODO: Screencast URL Magic
 
-### Why "NormCap"?
+### Why "normcap"?
 
 See [XKCD](https://xkcd.com):
 
@@ -176,7 +199,7 @@ pipenv run python -m normcap
 ### Design Principles
 
 - **Multi-Platform**<br>Should work on on Linux, Mac & Windows.
-- **Don't run as service**<br>As NormCap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to a slower start-up time.
+- **Don't run as service**<br>As normcap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to a slower start-up time.
 - **No network connection**<br>Everything should run locally without any network communication.
 - **Avoid text in UI**<br>This just avoids translations ;-) And I think it is feasible in such an simple application.
 - **Avoid configuration file or settings UI**<br>Focus on simplicity and core functionality.
