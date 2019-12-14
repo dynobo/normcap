@@ -8,6 +8,20 @@ from typing import Union
 from normcap.common.data_model import NormcapData
 
 
+def _format_list_of_dicts_output(list_of_dicts: list) -> str:
+    string = ""
+    for d in list_of_dicts:
+        for key, val in d.items():
+            if key in ["left", "top", "width", "height"]:
+                string += f"{key}:{val: <5}| "
+            elif key == "text":
+                string += f"{key}:{val}"
+            else:
+                string += f"{key}:{val: <3}| "
+        string += "\n"
+    return string
+
+
 def log_dataclass(desc: str, data_class: NormcapData, return_string: bool = True):
     """Debug output of NormCap's session data.
 
@@ -18,8 +32,17 @@ def log_dataclass(desc: str, data_class: NormcapData, return_string: bool = True
     logger = logging.getLogger(__name__)
     string = f"{desc}\n{'='*10} <dataclass> {'='*10}\n"
     for key in dir(data_class):
-        if not key.startswith("_"):
-            string += f"{key}: {getattr(data_class, key)}\n"
+        # Skip internal classes
+        if key.startswith("_"):
+            continue
+        # Nicer format tesseract output
+        if key == "words":
+            string += (
+                f"{key}: \n{_format_list_of_dicts_output(getattr(data_class, key))}\n"
+            )
+            continue
+        # Per default just print
+        string += f"{key}: {getattr(data_class, key)}\n"
     string += f"{'='*10} </dataclass> {'='*9}"
     logger.debug(string)
 
