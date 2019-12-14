@@ -89,7 +89,7 @@ class OcrHandler(AbstractHandler):
 
         if lang not in langs:
             self._logger.warning("Language %s for ocr not found!", langs)
-            self._logger.warning("Available languages: %s.", f"{ {*langs} }")
+            self._logger.warning("Available languages: %s.", {*langs})
             self._logger.warning("Fallback to %s.", langs[0])
             lang = langs[0]
 
