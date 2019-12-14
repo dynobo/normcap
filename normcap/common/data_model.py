@@ -91,8 +91,25 @@ class NormcapData:
         Returns:
             int -- number of detected lines
         """
-        line_nums = set()
-        for word in self.words:
-            line_nums.add(word["line_num"])
-
+        line_nums = set([w["line_num"] for w in self.words])
         return len(line_nums)
+
+    @property
+    def num_pars(self) -> int:
+        """Helper to return number of paragraphs.
+
+        Returns:
+            int -- number of detected paragraphs
+        """
+        par_nums = set([w["par_num"] for w in self.words])
+        return len(par_nums)
+
+    @property
+    def num_blocks(self) -> int:
+        """Helper to return number of blocks.
+
+        Returns:
+            int -- number of detected blocks
+        """
+        par_blocks = set([w["block_num"] for w in self.words])
+        return len(par_blocks)
