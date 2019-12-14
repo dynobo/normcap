@@ -61,9 +61,13 @@ class OcrHandler(AbstractHandler):
             "conf",
             "text",
         ]
+
         words = list(
             csv.DictReader(
-                tsv_data.split("\n"), fieldnames=tsv_columns, delimiter="\t",
+                tsv_data.split("\n"),
+                fieldnames=tsv_columns,
+                delimiter="\t",
+                quoting=csv.QUOTE_NONE,
             )
         )
         words = [w for w in words if w["text"]]
