@@ -2,6 +2,7 @@
 
 # Default
 import os
+from typing import Optional
 from dataclasses import dataclass, field
 
 # Extra
@@ -32,7 +33,7 @@ class NormcapData:
 
     # Results of cropping
     mode: str = ""  # Selected capture mode during crop ["raw","parsed"]
-    image: Image = None  # Cropped image
+    image: Optional[Image.Image] = None
     monitor: int = 0  # Screen of cropped image
     left: int = 0  # Position of cropped section
     right: int = 0
