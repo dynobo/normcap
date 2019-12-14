@@ -156,6 +156,11 @@ def test_normcap_main(test_params):
         result.transformed.split(), test_params["expected_result"].split()
     )
 
-    assert (similarity >= test_params["expected_similarity"]) and (
-        result.best_magic == test_params["expected_magic"]
-    )
+    # print("=" * 50)
+    # print(result.best_magic)
+    # print(result.transformed.split())
+    # print(test_params["expected_result"].split())
+    # print("=" * 50)
+
+    assert similarity >= test_params["expected_similarity"]
+    assert result.best_magic == test_params["expected_magic"]

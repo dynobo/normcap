@@ -32,12 +32,19 @@ class MagicHandler(AbstractHandler):
         if request.mode != "raw":  # Skip all magics, if raw mode enabled
             # Import magics here (to only load, when needed)!
             from normcap.magics.single_line_magic import SingleLineMagic
+            from normcap.magics.multi_line_magic import MultiLineMagic
             from normcap.magics.paragraph_magic import ParagraphMagic
             from normcap.magics.email_magic import EmailMagic
             from normcap.magics.url_magic import UrlMagic
 
             # Load Magics
-            magics_classes = [SingleLineMagic, ParagraphMagic, EmailMagic, UrlMagic]
+            magics_classes = [
+                SingleLineMagic,
+                MultiLineMagic,
+                ParagraphMagic,
+                EmailMagic,
+                UrlMagic,
+            ]
 
             for magic in magics_classes:
                 self._magics[magic.name] = magic()

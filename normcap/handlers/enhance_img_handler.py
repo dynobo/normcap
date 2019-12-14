@@ -1,7 +1,7 @@
 """Handler responsible to optimize the captured image for OCR."""
 
 # Extra
-import PIL  # type: ignore
+from PIL import Image, ImageOps  # type: ignore
 
 # Own
 from normcap.common.data_model import NormcapData
@@ -22,7 +22,8 @@ class EnhanceImgHandler(AbstractHandler):
         self._logger.info("Applying enhancements to image...")
 
         # Currently, the image is only enlarged
-        request.image = self._enlarge_dpi(request.image)
+        if request.image:
+            request.image = self._enlarge_dpi(request.image)
         # request.image = self._grayscale(request.image)
         # request.image = self._strech_contrast(request.image)
 
@@ -31,15 +32,15 @@ class EnhanceImgHandler(AbstractHandler):
         else:
             return request
 
-    def _grayscale(self, img: PIL.Image) -> PIL.Image:
+    def _grayscale(self, img: Image.Image) -> Image.Image:
         img = img.convert("L")
         return img
 
-    def _strech_contrast(self, img: PIL.Image) -> PIL.Image:
-        img = PIL.ImageOps.autocontrast(img)
+    def _strech_contrast(self, img: Image.Image) -> Image.Image:
+        img = ImageOps.autocontrast(img)
         return img
 
-    def _enlarge_dpi(self, img: PIL.Image) -> PIL.Image:
+    def _enlarge_dpi(self, img: Image.Image) -> Image.Image:
         """Resize image to get equivalent of 300dpi.
         Reason: Most display are around ~100dpi, while Tesseract works best ~300dpi.
 
