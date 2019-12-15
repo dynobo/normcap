@@ -70,7 +70,7 @@ class OcrHandler(AbstractHandler):
                 quoting=csv.QUOTE_NONE,
             )
         )
-        words = [w for w in words if w["text"]]
+        words = [w for w in words if w["text"].strip()]
         return words
 
     def get_language(self, lang) -> str:
