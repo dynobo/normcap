@@ -23,8 +23,7 @@ class ParagraphMagic(BaseMagic):
         Returns:
             float -- score between 0-100 (100 = more likely)
         """
-        # lines = max([request.num_lines, 1])
-        breaks = request.num_blocks + request.num_pars
+        breaks = request.num_blocks + request.num_pars - 1
         self._final_score = 100 - (100 / (breaks))
 
         return self._final_score
@@ -45,10 +44,10 @@ class ParagraphMagic(BaseMagic):
             breaks = 0
             if word["par_num"] != current_par_num:
                 current_par_num = word["par_num"]
-                breaks += 1
+                breaks = 2
             if word["block_num"] != current_block_num:
                 current_block_num = word["block_num"]
-                breaks += 1
+                breaks = 2
 
             if breaks > 0:
                 # New line
