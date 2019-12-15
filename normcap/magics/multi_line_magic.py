@@ -1,8 +1,5 @@
 """Magic Class to handle very simple single line text selection."""
 
-# Default
-import os
-
 # Own
 from normcap.magics.base_magic import BaseMagic
 from normcap.common.data_model import NormcapData
@@ -27,26 +24,21 @@ class MultiLineMagic(BaseMagic):
             and (request.num_blocks == 1)
             and (request.num_pars == 1)
         ):
-            self._final_score = 50
+            self._final_score = 50.0
 
         return self._final_score
 
     def transform(self, request: NormcapData) -> str:
-        """Just transform into multiple lines of text.
+        """Just transform into single line of text.
+
+        I think in most cases, the user expect to retrieve a single
+        line without the linebreaks in between.
 
         Arguments:
             request {NormcapData} -- NormCap's session data
 
         Returns:
-            str -- Multiple lines of text
+            str -- Single line of text
         """
-        result = ""
-        current_line_num = 1
-        for word in request.words:
-            if word["line_num"] != current_line_num:
-                current_line_num = word["line_num"]
-                result += os.linesep + word["text"]
-            else:
-                result += " " + word["text"]
-
-        return result.strip()
+        # Just return concatenated text
+        return request.text
