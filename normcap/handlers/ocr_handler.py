@@ -5,7 +5,7 @@ import csv
 
 
 # Extra
-from tesserocr import PyTessBaseAPI, OEM  # type: ignore # pylint: disable=no-name-in-module
+from tesserocr import PyTessBaseAPI, OEM, PSM  # type: ignore # pylint: disable=no-name-in-module
 
 
 # Own
@@ -43,7 +43,7 @@ class OcrHandler(AbstractHandler):
 
     def img_to_dict(self, img, lang):
         img.format = "PNG"  # WORKAROUND for a pyinstaller bug on Win
-        with PyTessBaseAPI(lang=lang, oem=OEM.DEFAULT) as api:
+        with PyTessBaseAPI(lang=lang, oem=OEM.DEFAULT, psm=PSM.SINGLE_BLOCK) as api:
             api.SetImage(img)
             tsv_data = api.GetTSVText(0)
 
