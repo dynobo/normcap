@@ -54,7 +54,7 @@ class OcrHandler(AbstractHandler):
         # 8 = Treat the image as a single word.
         # 9 = Treat the image as a single word in a circle.
         # 10 = Treat the image as a single character.
-        PSM_OPTS = [2, 4, 6]
+        PSM_OPTS = [2, 4, 6, 7]
 
         best_psm = 0  # For diagnostics
         best_mean_conf = 0
@@ -68,7 +68,7 @@ class OcrHandler(AbstractHandler):
             words = self.tsv_to_list_of_dicts(tsv_data)
 
             # Calc confidence, store best
-            mean_conf = statistics.mean([w.get("conf", 0) for w in words])
+            mean_conf = statistics.mean([w.get("conf", 0) for w in words] + [0])
             if mean_conf > best_mean_conf:
                 best_mean_conf = mean_conf
                 best_words = words
