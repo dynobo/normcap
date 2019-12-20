@@ -2,6 +2,7 @@
 
 # Default
 import os
+import statistics
 from typing import Optional
 from dataclasses import dataclass, field
 
@@ -43,10 +44,22 @@ class NormcapData:
     # Result of OCR
     words: list = field(default_factory=list)  # Words+metadata detected by OCR
 
-    # Result of ragics
+    # Result of magics
     scores: dict = field(default_factory=dict)  # magics with scores
     best_magic: str = ""  # Highest scored magic
     transformed: str = ""  # Transformed result
+
+    @property
+    def mean_conf(self) -> float:
+        """Helper to calculate mean confidence value of OCR.
+
+        Returns:
+            float -- Avg confidence value
+        """
+        if self.words:
+            return statistics.mean([w.get("conf", 0) for w in self.words])
+        else:
+            return 0
 
     @property
     def selected_area(self) -> int:
