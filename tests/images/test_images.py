@@ -72,8 +72,30 @@ TEST_IMAGES = [
         ),
         "expected_similarity": 0.90,
         "expected_magic": "paragraph",
-        "expected_paragraphs": 2,  # Paragraph = Double line break
+        "expected_doublelinebreaks": 2,  # Paragraph = Double line break
         "position": {"left": 210, "right": 920, "top": 330, "bottom": 550},
+        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+    },
+    {
+        "explanation": "Headline, Text and linebreaks",
+        "filename": "test_paragraph_magic_2_unscaled.jpg",
+        "expected_result": (
+            "C++ is not a safe language. It will cheerfully allow you to break the"
+            " rules of the system. If you try to do something illegal and foolish"
+            " like going back into a room you're not authorized to be in and rummaging"
+            " through a desk that might not even be there anymore, C++ is not going"
+            " to stop you. Safer languages than C++ solve this problem by restricting"
+            " your power -- by having much stricter control over keys, for example."
+            ""
+            "UPDATE"
+            ""
+            "Holy goodness, this answer is getting a lot of attention. (I'm not sure why"
+            ' -- I considered it to be just a "fun" little analogy, but whatever.)'
+        ),
+        "expected_similarity": 0.85,
+        "expected_magic": "paragraph",
+        "expected_doublelinebreaks": 2,  # Paragraph = Double line break
+        "position": {"left": 220, "right": 930, "top": 750, "bottom": 950},
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
 ]

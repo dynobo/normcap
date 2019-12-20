@@ -148,9 +148,9 @@ def test_normcap_main(pytestconfig, test_params):
 
     assert similarity >= test_params["expected_similarity"]
     assert result.best_magic == test_params["expected_magic"]
-    if test_params.get("expected_paragraphs", False):
+    if test_params.get("expected_doublelinebreaks", False):
         result_paragraphs = result.transformed.count(os.linesep * 2)
-        assert result_paragraphs == test_params["expected_paragraphs"]
+        assert result_paragraphs == test_params["expected_doublelinebreaks"]
 
     # Additional infos to be reported
     all_confs.append((result.mean_conf, similarity, test_params["explanation"]))
