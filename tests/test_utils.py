@@ -20,10 +20,10 @@ def test_data():
     data.left = 0
     data.right = 20
     data.words = [
-        {"line_num": 1, "text": "one", "par_num": 1, "block_num": 1},
-        {"line_num": 2, "text": "two", "par_num": 1, "block_num": 1},
-        {"line_num": 2, "text": "three", "par_num": 2, "block_num": 1},
-        {"line_num": 3, "text": "four", "par_num": 2, "block_num": 1},
+        {"line_num": 1, "block_num": 1, "par_num": 1, "text": "one"},
+        {"line_num": 2, "block_num": 1, "par_num": 1, "text": "two"},
+        {"line_num": 2, "block_num": 1, "par_num": 2, "text": "three"},
+        {"line_num": 3, "block_num": 1, "par_num": 2, "text": "four"},
     ]
     return data
 
