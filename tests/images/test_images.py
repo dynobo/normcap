@@ -70,7 +70,7 @@ TEST_IMAGES = [
             "Between these two papers is staked Derrida's philosophical ground, if not indeed his"
             " step beyond or outside philosophy."
         ),
-        "expected_similarity": 0.90,
+        "expected_similarity": 0.85,
         "expected_magic": "paragraph",
         "expected_doublelinebreaks": 2,  # Paragraph = Double line break
         "position": {"left": 210, "right": 920, "top": 330, "bottom": 550},
