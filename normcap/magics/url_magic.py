@@ -15,6 +15,14 @@ class UrlMagic(BaseMagic):
 
     name = "url"
     _urls: List[str] = []
+    _manual_correction_table = {
+        r"qithub\.com": "github.com",
+        r"WWW\.": "www.",
+        r"Www.": "www.",
+        r"www\. ": "www.",
+        r",com": ".com",
+        r"\: \/\/": "://",
+    }
 
     def score(self, request: NormcapData) -> float:
         """Calculate score based on chars in URLs vs. overall chars.
@@ -29,8 +37,16 @@ class UrlMagic(BaseMagic):
         # Get concatenated lines
         text = request.text
 
+        # Remove whitespace between two chars
+        # because OCR will often read e.g. "http: //github.com"
+        text = re.sub(r":\s+\/", ":/", text)
+        # Correct commonly misrecognized parts
+        for k, v in self._manual_correction_table.items():
+            text = re.sub(k, v, text)
+
         # Search urls in line
-        # (Creds to http://www.regexguru.com/2008/11/detecting-urls-in-a-block-of-text/)
+        # (Based on http://www.regexguru.com/2008/11/detecting-urls-in-a-block-of-text/)
+        # TODO: Handle urls missing protocol AND www. ?
         reg_url = (
             r"(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)"  # Prefix
             r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*"  # Handle parenthesis
@@ -48,7 +64,7 @@ class UrlMagic(BaseMagic):
         )
 
         # Map to score
-        self._final_score = round(100 * ratio, 2)
+        self._final_score = round(100 * (ratio * 0.85), 2)
 
         return self._final_score
 
@@ -62,9 +78,6 @@ class UrlMagic(BaseMagic):
             str -- URL(s), separated bye newline
         """
         self._logger.info("Transforming with URL magic...")
-
-        # www. often is falsly ocr-ed as WWW. (capitals). Let's fix that:
-        self._urls = [u.replace("WWW.", "www.") for u in self._urls]
 
         # Return as line separated list
         return os.linesep.join(self._urls)

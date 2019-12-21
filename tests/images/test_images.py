@@ -98,4 +98,35 @@ TEST_IMAGES = [
         "position": {"left": 220, "right": 930, "top": 750, "bottom": 950},
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
+    {
+        "explanation": "Detect sans serif URL between unknown symbols",
+        "filename": "test_url_magic_1_unscaled.jpg",
+        "expected_result": "https://github.com/dynobo/normcap",
+        "expected_similarity": 1,
+        "expected_magic": "url",
+        "position": {"left": 200, "right": 700, "top": 26, "bottom": 60},
+        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+    },
+    {
+        "explanation": "Detect mono space URL and correct misdetected whitespace",
+        "filename": "test_url_magic_1_unscaled.jpg",
+        "expected_result": "https://github.com/dynobo/normcap.git",
+        "expected_similarity": 1,
+        "expected_magic": "url",
+        "position": {"left": 180, "right": 530, "top": 290, "bottom": 310},
+        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+    },
+    {
+        "explanation": "4 URLs, 2 with missing prefix currently ignored",
+        "filename": "test_url_magic_2_unscaled.jpg",
+        "expected_result": (
+            "https://github.com/dynobo/normcap"
+            " www.python.com"
+            " https://en.wikipedia.org/wiki/Tesseract"
+        ),
+        "expected_similarity": 1,
+        "expected_magic": "url",
+        "position": {"left": 6, "right": 400, "top": 220, "bottom": 400},
+        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+    },
 ]
