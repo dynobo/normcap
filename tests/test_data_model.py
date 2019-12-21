@@ -5,6 +5,7 @@ import os
 
 # Extra
 import pytest
+from PIL import Image
 
 # Own
 from normcap.common.data_model import NormcapData
@@ -17,6 +18,13 @@ from normcap.common.data_model import NormcapData
 def test_data():
     """Create NormcapData instance for testing."""
     data = NormcapData()
+    data.cli_args = {
+        "verbose": True,
+        "mode": "parse",
+        "lang": "eng+deu+ger",
+        "color": "#FF0000",
+        "path": None,
+    }
     data.test_mode = True
     data.top = 0
     data.bottom = 10
@@ -28,6 +36,12 @@ def test_data():
         {"line_num": 2, "text": "three"},
         {"line_num": 3, "text": "four"},
     ]  # Space to check trimming
+
+    test_img_folder = os.path.dirname(os.path.abspath(__file__)) + "/images/"
+    img = Image.open(test_img_folder + "test_email_magic_1.jpg")
+    data.shots = [{"monitor": 0, "image": img}]
+    data.image = img
+
     return data
 
 
