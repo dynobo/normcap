@@ -24,8 +24,8 @@ class EnhanceImgHandler(AbstractHandler):
         # Currently, the image is only enlarged
         if request.image:
             request.image = self._enlarge_dpi(request.image)
-        # request.image = self._add_padding(request.image)
-        # request.image = self._strech_contrast(request.image)
+            # request.image = self._add_padding(request.image)
+            # request.image = self._strech_contrast(request.image)
 
         if self._next_handler:
             return super().handle(request)
@@ -65,7 +65,7 @@ class EnhanceImgHandler(AbstractHandler):
             PIL.Image -- Enlarged image
         """
         # TODO: adapt factor based on actual screen resolution
-        factor = 4
+        factor = 5
         width, height = img.size
         img = img.resize((width * factor, height * factor))
         self._logger.info("Resized screenshot by factor %s", factor)
