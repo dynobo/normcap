@@ -10,7 +10,6 @@ from PIL import ImageTk  # type: ignore
 
 # Own
 from normcap.common.data_model import NormcapData
-from normcap.common.utils import log_dataclass
 from normcap.handlers.abstract_handler import AbstractHandler
 
 
@@ -34,7 +33,7 @@ class CropHandler(AbstractHandler):
         self._logger.info("Cropping image...")
         request = self._crop_image(request)  # Test should jump in here
 
-        log_dataclass("Dataclass after image cropped:", request)
+        self._logger.debug("Dataclass after image cropped:%s", request)
 
         if self._next_handler:
             return super().handle(request)

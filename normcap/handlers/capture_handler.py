@@ -6,7 +6,6 @@ from PIL import Image  # type: ignore
 
 # Own
 from normcap.common.data_model import NormcapData
-from normcap.common.utils import log_dataclass
 from normcap.handlers.abstract_handler import AbstractHandler
 
 
@@ -47,5 +46,6 @@ class CaptureHandler(AbstractHandler):
                 shot = {"monitor": idx, "image": img, "position": position}
                 request.shots.append(shot)
 
-        log_dataclass("Dataclass after screenshot added:", request)
+        self._logger.debug("Dataclass after screenshot added:%s", request)
+
         return request

@@ -49,6 +49,25 @@ class NormcapData:
     best_magic: str = ""  # Highest scored magic
     transformed: str = ""  # Transformed result
 
+    def __repr__(self):
+        """
+        Returns:
+            str -- Representation of class
+        """
+        string = f"\n{'='*20} <dataclass> {'='*20}\n"
+        for key in dir(self):
+            # Skip internal classes
+            if key.startswith("_"):
+                continue
+            # Nicer format tesseract output
+            if key == "words":
+                string += f"{key}: \n{self._format_list_of_dicts_output(getattr(self, key))}\n"
+                continue
+            # Per default just print
+            string += f"{key}: {getattr(self, key)}\n"
+        string += f"{'='*20} </dataclass> {'='*19}"
+        return string
+
     @property
     def mean_conf(self) -> float:
         """Helper to calculate mean confidence value of OCR.
@@ -127,3 +146,16 @@ class NormcapData:
         """
         par_blocks = set([w["block_num"] for w in self.words])
         return len(par_blocks)
+
+    def _format_list_of_dicts_output(self, list_of_dicts: list) -> str:
+        string = ""
+        for d in list_of_dicts:
+            for key, val in d.items():
+                if key in ["left", "top", "width", "height"]:
+                    string += f"{key}:{val: <5}| "
+                elif key == "text":
+                    string += f"{key}:{val}"
+                else:
+                    string += f"{key}:{val: <3}| "
+            string += "\n"
+        return string

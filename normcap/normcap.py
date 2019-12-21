@@ -7,7 +7,6 @@ import argparse
 # Own
 from normcap import __version__
 from normcap.common.data_model import NormcapData
-from normcap.common.utils import log_dataclass
 from normcap.handlers.abstract_handler import Handler
 from normcap.handlers.capture_handler import CaptureHandler
 from normcap.handlers.crop_handler import CropHandler
@@ -153,7 +152,7 @@ def main(test_data: NormcapData = None):
     # Run chain
     normcap_data = client_code(capture, normcap_data)
 
-    log_dataclass("Final data object:", normcap_data)
+    logger.debug("Final data object:%s", normcap_data)
 
     return normcap_data
 

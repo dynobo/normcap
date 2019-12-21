@@ -41,4 +41,4 @@ class MultiLineMagic(BaseMagic):
             str -- Single line of text
         """
         # Just return concatenated text
-        return request.text
+        return request.lines
