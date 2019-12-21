@@ -20,17 +20,16 @@ def test_data():
     data.left = 0
     data.right = 20
     data.words = [
-        {"line_num": 1, "text": "one"},
-        {"line_num": 2, "text": "two"},
-        {"line_num": 2, "text": "three"},
-        {"line_num": 3, "text": "four"},
+        {"line_num": 1, "block_num": 1, "par_num": 1, "text": "one"},
+        {"line_num": 2, "block_num": 1, "par_num": 1, "text": "two"},
+        {"line_num": 2, "block_num": 1, "par_num": 2, "text": "three"},
+        {"line_num": 3, "block_num": 1, "par_num": 2, "text": "four"},
     ]
     return data
 
 
 def test_log_dataclass(test_data):
-    """Does output contains all data?"""
+    """Does output contains all available attributes?"""
     expected_strings = [k for k, v in vars(test_data).items()]
-    expected_strings += [str(v) for k, v in vars(test_data).items()]
     output = utils.log_dataclass("Test output", test_data, return_string=True)
     assert all([s in output for s in expected_strings])

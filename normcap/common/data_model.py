@@ -2,6 +2,8 @@
 
 # Default
 import os
+import statistics
+from typing import Optional
 from dataclasses import dataclass, field
 
 # Extra
@@ -32,7 +34,7 @@ class NormcapData:
 
     # Results of cropping
     mode: str = ""  # Selected capture mode during crop ["raw","parsed"]
-    image: Image = None  # Cropped image
+    image: Optional[Image.Image] = None
     monitor: int = 0  # Screen of cropped image
     left: int = 0  # Position of cropped section
     right: int = 0
@@ -42,10 +44,22 @@ class NormcapData:
     # Result of OCR
     words: list = field(default_factory=list)  # Words+metadata detected by OCR
 
-    # Result of ragics
+    # Result of magics
     scores: dict = field(default_factory=dict)  # magics with scores
     best_magic: str = ""  # Highest scored magic
     transformed: str = ""  # Transformed result
+
+    @property
+    def mean_conf(self) -> float:
+        """Helper to calculate mean confidence value of OCR.
+
+        Returns:
+            float -- Avg confidence value
+        """
+        if self.words:
+            return statistics.mean([w.get("conf", 0) for w in self.words])
+        else:
+            return 0
 
     @property
     def selected_area(self) -> int:
@@ -91,8 +105,25 @@ class NormcapData:
         Returns:
             int -- number of detected lines
         """
-        line_nums = set()
-        for word in self.words:
-            line_nums.add(word["line_num"])
-
+        line_nums = set([w["line_num"] for w in self.words])
         return len(line_nums)
+
+    @property
+    def num_pars(self) -> int:
+        """Helper to return number of paragraphs.
+
+        Returns:
+            int -- number of detected paragraphs
+        """
+        par_nums = set([w["par_num"] for w in self.words])
+        return len(par_nums)
+
+    @property
+    def num_blocks(self) -> int:
+        """Helper to return number of blocks.
+
+        Returns:
+            int -- number of detected blocks
+        """
+        par_blocks = set([w["block_num"] for w in self.words])
+        return len(par_blocks)

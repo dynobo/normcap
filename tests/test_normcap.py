@@ -2,7 +2,6 @@
 
 # Default
 import logging
-import json
 import os
 import tempfile
 
@@ -15,7 +14,7 @@ from normcap import normcap
 from normcap.common.data_model import NormcapData
 from normcap.common import utils
 from normcap.handlers.abstract_handler import AbstractHandler
-
+from .images.test_images import TEST_IMAGES
 
 # PyLint can't handle fixtures correctly. Ignore.
 # pylint: disable=redefined-outer-name
@@ -112,18 +111,6 @@ def test_init_logging_returns_logger(to_file):
 # ==========================
 
 
-def get_test_params():
-    """Load test parameters from json."""
-    test_img_folder = os.path.dirname(os.path.abspath(__file__)) + "/images/"
-    json_file = test_img_folder + "test_images.json"
-
-    with open(json_file) as data_file:
-        data = json.load(data_file)
-        test_params_list = data["images"]
-
-    return test_params_list
-
-
 def data_test_image(test_params):
     """Create NormcapData instance for testing."""
     data = NormcapData()
@@ -146,8 +133,11 @@ def data_test_image(test_params):
     return data
 
 
-@pytest.mark.parametrize("test_params", get_test_params())
-def test_normcap_main(test_params):
+all_confs = []
+
+
+@pytest.mark.parametrize("test_params", TEST_IMAGES)
+def test_normcap_main(pytestconfig, test_params):
     """Load various images and apply OCR pipeline."""
     test_data = data_test_image(test_params)
     result = normcap.main(test_data)
@@ -156,6 +146,12 @@ def test_normcap_main(test_params):
         result.transformed.split(), test_params["expected_result"].split()
     )
 
-    assert (similarity >= test_params["expected_similarity"]) and (
-        result.best_magic == test_params["expected_magic"]
-    )
+    assert similarity >= test_params["expected_similarity"]
+    assert result.best_magic == test_params["expected_magic"]
+    if test_params.get("expected_doublelinebreaks", False):
+        result_paragraphs = result.transformed.count(os.linesep * 2)
+        assert result_paragraphs == test_params["expected_doublelinebreaks"]
+
+    # Additional infos to be reported
+    all_confs.append((result.mean_conf, similarity, test_params["explanation"]))
+    pytestconfig.all_confs = all_confs

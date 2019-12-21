@@ -2,11 +2,10 @@
 
 # Default
 import csv
-
+import statistics
 
 # Extra
 from tesserocr import PyTessBaseAPI, OEM  # type: ignore # pylint: disable=no-name-in-module
-
 
 # Own
 from normcap.common.data_model import NormcapData
@@ -41,12 +40,44 @@ class OcrHandler(AbstractHandler):
 
         return request
 
-    def img_to_dict(self, img, lang):
+    def img_to_dict(self, img, lang) -> list:
         img.format = "PNG"  # WORKAROUND for a pyinstaller bug on Win
-        with PyTessBaseAPI(lang=lang, oem=OEM.DEFAULT) as api:
-            api.SetImage(img)
-            tsv_data = api.GetTSVText(0)
 
+        # 0 = Orientation and script detection (OSD) only.
+        # 1 = Automatic page segmentation with OSD.
+        # 2 = Automatic page segmentation, but no OSD, or OCR
+        # 3 = Fully automatic page segmentation, but no OSD. (Default)
+        # 4 = Assume a single column of text of variable sizes.
+        # 5 = Assume a single uniform block of vertically aligned text.
+        # 6 = Assume a single uniform block of text.
+        # 7 = Treat the image as a single text line.
+        # 8 = Treat the image as a single word.
+        # 9 = Treat the image as a single word in a circle.
+        # 10 = Treat the image as a single character.
+        PSM_OPTS = [2, 4, 6]
+
+        best_psm = 0  # For diagnostics
+        best_mean_conf = 0
+        best_words: list = []
+
+        for psm_opt in PSM_OPTS:
+            # OCR
+            with PyTessBaseAPI(lang=lang, oem=OEM.DEFAULT, psm=psm_opt) as api:
+                api.SetImage(img)
+                tsv_data = api.GetTSVText(0)
+            words = self.tsv_to_list_of_dicts(tsv_data)
+
+            # Calc confidence, store best
+            mean_conf = statistics.mean([w.get("conf", 0) for w in words] + [0])
+            if mean_conf > best_mean_conf:
+                best_mean_conf = mean_conf
+                best_words = words
+                best_psm = psm_opt
+
+        self._logger.info("Best PSM Mode: %s", best_psm)
+        return best_words
+
+    def tsv_to_list_of_dicts(self, tsv_data) -> list:
         tsv_columns = [
             "level",
             "page_num",
@@ -61,12 +92,25 @@ class OcrHandler(AbstractHandler):
             "conf",
             "text",
         ]
+
+        # Read tsv to list of dicts
         words = list(
             csv.DictReader(
-                tsv_data.split("\n"), fieldnames=tsv_columns, delimiter="\t",
+                tsv_data.split("\n"),
+                fieldnames=tsv_columns,
+                delimiter="\t",
+                quoting=csv.QUOTE_NONE,
             )
         )
-        words = [w for w in words if w["text"]]
+
+        # Cast types
+        for idx, word in enumerate(words):
+            for k, v in word.items():
+                if k != "text":
+                    words[idx][k] = int(v)  # type: ignore # (casting on purpose)
+
+        # Filter empty words
+        words = [w for w in words if w["text"].strip()]
         return words
 
     def get_language(self, lang) -> str:
@@ -85,7 +129,7 @@ class OcrHandler(AbstractHandler):
 
         if lang not in langs:
             self._logger.warning("Language %s for ocr not found!", langs)
-            self._logger.warning("Available languages: %s.", f"{ {*langs} }")
+            self._logger.warning("Available languages: %s.", {*langs})
             self._logger.warning("Fallback to %s.", langs[0])
             lang = langs[0]
 
