@@ -125,13 +125,20 @@ class OcrHandler(AbstractHandler):
         """
         # Check Language
         with PyTessBaseAPI(lang=lang) as api:
-            langs = api.GetAvailableLanguages()
+            tesseract_langs = api.GetAvailableLanguages()
 
-        if lang not in langs:
-            self._logger.warning("Language %s for ocr not found!", langs)
-            self._logger.warning("Available languages: %s.", {*langs})
-            self._logger.warning("Fallback to %s.", langs[0])
-            lang = langs[0]
+        requested_langs = lang.split("+")
+        unavailable_langs = set(requested_langs).difference(set(tesseract_langs))
+        available_langs = set(requested_langs).intersection(set(tesseract_langs))
+
+        if unavailable_langs:
+            self._logger.warning("Language %s for ocr not found!", {*unavailable_langs})
+            self._logger.warning("Available tesseract langs: %s.", {*tesseract_langs})
+            if available_langs:
+                lang = "+".join([l for l in requested_langs if l in available_langs])
+            else:
+                lang = tesseract_langs[0]
+            self._logger.warning("Fallback to %s.", lang)
 
         self._logger.info("Using language %s for ocr...", lang)
         return lang

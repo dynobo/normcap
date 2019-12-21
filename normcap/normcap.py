@@ -53,7 +53,7 @@ def create_argparser() -> argparse.ArgumentParser:
         "-m", "--mode", type=str, default="parse", help="startup mode [raw,parse]",
     )
     parser.add_argument(
-        "-l", "--lang", type=str, default="eng", help="set language for ocr tool"
+        "-l", "--lang", type=str, default="eng", help="languages for ocr, e.g. eng+deu",
     )
     parser.add_argument(
         "-c", "--color", type=str, default="#FF0000", help="set primary color for UI"
