@@ -17,9 +17,7 @@ class UrlMagic(BaseMagic):
     _urls: List[str] = []
     _manual_correction_table = {
         r"qithub\.com": "github.com",
-        r"WWW\.": "www.",
-        r"Www.": "www.",
-        r"www\. ": "www.",
+        r"[wW]{3}\s*\.\s*": "www.",
         r",com": ".com",
         r"\: \/\/": "://",
     }
