@@ -54,7 +54,7 @@ class OcrHandler(AbstractHandler):
         # 8 = Treat the image as a single word.
         # 9 = Treat the image as a single word in a circle.
         # 10 = Treat the image as a single character.
-        PSM_OPTS = [2, 4, 6, 7]
+        PSM_OPTS = [2, 4, 6]
 
         best_psm = 0  # For diagnostics
         best_mean_conf = 0
