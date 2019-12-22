@@ -36,7 +36,7 @@ def create_argparser() -> argparse.ArgumentParser:
 
     parser = argparse.ArgumentParser(
         prog="normcap",
-        description="Intelligent OCR-powered screen-capture tool "
+        description="OCR-powered screen-capture tool "
         + "to capture information instead of images.",
         formatter_class=ArgFormatter,
     )

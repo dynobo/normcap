@@ -2,7 +2,7 @@
 
 # normcap
 
-***Intelligent OCR powered screen-capture tool to capture information instead of images.***
+***OCR powered screen-capture tool to capture information instead of images.***
 
 <p align="center"><br>
 <a href="https://github.com/dynobo/normcap/releases"><img alt="Build passing" src="https://github.com/dynobo/normcap/workflows/Build/badge.svg"></a>
@@ -51,7 +51,13 @@ sudo pacman -S tesseract tesseract-data-eng xclip
 sudo dnf install tesseract xclip
 ```
 
-2\. Run `pip install normcap` (***OR*** download and extract binary package from the [latest release](
+2\. Install normcap:
+
+```sh
+pip install normcap
+```
+
+(***OR*** download and extract binary package from the [latest release](
 https://github.com/dynobo/normcap/releases))
 
 3\. Execute `./normcap`
@@ -60,7 +66,7 @@ https://github.com/dynobo/normcap/releases))
 
 **Recommended method:**
 
-1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation is required)
+1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation required)
 
 2\. Execute `normcap.exe`
 
@@ -94,8 +100,14 @@ pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/
 brew install tesseract tesseract-lang
 ```
 
-2\.  Download and extract binary package from the [latest release](
-https://github.com/dynobo/normcap/releases)
+2\. Install normcap:
+
+```sh
+pip install normcap
+```
+
+(***OR*** download and extract binary package from the [latest release](
+https://github.com/dynobo/normcap/releases))
 
 3\. Execute `normcap.app`
 
@@ -123,16 +135,16 @@ By default normcap is "stateless": it copies recognized text to the systems clip
 normcap has no settings, just a set of command line arguments:
 
 ```plain
-[holger@cioran normcap]$ poetry run python normcap/normcap.py --help
+(normcap)dynobo@cioran:~$ normcap --help
 usage: normcap [-h] [-v] [-m MODE] [-l LANG] [-c COLOR] [-p PATH]
 
-Intelligent OCR-powered screen-capture tool to capture information instead of images.
+OCR-powered screen-capture tool to capture information instead of images.
 
 optional arguments:
   -h, --help               show this help message and exit
   -v, --verbose            print debug information to console (default: False)
   -m MODE, --mode MODE     startup mode [raw,parse] (default: parse)
-  -l LANG, --lang LANG     set language for ocr tool (default: eng)
+  -l LANG, --lang LANG     languages for ocr, e.g. eng+deu (default: eng)
   -c COLOR, --color COLOR  set primary color for UI (default: #FF0000)
   -p PATH, --path PATH     set a path for storing images (default: None)
 ```
@@ -149,6 +161,20 @@ First, every "magic" calculates a **"score"** to determine the likelihood of the
 - **Parse:** Trim unnecessary whitespace
 
 TODO: Screencast Single Line Magic
+
+#### Multi-line Magic
+
+- **Score:**
+- **Parse:**
+
+TODO: Screencast Multi-line Magic
+
+#### Paragraph Magic
+
+- **Score:**
+- **Parse:**
+
+TODO: Screencast Paragraph Magic
 
 #### E-Mail Magic
 
