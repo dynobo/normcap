@@ -55,7 +55,7 @@ def create_argparser() -> argparse.ArgumentParser:
         "-l", "--lang", type=str, default="eng", help="languages for ocr, e.g. eng+deu",
     )
     parser.add_argument(
-        "-c", "--color", type=str, default="#FF0000", help="set primary color for UI"
+        "-c", "--color", type=str, default="#BF616A", help="set primary color for UI"
     )
     parser.add_argument(
         "-p", "--path", type=str, default=None, help="set a path for storing images"
