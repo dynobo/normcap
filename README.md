@@ -56,6 +56,10 @@ sudo dnf install tesseract xclip python3-tkinter
 2\. Install normcap:
 
 ```sh
+## on Ubuntu/Debian:
+pip3 install normcap
+
+# on Arch:
 pip install normcap
 ```
 
