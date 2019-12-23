@@ -86,7 +86,7 @@ setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"
 pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
 ```
 
-4\. Run 
+4\. Run
 
 ```sh
 pip install normcap
