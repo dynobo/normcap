@@ -34,7 +34,7 @@
 2. Select region on screen
 3. Retrieve recognized text in clipboard
 
-![normcap screencast](ressource/normcap.gif)
+![normcap screencast](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap.gif)
 
 ## Installation
 
@@ -44,18 +44,22 @@
 
 ```sh
 ## on Ubuntu/Debian:
-sudo apt-get install tesseract-ocr xclip
+sudo apt-get install tesseract-ocr xclip python3-tk python3-pil.imagetk
 
 # on Arch:
-sudo pacman -S tesseract tesseract-data-eng xclip
+sudo pacman -S tesseract tesseract-data-eng xclip tk python-pillow  
 
 # on Fedora
-sudo dnf install tesseract xclip
+sudo dnf install tesseract xclip python3-tkinter
 ```
 
 2\. Install normcap:
 
 ```sh
+## on Ubuntu/Debian:
+pip3 install normcap
+
+# on Arch:
 pip install normcap
 ```
 
@@ -117,18 +121,15 @@ https://github.com/dynobo/normcap/releases))
 
 ## Usage
 
-### Basics
+### General
 
-1. Run the `normcap` executable (A red border will appear around your screen)
-2. Select a region with text using your mouse (Or press `<esc>` to quit program)
-3. (Optional) Before letting go the mouse button, press `<space>`-key to switch mode, as indicated by a symbol:
+- After launching `normcap` press `<esc>` to abort and quit.
+
+- Before letting go the mouse button, press `<space>`-key to switch mode, as indicated by a symbol:
    - **☰ (raw):** Copy detected text line by line, without further modification
    - **☶ (parse):** Try to auto-detect type of text using [magics](#Magics) and format the text accordingly, then copy
-4. Paste the text from clipboard (e.g. `<ctrl> + v`)
 
-### Hints
-
-- To download additional languages for Mac and Linux, check the official repository of your distribution. Packages names might vary.
+- To download additional languages for Mac and Linux, check the official repository of your distribution for `tesseract`-languages. Packages names might vary.
 
 - The [Windows release](https://github.com/dynobo/normcap/releases) of normcap supports English and German out of the box. If you need additional languages, download the appropriate files from [the tesseract repo](https://github.com/tesseract-ocr/tessdata_best) and place them into the `/normcap/tessdata/` folder.
 
