@@ -12,8 +12,8 @@ README = (HERE / "README.md").read_text()
 setup(
     name="normcap",
     version="0.0.15",
-    description="Intelligent screencapture tool to capture information instead of images.",
-    keywords="screenshot ocr capture",
+    description="OCR-powered screen-capture tool to capture information instead of images",
+    keywords="screenshot ocr capture clipboard",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/dynobo/normcap",

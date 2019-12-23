@@ -88,7 +88,7 @@ def test_argparser_default_lang(argparser_defaults):
 
 def test_argparser_default_color(argparser_defaults):
     """Check accent color."""
-    assert argparser_defaults["color"] == "#FF0000"
+    assert argparser_defaults["color"] == "#BF616A"
 
 
 def test_argparser_default_path(argparser_defaults):

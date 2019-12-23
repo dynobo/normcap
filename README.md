@@ -2,7 +2,7 @@
 
 # normcap
 
-***Intelligent OCR powered screen-capture tool to capture information instead of images.***
+***OCR powered screen-capture tool to capture information instead of images.***
 
 <p align="center"><br>
 <a href="https://github.com/dynobo/normcap/releases"><img alt="Build passing" src="https://github.com/dynobo/normcap/workflows/Build/badge.svg"></a>
@@ -34,6 +34,8 @@
 2. Select region on screen
 3. Retrieve recognized text in clipboard
 
+![normcap screencast](ressource/normcap.gif)
+
 ## Installation
 
 ### On Linux
@@ -51,20 +53,24 @@ sudo pacman -S tesseract tesseract-data-eng xclip
 sudo dnf install tesseract xclip
 ```
 
-2\. Run `pip install normcap` (***OR*** download and extract binary package from the [latest release](
+2\. Install normcap:
+
+```sh
+pip install normcap
+```
+
+(***OR*** download and extract binary package from the [latest release](
 https://github.com/dynobo/normcap/releases))
 
 3\. Execute `./normcap`
 
-### On Windows
+### On Windows *(recommended method)*
 
-**Recommended method:**
-
-1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation is required)
+1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation required)
 
 2\. Execute `normcap.exe`
 
-**Alternative method:**
+### On Windows *(alternative method)*
 
 1\. Install "Tesseract", e.g. by using the [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
 
@@ -80,13 +86,17 @@ setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"
 pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
 ```
 
-4\. Run `pip install normcap`
+4\. Run
+
+```sh
+pip install normcap
+```
 
 5\. Execute `normcap`
 
 ### On Mac
 
-***Attention! On Mac, some issues occur. [Help needed](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)***
+***Attention! On Mac not everything works. [Help needed!](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)***
 
 1\. Install dependencies:
 
@@ -94,8 +104,14 @@ pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/
 brew install tesseract tesseract-lang
 ```
 
-2\.  Download and extract binary package from the [latest release](
-https://github.com/dynobo/normcap/releases)
+2\. Install normcap:
+
+```sh
+pip install normcap
+```
+
+(***OR*** download and extract binary package from the [latest release](
+https://github.com/dynobo/normcap/releases))
 
 3\. Execute `normcap.app`
 
@@ -105,34 +121,36 @@ https://github.com/dynobo/normcap/releases)
 
 1. Run the `normcap` executable (A red border will appear around your screen)
 2. Select a region with text using your mouse (Or press `<esc>` to quit program)
-3. (Optional) Before letting go the mouse button, press `<space>`-key to switch through different modes of operation, as indicated by a symbol:
+3. (Optional) Before letting go the mouse button, press `<space>`-key to switch mode, as indicated by a symbol:
    - **☰ (raw):** Copy detected text line by line, without further modification
    - **☶ (parse):** Try to auto-detect type of text using [magics](#Magics) and format the text accordingly, then copy
 4. Paste the text from clipboard (e.g. `<ctrl> + v`)
 
 ### Hints
 
-The [Windows release](https://github.com/dynobo/normcap/releases) of normcap supports English and German out of the box. Please [file an issue](https://github.com/dynobo/normcap/issues), if other languages should be included permanently, or download additional language files from [the tesseract repo](https://github.com/tesseract-ocr/tessdata_best) yourself and place them in the `/normcap/tessdata/` folder.
+- To download additional languages for Mac and Linux, check the official repository of your distribution. Packages names might vary.
 
-normcap is intended to be executed on demand via keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but it's startup is a bit slower.
+- The [Windows release](https://github.com/dynobo/normcap/releases) of normcap supports English and German out of the box. If you need additional languages, download the appropriate files from [the tesseract repo](https://github.com/tesseract-ocr/tessdata_best) and place them into the `/normcap/tessdata/` folder.
 
-By default normcap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
+- normcap is intended to be executed on demand via keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but it's startup is a bit slower.
+
+- By default normcap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
 
 ### Command line options
 
 normcap has no settings, just a set of command line arguments:
 
 ```plain
-[holger@cioran normcap]$ poetry run python normcap/normcap.py --help
+(normcap)dynobo@cioran:~$ normcap --help
 usage: normcap [-h] [-v] [-m MODE] [-l LANG] [-c COLOR] [-p PATH]
 
-Intelligent OCR-powered screen-capture tool to capture information instead of images.
+OCR-powered screen-capture tool to capture information instead of images.
 
 optional arguments:
   -h, --help               show this help message and exit
   -v, --verbose            print debug information to console (default: False)
   -m MODE, --mode MODE     startup mode [raw,parse] (default: parse)
-  -l LANG, --lang LANG     set language for ocr tool (default: eng)
+  -l LANG, --lang LANG     languages for ocr, e.g. eng+deu (default: eng)
   -c COLOR, --color COLOR  set primary color for UI (default: #FF0000)
   -p PATH, --path PATH     set a path for storing images (default: None)
 ```
@@ -141,28 +159,17 @@ optional arguments:
 
 "Magics" are like addons providing automated functionality to intelligently detect and format the captured input.
 
-First, every "magic" calculates a **"score"** to determine the likelihood of the magic being responsible for this type of text. Second, the "magic" which achieved the highest "score" take the necessary actions to **"parse"** the input text according to its type
+First, every "magic" calculates a **"score"** to determine the likelihood of the magic being responsible for this type of text. Second, the "magic" which achieved the highest "score" take the necessary actions to **"transform"** the input text according to its type.
 
-#### Single Line Magic
+Currently implemented Magics:
 
-- **Score:** If single line is detected
-- **Parse:** Trim unnecessary whitespace
-
-TODO: Screencast Single Line Magic
-
-#### E-Mail Magic
-
-- **Score:** Number of chars in email addresses vs. overall chars
-- **Parse:** Transform to comma separated list
-
-TODO: Screencast E-Mail Magic
-
-#### URL Magic
-
-- **Score:** Number of chars in URLs vs. overall chars
-- **Parse:** Transform to line-break separated URLs
-
-TODO: Screencast URL Magic
+| Magic                | Score                                                | Transform                                                                          |
+| -------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **Single&nbsp;line** | Only single line is detected                         | Trim unnecessary whitespace                                                        |
+| **Multi&nbsp;line**  | Multi lines, but single Paragraph                    | Separated by line break and trim each lined                                        |
+| **Paragraph**        | Multiple blocks of lines or multiple paragraphs      | Join every paragraph into single line, separate different paragraphs by empty line |
+| **E-Mail**           | Number of chars in email addresses vs. overall chars | Transform to comma separated list of email addresses                               |
+| **URL**              | Number of chars in URLs vs. overall chars            | Transform to line-break separated URLs                                             |
 
 ### Why "normcap"?
 

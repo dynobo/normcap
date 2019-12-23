@@ -9,7 +9,6 @@ from tesserocr import PyTessBaseAPI, OEM  # type: ignore # pylint: disable=no-na
 
 # Own
 from normcap.common.data_model import NormcapData
-from normcap.common.utils import log_dataclass
 from normcap.handlers.abstract_handler import AbstractHandler
 
 
@@ -33,7 +32,7 @@ class OcrHandler(AbstractHandler):
         # Actual OCR & transformation
         request.words = self.img_to_dict(request.image, request.cli_args["lang"])
 
-        log_dataclass("Dataclass after OCR:", request)
+        self._logger.debug("Dataclass after OCR:%s", request)
 
         if self._next_handler:
             return super().handle(request)

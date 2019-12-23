@@ -7,7 +7,6 @@ import argparse
 # Own
 from normcap import __version__
 from normcap.common.data_model import NormcapData
-from normcap.common.utils import log_dataclass
 from normcap.handlers.abstract_handler import Handler
 from normcap.handlers.capture_handler import CaptureHandler
 from normcap.handlers.crop_handler import CropHandler
@@ -37,7 +36,7 @@ def create_argparser() -> argparse.ArgumentParser:
 
     parser = argparse.ArgumentParser(
         prog="normcap",
-        description="Intelligent OCR-powered screen-capture tool "
+        description="OCR-powered screen-capture tool "
         + "to capture information instead of images.",
         formatter_class=ArgFormatter,
     )
@@ -56,7 +55,7 @@ def create_argparser() -> argparse.ArgumentParser:
         "-l", "--lang", type=str, default="eng", help="languages for ocr, e.g. eng+deu",
     )
     parser.add_argument(
-        "-c", "--color", type=str, default="#FF0000", help="set primary color for UI"
+        "-c", "--color", type=str, default="#BF616A", help="set primary color for UI"
     )
     parser.add_argument(
         "-p", "--path", type=str, default=None, help="set a path for storing images"
@@ -153,7 +152,7 @@ def main(test_data: NormcapData = None):
     # Run chain
     normcap_data = client_code(capture, normcap_data)
 
-    log_dataclass("Final data object:", normcap_data)
+    logger.debug("Final data object:%s", normcap_data)
 
     return normcap_data
 
