@@ -13,7 +13,7 @@ setup(
     name="normcap",
     version="0.0.15",
     description="OCR-powered screen-capture tool to capture information instead of images",
-    keywords="screenshot ocr capture",
+    keywords="screenshot ocr capture clipboard",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/dynobo/normcap",
