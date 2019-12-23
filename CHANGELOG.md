@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.1.0 (2019-12-23)
+
+**First public beta. Please help testing and provide feedback!**
+
+**Changes:**
+
+- Publishing to pypi
+- Add paragraph magic
+- Adjust color
+
 ## v0.0.15 (2019-12-13)
 
 **Changes:**
