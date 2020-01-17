@@ -8,6 +8,8 @@ mss = "*"
 pyperclip = "*"
 Pillow = "*"
 tesserocr = {platform_system = "!= 'Windows'",version = "*"}
+numpy = "*"
+opencv-python-headless = "*"
 
 [dev-packages]
 pytest = "==5.3.0"
