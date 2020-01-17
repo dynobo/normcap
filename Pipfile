@@ -18,7 +18,7 @@ mypy = "*"
 pre-commit = "*"
 vprof = "*"
 pywin32-ctypes = {platform_system = "== 'Windows'",version = "*"}
-PyInstaller = "*"
+PyInstaller = ">=3.6"
 pylint = "*"
 pefile = "*"
 rope = "*"
