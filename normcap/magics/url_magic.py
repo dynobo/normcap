@@ -16,11 +16,10 @@ class UrlMagic(BaseMagic):
     name = "url"
     _urls: List[str] = []
     _manual_correction_table = {
-        r"h\w{0,1}t+\w{0,1}ps\s*\:": "https:",
+        r"h\w{0,1}t+\w{0,1}ps\s*\:\s*\/+": "https:",
         r"qithub\.com": "github.com",
         r"[wW]{3}\s*\.\s*": "www.",
         r",com": ".com",
-        r"\: \/\/": "://",
     }
 
     def score(self, request: NormcapData) -> float:
