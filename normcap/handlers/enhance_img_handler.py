@@ -2,8 +2,9 @@
 
 # Extra
 from PIL import Image, ImageOps  # type: ignore
-import cv2  # type: ignore
-import numpy as np  # type: ignore
+
+# import cv2  # type: ignore
+# import numpy as np  # type: ignore
 
 # Own
 from normcap.common.data_model import NormcapData
@@ -37,28 +38,6 @@ class EnhanceImgHandler(AbstractHandler):
             return super().handle(request)
         else:
             return request
-
-    def _grayscale(self, img: Image.Image) -> Image.Image:
-        img = img.convert("L")
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        return img
-
-    def _denoise(self, img: Image.Image) -> Image.Image:
-        kernel = np.ones((1, 1), np.uint8)
-        img = cv2.dilate(img, kernel, iterations=1)
-        img = cv2.erode(img, kernel, iterations=1)
-        return img
-
-    def _threshold(self, img: Image.Image) -> Image.Image:
-        img = cv2.adaptiveThreshold(
-            cv2.medianBlur(img, 3),
-            255,
-            cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-            cv2.THRESH_BINARY,
-            31,
-            2,
-        )
-        return img
 
     def _strech_contrast(self, img: Image.Image) -> Image.Image:
         img = ImageOps.autocontrast(img)
@@ -95,3 +74,25 @@ class EnhanceImgHandler(AbstractHandler):
         self._logger.info("Resized screenshot by factor %s", factor)
 
         return img
+
+    # def _grayscale(self, img: Image.Image) -> Image.Image:
+    #     img = img.convert("L")
+    #     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    #     return img
+
+    # def _denoise(self, img: Image.Image) -> Image.Image:
+    #     kernel = np.ones((1, 1), np.uint8)
+    #     img = cv2.dilate(img, kernel, iterations=1)
+    #     img = cv2.erode(img, kernel, iterations=1)
+    #     return img
+
+    # def _threshold(self, img: Image.Image) -> Image.Image:
+    #     img = cv2.adaptiveThreshold(
+    #         cv2.medianBlur(img, 3),
+    #         255,
+    #         cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+    #         cv2.THRESH_BINARY,
+    #         31,
+    #         2,
+    #     )
+    #     return img
