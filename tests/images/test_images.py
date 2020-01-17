@@ -1,5 +1,6 @@
 TEST_IMAGES = [
     {
+        "test_id": "T_001",
         "explanation": "Check if email addresses are correctely recognized and returned",
         "filename": "test_email_magic_1.jpg",
         "expected_result": "parker@test.com, HArDToReAd@test.com, 0815@test.com",
@@ -9,6 +10,7 @@ TEST_IMAGES = [
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
+        "test_id": "T_002",
         "explanation": "Check if 'fake' addresses are correctely recognized as normal text",
         "filename": "test_email_magic_1.jpg",
         "expected_result": "To: Peter Parker <peter parker@test.com>, HArD To ReAd <HArDToReAd@test.com>; 0815 <0815@test.com>; Invalid_one <notvalid@test>; Invalid_two <also/not/valid/@test.com>; Invalid_three <@test.com> Subject: OCR testing image",
@@ -18,6 +20,7 @@ TEST_IMAGES = [
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
+        "test_id": "T_003",
         "explanation": "Numbers and punctuation",
         "filename": "test_email_magic_1.jpg",
         "expected_result": "Sent: Tuesday, September 2, 2019 1:38 AM",
@@ -27,6 +30,7 @@ TEST_IMAGES = [
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
+        "test_id": "T_004",
         "explanation": "Normal text",
         "filename": "test_email_magic_1_unscaled.jpg",
         "expected_result": "screenshot content",
@@ -36,6 +40,7 @@ TEST_IMAGES = [
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
+        "test_id": "T_005",
         "explanation": "Single word, blue, with blue underline",
         "filename": "test_email_magic_1_unscaled.jpg",
         "expected_result": "dynobo@mailbox.org",
@@ -45,6 +50,7 @@ TEST_IMAGES = [
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
+        "test_id": "T_006",
         "explanation": "Single word with red underline",
         "filename": "test_email_magic_1_unscaled.jpg",
         "expected_result": "Dynobo",
@@ -54,6 +60,7 @@ TEST_IMAGES = [
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
+        "test_id": "T_007",
         "explanation": "Text and linebreaks",
         "filename": "test_paragraph_magic_1_unscaled.jpg",
         "expected_result": (
@@ -77,6 +84,7 @@ TEST_IMAGES = [
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
+        "test_id": "T_008",
         "explanation": "Headline, Text and linebreaks",
         "filename": "test_paragraph_magic_2_unscaled.jpg",
         "expected_result": (
@@ -99,6 +107,7 @@ TEST_IMAGES = [
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
+        "test_id": "T_009",
         "explanation": "Detect sans serif URL between unknown symbols",
         "filename": "test_url_magic_1_unscaled.jpg",
         "expected_result": "https://github.com/dynobo/normcap",
@@ -108,6 +117,7 @@ TEST_IMAGES = [
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
+        "test_id": "T_010",
         "explanation": "Detect mono space URL and correct misdetected whitespace",
         "filename": "test_url_magic_1_unscaled.jpg",
         "expected_result": "https://github.com/dynobo/normcap.git",
@@ -117,6 +127,7 @@ TEST_IMAGES = [
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
+        "test_id": "T_011",
         "explanation": "4 URLs, 2 with missing prefix currently ignored",
         "filename": "test_url_magic_2_unscaled.jpg",
         "expected_result": (

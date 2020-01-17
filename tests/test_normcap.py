@@ -140,6 +140,9 @@ all_confs = []
 def test_normcap_main(pytestconfig, test_params):
     """Load various images and apply OCR pipeline."""
     test_data = data_test_image(test_params)
+
+    print(f"Test ID: {test_params['test_id']}")
+
     result = normcap.main(test_data)
 
     similarity = utils.get_jaccard_sim(
