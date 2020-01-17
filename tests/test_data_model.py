@@ -21,7 +21,7 @@ def test_data():
     data.cli_args = {
         "verbose": True,
         "mode": "parse",
-        "lang": "eng+deu+ger",
+        "lang": "eng+deu",
         "color": "#FF0000",
         "path": None,
     }

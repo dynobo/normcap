@@ -2,11 +2,11 @@ TEST_IMAGES = [
     {
         "test_id": "T_001",
         "explanation": "Check if email addresses are correctely recognized and returned",
-        "filename": "test_email_magic_1.jpg",
-        "expected_result": "parker@test.com, HArDToReAd@test.com, 0815@test.com",
+        "filename": "test_email_magic_1_unscaled.jpg",
+        "expected_result": "peter.parker@test.com, HArDToReAd@test.com, 0815@test.com",
         "expected_similarity": 1,
         "expected_magic": "email",
-        "position": {"left": 388, "right": 777, "top": 464, "bottom": 500},
+        "position": {"left": 20, "right": 440, "top": 277, "bottom": 320},
         "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
     },
     {
