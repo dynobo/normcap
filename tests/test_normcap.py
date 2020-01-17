@@ -22,7 +22,7 @@ from .images.test_images import TEST_IMAGES
 
 def test_version():
     """Are we testing right version?"""
-    assert normcap.__version__ == "0.1.0"
+    assert normcap.__version__ == "0.1.1"
 
 
 # TESTING client_code()
@@ -140,6 +140,9 @@ all_confs = []
 def test_normcap_main(pytestconfig, test_params):
     """Load various images and apply OCR pipeline."""
     test_data = data_test_image(test_params)
+
+    print(f"Test ID: {test_params['test_id']}")
+
     result = normcap.main(test_data)
 
     similarity = utils.get_jaccard_sim(

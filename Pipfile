@@ -8,6 +8,8 @@ mss = "*"
 pyperclip = "*"
 Pillow = "*"
 tesserocr = {platform_system = "!= 'Windows'",version = "*"}
+# numpy = "*"
+# opencv-python-headless = "*"
 
 [dev-packages]
 pytest = "==5.3.0"
@@ -18,7 +20,7 @@ mypy = "*"
 pre-commit = "*"
 vprof = "*"
 pywin32-ctypes = {platform_system = "== 'Windows'",version = "*"}
-PyInstaller = "*"
+PyInstaller = ">=3.6"
 pylint = "*"
 pefile = "*"
 rope = "*"
@@ -27,6 +29,7 @@ coverage = "==5.0a4"
 black = "*"
 bumpversion = "*"
 twine = "*"
+atomicwrites = "*"
 
 [requires]
 python_version = "3.7"

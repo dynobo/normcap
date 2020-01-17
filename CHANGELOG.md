@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.1 (2020-01-17)
+
+**Changes:**
+
+- Update PyInstaller to avoid potential vulnerability
+
 ## v0.1.0 (2019-12-23)
 
 **First public beta. Please help testing and provide feedback!**
