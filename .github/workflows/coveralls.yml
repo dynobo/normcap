@@ -26,8 +26,10 @@ jobs:
       run: cd /usr/lib/python3/dist-packages/ && sudo ln -s apt_pkg.cpython-36m-x86_64-linux-gnu.so apt_pkg.so
     - name: Install normcap dependencies
       run: sudo apt-get install tesseract-ocr tesseract-ocr-deu libtesseract-dev libleptonica-dev pkg-config xclip 
+    - name: Install wheel
+      run: python3.7 -m pip install --user wheel      
     - name: Install pipenv
-      run: python3.7 -m pip install --user pipenv wheel
+      run: python3.7 -m pip install --user pipenv
     - name: Create virtual env
       run: $HOME/.local/bin/pipenv install --dev
     - name: Install coveralls
