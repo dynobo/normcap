@@ -9,7 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master    
-    
+   
+    # SET ENV VARS
+    - name: Set environment variables
+      uses: allenevans/set-env@v1.0.0
+      with:
+        CI: 'true'
+
     # PREPARE
     - name: Install Python 3.7 
       # Because GitHub Actions' python isn't build against tkinter!
