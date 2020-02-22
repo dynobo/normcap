@@ -23,7 +23,7 @@ jobs:
       run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3.7-tk
     - name: Symlink apt-pkg lib 
       # to make pipenv working with different python versions
-      run: sudo ln -s apt_pkg.cpython-36m-x86_64-linux-gnu.so apt_pkg.so
+      run: sudo ln -s /usr/lib/python3/dist-packages/apt_pkg.cpython-36m-x86_64-linux-gnu.so /usr/lib/python3/dist-packages/apt_pkg.so
     - name: Install normcap dependencies
       run: sudo apt-get install tesseract-ocr tesseract-ocr-deu libtesseract-dev libleptonica-dev pkg-config xclip 
     - name: Install pipenv
