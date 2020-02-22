@@ -27,7 +27,7 @@ jobs:
     - name: Install normcap dependencies
       run: sudo apt-get install tesseract-ocr tesseract-ocr-deu libtesseract-dev libleptonica-dev pkg-config xclip 
     - name: Install pipenv
-      run: python3.7 -m pip install --user pipenv
+      run: python3.7 -m pip install --user pipenv wheel
     - name: Create virtual env
       run: $HOME/.local/bin/pipenv install --dev
     - name: Install coveralls
