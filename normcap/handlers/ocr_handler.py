@@ -53,6 +53,31 @@ class OcrHandler(AbstractHandler):
         # 8 = Treat the image as a single word.
         # 9 = Treat the image as a single word in a circle.
         # 10 = Treat the image as a single character.
+        psm_opt = 2
+
+        with PyTessBaseAPI(lang=lang, oem=OEM.LSTM_ONLY, psm=psm_opt) as api:
+            api.SetImage(img)
+            tsv_data = api.GetTSVText(0)
+        words = self.tsv_to_list_of_dicts(tsv_data)
+
+        mean_conf = statistics.mean([w.get("conf", 0) for w in words] + [0])
+        self._logger.info("PSM Mode: %s, Mean Conf: %s", psm_opt, mean_conf)
+        return words
+
+    def img_to_dict_best(self, img, lang) -> list:
+        img.format = "PNG"  # WORKAROUND for a pyinstaller bug on Win
+
+        # 0 = Orientation and script detection (OSD) only.
+        # 1 = Automatic page segmentation with OSD.
+        # 2 = Automatic page segmentation, but no OSD, or OCR
+        # 3 = Fully automatic page segmentation, but no OSD. (Default)
+        # 4 = Assume a single column of text of variable sizes.
+        # 5 = Assume a single uniform block of vertically aligned text.
+        # 6 = Assume a single uniform block of text.
+        # 7 = Treat the image as a single text line.
+        # 8 = Treat the image as a single word.
+        # 9 = Treat the image as a single word in a circle.
+        # 10 = Treat the image as a single character.
         PSM_OPTS = [2, 4, 6, 7]
 
         best_psm = 0  # For diagnostics
