@@ -161,17 +161,17 @@ optional arguments:
 
 "Magics" are like add-ons providing automated functionality to intelligently detect and format the captured input.
 
-First, every "magic" calculates a **"score"** to determine the likelihood of the magic being responsible for this type of text. Second, the "magic" which achieved the highest "score" takes the necessary actions to **"transform"** the input text according to its type.
+First, every "magic" calculates a "**score**" to determine the likelihood of being responsible for this type of text. Second, the "magic" which achieved the highest "score" takes the necessary actions to **"transform"** the input text according to its type.
 
 Currently implemented Magics:
 
-| Magic                | Score                                                | Transform                                                                          |
-| -------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| **Single&nbsp;line** | Only single line is detected                         | Trim unnecessary whitespace                                                        |
-| **Multi&nbsp;line**  | Multi lines, but single Paragraph                    | Separated by line break and trim each lined                                        |
-| **Paragraph**        | Multiple blocks of lines or multiple paragraphs      | Join every paragraph into single line, separate different paragraphs by empty line |
-| **E-Mail**           | Number of chars in email addresses vs. overall chars | Transform to comma separated list of email addresses                               |
-| **URL**              | Number of chars in URLs vs. overall chars            | Transform to line-break separated URLs                                             |
+| Magic                | Score                                                | Transform                                                                            |
+| -------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **Single&nbsp;line** | Only single line is detected                         | Trim unnecessary whitespace                                                          |
+| **Multi&nbsp;line**  | Multi lines, but single Paragraph                    | Separated by line breaks and trim each lined                                         |
+| **Paragraph**        | Multiple blocks of lines or multiple paragraphs      | Join every paragraph into a single line, separate different paragraphs by empty line |
+| **E-Mail**           | Number of chars in email addresses vs. overall chars | Transform to a comma-separated list of email addresses                               |
+| **URL**              | Number of chars in URLs vs. overall chars            | Transform to line-break separated URLs                                               |
 
 ### Why "normcap"?
 
