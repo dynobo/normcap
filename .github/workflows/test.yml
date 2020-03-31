@@ -1,101 +1,102 @@
 name: Test
 
-on: 
+on:
   pull_request:
     branches:
       - master
-  
 
 jobs:
   test_linux:
     name: Test on Linux64
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master    
-    
-    # PREPARE
-    - name: Install Python 3.7 
-      # Because GitHub Actions' python isn't build against tkinter!
-      run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3.7-tk python3-setuptools
-    - name: Symlink apt-pkg lib 
-      # to make pipenv working with different python versions
-      run: cd /usr/lib/python3/dist-packages/ && sudo ln -s apt_pkg.cpython-36m-x86_64-linux-gnu.so apt_pkg.so
-    - name: Install normcap dependencies
-      run: sudo apt-get install tesseract-ocr tesseract-ocr-deu libtesseract-dev libleptonica-dev pkg-config xclip 
-    - name: Install wheel
-      run: python3.7 -m pip install --user wheel            
-    - name: Install pipenv
-      run: python3.7 -m pip install --user pipenv
-    - name: Create virtual env
-      run: $HOME/.local/bin/pipenv install --dev
-    
-    # LINT
-    - name: Lint with flake8
-      run: $HOME/.local/bin/pipenv run flake8 . --count --show-source --statistics
+      - uses: actions/checkout@master
 
-    # TEST
-    - name: Test with pytest
-      # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
-      run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest
+      # PREPARE
+      - name: Install Python 3.7
+        # Because GitHub Actions' python isn't build against tkinter!
+        run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3.7-tk python3-setuptools
+      - name: Symlink apt-pkg lib
+        # to make pipenv working with different python versions
+        run: cd /usr/lib/python3/dist-packages/ && sudo ln -s apt_pkg.cpython-36m-x86_64-linux-gnu.so apt_pkg.so
+      - name: Install normcap dependencies
+        run: sudo apt-get install tesseract-ocr tesseract-ocr-deu libtesseract-dev libleptonica-dev pkg-config xclip
+      - name: Install wheel
+        run: python3.7 -m pip install --user wheel
+      - name: Install pipenv
+        run: python3.7 -m pip install --user pipenv
+      - name: Create virtual env
+        run: $HOME/.local/bin/pipenv install --dev
+
+      # LINT
+      - name: Lint with flake8
+        run: $HOME/.local/bin/pipenv run flake8 . --count --show-source --statistics
+
+      # TEST
+      - name: Test with pytest
+        # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
+        run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest
 
   test_macos:
     name: Test on MacOS
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@master    
-    
-    # PREPARE
-    - name: Install normcap dependencies
-      run: brew install pkg-config tesseract-lang
-    - name: Install pipenv
-      run: python3.7 -m pip install --user pipenv
-    - name: Create virtual env
-      run: $HOME/Library/Python/3.7/bin/pipenv install --dev
+      - uses: actions/checkout@master
 
-    # LINT
-    - name: Lint with flake8
-      run: $HOME/Library/Python/3.7/bin/pipenv run flake8 . --count --show-source --statistics
+      # PREPARE
+      - name: Install normcap dependencies
+        run: brew install pkg-config tesseract-lang
+      - name: Install pipenv
+        run: python3.7 -m pip install --user pipenv
+      - name: Create virtual env
+        run: $HOME/Library/Python/3.7/bin/pipenv install --dev
 
-    # TEST
-    - name: Test with pytest
-      run: $HOME/Library/Python/3.7/bin/pipenv run python3.7 -m pytest  
-    
+      # LINT
+      - name: Lint with flake8
+        run: $HOME/Library/Python/3.7/bin/pipenv run flake8 . --count --show-source --statistics
+
+      # TEST
+      - name: Test with pytest
+        run: $HOME/Library/Python/3.7/bin/pipenv run python3.7 -m pytest
+
   test_windows:
     name: Test on Windows
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@master    
+      - uses: actions/checkout@master
 
-    # SET ENV VARS
-    - name: Set environment variables
-      uses: allenevans/set-env@v1.0.0
-      with:
-        CI: 'true'
-      
-    # PREPARE
-    - name: Install pipenv
-      run: python -m pip install --user pipenv
-    - name: Create virtual env
-      run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv install --dev
-    - name: Install tesserocr
-      run: >
-        C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv 
-        run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
-    - name: Download tessdata
-      run: >
-        new-item -Name tessdata -ItemType directory;  
-        cd tessdata;        
-        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/eng.traineddata -OutFile eng.traineddata;
-        iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/deu.traineddata -OutFile deu.traineddata;
-        dir;
-        cd..;
+      # SET ENV VARS
+      - name: Set environment variables
+        uses: allenevans/set-env@v1.0.0
+        with:
+          CI: "true"
 
-    # LINT
-    - name: Lint with flake8
-      run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run flake8 . --count --show-source --statistics        
+      # PREPARE
+      - name: Install pipenv
+        run: >
+          python -m pip install --user pipenv
+          set PATH=%PATH%;C:\Users\runneradmin\AppData\Roaming\Python\Python37\Scripts
+      - name: Create virtual env
+        run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv install --dev
+      - name: Install tesserocr
+        run: >
+          C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv 
+          run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
+      - name: Download tessdata
+        run: >
+          new-item -Name tessdata -ItemType directory;  
+          cd tessdata;        
+          iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/eng.traineddata -OutFile eng.traineddata;
+          iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.0.0/deu.traineddata -OutFile deu.traineddata;
+          dir;
+          cd..;
 
-    # TEST
-    - name: Test with pytest
-      run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run python -m pytest  
-      env:
-        TESSDATA_PREFIX: D:\a\normcap\normcap\tessdata
+      # LINT
+      - name: Lint with flake8
+        run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run flake8 . --count --show-source --statistics
+
+      # TEST
+      - name: Test with pytest
+        run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run python -m pytest
+        env:
+          TESSDATA_PREFIX: D:\a\normcap\normcap\tessdata
