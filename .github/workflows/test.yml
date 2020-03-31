@@ -75,12 +75,11 @@ jobs:
       - name: Install pipenv
         run: >
           python -m pip install --user pipenv
-          set PATH=%PATH%;C:\Users\runneradmin\AppData\Roaming\Python\Python37\Scripts
       - name: Create virtual env
-        run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv install --dev
+        run: C:\Users\runneradmin\AppData\Roaming\Python\Python37\Scripts\pipenv install --dev
       - name: Install tesserocr
         run: >
-          C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv 
+          C:\Users\runneradmin\AppData\Roaming\Python\Python37\Scripts\pipenv 
           run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
       - name: Download tessdata
         run: >
@@ -93,10 +92,10 @@ jobs:
 
       # LINT
       - name: Lint with flake8
-        run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run flake8 . --count --show-source --statistics
+        run: C:\Users\runneradmin\AppData\Roaming\Python\Python37\Scripts\pipenv run flake8 . --count --show-source --statistics
 
       # TEST
       - name: Test with pytest
-        run: C:\Users\runneradmin\AppData\Roaming\Python\Python36\Scripts\pipenv run python -m pytest
+        run: C:\Users\runneradmin\AppData\Roaming\Python\Python37\Scripts\pipenv run python -m pytest
         env:
           TESSDATA_PREFIX: D:\a\normcap\normcap\tessdata
