@@ -2,7 +2,7 @@
 
 # normcap
 
-***OCR powered screen-capture tool to capture information instead of images.***
+**_OCR powered screen-capture tool to capture information instead of images._**
 
 <p align="center"><br>
 <a href="https://github.com/dynobo/normcap/releases"><img alt="Build passing" src="https://github.com/dynobo/normcap/workflows/Build/badge.svg"></a>
@@ -31,7 +31,7 @@
 **Basic usage:**
 
 1. Launch `normcap`
-2. Select region on screen
+2. Select a region on the screen
 3. Retrieve recognized text in clipboard
 
 ![](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap.gif)
@@ -49,7 +49,7 @@
 sudo apt-get install tesseract-ocr xclip python3-tk python3-pil.imagetk
 
 # on Arch:
-sudo pacman -S tesseract tesseract-data-eng xclip tk python-pillow  
+sudo pacman -S tesseract tesseract-data-eng xclip tk python-pillow
 
 # on Fedora
 sudo dnf install tesseract xclip python3-tkinter
@@ -65,18 +65,17 @@ pip3 install normcap
 pip install normcap
 ```
 
-(***OR*** download and extract binary package from the [latest release](
-https://github.com/dynobo/normcap/releases))
+(**_OR_** download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases))
 
 3\. Execute `./normcap`
 
-### On Windows *(recommended method)*
+### On Windows _(recommended method)_
 
-1\. Download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation required)
+1\. Download and extract the binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation required)
 
 2\. Execute `normcap.exe`
 
-### On Windows *(alternative method)*
+### On Windows _(alternative method)_
 
 1\. Install "Tesseract", e.g. by using the [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
 
@@ -102,7 +101,7 @@ pip install normcap
 
 ### On Mac
 
-***Attention! On Mac not everything works. [Help needed!](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)***
+**_Attention! On Mac, not everything works. [Help needed!](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)_**
 
 1\. Install dependencies:
 
@@ -116,8 +115,7 @@ brew install tesseract tesseract-lang
 pip install normcap
 ```
 
-(***OR*** download and extract binary package from the [latest release](
-https://github.com/dynobo/normcap/releases))
+(**_OR_** download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases))
 
 3\. Execute `normcap.app`
 
@@ -127,17 +125,18 @@ https://github.com/dynobo/normcap/releases))
 
 - After launching `normcap` press `<esc>` to abort and quit.
 
-- Before letting go the mouse button, press `<space>`-key to switch mode, as indicated by a symbol:
-   - **☰ (raw):** Copy detected text line by line, without further modification
-   - **☶ (parse):** Try to auto-detect type of text using [magics](#Magics) and format the text accordingly, then copy
+- Before letting the mouse button go, press the `<space>`-key to switch mode, as indicated by a symbol:
 
-- To download additional languages for Mac and Linux, check the official repository of your distribution for `tesseract`-languages. Packages names might vary.
+  - **☰ (raw):** Copy detected text line by line, without further modification
+  - **☶ (parse):** Try to auto-detect the type of text using [magics](#Magics) and format the text accordingly, then copy
+
+- To download additional languages for Mac and Linux, check the official repository of your distribution for `tesseract`-languages. Packages' names might vary.
 
 - The [Windows release](https://github.com/dynobo/normcap/releases) of normcap supports English and German out of the box. If you need additional languages, download the appropriate files from [the tesseract repo](https://github.com/tesseract-ocr/tessdata_best) and place them into the `/normcap/tessdata/` folder.
 
-- normcap is intended to be executed on demand via keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but it's startup is a bit slower.
+- normcap is intended to be executed on demand via a keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but its startup is a bit slower.
 
-- By default normcap is "stateless": it copies recognized text to the systems clipboard, but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
+- By default normcap is "stateless": it copies recognized text to the system's clipboard but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
 
 ### Command line options
 
@@ -160,9 +159,9 @@ optional arguments:
 
 ### Magics
 
-"Magics" are like addons providing automated functionality to intelligently detect and format the captured input.
+"Magics" are like add-ons providing automated functionality to intelligently detect and format the captured input.
 
-First, every "magic" calculates a **"score"** to determine the likelihood of the magic being responsible for this type of text. Second, the "magic" which achieved the highest "score" take the necessary actions to **"transform"** the input text according to its type.
+First, every "magic" calculates a **"score"** to determine the likelihood of the magic being responsible for this type of text. Second, the "magic" which achieved the highest "score" takes the necessary actions to **"transform"** the input text according to its type.
 
 Currently implemented Magics:
 
@@ -208,28 +207,28 @@ pipenv run python -m normcap
 
 ### Design Principles
 
-- **Multi-Platform**<br>Should work on on Linux, Mac & Windows.
-- **Don't run as service**<br>As normcap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to a slower start-up time.
+- **Multi-Platform**<br>Should work on Linux, Mac & Windows.
+- **Don't run as service**<br>As normcap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to slower start-up time.
 - **No network connection**<br>Everything should run locally without any network communication.
-- **Avoid text in UI**<br>This just avoids translations ;-) And I think it is feasible in such an simple application.
+- **Avoid text in UI**<br>This just avoids translations ;-) And I think it is feasible in such a simple application.
 - **Avoid configuration file or settings UI**<br>Focus on simplicity and core functionality.
-- **Dependencies**<br>The less dependencies, the better. Of course I have to compromise, but I'm always open to suggestions on how to further reduce dependencies.
+- **Dependencies**<br>The fewer dependencies, the better. Of course, I have to compromise, but I'm always open to suggestions on how to further reduce dependencies.
 - **Chain of Responsibility as main design pattern**<br>[See description on refactoring.guru](https://refactoring.guru/design-patterns/chain-of-responsibility)
-- **Multi-Monitors**<br>Supports setups with two or more display.
+- **Multi-Monitors**<br>Supports setups with two or more displays
 
 ## Credits
 
-This projected uses the following non-standard libraries:
+This project uses the following non-standard libraries:
 
-- [mss](https://pypi.org/project/mss/) *- taking screenshots*
-- [pillow](https://pypi.org/project/Pillow/) *- manipulating images*
-- [tesserocr](https://pypi.org/project/tesserocr/) *- wrapper for tesseract's API*
-- [pyperclip](https://pypi.org/project/pyperclip/) *- accessing clipboard*
-- [pyinstaller](https://pypi.org/project/PyInstaller/) *- packaging for platforms*
+- [mss](https://pypi.org/project/mss/) _- taking screenshots_
+- [pillow](https://pypi.org/project/Pillow/) _- manipulating images_
+- [tesserocr](https://pypi.org/project/tesserocr/) _- wrapper for tesseract's API_
+- [pyperclip](https://pypi.org/project/pyperclip/) _- accessing clipboard_
+- [pyinstaller](https://pypi.org/project/PyInstaller/) _- packaging for platforms_
 
 And it depends on external software
 
-- [tesseract](https://github.com/tesseract-ocr/tesseract) - *OCR engine*
+- [tesseract](https://github.com/tesseract-ocr/tesseract) - _OCR engine_
 
 Thanks to the maintainers of those nice libraries!
 

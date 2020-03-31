@@ -5,7 +5,7 @@
 **Changes:**
 
 - Update Bleach Package to avoid potential vulnerability
-- Switched to standard traindata for Windows
+- Switched to standard tesseract train-data for Windows
 - Improve performance by skipping unnecessary tests
 
 ## v0.1.1 (2020-01-17)
@@ -16,7 +16,7 @@
 
 ## v0.1.0 (2019-12-23)
 
-**First public beta. Please help testing and provide feedback!**
+**First public beta. Please test and provide feedback!**
 
 **Changes:**
 
@@ -48,7 +48,7 @@ Any feedback is useful, whether you find bugs or everything works for you. Thank
 **Changes:**
 
 - Initial working release
-- Multi monitor support
+- Multi-monitor support
 - Support Linux, Windows, Mac
 - Add Magics for
   - Single Lines (unformatted text)
