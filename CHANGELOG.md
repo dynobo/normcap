@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.1.2 (2020-03-31)
+
+**Changes:**
+
+- Update Bleach Package to avoid potential vulnerability
+- Switched to standard traindata for Windows
+- Improve performance by skipping unnecessary tests
+
 ## v0.1.1 (2020-01-17)
 
 **Changes:**
