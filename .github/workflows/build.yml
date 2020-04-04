@@ -116,14 +116,14 @@ jobs:
           iwr https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.0.0/eng.traineddata -OutFile eng.traineddata;
           dir;
           cd..;
-
       # WORKAROUND BROKEN PYINSTALLER
       # TODO: Remove, when merged:
       # https://github.com/pyinstaller/pyinstaller/commit/91481570517707fc70aa70dca9eb986c61eac35d
       - name: Install develop of PyInstaller
         run: >
-          pip uninstall pyinstaller
-          pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip
+          C:\Users\runneradmin\AppData\Roaming\Python\Python37\Scripts\pipenv uninstall pyinstaller;
+          C:\Users\runneradmin\AppData\Roaming\Python\Python37\Scripts\pipenv 
+          run pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip
 
       # TEST
       - name: Test with pytest
