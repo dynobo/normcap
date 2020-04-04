@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.3 (2020-04-04)
+
+**Changes:**
+
+- Use the development version of PyInstaller for building Windows binaries to get [the not yet released bugfix](https://github.com/pyinstaller/pyinstaller/commit/91481570517707fc70aa70dca9eb986c61eac35d)
+
 ## v0.1.2 (2020-03-31)
 
 **Changes:**
