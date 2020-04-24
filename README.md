@@ -46,13 +46,13 @@
 
 ```sh
 ## on Ubuntu/Debian:
-sudo apt-get install tesseract-ocr xclip python3-tk python3-pil.imagetk
+sudo apt-get install tesseract-ocr xclip python3-tk python3-pil.imagetk libleptonica-dev libtesseract-dev
 
 # on Arch:
-sudo pacman -S tesseract tesseract-data-eng xclip tk python-pillow
+sudo pacman -S tesseract tesseract-data-eng leptonica xclip tk python-pillow
 
 # on Fedora
-sudo dnf install tesseract xclip python3-tkinter
+sudo dnf install tesseract tesseract-devel leptonica-devel xclip python3-tkinter
 ```
 
 2\. Install normcap:
