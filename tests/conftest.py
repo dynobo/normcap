@@ -9,7 +9,7 @@ def pytest_terminal_summary(
     yield
     if hasattr(config, "all_confs"):
         terminalreporter.section("OCR Avg Confidences")
-        terminalreporter.write(f"Conf.\tSimil.\tTest Explanation\n")
+        terminalreporter.write("Conf.\tSimil.\tTest Explanation\n")
         terminalreporter.write("-" * 65 + "\n")
         for c in config.all_confs:
             terminalreporter.write(f"{c[0]:.1f}\t{c[1]:.2f}\t({c[2]})\n")

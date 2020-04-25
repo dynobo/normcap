@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.4 (2020-04-25)
+
+**Changes:**
+
+- Add fallback for Wayland DE on Linux, see [Issue 76](https://github.com/dynobo/normcap/issues/76#issue-605722434)
+
 ## v0.1.3 (2020-04-04)
 
 **Changes:**

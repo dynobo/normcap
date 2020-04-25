@@ -160,7 +160,7 @@ class OcrHandler(AbstractHandler):
             self._logger.warning("Language %s for ocr not found!", {*unavailable_langs})
             self._logger.warning("Available tesseract langs: %s.", {*tesseract_langs})
             if available_langs:
-                lang = "+".join([l for l in requested_langs if l in available_langs])
+                lang = "+".join([rl for rl in requested_langs if rl in available_langs])
             else:
                 lang = tesseract_langs[0]
             self._logger.warning("Fallback to %s.", lang)
