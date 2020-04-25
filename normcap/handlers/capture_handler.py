@@ -156,8 +156,12 @@ class CaptureHandler(AbstractHandler):
             line = line.decode()
 
             sections = line.split()
-            # 0       1                 2                   3
-            # 0: +*DP-1-2-2 1920/521x1080/293clean
+            # 0       1             2             3
+            # 0: +*DP-1-2-2 1920/521x1080/293 XWAYLAND0
+
+            # Skip lines containing no monitor info
+            if len(sections) < 4:
+                continue
 
             dim_section = sections[2]
             dim = dim_section.split("/")
