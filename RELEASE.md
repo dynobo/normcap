@@ -12,3 +12,8 @@ bumpversion major
 bumpversion minor
 bumpversion patch
 ```
+
+## Merge
+
+1. Create pull request from master to dev
+2. See, if all tests ran through
