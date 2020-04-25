@@ -39,7 +39,7 @@ setup(
         "mss>=6.0.0",
         "Pillow>=8.0.1",
         "pyperclip>=1.8.1",
-        "tesserocr>=2.5.1",
+        "tesserocr>=2.4.01",
         "pyscreenshot>=2.2",
     ],
     entry_points={"console_scripts": ["normcap=normcap.__main__:run"]},
