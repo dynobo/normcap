@@ -1,0 +1,8 @@
+ # requirements.txt
+ #
+ # installs all generic dependencies
+-r requirements.txt
+
+# install macos specific dependencies
+pywin32-ctypes==0.2.0
+atomicwrites==1.4.0

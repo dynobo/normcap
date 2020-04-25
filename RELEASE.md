@@ -45,7 +45,7 @@ python setup.py sdist bdist_wheel
 
 ```sh
 twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-pip3 install -i https://test.pypi.org/simple/ normcap
+pip3 install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple normcap
 ```
 
 3. Upload to pypi
