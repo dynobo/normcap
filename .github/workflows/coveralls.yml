@@ -4,39 +4,34 @@ name: Coveralls
 
 jobs:
   build:
-    name: Test
-    runs-on: ubuntu-latest
+    name: Coveralls Tests on Linux64
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@master
 
       # PREPARE
-      - name: Install Python 3.7
-        # Because GitHub Actions' python isn't build against tkinter!
-        run: sudo apt-get update && sudo apt-get install python3.7 python3.7-dev python3.7-tk python3-setuptools
-      - name: Symlink apt-pkg lib
-        # to make pipenv working with different python versions
-        run: cd /usr/lib/python3/dist-packages/ && sudo ln -s apt_pkg.cpython-36m-x86_64-linux-gnu.so apt_pkg.so
+      - name: Install Python Dependencies
+        run: sudo apt-get update && sudo apt-get install python3.8-dev python3.8-tk python3.8-venv
       - name: Install normcap dependencies
         run: sudo apt-get install tesseract-ocr tesseract-ocr-deu libtesseract-dev libleptonica-dev pkg-config xclip
-      - name: Install wheel
-        run: python3.7 -m pip install --user wheel
-      - name: Install pipenv
-        run: python3.7 -m pip install --user pipenv
+      - name: Install wheel & venv
+        run: python3.8 -m pip install --user wheel setuptools
       - name: Create virtual env
-        run: $HOME/.local/bin/pipenv install --dev
+        run: python3.8 -m venv .venv
+      - name: Install deps
+        run: .venv/bin/python -m pip install -r requirements.txt
         env:
           CI: true
-
-      - name: Install coveralls
-        run: $HOME/.local/bin/pipenv run pip install coveralls
 
       # TEST
       - name: Test with pytest
         # xvfb-run with bpp 32 has to be used to make the mss screenshot grab work
-        run: $HOME/.local/bin/pipenv run xvfb-run --server-args="-screen 0 1024x768x24+32" python3.7 -m pytest
+        run: xvfb-run --server-args="-screen 0 1024x768x24+32" .venv/bin/python -m pytest
+        env:
+          XDG_SESSION_TYPE: wayland
 
       # PUBLISH
       - name: Publish
-        run: $HOME/.local/bin/pipenv run coveralls
+        run: .venv/bin/coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}

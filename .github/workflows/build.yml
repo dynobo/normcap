@@ -124,7 +124,7 @@ jobs:
       - name: Install deps
         run: >
           .\venv\Scripts\activate;
-          pip install -r requirements-win.txt
+          pip install -r requirements-win.txt;
           deactivate;
 
       # TEST
