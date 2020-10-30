@@ -1,40 +1,30 @@
 [[source]]
-name = "pypi"
-url = "https://pypi.org/simple"
+url = "https://pypi.python.org/simple"
 verify_ssl = true
-
-[packages]
-mss = "*"
-pyperclip = "*"
-Pillow = "*"
-tesserocr = {platform_system = "!= 'Windows'",version = "*"}
-# numpy = "*"
-# opencv-python-headless = "*"
-pyscreenshot = "*"
+name = "pypi"
 
 [dev-packages]
-pytest = "==5.3.0"
-pytest-cov = "*"
-flake8 = "*"
-isort = "*"
-mypy = "*"
-pre-commit = "*"
-vprof = "*"
-pywin32-ctypes = {platform_system = "== 'Windows'",version = "*"}
-PyInstaller = ">=3.6"
-pylint = "*"
-pefile = "*"
-rope = "*"
-python-coveralls = "*"
-coverage = "==5.0a4"
-black = "*"
-bumpversion = "*"
-twine = "*"
-atomicwrites = {platform_system = "== 'Windows'",version = "*"}
-macholib = {platform_system = "== 'Darwin'",version = "*"}
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
 
-[pipenv]
-allow_prereleases = true
+[packages]
+pytest = "==6.1.2"
+pytest-cov = "==2.10.1"
+flake8 = "==3.8.4"
+isort = "==5.6.4"
+mypy = "==0.790"
+pre-commit = "==2.8.1"
+pyinstaller = "==3.6"
+pylint = "==2.6.0"
+pefile = "==2019.4.18"
+rope = "==0.18.0"
+python-coveralls = "==2.9.3"
+coverage = "==5.3"
+black = "==20.8b1"
+bumpversion = "==0.6.0"
+twine = "==3.2.0"
+
+[packages.a819127]
+path = "/home/holger/coding/normcap"
+editable = true

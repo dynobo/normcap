@@ -192,17 +192,21 @@ git clone https://github.com/dynobo/normcap.git
 # Change into project directory
 cd normcap
 
-# Install pipenv (if not already installed)
-pip install pipenv
+# Create and activate virtual env
+python -m venv .venv
+source .venv/bin/activate
 
 # Install project development incl. dependencies
-pipenv install --dev
+pip install -r requirements.txt
+# or depending on your OS:
+#    pip install -r requirements-macos.txt
+#    pip install -r requirements-win.txt
 
 # Register pre-commit hook
-pipenv run pre-commit install -t pre-commit
+pre-commit install -t pre-commit
 
 # Run normcap in pipenv environment
-pipenv run python -m normcap
+python -m normcap
 ```
 
 ### Design Principles
