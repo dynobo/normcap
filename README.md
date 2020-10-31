@@ -34,7 +34,7 @@
 2. Select a region on the screen
 3. Retrieve recognized text in clipboard
 
-[![Screencast](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap)](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap)
+[![Screencast](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap.gif)](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap.gif)
 
 ## Installation
 
