@@ -34,9 +34,7 @@
 2. Select a region on the screen
 3. Retrieve recognized text in clipboard
 
-![](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap.gif)
-
-([Screencast on GitHub](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap.gif))
+[![Screencast](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap)](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap)
 
 ## Installation
 
@@ -67,7 +65,7 @@ pip install normcap
 
 (**_OR_** download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases))
 
-3\. Execute `./normcap`
+3\. Execute `normcap`
 
 ### On Windows _(recommended method)_
 

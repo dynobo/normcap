@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.1.5 (2020-10-31)
+
+**Changes:**
+
+- Fixes Issue #81: Unhandled exception when user selected no region
+- Related to the one above: Skip OCR if selected area is tiny (below 25 square pixels)
+
+**Development related:**
+- Updates dependencies which also now get pinned
+- Move away from pipenv, using plain setuptools and requirements.txt's instead.
+
 ## v0.1.4 (2020-04-25)
 
 **Changes:**
