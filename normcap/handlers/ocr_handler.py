@@ -40,8 +40,10 @@ class OcrHandler(AbstractHandler):
         return request
 
     def img_to_dict(self, img, lang) -> list:
-        if not img.size or img.size[0] * img.size[1] <= 10:
-            self._logger.warning("Image too small for OCR. Dimensions: %s", img.size)
+        if not img.size or img.size[0] * img.size[1] <= 25:
+            self._logger.info(
+                "Selected region of %s too small for OCR. Skipping.", img.size
+            )
             return []
 
         img.format = "PNG"  # WORKAROUND for a pyinstaller bug on Win
