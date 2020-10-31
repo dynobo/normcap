@@ -4,7 +4,7 @@
 
 **Changes:**
 
-- Fixes Issue #81: Unhandled exception when user selected no region
+- Fixes [Issue #81](https://github.com/dynobo/normcap/issues/81): Unhandled exception when user selected no region
 - Related to the one above: Skip OCR if selected area is tiny (below 25 square pixels)
 
 **Development related:**
