@@ -11,7 +11,7 @@ flake8==3.8.4
 isort==5.6.4
 mypy==0.790
 pre-commit==2.8.1
-PyInstaller==3.6
+PyInstaller==4.0
 pylint==2.6.0
 pefile==2019.4.18
 rope==0.18.0

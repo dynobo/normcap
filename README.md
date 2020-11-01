@@ -71,7 +71,7 @@ pip install normcap
 
 1\. Download and extract the binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation required)
 
-2\. Execute `normcap.exe`
+2\. Execute `normcap-v{version}.exe`
 
 ### On Windows _(alternative method)_
 
@@ -115,7 +115,7 @@ pip install normcap
 
 (**_OR_** download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases))
 
-3\. Execute `normcap.app`
+3\. Execute `normcap-v{version}.app`
 
 ## Usage
 

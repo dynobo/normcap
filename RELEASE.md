@@ -24,13 +24,13 @@ bumpversion patch
 1. Tag version and push:
 
 ```sh
-git checkout -b master
+git checkout master
 git pull
 git tag v0.1.4
 git push --tags
 ```
 
-2. Check if build ran through
+2. Check if build ran through and window executable is working
 
 ## Upload to pypi
 
