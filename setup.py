@@ -11,7 +11,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="normcap",
-    version="0.1.5",
+    version="0.1.6",
     description="OCR-powered screen-capture tool to capture information instead of images",
     keywords="screenshot ocr capture clipboard",
     long_description=README,
@@ -33,7 +33,8 @@ setup(
         "Operating System :: MacOS",
     ],
     packages=find_packages(exclude=("tests",)),
-    include_package_data=False,
+    include_package_data=True,
+    package_data={"ressources": ["*"]},
     python_requires=">=3.7.0",
     install_requires=[
         "mss>=6.0.0",
@@ -41,6 +42,8 @@ setup(
         "pyperclip>=1.8.1",
         "tesserocr>=2.4.0",
         "pyscreenshot>=2.2",
+        "notify-py>=0.2.4",
+        "importlib-resources>=3.3.0",
     ],
     entry_points={"console_scripts": ["normcap=normcap.__main__:run"]},
 )

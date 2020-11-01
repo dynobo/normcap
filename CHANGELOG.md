@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.165 (2020-11-01)
+
+**Changes:**
+
+- Implements [Issue #27](https://github.com/dynobo/normcap/issues/27): Show system notification after OCR completed.
+
 ## v0.1.5 (2020-10-31)
 
 **Changes:**

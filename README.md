@@ -34,7 +34,7 @@
 2. Select a region on the screen
 3. Retrieve recognized text in clipboard
 
-[![Screencast](https://user-images.githubusercontent.com/11071876/97786948-39ed1e80-1baf-11eb-852c-bce87abc6890.gif)](https://raw.githubusercontent.com/dynobo/normcap/master/ressource/normcap.gif)
+[![Screencast](https://user-images.githubusercontent.com/11071876/97786948-39ed1e80-1baf-11eb-852c-bce87abc6890.gif)](https://raw.githubusercontent.com/dynobo/normcap/master/normcap/ressources/normcap.gif)
 
 ## Installation
 
@@ -71,7 +71,7 @@ pip install normcap
 
 1\. Download and extract the binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation required)
 
-2\. Execute `normcap.exe`
+2\. Execute `normcap-v{version}.exe`
 
 ### On Windows _(alternative method)_
 
@@ -115,7 +115,7 @@ pip install normcap
 
 (**_OR_** download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases))
 
-3\. Execute `normcap.app`
+3\. Execute `normcap-v{version}.app`
 
 ## Usage
 
@@ -227,6 +227,7 @@ This project uses the following non-standard libraries:
 - [tesserocr](https://pypi.org/project/tesserocr/) _- wrapper for tesseract's API_
 - [pyperclip](https://pypi.org/project/pyperclip/) _- accessing clipboard_
 - [pyinstaller](https://pypi.org/project/PyInstaller/) _- packaging for platforms_
+- [notify-py](https://pypi.org/project/notify-py/) _- system notifications_
 
 And it depends on external software
 

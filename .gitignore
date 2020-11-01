@@ -8,8 +8,8 @@ coverage
 .coverage
 .coveralls.yml
 *.spec
-ressource/icon
-ressource/screencast
+normcap/ressources/icon
+normcap/ressources/screencast
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

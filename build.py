@@ -1,13 +1,20 @@
 # Default
 import os
 import sys
+from pathlib import Path
 
 # Extra
 import PyInstaller.__main__
+import importlib_resources
 
+# Own
+import normcap
+
+# WORKAROUND FOR BUG IN PYINSTALLER
+(Path(importlib_resources.__file__).parent / "version.txt").touch()
 
 ARGS = [
-    "--name=normcap",
+    f"--name=normcap-v{normcap.__version__}",
     "--clean",
     "--noconfirm",
     # "--onefile",
@@ -15,11 +22,14 @@ ARGS = [
     "--windowed",
     # "--debug=all",
     # "--log-level=DEBUG",
-    f"--icon={os.path.join('ressource', 'normcap.ico')}",
+    f"--icon={os.path.join('normcap','ressources', 'normcap.ico')}",
     f"--paths={os.path.join('.venv', 'lib', 'python3.8', 'site-packages')}",
     "--hidden-import=PIL",
     "--hidden-import=PIL._imagingtk",
     "--hidden-import=PIL._tkinter_finder",
+    "--hidden-import=importlib_resources.trees",
+    "--runtime-hook=rthook.py",
+    f"--add-data=normcap/ressources{os.pathsep}normcap/ressources",
 ]
 
 if sys.platform.lower().startswith("linux"):
