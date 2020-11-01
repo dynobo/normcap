@@ -15,7 +15,7 @@ ARGS = [
     "--windowed",
     # "--debug=all",
     # "--log-level=DEBUG",
-    f"--icon={os.path.join('ressource', 'normcap.ico')}",
+    f"--icon={os.path.join('normcap','ressources', 'normcap.ico')}",
     f"--paths={os.path.join('.venv', 'lib', 'python3.8', 'site-packages')}",
     "--hidden-import=PIL",
     "--hidden-import=PIL._imagingtk",

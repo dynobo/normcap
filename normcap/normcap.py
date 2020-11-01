@@ -15,6 +15,7 @@ from normcap.handlers.ocr_handler import OcrHandler
 from normcap.handlers.clipboard_handler import ClipboardHandler
 from normcap.handlers.magic_handler import MagicHandler
 from normcap.handlers.enhance_img_handler import EnhanceImgHandler
+from normcap.handlers.notification_handler import NotificationHandler
 
 
 def create_argparser() -> argparse.ArgumentParser:
@@ -133,11 +134,12 @@ def main(test_data: NormcapData = None):
     # Define Handlers
     capture = CaptureHandler()
     crop = CropHandler()
-    store = StoreHandler()
     enhance_img = EnhanceImgHandler()
+    store = StoreHandler()
     ocr = OcrHandler()
-    clipboard = ClipboardHandler()
     magics = MagicHandler()
+    clipboard = ClipboardHandler()
+    notification = NotificationHandler()
 
     # Define Chain of Responsibilities
     # fmt: off
@@ -146,7 +148,8 @@ def main(test_data: NormcapData = None):
            .set_next(store) \
            .set_next(ocr) \
            .set_next(magics) \
-           .set_next(clipboard)
+           .set_next(clipboard) \
+           .set_next(notification)
     # fmt: on
 
     # Run chain
