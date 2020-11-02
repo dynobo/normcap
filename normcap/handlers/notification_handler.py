@@ -13,6 +13,7 @@ from normcap.common.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
 from normcap import __version__
 
+
 class NotificationHandler(AbstractHandler):
     def handle(self, request: NormcapData) -> NormcapData:
         """Trigger system notification when ocr is done.
