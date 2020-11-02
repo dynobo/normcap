@@ -42,7 +42,7 @@ setup(
         "pyperclip>=1.8.1",
         "tesserocr>=2.4.0",
         "pyscreenshot>=2.2",
-        "notify-py>=0.2.4",
+        "notify-py>=0.3.0",
         "importlib-resources>=3.3.0",
     ],
     entry_points={"console_scripts": ["normcap=normcap.__main__:run"]},
