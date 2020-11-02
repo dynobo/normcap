@@ -3,6 +3,9 @@
 # Default
 from typing import Union
 
+# Extra
+import pystray  # type: ignore
+
 
 def get_jaccard_sim(seq1: Union[list, str], seq2: Union[list, str]) -> float:
     """Calculates the jaccard similarity of two sequences.
@@ -23,3 +26,42 @@ def get_jaccard_sim(seq1: Union[list, str], seq2: Union[list, str]) -> float:
     set2 = set(seq2)
     equal = set1.intersection(set2)
     return len(equal) / (len(set1) + len(set2) - len(equal))
+
+
+def run_in_tray(func):
+    def set_quit():
+        pass
+
+    def _create_image():
+        pass
+
+    state = 0
+
+    def set_state(v):
+        def inner(icon, item):
+            global state
+            state = v
+
+        return inner
+
+    def get_state(v):
+        def inner(item):
+            return state == v
+
+        return inner
+
+    normcap_data = {}
+    pystray.Icon(
+        "test",
+        _create_image(),
+        menu=pystray.Menu(
+            lambda: (
+                pystray.MenuItem(
+                    "State %d" % i, set_state(i), checked=get_state(i), radio=True
+                )
+                for i in range(max(5, state + 2))
+            )
+        ),
+    ).run()
+
+    return normcap_data

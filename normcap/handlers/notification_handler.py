@@ -9,6 +9,7 @@ from notifypy import Notify  # type: ignore
 from importlib_resources import files  # type: ignore
 
 # Own
+from normcap import __version__
 from normcap.common.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
 
@@ -79,9 +80,9 @@ class NotificationHandler(AbstractHandler):
             text (str): Notification text
             icon_path (str): Path to icon shown in the notification
         """
-        notification = Notify()
+        notification = Notify(default_application_name=f"Normcap v{__version__}")
         notification.title = title
         notification.message = text
         if icon_path:
             notification.icon = icon_path
-        notification.send(block=False)
+        notification.send()
