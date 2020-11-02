@@ -11,6 +11,7 @@ from importlib_resources import files  # type: ignore
 # Own
 from normcap.common.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
+from normcap import __version__
 
 
 class NotificationHandler(AbstractHandler):
@@ -82,6 +83,7 @@ class NotificationHandler(AbstractHandler):
         notification = Notify()
         notification.title = title
         notification.message = text
+        notification.application_name = 'NormCap ' + __version__
         if icon_path:
             notification.icon = icon_path
         notification.send(block=False)
