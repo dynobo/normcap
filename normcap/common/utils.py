@@ -5,6 +5,8 @@ from typing import Union
 
 # Extra
 import pystray  # type: ignore
+from importlib_resources import files  # type: ignore
+from PIL import Image  # type: ignore
 
 
 def get_jaccard_sim(seq1: Union[list, str], seq2: Union[list, str]) -> float:
@@ -33,7 +35,9 @@ def run_in_tray(func):
         pass
 
     def _create_image():
-        pass
+        icon_path = files("normcap.ressources").joinpath("normcap.png")
+        image = Image.open(icon_path)
+        return image
 
     state = 0
 

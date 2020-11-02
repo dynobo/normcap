@@ -14,6 +14,7 @@ from normcap.common.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
 from normcap import __version__
 
+
 class NotificationHandler(AbstractHandler):
     def handle(self, request: NormcapData) -> NormcapData:
         """Trigger system notification when ocr is done.
@@ -80,10 +81,10 @@ class NotificationHandler(AbstractHandler):
             text (str): Notification text
             icon_path (str): Path to icon shown in the notification
         """
-        notification = Notify(default_application_name=f"Normcap v{__version__}")
+        notification = Notify()
         notification.title = title
         notification.message = text
-        notification.application_name = 'NormCap ' + __version__
+        notification.application_name = "NormCap v" + __version__
         if icon_path:
             notification.icon = icon_path
         notification.send()
