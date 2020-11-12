@@ -153,8 +153,9 @@ class _CropWindow:
             # self.tk.call("::tk::unsupported::MacWindowStyle", "style", self.tk._w, "plain", "none")
 
         if sys.platform.startswith("linux"):
-            self.tk.attributes("-fullscreen", True)
-
+            self.tk.update_idletasks()
+            self.tk.overrideredirect(1)
+            self.tk.attributes("-fullscreen", 1) 
     def _show_window(self):
         # Produces frame, useful for debug
         self.frame = tkinter.Frame(self.tk)
@@ -184,7 +185,7 @@ class _CropWindow:
             0,
             self.shot["position"]["width"] - 1,
             self.shot["position"]["height"] - 2,
-            width=3,
+            width=5,
             outline=self.root.color,
         )
 
@@ -241,7 +242,12 @@ class _CropWindow:
         if not self.root.rect:
             # Draw outline
             self.root.rect = self.canvas.create_rectangle(
-                self.root.x, self.root.y, 1, 1, outline=self.root.color
+                self.root.x, 
+                self.root.y, 
+                1, 
+                1, 
+                outline=self.root.color,
+                width=2
             )
             # Draw indicator
             self.root.mode_indicator = self.canvas.create_text(
