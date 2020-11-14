@@ -2,6 +2,7 @@
 
 # Default
 import logging
+import time
 import tkinter
 import sys
 from dataclasses import dataclass
@@ -204,6 +205,8 @@ class _RootWindow(tkinter.Tk):
 
     def _on_escape_press(self, _):
         self.logger.info("ESC pressed: Aborting screen capture")
+        self.withdraw()
+        time.sleep(0.2)
         self.destroy()
 
     def _on_space_press(self, _):
@@ -346,4 +349,6 @@ class _CropWindow(tkinter.Toplevel):
         self.root.props.mouse_x = self.canvas.canvasx(event.x)
         self.root.props.mouse_y = self.canvas.canvasy(event.y)
         self.root.props.monitor = self.shot["monitor"]
+        self.root.withdraw()
+        time.sleep(0.2)
         self.root.destroy()
