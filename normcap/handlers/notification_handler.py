@@ -26,7 +26,7 @@ class NotificationHandler(AbstractHandler):
         """
         self._logger.info("Sending notification...")
         title, text, icon_path = self.compose_notification(request)
-
+        self._logger.info("Icon path: %s", icon_path)
         if not request.test_mode:
             self.send_notification(title, text, icon_path)
 
