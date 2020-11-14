@@ -13,6 +13,7 @@ mypy==0.790
 pre-commit==2.8.1
 PyInstaller==4.0
 pylint==2.6.0
+pydocstyle==5.1.1 
 pefile==2019.4.18
 rope==0.18.0
 coveralls==2.1.2
