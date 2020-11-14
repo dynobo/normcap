@@ -17,19 +17,6 @@ jobs:
           python3.8-dev 
           python3.8-tk 
           python3.8-venv
-      # - name: Install PyGObject Dependencies
-      #   run: >
-      #     sudo apt-get install 
-      #     libappindicator3-1 
-      #     libgirepository1.0-dev 
-      #     gcc
-      #     libcairo2-dev
-      #     pkg-config
-      #     python3-dev
-      #     python3-gi
-      #     gobject-introspection
-      #     gir1.2-gtk-3.0
-      #     gir1.2-appindicator3-0.1
       - name: Install normcap dependencies
         run: > 
           sudo apt-get install 
@@ -37,9 +24,8 @@ jobs:
           tesseract-ocr-deu 
           libtesseract-dev 
           libleptonica-dev 
-          pkg-config xclip
-      #- name: Install  venv
-      #  run: python3.8 -m pip install --user setuptools
+          pkg-config
+          xclip
       - name: Create virtual env
         run: python3.8 -m venv .venv
       - name: Install wheel upfront
