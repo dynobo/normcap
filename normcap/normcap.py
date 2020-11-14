@@ -6,6 +6,7 @@ import argparse
 
 # Own
 from normcap import __version__
+from normcap.common.utils import run_in_tray
 from normcap.common.data_model import NormcapData
 from normcap.handlers.abstract_handler import Handler
 from normcap.handlers.capture_handler import CaptureHandler
@@ -50,16 +51,31 @@ def create_argparser() -> argparse.ArgumentParser:
         default=False,
     )
     parser.add_argument(
-        "-m", "--mode", type=str, default="parse", help="startup mode [raw,parse]",
+        "-m",
+        "--mode",
+        type=str,
+        default="parse",
+        help="startup mode [raw,parse]",
     )
     parser.add_argument(
-        "-l", "--lang", type=str, default="eng", help="languages for ocr, e.g. eng+deu",
+        "-l",
+        "--lang",
+        type=str,
+        default="eng",
+        help="languages for ocr, e.g. eng+deu",
     )
     parser.add_argument(
         "-c", "--color", type=str, default="#BF616A", help="set primary color for UI"
     )
     parser.add_argument(
         "-p", "--path", type=str, default=None, help="set a path for storing images"
+    )
+    parser.add_argument(
+        "-t",
+        "--tray",
+        action="store_true",
+        help="remain in system tray",
+        default=False,
     )
     return parser
 
@@ -153,7 +169,11 @@ def main(test_data: NormcapData = None):
     # fmt: on
 
     # Run chain
-    normcap_data = client_code(capture, normcap_data)
+    if args["tray"]:
+        # TODO: mss crashs when taking 3rd screenshot, but only if tkinter window was shown.
+        normcap_data = run_in_tray(client_code, capture, normcap_data)
+    else:
+        normcap_data = client_code(capture, normcap_data)
 
     logger.debug("Final data object:%s", normcap_data)
 

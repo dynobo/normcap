@@ -1,6 +1,12 @@
 # Changelog
 
-## v0.165 (2020-11-01)
+## v0.1.7 (2020-11-14)
+
+**Changes:**
+- Switch method to show fullscreen Windows to fix [Issue #88](https://github.com/dynobo/normcap/issues/88)
+- Introduce preview of [Tray Icon support](https://github.com/dynobo/normcap/issues/82). It is not stable yet, but you can test it using the new `--tray` command line switch.
+
+## v0.1.6 (2020-11-01)
 
 **Changes:**
 

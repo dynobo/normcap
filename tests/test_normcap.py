@@ -22,8 +22,7 @@ from .images.test_images import TEST_IMAGES
 
 def test_version():
     """Are we testing right version?"""
-    assert normcap.__version__ == "0.1.6"
-
+    assert normcap.__version__ == "0.1.7"
 
 # TESTING client_code()
 # ==========================
@@ -67,7 +66,7 @@ def argparser_defaults():
 def test_argparser_defaults_complete(argparser_defaults):
     """Check if all default options are available."""
     args_keys = set(argparser_defaults.keys())
-    expected_options = set(["verbose", "mode", "lang", "color", "path"])
+    expected_options = set(["verbose", "mode", "lang", "color", "path", "tray"])
     assert args_keys == expected_options
 
 

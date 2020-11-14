@@ -2,6 +2,7 @@
 
 # Default
 import os
+import sys
 import statistics
 from typing import Optional
 from dataclasses import dataclass, field
@@ -22,6 +23,9 @@ class NormcapData:
         - CLI arguments
         - Additional meta data
     """
+
+    # Platform
+    platform: str = sys.platform.lower()
 
     # Set to true during unit tests only
     test_mode: bool = False

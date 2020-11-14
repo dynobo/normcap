@@ -7,7 +7,13 @@ TEST_IMAGES = [
         "expected_similarity": 1,
         "expected_magic": "email",
         "position": {"left": 20, "right": 440, "top": 277, "bottom": 320},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
     {
         "test_id": "T_002",
@@ -17,7 +23,13 @@ TEST_IMAGES = [
         "expected_similarity": 0.75,
         "expected_magic": "paragraph",
         "position": {"left": 388, "right": 1000, "top": 464, "bottom": 540},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
     {
         "test_id": "T_003",
@@ -27,7 +39,13 @@ TEST_IMAGES = [
         "expected_similarity": 1,
         "expected_magic": "single_line",
         "position": {"left": 388, "right": 750, "top": 446, "bottom": 465},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
     {
         "test_id": "T_004",
@@ -37,7 +55,13 @@ TEST_IMAGES = [
         "expected_similarity": 1,
         "expected_magic": "single_line",
         "position": {"left": 272, "right": 376, "top": 11, "bottom": 37},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
     {
         "test_id": "T_005",
@@ -47,7 +71,13 @@ TEST_IMAGES = [
         "expected_similarity": 1,
         "expected_magic": "email",
         "position": {"left": 150, "right": 281, "top": 92, "bottom": 106},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
     {
         "test_id": "T_006",
@@ -57,7 +87,13 @@ TEST_IMAGES = [
         "expected_similarity": 1,
         "expected_magic": "single_line",
         "position": {"left": 74, "right": 160, "top": 235, "bottom": 258},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
     {
         "test_id": "T_007",
@@ -81,7 +117,13 @@ TEST_IMAGES = [
         "expected_magic": "paragraph",
         "expected_doublelinebreaks": 2,  # Paragraph = Double line break
         "position": {"left": 210, "right": 920, "top": 330, "bottom": 550},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
     {
         "test_id": "T_008",
@@ -104,7 +146,13 @@ TEST_IMAGES = [
         "expected_magic": "paragraph",
         "expected_doublelinebreaks": 2,  # Paragraph = Double line break
         "position": {"left": 220, "right": 930, "top": 750, "bottom": 950},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
     {
         "test_id": "T_009",
@@ -114,7 +162,13 @@ TEST_IMAGES = [
         "expected_similarity": 1,
         "expected_magic": "url",
         "position": {"left": 200, "right": 700, "top": 26, "bottom": 60},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
     {
         "test_id": "T_010",
@@ -124,7 +178,13 @@ TEST_IMAGES = [
         "expected_similarity": 1,
         "expected_magic": "url",
         "position": {"left": 180, "right": 530, "top": 290, "bottom": 310},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
     {
         "test_id": "T_011",
@@ -138,6 +198,12 @@ TEST_IMAGES = [
         "expected_similarity": 1,
         "expected_magic": "url",
         "position": {"left": 6, "right": 400, "top": 220, "bottom": 400},
-        "cli_args": {"lang": "eng", "mode": "parse", "verbose": True, "path": None},
+        "cli_args": {
+            "lang": "eng",
+            "mode": "parse",
+            "verbose": True,
+            "path": None,
+            "tray": None,
+        },
     },
 ]

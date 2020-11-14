@@ -2,13 +2,18 @@
 
 # Default
 import logging
+import time
 import tkinter
 import sys
+from dataclasses import dataclass
+from typing import Optional
+import webbrowser
 
 # Extra
 from PIL import ImageTk  # type: ignore
 
 # Own
+from normcap import __version__
 from normcap.common.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
 
@@ -37,8 +42,8 @@ class CropHandler(AbstractHandler):
 
         if self._next_handler:
             return super().handle(request)
-        else:
-            return request
+
+        return request
 
     def _select_region_with_gui(self, request: NormcapData) -> NormcapData:
         """Show window(s) with screenshots and select region.
@@ -54,18 +59,14 @@ class CropHandler(AbstractHandler):
                                      "monitor": <int>,
                                      "mode": <int>}
         """
-        # Create window for every monitor
-        root = tkinter.Tk()
-        for idx, shot in enumerate(request.shots):
-            if idx == 0:
-                _CropWindow(root, root, shot, request.cli_args)
-            else:
-                top = tkinter.Toplevel()
-                _CropWindow(root, top, shot, request.cli_args)
+        # Create dummy window plus one for every monitor
+        root = _RootWindow(request.cli_args, request.platform)
+        for shot in request.shots:
+            _CropWindow(root, shot)
         root.mainloop()
 
         # Store result in request class
-        result = root.result
+        result = root.props.crop_result
         if result:
             request.bottom = result["lower"]
             request.top = result["upper"]
@@ -79,7 +80,8 @@ class CropHandler(AbstractHandler):
 
         return request
 
-    def _crop_image(self, request: NormcapData) -> NormcapData:
+    @staticmethod
+    def _crop_image(request: NormcapData) -> NormcapData:
         """Crop monitor's image and append to session data.
 
         Arguments:
@@ -96,18 +98,132 @@ class CropHandler(AbstractHandler):
         return request
 
 
-class _CropWindow:
-    # TODO: Docstrings
-    def __init__(self, root, current_window, shot, cli_args):
+@dataclass()
+class WindowProps:
+    """Stores data relevant to the gui interaction."""
+
+    platform: str = ""
+    monitor: Optional[int] = None
+    active_canvas = None
+    rect = None
+
+    start_mouse_x: int = 0
+    start_mouse_y: int = 0
+    mouse_x: int = 0
+    mouse_y: int = 0
+
+    mode_indicator = None
+    modes = ("raw", "parse")
+    modes_chars = ("☰", "☶")
+
+    current_mode: str = "parse"
+    color: str = "#ff0000"
+    img_path: Optional[str] = None
+
+    @property
+    def mode_char(self) -> str:
+        """Return mod_char of current_mode from modes_chars."""
+        idx = self.modes.index(self.current_mode)
+        return self.modes_chars[idx]
+
+    @property
+    def crop_result(self) -> Optional[dict]:
+        """Return dict which is passed into NormcapData as result of crop handler."""
+        if self.monitor is not None:
+            return {
+                "monitor": self.monitor,
+                "upper": min([self.mouse_y, self.start_mouse_y]),
+                "lower": max([self.mouse_y, self.start_mouse_y]),
+                "left": min([self.mouse_x, self.start_mouse_x]),
+                "right": max([self.mouse_x, self.start_mouse_x]),
+                "mode": self.current_mode,
+            }
+        return None
+
+
+class _RootWindow(tkinter.Tk):
+    """Dummy Root Window.
+
+    This is necessary, because when in Mac and Linux windows are started
+    with overrideredict(1) they can't receive keyboard events anymore.
+    This dummy window should stay in the background and receive those events,
+    while the "main" windows showing the screenshots should overlay it on
+    top.
+    """
+
+    def __init__(self, cli_args, platform):
+        super().__init__()
         self.logger = logging.getLogger(__name__)
-        self.tk = current_window
+
+        self.props = WindowProps()
+        self.props.current_mode = cli_args["mode"]
+        self.props.color = cli_args["color"]
+        self.props.img_path = cli_args["path"]
+        self.props.platform = platform
+
+        self._show_dummy_window()
+        self._set_bindings()
+        self._set_window_geometry()
+
+    def _show_dummy_window(self):
+        tkinter.Label(
+            self, text=f"Normcap v{__version__} ({self.props.platform})"
+        ).pack()
+        tkinter.Label(
+            self,
+            text=(
+                "This is a dummy window and should not be visible to you."
+                "If you see it nevertheless, please file an issue on:"
+            ),
+        ).pack()
+        link_label = tkinter.Label(
+            self,
+            text=r"https://github.com/dynobo/normcap/issues",
+            fg="blue",
+            cursor="hand2",
+        )
+        link_label.pack()
+        link_label.bind("<Button-1>", self._open_github_issues)
+
+    @staticmethod
+    def _open_github_issues(event):
+        webbrowser.open_new(event.widget.cget("text"))
+
+    def _set_window_geometry(self):
+        self.geometry("150x100+10+10")
+
+    def _set_bindings(self):
+        self.bind_all("<Escape>", self._on_escape_press)
+        self.bind_all("<space>", self._on_space_press)
+
+    def _next_mode(self):
+        idx = self.props.modes.index(self.props.current_mode)
+        idx += 1
+        if idx >= len(self.props.modes):
+            idx = 0
+        self.props.current_mode = self.props.modes[idx]
+
+    def _on_escape_press(self, _):
+        self.logger.info("ESC pressed: Aborting screen capture")
+        self.withdraw()
+        time.sleep(0.2)
+        self.destroy()
+
+    def _on_space_press(self, _):
+        self._next_mode()
+        if self.props.mode_indicator:
+            self.props.active_canvas.itemconfig(
+                self.props.mode_indicator, text=self.props.mode_char
+            )
+
+
+class _CropWindow(tkinter.Toplevel):
+    def __init__(self, root, shot):
+        super().__init__()
+        # self.tk = tkinter.Toplevel()
         self.root = root
-        self.cli_args = cli_args
 
-        if root == current_window:
-            self.root = self._init_root_vars(self.root)
-
-        self.tk.configure(bg="black")  # To hide top border on i3
+        self.configure(bg="black")  # To hide top border on i3
         self.shot = shot
 
         self._show_window()
@@ -116,54 +232,36 @@ class _CropWindow:
         self._set_window_geometry()
         self._set_fullscreen()
 
-    def _init_root_vars(self, root):
-        root.active_canvas = None
-
-        root.rect = None
-        root.start_x = 0
-        root.start_y = 0
-        root.x = 0
-        root.y = 0
-
-        root.mode_indicator = None
-        root.modes = ("raw", "parse")
-        root.modes_chars = ("☰", "☶")
-        root.current_mode = self.cli_args["mode"]
-
-        root.color = self.cli_args["color"]
-        root.img_path = self.cli_args["path"]
-
-        return root
-
     def _set_fullscreen(self):
         # Set Fullscreen
-        #    Behave different per OS, because:
-        #    - with tk.attributes I couldn't move the windows to the correct screen on MS Windows
+        #    Behaves different per OS, because:
+        #    - with attributes I couldn't move the windows to the correct screen on MS Windows
         #    - with overrideredirect I couldn't get the keybindings working on Linux
-        # TODO: Move platform detection to beginning, add to dataclass
-        if sys.platform.startswith("win"):
-            self.tk.overrideredirect(1)
+        if self.root.props.platform.startswith("win"):
+            self.overrideredirect(1)
+            self.attributes("-topmost", 1)
 
-        if sys.platform.startswith("darwin"):
-            self.tk.overrideredirect(1)
-            self.tk.attributes("-fullscreen", 1)
-            self.tk.attributes("-topmost", 1)
+        if self.root.props.platform.startswith("darwin"):
+            self.overrideredirect(1)
+            self.attributes("-fullscreen", 1)
+            self.attributes("-topmost", 1)
             # os.system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "python" to true' ''')
-            # self.tk.focus_force()
-            # self.tk.call("::tk::unsupported::MacWindowStyle", "style", self.tk._w, "plain", "none")
+            # self.focus_force()
+            # self.call("::tk::unsupported::MacWindowStyle", "style", self._w, "plain", "none")
 
-        if sys.platform.startswith("linux"):
-            self.tk.attributes("-fullscreen", True)
+        if self.root.props.platform.startswith("linux"):
+            self.overrideredirect(1)
+            self.attributes("-fullscreen", 1)
 
     def _show_window(self):
         # Produces frame, useful for debug
-        self.frame = tkinter.Frame(self.tk)
+        self.frame = tkinter.Frame(self)
         self.frame.pack()
 
         # Create canvas
         self.canvas = tkinter.Canvas(
-            self.tk,
-            bg=self.root.color,
+            self,
+            bg=self.root.props.color,
             width=self.shot["position"]["width"],
             height=self.shot["position"]["height"],
             highlightthickness=0,
@@ -184,104 +282,74 @@ class _CropWindow:
             0,
             self.shot["position"]["width"] - 1,
             self.shot["position"]["height"] - 2,
-            width=3,
-            outline=self.root.color,
+            width=5,
+            outline=self.root.props.color,
         )
 
     def _set_window_geometry(self):
-        self.tk.geometry(
+        self.geometry(
             f"{self.shot['position']['width']}x{self.shot['position']['height']}"
             + f"+{self.shot['position']['left']}+{self.shot['position']['top']}"
         )
 
     def _set_bindings(self):
-        self.root.bind_all("<Escape>", self._on_escape_press)
-        self.root.bind_all("<space>", self._on_space_press)
         self.canvas.bind("<B1-Motion>", self._on_move_press)
         self.canvas.bind("<ButtonPress-1>", self._on_button_press)
         self.canvas.bind("<ButtonRelease-1>", self._on_button_release)
 
-    def _end_fullscreen(self, result=None):
-        self.root.result = result
-        self.root.destroy()
-
-    def _next_mode(self):
-        idx = self.root.modes.index(self.root.current_mode)
-        idx += 1
-        if idx >= len(self.root.modes):
-            idx = 0
-        self.root.current_mode = self.root.modes[idx]
-
-    def _get_mode_char(self):
-        idx = self.root.modes.index(self.root.current_mode)
-        return self.root.modes_chars[idx]
-
     def _get_top_right(self):
-        top = min([self.root.start_y, self.root.y])
-        right = max([self.root.start_x, self.root.x])
+        top = min([self.root.props.start_mouse_y, self.root.props.mouse_y])
+        right = max([self.root.props.start_mouse_x, self.root.props.mouse_x])
         return top, right
-
-    def _on_escape_press(self, event):
-        self.logger.info("ESC pressed: Aborting screen capture")
-        self._end_fullscreen()
-
-    def _on_space_press(self, event):
-        self._next_mode()
-        if self.root.mode_indicator:
-            self.root.active_canvas.itemconfig(
-                self.root.mode_indicator, text=self._get_mode_char()
-            )
 
     def _on_button_press(self, event):
         # save mouse start position
-        self.root.start_x = self.canvas.canvasx(event.x)
-        self.root.start_y = self.canvas.canvasy(event.y)
+        self.root.props.start_mouse_x = self.canvas.canvasx(event.x)
+        self.root.props.start_mouse_y = self.canvas.canvasy(event.y)
 
-        # initially create rectangle
-        if not self.root.rect:
-            # Draw outline
-            self.root.rect = self.canvas.create_rectangle(
-                self.root.x, self.root.y, 1, 1, outline=self.root.color
-            )
-            # Draw indicator
-            self.root.mode_indicator = self.canvas.create_text(
-                self.root.start_x,
-                self.root.start_y,
-                anchor="se",
-                text=self._get_mode_char(),
-                fill=self.root.color,
-                font=("Sans", 18),
-            )
-            self.root.active_canvas = self.canvas
+        # Draw outline
+        self.root.props.rect = self.canvas.create_rectangle(
+            self.root.props.mouse_x,
+            self.root.props.mouse_y,
+            1,
+            1,
+            outline=self.root.props.color,
+            width=2,
+        )
+        # Draw indicator
+        self.root.props.mode_indicator = self.canvas.create_text(
+            self.root.props.start_mouse_x,
+            self.root.props.start_mouse_y,
+            anchor="se",
+            text=self.root.props.mode_char,
+            fill=self.root.props.color,
+            font=("Sans", 18),
+        )
+        self.root.props.active_canvas = self.canvas
 
     def _on_move_press(self, event):
-        self.root.x = self.canvas.canvasx(event.x)
-        self.root.y = self.canvas.canvasy(event.y)
+        # Save current mouse position
+        self.root.props.mouse_x = self.canvas.canvasx(event.x)
+        self.root.props.mouse_y = self.canvas.canvasy(event.y)
 
-        # expand rectangle as you drag the mouse
+        # Expand rectangle as mouse is dragged
         self.canvas.coords(
-            self.root.rect,
-            self.root.start_x,
-            self.root.start_y,
-            self.root.x,
-            self.root.y,
+            self.root.props.rect,
+            self.root.props.start_mouse_x,
+            self.root.props.start_mouse_y,
+            self.root.props.mouse_x,
+            self.root.props.mouse_y,
         )
 
-        # Move indicator
+        # Move also mode indicator
         top, right = self._get_top_right()
-        self.canvas.coords(self.root.mode_indicator, right, top)
+        self.canvas.coords(self.root.props.mode_indicator, right, top)
 
     def _on_button_release(self, event):
-        self.root.x = self.canvas.canvasx(event.x)
-        self.root.y = self.canvas.canvasy(event.y)
-
-        crop_args = {
-            "monitor": self.shot["monitor"],
-            "upper": min([self.root.y, self.root.start_y]),
-            "lower": max([self.root.y, self.root.start_y]),
-            "left": min([self.root.x, self.root.start_x]),
-            "right": max([self.root.x, self.root.start_x]),
-            "mode": self.root.current_mode,
-        }
-
-        self._end_fullscreen(result=crop_args)
+        # Update position and destroy window
+        self.root.props.mouse_x = self.canvas.canvasx(event.x)
+        self.root.props.mouse_y = self.canvas.canvasy(event.y)
+        self.root.props.monitor = self.shot["monitor"]
+        self.root.withdraw()
+        time.sleep(0.2)
+        self.root.destroy()
