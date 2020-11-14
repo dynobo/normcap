@@ -67,7 +67,7 @@ def argparser_defaults():
 def test_argparser_defaults_complete(argparser_defaults):
     """Check if all default options are available."""
     args_keys = set(argparser_defaults.keys())
-    expected_options = set(["verbose", "mode", "lang", "color", "path"])
+    expected_options = set(["verbose", "mode", "lang", "color", "path", "tray"])
     assert args_keys == expected_options
 
 

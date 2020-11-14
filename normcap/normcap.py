@@ -51,10 +51,18 @@ def create_argparser() -> argparse.ArgumentParser:
         default=False,
     )
     parser.add_argument(
-        "-m", "--mode", type=str, default="parse", help="startup mode [raw,parse]",
+        "-m",
+        "--mode",
+        type=str,
+        default="parse",
+        help="startup mode [raw,parse]",
     )
     parser.add_argument(
-        "-l", "--lang", type=str, default="eng", help="languages for ocr, e.g. eng+deu",
+        "-l",
+        "--lang",
+        type=str,
+        default="eng",
+        help="languages for ocr, e.g. eng+deu",
     )
     parser.add_argument(
         "-c", "--color", type=str, default="#BF616A", help="set primary color for UI"
@@ -161,7 +169,7 @@ def main(test_data: NormcapData = None):
     # fmt: on
 
     # Run chain
-    if not args["tray"]:
+    if args["tray"]:
         # TODO: mss crashs when taking 3rd screenshot, but only if tkinter window was shown.
         normcap_data = run_in_tray(client_code, capture, normcap_data)
     else:
