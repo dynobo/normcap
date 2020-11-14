@@ -1,6 +1,5 @@
 """Handler responsible for copying the result to clipboard."""
 # Default
-import sys
 import os
 import textwrap
 
@@ -12,7 +11,6 @@ from importlib_resources import files  # type: ignore
 from normcap import __version__
 from normcap.common.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
-from normcap import __version__
 
 
 class NotificationHandler(AbstractHandler):
@@ -42,7 +40,7 @@ class NotificationHandler(AbstractHandler):
         """Extract message text out of requests object and include icon."""
         # Message icon, not available for MacOS
         icon_path = None
-        if not sys.platform.lower().startswith("darwin"):
+        if request.platform != "darwin":
             icon_path = files("normcap.ressources").joinpath("normcap.png")
 
         # Message text
