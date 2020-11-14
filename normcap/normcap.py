@@ -3,8 +3,6 @@
 # Standard
 import logging
 import argparse
-import traceback
-import sys
 
 # Own
 from normcap import __version__
@@ -173,16 +171,7 @@ def main(test_data: NormcapData = None):
     # Run chain
     if args["tray"]:
         # TODO: mss crashs when taking 3rd screenshot, but only if tkinter window was shown.
-        try:
-            normcap_data = run_in_tray(client_code, capture, normcap_data)
-        except Exception:
-            logger.error("Exception within system tray module:")
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            traceback.print_exception(
-                exc_type, exc_value, exc_traceback, file=sys.stdout
-            )
-            exit(1)
-
+        normcap_data = run_in_tray(client_code, capture, normcap_data)
     else:
         normcap_data = client_code(capture, normcap_data)
 
