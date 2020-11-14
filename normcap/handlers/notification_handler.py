@@ -1,5 +1,6 @@
 """Handler responsible for copying the result to clipboard."""
 # Default
+import sys
 import os
 import textwrap
 
@@ -11,7 +12,6 @@ from importlib_resources import files  # type: ignore
 from normcap import __version__
 from normcap.common.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
-
 
 class NotificationHandler(AbstractHandler):
     def handle(self, request: NormcapData) -> NormcapData:
@@ -85,4 +85,4 @@ class NotificationHandler(AbstractHandler):
         notification.application_name = "NormCap v" + __version__
         if icon_path:
             notification.icon = icon_path
-        notification.send()
+        notification.send(block=False)
