@@ -40,7 +40,7 @@
 
 ### On Linux
 
-1\. Install dependencies:
+1\. Install dependencies (some of them are probably default):
 
 ```sh
 ## on Ubuntu/Debian:
@@ -50,7 +50,7 @@ sudo apt-get install tesseract-ocr xclip python3-tk python3-pil.imagetk liblepto
 sudo pacman -S tesseract tesseract-data-eng leptonica xclip tk python-pillow
 
 # on Fedora
-sudo dnf install tesseract tesseract-devel leptonica-devel xclip python3-tkinter
+sudo dnf install tesseract tesseract-devel leptonica-devel xclip python3-tkinter libappindicator-gtk3 gcc gobject-introspection-devel cairo-devel pkg-config python3-devel gtk3
 ```
 
 2\. Install normcap:

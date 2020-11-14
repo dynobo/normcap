@@ -237,10 +237,10 @@ class _CropWindow(tkinter.Toplevel):
         #    Behaves different per OS, because:
         #    - with attributes I couldn't move the windows to the correct screen on MS Windows
         #    - with overrideredirect I couldn't get the keybindings working on Linux
-        if self.root.props.platform == "windows":
+        if self.root.props.platform.startswith("win"):
             self.overrideredirect(1)
 
-        if self.root.props.platform == "darwin":
+        if self.root.props.platform.startswith("darwin"):
             self.overrideredirect(1)
             self.attributes("-fullscreen", 1)
             self.attributes("-topmost", 1)
@@ -248,7 +248,7 @@ class _CropWindow(tkinter.Toplevel):
             # self.focus_force()
             # self.call("::tk::unsupported::MacWindowStyle", "style", self._w, "plain", "none")
 
-        if self.root.props.platform == "linux":
+        if self.root.props.platform.startswith("linux"):
             self.overrideredirect(1)
             self.attributes("-fullscreen", 1)
 
