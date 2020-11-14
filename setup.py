@@ -44,6 +44,7 @@ setup(
         "pyscreenshot>=2.2",
         "notify-py>=0.3.0",
         "pystray>=0.17.1",
+        "PyGObject>=3.38.0",  # Necessary for pystray on Ubuntu Gnome
         "importlib-resources>=3.3.0",
     ],
     entry_points={"console_scripts": ["normcap=normcap.__main__:run"]},
