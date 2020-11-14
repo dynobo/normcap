@@ -190,7 +190,7 @@ class _RootWindow(tkinter.Tk):
         webbrowser.open_new(event.widget.cget("text"))
 
     def _set_window_geometry(self):
-        self.geometry("200x200+10+10")
+        self.geometry("150x100+10+10")
 
     def _set_bindings(self):
         self.bind_all("<Escape>", self._on_escape_press)
@@ -239,6 +239,7 @@ class _CropWindow(tkinter.Toplevel):
         #    - with overrideredirect I couldn't get the keybindings working on Linux
         if self.root.props.platform.startswith("win"):
             self.overrideredirect(1)
+            self.attributes("-topmost", 1)
 
         if self.root.props.platform.startswith("darwin"):
             self.overrideredirect(1)
