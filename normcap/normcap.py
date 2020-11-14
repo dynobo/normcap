@@ -162,7 +162,8 @@ def main(test_data: NormcapData = None):
 
     # Run chain
     if not args["tray"]:
-        normcap_data = run_in_tray(client_code(capture, normcap_data))
+        # TODO: mss crashs when taking 3rd screenshot, but only if tkinter window was shown.
+        normcap_data = run_in_tray(client_code, capture, normcap_data)
     else:
         normcap_data = client_code(capture, normcap_data)
 
