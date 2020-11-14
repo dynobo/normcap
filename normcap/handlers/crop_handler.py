@@ -129,7 +129,7 @@ class WindowProps:
     @property
     def crop_result(self) -> Optional[dict]:
         """Return dict which is passed into NormcapData as result of crop handler."""
-        if self.monitor:
+        if self.monitor is not None:
             return {
                 "monitor": self.monitor,
                 "upper": min([self.mouse_y, self.start_mouse_y]),
