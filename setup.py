@@ -37,7 +37,7 @@ setup(
     package_data={"ressources": ["*"]},
     python_requires=">=3.7.0",
     install_requires=[
-        "mss>=6.0.0",
+        "mss>=6.1.0",
         "Pillow>=8.0.1",
         "pyperclip>=1.8.1",
         "tesserocr>=2.4.0",
