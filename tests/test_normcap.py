@@ -22,7 +22,7 @@ from .images.test_images import TEST_IMAGES
 
 def test_version():
     """Are we testing right version?"""
-    assert normcap.__version__ == "0.1.7"
+    assert normcap.__version__ == "0.1.8"
 
 
 # TESTING client_code()
