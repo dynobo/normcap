@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.8 (2020-11-17)
+
+**Changes:**
+- Removed experimental tray icon support introduced in v0.1.7 (has caused unexpected issues).
+
 ## v0.1.7 (2020-11-14)
 
 **Changes:**
