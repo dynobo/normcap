@@ -43,7 +43,6 @@ setup(
         "tesserocr>=2.4.0",
         "pyscreenshot>=2.2",
         "notify-py>=0.3.0",
-        "pystray>=0.17.1",
         "importlib-resources>=3.3.0",
     ],
     entry_points={"console_scripts": ["normcap=normcap.__main__:run"]},
