@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.9 (2020-12-06)
+
+**Changes:**
+- Add installer for MS Windows to enables notification management
+- Fix crash by caused by missing notification icon in certain setups
+
+
 ## v0.1.8 (2020-11-17)
 
 **Changes:**
