@@ -67,7 +67,9 @@ def argparser_defaults():
 def test_argparser_defaults_complete(argparser_defaults):
     """Check if all default options are available."""
     args_keys = set(argparser_defaults.keys())
-    expected_options = set(["verbose", "mode", "lang", "color", "path"])
+    expected_options = set(
+        ["verbose", "mode", "lang", "no_notifications", "color", "path"]
+    )
     assert args_keys == expected_options
 
 
@@ -79,6 +81,11 @@ def test_argparser_default_verbose(argparser_defaults):
 def test_argparser_default_mode(argparser_defaults):
     """Check default capture mode."""
     assert argparser_defaults["mode"] == "parse"
+
+
+def test_argparser_default_no_notifications(argparser_defaults):
+    """Check no notifications."""
+    assert argparser_defaults["no_notifications"] is False
 
 
 def test_argparser_default_lang(argparser_defaults):
