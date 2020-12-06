@@ -2,19 +2,27 @@
 import os
 import sys
 from pathlib import Path
+import requests
 
 # Extra
 import PyInstaller.__main__
 import importlib_resources
 
-# Own
-import normcap
+# Download nsis macro
+MACRO_URL = (
+    "https://raw.githubusercontent.com/safing/nsis-shortcut-properties/"
+    "006b2b62da906c3cad449918a13b83b14e2294ec/shortcut-properties.nsh"
+)
+response = requests.get(MACRO_URL)
+with open("shortcut-properties.nsh", "wb") as f:
+    for chunk in response.iter_content(chunk_size=128):
+        f.write(chunk)
 
 # WORKAROUND FOR BUG IN PYINSTALLER
 (Path(importlib_resources.__file__).parent / "version.txt").touch()
 
 ARGS = [
-    f"--name=normcap-v{normcap.__version__}",
+    "--name=normcap",
     "--clean",
     "--noconfirm",
     # "--onefile",
@@ -29,7 +37,7 @@ ARGS = [
     "--hidden-import=PIL._tkinter_finder",
     "--hidden-import=importlib_resources.trees",
     "--runtime-hook=rthook.py",
-    f"--add-data=normcap/ressources{os.pathsep}normcap/ressources",
+    f"--add-data=normcap/ressources{os.pathsep}./ressources",
 ]
 
 if sys.platform.lower().startswith("linux"):
@@ -39,6 +47,7 @@ if sys.platform.lower().startswith("win"):
     ARGS.extend(
         [
             "--add-data=tessdata;tessdata",
+            "--add-data=shortcut-properties.nsh;./",
             "--runtime-hook=rthook.py",
             "--win-private-assemblies",
         ]

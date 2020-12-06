@@ -22,7 +22,7 @@ jobs:
           python3.8-tk 
           python3.8-venv
       - name: Install normcap dependencies
-        run: > 
+        run: >
           sudo apt-get install 
           tesseract-ocr 
           tesseract-ocr-deu 
@@ -52,7 +52,7 @@ jobs:
 
       # RELEASE
       - name: Compress build files
-        run: cd dist && tar -czvf normcap_linux64.tar.gz normcap-v*
+        run: cd dist && tar -czvf normcap_linux64.tar.gz normcap
       - name: Draft release
         uses: softprops/action-gh-release@v1
         with:
@@ -78,7 +78,7 @@ jobs:
       - name: Create virtual env
         run: python3 -m venv .venv
       - name: Install deps
-        run: .venv/bin/python -m pip install -r requirements-macos.txt        
+        run: .venv/bin/python -m pip install -r requirements-macos.txt
         env:
           CI: true
 
@@ -92,7 +92,7 @@ jobs:
 
       # RELEASE
       - name: Compress build files
-        run: cd dist && tar -czvf normcap_macos.tar.gz normcap-v*
+        run: cd dist && tar -czvf normcap_macos.tar.gz normcap
       - name: Draft release
         uses: softprops/action-gh-release@v1
         with:
@@ -110,13 +110,13 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-         # PREPARE
+        # PREPARE
       - name: Install venv
         run: >
           python -m pip install virtualenv;
           python -c "import os, sys; print(os.path.dirname(sys.executable))";
           python --version;
-      - name: Create virtual env                         
+      - name: Create virtual env
         run: virtualenv --python C:\hostedtoolcache\windows\Python\3.7.9\x64\python.exe venv
         env:
           CI: true
@@ -124,7 +124,7 @@ jobs:
         run: >
           .\venv\Scripts\activate;
           pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl;
-          deactivate;          
+          deactivate;
       - name: Download tessdata
         run: >
           new-item -Name tessdata -ItemType directory;  
@@ -155,13 +155,23 @@ jobs:
           python build.py;
           deactivate;
 
-      # RELEASE
+      # Zip
       - name: Compress build files
         run: cd dist; 7z a -tzip ..\normcap_win64.zip *; cd ..
+
+        # Installer
+      - name: NSIS installer
+        run: >
+          move dist\normcap\ressources\win_installer.nsis dist\normcap\;
+          makensis dist\normcap\win_installer.nsis
+
+      # Release
       - name: Draft release
         uses: softprops/action-gh-release@v1
         with:
-          files: normcap_win64.zip
+          files: |
+            dist\normcap\normcap_win64_installer.exe
+            normcap_win64.zip
           body: See [CHANGELOG](https://github.com/dynobo/normcap/blob/master/CHANGELOG.md) for details.
           draft: true
           prerelease: true
