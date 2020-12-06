@@ -34,7 +34,7 @@
 2. Select a region on the screen
 3. Retrieve recognized text in clipboard
 
-[![Screencast](https://user-images.githubusercontent.com/11071876/97786948-39ed1e80-1baf-11eb-852c-bce87abc6890.gif)](https://raw.githubusercontent.com/dynobo/normcap/master/normcap/ressources/normcap.gif)
+[![Screencast](https://user-images.githubusercontent.com/11071876/97786948-39ed1e80-1baf-11eb-852c-bce87abc6890.gif)](https://raw.githubusercontent.com/dynobo/normcap/master/assets/normcap.gif)
 
 ## Installation
 
@@ -67,13 +67,23 @@ pip install normcap
 
 3\. Execute `normcap`
 
-### On Windows _(recommended method)_
+### On Windows
+
+Choose _one_ of the following three installation method A), B) or C).
+
+#### A) Recommended method
+
+1.) Download and run `normcap_win64_installer.exe` from the [latest release](https://github.com/dynobo/normcap/releases) (admin rights required)
+
+2.) Start the shortcut `NormCap` from start menu.
+
+#### B) Without real installation (portable)
 
 1\. Download and extract the binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation required)
 
-2\. Execute `normcap-v{version}.exe`
+2\. Execute `normcap.exe`
 
-### On Windows _(alternative method)_
+#### C) Package installation
 
 1\. Install "Tesseract", e.g. by using the [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
 
@@ -151,7 +161,8 @@ optional arguments:
   -v, --verbose            print debug information to console (default: False)
   -m MODE, --mode MODE     startup mode [raw,parse] (default: parse)
   -l LANG, --lang LANG     languages for ocr, e.g. eng+deu (default: eng)
-  -c COLOR, --color COLOR  set primary color for UI (default: #FF0000)
+  -n, --no-notifications   disable notifications shown after ocr detection (default: False)
+  -c COLOR, --color COLOR  set primary color for UI (default: #BF616A)
   -p PATH, --path PATH     set a path for storing images (default: None)
 ```
 
