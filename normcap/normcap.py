@@ -64,6 +64,13 @@ def create_argparser() -> argparse.ArgumentParser:
         help="languages for ocr, e.g. eng+deu",
     )
     parser.add_argument(
+        "-n",
+        "--no-notifications",
+        action="store_true",
+        help="disable notifications shown after ocr detection",
+        default=False,
+    )
+    parser.add_argument(
         "-c", "--color", type=str, default="#BF616A", help="set primary color for UI"
     )
     parser.add_argument(
