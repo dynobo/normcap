@@ -38,12 +38,12 @@ setup(
     python_requires=">=3.7.0",
     install_requires=[
         "mss>=6.1.0",
-        "Pillow>=8.0.1",
-        "pyperclip>=1.8.1",
+        "Pillow>=8.1.2",
+        "pyperclip>=1.8.2",
         "tesserocr>=2.4.0",
-        "pyscreenshot>=2.2",
+        "pyscreenshot>=2.3",
         "notify-py>=0.3.1",
-        "importlib-resources>=3.3.0",
+        "importlib-resources>=5.1.2",
     ],
     entry_points={
         "console_scripts": [
