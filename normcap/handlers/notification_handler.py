@@ -2,9 +2,11 @@
 # Default
 import os
 import textwrap
+import traceback
 
 # Extra
 from notifypy import Notify  # type: ignore
+from notifypy.exceptions import BinaryNotFound  # type: ignore
 from importlib_resources import files  # type: ignore
 
 # Own
@@ -24,6 +26,7 @@ class NotificationHandler(AbstractHandler):
             NormcapData -- Enriched NormCap's session data
         """
         self._logger.info("Sending notification...")
+        self._verbose = request.cli_args["verbose"]
         if not request.cli_args["no_notifications"]:
             title, text, icon_path = self.compose_notification(request)
             self._logger.info("Icon path: %s", icon_path)
@@ -82,8 +85,7 @@ class NotificationHandler(AbstractHandler):
         title += f"{'s' if count > 1 else ''} captured"
         return title, text, icon_path
 
-    @staticmethod
-    def send_notification(title, text, icon_path):
+    def send_notification(self, title, text, icon_path):
         """Send notification out.
 
         Args:
@@ -91,10 +93,17 @@ class NotificationHandler(AbstractHandler):
             text (str): Notification text
             icon_path (str): Path to icon shown in the notification
         """
-        notification = Notify()
-        notification.title = title
-        notification.message = text
-        notification.application_name = "NormCap"
-        if icon_path:
-            notification.icon = icon_path
-        notification.send(block=False)
+        try:
+            notification = Notify()
+            notification.title = title
+            notification.message = text
+            notification.application_name = "NormCap"
+            if icon_path:
+                notification.icon = icon_path
+            notification.send(block=False)
+        except BinaryNotFound:
+            self._logger.warning(
+                "Missing dependencies. Notifications will not" " be visible."
+            )
+            if self._verbose:
+                traceback.print_exc()

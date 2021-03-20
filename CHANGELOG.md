@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.10 (2021-03-20)
+
+**Changes:**
+- Handle missing system dependencies for the notification more gracefully
+- Update versions of python package dependencies
+
 ## v0.1.9 (2020-12-06)
 
 **Changes:**
