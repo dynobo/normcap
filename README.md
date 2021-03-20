@@ -44,13 +44,13 @@
 
 ```sh
 ## on Ubuntu/Debian:
-sudo apt-get install tesseract-ocr xclip python3-tk python3-pil.imagetk libleptonica-dev libtesseract-dev
+sudo apt-get install tesseract-ocr xclip python3-tk python3-pil.imagetk libleptonica-dev libtesseract-dev libnotify-bin
 
 # on Arch:
-sudo pacman -S tesseract tesseract-data-eng leptonica xclip tk python-pillow
+sudo pacman -S tesseract tesseract-data-eng leptonica xclip tk python-pillow libnotify
 
 # on Fedora
-sudo dnf install tesseract tesseract-devel leptonica-devel xclip python3-tkinter libappindicator-gtk3 gcc gobject-introspection-devel cairo-devel pkg-config python3-devel gtk3
+sudo dnf install tesseract tesseract-devel leptonica-devel xclip python3-tkinter libappindicator-gtk3 gcc gobject-introspection-devel cairo-devel pkg-config python3-devel gtk3 libnotify
 ```
 
 2\. Install normcap:
