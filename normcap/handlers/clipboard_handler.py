@@ -1,12 +1,9 @@
 """Handler responsible for copying the result to clipboard."""
-# Default
 import contextlib
 import io
 
-# Extra
-import pyperclip  # type: ignore
+import pyclip  # type: ignore
 
-# Own
 from normcap.common.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
 
@@ -26,7 +23,7 @@ class ClipboardHandler(AbstractHandler):
 
         # supress output triggered somewhere in pypeclip
         with contextlib.redirect_stdout(io.StringIO()):
-            pyperclip.copy(request.transformed)
+            pyclip.copy(request.transformed)
 
         if self._next_handler:
             return super().handle(request)

@@ -38,8 +38,8 @@ setup(
     python_requires=">=3.7.0",
     install_requires=[
         "mss>=6.1.0",
-        "Pillow>=8.1.2",
-        "pyperclip>=1.8.2",
+        "Pillow>=8.2.0",
+        "pyclip>=0.5.4",
         "tesserocr>=2.4.0",
         "pyscreenshot>=2.3",
         "notify-py>=0.3.1",

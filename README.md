@@ -236,7 +236,7 @@ This project uses the following non-standard libraries:
 - [mss](https://pypi.org/project/mss/) _- taking screenshots_
 - [pillow](https://pypi.org/project/Pillow/) _- manipulating images_
 - [tesserocr](https://pypi.org/project/tesserocr/) _- wrapper for tesseract's API_
-- [pyperclip](https://pypi.org/project/pyperclip/) _- accessing clipboard_
+- [pyclip](https://pypi.org/project/pyclip/) _- accessing clipboard_
 - [pyinstaller](https://pypi.org/project/PyInstaller/) _- packaging for platforms_
 - [notify-py](https://pypi.org/project/notify-py/) _- system notifications_
 
