@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.11 (2021-04-04)
+
+**Changes:**
+- Switch to pyclip library for clipboard handling
+- Try a fix for MacOS dummy window issue
+
 ## v0.1.10 (2021-03-20)
 
 **Changes:**

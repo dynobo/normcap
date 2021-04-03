@@ -63,7 +63,7 @@ pip3 install normcap
 pip install normcap
 ```
 
-(**_OR_** download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases))
+(**_OR_** download & extract binary package from the [latest release](https://github.com/dynobo/normcap/releases))
 
 3\. Execute `normcap`
 
@@ -123,7 +123,7 @@ brew install tesseract tesseract-lang
 pip install normcap
 ```
 
-(**_OR_** download and extract binary package from the [latest release](https://github.com/dynobo/normcap/releases))
+(**_OR_** download & extract binary package from the [latest release](https://github.com/dynobo/normcap/releases))
 
 3\. Execute `normcap-v{version}.app`
 
