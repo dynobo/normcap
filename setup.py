@@ -11,7 +11,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="normcap",
-    version="0.1.10",
+    version="0.1.11",
     description="OCR-powered screen-capture tool to capture information instead of images",
     keywords="screenshot ocr capture clipboard",
     long_description=README,
