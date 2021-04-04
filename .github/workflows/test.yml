@@ -52,28 +52,22 @@ jobs:
         env:
           XDG_SESSION_TYPE: wayland
 
-  test_macos:
-    name: Test on MacOS
-    runs-on: macos-latest
-    env: 
-      PKG_CONFIG_PATH: "/usr/local/opt/tcl-tk/lib/pkgconfig"
-    steps:
-      - uses: actions/checkout@master
-
-      # PREPARE
-      - name: Install normcap dependencies
-        run: brew install pkg-config tesseract-lang
-      - name: Install wheel
-        run: python3 -m pip install wheel
-      - name: Create virtual env
-        run: python3 -m venv .venv
-      - name: Install deps
-        run: .venv/bin/python -m pip install -r requirements-macos.txt        
-        env:
-          CI: true
-      # TEST
-      - name: Test with pytest
-        run: .venv/bin/python -m pytest
+  # test_macos:
+  #   name: Test on MacOS
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - name: Install normcap dependencies
+  #       run: brew install pkg-config tesseract-lang
+  #     - name: Install wheel
+  #       run: python3 -m pip install wheel
+  #     - name: Install deps
+  #       run: python3 -m pip install -r requirements-macos.txt
+  #       env:
+  #         CI: true
+  #     # TEST
+  #     - name: Test with pytest
+  #       run: python3 -m pytest
 
   test_windows:
     name: Test on Windows
