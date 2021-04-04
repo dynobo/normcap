@@ -220,7 +220,6 @@ class _RootWindow(tkinter.Tk):
 class _CropWindow(tkinter.Toplevel):
     def __init__(self, root, shot):
         super().__init__()
-        # self.tk = tkinter.Toplevel()
         self.root = root
 
         self.configure(bg="black")  # To hide top border on i3
@@ -243,11 +242,11 @@ class _CropWindow(tkinter.Toplevel):
 
         if self.root.props.platform.startswith("darwin"):
             self.overrideredirect(1)
+            self.overrideredirect(0)
             self.attributes("-fullscreen", 1)
             self.attributes("-topmost", 1)
-            # os.system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "python" to true' ''')
-            # self.focus_force()
-            # self.call("::tk::unsupported::MacWindowStyle", "style", self._w, "plain", "none")
+            self["cursor"] = "cross"
+            self.lift()
 
         if self.root.props.platform.startswith("linux"):
             self.overrideredirect(1)

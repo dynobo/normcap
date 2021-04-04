@@ -2,7 +2,7 @@ Unicode True
 
 !define APPNAME "NormCap"
 !define DESCRIPTION "OCR powered screen-capture tool"
-!define VERSION "0.1.10"
+!define VERSION "0.1.11"
 !define HELPURL "https://github.com/dynobo/normcap/issues" # "Support Information" link
 !define UPDATEURL "https://github.com/dynobo/normcap/releases" # "Product Updates" link
 !define ABOUTURL "https://github.com/dynobo/normcap" # "Publisher" link
