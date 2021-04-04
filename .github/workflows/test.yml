@@ -61,6 +61,8 @@ jobs:
       # PREPARE
       - name: Install normcap dependencies
         run: brew install pkg-config tesseract-lang tcl-tk
+      - name: Reinstall python
+        run: brew reinstall python3
       - name: Install wheel
         run: python3 -m pip install wheel
       - name: Create virtual env
