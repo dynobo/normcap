@@ -3,7 +3,7 @@ name: Test
 on:
   pull_request:
     branches:
-      - master
+      - main
 
 # Infos on current github runners:
 # https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#about-github-hosted-runners
@@ -13,7 +13,7 @@ jobs:
     name: Test on Linux64
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
 
       # PREPARE
       - name: Install Python Dependencies
@@ -56,7 +56,7 @@ jobs:
   #   name: Test on MacOS
   #   runs-on: macos-latest
   #   steps:
-  #     - uses: actions/checkout@master
+  #     - uses: actions/checkout@main
   #     - name: Install normcap dependencies
   #       run: brew install pkg-config tesseract-lang
   #     - name: Install wheel
@@ -73,7 +73,7 @@ jobs:
     name: Test on Windows
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
 
       # PREPARE
       - name: Install venv
