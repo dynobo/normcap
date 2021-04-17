@@ -11,7 +11,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
 
       # PREPARE
       - name: Install Python Dependencies
@@ -57,7 +57,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: dist/normcap_linux64.tar.gz
-          body: See [CHANGELOG](https://github.com/dynobo/normcap/blob/master/CHANGELOG.md) for details.
+          body: See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) for details.
           draft: true
           prerelease: true
         env:
@@ -68,7 +68,7 @@ jobs:
   #   if: startsWith(github.ref, 'refs/tags/v')
   #   runs-on: macos-latest
   #   steps:
-  #     - uses: actions/checkout@master
+  #     - uses: actions/checkout@main
 
   #     # PREPARE
   #     - name: Install normcap dependencies
@@ -97,7 +97,7 @@ jobs:
   #       uses: softprops/action-gh-release@v1
   #       with:
   #         files: dist/normcap_macos.tar.gz
-  #         body: See [CHANGELOG](https://github.com/dynobo/normcap/blob/master/CHANGELOG.md) for details.
+  #         body: See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) for details.
   #         draft: true
   #         prerelease: true
   #       env:
@@ -108,7 +108,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
 
         # PREPARE
       - name: Install venv
@@ -172,7 +172,7 @@ jobs:
           files: |
             dist\normcap\normcap_win64_installer.exe
             normcap_win64.zip
-          body: See [CHANGELOG](https://github.com/dynobo/normcap/blob/master/CHANGELOG.md) for details.
+          body: See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) for details.
           draft: true
           prerelease: true
         env:
