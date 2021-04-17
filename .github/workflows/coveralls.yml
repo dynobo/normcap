@@ -7,7 +7,7 @@ jobs:
     name: Coveralls Tests on Linux64
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
 
       # PREPARE
       - name: Install Python Dependencies
