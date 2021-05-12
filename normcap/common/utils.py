@@ -29,11 +29,9 @@ def get_jaccard_sim(seq1: Union[list, str], seq2: Union[list, str]) -> float:
 def get_tesseract_version() -> str:
     version = "unknown"
     try:
-        result = subprocess.run(
-            ["tesseract", "--version", "|", "grep", "tesseract"], stdout=subprocess.PIPE
-        )
-        output = result.stdout.decode("utf-8").strip()
-        version = output[len("tesseract") :].strip()
+        result = subprocess.run(["tesseract", "--version"], stdout=subprocess.PIPE)
+        lines = result.stdout.decode("utf-8").strip().split()
+        version = lines[1]
     except:  # noqa
         pass
     return version
