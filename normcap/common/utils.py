@@ -2,6 +2,7 @@
 
 # Default
 from typing import Union
+import subprocess
 
 
 def get_jaccard_sim(seq1: Union[list, str], seq2: Union[list, str]) -> float:
@@ -23,3 +24,16 @@ def get_jaccard_sim(seq1: Union[list, str], seq2: Union[list, str]) -> float:
     set2 = set(seq2)
     equal = set1.intersection(set2)
     return len(equal) / (len(set1) + len(set2) - len(equal))
+
+
+def get_tesseract_version() -> str:
+    version = "unknown"
+    try:
+        result = subprocess.run(
+            ["tesseract", "--version", "|", "grep", "tesseract"], stdout=subprocess.PIPE
+        )
+        output = result.stdout.decode("utf-8").strip()
+        version = output[len("tesseract") :].strip()
+    except:  # noqa
+        pass
+    return version
