@@ -44,7 +44,7 @@
 
 ```sh
 ## on Ubuntu/Debian:
-sudo apt-get install tesseract-ocr xclip python3-dev python3-tk python3-pil.imagetk libleptonica-dev libtesseract-dev libnotify-bin
+sudo apt-get install tesseract-ocr xclip python3-dev python3-tk python3-pil.imagetk libleptonica-dev libtesseract-dev libnotify-bin build-essential
 
 # on Arch:
 sudo pacman -S tesseract tesseract-data-eng leptonica xclip tk python-pillow libnotify

@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.13 (2021-12-05)
+
+**Changes:**
+- Implement workaround for tesserocr breaking on Linux with Tesseract 4.0.x
+
 ## v0.1.11 (2021-04-04)
 
 **Changes:**

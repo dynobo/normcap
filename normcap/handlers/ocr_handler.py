@@ -3,13 +3,20 @@
 # Default
 import csv
 import statistics
-
-# Extra
-from tesserocr import PyTessBaseAPI, OEM  # type: ignore # pylint: disable=no-name-in-module
+import sys
 
 # Own
 from normcap.common.data_model import NormcapData
 from normcap.handlers.abstract_handler import AbstractHandler
+from normcap.common.utils import get_tesseract_version
+
+# Setting the local might be necessary for tesseract 4.0.x before import
+if sys.platform.startswith("linux") and get_tesseract_version().startswith("4.0"):
+    import locale
+
+    locale.setlocale(locale.LC_ALL, "C")
+
+from tesserocr import PyTessBaseAPI, OEM  # type: ignore # pylint: disable=no-name-in-module
 
 
 class OcrHandler(AbstractHandler):
