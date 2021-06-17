@@ -23,7 +23,7 @@ class ClipboardHandler(AbstractHandler):
 
         # supress output triggered somewhere in pypeclip
         with contextlib.redirect_stdout(io.StringIO()):
-            pyclip.copy(request.transformed)
+            pyclip.copy(request.transformed, encoding="utf-8")
 
         if self._next_handler:
             return super().handle(request)

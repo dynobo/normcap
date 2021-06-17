@@ -1,6 +1,11 @@
 # Changelog
 
-## v0.1.12 (2021-12-05)
+## v0.1.13 (2021-06-17)
+
+**Changes:**
+- Fix crash when recognizing UTF-8 chars like accents.
+
+## v0.1.12 (2021-05-12)
 
 **Changes:**
 - Implement workaround for tesserocr breaking on Linux with Tesseract 4.0.x
