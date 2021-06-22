@@ -179,29 +179,22 @@ class PerformOcr:
     @staticmethod
     def sanatize_language(config_language: str, tesseract_languages: List[str]) -> str:
         """Retrieve tesseract version number."""
-        try:
-            tesseract_langs = set(tesseract_languages)
-            requested_langs = set(config_language.split("+"))
-            unavailable_langs = requested_langs.difference(tesseract_langs)
-            available_langs = requested_langs.intersection(tesseract_langs)
+        tesseract_langs = set(tesseract_languages)
+        requested_langs = set(config_language.split("+"))
+        unavailable_langs = requested_langs.difference(tesseract_langs)
+        available_langs = requested_langs.intersection(tesseract_langs)
 
-            if unavailable_langs:
-                logger.warning("Language %s for ocr not found!", {*unavailable_langs})
-                logger.warning("Available tesseract langs: %s.", {*tesseract_langs})
-                if available_langs:
-                    config_language = "+".join(
-                        [rl for rl in requested_langs if rl in available_langs]
-                    )
-                else:
-                    config_language = list(tesseract_langs)[0]
-                logger.warning("Fallback to %s.", config_language)
+        if unavailable_langs:
+            logger.warning("Language %s for ocr not found!", {*unavailable_langs})
+            logger.warning("Available tesseract langs: %s.", {*tesseract_langs})
+            if available_langs:
+                config_language = "+".join(
+                    [rl for rl in requested_langs if rl in available_langs]
+                )
+            else:
+                config_language = list(tesseract_langs)[0]
+            logger.warning("Fallback to %s.", config_language)
 
-        except:  # pylint: disable=bare-except
-            logger.warning(
-                "Couldn't determine Tesseract languages. You might "
-                + "have to put the directory of the tesseract executable into your systems "
-                + "PATH environment variable."
-            )
         return config_language
 
 

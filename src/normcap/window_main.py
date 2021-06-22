@@ -201,8 +201,7 @@ class WindowMain(WindowBase):
         """Setting up tray icon."""
         logger.debug("Setting up tray icon")
         menu = self.create_tray_menu()
-        self.main_window.tray = QtWidgets.QSystemTrayIcon()  # Win, Lin
-        # self.main_window.tray = QtWidgets.QSystemTrayIcon(self) # Mac
+        self.main_window.tray = QtWidgets.QSystemTrayIcon()
         self.main_window.tray.setIcon(self.tray_icon)
         self.main_window.tray.setContextMenu(menu)
         if self.config.tray:
@@ -213,31 +212,31 @@ class WindowMain(WindowBase):
         """Create menu for system tray."""
         menu = QtWidgets.QMenu()
 
-        captureAction = menu.addAction("Capture")
-        captureAction.triggered.connect(self.show_windows)
-        exitAction = menu.addAction("Exit")
-        exitAction.triggered.connect(sys.exit)
+        capture_action = menu.addAction("Capture")
+        capture_action.triggered.connect(self.show_windows)
+        exit_action = menu.addAction("Exit")
+        exit_action.triggered.connect(sys.exit)
 
         menu.addSeparator()
 
-        websiteAction = menu.addAction(f"NormCap {__version__} Website")
-        websiteAction.triggered.connect(
+        website_action = menu.addAction(f"NormCap {__version__} Website")
+        website_action.triggered.connect(
             lambda: QtGui.QDesktopServices.openUrl("https://github.com/dynobo/normcap")
         )
-        updateAction = menu.addAction("- Releases")
-        updateAction.triggered.connect(
+        update_action = menu.addAction("- Releases")
+        update_action.triggered.connect(
             lambda: QtGui.QDesktopServices.openUrl(
                 "https://github.com/dynobo/normcap/releases"
             )
         )
-        faqAction = menu.addAction("- FAQ")
-        faqAction.triggered.connect(
+        faq_action = menu.addAction("- FAQ")
+        faq_action.triggered.connect(
             lambda: QtGui.QDesktopServices.openUrl(
                 "https://github.com/dynobo/normcap/blob/main/FAQ.md"
             )
         )
-        issueAction = menu.addAction("- Report Problem")
-        issueAction.triggered.connect(
+        issue_action = menu.addAction("- Report Problem")
+        issue_action.triggered.connect(
             lambda: QtGui.QDesktopServices.openUrl(
                 "https://github.com/dynobo/normcap/issues"
             )
@@ -249,7 +248,7 @@ class WindowMain(WindowBase):
         title, message = self.compose_notification()
         self.main_window.tray.show()
         self.main_window.tray.showMessage(title, message, self.notification_icon)
-        # self.com.onQuitOrHide.emit()  # Mac, Lin
+
         # Delay quit or hide to get notification enough time to show up.
         delay = 5000 if self.system_info.platform == Platform.WINDOWS else 500
         QtCore.QTimer.singleShot(delay, self.com.onQuitOrHide.emit)

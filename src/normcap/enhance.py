@@ -24,16 +24,11 @@ class EnhanceImage:
 
             capture.image = self._add_padding(capture.image)
             utils.save_image_in_tempfolder(capture.image, postfix="_padded")
-
-            # capture.image = self._grayscale(capture.image)
-            # capture.image = self._denoise(capture.image)
-            # capture.image = self._threshold(capture.image)
-            # capture.image = self._strech_contrast(capture.image)
         return capture
 
     @staticmethod
     def _strech_contrast(img: QtGui.QImage) -> QtGui.QImage:
-        # img = ImageOps.autocontrast(img)
+        # TODO: to be implemented
         return img
 
     @staticmethod

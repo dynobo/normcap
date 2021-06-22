@@ -123,12 +123,12 @@ def get_tesseract_version() -> str:
     try:
         lines = tesserocr.tesseract_version().strip().split()
         tesseract_version = lines[1]
-    except:  # pylint: disable=bare-except
-        logger.warning(
+    except RuntimeError as e:
+        raise RuntimeError(
             "Couldn't determine Tesseract version number. You might "
             + "have to put the directory of the tesseract executable into your systems "
             + "PATH environment variable."
-        )
+        ) from e
     return tesseract_version
 
 
