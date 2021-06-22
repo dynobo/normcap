@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Briefcase-Version: 0.3.5
+Name: normcap
+Formal-Name: NormCap
+App-ID: eu.dynobo.normcap
+Version: 0.0.1
+Home-page: https://github.com/dynobo/normcap
+Author: dynobo
+Author-email: dynobo@mailbox.org
+Summary:  OCR-powered screen-capture tool to capture information instead of images

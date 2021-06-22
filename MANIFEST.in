@@ -1,1 +1,7 @@
-include normcap/ressources/*
+include README.md
+include CHANGELOG.md
+include LICENSE
+recursive-include src *.icns
+recursive-include src *.ico
+recursive-include src *.png
+recursive-include src *.ui

@@ -2,6 +2,11 @@
 # Edit at https://www.gitignore.io/?templates=python
 
 # Own
+.venv/
+linux/
+macOS/
+windows/
+Windows/
 shortcut-properties.nsh
 .vscode/
 cov.xml
@@ -9,8 +14,10 @@ coverage
 .coverage
 .coveralls.yml
 *.spec
-normcap/ressources/icon
-normcap/ressources/screencast
+normcap/resources/icon
+normcap/resources/screencast
+.DS_Store
+*.traineddata
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

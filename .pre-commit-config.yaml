@@ -1,42 +1,56 @@
 # See https://pre-commit.com/ for usage and config
 repos:
-- repo: local
-  hooks:
-  - id: black
-    name: black
-    stages: [commit]
-    language: system
-    entry: .venv/bin/black
-    types: [python]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+  - repo: local
+    hooks:
+      - id: mdformat
+        name: mdformat
+        stages: [commit]
+        language: system
+        entry: poetry run mdformat --wrap 88
+        types: [markdown]
 
-  - id: flake8
-    name: flake8
-    stages: [commit]
-    language: system
-    entry: .venv/bin/flake8
-    types: [python]
-    exclude: setup.py
+      - id: isort
+        name: isort
+        stages: [commit]
+        language: system
+        entry: poetry run isort --jobs=0 src/normcap src/tests/
+        types: [python]
 
-  - id: mypy
-    name: mypy
-    stages: [commit]
-    language: system
-    entry: .venv/bin/mypy
-    types: [python]
-    pass_filenames: false
+      - id: black
+        name: black
+        stages: [commit]
+        language: system
+        entry: poetry run black src/normcap src/tests/
+        types: [python]
 
-  # - id: pytest
-  #   name: pytest
-  #   stages: [commit]
-  #   language: system
-  #   entry: pipenv run pytest
-  #   types: [python]
-  #   pass_filenames: false    
+      - id: pylint
+        name: pylint
+        stages: [commit]
+        language: system
+        entry: poetry run pylint src/normcap src/tests/
+        types: [python]
+        pass_filenames: false
 
-  # - id: pytest-cov
-  #   name: pytest
-  #   stages: [push]
-  #   language: system
-  #   entry: pipenv run pytest --cov --cov-fail-under=1
-  #   types: [python]
-  #   pass_filenames: false
+      - id: mypy
+        name: mypy
+        stages: [commit]
+        language: system
+        entry: poetry run mypy
+        types: [python]
+        pass_filenames: false
+
+      - id: pytest
+        name: pytest
+        stages: [commit]
+        language: system
+        entry: poetry run pytest src/tests/ --cov normcap --cov-report xml:cov.xml --cov-report html
+        types: [python]
+        pass_filenames: false
