@@ -1,91 +1,88 @@
 <!-- markdownlint-disable MD013 MD026 MD033 -->
 
-# normcap
+# NormCap
 
 **_OCR powered screen-capture tool to capture information instead of images._**
 
-<p align="center"><br>
-<a href="https://github.com/dynobo/normcap/releases"><img alt="Build passing" src="https://github.com/dynobo/normcap/workflows/Build/badge.svg"></a>
-<a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPLv3" src="https://img.shields.io/badge/License-GPLv3-blue.svg"></a>
-<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/Code%20style-black-%23000000"></a>
-<a href='https://coveralls.io/github/dynobo/normcap'><img src='https://coveralls.io/repos/github/dynobo/normcap/badge.svg' alt='Coverage Status' /></a>
-</p>
+[![Build passing](https://github.com/dynobo/normcap/workflows/Build/badge.svg)](https://github.com/dynobo/normcap/releases)
+[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Code style: black](https://img.shields.io/badge/Code%20style-black-%23000000)](https://github.com/psf/black)
+[![Coverage Status](https://coveralls.io/repos/github/dynobo/normcap/badge.svg)](https://coveralls.io/github/dynobo/normcap)
 
-<p align="center">
-<strong>Links:</strong> <a href="https://github.com/dynobo/normcap/releases">Releases</a> |
-<a href="https://github.com/dynobo/normcap/blob/main/CHANGELOG.md">Changelog</a> |
-<a href="https://github.com/dynobo/normcap/labels/backlog">Roadmap</a> |
-<a href="https://github.com/dynobo/normcap/">Repo</a>
-</p>
+**Links:** [Repo](https://github.com/dynobo/normcap) |
+[PyPi](https://pypi.org/project/normcap) |
+[Releases](https://github.com/dynobo/normcap/releases) |
+[Changelog](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) |
+[FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md)
 
-<p align="center">
-<strong>Content:</strong> <a href="#Introduction">Introduction</a> |
-<a href="#Installation">Installation</a> |
-<a href="#Usage">Usage</a> |
-<a href="#Contribute">Contribute</a> |
-<a href="#Contribute">Credits</a>
-<br><br></p>
-
-## Introduction
-
-**Basic usage:**
-
-1. Launch `normcap`
-2. Select a region on the screen
-3. Retrieve recognized text in clipboard
+**Content:** [Quickstart](#Quickstart) | [Python package](#Python-package) |
+[Usage](#Usage) | [Contribute](#Contribute) | [Credits](#Credits)
 
 [![Screencast](https://user-images.githubusercontent.com/11071876/97786948-39ed1e80-1baf-11eb-852c-bce87abc6890.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
-## Installation
+## Quickstart
+
+**❱❱
+[Download & run a pre-build package for Linux, MacOS or Windows](https://github.com/dynobo/normcap/releases)
+❰❰**
+
+Hints:
+
+- If you experience issues or have questions please look at the
+  [FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md) or
+  [open an issue](https://github.com/dynobo/normcap/issues).
+- On **Linux**, make the AppImage executable before running it:
+  ```
+  chmod +x NormCap-Linux.AppImage
+  ./NormCap-Linux.AppImage
+  ```
+- On **MacOS**, you have to allow the unsigned application on first start: "System
+  Preferences" → "Security & Privacy" → Tab "General" → "Open anyway". \
+  Depending on
+  your OS, you might also need to allow NormCap to take screenshots.
+
+## Python package
+
+As an _alternative_ to a pre-build package you can install the
+[NormCap Python package](https://pypi.org/project/normcap/):
 
 ### On Linux
 
-1\. Install dependencies (some of them are probably default):
-
 ```sh
-## on Ubuntu/Debian:
-sudo apt-get install tesseract-ocr xclip python3-dev python3-tk python3-pil.imagetk libleptonica-dev libtesseract-dev libnotify-bin build-essential
+# Install dependencies (Ubuntu/Debian)
+sudo apt install tesseract-ocr tesseract-ocr-eng \
+                 libtesseract-dev libleptonica-dev
 
-# on Arch:
-sudo pacman -S tesseract tesseract-data-eng leptonica xclip tk python-pillow libnotify
+## Install dependencies (Arch)
+sudo pacman -S tesseract tesseract-data-eng leptonica
 
-# on Fedora
-sudo dnf install tesseract tesseract-devel leptonica-devel xclip python3-devel python3-tkinter libappindicator-gtk3 gcc gobject-introspection-devel cairo-devel pkg-config python3-devel gtk3 libnotify
-```
+## Install dependencies (Fedora)
+sudo dnf install tesseract tesseract-devel leptonica-devel
 
-2\. Install normcap:
-
-```sh
-## on Ubuntu/Debian:
-pip3 install normcap
-
-# on Arch:
+# Install normcap
 pip install normcap
+
+# Run
+./normcap
 ```
 
-(**_OR_** download & extract binary package from the [latest release](https://github.com/dynobo/normcap/releases))
+### On MacOS
 
-3\. Execute `normcap`
+```sh
+# Install dependencies
+brew install tesseract tesseract-lang
+
+# Install normcap
+pip install normcap
+
+# Run
+./normcap
+```
 
 ### On Windows
 
-Choose _one_ of the following three installation method A), B) or C).
-
-#### A) Recommended method
-
-1.) Download and run `normcap_win64_installer.exe` from the [latest release](https://github.com/dynobo/normcap/releases) (admin rights required)
-
-2.) Start the shortcut `NormCap` from start menu.
-
-#### B) Without real installation (portable)
-
-1\. Download and extract the binary package from the [latest release](https://github.com/dynobo/normcap/releases) (no installation required)
-
-2\. Execute `normcap.exe`
-
-#### C) Package installation
-
-1\. Install "Tesseract", e.g. by using the [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
+1\. Install "Tesseract **4.1**", e.g. by using the
+[installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
 
 2\. Set the environment variable `TESSDATA_PREFIX` to Tesseract's data folder, e.g.:
 
@@ -93,104 +90,92 @@ Choose _one_ of the following three installation method A), B) or C).
 setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"
 ```
 
-3\. Install [tesserocr](https://pypi.org/project/tesserocr/), e.g. by using the [Windows specific wheel](https://github.com/simonflueckiger/tesserocr-windows_build):
+3\. Install [tesserocr](https://pypi.org/project/tesserocr/) using the
+[Windows specific wheel](https://github.com/simonflueckiger/tesserocr-windows_build) and
+NormCap afterwards:
 
 ```bash
+# Install tesserocr package
 pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
-```
 
-4\. Run
-
-```sh
+# Install normcap
 pip install normcap
+
+# Run
+normcap
 ```
-
-5\. Execute `normcap`
-
-### On Mac
-
-**_Attention! On Mac, not everything works. [Help needed!](https://github.com/dynobo/normcap/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)_**
-
-1\. Install dependencies:
-
-```sh
-brew install tesseract tesseract-lang
-```
-
-2\. Install normcap:
-
-```sh
-pip install normcap
-```
-
-3\. Execute `normcap`
 
 ## Usage
 
 ### General
 
-- After launching `normcap` press `<esc>` to abort and quit.
+- Press `<esc>` key to abort a capture and quit the application.
 
-- Before letting the mouse button go, press the `<space>`-key to switch mode, as indicated by a symbol:
+- Press `<space>` key while selecting a region with the mouse (left mouse button has to
+  be hold down) to switch between the two capture modes:
 
+  - **★ (parse):** Try to auto-detect the type of text using [magics](#Magics) and
+    format the text accordingly, then copy
   - **☰ (raw):** Copy detected text line by line, without further modification
-  - **☶ (parse):** Try to auto-detect the type of text using [magics](#Magics) and format the text accordingly, then copy
-
-- To download additional languages for Mac and Linux, check the official repository of your distribution for `tesseract`-languages. Packages' names might vary.
-
-- The [Windows release](https://github.com/dynobo/normcap/releases) of normcap supports English and German out of the box. If you need additional languages, download the appropriate files from [the tesseract repo](https://github.com/tesseract-ocr/tessdata_best) and place them into the `/normcap/tessdata/` folder.
-
-- normcap is intended to be executed on demand via a keybinding or desktop shortcut. Therefore it doesn't occupy resources by running in the background, but its startup is a bit slower.
-
-- By default normcap is "stateless": it copies recognized text to the system's clipboard but doesn't save images or text on the disk. However, you can use the `--path` switch to store the images in any folder.
 
 ### Command line options
 
-normcap has no settings, just a set of command line arguments:
+NormCap has no settings, just a set of command line arguments:
 
 ```plain
 (normcap)dynobo@cioran:~$ normcap --help
-usage: normcap [-h] [-v] [-m MODE] [-l LANG] [-c COLOR] [-p PATH]
+usage: normcap [-h] [-l LANGUAGE] [-c COLOR] [-n] [-t] [-v] [-V]
 
 OCR-powered screen-capture tool to capture information instead of images.
 
 optional arguments:
-  -h, --help               show this help message and exit
-  -v, --verbose            print debug information to console (default: False)
-  -m MODE, --mode MODE     startup mode [raw,parse] (default: parse)
-  -l LANG, --lang LANG     languages for ocr, e.g. eng+deu (default: eng)
-  -n, --no-notifications   disable notifications shown after ocr detection (default: False)
-  -c COLOR, --color COLOR  set primary color for UI (default: #BF616A)
-  -p PATH, --path PATH     set a path for storing images (default: None)
+  -h, --help                  show this help message and exit
+  -l LANGUAGE, --language LANGUAGE
+                              set language(s) for text recognition, e.g.
+                              eng+deu (default: eng)
+  -c COLOR, --color COLOR     set primary color for UI (default: #FF2E88)
+  -n, --no-notifications      disable notifications shown after ocr detection
+                              (default: False)
+  -t, --tray                  keep running in system tray - experimental
+                              (default: False)
+  -v, --verbose               print debug information to console (default:
+                              False)
+  -V, --very-verbose          print more debug information to console
+                              (default: False)
 ```
 
 ### Magics
 
-"Magics" are like add-ons providing automated functionality to intelligently detect and format the captured input.
+"Magics" are like add-ons providing automated functionality to intelligently detect and
+format the captured input.
 
-First, every "magic" calculates a "**score**" to determine the likelihood of being responsible for this type of text. Second, the "magic" which achieved the highest "score" takes the necessary actions to **"transform"** the input text according to its type.
+First, every "magic" calculates a "**score**" to determine the likelihood of being
+responsible for this type of text. Second, the "magic" which achieved the highest
+"score" takes the necessary actions to **"transform"** the input text according to its
+type.
 
 Currently implemented Magics:
 
-| Magic                | Score                                                | Transform                                                                            |
-| -------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| **Single&nbsp;line** | Only single line is detected                         | Trim unnecessary whitespace                                                          |
-| **Multi&nbsp;line**  | Multi lines, but single Paragraph                    | Separated by line breaks and trim each lined                                         |
-| **Paragraph**        | Multiple blocks of lines or multiple paragraphs      | Join every paragraph into a single line, separate different paragraphs by empty line |
-| **E-Mail**           | Number of chars in email addresses vs. overall chars | Transform to a comma-separated list of email addresses                               |
-| **URL**              | Number of chars in URLs vs. overall chars            | Transform to line-break separated URLs                                               |
+| Magic           | Score                                                | Transform                                                                            |
+| --------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **Single line** | Only single line is detected                         | Trim unnecessary whitespace                                                          |
+| **Multi line**  | Multi lines, but single Paragraph                    | Separated by line breaks and trim each lined                                         |
+| **Paragraph**   | Multiple blocks of lines or multiple paragraphs      | Join every paragraph into a single line, separate different paragraphs by empty line |
+| **E-Mail**      | Number of chars in email addresses vs. overall chars | Transform to a comma-separated list of email addresses                               |
+| **URL**         | Number of chars in URLs vs. overall chars            | Transform to line-break separated URLs                                               |
 
-### Why "normcap"?
+## Why "NormCap"?
 
 See [XKCD](https://xkcd.com):
 
-<a href="https://xkcd.com/2116/"><img src="https://imgs.xkcd.com/comics/norm_normal_file_format.png" width="250px;"></a>
+[![Comic](https://imgs.xkcd.com/comics/norm_normal_file_format.png)](https://xkcd.com/2116/)
 
 ## Contribute
 
 ### Setup Environment
 
-Prerequisites are **Python**, **Tesseract** (incl. **language data**) and on Linux also **XClip**.
+Prerequisites are **Python >=3.7.1**, **Poetry**, **Tesseract** (incl. **language
+data**).
 
 ```sh
 # Clone repository
@@ -199,44 +184,28 @@ git clone https://github.com/dynobo/normcap.git
 # Change into project directory
 cd normcap
 
-# Create and activate virtual env
-python -m venv .venv
-source .venv/bin/activate
-
-# Install project development incl. dependencies
-pip install -r requirements.txt
-# or depending on your OS:
-#    pip install -r requirements-macos.txt
-#    pip install -r requirements-win.txt
+# Create virtual env and install dependencies
+poetry install
 
 # Register pre-commit hook
-pre-commit install -t pre-commit
+poetry run pre-commit install
 
-# Run normcap in pipenv environment
-python -m normcap
+# Run NormCap in virtual env
+poetry run python -m normcap
 ```
-
-### Design Principles
-
-- **Multi-Platform**<br>Should work on Linux, Mac & Windows.
-- **Don't run as service**<br>As normcap is (hopefully) not used too often, it shouldn't consume resources in the background, even if it leads to slower start-up time.
-- **No network connection**<br>Everything should run locally without any network communication.
-- **Avoid text in UI**<br>This just avoids translations ;-) And I think it is feasible in such a simple application.
-- **Avoid configuration file or settings UI**<br>Focus on simplicity and core functionality.
-- **Dependencies**<br>The fewer dependencies, the better. Of course, I have to compromise, but I'm always open to suggestions on how to further reduce dependencies.
-- **Chain of Responsibility as main design pattern**<br>[See description on refactoring.guru](https://refactoring.guru/design-patterns/chain-of-responsibility)
-- **Multi-Monitors**<br>Supports setups with two or more displays
 
 ## Credits
 
 This project uses the following non-standard libraries:
 
-- [mss](https://pypi.org/project/mss/) _- taking screenshots_
-- [pillow](https://pypi.org/project/Pillow/) _- manipulating images_
+- [pyside2](https://pypi.org/project/PySide2/) _- bindings for Qt UI Framework_
 - [tesserocr](https://pypi.org/project/tesserocr/) _- wrapper for tesseract's API_
-- [pyclip](https://pypi.org/project/pyclip/) _- accessing clipboard_
-- [pyinstaller](https://pypi.org/project/PyInstaller/) _- packaging for platforms_
-- [notify-py](https://pypi.org/project/notify-py/) _- system notifications_
+- [jeepney](https://pypi.org/project/jeepney/) _- DBUS client_
+
+Packaging is done with:
+
+- [briefcase](https://pypi.org/project/briefcase/) _- converting Python projects into_
+  _standalone apps_
 
 And it depends on external software
 

@@ -1,0 +1,72 @@
+# Infos on current github runners:
+# https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#about-github-hosted-runners
+
+name: Test
+on: [pull_request]
+
+jobs:
+  test_all:
+    name: Linting & Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-10.15, windows-2019, ubuntu-20.04]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - uses: abatilo/actions-poetry@v2.1.0
+        with:
+          poetry-version: 1.1.5
+      - name: Install Linux system deps
+        if: ${{ matrix.os  == 'ubuntu-20.04' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            libleptonica-dev \
+            libtesseract-dev \
+            python3-pil \
+            tesseract-ocr \
+            tesseract-ocr-eng
+      - name: Install MacOS system deps
+        if: ${{ matrix.os  == 'macos-10.15' }}
+        run: |
+          brew install pkg-config tesseract
+          brew info tesseract
+          ls -R /usr/local/Cellar/tesseract/
+          ls -R /usr/local/Cellar/leptonica/
+      - name: Poetry install
+        run: |
+          poetry install
+          poetry run python build.py download-tessdata
+
+      # TEST WORKFLOW SPECIFIC
+      - name: Pylint
+        run: poetry run pylint src/normcap src/tests/
+      - name: Mypy
+        run: poetry run mypy .
+      - name: Black
+        run: poetry run black --check .
+      - name: Isort
+        run: poetry run isort --check .
+      - name: Pytest on Linux
+        if: ${{ matrix.os  == 'ubuntu-20.04' }}
+        # xvfb-run with bpp 32 needed to grab screenshot with mss
+        run: xvfb-run --server-args="-screen 0 1024x768x24+32" poetry run pytest
+        env:
+          XDG_SESSION_TYPE: wayland
+      - name: Pytest on Windows
+        if: ${{ matrix.os  == 'windows-2019' }}
+        run: poetry run pytest
+        env:
+          TESSDATA_PREFIX: D:\a\normcap\normcap\tessdata
+      - name: Pytest on MacOS
+        if: ${{ matrix.os  == 'macos-10.15' }}
+        run: poetry run pytest
+      - name: Coveralls
+        if: ${{ matrix.os  == 'ubuntu-20.04' }}
+        run: poetry run coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
