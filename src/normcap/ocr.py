@@ -159,7 +159,7 @@ class PerformOcr:
         # Read tsv to list of dicts
         words = list(
             csv.DictReader(
-                tsv_data.split("\n"),
+                tsv_data.splitlines(),
                 fieldnames=tsv_columns,
                 delimiter="\t",
                 quoting=csv.QUOTE_NONE,

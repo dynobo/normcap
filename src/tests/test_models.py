@@ -73,7 +73,7 @@ def test_capture(capture: Capture):
     assert capture.text.startswith("one")
 
     assert isinstance(capture.lines, str)
-    lines = capture.lines.split("\n")
+    lines = capture.lines.splitlines()
     assert len(lines) == 2
     assert lines[0] == "one two"
 
