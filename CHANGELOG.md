@@ -1,10 +1,10 @@
 # Changelog
 
-## v0.2.0b3 (2021-06-23)
+## v0.2.0-b3 (2021-06-23)
 
 **Changes:**
 
-- (Almost) complete rewrite of NormCap (things might be different)
+- (Almost) complete rewrite of NormCap (things might be different!)
 - Provide easy to use binary package releases
 - Better support for HiDPI and multi monitor setups
 - Switch from Tk to Qt as UI Framework
