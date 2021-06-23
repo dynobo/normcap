@@ -11,7 +11,7 @@
    height="1080"
    id="svg2383"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="text_2.svg"
    sodipodi:version="0.32"
    version="1.0"
@@ -232,10 +232,10 @@
      inkscape:document-units="px"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-height="1080"
-     inkscape:window-maximized="0"
-     inkscape:window-width="1920"
-     inkscape:window-x="1920"
+     inkscape:window-height="1383"
+     inkscape:window-maximized="1"
+     inkscape:window-width="2560"
+     inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:zoom="0.35355339"
      objecttolerance="10"
@@ -251,7 +251,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -294,7 +294,7 @@
            x="364.04843"
            y="1070.2429"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:85.3333px;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';fill:#ffffff;stroke:none;stroke-width:2;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;paint-order:normal">... <tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:85.3333px;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';stroke:#c83737;stroke-width:2;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:85.3333px;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';stroke:#c83771;stroke-width:2;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
    id="tspan891">red border</tspan> appears around screen ...</tspan></text>
     </g>
   </g>

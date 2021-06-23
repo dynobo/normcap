@@ -1,7 +1,0 @@
- # requirements.txt
- #
- # installs all generic dependencies
--r requirements.txt
-
-# install macos specific dependencies
-macholib==1.14
