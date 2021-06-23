@@ -47,6 +47,7 @@ jobs:
       - name: Prepare Windows 2/2
         if: ${{ matrix.os  == 'windows-2019' }}
         run: poetry run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
+        continue-on-error: false
 
       - name: Poetry install
         run: |
