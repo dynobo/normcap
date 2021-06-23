@@ -20,7 +20,8 @@ jobs:
       - uses: abatilo/actions-poetry@v2.1.0
         with:
           poetry-version: 1.1.5
-      - name: Install Linux system deps
+
+      - name: Prepare Linux
         if: ${{ matrix.os  == 'ubuntu-20.04' }}
         run: |
           sudo apt-get update
@@ -30,13 +31,24 @@ jobs:
             python3-pil \
             tesseract-ocr \
             tesseract-ocr-eng
-      - name: Install MacOS system deps
+
+      - name: Prepare MacOS
         if: ${{ matrix.os  == 'macos-10.15' }}
         run: |
           brew install pkg-config tesseract
           brew info tesseract
           ls -R /usr/local/Cellar/tesseract/
           ls -R /usr/local/Cellar/leptonica/
+
+      - name: Prepare Windows 1/2
+        if: ${{ matrix.os  == 'windows-2019' }}
+        run: poetry install
+        continue-on-error: true
+      - name: Prepare Windows 2/2
+        if: ${{ matrix.os  == 'windows-2019' }}
+        run: poetry run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
+        continue-on-error: false
+
       - name: Poetry install
         run: |
           poetry install
