@@ -144,31 +144,37 @@ def get_tessdata_path() -> str:
     """Deside which path for tesseract language files to use."""
     resource_path = Path(importlib_resources.files("normcap.resources"))
 
+    path = None
+
     # Use path set via env var, if it exists
     if "TESSDATA_PREFIX" in os.environ:
         path = Path(os.environ["TESSDATA_PREFIX"])
-    elif is_briefcase_package():
-        path = resource_path
-    elif len(list(resource_path.glob("**/*.traineddata"))) > 1:
-        path = resource_path
-    else:
-        raise ValueError("TESSDATA_PREFIX is not defined.")
 
-    if not path.is_dir():
-        raise ValueError(f"No valid path for tessdata found. {path} is invalid.")
+    if is_briefcase_package():
+        path = resource_path
 
-    return str(path.absolute()) + os.sep + "tessdata" + os.sep
+    if path and path.is_dir():
+        return str(path.absolute()) + os.sep + "tessdata" + os.sep
+
+    if path is None:
+        return ""
+
+    raise ValueError(f"No valid path for tessdata found. {path} is invalid.")
 
 
 def get_tesseract_languages() -> List[str]:
     """Detect available tesseract languages."""
 
     path = get_tessdata_path()
-    logger.info(f"Searching tesseract languages in {path}")
+    logger.info(f"Searching tesseract languages {path}")
     tesseract_languages = list(set(tesserocr.get_languages(path=path)[1]))
 
     if len(tesseract_languages) < 1:
-        raise ValueError("Could load any languages for tesseract!")
+        raise ValueError(
+            "Could load any languages for tesseract. "
+            + "On Windows, make sure that TESSDATA_PREFIX environment variable is set. "
+            + "On Linux/MacOS see if 'tesseract --list-langs' work is the command line."
+        )
 
     return tesseract_languages
 
