@@ -18,7 +18,7 @@
 **Content:** [Quickstart](#Quickstart) | [Python package](#Python-package) |
 [Usage](#Usage) | [Contribute](#Contribute) | [Credits](#Credits)
 
-[![Screencast](https://user-images.githubusercontent.com/11071876/97786948-39ed1e80-1baf-11eb-852c-bce87abc6890.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
+[![Screencast](https://user-images.githubusercontent.com/11071876/123133596-3107d080-d450-11eb-8451-6dcebb7876ad.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
 ## Quickstart
 
