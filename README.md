@@ -51,13 +51,15 @@ As an _alternative_ to a pre-build package you can install the
 ```sh
 # Install dependencies (Ubuntu/Debian)
 sudo apt install tesseract-ocr tesseract-ocr-eng \
-                 libtesseract-dev libleptonica-dev
+                 libtesseract-dev libleptonica-dev \
+                 python3-dev
 
 ## Install dependencies (Arch)
 sudo pacman -S tesseract tesseract-data-eng leptonica
 
 ## Install dependencies (Fedora)
-sudo dnf install tesseract tesseract-devel leptonica-devel
+sudo dnf install tesseract tesseract-devel \
+                 libleptonica-devel python3-devel
 
 # Install normcap
 pip install normcap
