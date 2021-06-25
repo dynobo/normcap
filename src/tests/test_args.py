@@ -25,7 +25,7 @@ def test_argparser_defaults_complete(argparser_defaults):
     expected_options = set(
         [
             "color",
-            "language",
+            "languages",
             "no_notifications",
             "tray",
             "verbose",
@@ -48,6 +48,8 @@ def test_argparser_attributes_in_config_class(argparser_defaults):
     """Check if every args has an attribute in Config class."""
     attributes = [f.name for f in fields(Config)]
     for arg in argparser_defaults:
+        if arg in ["verbose", "very_verbose"]:
+            continue
         assert arg in attributes
 
 
@@ -63,7 +65,7 @@ def test_argparser_default_no_notifications(argparser_defaults):
 
 def test_argparser_default_lang(argparser_defaults):
     """Check OCR language."""
-    assert argparser_defaults["language"] == "eng"
+    assert argparser_defaults["languages"] == "eng"
 
 
 def test_argparser_default_color(argparser_defaults):

@@ -4,7 +4,7 @@ import os
 import pprint
 import statistics
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Set, Tuple
 
 from PySide2 import QtGui
 
@@ -116,7 +116,7 @@ class SystemInfo:
     desktop_environment: DesktopEnvironment
     normcap_version: str
     tesseract_version: str
-    tesseract_languages: List[str]
+    tesseract_languages: Set[str]
     tessdata_path: str
     briefcase_package: bool
     screens: Dict[int, ScreenInfo] = field(default_factory=dict)
@@ -140,11 +140,9 @@ class Config:
     """User settings (set via CLI args)."""
 
     color: str
-    language: str
+    languages: Set[str]
     no_notifications: bool
     tray: bool
-    verbose: bool
-    very_verbose: bool
 
     def __repr__(self):
         string = pprint.pformat(self.__dict__, indent=3)

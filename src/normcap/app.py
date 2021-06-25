@@ -24,10 +24,13 @@ def main():
     arg_parser = create_argparser()
     args = vars(arg_parser.parse_args())
 
-    if args["verbose"]:
+    if args.pop("verbose"):
         logger.setLevel("INFO")
-    if args["very_verbose"]:
+    if args.pop("very_verbose"):
         logger.setLevel("DEBUG")
+
+    if args["languages"]:
+        args["languages"] = set(args["languages"].split("+"))
 
     logger.info(f"Starting Normcap v{__version__}")
 

@@ -318,7 +318,7 @@ class WindowMain(WindowBase):
 
         logger.debug("Performing OCR")
         self.capture = perform_ocr(
-            language=self.config.language,
+            languages=self.config.languages,
             capture=self.capture,
             system_info=self.system_info,
         )

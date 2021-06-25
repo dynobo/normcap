@@ -7,7 +7,7 @@ import os
 import sys
 import tempfile
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, Set
 
 import importlib_metadata
 import importlib_resources
@@ -162,7 +162,7 @@ def get_tessdata_path() -> str:
     raise ValueError(f"No valid path for tessdata found. {path} is invalid.")
 
 
-def get_tesseract_languages() -> List[str]:
+def get_tesseract_languages() -> Set[str]:
     """Detect available tesseract languages."""
 
     path = get_tessdata_path()
@@ -176,7 +176,7 @@ def get_tesseract_languages() -> List[str]:
             + "On Linux/MacOS see if 'tesseract --list-langs' work is the command line."
         )
 
-    return tesseract_languages
+    return set(tesseract_languages)
 
 
 def get_system_info() -> SystemInfo:

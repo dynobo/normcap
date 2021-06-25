@@ -2,7 +2,7 @@
 
 import csv
 import statistics
-from typing import List
+from typing import Set
 
 from PySide2 import QtGui
 
@@ -14,10 +14,10 @@ from normcap.utils import tesserocr
 class PerformOcr:
     """Handles the text recognition task."""
 
-    language: str
+    languages: Set[str]
     tessdata_path: str
 
-    def __call__(self, language: str, capture: Capture, system_info: SystemInfo):
+    def __call__(self, languages: Set[str], capture: Capture, system_info: SystemInfo):
         """Apply OCR on selected image section.
         Arguments:
             AbstractHandler {class} -- self
@@ -26,12 +26,12 @@ class PerformOcr:
             Capture -- Enriched NormCap's session data
         """
         self.tessdata_path = system_info.tessdata_path
-        self.language = self.sanatize_language(
-            language, system_info.tesseract_languages
+        self.languages = self.sanatize_language(
+            languages, system_info.tesseract_languages
         )
 
         logger.info(f"Using tessdata in '{self.tessdata_path}'")
-        logger.info(f"Using language '{self.language}'")
+        logger.info(f"Using language '{self.languages}'")
 
         capture = self.extract(capture)
         return capture
@@ -74,7 +74,7 @@ class PerformOcr:
 
         with tesserocr.PyTessBaseAPI(
             path=self.tessdata_path,
-            lang=self.language,
+            lang="+".join(list(self.languages)),
             oem=oem_opt,
             psm=psm_opt,
         ) as api:
@@ -177,25 +177,27 @@ class PerformOcr:
         return words
 
     @staticmethod
-    def sanatize_language(config_language: str, tesseract_languages: List[str]) -> str:
+    def sanatize_language(
+        config_languages: Set[str], tesseract_languages: Set[str]
+    ) -> Set[str]:
         """Retrieve tesseract version number."""
-        tesseract_langs = set(tesseract_languages)
-        requested_langs = set(config_language.split("+"))
-        unavailable_langs = requested_langs.difference(tesseract_langs)
-        available_langs = requested_langs.intersection(tesseract_langs)
+        unavailable_langs = config_languages.difference(tesseract_languages)
+        available_langs = config_languages.intersection(tesseract_languages)
 
-        if unavailable_langs:
-            logger.warning("Language %s for ocr not found!", {*unavailable_langs})
-            logger.warning("Available tesseract langs: %s.", {*tesseract_langs})
-            if available_langs:
-                config_language = "+".join(
-                    [rl for rl in requested_langs if rl in available_langs]
-                )
-            else:
-                config_language = list(tesseract_langs)[0]
-            logger.warning("Fallback to %s.", config_language)
+        if not unavailable_langs:
+            return config_languages
 
-        return config_language
+        logger.warning(
+            f"Languages {unavailable_langs} not found. "
+            + f"Available on the system are: {tesseract_languages}."
+        )
+        if available_langs:
+            logger.warning(f"Fallback to languages {available_langs}.")
+            return available_langs
+
+        fallback_language = tesseract_languages.pop()
+        logger.warning(f"Fallback to language {fallback_language}.")
+        return set([fallback_language])
 
 
 perform_ocr = PerformOcr()

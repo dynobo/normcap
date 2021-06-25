@@ -28,7 +28,7 @@ def create_argparser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "-l",
-        "--language",
+        "--languages",
         type=str,
         default="eng",
         help="set language(s) for text recognition, e.g. eng+deu",
