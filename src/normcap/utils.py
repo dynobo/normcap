@@ -7,7 +7,7 @@ import os
 import sys
 import tempfile
 from pathlib import Path
-from typing import Dict, Set
+from typing import Dict, List
 
 import importlib_metadata
 import importlib_resources
@@ -162,12 +162,12 @@ def get_tessdata_path() -> str:
     raise ValueError(f"No valid path for tessdata found. {path} is invalid.")
 
 
-def get_tesseract_languages() -> Set[str]:
+def get_tesseract_languages() -> List[str]:
     """Detect available tesseract languages."""
 
     path = get_tessdata_path()
     logger.info(f"Searching tesseract languages {path}")
-    tesseract_languages = list(set(tesserocr.get_languages(path=path)[1]))
+    tesseract_languages = list(tesserocr.get_languages(path=path)[1])
 
     if len(tesseract_languages) < 1:
         raise ValueError(
@@ -176,7 +176,7 @@ def get_tesseract_languages() -> Set[str]:
             + "On Linux/MacOS see if 'tesseract --list-langs' work is the command line."
         )
 
-    return set(tesseract_languages)
+    return tesseract_languages
 
 
 def get_system_info() -> SystemInfo:
@@ -272,3 +272,24 @@ def except_hook(cls, exception, traceback):
         "Uncaught exception! Quitting NormCap!", exc_info=(cls, exception, traceback)
     )
     sys.exit(1)
+
+
+def get_config_directory() -> Path:
+    """Retrieve platform specific configuration directory."""
+    platform_str = sys.platform.lower()
+
+    # Windows
+    if platform_str == "win":
+        local_appdata = os.getenv("LOCALAPPDATA")
+        if local_appdata:
+            return Path(local_appdata)
+        appdata = os.getenv("APPDATA")
+        if appdata:
+            return Path(appdata)
+        raise ValueError("Couldn't determine the appdata directory.")
+
+    # Linux and Mac
+    xdg_config_home = os.getenv("XDG_CONFIG_HOME")
+    if xdg_config_home:
+        return Path(xdg_config_home)
+    return Path.home() / ".config"

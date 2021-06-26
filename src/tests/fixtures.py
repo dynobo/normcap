@@ -26,8 +26,9 @@ def config() -> Config:
     """Create a config object."""
     return Config(
         color="#00ff00",
-        languages={"eng"},
-        no_notifications=True,
+        languages=("eng",),
+        updates=True,
+        notifications=True,
         tray=False,
     )
 
@@ -103,7 +104,7 @@ def system_info() -> SystemInfo:
         normcap_version="version-string",
         tesseract_version="version-string",
         tessdata_path="./",
-        tesseract_languages={"eng"},
+        tesseract_languages=["eng"],
         briefcase_package=False,
         screens={
             0: ScreenInfo(

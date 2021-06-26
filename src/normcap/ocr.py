@@ -2,7 +2,7 @@
 
 import csv
 import statistics
-from typing import Set
+from typing import List, Set
 
 from PySide2 import QtGui
 
@@ -17,7 +17,7 @@ class PerformOcr:
     languages: Set[str]
     tessdata_path: str
 
-    def __call__(self, languages: Set[str], capture: Capture, system_info: SystemInfo):
+    def __call__(self, languages: List[str], capture: Capture, system_info: SystemInfo):
         """Apply OCR on selected image section.
         Arguments:
             AbstractHandler {class} -- self
@@ -178,24 +178,26 @@ class PerformOcr:
 
     @staticmethod
     def sanatize_language(
-        config_languages: Set[str], tesseract_languages: Set[str]
+        config_languages: List[str], tesseract_languages: List[str]
     ) -> Set[str]:
         """Retrieve tesseract version number."""
-        unavailable_langs = config_languages.difference(tesseract_languages)
-        available_langs = config_languages.intersection(tesseract_languages)
+        set_config_languages = set(config_languages)
+        set_tesseract_languages = set(tesseract_languages)
+        unavailable_langs = set_config_languages.difference(set_tesseract_languages)
+        available_langs = set_config_languages.intersection(set_tesseract_languages)
 
         if not unavailable_langs:
-            return config_languages
+            return set_config_languages
 
         logger.warning(
             f"Languages {unavailable_langs} not found. "
-            + f"Available on the system are: {tesseract_languages}."
+            + f"Available on the system are: {set_tesseract_languages}."
         )
         if available_langs:
             logger.warning(f"Fallback to languages {available_langs}.")
             return available_langs
 
-        fallback_language = tesseract_languages.pop()
+        fallback_language = set_tesseract_languages.pop()
         logger.warning(f"Fallback to language {fallback_language}.")
         return set([fallback_language])
 

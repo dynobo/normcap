@@ -795,9 +795,6 @@ category = "main"
 optional = false
 python-versions = "*"
 
-[package.source]
-type = "url"
-url = "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl"
 [[package]]
 name = "tesserocr"
 version = "2.5.2"
@@ -826,6 +823,14 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 name = "typed-ast"
 version = "1.4.3"
 description = "a fork of Python 2 and 3 ast modules with type comment support"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "types-pyyaml"
+version = "5.4.3"
+description = "Typing stubs for PyYAML"
 category = "dev"
 optional = false
 python-versions = "*"
@@ -912,7 +917,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "2ead3273e5a9f4ded15a0f16115be91caf890b2f2639372a66a4479a0ea32baa"
+content-hash = "89762d29bb3fb29718998ec346d8bdcced24d872683cd9cd07d84f26af401f63"
 
 [metadata.files]
 appdirs = [
@@ -1376,6 +1381,7 @@ snowballstemmer = [
     {file = "snowballstemmer-2.1.0.tar.gz", hash = "sha256:e997baa4f2e9139951b6f4c631bad912dfd3c792467e2f03d7239464af90e914"},
 ]
 tesserocr = [
+    {file = "tesserocr-2.4.0.tar.gz", hash = "sha256:ba60466fc91835656d4b4f93deb4ba7543d1588722ec4e0b84cc694500373b85"},
     {file = "tesserocr-2.5.2.tar.gz", hash = "sha256:9371dd3f6fe3238039c73bfe15bcaf21389f7e75f62bd530a30110149f39b2ae"},
 ]
 text-unidecode = [
@@ -1417,6 +1423,10 @@ typed-ast = [
     {file = "typed_ast-1.4.3-cp39-cp39-win32.whl", hash = "sha256:209596a4ec71d990d71d5e0d312ac935d86930e6eecff6ccc7007fe54d703808"},
     {file = "typed_ast-1.4.3-cp39-cp39-win_amd64.whl", hash = "sha256:9c6d1a54552b5330bc657b7ef0eae25d00ba7ffe85d9ea8ae6540d2197a3788c"},
     {file = "typed_ast-1.4.3.tar.gz", hash = "sha256:fb1bbeac803adea29cedd70781399c99138358c26d05fcbd23c13016b7f5ec65"},
+]
+types-pyyaml = [
+    {file = "types-PyYAML-5.4.3.tar.gz", hash = "sha256:2e7b81b2b7af751634425107b986086c6ba7cb61270a43a5c290c58be8cdbc3a"},
+    {file = "types_PyYAML-5.4.3-py2.py3-none-any.whl", hash = "sha256:bca83cbfc0be48600a8abf1e3d87fb762a91e6d35d724029a3321dd2dce2ceb1"},
 ]
 types-toml = [
     {file = "types-toml-0.1.3.tar.gz", hash = "sha256:33ebe67bebaec55a123ecbaa2bd98fe588335d8d8dda2c7ac53502ef5a81a79a"},

@@ -28,6 +28,7 @@ def test_argparser_defaults_complete(argparser_defaults):
             "languages",
             "no_notifications",
             "tray",
+            "updates",
             "verbose",
             "very_verbose",
         ]
@@ -48,7 +49,7 @@ def test_argparser_attributes_in_config_class(argparser_defaults):
     """Check if every args has an attribute in Config class."""
     attributes = [f.name for f in fields(Config)]
     for arg in argparser_defaults:
-        if arg in ["verbose", "very_verbose"]:
+        if arg in ["verbose", "very_verbose", "no_notifications"]:
             continue
         assert arg in attributes
 

@@ -14,7 +14,10 @@ from normcap import __version__, utils
 from normcap.args import create_argparser
 from normcap.logger import logger
 from normcap.models import Config
+from normcap.utils import get_config_directory
 from normcap.window_main import WindowMain
+
+CONFIG_FILE = get_config_directory() / "normcap" / "config.yaml"
 
 
 def main():
@@ -30,7 +33,9 @@ def main():
         logger.setLevel("DEBUG")
 
     if args["languages"]:
-        args["languages"] = set(args["languages"].split("+"))
+        args["languages"] = args["languages"].split("+")
+
+    args["notifications"] = not args.pop("no_notifications")
 
     logger.info(f"Starting Normcap v{__version__}")
 
@@ -50,7 +55,13 @@ def main():
         system_info = utils.get_system_info()
         logger.debug(f"Detected system info:{system_info}")
 
-        config = Config(**args)
+        if len(sys.argv) > 1:
+            config = Config(file_path=None, **args)
+            logger.debug("Using unpersisted config (from cli args)")
+        else:
+            config = Config(file_path=CONFIG_FILE)
+            logger.debug("Using persisted config (from config file)")
+
         logger.debug(f"Applied user config:{config}")
 
         window = WindowMain(config, system_info)
