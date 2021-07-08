@@ -26,6 +26,7 @@ def test_argparser_defaults_complete(argparser_defaults):
         [
             "color",
             "languages",
+            "mode",
             "no_notifications",
             "tray",
             "updates",

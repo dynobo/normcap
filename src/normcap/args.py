@@ -27,6 +27,13 @@ def create_argparser() -> argparse.ArgumentParser:
         formatter_class=ArgFormatter,
     )
     parser.add_argument(
+        "-m",
+        "--mode",
+        type=str,
+        default="parse",
+        help="set capture mode to 'raw' or 'parse' (default)'",
+    )
+    parser.add_argument(
         "-l",
         "--languages",
         type=str,

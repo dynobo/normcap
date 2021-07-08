@@ -144,6 +144,7 @@ class ConfigBase:
     color: str = "#FF2E88"
     # TODO: Get's not initialized correctly.
     languages: Tuple[str] = ("eng",)
+    mode: str = "parse"
     notifications: bool = True
     tray: bool = False
     updates: bool = False

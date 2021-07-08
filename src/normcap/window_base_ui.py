@@ -18,7 +18,7 @@ class Ui_BaseWindow(object):
         if not BaseWindow.objectName():
             BaseWindow.setObjectName(u"BaseWindow")
         BaseWindow.setEnabled(True)
-        BaseWindow.resize(423, 588)
+        BaseWindow.resize(835, 588)
         icon = QIcon()
         icon.addFile(u"normcap.png", QSize(), QIcon.Normal, QIcon.Off)
         BaseWindow.setWindowIcon(icon)
@@ -38,12 +38,35 @@ class Ui_BaseWindow(object):
         self.frame = QFrame(self.centralwidget)
         self.frame.setObjectName(u"frame")
         self.frame.setCursor(QCursor(Qt.CrossCursor))
+        self.frame.setLayoutDirection(Qt.RightToLeft)
         self.frame.setStyleSheet(
             u"QFrame {\n" "   border-width: 3px;\n" "   border-style: solid;\n" "}"
         )
         self.frame.setFrameShape(QFrame.StyledPanel)
         self.frame.setFrameShadow(QFrame.Plain)
         self.frame.setLineWidth(0)
+        self.gridLayout_2 = QGridLayout(self.frame)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.horizontalSpacer = QSpacerItem(
+            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum
+        )
+
+        self.gridLayout_2.addItem(self.horizontalSpacer, 1, 1, 1, 1)
+
+        self.verticalSpacer = QSpacerItem(
+            20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding
+        )
+
+        self.gridLayout_2.addItem(self.verticalSpacer, 2, 1, 1, 1)
+
+        self.top_right_frame = QFrame(self.frame)
+        self.top_right_frame.setObjectName(u"top_right_frame")
+        self.top_right_frame.setMinimumSize(QSize(32, 32))
+        self.top_right_frame.setStyleSheet(u"border:none;")
+        self.top_right_frame.setFrameShape(QFrame.StyledPanel)
+        self.top_right_frame.setFrameShadow(QFrame.Raised)
+
+        self.gridLayout_2.addWidget(self.top_right_frame, 1, 0, 1, 1)
 
         self.gridLayout.addWidget(self.frame, 0, 0, 1, 1)
 

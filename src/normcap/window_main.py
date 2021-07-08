@@ -1,11 +1,9 @@
 """Normcap main window."""
-
 import os
-import sys
 import tempfile
 import textwrap
 import time
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 import importlib_resources
 from PySide2 import QtCore, QtGui, QtWidgets
@@ -13,6 +11,8 @@ from PySide2 import QtCore, QtGui, QtWidgets
 import normcap.clipboard as clipboard
 from normcap import __version__
 from normcap.enhance import enhance_image
+from normcap.gui.settings_menu import create_settings_button
+from normcap.gui.system_tray import create_system_tray
 from normcap.logger import logger
 from normcap.magic import apply_magic
 from normcap.models import (
@@ -60,22 +60,21 @@ class WindowMain(WindowBase):
             system_info=system_info, screen_idx=0, parent=None, color=config.color
         )
         self.config: Config = config
-
         self.capture: Capture = Capture()
         self.com = Communicate()
-
-        self.tray_icon = self.get_icon("tray.png")
-
-        if self.system_info.platform == Platform.WINDOWS:
-            self.notification_icon = self.get_icon("normcap.png")
-        else:
-            self.notification_icon = self.tray_icon
 
         self.all_windows: Dict[int, WindowBase] = {0: self}
         self.multi_monitor_mode = len(self.system_info.screens) > 1
 
         self.set_signals()
-        self.set_system_tray()
+
+        self.settings_btn = create_settings_button(self)
+        self.settings_btn.show()
+
+        self.main_window.tray = create_system_tray(self)
+        if self.config.tray:
+            logger.debug("Show tray icon")
+            self.main_window.tray.show()
 
         if self.multi_monitor_mode:
             self.init_child_windows()
@@ -99,9 +98,11 @@ class WindowMain(WindowBase):
     ###################
 
     @staticmethod
-    def get_icon(icon_file: str):
+    def get_icon(icon_file: str, system_icon: Optional[str] = None):
         """Load icon from system or if not available from resources."""
-        icon = QtGui.QIcon.fromTheme("tool-magic-symbolic")
+        icon = None
+        if system_icon:
+            icon = QtGui.QIcon.fromTheme(system_icon)
         if not icon:
             with importlib_resources.path("normcap.resources", icon_file) as fp:
                 icon_path = str(fp.absolute())
@@ -125,16 +126,15 @@ class WindowMain(WindowBase):
         """Initialize child windows with method depending on system."""
         if self.system_info.display_manager != DisplayManager.WAYLAND:
             self.create_all_child_windows()
+        elif self.system_info.desktop_environment == DesktopEnvironment.GNOME:
+            self.com.onWindowPositioned.connect(self.create_next_child_window)
         else:
-            if self.system_info.desktop_environment == DesktopEnvironment.GNOME:
-                self.com.onWindowPositioned.connect(self.create_next_child_window)
-            else:
-                logger.error(
-                    f"NormCap currently doesn't support multi monitor mode"
-                    f"for {self.system_info.display_manager} "
-                    f"on {self.system_info.desktop_environment}."
-                    f"\n{FILE_ISSUE_TEXT}"
-                )
+            logger.error(
+                f"NormCap currently doesn't support multi monitor mode"
+                f"for {self.system_info.display_manager} "
+                f"on {self.system_info.desktop_environment}."
+                f"\n{FILE_ISSUE_TEXT}"
+            )
 
     def create_next_child_window(self):
         """Instantiate child windows in multi screen setting."""
@@ -193,61 +193,57 @@ class WindowMain(WindowBase):
             logger.debug("Exit normcap.")
             QtWidgets.QApplication.quit()
 
-    #########################
-    # Tray and Notification #
-    #########################
-
-    def set_system_tray(self):
-        """Setting up tray icon."""
-        logger.debug("Setting up tray icon")
-        menu = self.create_tray_menu()
-        self.main_window.tray = QtWidgets.QSystemTrayIcon()
-        self.main_window.tray.setIcon(self.tray_icon)
-        self.main_window.tray.setContextMenu(menu)
+    def show_or_hide_tray_icon(self):
+        """Set visibility state of tray icon"""
         if self.config.tray:
             logger.debug("Show tray icon")
             self.main_window.tray.show()
+        else:
+            logger.debug("Hide tray icon")
+            self.main_window.tray.hide()
 
-    def create_tray_menu(self):
-        """Create menu for system tray."""
-        menu = QtWidgets.QMenu()
+    #########################
+    # On settings change    #
+    #########################
 
-        capture_action = menu.addAction("Capture")
-        capture_action.triggered.connect(self.show_windows)
-        exit_action = menu.addAction("Exit")
-        exit_action.triggered.connect(sys.exit)
+    def set_config(self, name, value):
+        """Change value in config object."""
+        if name == "languages":
+            languages = list(self.config.languages)
+            action = [a for a in self.settings_menu.actions() if a.text() == value][0]
+            checked = action.isChecked()
+            if checked and value not in languages:
+                languages.append(value)
+            if not checked and value in languages:
+                if len(languages) > 1:
+                    languages.remove(value)
+                else:
+                    action.setChecked(True)
+            self.config.languages = tuple(languages)
+        elif name == "tray":
+            self.config.__setattr__(name, value)
+            self.show_or_hide_tray_icon()
+        else:
+            self.config.__setattr__(name, value)
 
-        menu.addSeparator()
+        logger.debug(self.config)
 
-        website_action = menu.addAction(f"NormCap {__version__} Website")
-        website_action.triggered.connect(
-            lambda: QtGui.QDesktopServices.openUrl("https://github.com/dynobo/normcap")
-        )
-        update_action = menu.addAction("- Releases")
-        update_action.triggered.connect(
-            lambda: QtGui.QDesktopServices.openUrl(
-                "https://github.com/dynobo/normcap/releases"
-            )
-        )
-        faq_action = menu.addAction("- FAQ")
-        faq_action.triggered.connect(
-            lambda: QtGui.QDesktopServices.openUrl(
-                "https://github.com/dynobo/normcap/blob/main/FAQ.md"
-            )
-        )
-        issue_action = menu.addAction("- Report Problem")
-        issue_action.triggered.connect(
-            lambda: QtGui.QDesktopServices.openUrl(
-                "https://github.com/dynobo/normcap/issues"
-            )
-        )
-        return menu
+    #########################
+    # On notification send  #
+    #########################
 
     def send_notification(self):
         """Setting up tray icon."""
+        if not self.config.notifications:
+            self.com.onQuitOrHide.emit()
+
+        on_windows = self.system_info.platform == Platform.WINDOWS
+        icon_file = "normcap.png" if on_windows else "tray.png"
+        notification_icon = self.get_icon(icon_file, "tool-magic-symbolic")
+
         title, message = self.compose_notification()
         self.main_window.tray.show()
-        self.main_window.tray.showMessage(title, message, self.notification_icon)
+        self.main_window.tray.showMessage(title, message, notification_icon)
 
         # Delay quit or hide to get notification enough time to show up.
         delay = 5000 if self.system_info.platform == Platform.WINDOWS else 500
@@ -315,7 +311,6 @@ class WindowMain(WindowBase):
 
     def capture_to_ocr(self):
         """Perform content recognition on grabed image."""
-
         logger.debug("Performing OCR")
         self.capture = perform_ocr(
             languages=self.config.languages,
@@ -339,9 +334,7 @@ class WindowMain(WindowBase):
 
     def copy_to_clipboard(self):
         """Copy results to clipboard."""
-        logger.info(
-            f"Copying (transformed) text to clipboard:\n{self.capture.transformed}"
-        )
+        logger.info(f"Copying text to clipboard:\n{self.capture.transformed}")
         clipboard_copy = clipboard.init()
         clipboard_copy(self.capture.transformed)
 
