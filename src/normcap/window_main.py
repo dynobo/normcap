@@ -28,6 +28,7 @@ from normcap.models import (
 )
 from normcap.ocr import perform_ocr
 from normcap.screengrab import grab_screen
+from normcap.update import get_new_version
 from normcap.window_base import WindowBase
 
 
@@ -44,6 +45,7 @@ class Communicate(QtCore.QObject):
     onSetCursorWait = QtCore.Signal()
     onQuitOrHide = QtCore.Signal()
     onMagicsApplied = QtCore.Signal()
+    onCheckUpdates = QtCore.Signal()
 
 
 class WindowMain(WindowBase):
@@ -66,7 +68,7 @@ class WindowMain(WindowBase):
         self.all_windows: Dict[int, WindowBase] = {0: self}
         self.multi_monitor_mode = len(self.system_info.screens) > 1
 
-        self.set_signals()
+        self._set_signals()
 
         self.settings_buttton = create_settings_button(self)
         self.settings_buttton.show()
@@ -77,9 +79,9 @@ class WindowMain(WindowBase):
             self.main_window.tray.show()
 
         if self.multi_monitor_mode:
-            self.init_child_windows()
+            self._init_child_windows()
 
-    def set_signals(self):
+    def _set_signals(self):
         """Setup signals to trigger program logic."""
         self.com.onRegionSelected.connect(self.grab_image)
         self.com.onImageGrabbed.connect(self.prepare_image)
@@ -92,6 +94,8 @@ class WindowMain(WindowBase):
         self.com.onMinimizeWindows.connect(self.minimize_windows)
         self.com.onSetCursorWait.connect(self.set_cursor_wait)
         self.com.onQuitOrHide.connect(self.quit_or_minimize)
+
+        self.com.onCheckUpdates.connect(self.check_for_updates)
 
     ###################
     # UI Manipulation #
@@ -122,7 +126,7 @@ class WindowMain(WindowBase):
         QtWidgets.QApplication.restoreOverrideCursor()
         QtWidgets.QApplication.processEvents()
 
-    def init_child_windows(self):
+    def _init_child_windows(self):
         """Initialize child windows with method depending on system."""
         if self.system_info.display_manager != DisplayManager.WAYLAND:
             self.create_all_child_windows()
@@ -341,3 +345,44 @@ class WindowMain(WindowBase):
         QtWidgets.QApplication.processEvents()
         time.sleep(1.05)
         self.com.onCopiedToClipboard.emit()
+
+    def check_for_updates(self):
+        """Check if update is available and present dialog."""
+        # return
+        if not self.config.updates:
+            return
+
+        logger.debug("Checking for updates")
+
+        new_version = get_new_version(self.system_info.briefcase_package)
+
+        if not new_version:
+            return
+
+        text = f"<b>NormCap v{new_version} is available.</b> (You have v{__version__})"
+        if self.system_info.briefcase_package:
+            info_text = (
+                "You can download the new version for your operating system from "
+                "GitHub.\n\n"
+                "Do you want to visit the release website now?"
+            )
+        else:
+            info_text = (
+                "You should be able to upgrade from command line with "
+                "'pip install normcap --upgrade'.\n\n"
+                "Do you want to visit the release website now?"
+            )
+
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIconPixmap(self.get_icon("normcap.png").pixmap(48, 48))
+        msgBox.setText(text)
+        msgBox.setInformativeText(info_text)
+        msgBox.setStandardButtons(
+            QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel
+        )
+        msgBox.setDefaultButton(QtWidgets.QMessageBox.Ok)
+
+        choice = msgBox.exec_()
+        if choice == 1024:
+            QtGui.QDesktopServices.openUrl("https://github.com/dynobo/normcap/releases")
+            self.com.onQuitOrHide.emit()

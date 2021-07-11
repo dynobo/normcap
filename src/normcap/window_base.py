@@ -187,7 +187,7 @@ class WindowBase(QtWidgets.QMainWindow):
             logger.debug(f"Positioning window on screen {self.screen_idx}")
             self._position_windows_on_wayland()
             self.main_window.com.onWindowPositioned.emit()
-
+            self.main_window.com.onCheckUpdates.emit()
         return super().changeEvent(event)
 
     ##################
