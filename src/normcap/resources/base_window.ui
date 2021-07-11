@@ -23,11 +23,6 @@
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
-  <property name="styleSheet">
-   <string notr="true">QMainWindow::separator {
-    background-color: #ddd;
-}</string>
-  </property>
   <property name="animated">
    <bool>true</bool>
   </property>

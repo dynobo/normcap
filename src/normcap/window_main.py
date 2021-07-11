@@ -68,8 +68,8 @@ class WindowMain(WindowBase):
 
         self.set_signals()
 
-        self.settings_btn = create_settings_button(self)
-        self.settings_btn.show()
+        self.settings_buttton = create_settings_button(self)
+        self.settings_buttton.show()
 
         self.main_window.tray = create_system_tray(self)
         if self.config.tray:

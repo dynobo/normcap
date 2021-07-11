@@ -23,9 +23,9 @@ class Ui_BaseWindow(object):
         icon.addFile(u"normcap.png", QSize(), QIcon.Normal, QIcon.Off)
         BaseWindow.setWindowIcon(icon)
         BaseWindow.setAutoFillBackground(True)
-        BaseWindow.setStyleSheet(
-            u"QMainWindow::separator {\n" "    background-color: #ddd;\n" "}"
-        )
+        # BaseWindow.setStyleSheet(
+        #     u"QMainWindow::separator {\n" "    background-color: #ddd;\n" "}"
+        # )
         BaseWindow.setAnimated(True)
         self.centralwidget = QWidget(BaseWindow)
         self.centralwidget.setObjectName(u"centralwidget")

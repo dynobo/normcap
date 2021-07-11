@@ -4,7 +4,9 @@ from PySide2 import QtCore, QtGui, QtWidgets
 
 
 # pylint: disable=too-many-statements
-def create_menu(window: QtWidgets.QMainWindow) -> QtWidgets.QMenu:
+def create_menu(
+    window: QtWidgets.QMainWindow, parent: QtWidgets.QWidget
+) -> QtWidgets.QMenu:
     """Creat settings menu."""
     # pylint: disable=no-member  # action.triggered.connect is not resolved
 
@@ -12,8 +14,24 @@ def create_menu(window: QtWidgets.QMainWindow) -> QtWidgets.QMenu:
     font.setPixelSize(12)
     font.setBold(True)
 
-    menu = QtWidgets.QMenu()
-
+    menu = QtWidgets.QMenu(parent)
+    menu.setStyleSheet(
+        f"""
+        QMenu {{
+            background-color: rgba(0,0,0,0.6);
+            color: white;
+        }}
+        QMenu::separator {{
+            background-color: rgba(255,255,255,0.2);
+        }}
+        QMenu::item:disabled {{
+            color: {window.config.color};
+        }}
+        QMenu::item:selected {{
+            background-color: rgba(150,150,150,0.6);
+        }}
+        """
+    )
     # Settings section
 
     action = QtWidgets.QAction("Settings:", menu)
@@ -21,13 +39,13 @@ def create_menu(window: QtWidgets.QMainWindow) -> QtWidgets.QMenu:
     action.setFont(font)
     menu.addAction(action)
 
-    action = QtWidgets.QAction("Show Notifications", menu)
+    action = QtWidgets.QAction("Show notifications", menu)
     action.setCheckable(True)
     action.setChecked(window.config.notifications)
     action.triggered.connect(lambda check: window.set_config("notifications", check))
     menu.addAction(action)
 
-    action = QtWidgets.QAction("Keep in System Tray", menu)
+    action = QtWidgets.QAction("Keep in system tray", menu)
     action.setCheckable(True)
     action.setChecked(window.config.tray)
     action.triggered.connect(lambda check: window.set_config("tray", check))
@@ -43,7 +61,7 @@ def create_menu(window: QtWidgets.QMainWindow) -> QtWidgets.QMenu:
 
     # Mode section
 
-    action = QtWidgets.QAction("Mode:", menu)
+    action = QtWidgets.QAction("Capture mode:", menu)
     action.setEnabled(False)
     action.setFont(font)
     menu.addAction(action)
@@ -91,6 +109,10 @@ def create_menu(window: QtWidgets.QMainWindow) -> QtWidgets.QMenu:
     menu.addSeparator()
 
     # Final section
+    action = QtWidgets.QAction("Application:", menu)
+    action.setEnabled(False)
+    action.setFont(font)
+    menu.addAction(action)
 
     action = QtWidgets.QAction("Exit", menu)
     action.triggered.connect(window.com.onQuitOrHide.emit)
@@ -131,9 +153,9 @@ def create_button(window: QtWidgets.QMainWindow) -> QtWidgets.QToolButton:
 def create_settings_button(window: QtWidgets.QMainWindow) -> QtWidgets.QToolButton:
     """Combine settings menu and button"""
 
-    window.settings_menu = create_menu(window)
-
     button = create_button(window)
+    window.settings_menu = create_menu(window, button)
+
     button.setMenu(window.settings_menu)
 
     return button
