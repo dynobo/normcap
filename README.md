@@ -28,18 +28,14 @@
 
 Hints:
 
-- If you experience issues or have questions please look at the
+- If you experience issues please look at the
   [FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md) or
   [open an issue](https://github.com/dynobo/normcap/issues).
-- On **Linux**, make the AppImage executable before running it:
-  ```
-  chmod +x NormCap-Linux.AppImage
-  ./NormCap-Linux.AppImage
-  ```
+- On **Linux**, make the AppImage executable (e.g. `chmod +x`) before running it.
 - On **MacOS**, you have to allow the unsigned application on first start: "System
   Preferences" → "Security & Privacy" → Tab "General" → "Open anyway". \
   Depending on
-  your OS, you might also need to allow NormCap to take screenshots.
+  your system, you might also need to allow NormCap to take screenshots.
 
 ## Python package
 
