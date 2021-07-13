@@ -55,7 +55,9 @@ def main():
         system_info = utils.get_system_info()
         logger.debug(f"Detected system info:{system_info}")
 
-        if len(sys.argv) > 1:
+        exclude_args = ["-v", "-V", "--verbose", "--very-verbose"]
+        count_args = len([s for s in sys.argv if s not in exclude_args])
+        if count_args > 1:
             config = Config(file_path=None, **args)
             logger.debug("Using unpersisted config (from cli args)")
         else:

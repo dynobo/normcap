@@ -23,9 +23,6 @@ class Ui_BaseWindow(object):
         icon.addFile(u"normcap.png", QSize(), QIcon.Normal, QIcon.Off)
         BaseWindow.setWindowIcon(icon)
         BaseWindow.setAutoFillBackground(True)
-        # BaseWindow.setStyleSheet(
-        #     u"QMainWindow::separator {\n" "    background-color: #ddd;\n" "}"
-        # )
         BaseWindow.setAnimated(True)
         self.centralwidget = QWidget(BaseWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -48,20 +45,20 @@ class Ui_BaseWindow(object):
         self.gridLayout_2 = QGridLayout(self.frame)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.horizontalSpacer = QSpacerItem(
-            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum
+            0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum
         )
 
         self.gridLayout_2.addItem(self.horizontalSpacer, 1, 1, 1, 1)
 
         self.verticalSpacer = QSpacerItem(
-            20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding
+            0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding
         )
 
         self.gridLayout_2.addItem(self.verticalSpacer, 2, 1, 1, 1)
 
         self.top_right_frame = QFrame(self.frame)
         self.top_right_frame.setObjectName(u"top_right_frame")
-        self.top_right_frame.setMinimumSize(QSize(32, 32))
+        self.top_right_frame.setMinimumSize(QSize(38, 38))
         self.top_right_frame.setStyleSheet(u"border:none;")
         self.top_right_frame.setFrameShape(QFrame.StyledPanel)
         self.top_right_frame.setFrameShadow(QFrame.Raised)

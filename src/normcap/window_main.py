@@ -78,6 +78,9 @@ class WindowMain(WindowBase):
             logger.debug("Show tray icon")
             self.main_window.tray.show()
 
+        if self.config.updates:
+            self.com.onCheckUpdates.emit()
+
         if self.multi_monitor_mode:
             self._init_child_windows()
 
@@ -212,6 +215,7 @@ class WindowMain(WindowBase):
 
     def set_config(self, name, value):
         """Change value in config object."""
+        logger.debug(f"Setting config {name} {value}")
         if name == "languages":
             languages = list(self.config.languages)
             action = [a for a in self.settings_menu.actions() if a.text() == value][0]

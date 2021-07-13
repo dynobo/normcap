@@ -26,43 +26,6 @@ def create_tray_menu(window: QtWidgets.QMainWindow) -> QtWidgets.QMenu:
     action.triggered.connect(sys.exit)
     menu.addAction(action)
 
-    menu.addSeparator()
-
-    action = QtWidgets.QAction(f"NormCap {__version__}", menu)
-    action.setEnabled(False)
-    action.setFont(font)
-    menu.addAction(action)
-
-    action = QtWidgets.QAction("- Website", menu)
-    action.triggered.connect(
-        lambda: QtGui.QDesktopServices.openUrl("https://github.com/dynobo/normcap")
-    )
-    menu.addAction(action)
-
-    action = QtWidgets.QAction("- Releases", menu)
-    action.triggered.connect(
-        lambda: QtGui.QDesktopServices.openUrl(
-            "https://github.com/dynobo/normcap/releases"
-        )
-    )
-    menu.addAction(action)
-
-    action = QtWidgets.QAction("- FAQ", menu)
-    action.triggered.connect(
-        lambda: QtGui.QDesktopServices.openUrl(
-            "https://github.com/dynobo/normcap/blob/main/FAQ.md"
-        )
-    )
-    menu.addAction(action)
-
-    action = QtWidgets.QAction("- Report a Problem", menu)
-    action.triggered.connect(
-        lambda: QtGui.QDesktopServices.openUrl(
-            "https://github.com/dynobo/normcap/issues"
-        )
-    )
-    menu.addAction(action)
-
     return menu
 
 

@@ -3,6 +3,12 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
 
+def open_url_and_hide(window, url):
+    """Open url and quit or hide NormCap."""
+    QtGui.QDesktopServices.openUrl(url)
+    window.com.onQuitOrHide.emit()
+
+
 # pylint: disable=too-many-statements
 def create_menu(
     window: QtWidgets.QMainWindow, parent: QtWidgets.QWidget
@@ -18,17 +24,33 @@ def create_menu(
     menu.setStyleSheet(
         f"""
         QMenu {{
-            background-color: rgba(0,0,0,0.6);
+            background-color: rgba(0,0,0,0.3);
             color: white;
         }}
         QMenu::separator {{
             background-color: rgba(255,255,255,0.2);
         }}
+        QMenu::item {{
+            padding: 4px 16px 4px 16px;
+            background-color: transparent;
+        }}
         QMenu::item:disabled {{
             color: {window.config.color};
         }}
         QMenu::item:selected {{
-            background-color: rgba(150,150,150,0.6);
+            background-color: rgba(150,150,150,0.5);
+        }}
+        QMenu::indicator {{
+            position: relative;
+            right: -5px;
+        }}
+        QMenu::indicator:unchecked {{
+        }}
+        QMenu::indicator:checked {{
+        }}
+        QMenu::left-arrow,
+        QMenu::right-arrow {{
+            margin: 5px;
         }}
         """
     )
@@ -114,6 +136,41 @@ def create_menu(
     action.setFont(font)
     menu.addAction(action)
 
+    submenu = QtWidgets.QMenu(menu)
+    submenu.setTitle("Website")
+
+    action = QtWidgets.QAction("Source code", submenu)
+    action.triggered.connect(
+        lambda window: open_url_and_hide(window, "https://github.com/dynobo/normcap")
+    )
+    submenu.addAction(action)
+
+    action = QtWidgets.QAction("Releases", submenu)
+    action.triggered.connect(
+        lambda window: open_url_and_hide(
+            window, "https://github.com/dynobo/normcap/releases"
+        )
+    )
+    submenu.addAction(action)
+
+    action = QtWidgets.QAction("FAQ", submenu)
+    action.triggered.connect(
+        lambda window: open_url_and_hide(
+            window, "https://github.com/dynobo/normcap/blob/main/FAQ.md"
+        )
+    )
+    submenu.addAction(action)
+
+    action = QtWidgets.QAction("Report a problem", submenu)
+    action.triggered.connect(
+        lambda window: open_url_and_hide(
+            window, "https://github.com/dynobo/normcap/issues"
+        )
+    )
+    submenu.addAction(action)
+
+    menu.addMenu(submenu)
+
     action = QtWidgets.QAction("Exit", menu)
     action.triggered.connect(window.com.onQuitOrHide.emit)
     menu.addAction(action)
@@ -125,7 +182,7 @@ def create_button(window: QtWidgets.QMainWindow) -> QtWidgets.QToolButton:
     """Creat settings button."""
 
     button = QtWidgets.QToolButton(window.ui.top_right_frame)
-    button.setFixedSize(32, 32)
+    button.setFixedSize(38, 38)
     button.setToolButtonStyle(QtCore.Qt.ToolButtonTextOnly)
     button.setStyleSheet(
         """
@@ -135,6 +192,7 @@ def create_button(window: QtWidgets.QMainWindow) -> QtWidgets.QToolButton:
         QToolButton {
             text-align: center;
             color: red;
+            padding-top: 2px;
         }
         """
     )
