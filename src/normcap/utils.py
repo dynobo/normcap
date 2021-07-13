@@ -167,7 +167,7 @@ def get_tesseract_languages() -> List[str]:
 
     path = get_tessdata_path()
     logger.info(f"Searching tesseract languages {path}")
-    tesseract_languages = list(set(tesserocr.get_languages(path=path)[1]))
+    tesseract_languages = list(tesserocr.get_languages(path=path)[1])
 
     if len(tesseract_languages) < 1:
         raise ValueError(
@@ -272,3 +272,24 @@ def except_hook(cls, exception, traceback):
         "Uncaught exception! Quitting NormCap!", exc_info=(cls, exception, traceback)
     )
     sys.exit(1)
+
+
+def get_config_directory() -> Path:
+    """Retrieve platform specific configuration directory."""
+    platform_str = sys.platform.lower()
+
+    # Windows
+    if platform_str == "win":
+        local_appdata = os.getenv("LOCALAPPDATA")
+        if local_appdata:
+            return Path(local_appdata)
+        appdata = os.getenv("APPDATA")
+        if appdata:
+            return Path(appdata)
+        raise ValueError("Couldn't determine the appdata directory.")
+
+    # Linux and Mac
+    xdg_config_home = os.getenv("XDG_CONFIG_HOME")
+    if xdg_config_home:
+        return Path(xdg_config_home)
+    return Path.home() / ".config"

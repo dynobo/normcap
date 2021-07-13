@@ -26,11 +26,10 @@ def config() -> Config:
     """Create a config object."""
     return Config(
         color="#00ff00",
-        language="eng",
-        no_notifications=True,
+        languages=("eng",),
+        updates=True,
+        notifications=True,
         tray=False,
-        verbose=True,
-        very_verbose=True,
     )
 
 

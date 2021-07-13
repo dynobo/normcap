@@ -6,7 +6,7 @@ To launch designer:
     .venv/lib/python3.9/site-packages/PySide2/designer
 
 To generate a new python class from ui-file:
-    uic -g python base_window.ui > ../window_base_ui.py
+    uic -g python src/normcap/resources/base_window.ui > src/normcap/window_base_ui.py
 
 """
 from copy import deepcopy
@@ -187,7 +187,7 @@ class WindowBase(QtWidgets.QMainWindow):
             logger.debug(f"Positioning window on screen {self.screen_idx}")
             self._position_windows_on_wayland()
             self.main_window.com.onWindowPositioned.emit()
-
+            self.main_window.com.onCheckUpdates.emit()
         return super().changeEvent(event)
 
     ##################

@@ -1,7 +1,7 @@
 # Frequently Asked Questions  <!-- omit in toc -->
 
 - [General](#general)
-  - [How can I specify the language(s) to be detected?](#how-can-i-specify-the-languages-to-be-detected)
+  - [How can I add additional languages to NormCap?](#how-can-i-add-additional-languages-to-normcap)
   - [What can I do improve the detection accuracy?](#what-can-i-do-improve-the-detection-accuracy)
   - [Is my image analyzed in "the cloud"?](#is-my-image-analyzed-in-the-cloud)
   - [What is the difference between using a pre-build package or a Python package?](#what-is-the-difference-between-using-a-pre-build-package-or-a-python-package)
@@ -13,33 +13,21 @@
 - [Troubleshooting](#troubleshooting)
   - [NormCap is not starting](#normcap-is-not-starting)
   - [\[Linux\] NormCap fails with "Could not load the Qt platform plugin xcb ..."](#linux-normcap-fails-with-could-not-load-the-qt-platform-plugin-xcb-)
-  - [\[Linux\] Normcap is started with `--tray` argument but still not shown in system tray](#linux-normcap-is-started-with---tray-argument-but-still-not-shown-in-system-tray)
+  - [\[Linux\] Normcap does not show up in system tray](#linux-normcap-does-not-show-up-in-system-tray)
   - [\[Linux\] Normcap doesn't show a notification after capture](#linux-normcap-doesnt-show-a-notification-after-capture)
 - [Development](#development)
   - ["No such file or directory" error when running `briefcase build`](#no-such-file-or-directory-error-when-running-briefcase-build)
 
 ## General
 
-### How can I specify the language(s) to be detected?
+### How can I add additional languages to NormCap?
 
-Start NormCap with a command line argument to select the language(s) to detect:
+The **prebuild packages** are shipped with the following languages English, German,
+Chinese, French, Spanish and Russian. If you miss a language, please
+[open an issue](https://github.com/dynobo/normcap/issues).
 
-- English (default): `--language eng`
-- German: `--language deu`
-- Chinese: `--language chi_sim`
-- French: `--language fra`
-- Spanish: `--language spa`
-- Russian: `--language rus`
-
-You can also combine languages, but it will slow down the detection:
-
-- E.g. Chinese *and* English: `--language chi_sim+eng`
-
-The languages listed above are all shipped with the prebuild packages. If you miss a
-language, please [open an issue](https://github.com/dynobo/normcap/issues).
-
-If you installed NormCap as Python package, refer to the online documentation on how to
-install additional language for Tesseract on your system.
+If you installed NormCap as **Python package**, refer to the online documentation on how
+to install additional language for Tesseract on your system.
 
 ### What can I do improve the detection accuracy?
 
@@ -104,7 +92,7 @@ you know a way to avoid this, please open an issue)
 
 ### NormCap is not starting
 
-Please try to start again with the `-V` aka `--very-verbose` option. This should reveal
+Please try to start again with the `-V` or `--very-verbose` option. This should reveal
 more information useful for problem solving.
 
 ### \[Linux\] NormCap fails with "Could not load the Qt platform plugin xcb ..."
@@ -143,7 +131,7 @@ symlink for the missing version:
 sudo ln -s /lib/x86_64-linux-gnu/libxcb-util.so.0 /lib/x86_64-linux-gnu/libxcb-util.so.1
 ```
 
-### \[Linux\] Normcap is started with `--tray` argument but still not shown in system tray
+### \[Linux\] Normcap does not show up in system tray
 
 Is your display environment Gnome Shell? Then you probably need to install a
 [Gnome Shell extension](https://extensions.gnome.org/) to support showing applications

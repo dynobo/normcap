@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>423</width>
+    <width>835</width>
     <height>588</height>
    </rect>
   </property>
@@ -22,11 +22,6 @@
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
-  </property>
-  <property name="styleSheet">
-   <string notr="true">QMainWindow::separator {
-    background-color: #ddd;
-}</string>
   </property>
   <property name="animated">
    <bool>true</bool>
@@ -59,6 +54,9 @@
       <property name="cursor">
        <cursorShape>CrossCursor</cursorShape>
       </property>
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true">QFrame {
    border-width: 3px;
@@ -74,6 +72,53 @@
       <property name="lineWidth">
        <number>0</number>
       </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="1">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="1">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="0">
+        <widget class="QFrame" name="top_right_frame">
+         <property name="minimumSize">
+          <size>
+           <width>38</width>
+           <height>38</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border:none;</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>

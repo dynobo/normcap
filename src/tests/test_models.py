@@ -1,4 +1,4 @@
-"""Test image enhancing methods."""
+"""Test data models."""
 
 import pytest  # type: ignore
 from PySide2 import QtGui
@@ -50,7 +50,7 @@ def test_system_info(system_info: SystemInfo):
 def test_config(config: Config):
     """Check if repr includes all fields correct."""
     string = str(config)
-    for field in config.__dict__:
+    for field in config.__dataclass_fields__:  # type:ignore
         assert field in string
 
 

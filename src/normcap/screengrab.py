@@ -4,7 +4,11 @@ import os
 import tempfile
 
 from jeepney.integrate.blocking import connect_and_authenticate  # type: ignore
-from jeepney.wrappers import MessageGenerator, new_method_call  # type: ignore
+from jeepney.wrappers import (  # type: ignore
+    DBusErrorResponse,
+    MessageGenerator,
+    new_method_call,
+)
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from normcap import utils
@@ -135,6 +139,11 @@ class ScreenGrabber:
             _ = connection.send_and_get_reply(msg)
             self.capture.image = QtGui.QImage(temp_name)
             utils.save_image_in_tempfolder(self.capture.image, postfix="_raw_dbus")
+        except DBusErrorResponse as e:
+            if "invalid params" in [d.lower() for d in e.data]:
+                logger.info("ScreenShot with DBUS failed with 'invalid params'.")
+            else:
+                logger.exception("ScreenShot with DBUS through exception")
         finally:
             os.unlink(temp_name)
 

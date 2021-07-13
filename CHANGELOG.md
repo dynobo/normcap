@@ -1,6 +1,13 @@
 # Changelog
 
-## v0.2.0-b3 (2021-06-23)
+## v0.2.1 (2021-07-13)
+
+**Changes:**
+
+- Add settings menu
+- Add check for updates on startup (experimental, needs opt-in)
+
+## v0.2.0 (2021-06-23)
 
 **Changes:**
 

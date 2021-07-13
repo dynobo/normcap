@@ -27,8 +27,15 @@ def create_argparser() -> argparse.ArgumentParser:
         formatter_class=ArgFormatter,
     )
     parser.add_argument(
+        "-m",
+        "--mode",
+        type=str,
+        default="parse",
+        help="set capture mode to 'raw' or 'parse' (default)'",
+    )
+    parser.add_argument(
         "-l",
-        "--language",
+        "--languages",
         type=str,
         default="eng",
         help="set language(s) for text recognition, e.g. eng+deu",
@@ -48,6 +55,13 @@ def create_argparser() -> argparse.ArgumentParser:
         "--tray",
         action="store_true",
         help="keep running in system tray - experimental",
+        default=False,
+    )
+    parser.add_argument(
+        "-u",
+        "--updates",
+        action="store_true",
+        help="search for updates on startup",
         default=False,
     )
     parser.add_argument(
