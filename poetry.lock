@@ -714,7 +714,7 @@ unidecode = ["Unidecode (>=1.1.1)"]
 name = "pyyaml"
 version = "5.4.1"
 description = "YAML parser and emitter for Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 
@@ -917,7 +917,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "89762d29bb3fb29718998ec346d8bdcced24d872683cd9cd07d84f26af401f63"
+content-hash = "5b8b214504ac828699c0b23a9f1918743f9ff15584e8d482b15f4a721f3d4089"
 
 [metadata.files]
 appdirs = [

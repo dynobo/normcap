@@ -34,6 +34,7 @@ importlib-metadata = "^4.5.0"
 importlib-resources = "^5.1.4"
 jeepney = "^0.6.0"
 PySide2 = "^5.15.2"
+PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 briefcase = "^0.3.5"
@@ -124,7 +125,13 @@ sources = ["src/normcap"]
 icon = "src/normcap/resources/normcap"
 installer_icon = "src/normcap/resources/normcap_install"
 installer_background = "src/normcap/resources/normcap_install_bg"
-requires = ["pyside2", "jeepney", "importlib-metadata", "importlib-resources"]
+requires = [
+    "pyside2",
+    "jeepney",
+    "importlib-metadata",
+    "importlib-resources",
+    "PyYAML",
+]
 
 [tool.briefcase.app.normcap.macOS]
 requires = ["tesserocr==2.4.1"]
