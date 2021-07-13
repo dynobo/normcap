@@ -10,8 +10,11 @@ from normcap.models import Config, ConfigBase
 
 def test_persisted_config_repr():
     """Check if repr includes all fields correct."""
-    with tempfile.NamedTemporaryFile() as cf:
-        config = Config(file_path=Path(cf.name))
+    temp_config = Path(tempfile.gettempdir()) / "config.temp"
+    try:
+        config = Config(file_path=temp_config)
+    finally:
+        os.unlink(temp_config)
 
     string = str(config)
     for field in config.__dataclass_fields__:  # type: ignore
@@ -20,10 +23,13 @@ def test_persisted_config_repr():
 
 def test_persisted_config_is_same_as_config():
     """Check if the datafield of normal and persisted config are the same."""
-    with tempfile.NamedTemporaryFile() as cf:
-        persisted_config = Config(file_path=Path(cf.name))
-    config = ConfigBase()
+    temp_config = Path(tempfile.gettempdir()) / "config.temp"
+    try:
+        persisted_config = Config(file_path=temp_config)
+    finally:
+        os.unlink(temp_config)
 
+    config = ConfigBase()
     persisted_config_fields = set(persisted_config.__dataclass_fields__)  # type: ignore
     config_fields = set(config.__dataclass_fields__)  # type: ignore # pylint: disable=no-member
 
@@ -33,11 +39,11 @@ def test_persisted_config_is_same_as_config():
 def test_persistance():
     """Check if the datafield of normal and persisted config are the same."""
     # Create config file
-    temp_path = Path.cwd() / "test_config.tmp"
+    temp_config = Path(tempfile.gettempdir()) / "config.temp"
 
     try:
         # Init with defaults
-        config = Config(file_path=temp_path)
+        config = Config(file_path=temp_config)
         initial_value = config.languages
 
         # Set new value
@@ -46,11 +52,11 @@ def test_persistance():
 
         # Reload config
         del config
-        config = Config(file_path=temp_path)
+        config = Config(file_path=temp_config)
         loaded_value = config.languages
     finally:
         # Delete config file
-        os.unlink(temp_path)
+        os.unlink(temp_config)
 
     assert initial_value != loaded_value
     assert new_value == loaded_value
