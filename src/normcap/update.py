@@ -1,5 +1,6 @@
 """Find new version on github or pypi."""
 import json
+import re
 import urllib.request
 from typing import Union
 
@@ -10,10 +11,10 @@ from normcap.logger import logger
 def get_newest_github_release():
     """Used for briefcase packaged version."""
     try:
-        url = "https://api.github.com/repos/dynobo/normcap/releases"
+        url = "https://github.com/dynobo/normcap/releases"
         with urllib.request.urlopen(url) as response:
-            data = json.loads(response.read())
-        latest_release_tag = data[0]["tag_name"].strip("v")
+            html = response.read().decode("utf-8")
+        latest_release_tag = re.search(r'title="v(\d+\.\d+\.\d+.*)"|$', html).group(1)
     except Exception:  # pylint: disable=broad-except
         logger.exception(f"Couldn't connect to {url} to check for updates.")
         latest_release_tag = ""
