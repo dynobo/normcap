@@ -2,6 +2,8 @@
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
+from normcap.models import Platform
+
 
 def open_url_and_hide(window, url):
     """Open url and quit or hide NormCap."""
@@ -141,21 +143,19 @@ def create_menu(
 
     action = QtWidgets.QAction("Source code", submenu)
     action.triggered.connect(
-        lambda window: open_url_and_hide(window, "https://github.com/dynobo/normcap")
+        lambda: open_url_and_hide(window, "https://github.com/dynobo/normcap")
     )
     submenu.addAction(action)
 
     action = QtWidgets.QAction("Releases", submenu)
     action.triggered.connect(
-        lambda window: open_url_and_hide(
-            window, "https://github.com/dynobo/normcap/releases"
-        )
+        lambda: open_url_and_hide(window, "https://github.com/dynobo/normcap/releases")
     )
     submenu.addAction(action)
 
     action = QtWidgets.QAction("FAQ", submenu)
     action.triggered.connect(
-        lambda window: open_url_and_hide(
+        lambda: open_url_and_hide(
             window, "https://github.com/dynobo/normcap/blob/main/FAQ.md"
         )
     )
@@ -163,9 +163,7 @@ def create_menu(
 
     action = QtWidgets.QAction("Report a problem", submenu)
     action.triggered.connect(
-        lambda window: open_url_and_hide(
-            window, "https://github.com/dynobo/normcap/issues"
-        )
+        lambda: open_url_and_hide(window, "https://github.com/dynobo/normcap/issues")
     )
     submenu.addAction(action)
 
@@ -196,6 +194,11 @@ def create_button(window: QtWidgets.QMainWindow) -> QtWidgets.QToolButton:
         }
         """
     )
+
+    # Move Button down on macOS as workaround for not being
+    # visible behind the menu bar
+    if window.system_info.platform == Platform.MACOS:
+        button.move(0, 20)
 
     font = QtGui.QFont()
     font.setPixelSize(32)

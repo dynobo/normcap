@@ -45,7 +45,7 @@ class Communicate(QtCore.QObject):
     onSetCursorWait = QtCore.Signal()
     onQuitOrHide = QtCore.Signal()
     onMagicsApplied = QtCore.Signal()
-    onCheckUpdates = QtCore.Signal()
+    onUpdateAvailable = QtCore.Signal(str)
 
 
 class WindowMain(WindowBase):
@@ -79,7 +79,7 @@ class WindowMain(WindowBase):
             self.main_window.tray.show()
 
         if self.config.updates:
-            self.com.onCheckUpdates.emit()
+            QtCore.QTimer.singleShot(0, self.check_for_updates)
 
         if self.multi_monitor_mode:
             self._init_child_windows()
@@ -97,8 +97,7 @@ class WindowMain(WindowBase):
         self.com.onMinimizeWindows.connect(self.minimize_windows)
         self.com.onSetCursorWait.connect(self.set_cursor_wait)
         self.com.onQuitOrHide.connect(self.quit_or_minimize)
-
-        self.com.onCheckUpdates.connect(self.check_for_updates)
+        self.com.onUpdateAvailable.connect(self.show_update_message)
 
     ###################
     # UI Manipulation #
@@ -237,6 +236,52 @@ class WindowMain(WindowBase):
         logger.debug(self.config)
 
     #########################
+    # Checking for Updates  #
+    #########################
+
+    def check_for_updates(self):
+        """Check if update is available and present dialog."""
+        logger.debug("Checking for updates")
+
+        new_version = get_new_version(self.system_info.briefcase_package)
+
+        if not new_version:
+            return
+
+        self.com.onUpdateAvailable.emit(new_version)
+
+    def show_update_message(self, new_version):
+        """Show dialog informing about available update."""
+
+        text = f"<b>NormCap v{new_version} is available.</b> (You have v{__version__})"
+        if self.system_info.briefcase_package:
+            info_text = (
+                "You can download the new version for your operating system from "
+                "GitHub.\n\n"
+                "Do you want to visit the release website now?"
+            )
+        else:
+            info_text = (
+                "You should be able to upgrade from command line with "
+                "'pip install normcap --upgrade'.\n\n"
+                "Do you want to visit the release website now?"
+            )
+
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIconPixmap(self.get_icon("normcap.png").pixmap(48, 48))
+        msgBox.setText(text)
+        msgBox.setInformativeText(info_text)
+        msgBox.setStandardButtons(
+            QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel
+        )
+        msgBox.setDefaultButton(QtWidgets.QMessageBox.Ok)
+
+        choice = msgBox.exec_()
+        if choice == 1024:
+            QtGui.QDesktopServices.openUrl("https://github.com/dynobo/normcap/releases")
+            self.com.onQuitOrHide.emit()
+
+    #########################
     # On notification send  #
     #########################
 
@@ -349,44 +394,3 @@ class WindowMain(WindowBase):
         QtWidgets.QApplication.processEvents()
         time.sleep(1.05)
         self.com.onCopiedToClipboard.emit()
-
-    def check_for_updates(self):
-        """Check if update is available and present dialog."""
-        # return
-        if not self.config.updates:
-            return
-
-        logger.debug("Checking for updates")
-
-        new_version = get_new_version(self.system_info.briefcase_package)
-
-        if not new_version:
-            return
-
-        text = f"<b>NormCap v{new_version} is available.</b> (You have v{__version__})"
-        if self.system_info.briefcase_package:
-            info_text = (
-                "You can download the new version for your operating system from "
-                "GitHub.\n\n"
-                "Do you want to visit the release website now?"
-            )
-        else:
-            info_text = (
-                "You should be able to upgrade from command line with "
-                "'pip install normcap --upgrade'.\n\n"
-                "Do you want to visit the release website now?"
-            )
-
-        msgBox = QtWidgets.QMessageBox()
-        msgBox.setIconPixmap(self.get_icon("normcap.png").pixmap(48, 48))
-        msgBox.setText(text)
-        msgBox.setInformativeText(info_text)
-        msgBox.setStandardButtons(
-            QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel
-        )
-        msgBox.setDefaultButton(QtWidgets.QMessageBox.Ok)
-
-        choice = msgBox.exec_()
-        if choice == 1024:
-            QtGui.QDesktopServices.openUrl("https://github.com/dynobo/normcap/releases")
-            self.com.onQuitOrHide.emit()
