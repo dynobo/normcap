@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.2 (2021-07-15)
+
+**Changes:**
+
+- Bugfixes related to update checking
+- Small UI improvements
+
 ## v0.2.1 (2021-07-13)
 
 **Changes:**
