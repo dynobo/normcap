@@ -122,22 +122,26 @@ NormCap has no settings, just a set of command line arguments:
 
 ```plain
 (normcap)dynobo@cioran:~$ normcap --help
-usage: normcap [-h] [-l LANGUAGE] [-c COLOR] [-n] [-t] [-v] [-V]
+usage: normcap [-h] [-m MODE] [-l LANGUAGES] [-c COLOR] [-n] [-t] [-u] [-v] [-V]
 
 OCR-powered screen-capture tool to capture information instead of images.
 
 optional arguments:
   -h, --help                  show this help message and exit
-  -l LANGUAGE, --language LANGUAGE
-                              set language(s) for text recognition, e.g.
-                              eng+deu (default: eng)
+  -m MODE, --mode MODE        set capture mode to 'raw' or 'parse'
+                              (default: parse)
+  -l LANGUAGES, --languages LANGUAGES
+                              set language(s) for text recognition, e.g. eng+deu
+                              (default: eng)
   -c COLOR, --color COLOR     set primary color for UI (default: #FF2E88)
   -n, --no-notifications      disable notifications shown after ocr detection
                               (default: False)
   -t, --tray                  keep running in system tray - experimental
                               (default: False)
-  -v, --verbose               print debug information to console (default:
-                              False)
+  -u, --updates               search for updates on startup - experimental
+                              (default: False)
+  -v, --verbose               print debug information to console
+                              (default: False)
   -V, --very-verbose          print more debug information to console
                               (default: False)
 ```
