@@ -13,7 +13,7 @@ def get_newest_github_release():
         url = "https://api.github.com/repos/dynobo/normcap/releases"
         with urllib.request.urlopen(url) as response:
             data = json.loads(response.read())
-        latest_release_tag = data[0].tag_name.strip("v")
+        latest_release_tag = data[0]["tag_name"].strip("v")
     except Exception:  # pylint: disable=broad-except
         logger.exception(f"Couldn't connect to {url} to check for updates.")
         latest_release_tag = ""
