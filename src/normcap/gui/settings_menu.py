@@ -181,33 +181,18 @@ def create_button(window: QtWidgets.QMainWindow) -> QtWidgets.QToolButton:
 
     button = QtWidgets.QToolButton(window.ui.top_right_frame)
     button.setFixedSize(38, 38)
-    button.setToolButtonStyle(QtCore.Qt.ToolButtonTextOnly)
-    button.setStyleSheet(
-        """
-        QToolButton::menu-indicator {
-            image: none;
-        }
-        QToolButton {
-            text-align: center;
-            color: red;
-            padding-top: 2px;
-        }
-        """
-    )
+    button.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
 
     # Move Button down on macOS as workaround for not being
     # visible behind the menu bar
     if window.system_info.platform == Platform.MACOS:
         button.move(0, 20)
 
-    font = QtGui.QFont()
-    font.setPixelSize(32)
-    font.setBold(True)
-    button.setFont(font)
-    button.setText("⚙")
-
+    button.setIcon(window.get_icon("settings.png"))
+    button.setIconSize(QtCore.QSize(24, 24))
     button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
     button.setCursor(QtCore.Qt.ArrowCursor)
+
     return button
 
 

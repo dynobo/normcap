@@ -104,7 +104,7 @@
          <property name="minimumSize">
           <size>
            <width>38</width>
-           <height>68</height>
+           <height>72</height>
           </size>
          </property>
          <property name="styleSheet">
