@@ -58,7 +58,7 @@ class Ui_BaseWindow(object):
 
         self.top_right_frame = QFrame(self.frame)
         self.top_right_frame.setObjectName(u"top_right_frame")
-        self.top_right_frame.setMinimumSize(QSize(38, 68))
+        self.top_right_frame.setMinimumSize(QSize(38, 72))
         self.top_right_frame.setStyleSheet(u"border:none;")
         self.top_right_frame.setFrameShape(QFrame.StyledPanel)
         self.top_right_frame.setFrameShadow(QFrame.Raised)
