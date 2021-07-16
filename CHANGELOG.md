@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.2.3 (in progress)
+## v0.2.3 (2021-07-16)
 
 **Changes:**
 

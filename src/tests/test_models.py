@@ -90,7 +90,7 @@ def test_persisted_config():
         config = Config(file_path=temp_config)
         loaded_value = config.languages
     finally:
-        temp_config.unlink(True)
+        temp_config.unlink()
 
     assert initial_value != loaded_value
     assert new_value == loaded_value
@@ -111,7 +111,7 @@ def test_persisted_config_repr():
     try:
         config = Config(file_path=temp_config)
     finally:
-        temp_config.unlink(True)
+        temp_config.unlink()
 
     string = str(config)
     # pylint: disable=no-member
@@ -126,7 +126,7 @@ def test_persisted_config_is_same_as_config():
     try:
         persisted_config = Config(file_path=temp_config)
     finally:
-        temp_config.unlink(True)
+        temp_config.unlink()
 
     config = ConfigBase()
     # pylint: disable=no-member
@@ -144,7 +144,7 @@ def test_persisted_config_reads_empty_file():
     try:
         persisted_config = Config(file_path=temp_config)
     finally:
-        temp_config.unlink(True)
+        temp_config.unlink()
 
     config = ConfigBase()
     assert persisted_config.color == config.color

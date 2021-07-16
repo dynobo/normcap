@@ -145,7 +145,7 @@ class ScreenGrabber:
             else:
                 logger.exception("ScreenShot with DBUS through exception")
         finally:
-            Path(temp_name).unlink(True)
+            Path(temp_name).unlink()
 
 
 grab_screen = ScreenGrabber()
