@@ -1,5 +1,3 @@
-"""Test utility functions."""
-
 import os
 
 import pytest  # type: ignore

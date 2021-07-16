@@ -94,6 +94,7 @@ disable = [
     "invalid-name",
     "logging-fstring-interpolation",
     "logging-not-lazy",
+    "missing-module-docstring",
     "too-few-public-arguments",
     "too-few-public-methods",
     "too-many-arguments",

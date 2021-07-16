@@ -1,5 +1,3 @@
-"""Test update checking functionality."""
-
 import pytest
 
 from normcap.update import (

@@ -1,7 +1,7 @@
 """Some utility functions."""
 
-import os
 import tempfile
+from pathlib import Path
 
 from jeepney.integrate.blocking import connect_and_authenticate  # type: ignore
 from jeepney.wrappers import (  # type: ignore
@@ -145,7 +145,7 @@ class ScreenGrabber:
             else:
                 logger.exception("ScreenShot with DBUS through exception")
         finally:
-            os.unlink(temp_name)
+            Path(temp_name).unlink(True)
 
 
 grab_screen = ScreenGrabber()
