@@ -15,7 +15,7 @@ def open_url_and_hide(window, url):
 def create_menu(
     window: QtWidgets.QMainWindow, parent: QtWidgets.QWidget
 ) -> QtWidgets.QMenu:
-    """Creat settings menu."""
+    """Create settings menu."""
     # pylint: disable=no-member  # action.triggered.connect is not resolved
 
     font = QtGui.QFont()
@@ -26,14 +26,16 @@ def create_menu(
     menu.setStyleSheet(
         f"""
         QMenu {{
-            background-color: rgba(0,0,0,0.3);
+            background-color: rgba(0,0,0,0.8);
             color: white;
         }}
         QMenu::separator {{
             background-color: rgba(255,255,255,0.2);
+            height: 1px;
+            margin-top: 5px;
         }}
         QMenu::item {{
-            padding: 4px 16px 4px 16px;
+            padding: 3px 16px 3px 16px;
             background-color: transparent;
         }}
         QMenu::item:disabled {{
@@ -58,7 +60,7 @@ def create_menu(
     )
     # Settings section
 
-    action = QtWidgets.QAction("Settings:", menu)
+    action = QtWidgets.QAction("Settings", menu)
     action.setEnabled(False)
     action.setFont(font)
     menu.addAction(action)
@@ -85,7 +87,7 @@ def create_menu(
 
     # Mode section
 
-    action = QtWidgets.QAction("Capture mode:", menu)
+    action = QtWidgets.QAction("Capture mode", menu)
     action.setEnabled(False)
     action.setFont(font)
     menu.addAction(action)
@@ -114,7 +116,7 @@ def create_menu(
 
     # Language section
 
-    action = QtWidgets.QAction("Languages:", menu)
+    action = QtWidgets.QAction("Languages", menu)
     action.setEnabled(False)
     action.setFont(font)
     menu.addAction(action)
@@ -133,7 +135,7 @@ def create_menu(
     menu.addSeparator()
 
     # Final section
-    action = QtWidgets.QAction("Application:", menu)
+    action = QtWidgets.QAction("Application", menu)
     action.setEnabled(False)
     action.setFont(font)
     menu.addAction(action)
@@ -169,7 +171,7 @@ def create_menu(
 
     menu.addMenu(submenu)
 
-    action = QtWidgets.QAction("Exit", menu)
+    action = QtWidgets.QAction("Close", menu)
     action.triggered.connect(window.com.onQuitOrHide.emit)
     menu.addAction(action)
 

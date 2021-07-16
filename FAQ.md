@@ -1,4 +1,4 @@
-# Frequently Asked Questions  <!-- omit in toc -->
+# Frequently Asked Questions <!-- omit in toc -->
 
 - [General](#general)
   - [How can I add additional languages to NormCap?](#how-can-i-add-additional-languages-to-normcap)
@@ -31,10 +31,15 @@ to install additional language for Tesseract on your system.
 
 ### What can I do improve the detection accuracy?
 
-The most import thing is to
-[specify the correct language](#how-can-i-specify-the-languages-to-be-detected). If you
-the results are still quite bad, please submit a screenshot of the text your are trying
-to recognize [as an issue](https://github.com/dynobo/normcap/issues).
+The most import thing is to specify the correct language (via settings menu or the
+`--language` command line argument). But keep in mind, that selecting multiple languages
+at once slows down the recognition a bit.
+
+Tesseract sometimes also struggles with recognizing text with just very view characters,
+like a single word. In this case it might help to select a larger portion of text.
+
+If you the results are still quite bad, please submit a screenshot of the text your are
+trying to recognize [as an issue](https://github.com/dynobo/normcap/issues).
 
 ### Is my image analyzed in "the cloud"?
 

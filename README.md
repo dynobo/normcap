@@ -118,7 +118,10 @@ normcap
 
 ### Command line options
 
-NormCap has no settings, just a set of command line arguments:
+NormCap has some settings. If you use the settings menu in the UI, your settings are
+persisted in `<users config folder>/normcap/config.yaml`. If you start NormCap with a
+command line argument (other then `-h`, `-v` and `-V`), all persisted settings are
+ignored and only the settings provided as arguments are used:
 
 ```plain
 (normcap)dynobo@cioran:~$ normcap --help
