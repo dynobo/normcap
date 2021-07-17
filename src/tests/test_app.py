@@ -1,4 +1,3 @@
-"""Test on main app logic."""
 import toml
 
 import normcap

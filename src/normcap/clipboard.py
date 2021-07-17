@@ -10,7 +10,7 @@ def init():
 
     app = QtWidgets.QApplication.instance()
     if app is None:
-        app = QtWidgets.QApplication([])
+        app = QtWidgets.QApplication()
 
     def copy_qt(text):
         cb = app.clipboard()

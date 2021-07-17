@@ -6,6 +6,7 @@ from PySide2 import QtGui, QtWidgets
 
 from normcap import __version__
 from normcap.logger import logger
+from normcap.utils import get_icon
 
 
 def create_tray_menu(window: QtWidgets.QMainWindow) -> QtWidgets.QMenu:
@@ -34,7 +35,7 @@ def create_system_tray(window: QtWidgets.QMainWindow) -> QtWidgets.QSystemTrayIc
     logger.debug("Setting up tray icon")
     menu = create_tray_menu(window)
     tray = QtWidgets.QSystemTrayIcon()
-    tray_icon = window.get_icon("tray.png", "tool-magic-symbolic")
+    tray_icon = get_icon("tray.png", "tool-magic-symbolic")
     tray.setIcon(tray_icon)
     tray.setContextMenu(menu)
     return tray

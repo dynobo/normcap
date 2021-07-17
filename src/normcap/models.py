@@ -177,7 +177,7 @@ class Config(ConfigBase):
         self.init_complete = True
 
     def __setattr__(self, name, value):
-        if name in self.__annotations__ and getattr(self, name) == value:
+        if name in list(self.__dataclass_fields__) and getattr(self, name) == value:
             return
 
         super().__setattr__(name, value)
@@ -189,9 +189,9 @@ class Config(ConfigBase):
 
     def _save_to_file(self):
         """Save dataclass as yaml."""
-        if self.file_path.parent.exists() and not self.file_path.parent.is_dir():
+        if self.file_path.is_dir():
             raise ValueError(
-                f"{self.file_path.parent.absolute()} exists but is not a directory."
+                f"{self.file_path.absolute()} is an exisiting directory, not a file."
             )
 
         self.file_path.parent.mkdir(parents=True, exist_ok=True)

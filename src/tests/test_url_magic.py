@@ -1,4 +1,3 @@
-"""Test image enhancing methods."""
 import pytest  # type: ignore
 
 from normcap.magics.url_magic import UrlMagic

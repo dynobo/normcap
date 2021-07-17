@@ -66,7 +66,9 @@ jobs:
       - name: Pytest on Linux
         if: ${{ matrix.os  == 'ubuntu-20.04' }}
         # xvfb-run with bpp 32 needed to grab screenshot with mss
-        run: xvfb-run --server-args="-screen 0 1024x768x24+32" poetry run pytest
+        run: |
+          xvfb-run --server-args="-screen 0 1024x768x24+32" \
+            poetry run pytest -m "not skip_on_gh_linux"
         env:
           XDG_SESSION_TYPE: wayland
       - name: Pytest on Windows

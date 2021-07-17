@@ -7,7 +7,7 @@ import os
 import sys
 import tempfile
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import importlib_metadata
 import importlib_resources
@@ -293,3 +293,36 @@ def get_config_directory() -> Path:
     if xdg_config_home:
         return Path(xdg_config_home)
     return Path.home() / ".config"
+
+
+def get_icon(icon_file: str, system_icon: Optional[str] = None):
+    """Load icon from system or if not available from resources."""
+    icon = None
+    if system_icon:
+        icon = QtGui.QIcon.fromTheme(system_icon)
+    if not icon:
+        with importlib_resources.path("normcap.resources", icon_file) as fp:
+            icon_path = str(fp.absolute())
+        icon = QtGui.QIcon()
+        icon.addFile(icon_path)
+    return icon
+
+
+def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None):
+    """Show in-progress cursor for application.
+
+    QtCore.Qt.WaitCursor
+    QtCore.Qt.CrossCursor
+    QtCore.Qt.ArrowCursor
+    """
+    if cursor is not None:
+        QtWidgets.QApplication.setOverrideCursor(cursor)
+    else:
+        QtWidgets.QApplication.restoreOverrideCursor()
+    QtWidgets.QApplication.processEvents()
+
+
+def open_url_and_hide(window, url):
+    """Open url and quit or hide NormCap."""
+    QtGui.QDesktopServices.openUrl(url)
+    window.com.onQuitOrHide.emit()

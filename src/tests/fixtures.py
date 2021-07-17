@@ -1,5 +1,3 @@
-"""Fixtures used by various tests."""
-
 import pytest  # type: ignore
 from PySide2 import QtGui
 

@@ -1,4 +1,3 @@
-"""Test CLI args."""
 from dataclasses import fields
 
 import pytest  # type: ignore

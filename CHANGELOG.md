@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.3 (2021-07-16)
+
+**Changes:**
+
+- Fix styling issues with settings menu
+
 ## v0.2.2 (2021-07-15)
 
 **Changes:**

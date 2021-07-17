@@ -3,15 +3,14 @@ import os
 import tempfile
 import textwrap
 import time
-from typing import Dict, Optional, Tuple
+from typing import Dict, Tuple
 
-import importlib_resources
 from PySide2 import QtCore, QtGui, QtWidgets
 
 import normcap.clipboard as clipboard
 from normcap import __version__
 from normcap.enhance import enhance_image
-from normcap.gui.settings_menu import create_settings_button
+from normcap.gui.settings_menu import SettingsButton
 from normcap.gui.system_tray import create_system_tray
 from normcap.logger import logger
 from normcap.magic import apply_magic
@@ -29,6 +28,7 @@ from normcap.models import (
 from normcap.ocr import perform_ocr
 from normcap.screengrab import grab_screen
 from normcap.update import get_new_version
+from normcap.utils import get_icon, set_cursor
 from normcap.window_base import WindowBase
 
 
@@ -70,8 +70,8 @@ class WindowMain(WindowBase):
 
         self._set_signals()
 
-        self.settings_buttton = create_settings_button(self)
-        self.settings_buttton.show()
+        self.settings_button = SettingsButton(self)
+        self.settings_button.show()
 
         self.main_window.tray = create_system_tray(self)
         if self.config.tray:
@@ -92,41 +92,15 @@ class WindowMain(WindowBase):
         self.com.onOcrPerformed.connect(self.apply_magics)
         self.com.onMagicsApplied.connect(self.copy_to_clipboard)
         self.com.onCopiedToClipboard.connect(self.send_notification)
-        self.com.onCopiedToClipboard.connect(self.restore_cursor)
 
         self.com.onMinimizeWindows.connect(self.minimize_windows)
-        self.com.onSetCursorWait.connect(self.set_cursor_wait)
+        self.com.onSetCursorWait.connect(lambda: set_cursor(QtCore.Qt.WaitCursor))
         self.com.onQuitOrHide.connect(self.quit_or_minimize)
         self.com.onUpdateAvailable.connect(self.show_update_message)
 
     ###################
     # UI Manipulation #
     ###################
-
-    @staticmethod
-    def get_icon(icon_file: str, system_icon: Optional[str] = None):
-        """Load icon from system or if not available from resources."""
-        icon = None
-        if system_icon:
-            icon = QtGui.QIcon.fromTheme(system_icon)
-        if not icon:
-            with importlib_resources.path("normcap.resources", icon_file) as fp:
-                icon_path = str(fp.absolute())
-            icon = QtGui.QIcon()
-            icon.addFile(icon_path)
-        return icon
-
-    @staticmethod
-    def set_cursor_wait():
-        """Show in-progress cursor for application."""
-        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
-        QtWidgets.QApplication.processEvents()
-
-    @staticmethod
-    def restore_cursor():
-        """Restore normal cursor."""
-        QtWidgets.QApplication.restoreOverrideCursor()
-        QtWidgets.QApplication.processEvents()
 
     def _init_child_windows(self):
         """Initialize child windows with method depending on system."""
@@ -167,7 +141,7 @@ class WindowMain(WindowBase):
 
     def minimize_windows(self):
         """Hide all windows of normcap."""
-        self.restore_cursor()
+        set_cursor(None)
         for window in self.all_windows.values():
             window.hide()
 
@@ -268,7 +242,7 @@ class WindowMain(WindowBase):
             )
 
         msgBox = QtWidgets.QMessageBox()
-        msgBox.setIconPixmap(self.get_icon("normcap.png").pixmap(48, 48))
+        msgBox.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
         msgBox.setText(text)
         msgBox.setInformativeText(info_text)
         msgBox.setStandardButtons(
@@ -292,7 +266,7 @@ class WindowMain(WindowBase):
 
         on_windows = self.system_info.platform == Platform.WINDOWS
         icon_file = "normcap.png" if on_windows else "tray.png"
-        notification_icon = self.get_icon(icon_file, "tool-magic-symbolic")
+        notification_icon = get_icon(icon_file, "tool-magic-symbolic")
 
         title, message = self.compose_notification()
         self.main_window.tray.show()
