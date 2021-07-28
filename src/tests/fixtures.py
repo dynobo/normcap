@@ -4,7 +4,6 @@ from PySide2 import QtGui
 from normcap.models import (
     Capture,
     CaptureMode,
-    Config,
     DesktopEnvironment,
     DisplayManager,
     Platform,
@@ -17,18 +16,6 @@ from normcap.models import (
 # pylint: disable=redefined-outer-name
 # Allow usint privates:
 # pylint: disable=protected-access
-
-
-@pytest.fixture(scope="session")
-def config() -> Config:
-    """Create a config object."""
-    return Config(
-        color="#00ff00",
-        languages=("eng",),
-        updates=True,
-        notifications=True,
-        tray=False,
-    )
 
 
 @pytest.fixture(scope="session")

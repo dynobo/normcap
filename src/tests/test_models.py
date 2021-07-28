@@ -14,7 +14,7 @@ from normcap.models import (
 )
 
 # pylint: disable=unused-import
-from .fixtures import capture, config, system_info
+from .fixtures import capture, system_info
 
 # Allow pytest fixtures:
 # pylint: disable=redefined-outer-name
@@ -58,26 +58,39 @@ def test_system_info(system_info: SystemInfo):
     assert isinstance(system_info.screens[0].height, int)
 
 
-def test_config(config: Config):
-    """Check if repr includes all fields correct."""
-    string = str(config)
-    for field in config.__dataclass_fields__:  # type:ignore
-        assert field in string
-
-    # Setting to same value won't trigger save
-    setattr(config, "color", "#00ff00")
-
-    # Setting to different value will trigger save
-    setattr(config, "color", "#ffffff")
-
-
-def test_persisted_config():
+def test_config_repr():
     """Check if config values are actually persisted."""
-    # Create config file
     temp_config = Path(tempfile.gettempdir()) / "config.tmp"
-
     try:
-        # Init with defaults
+        config = Config(file_path=temp_config)
+        config_string = str(config)
+        config_fields = config.__dataclass_fields__
+    finally:
+        temp_config.unlink()
+
+    for field in config_fields:
+        assert field in config_string
+
+
+def test_config_change_attribute():
+    """Check if config values are actually persisted."""
+    temp_config = Path(tempfile.gettempdir()) / "config.tmp"
+    try:
+        config = Config(file_path=temp_config)
+
+        # Setting to same value won't trigger save
+        setattr(config, "color", "#00ff00")
+
+        # Setting to different value will trigger save
+        setattr(config, "color", "#ffffff")
+    finally:
+        temp_config.unlink()
+
+
+def test_config_persists():
+    """Check if config values are actually persisted."""
+    temp_config = Path(tempfile.gettempdir()) / "config.tmp"
+    try:
         config = Config(file_path=temp_config)
         initial_value = config.languages
 
