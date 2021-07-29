@@ -7,6 +7,7 @@
 - All: Improve robustness of settings
 - Pre-build packages: Add languages `jpn` and `jpn_vert`
 - MacOS: Fix bug that prevented the selection of a region
+- MacOS: Catch ImportError of urllib in case update check is enabled
 
 ## v0.2.3 (2021-07-16)
 
