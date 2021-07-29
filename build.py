@@ -140,6 +140,8 @@ def download_tessdata():
         "chi_sim.traineddata",
         "deu.traineddata",
         "fra.traineddata",
+        "jpn.traineddata",
+        "jpn_vert.traineddata",
         "rus.traineddata",
         "spa.traineddata",
         "eng.traineddata",

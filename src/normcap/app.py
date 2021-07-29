@@ -17,8 +17,6 @@ from normcap.models import Config
 from normcap.utils import get_config_directory
 from normcap.window_main import WindowMain
 
-CONFIG_FILE = get_config_directory() / "normcap" / "config.yaml"
-
 
 def main():
     """Main entry point."""
@@ -27,19 +25,19 @@ def main():
     arg_parser = create_argparser()
     args = vars(arg_parser.parse_args())
 
-    if args.pop("verbose"):
+    if args["verbose"]:
         logger.setLevel("INFO")
-    if args.pop("very_verbose"):
+    if args["very_verbose"]:
         logger.setLevel("DEBUG")
 
     if args["languages"]:
-        args["languages"] = args["languages"].split("+")
+        args["languages"] = tuple(args["languages"].split("+"))
 
     args["notifications"] = not args.pop("no_notifications")
 
     logger.info(f"Starting Normcap v{__version__}")
+    logger.debug(f"CLI command: {' '.join(sys.argv)}")
 
-    # QtCore.QCoreApplication.addLibraryPath()
     lib_paths = QtCore.QCoreApplication.libraryPaths()
     logger.debug(f"QT LibraryPaths: {lib_paths}")
 
@@ -55,14 +53,17 @@ def main():
         system_info = utils.get_system_info()
         logger.debug(f"Detected system info:{system_info}")
 
-        exclude_args = ["-v", "-V", "--verbose", "--very-verbose"]
-        count_args = len([s for s in sys.argv if s not in exclude_args])
-        if count_args > 1:
-            config = Config(file_path=None, **args)
-            logger.debug("Using unpersisted config (from cli args)")
-        else:
-            config = Config(file_path=CONFIG_FILE)
-            logger.debug("Using persisted config (from config file)")
+        # Init configuration
+        config_file = get_config_directory() / "normcap" / "config.yaml"
+        config = Config(file_path=config_file)
+
+        # Overwrite config from cli (if applicable)
+        for key, value in args.items():
+            if (value != arg_parser.get_default(key)) and (
+                key in config_file.__dataclass_fields__
+            ):
+                logger.debug(f"Override configuration form CLI: {key}: {value}")
+                config.__setattr__(key, value)
 
         logger.debug(f"Applied user config:{config}")
 

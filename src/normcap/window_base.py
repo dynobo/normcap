@@ -239,7 +239,8 @@ class WindowBase(QtWidgets.QMainWindow):
         )
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.setStyleSheet("background-color:transparent")
+        # Full transparent bg makes window click trough. Therefore:
+        self.setStyleSheet("background-color:rgba(128,128,128,0.03)")
         screen_geometry = self.system_info.screens[self.screen_idx].geometry
         self.setGeometry(
             screen_geometry.left,

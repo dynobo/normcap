@@ -163,21 +163,19 @@ class ConfigBase:
 class Config(ConfigBase):
     """User settings (set via CLI args)."""
 
-    file_path: Optional[Path] = None
+    __dataclass_fields__: dict
     init_complete: bool = False
 
-    def __init__(self, file_path: Optional[Path] = None, **kwargs):
-        super().__init__(**kwargs)
-
-        if not file_path:
-            return
+    def __init__(self, file_path: Path):
+        super().__init__()
+        self.__annotations__ = super().__annotations__
 
         self.file_path = file_path
         self._load_from_file()
         self.init_complete = True
 
     def __setattr__(self, name, value):
-        if name in list(self.__dataclass_fields__) and getattr(self, name) == value:
+        if (name in self.__dataclass_fields__) and (getattr(self, name) == value):
             return
 
         super().__setattr__(name, value)

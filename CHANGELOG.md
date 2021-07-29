@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2.4 (2021-07-29)
+
+**Changes:**
+
+- All: Improve robustness of settings
+- Pre-build packages: Add languages `jpn` and `jpn_vert`
+- MacOS: Fix bug that prevented the selection of a region
+
 ## v0.2.3 (2021-07-16)
 
 **Changes:**
