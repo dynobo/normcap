@@ -3,7 +3,7 @@
 import tempfile
 from pathlib import Path
 
-from jeepney.integrate.blocking import connect_and_authenticate  # type: ignore
+from jeepney.io.blocking import open_dbus_connection  # type: ignore
 from jeepney.wrappers import (  # type: ignore
     DBusErrorResponse,
     MessageGenerator,
@@ -134,7 +134,7 @@ class ScreenGrabber:
         rect = self.capture.rect
         _, temp_name = tempfile.mkstemp(prefix="normcap")
         try:
-            connection = connect_and_authenticate(bus="SESSION")
+            connection = open_dbus_connection(bus="SESSION")
             msg = DbusScreenshot().grab_rect(*rect.geometry, temp_name)
             _ = connection.send_and_get_reply(msg)
             self.capture.image = QtGui.QImage(temp_name)

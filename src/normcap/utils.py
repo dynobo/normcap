@@ -12,7 +12,7 @@ from typing import Dict, List, Optional
 import importlib_metadata
 import importlib_resources
 import tesserocr  # type: ignore  # pylint: disable=wrong-import-order
-from jeepney.integrate.blocking import connect_and_authenticate  # type: ignore
+from jeepney.io.blocking import open_dbus_connection  # type: ignore
 from jeepney.wrappers import MessageGenerator, new_method_call  # type: ignore
 from PySide2 import QtCore, QtGui, QtWidgets
 
@@ -261,7 +261,7 @@ def move_active_window_to_position_on_gnome(screen_geometry):
             """Grab specific section to file with flash disabled."""
             return new_method_call(self, "Eval", "s", (JS_CODE,))
 
-    connection = connect_and_authenticate(bus="SESSION")
+    connection = open_dbus_connection(bus="SESSION")
     msg = MoveWindow().move()
     _ = connection.send_and_get_reply(msg)
 
