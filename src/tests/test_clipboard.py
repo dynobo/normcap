@@ -1,7 +1,7 @@
 import pytest
 from PySide2 import QtGui
 
-import normcap.clipboard as clipboard
+from normcap import clipboard
 
 
 @pytest.mark.skip_on_gh_linux

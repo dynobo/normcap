@@ -7,4 +7,4 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
     level="WARNING",
 )
-logger = logging.getLogger(__name__.split(".")[0])
+logger = logging.getLogger(__name__.split(".", maxsplit=1)[0])

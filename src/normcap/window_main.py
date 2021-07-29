@@ -7,8 +7,7 @@ from typing import Dict, Tuple
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
-import normcap.clipboard as clipboard
-from normcap import __version__
+from normcap import __version__, clipboard
 from normcap.enhance import enhance_image
 from normcap.gui.settings_menu import SettingsButton
 from normcap.gui.system_tray import create_system_tray

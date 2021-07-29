@@ -1,11 +1,17 @@
 """Find new version on github or pypi."""
 import json
 import re
-import urllib.request
 from typing import Union
 
 from normcap import __version__
 from normcap.logger import logger
+
+try:
+    import urllib.request
+except ModuleNotFoundError:
+    # TODO: on MacOS the import fails with "no module named _scproxy"
+    # Find fix or workaround (e.g. by fallback to wget)
+    logger.exception("Couldn't import urllib. Checking for updates won't work!")
 
 
 def get_newest_github_release():
