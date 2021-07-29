@@ -60,7 +60,7 @@ def main():
         # Overwrite config from cli (if applicable)
         for key, value in args.items():
             if (value != arg_parser.get_default(key)) and (
-                key in config_file.__dataclass_fields__
+                key in config.__dataclass_fields__
             ):
                 logger.debug(f"Override configuration form CLI: {key}: {value}")
                 config.__setattr__(key, value)
