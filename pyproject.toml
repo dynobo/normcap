@@ -52,6 +52,8 @@ toml = "^0.10.2"
 types-toml = "^0.1.3"
 mdformat-gfm = "^0.3.2"
 types-PyYAML = "^5.4.3"
+pytest-qt = "^4.0.2"
+pytest-xvfb = "^2.0.0"
 
 [tool.black]
 line-length = 88
@@ -83,7 +85,7 @@ ignore_errors = true
 
 [tool.pylint.master]
 extension-pkg-allow-list = ["PySide2", "tesserocr"]
-jobs = 0
+jobs = 1
 
 [tool.pylint.'MESSAGES CONTROL']
 load-plugins = "pylint.extensions.mccabe"
@@ -105,6 +107,8 @@ disable = [
 [tool.pytest.ini_options]
 addopts = "--cov normcap --cov-report xml:cov.xml --cov-report html"
 testpaths = ["src/tests"]
+qt_api = "pyside2"
+markers = ["skip_on_gh_linux: do not run during CI/CD on github runner linux"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "briefcase"]

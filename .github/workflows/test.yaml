@@ -2,12 +2,13 @@
 # https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#about-github-hosted-runners
 
 name: Test
-on: [pull_request]
+on: [pull_request, push]
 
 jobs:
   test_all:
     name: Linting & Tests
     runs-on: ${{ matrix.os }}
+    if: ${{ github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[test]') }}
     strategy:
       fail-fast: false
       matrix:
@@ -65,12 +66,21 @@ jobs:
         run: poetry run isort --check .
       - name: Pytest on Linux
         if: ${{ matrix.os  == 'ubuntu-20.04' }}
-        # xvfb-run with bpp 32 needed to grab screenshot with mss
+        # libxkbcommon and xvfb is needed to test qt/ui specific things
         run: |
-          xvfb-run --server-args="-screen 0 1024x768x24+32" \
-            poetry run pytest -m "not skip_on_gh_linux"
+          sudo apt-get install \
+            xvfb \
+            libxkbcommon-x11-0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-xinerama0 \
+            libxcb-xfixes0
+          poetry run pytest -m "not skip_on_gh_linux"
         env:
-          XDG_SESSION_TYPE: wayland
+          XDG_SESSION_TYPE: gnome
       - name: Pytest on Windows
         if: ${{ matrix.os  == 'windows-2019' }}
         run: poetry run pytest
