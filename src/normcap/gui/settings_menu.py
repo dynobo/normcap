@@ -204,7 +204,7 @@ class SettingsButton(QtWidgets.QToolButton):
             """
         )
         self.setIcon(get_icon("settings.png"))
-        self.setIconSize(QtCore.QSize(24, 24))
+        self.setIconSize(QtCore.QSize(28, 28))
         self.setPopupMode(QtWidgets.QToolButton.InstantPopup)
 
         if window_main.system_info.platform == Platform.MACOS:
