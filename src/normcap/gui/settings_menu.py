@@ -176,7 +176,7 @@ class SettingsMenu(QtWidgets.QMenu):
         self.addMenu(submenu)
 
         action = QtWidgets.QAction("Close", self)
-        action.triggered.connect(self.window_main.com.onQuitOrHide.emit)
+        action.triggered.connect(self.window_main.com.on_quit_or_hide.emit)
         self.addAction(action)
 
 

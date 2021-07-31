@@ -13,7 +13,7 @@ def test_update_checker(qtbot, packaged):
 
     version_checker = UpdateChecker(packaged=packaged)
 
-    with qtbot.waitSignal(version_checker.onVersionRetrieved) as result:
+    with qtbot.waitSignal(version_checker.on_version_retrieved) as result:
         version_checker.check()
     version = result.args[0]
 
@@ -41,7 +41,7 @@ def test_update_checker_cant_parse(caplog, packaged, text):
 def test_downloader(qtbot):
     """Download a website's source."""
     downloader = Downloader()
-    with qtbot.waitSignal(downloader.onDownloadFinished) as result:
+    with qtbot.waitSignal(downloader.on_download_finished) as result:
         downloader.get("https://github.com")
 
     raw = result.args[0]
@@ -53,7 +53,7 @@ def test_downloader_not_existing_url(qtbot):
     """Do not trigger download finished signal."""
     downloader = Downloader()
     with qtbot.waitSignal(
-        downloader.onDownloadFinished, raising=False, timeout=2
+        downloader.on_download_finished, raising=False, timeout=2
     ) as result:
         downloader.get("http://not_existing_url.normcap")
 
@@ -72,7 +72,7 @@ def test_downloader_network_error(caplog, qtbot):
     reply.setError(QtNetwork.QNetworkReply.HostNotFoundError, "Not Found")
 
     with qtbot.waitSignal(
-        downloader.onDownloadFinished, raising=False, timeout=1
+        downloader.on_download_finished, raising=False, timeout=1
     ) as result:
         downloader._on_get_done(reply)
 

@@ -35,17 +35,17 @@ from normcap.window_base import WindowBase
 class Communicate(QtCore.QObject):
     """Applications' communication bus."""
 
-    onRegionSelected = QtCore.Signal(Rect)
-    onImageGrabbed = QtCore.Signal()
-    onOcrPerformed = QtCore.Signal()
-    onImagePrepared = QtCore.Signal()
-    onCopiedToClipboard = QtCore.Signal()
-    onWindowPositioned = QtCore.Signal()
-    onMinimizeWindows = QtCore.Signal()
-    onSetCursorWait = QtCore.Signal()
-    onQuitOrHide = QtCore.Signal()
-    onMagicsApplied = QtCore.Signal()
-    onUpdateAvailable = QtCore.Signal(str)
+    on_region_selected = QtCore.Signal(Rect)
+    on_image_grabbed = QtCore.Signal()
+    on_ocr_performed = QtCore.Signal()
+    on_image_prepared = QtCore.Signal()
+    on_copied_to_clipboard = QtCore.Signal()
+    on_window_positioned = QtCore.Signal()
+    on_minimize_windows = QtCore.Signal()
+    on_set_cursor_wait = QtCore.Signal()
+    on_quit_or_hide = QtCore.Signal()
+    on_magics_applied = QtCore.Signal()
+    on_update_available = QtCore.Signal(str)
 
 
 class WindowMain(WindowBase):
@@ -88,17 +88,17 @@ class WindowMain(WindowBase):
 
     def _set_signals(self):
         """Setup signals to trigger program logic."""
-        self.com.onRegionSelected.connect(self.grab_image)
-        self.com.onImageGrabbed.connect(self.prepare_image)
-        self.com.onImagePrepared.connect(self.capture_to_ocr)
-        self.com.onOcrPerformed.connect(self.apply_magics)
-        self.com.onMagicsApplied.connect(self.copy_to_clipboard)
-        self.com.onCopiedToClipboard.connect(self.send_notification)
+        self.com.on_region_selected.connect(self.grab_image)
+        self.com.on_image_grabbed.connect(self.prepare_image)
+        self.com.on_image_prepared.connect(self.capture_to_ocr)
+        self.com.on_ocr_performed.connect(self.apply_magics)
+        self.com.on_magics_applied.connect(self.copy_to_clipboard)
+        self.com.on_copied_to_clipboard.connect(self.send_notification)
 
-        self.com.onMinimizeWindows.connect(self.minimize_windows)
-        self.com.onSetCursorWait.connect(lambda: set_cursor(QtCore.Qt.WaitCursor))
-        self.com.onQuitOrHide.connect(self.quit_or_minimize)
-        self.com.onUpdateAvailable.connect(self.show_update_message)
+        self.com.on_minimize_windows.connect(self.minimize_windows)
+        self.com.on_set_cursor_wait.connect(lambda: set_cursor(QtCore.Qt.WaitCursor))
+        self.com.on_quit_or_hide.connect(self.quit_or_minimize)
+        self.com.on_update_available.connect(self.show_update_message)
 
     ###################
     # UI Manipulation #
@@ -109,7 +109,7 @@ class WindowMain(WindowBase):
         if self.system_info.display_manager != DisplayManager.WAYLAND:
             self.create_all_child_windows()
         elif self.system_info.desktop_environment == DesktopEnvironment.GNOME:
-            self.com.onWindowPositioned.connect(self.create_next_child_window)
+            self.com.on_window_positioned.connect(self.create_next_child_window)
         else:
             logger.error(
                 f"NormCap currently doesn't support multi monitor mode"
@@ -218,7 +218,7 @@ class WindowMain(WindowBase):
     def check_for_updates(self):
         """Check if update is available and present dialog."""
         logger.debug("Checking for updates")
-        self.checker.onVersionRetrieved.connect(self.show_update_message)
+        self.checker.on_version_retrieved.connect(self.show_update_message)
         self.checker.check()
 
     def show_update_message(self, new_version):
@@ -257,7 +257,7 @@ class WindowMain(WindowBase):
 
         if choice == 1024:
             QtGui.QDesktopServices.openUrl(URLS.releases)
-            self.com.onQuitOrHide.emit()
+            self.com.on_quit_or_hide.emit()
 
     #########################
     # On notification send  #
@@ -266,7 +266,7 @@ class WindowMain(WindowBase):
     def send_notification(self):
         """Setting up tray icon."""
         if not self.config.notifications:
-            self.com.onQuitOrHide.emit()
+            self.com.on_quit_or_hide.emit()
 
         on_windows = self.system_info.platform == Platform.WINDOWS
         icon_file = "normcap.png" if on_windows else "tray.png"
@@ -278,7 +278,7 @@ class WindowMain(WindowBase):
 
         # Delay quit or hide to get notification enough time to show up.
         delay = 5000 if self.system_info.platform == Platform.WINDOWS else 500
-        QtCore.QTimer.singleShot(delay, self.com.onQuitOrHide.emit)
+        QtCore.QTimer.singleShot(delay, self.com.on_quit_or_hide.emit)
 
     def compose_notification(self) -> Tuple[str, str]:
         """Extract message text out of captures object and include icon."""
@@ -328,17 +328,17 @@ class WindowMain(WindowBase):
             system_info=self.system_info,
             capture=self.capture,
         )
-        self.com.onImageGrabbed.emit()
+        self.com.on_image_grabbed.emit()
 
     def prepare_image(self):
         """Enhance image before performin OCR."""
         if self.capture.image_area > 25:
             logger.debug("Preparing image for OCR")
             self.capture = enhance_image(self.capture)
-            self.com.onImagePrepared.emit()
+            self.com.on_image_prepared.emit()
         else:
             logger.warning(f"Area of {self.capture.image_area} too small. Skip OCR.")
-            self.com.onQuitOrHide.emit()
+            self.com.on_quit_or_hide.emit()
 
     def capture_to_ocr(self):
         """Perform content recognition on grabed image."""
@@ -350,7 +350,7 @@ class WindowMain(WindowBase):
         )
         logger.info(f"Raw text from OCR:\n{self.capture.text}")
         logger.debug(f"Result from OCR:{self.capture}")
-        self.com.onOcrPerformed.emit()
+        self.com.on_ocr_performed.emit()
 
     def apply_magics(self):
         """Beautify/parse content base on magic rules."""
@@ -361,7 +361,7 @@ class WindowMain(WindowBase):
         if self.capture.mode is CaptureMode.RAW:
             logger.debug("Raw mode. Skip applying Magics and use raw text.")
             self.capture.transformed = self.capture.text.strip()
-        self.com.onMagicsApplied.emit()
+        self.com.on_magics_applied.emit()
 
     def copy_to_clipboard(self):
         """Copy results to clipboard."""
@@ -371,4 +371,4 @@ class WindowMain(WindowBase):
 
         QtWidgets.QApplication.processEvents()
         time.sleep(1.05)
-        self.com.onCopiedToClipboard.emit()
+        self.com.on_copied_to_clipboard.emit()

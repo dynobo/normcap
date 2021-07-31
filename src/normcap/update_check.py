@@ -16,7 +16,7 @@ class Downloader(QtCore.QObject):
     of urllib.request fails with "no module named _scproxy" in the packaged version.
     """
 
-    onDownloadFinished = QtCore.Signal(str)
+    on_download_finished = QtCore.Signal(str)
 
     def __init__(self):
         super().__init__()
@@ -39,13 +39,13 @@ class Downloader(QtCore.QObject):
         bytes_string = reply.readAll()
         source = str(bytes_string, "utf-8")
 
-        self.onDownloadFinished.emit(source)
+        self.on_download_finished.emit(source)
 
 
 class UpdateChecker(QtCore.QObject):
     """Helper to check for a new version."""
 
-    onVersionRetrieved = QtCore.Signal(str)
+    on_version_retrieved = QtCore.Signal(str)
 
     def __init__(self, packaged: bool = False):
         super().__init__()
@@ -57,7 +57,7 @@ class UpdateChecker(QtCore.QObject):
         newest_version = self._parse_response(text)
         logger.debug(f"Version found: {newest_version} (installed={__version__}).")
         if newest_version not in ["", __version__]:
-            self.onVersionRetrieved.emit(newest_version)  # type: ignore
+            self.on_version_retrieved.emit(newest_version)  # type: ignore
 
     def _parse_response(self, text: str):
         """Parse the tag version from the response and emit version retrieved signal."""
@@ -84,5 +84,5 @@ class UpdateChecker(QtCore.QObject):
         url = URLS.releases if self.packaged else f"{URLS.pypi}/json"
 
         logger.debug(f"Search for new version on {url}")
-        self.downloader.onDownloadFinished.connect(self._check_if_new)
+        self.downloader.on_download_finished.connect(self._check_if_new)
         self.downloader.get(url)

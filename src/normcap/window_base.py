@@ -136,7 +136,7 @@ class WindowBase(QtWidgets.QMainWindow):
                 self.update()
             else:
                 # Quit application
-                self.main_window.com.onQuitOrHide.emit()
+                self.main_window.com.on_quit_or_hide.emit()
         elif event.key() == QtCore.Qt.Key_Space:
             mode = self.main_window.capture.mode
             if mode < max(CaptureMode):
@@ -166,13 +166,15 @@ class WindowBase(QtWidgets.QMainWindow):
             self.selection_rect.right = event.pos().x()
 
             self.is_selecting = False
-            self.main_window.com.onSetCursorWait.emit()
-            self.main_window.com.onMinimizeWindows.emit()
+            self.main_window.com.on_set_cursor_wait.emit()
+            self.main_window.com.on_minimize_windows.emit()
 
             capture_rect = deepcopy(self.selection_rect)
             capture_rect = self.to_global_rect(capture_rect)
             capture_rect = self.sanatize_rect(capture_rect)
-            self.main_window.com.onRegionSelected.emit((capture_rect, self.screen_idx))
+            self.main_window.com.on_region_selected.emit(
+                (capture_rect, self.screen_idx)
+            )
 
             self.selection_rect = Rect()
             self.update()
@@ -186,7 +188,7 @@ class WindowBase(QtWidgets.QMainWindow):
         ):
             logger.debug(f"Positioning window on screen {self.screen_idx}")
             self._position_windows_on_wayland()
-            self.main_window.com.onWindowPositioned.emit()
+            self.main_window.com.on_window_positioned.emit()
         return super().changeEvent(event)
 
     ##################

@@ -325,4 +325,4 @@ def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None):
 def open_url_and_hide(window, url):
     """Open url and quit or hide NormCap."""
     QtGui.QDesktopServices.openUrl(url)
-    window.com.onQuitOrHide.emit()
+    window.com.on_quit_or_hide.emit()
