@@ -15,6 +15,7 @@ from normcap.logger import logger
 from normcap.magic import apply_magic
 from normcap.models import (
     FILE_ISSUE_TEXT,
+    URLS,
     Capture,
     CaptureMode,
     Config,
@@ -26,7 +27,7 @@ from normcap.models import (
 )
 from normcap.ocr import perform_ocr
 from normcap.screengrab import grab_screen
-from normcap.update import get_new_version
+from normcap.update_check import UpdateChecker
 from normcap.utils import get_icon, set_cursor
 from normcap.window_base import WindowBase
 
@@ -77,8 +78,10 @@ class WindowMain(WindowBase):
             logger.debug("Show tray icon")
             self.main_window.tray.show()
 
+        self.checker = UpdateChecker(self.system_info.briefcase_package)
+
         if self.config.updates:
-            QtCore.QTimer.singleShot(0, self.check_for_updates)
+            QtCore.QTimer.singleShot(1500, self.check_for_updates)
 
         if self.multi_monitor_mode:
             self._init_child_windows()
@@ -215,13 +218,8 @@ class WindowMain(WindowBase):
     def check_for_updates(self):
         """Check if update is available and present dialog."""
         logger.debug("Checking for updates")
-
-        new_version = get_new_version(self.system_info.briefcase_package)
-
-        if not new_version:
-            return
-
-        self.com.onUpdateAvailable.emit(new_version)
+        self.checker.onVersionRetrieved.connect(self.show_update_message)
+        self.checker.check()
 
     def show_update_message(self, new_version):
         """Show dialog informing about available update."""
@@ -241,6 +239,10 @@ class WindowMain(WindowBase):
             )
 
         msgBox = QtWidgets.QMessageBox()
+
+        # Necessary on wayland for main window to regain focus:
+        msgBox.setWindowFlags(QtCore.Qt.Popup)
+
         msgBox.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
         msgBox.setText(text)
         msgBox.setInformativeText(info_text)
@@ -249,9 +251,12 @@ class WindowMain(WindowBase):
         )
         msgBox.setDefaultButton(QtWidgets.QMessageBox.Ok)
 
+        set_cursor(QtCore.Qt.ArrowCursor)
         choice = msgBox.exec_()
+        set_cursor(QtCore.Qt.CrossCursor)
+
         if choice == 1024:
-            QtGui.QDesktopServices.openUrl("https://github.com/dynobo/normcap/releases")
+            QtGui.QDesktopServices.openUrl(URLS.releases)
             self.com.onQuitOrHide.emit()
 
     #########################
