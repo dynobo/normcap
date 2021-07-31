@@ -18,7 +18,7 @@ class Ui_BaseWindow(object):
         if not BaseWindow.objectName():
             BaseWindow.setObjectName(u"BaseWindow")
         BaseWindow.setEnabled(True)
-        BaseWindow.resize(835, 588)
+        BaseWindow.resize(640, 480)
         icon = QIcon()
         icon.addFile(u"normcap.png", QSize(), QIcon.Normal, QIcon.Off)
         BaseWindow.setWindowIcon(icon)

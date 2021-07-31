@@ -215,16 +215,22 @@ class WindowBase(QtWidgets.QMainWindow):
 
     def _set_fullscreen_linux(self):
         """Set fullscreen on Linux platforms."""
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
-            | QtCore.Qt.CustomizeWindowHint
+            | QtCore.Qt.BypassWindowManagerHint
             | QtCore.Qt.WindowStaysOnTopHint
+            | QtCore.Qt.Popup
         )
+
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.setStyleSheet("background-color:transparent")
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.setWindowState(QtCore.Qt.WindowActive)
+
         screen_geometry = self.system_info.screens[self.screen_idx].geometry
         self.move(screen_geometry.left, screen_geometry.top)
-        self.showFullScreen()
+        self.setMinimumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
+        self.show()
 
     def _set_fullscreen_macos(self):
         """Set fullscreen on MacOS platforms."""
@@ -238,9 +244,10 @@ class WindowBase(QtWidgets.QMainWindow):
             #       and doesn't set the crosshair cursor.
         )
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)
         # Full transparent bg makes window click trough. Therefore:
         self.setStyleSheet("background-color:rgba(128,128,128,0.03)")
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+
         screen_geometry = self.system_info.screens[self.screen_idx].geometry
         self.setGeometry(
             screen_geometry.left,
