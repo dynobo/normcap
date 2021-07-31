@@ -10,9 +10,23 @@ from typing import Dict, List, Optional, Tuple
 import yaml
 from PySide2 import QtGui
 
+
+@dataclass
+class Urls:
+    """URLs used on various places."""
+
+    releases = "https://github.com/dynobo/normcap/releases"
+    pypi = "https://pypi.org/pypi/normcap"
+    github = "https://github.com/dynobo/normcap"
+    issues = "https://github.com/dynobo/normcap/issues"
+    faqs = "https://github.com/dynobo/normcap/blob/main/FAQ.md"
+
+
+URLS = Urls()
+
 FILE_ISSUE_TEXT = (
     "Please create a new issue with the output above on "
-    "https://github.com/dynobo/normcap/issues . I'll see what I can do about it."
+    f"{URLS.issues} . I'll see what I can do about it."
 )
 
 

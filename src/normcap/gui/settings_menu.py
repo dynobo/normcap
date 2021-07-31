@@ -2,7 +2,7 @@
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from normcap.models import Platform
+from normcap.models import URLS, Platform
 from normcap.utils import get_icon, open_url_and_hide
 
 
@@ -153,33 +153,23 @@ class SettingsMenu(QtWidgets.QMenu):
 
         action = QtWidgets.QAction("Source code", submenu)
         action.triggered.connect(
-            lambda: open_url_and_hide(
-                self.window_main, "https://github.com/dynobo/normcap"
-            )
+            lambda: open_url_and_hide(self.window_main, URLS.github)
         )
         submenu.addAction(action)
 
         action = QtWidgets.QAction("Releases", submenu)
         action.triggered.connect(
-            lambda: open_url_and_hide(
-                self.window_main, "https://github.com/dynobo/normcap/releases"
-            )
+            lambda: open_url_and_hide(self.window_main, URLS.releases)
         )
         submenu.addAction(action)
 
         action = QtWidgets.QAction("FAQ", submenu)
-        action.triggered.connect(
-            lambda: open_url_and_hide(
-                self.window_main, "https://github.com/dynobo/normcap/blob/main/FAQ.md"
-            )
-        )
+        action.triggered.connect(lambda: open_url_and_hide(self.window_main, URLS.faqs))
         submenu.addAction(action)
 
         action = QtWidgets.QAction("Report a problem", submenu)
         action.triggered.connect(
-            lambda: open_url_and_hide(
-                self.window_main, "https://github.com/dynobo/normcap/issues"
-            )
+            lambda: open_url_and_hide(self.window_main, URLS.issues)
         )
         submenu.addAction(action)
 
