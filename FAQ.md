@@ -5,7 +5,7 @@
   - [How can I improve the detection accuracy?](#how-can-i-improve-the-detection-accuracy)
   - [Is my image analyzed in "the cloud"?](#is-my-image-analyzed-in-the-cloud)
   - [What is the difference between the pre-build package and the Python package?](#what-is-the-difference-between-the-pre-build-package-and-the-python-package)
-  - [Where are my settings stored?](#where-are-my-settings-stored)
+  - [Can I start NormCap via a keyboard shortcut?](#can-i-start-normcap-via-a-keyboard-shortcut)
   - [\[MacOS\] How can I start NormCap with a command line argument?](#macos-how-can-i-start-normcap-with-a-command-line-argument)
   - [\[MacOs\] How can I create a launcher to start NormCap with command line arguments?](#macos-how-can-i-create-a-launcher-to-start-normcap-with-command-line-arguments)
 - [Troubleshooting](#troubleshooting)
@@ -30,7 +30,7 @@ to install additional language for Tesseract on your system.
 ### How can I improve the detection accuracy?
 
 The most import thing is to specify the correct language(s) (via settings menu or the
-`--languages` command line argument). Keep in mind: selecting multiple languages at once
+`--language` command line argument). Keep in mind: selecting multiple languages at once
 slows down the recognition a bit.
 
 Sometimes Tesseract struggles with recognizing text with just very view characters, like
@@ -59,13 +59,21 @@ Python package:
 - Might need less disk space (depending on your setup)
 - Easier to extend with different languages
 
-### Where are my settings stored?
+### Can I start NormCap via a keyboard shortcut?
 
-The options you choose in the settings menu or supply as command line arguments are
-persisted in `<users config folder>/normcap/config.yaml`.
+Yes, but you'll have to configure it on your own using your operating system's tools:
 
-- On MacOS and Linux this should be: `~/.config/normcap/config.yaml`.
-- On Windows it's something like:
+- Linux:
+  - Ubuntu/Gnome:
+    [Set Keyboard Shortcuts](https://help.ubuntu.com/stable/ubuntu-help/keyboard-shortcuts-set.html)
+  - Manjaro/XFCE, Plasma:
+    [Keyboard Shortcuts](https://wiki.manjaro.org/index.php?title=Keyboard_Shortcuts)
+- MacOS:
+  [Set a keyboard shortcut to open Mac apps](https://www.wikihow.com/Set-a-Keyboard-Shortcut-to-Open-Mac-Apps)
+- Windows 10:
+  [Open programs with keyboard shortcuts in Windows 10](https://www.cnet.com/tech/computing/open-programs-with-keyboard-shortcuts-in-windows-10/)
+
+(Your preferred search engine will very likely reveal even more options.)
 
 ### \[MacOS\] How can I start NormCap with a command line argument?
 

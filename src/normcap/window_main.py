@@ -9,7 +9,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__, clipboard
 from normcap.enhance import enhance_image
-from normcap.gui.settings_menu import SettingsButton
+from normcap.gui.settings_menu import SettingsMenu
 from normcap.gui.system_tray import create_system_tray
 from normcap.logger import logger
 from normcap.magic import apply_magic
@@ -18,7 +18,6 @@ from normcap.models import (
     URLS,
     Capture,
     CaptureMode,
-    Config,
     DesktopEnvironment,
     DisplayManager,
     Platform,
@@ -27,6 +26,7 @@ from normcap.models import (
 )
 from normcap.ocr import perform_ocr
 from normcap.screengrab import grab_screen
+from normcap.settings import init_settings, log_settings
 from normcap.update_check import UpdateChecker
 from normcap.utils import get_icon, set_cursor
 from normcap.window_base import WindowBase
@@ -46,6 +46,7 @@ class Communicate(QtCore.QObject):
     on_quit_or_hide = QtCore.Signal()
     on_magics_applied = QtCore.Signal()
     on_update_available = QtCore.Signal(str)
+    on_open_url_and_hide = QtCore.Signal(str)
 
 
 class WindowMain(WindowBase):
@@ -53,15 +54,16 @@ class WindowMain(WindowBase):
 
     tray: QtWidgets.QSystemTrayIcon
 
-    def __init__(
-        self,
-        config: Config,
-        system_info: SystemInfo,
-    ):
+    def __init__(self, system_info: SystemInfo, args):
+        self.settings = init_settings(args)
+
         super().__init__(
-            system_info=system_info, screen_idx=0, parent=None, color=config.color
+            system_info=system_info,
+            screen_idx=0,
+            parent=None,
+            color=str(self.settings.value("color")),
         )
-        self.config: Config = config
+
         self.capture: Capture = Capture()
         self.com = Communicate()
 
@@ -70,18 +72,21 @@ class WindowMain(WindowBase):
 
         self._set_signals()
 
-        self.settings_button = SettingsButton(self)
-        self.settings_button.show()
+        self.settings_menu = SettingsMenu(self)
+        self.settings_menu.com.on_setting_changed.connect(self.update_setting)
+        self.settings_menu.com.on_open_url.connect(self.com.on_open_url_and_hide)
+        self.settings_menu.com.on_quit_or_hide.connect(self.com.on_quit_or_hide.emit)
+        self.settings_menu.show()
 
         self.main_window.tray = create_system_tray(self)
-        if self.config.tray:
+        if self.settings.value("tray", type=bool):
             logger.debug("Show tray icon")
             self.main_window.tray.show()
 
         self.checker = UpdateChecker(self.system_info.briefcase_package)
 
-        if self.config.updates:
-            QtCore.QTimer.singleShot(1500, self.check_for_updates)
+        if self.settings.value("update", type=bool):
+            QtCore.QTimer.singleShot(700, self.check_for_updates)
 
         if self.multi_monitor_mode:
             self._init_child_windows()
@@ -99,6 +104,7 @@ class WindowMain(WindowBase):
         self.com.on_set_cursor_wait.connect(lambda: set_cursor(QtCore.Qt.WaitCursor))
         self.com.on_quit_or_hide.connect(self.quit_or_minimize)
         self.com.on_update_available.connect(self.show_update_message)
+        self.com.on_open_url_and_hide.connect(self.open_url_and_hide)
 
     ###################
     # UI Manipulation #
@@ -137,7 +143,7 @@ class WindowMain(WindowBase):
             system_info=self.system_info,
             screen_idx=index,
             parent=self,
-            color=self.config.color,
+            color=str(self.settings.value("color")),
         )
         self.all_windows[index].show()
 
@@ -160,7 +166,7 @@ class WindowMain(WindowBase):
     def quit_or_minimize(self):
         """Minimize application if in tray-mode, else exit."""
         # Necessary to get text to clipboard before exitting
-        if self.config.tray:
+        if self.settings.value("tray", type=bool):
             logger.debug("Hiding windows to tray")
             self.minimize_windows()
         else:
@@ -177,7 +183,7 @@ class WindowMain(WindowBase):
 
     def show_or_hide_tray_icon(self):
         """Set visibility state of tray icon"""
-        if self.config.tray:
+        if self.settings.value("tray", type=bool):
             logger.debug("Show tray icon")
             self.main_window.tray.show()
         else:
@@ -188,28 +194,15 @@ class WindowMain(WindowBase):
     # On settings change    #
     #########################
 
-    def set_config(self, name, value):
-        """Change value in config object."""
-        logger.debug(f"Setting config {name} {value}")
-        if name == "languages":
-            languages = list(self.config.languages)
-            action = [a for a in self.settings_menu.actions() if a.text() == value][0]
-            checked = action.isChecked()
-            if checked and value not in languages:
-                languages.append(value)
-            if not checked and value in languages:
-                if len(languages) > 1:
-                    languages.remove(value)
-                else:
-                    action.setChecked(True)
-            self.config.languages = tuple(languages)
-        elif name == "tray":
-            self.config.__setattr__(name, value)
-            self.show_or_hide_tray_icon()
-        else:
-            self.config.__setattr__(name, value)
+    def update_setting(self, data):
+        """Update settings"""
+        name, value = data
+        self.settings.setValue(name, value)
 
-        logger.debug(self.config)
+        if name == "tray":
+            self.show_or_hide_tray_icon()
+
+        log_settings(self.settings)
 
     #########################
     # Checking for Updates  #
@@ -256,16 +249,20 @@ class WindowMain(WindowBase):
         set_cursor(QtCore.Qt.CrossCursor)
 
         if choice == 1024:
-            QtGui.QDesktopServices.openUrl(URLS.releases)
-            self.com.on_quit_or_hide.emit()
+            self.com.on_open_url_and_hide.emit(URLS.releases)
 
     #########################
     # On notification send  #
     #########################
 
+    def open_url_and_hide(self, url):
+        """Open url in default browser, then hide to tray or exit."""
+        QtGui.QDesktopServices.openUrl(url)
+        self.com.on_quit_or_hide.emit()
+
     def send_notification(self):
         """Setting up tray icon."""
-        if not self.config.notifications:
+        if not self.settings.value("notification", type=bool):
             self.com.on_quit_or_hide.emit()
 
         on_windows = self.system_info.platform == Platform.WINDOWS
@@ -344,7 +341,7 @@ class WindowMain(WindowBase):
         """Perform content recognition on grabed image."""
         logger.debug("Performing OCR")
         self.capture = perform_ocr(
-            languages=self.config.languages,
+            languages=self.settings.value("language"),
             capture=self.capture,
             system_info=self.system_info,
         )

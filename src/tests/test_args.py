@@ -1,9 +1,7 @@
-from dataclasses import fields
-
 import pytest  # type: ignore
 
 from normcap.args import create_argparser
-from normcap.models import Config
+from normcap.settings import init_settings
 
 # Allow pytest fixtures:
 # pylint: disable=redefined-outer-name
@@ -24,11 +22,12 @@ def test_argparser_defaults_complete(argparser_defaults):
     expected_options = set(
         [
             "color",
-            "languages",
+            "language",
             "mode",
-            "no_notifications",
+            "notification",
+            "reset",
             "tray",
-            "updates",
+            "update",
             "verbose",
             "very_verbose",
         ]
@@ -45,30 +44,21 @@ def test_argparser_help_complete():
     assert True
 
 
-def test_argparser_attributes_in_config_class(argparser_defaults):
-    """Check if every args has an attribute in Config class."""
-    attributes = [f.name for f in fields(Config)]
+def test_argparser_attributes_in_settings(argparser_defaults):
+    """Check if every setting has an cli args an vice versa."""
+    settings = init_settings({})
+
     for arg in argparser_defaults:
-        if arg in ["verbose", "very_verbose", "no_notifications"]:
+        if arg in ["verbose", "very_verbose", "reset"]:
             continue
-        assert arg in attributes
+        assert arg in settings.allKeys()
+
+    for key in settings.allKeys():
+        assert key in argparser_defaults
 
 
-def test_argparser_default_verbose(argparser_defaults):
+def test_argparser_check_defaults(argparser_defaults):
     """Check verbose (for loglevel)."""
+    assert argparser_defaults["reset"] is False
     assert argparser_defaults["verbose"] is False
-
-
-def test_argparser_default_no_notifications(argparser_defaults):
-    """Check no notifications."""
-    assert argparser_defaults["no_notifications"] is False
-
-
-def test_argparser_default_lang(argparser_defaults):
-    """Check OCR language."""
-    assert argparser_defaults["languages"] == "eng"
-
-
-def test_argparser_default_color(argparser_defaults):
-    """Check accent color."""
-    assert argparser_defaults["color"] == "#FF2E88"
+    assert argparser_defaults["very_verbose"] is False

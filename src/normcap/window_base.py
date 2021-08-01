@@ -213,7 +213,9 @@ class WindowBase(QtWidgets.QMainWindow):
         elif self.system_info.platform == Platform.WINDOWS:
             self._set_fullscreen_windows()
         else:
-            raise NotImplementedError(f"Platform {self.config.platform} not supported")
+            raise NotImplementedError(
+                f"Platform {self.system_info.platform} not supported"
+            )
 
     def _set_fullscreen_linux(self):
         """Set fullscreen on Linux platforms."""

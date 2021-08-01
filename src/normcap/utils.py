@@ -304,7 +304,7 @@ def get_config_directory() -> Path:
     return Path.home() / ".config"
 
 
-def get_icon(icon_file: str, system_icon: Optional[str] = None):
+def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
     icon = None
     if system_icon:
