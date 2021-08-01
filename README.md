@@ -20,22 +20,29 @@
 
 [![Screencast](https://user-images.githubusercontent.com/11071876/123133596-3107d080-d450-11eb-8451-6dcebb7876ad.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
+## Features
+
+- On-screen recognition of selected text
+- Multi platform support for Linux, Windows, MacOS
+- Multi monitor support, incl. HDPI displays
+- "[Magically](#magics)" parsing the text (optional, on by default)
+- Show notifications (optional)
+- Stay in system tray (optional)
+- Check for updates (optional, off by default)
+
 ## Quickstart
 
 **❱❱
 [Download & run a pre-build package for Linux, MacOS or Windows](https://github.com/dynobo/normcap/releases)
 ❰❰**
 
-Hints:
+If you experience issues please look at the
+[FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md) or
+[open an issue](https://github.com/dynobo/normcap/issues).
 
-- If you experience issues please look at the
-  [FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md) or
-  [open an issue](https://github.com/dynobo/normcap/issues).
-- On **Linux**, make the AppImage executable (e.g. `chmod +x`) before running it.
-- On **MacOS**, you have to allow the unsigned application on first start: "System
-  Preferences" → "Security & Privacy" → Tab "General" → "Open anyway". \
-  Depending on
-  your system, you might also need to allow NormCap to take screenshots.
+(On **MacOS**, allow the unsigned application on first start: "System Preferences" →
+"Security & Privacy" → "General" → "Open anyway". You might also need to allow NormCap
+to take screenshots.)
 
 ## Python package
 
@@ -115,39 +122,6 @@ normcap
   - **★ (parse):** Try to auto-detect the type of text using [magics](#Magics) and
     format the text accordingly, then copy
   - **☰ (raw):** Copy detected text line by line, without further modification
-
-### Command line options
-
-NormCap has some settings. If you use the settings menu in the UI, your settings are
-persisted in `<users config folder>/normcap/config.yaml`. If you start NormCap with a
-command line argument (other then `-h`, `-v` and `-V`), all persisted settings are
-ignored and only the settings provided as arguments are used:
-
-```plain
-(normcap)dynobo@cioran:~$ normcap --help
-usage: normcap [-h] [-m MODE] [-l LANGUAGES] [-c COLOR] [-n] [-t] [-u] [-v] [-V]
-
-OCR-powered screen-capture tool to capture information instead of images.
-
-optional arguments:
-  -h, --help                  show this help message and exit
-  -m MODE, --mode MODE        set capture mode to 'raw' or 'parse'
-                              (default: parse)
-  -l LANGUAGES, --languages LANGUAGES
-                              set language(s) for text recognition, e.g. eng+deu
-                              (default: eng)
-  -c COLOR, --color COLOR     set primary color for UI (default: #FF2E88)
-  -n, --no-notifications      disable notifications shown after ocr detection
-                              (default: False)
-  -t, --tray                  keep running in system tray - experimental
-                              (default: False)
-  -u, --updates               search for updates on startup - experimental
-                              (default: False)
-  -v, --verbose               print debug information to console
-                              (default: False)
-  -V, --very-verbose          print more debug information to console
-                              (default: False)
-```
 
 ### Magics
 
