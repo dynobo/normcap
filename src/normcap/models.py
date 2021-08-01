@@ -20,6 +20,7 @@ class Urls:
     github = "https://github.com/dynobo/normcap"
     issues = "https://github.com/dynobo/normcap/issues"
     faqs = "https://github.com/dynobo/normcap/blob/main/FAQ.md"
+    xcb_error = f"{faqs}#linux-could-not-load-the-qt-platform-plugin-xcb"
 
 
 URLS = Urls()

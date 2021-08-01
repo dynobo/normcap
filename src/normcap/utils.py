@@ -19,6 +19,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 from normcap import __version__
 from normcap.logger import logger
 from normcap.models import (
+    URLS,
     DesktopEnvironment,
     DisplayManager,
     Platform,
@@ -195,15 +196,23 @@ def get_system_info() -> SystemInfo:
     )
 
 
-def qt_message_handler(mode, ctx, msg):
+def qt_message_handler(mode, _, msg):
     """Intercept QT message.
 
     Used to hide away unnecessary warnings by showing them only on higher
     log level (--very-verbose).
     """
     level = mode.name.decode("utf8")
-    logger.debug(f"[QT] L:{ctx.line}, func: {ctx.function}, file: {ctx.file}")
-    logger.debug(f"[QT] {level} - {msg}")
+
+    if level.lower() == "qtfatalmsg":
+        logger.error(f"[QT] {level} - {msg}")
+    elif "could not load the qt platform" in msg.lower():
+        logger.error(f"[QT] {level} - {msg}")
+        if "xcb" in msg.lower() and "it was found" + URLS.faqs in msg.lower():
+            logger.error(f"Try solving the problem as described here: {URLS.xcb_error}")
+            logger.error(f"If that doesn't help, please open an issue: {URLS.issues}")
+    else:
+        logger.debug(f"[QT] {level} - {msg}")
 
 
 @contextlib.contextmanager
