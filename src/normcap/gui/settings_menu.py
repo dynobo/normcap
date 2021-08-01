@@ -3,13 +3,13 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from normcap.models import URLS, Platform
-from normcap.utils import get_icon, open_url_and_hide
+from normcap.utils import get_icon
 
 
 class SettingsMenu(QtWidgets.QMenu):
     """Settings menu and bindings to actions."""
 
-    style_sheet = """
+    _MENU_STYLE_TEMPLATE = """
             QMenu {
                 background-color: rgba(0,0,0,0.8);
                 color: white;
@@ -48,37 +48,44 @@ class SettingsMenu(QtWidgets.QMenu):
         self.setObjectName("settings_menu")
         self.window_main = window_main
 
-        self.setStyleSheet(self.style_sheet.replace("$COLOR", window_main.config.color))
-        self.title_font = self.get_title_font()
+        self.setStyleSheet(
+            self._MENU_STYLE_TEMPLATE.replace("$COLOR", window_main.config.color)
+        )
+        self.title_font = self._get_title_font()
 
-        self.add_title("Settings")
-        self.add_settings_section()
+        self._add_title("Settings")
+        self._add_settings_section()
         self.addSeparator()
-        self.add_title("Capture mode")
-        self.add_mode_section()
+        self._add_title("Capture mode")
+        self._add_mode_section()
         self.addSeparator()
-        self.add_title("Languages")
-        self.add_languages_section()
+        self._add_title("Languages")
+        self._add_languages_section()
         self.addSeparator()
-        self.add_title("Application")
-        self.add_application_section()
+        self._add_title("Application")
+        self._add_application_section()
 
     @staticmethod
-    def get_title_font() -> QtGui.QFont:
+    def _get_title_font() -> QtGui.QFont:
         """Define font for menu subtitles."""
         font = QtGui.QFont()
         font.setPixelSize(12)
         font.setBold(True)
         return font
 
-    def add_title(self, title: str):
+    def _open_url_and_hide(self, url):
+        """Open url and quit or hide NormCap."""
+        QtGui.QDesktopServices.openUrl(url)
+        self.window_main.com.on_quit_or_hide.emit()
+
+    def _add_title(self, title: str):
         """Add section title."""
         action = QtWidgets.QAction(title, self)
         action.setEnabled(False)
         action.setFont(self.title_font)
         self.addAction(action)
 
-    def add_settings_section(self):
+    def _add_settings_section(self):
         """Add session options and actions."""
         # pylint: disable=no-member  # action.triggered.connect is not resolved
 
@@ -106,7 +113,7 @@ class SettingsMenu(QtWidgets.QMenu):
         )
         self.addAction(action)
 
-    def add_mode_section(self):
+    def _add_mode_section(self):
         """Add caputure mode options and actions."""
         # pylint: disable=no-member
         mode_group = QtWidgets.QActionGroup(self)
@@ -129,7 +136,7 @@ class SettingsMenu(QtWidgets.QMenu):
         mode_group.addAction(action)
         self.addAction(action)
 
-    def add_languages_section(self):
+    def _add_languages_section(self):
         """Add multiselect for language option."""
         # pylint: disable=no-member
         for language in self.window_main.system_info.tesseract_languages:
@@ -143,7 +150,7 @@ class SettingsMenu(QtWidgets.QMenu):
             action.setChecked(language in self.window_main.config.languages)
             self.addAction(action)
 
-    def add_application_section(self):
+    def _add_application_section(self):
         """Add application related actions."""
         # pylint: disable=no-member
 
@@ -152,25 +159,19 @@ class SettingsMenu(QtWidgets.QMenu):
         submenu.setTitle("Website")
 
         action = QtWidgets.QAction("Source code", submenu)
-        action.triggered.connect(
-            lambda: open_url_and_hide(self.window_main, URLS.github)
-        )
+        action.triggered.connect(lambda: self._open_url_and_hide(URLS.github))
         submenu.addAction(action)
 
         action = QtWidgets.QAction("Releases", submenu)
-        action.triggered.connect(
-            lambda: open_url_and_hide(self.window_main, URLS.releases)
-        )
+        action.triggered.connect(lambda: self._open_url_and_hide(URLS.releases))
         submenu.addAction(action)
 
         action = QtWidgets.QAction("FAQ", submenu)
-        action.triggered.connect(lambda: open_url_and_hide(self.window_main, URLS.faqs))
+        action.triggered.connect(lambda: self._open_url_and_hide(URLS.faqs))
         submenu.addAction(action)
 
         action = QtWidgets.QAction("Report a problem", submenu)
-        action.triggered.connect(
-            lambda: open_url_and_hide(self.window_main, URLS.issues)
-        )
+        action.triggered.connect(lambda: self._open_url_and_hide(URLS.issues))
         submenu.addAction(action)
 
         self.addMenu(submenu)
