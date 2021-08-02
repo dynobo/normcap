@@ -15,13 +15,14 @@ from normcap.args import create_argparser
 from normcap.logger import logger
 from normcap.window_main import WindowMain
 
+# TODO: Remove config yaml from older version
+
 
 def main():
     """Main entry point."""
     sys.excepthook = utils.except_hook
 
-    arg_parser = create_argparser()
-    args = vars(arg_parser.parse_args())
+    args = vars(create_argparser().parse_args())
 
     if args["verbose"]:
         logger.setLevel("INFO")
@@ -40,8 +41,10 @@ def main():
 
     # Start Qt Application
     with utils.temporary_environ(XCURSOR_SIZE=24):
+        # Wrap qt log messages
         QtCore.qInstallMessageHandler(utils.qt_message_handler)
 
+        # Init App
         QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
         app = QtWidgets.QApplication(sys.argv)
         app.setQuitOnLastWindowClosed(False)

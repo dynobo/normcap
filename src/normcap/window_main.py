@@ -9,6 +9,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__, clipboard
 from normcap.enhance import enhance_image
+from normcap.gui.settings import init_settings, log_settings
 from normcap.gui.settings_menu import SettingsMenu
 from normcap.gui.system_tray import create_system_tray
 from normcap.logger import logger
@@ -26,13 +27,13 @@ from normcap.models import (
 )
 from normcap.ocr import perform_ocr
 from normcap.screengrab import grab_screen
-from normcap.settings import init_settings, log_settings
 from normcap.update_check import UpdateChecker
 from normcap.utils import get_icon, set_cursor
 from normcap.window_base import WindowBase
 
 
 class Communicate(QtCore.QObject):
+
     """Applications' communication bus."""
 
     on_region_selected = QtCore.Signal(Rect)
