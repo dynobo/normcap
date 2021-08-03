@@ -1,7 +1,7 @@
 import pytest  # type: ignore
 
 from normcap.args import create_argparser
-from normcap.gui.settings import init_settings
+from normcap.qt.settings import init_settings
 
 # Allow pytest fixtures:
 # pylint: disable=redefined-outer-name

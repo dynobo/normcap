@@ -1,5 +1,6 @@
 """Normcap main window."""
 import os
+import sys
 import tempfile
 import textwrap
 import time
@@ -7,16 +8,12 @@ from typing import Dict, Tuple
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from normcap import __version__, clipboard
+from normcap import clipboard
 from normcap.enhance import enhance_image
-from normcap.gui.settings import init_settings, log_settings
-from normcap.gui.settings_menu import SettingsMenu
-from normcap.gui.system_tray import create_system_tray
 from normcap.logger import logger
 from normcap.magic import apply_magic
 from normcap.models import (
     FILE_ISSUE_TEXT,
-    URLS,
     Capture,
     CaptureMode,
     DesktopEnvironment,
@@ -26,8 +23,11 @@ from normcap.models import (
     SystemInfo,
 )
 from normcap.ocr import perform_ocr
+from normcap.qt.settings import init_settings, log_settings
+from normcap.qt.settings_menu import SettingsMenu
+from normcap.qt.system_tray import SystemTray
+from normcap.qt.update_check import UpdateChecker
 from normcap.screengrab import grab_screen
-from normcap.update_check import UpdateChecker
 from normcap.utils import get_icon, set_cursor
 from normcap.window_base import WindowBase
 
@@ -53,7 +53,9 @@ class Communicate(QtCore.QObject):
 class WindowMain(WindowBase):
     """Main (parent) window."""
 
-    tray: QtWidgets.QSystemTrayIcon
+    tray: SystemTray
+    settings_menu: SettingsMenu
+    update_checker: UpdateChecker
 
     def __init__(self, system_info: SystemInfo, args):
         self.settings = init_settings(args)
@@ -68,29 +70,35 @@ class WindowMain(WindowBase):
         self.capture: Capture = Capture()
         self.com = Communicate()
 
-        self.all_windows: Dict[int, WindowBase] = {0: self}
-        self.multi_monitor_mode = len(self.system_info.screens) > 1
-
         self._set_signals()
+        self._add_settings_menu()
+        self._add_tray()
+        self._add_update_checker()
 
+        self.all_windows: Dict[int, WindowBase] = {0: self}
+        if len(self.system_info.screens) > 1:
+            self._init_child_windows()
+
+    def _add_settings_menu(self):
         self.settings_menu = SettingsMenu(self)
         self.settings_menu.com.on_setting_changed.connect(self.update_setting)
         self.settings_menu.com.on_open_url.connect(self.com.on_open_url_and_hide)
         self.settings_menu.com.on_quit_or_hide.connect(self.com.on_quit_or_hide.emit)
         self.settings_menu.show()
 
-        self.main_window.tray = create_system_tray(self)
+    def _add_tray(self):
+        self.tray = SystemTray(self)
+        self.tray.com.on_capture.connect(self.show_windows)
+        self.tray.com.on_exit.connect(sys.exit)
         if self.settings.value("tray", type=bool):
-            logger.debug("Show tray icon")
-            self.main_window.tray.show()
+            self.tray.show()
 
-        self.checker = UpdateChecker(self.system_info.briefcase_package)
-
+    def _add_update_checker(self):
         if self.settings.value("update", type=bool):
-            QtCore.QTimer.singleShot(700, self.check_for_updates)
-
-        if self.multi_monitor_mode:
-            self._init_child_windows()
+            checker = UpdateChecker(self, packaged=self.system_info.briefcase_package)
+            checker.com.on_version_retrieved.connect(checker.show_update_message)
+            checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
+            QtCore.QTimer.singleShot(500, checker.check)
 
     def _set_signals(self):
         """Setup signals to trigger program logic."""
@@ -104,7 +112,6 @@ class WindowMain(WindowBase):
         self.com.on_minimize_windows.connect(self.minimize_windows)
         self.com.on_set_cursor_wait.connect(lambda: set_cursor(QtCore.Qt.WaitCursor))
         self.com.on_quit_or_hide.connect(self.quit_or_minimize)
-        self.com.on_update_available.connect(self.show_update_message)
         self.com.on_open_url_and_hide.connect(self.open_url_and_hide)
 
     ###################
@@ -157,12 +164,13 @@ class WindowMain(WindowBase):
     def show_windows(self):
         """Make hidden windows visible again."""
         for window in self.all_windows.values():
-            if self.system_info.platform == Platform.MACOS:
-                window.show()
-                window.raise_()
-                window.activateWindow()
-            else:
-                window.showFullScreen()
+            window.set_fullscreen()
+            # if self.system_info.platform == Platform.MACOS:
+            #     window.show()
+            #     window.raise_()
+            #     window.activateWindow()
+            # else:
+            #     window.showFullScreen()
 
     def quit_or_minimize(self):
         """Minimize application if in tray-mode, else exit."""
@@ -204,53 +212,6 @@ class WindowMain(WindowBase):
             self.show_or_hide_tray_icon()
 
         log_settings(self.settings)
-
-    #########################
-    # Checking for Updates  #
-    #########################
-
-    def check_for_updates(self):
-        """Check if update is available and present dialog."""
-        logger.debug("Checking for updates")
-        self.checker.on_version_retrieved.connect(self.show_update_message)
-        self.checker.check()
-
-    def show_update_message(self, new_version):
-        """Show dialog informing about available update."""
-
-        text = f"<b>NormCap v{new_version} is available.</b> (You have v{__version__})"
-        if self.system_info.briefcase_package:
-            info_text = (
-                "You can download the new version for your operating system from "
-                "GitHub.\n\n"
-                "Do you want to visit the release website now?"
-            )
-        else:
-            info_text = (
-                "You should be able to upgrade from command line with "
-                "'pip install normcap --upgrade'.\n\n"
-                "Do you want to visit the release website now?"
-            )
-
-        msgBox = QtWidgets.QMessageBox()
-
-        # Necessary on wayland for main window to regain focus:
-        msgBox.setWindowFlags(QtCore.Qt.Popup)
-
-        msgBox.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
-        msgBox.setText(text)
-        msgBox.setInformativeText(info_text)
-        msgBox.setStandardButtons(
-            QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel
-        )
-        msgBox.setDefaultButton(QtWidgets.QMessageBox.Ok)
-
-        set_cursor(QtCore.Qt.ArrowCursor)
-        choice = msgBox.exec_()
-        set_cursor(QtCore.Qt.CrossCursor)
-
-        if choice == 1024:
-            self.com.on_open_url_and_hide.emit(URLS.releases)
 
     #########################
     # On notification send  #
