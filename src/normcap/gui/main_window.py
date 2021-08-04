@@ -10,6 +10,11 @@ from PySide2 import QtCore, QtGui, QtWidgets
 
 from normcap import clipboard
 from normcap.enhance import enhance_image
+from normcap.gui.base_window import BaseWindow
+from normcap.gui.settings import init_settings, log_settings
+from normcap.gui.settings_menu import SettingsMenu
+from normcap.gui.system_tray import SystemTray
+from normcap.gui.update_check import UpdateChecker
 from normcap.logger import logger
 from normcap.magic import apply_magic
 from normcap.models import (
@@ -23,13 +28,8 @@ from normcap.models import (
     SystemInfo,
 )
 from normcap.ocr import perform_ocr
-from normcap.qt.settings import init_settings, log_settings
-from normcap.qt.settings_menu import SettingsMenu
-from normcap.qt.system_tray import SystemTray
-from normcap.qt.update_check import UpdateChecker
 from normcap.screengrab import grab_screen
 from normcap.utils import get_icon, set_cursor
-from normcap.window_base import WindowBase
 
 
 class Communicate(QtCore.QObject):
@@ -50,7 +50,7 @@ class Communicate(QtCore.QObject):
     on_open_url_and_hide = QtCore.Signal(str)
 
 
-class WindowMain(WindowBase):
+class MainWindow(BaseWindow):
     """Main (parent) window."""
 
     tray: SystemTray
@@ -68,22 +68,29 @@ class WindowMain(WindowBase):
         )
 
         self.capture: Capture = Capture()
-        self.com = Communicate()
+        self.capture.mode = (
+            CaptureMode.PARSE
+            if self.settings.value("mode") == "parse"
+            else CaptureMode.RAW
+        )
 
+        self.com = Communicate()
         self._set_signals()
+
         self._add_settings_menu()
         self._add_tray()
         self._add_update_checker()
 
-        self.all_windows: Dict[int, WindowBase] = {0: self}
+        self.all_windows: Dict[int, BaseWindow] = {0: self}
         if len(self.system_info.screens) > 1:
             self._init_child_windows()
 
     def _add_settings_menu(self):
         self.settings_menu = SettingsMenu(self)
-        self.settings_menu.com.on_setting_changed.connect(self.update_setting)
+        self.settings_menu.com.on_setting_changed.connect(self._update_setting)
         self.settings_menu.com.on_open_url.connect(self.com.on_open_url_and_hide)
         self.settings_menu.com.on_quit_or_hide.connect(self.com.on_quit_or_hide.emit)
+        self.settings_menu.move(self.width() - self.settings_menu.width() - 20, 20)
         self.settings_menu.show()
 
     def _add_tray(self):
@@ -121,9 +128,9 @@ class WindowMain(WindowBase):
     def _init_child_windows(self):
         """Initialize child windows with method depending on system."""
         if self.system_info.display_manager != DisplayManager.WAYLAND:
-            self.create_all_child_windows()
+            self._create_all_child_windows()
         elif self.system_info.desktop_environment == DesktopEnvironment.GNOME:
-            self.com.on_window_positioned.connect(self.create_next_child_window)
+            self.com.on_window_positioned.connect(self._create_next_child_window)
         else:
             logger.error(
                 f"NormCap currently doesn't support multi monitor mode"
@@ -132,22 +139,22 @@ class WindowMain(WindowBase):
                 f"\n{FILE_ISSUE_TEXT}"
             )
 
-    def create_next_child_window(self):
-        """Instantiate child windows in multi screen setting."""
+    def _create_next_child_window(self):
+        """Opening child windows only for next display."""
         if len(self.system_info.screens) > len(self.all_windows):
             index = max(self.all_windows.keys()) + 1
-            self.create_child_window(index)
+            self._create_child_window(index)
 
-    def create_all_child_windows(self):
+    def _create_all_child_windows(self):
         """Opening all child windows at once."""
         for index in self.system_info.screens:
             if index == self.screen_idx:
                 continue
-            self.create_child_window(index)
+            self._create_child_window(index)
 
-    def create_child_window(self, index: int):
+    def _create_child_window(self, index: int):
         """Open a child window for the specified screen."""
-        self.all_windows[index] = WindowBase(
+        self.all_windows[index] = BaseWindow(
             system_info=self.system_info,
             screen_idx=index,
             parent=self,
@@ -203,13 +210,18 @@ class WindowMain(WindowBase):
     # On settings change    #
     #########################
 
-    def update_setting(self, data):
+    def _update_setting(self, data):
         """Update settings"""
         name, value = data
         self.settings.setValue(name, value)
 
         if name == "tray":
             self.show_or_hide_tray_icon()
+
+        elif name == "mode":
+            self.capture.mode = (
+                CaptureMode.PARSE if value == "parse" else CaptureMode.RAW
+            )
 
         log_settings(self.settings)
 
@@ -222,6 +234,7 @@ class WindowMain(WindowBase):
         QtGui.QDesktopServices.openUrl(url)
         self.com.on_quit_or_hide.emit()
 
+    # TODO: Move notification logic to separate file
     def send_notification(self):
         """Setting up tray icon."""
         if not self.settings.value("notification", type=bool):

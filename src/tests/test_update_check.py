@@ -1,6 +1,6 @@
 import pytest
 
-from normcap.qt.update_check import UpdateChecker
+from normcap.gui.update_check import UpdateChecker
 
 # Allow pytest fixtures:
 # pylint: disable=redefined-outer-name,protected-access

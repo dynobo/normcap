@@ -4,13 +4,15 @@ from typing import Any
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from normcap.models import URLS, Platform
+from normcap.models import URLS
 from normcap.utils import get_icon
 
 _MENU_STYLE = """
         QMenu {
             background-color: rgba(0,0,0,0.8);
             color: white;
+            right: 20px;
+            margin-right: 10px;
         }
         QMenu::separator {
             background-color: rgba(255,255,255,0.2);
@@ -28,21 +30,17 @@ _MENU_STYLE = """
             background-color: rgba(150,150,150,0.5);
         }
         QMenu::indicator {
-            position: relative;
             right: -5px;
         }
-        QMenu::indicator:unchecked {
-        }
-        QMenu::indicator:checked {
-        }
         QMenu::left-arrow,
-        QMenu::right-arrow {
-            margin: 5px;
+        QMenu::right-arrow  {
+            right: 15px;
         }
     """
 
 _BUTTON_STYLE = """
-        "QToolButton::menu-indicator { image: none; }"
+        QToolButton { border:0px; }
+        QToolButton::menu-indicator { image: none; }
     """
 
 
@@ -58,24 +56,22 @@ class SettingsMenu(QtWidgets.QToolButton):
     """Button to adjust setting on main window top right."""
 
     def __init__(self, window_main: QtWidgets.QMainWindow):
-        super().__init__(window_main.ui.top_right_frame)
+        super().__init__(window_main.frame)
+        self.setObjectName("settings_icon")
         self.settings = window_main.settings
         self.system_info = window_main.system_info
 
         self.setFixedSize(38, 38)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.setStyleSheet(_BUTTON_STYLE)
+
         self.setIcon(get_icon("settings.png"))
         self.setIconSize(QtCore.QSize(28, 28))
         self.setPopupMode(QtWidgets.QToolButton.InstantPopup)
 
-        self.title_font = QtGui.QFont(QtGui.QFont().family(), 12, QtGui.QFont.Bold)
+        self.title_font = QtGui.QFont(QtGui.QFont().family(), 10, QtGui.QFont.Bold)
 
         self.com = Communicate()
-
-        # TODO: Remove when window on MacOS got corrected
-        if self.system_info.platform == Platform.MACOS:
-            self.move(0, 20)
 
         self._add_menu()
 
@@ -83,6 +79,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         menu = QtWidgets.QMenu(self)
         menu.setObjectName("settings_menu")
         menu.setStyleSheet(_MENU_STYLE.replace("$COLOR", self.settings.value("color")))
+        menu.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
 
         self._add_title(menu, "Settings")
         self._add_settings_section(menu)

@@ -5,9 +5,9 @@ import re
 from PySide2 import QtCore, QtWidgets
 
 from normcap import __version__
+from normcap.gui.downloader import Downloader
 from normcap.logger import logger
 from normcap.models import URLS
-from normcap.qt.downloader import Downloader
 from normcap.utils import get_icon, set_cursor
 
 

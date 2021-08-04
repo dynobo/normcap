@@ -12,8 +12,8 @@ from PySide2 import QtCore, QtWidgets
 
 from normcap import __version__, utils
 from normcap.args import create_argparser
+from normcap.gui.main_window import MainWindow
 from normcap.logger import logger
-from normcap.window_main import WindowMain
 
 # TODO: Remove config yaml from older version
 
@@ -53,7 +53,7 @@ def main():
         system_info = utils.get_system_info()
         logger.debug(f"Detected system info:{system_info}")
 
-        window = WindowMain(system_info, args)
+        window = MainWindow(system_info, args)
         window.show()
 
         sys.exit(app.exec_())

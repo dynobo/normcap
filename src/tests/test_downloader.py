@@ -1,6 +1,6 @@
 from PySide2 import QtNetwork
 
-from normcap.qt.update_check import Downloader
+from normcap.gui.update_check import Downloader
 
 # Allow pytest fixtures:
 # pylint: disable=redefined-outer-name,protected-access

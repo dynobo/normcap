@@ -1,25 +1,19 @@
 """Normcap base window.
 
-Instantiated for child windows (multi display), inherited for the main window.
-
-To launch designer:
-    .venv/lib/python3.9/site-packages/PySide2/designer
-
-To generate a new python class from ui-file:
-    uic -g python src/normcap/resources/base_window.ui > src/normcap/window_base_ui.py
-
+Inherited for the main window, instantiated for the child windows (which get created
+in multi display setups).
 """
+
 from copy import deepcopy
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from normcap.logger import logger
 from normcap.models import CaptureMode, DisplayManager, Platform, Rect, SystemInfo
-from normcap.utils import move_active_window_to_position_on_gnome
-from normcap.window_base_ui import Ui_BaseWindow
+from normcap.utils import get_icon, move_active_window_to_position_on_gnome
 
 
-class WindowBase(QtWidgets.QMainWindow):
+class BaseWindow(QtWidgets.QMainWindow):
     """Main (parent) window."""
 
     def __init__(
@@ -31,27 +25,45 @@ class WindowBase(QtWidgets.QMainWindow):
         self.primary_color: str = color
         self.main_window: QtWidgets.QMainWindow = parent if parent else self
 
+        # Window properties
+        self.setObjectName(f"window-{self.screen_idx}")
+        self.setWindowTitle("NormCap")
+        self.setWindowIcon(get_icon("normcap.png"))
+        self.setAnimated(False)
+        self.setEnabled(True)
+
+        # Prepare selection rectangle
         self.qt_primary_color: QtGui.QColor = QtGui.QColor(self.primary_color)
         self.selection_rect: Rect = Rect()
         self.is_positioned: bool = False
         self.pen_width: int = 2
         self.is_selecting: bool = False
+        self.mode_indicator: str = "?"
+        self.mode_indicator_font = QtGui.QFont()
+        self.mode_indicator_font.setPixelSize(24)
 
+        # Setup widgets and show
         logger.debug(f"Creating window for screen {self.screen_idx}")
-        self.ui = Ui_BaseWindow()
-        self.ui.setupUi(self)
-        self.set_border_color()
+        self._add_central_widget()
         self.set_fullscreen()
+
+    def _add_central_widget(self):
+        self.frame = QtWidgets.QFrame()
+        self.frame.setObjectName("central_widget")
+        self.frame.setEnabled(True)
+        self.frame.setAutoFillBackground(True)
+        self.frame.setStyleSheet(f"QFrame {{border: 3px solid {self.primary_color};}}")
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Plain)
+        self.frame.setLineWidth(0)
+        self.setCentralWidget(self.frame)
 
     ##################
     # Utility
     ##################
+    def _to_global_rect(self, rect: Rect) -> Rect:
+        """Transform coordinates on display to global coordinates for multi screen"""
 
-    def to_global_rect(self, rect: Rect) -> Rect:
-        """Transform coordinates on display to global coordinates.
-
-        Necessary in multi display settings.
-        """
         # Reposition if necessary (multi monitor)
         screen = self.system_info.screens[self.screen_idx]
         offset_x = screen.geometry.left
@@ -71,7 +83,7 @@ class WindowBase(QtWidgets.QMainWindow):
         return rect
 
     @staticmethod
-    def sanatize_rect(rect: Rect) -> Rect:
+    def _sanatize_rect(rect: Rect) -> Rect:
         """Make sure that first coordinates are top/left and second bottom/right.
 
         Also for unknown reason, the selections drawn from bottom/right to
@@ -93,8 +105,7 @@ class WindowBase(QtWidgets.QMainWindow):
 
         return rect
 
-    def get_mode_indicator_char(self):
-        """Map mode to char rendered on screen as indicator."""
+    def _get_mode_indicator_char(self):
         if self.main_window.capture.mode is CaptureMode.RAW:
             return "☰"
         if self.main_window.capture.mode is CaptureMode.PARSE:
@@ -110,6 +121,7 @@ class WindowBase(QtWidgets.QMainWindow):
             return
 
         painter = QtGui.QPainter(self)
+
         # Draw selection rectangle
         painter.setPen(
             QtGui.QPen(self.qt_primary_color, self.pen_width, QtCore.Qt.DashLine)
@@ -117,18 +129,15 @@ class WindowBase(QtWidgets.QMainWindow):
         painter.drawRect(*self.selection_rect.geometry)
 
         # Draw Mode indicator
-        font = painter.font()
-        font.setPixelSize(24)
-        painter.setFont(font)
+        painter.setFont(self.mode_indicator_font)
         painter.drawText(
             max(self.selection_rect.right, self.selection_rect.left) - 18,
             min(self.selection_rect.bottom, self.selection_rect.top) - 8,
-            self.get_mode_indicator_char(),
+            self.mode_indicator,
         )
         painter.end()
 
     def keyPressEvent(self, event):
-        """Handle keyboard events."""
         if event.key() == QtCore.Qt.Key_Escape:
             if self.is_selecting:
                 # Abort selection process, allowing to reselect
@@ -137,18 +146,11 @@ class WindowBase(QtWidgets.QMainWindow):
             else:
                 # Quit application
                 self.main_window.com.on_quit_or_hide.emit()
-        elif event.key() == QtCore.Qt.Key_Space:
-            mode = self.main_window.capture.mode
-            if mode < max(CaptureMode):
-                mode = CaptureMode(mode.value + 1)
-            else:
-                mode = CaptureMode(0)
-            self.main_window.capture.mode = mode
-            self.update()
 
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             self.is_selecting = True
+            self.mode_indicator = self._get_mode_indicator_char()
             self.selection_rect.top = event.pos().y()
             self.selection_rect.left = event.pos().x()
             self.selection_rect.bottom = event.pos().y()
@@ -170,8 +172,8 @@ class WindowBase(QtWidgets.QMainWindow):
             self.main_window.com.on_minimize_windows.emit()
 
             capture_rect = deepcopy(self.selection_rect)
-            capture_rect = self.to_global_rect(capture_rect)
-            capture_rect = self.sanatize_rect(capture_rect)
+            capture_rect = self._to_global_rect(capture_rect)
+            capture_rect = self._sanatize_rect(capture_rect)
             self.main_window.com.on_region_selected.emit(
                 (capture_rect, self.screen_idx)
             )
@@ -195,15 +197,9 @@ class WindowBase(QtWidgets.QMainWindow):
     # Adjust UI
     ##################
 
-    def set_border_color(self):
-        """Set style to set color of border around display."""
-        css = self.ui.frame.styleSheet()
-        self.ui.frame.setStyleSheet(
-            f"{css} QFrame {{border-color: {self.primary_color};}}"
-        )
-
     def set_fullscreen(self):
         """Set window to full screen using platform specific methods."""
+
         logger.debug(f"Setting window for screen {self.screen_idx} to fullscreen")
 
         if self.system_info.platform == Platform.LINUX:
@@ -218,7 +214,6 @@ class WindowBase(QtWidgets.QMainWindow):
             )
 
     def _set_fullscreen_linux(self):
-        """Set fullscreen on Linux platforms."""
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.BypassWindowManagerHint
@@ -237,7 +232,6 @@ class WindowBase(QtWidgets.QMainWindow):
         self.show()
 
     def _set_fullscreen_macos(self):
-        """Set fullscreen on MacOS platforms."""
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.CustomizeWindowHint
@@ -261,7 +255,6 @@ class WindowBase(QtWidgets.QMainWindow):
         )
 
     def _set_fullscreen_windows(self):
-        """Set fullscreen on Windows platforms."""
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.CustomizeWindowHint
@@ -275,7 +268,6 @@ class WindowBase(QtWidgets.QMainWindow):
         self.showFullScreen()
 
     def _position_windows_on_wayland(self):
-        """Set fullscreen on Linux platforms."""
         self.setFocus()
         screen_geometry = self.system_info.screens[self.screen_idx].geometry
         logger.debug(f"Moving window to screen {self.screen_idx} to {screen_geometry}")
