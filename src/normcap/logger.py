@@ -8,3 +8,10 @@ logging.basicConfig(
     level="WARNING",
 )
 logger = logging.getLogger(__name__.split(".", maxsplit=1)[0])
+
+
+def format_section(section: str, title: str) -> str:
+    """Wrap a string inside section delimiters."""
+    title_start = f" <{title}> "
+    title_end = f" </{title}> "
+    return f"\n{title_start:-^60s}\n{section.strip()}\n{title_end:-^60s}"

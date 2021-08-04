@@ -1,7 +1,8 @@
 import pytest  # type: ignore
 from PySide2 import QtGui
 
-from normcap.models import Capture, Rect, SystemInfo, _format_section
+from normcap.logger import format_section
+from normcap.models import Capture, Rect, SystemInfo
 
 # pylint: disable=unused-import
 from .fixtures import capture, system_info
@@ -15,7 +16,7 @@ from .fixtures import capture, system_info
 def test_format_section():
     """Check if formatting works."""
     text = "This Is a Dummy Text\n\n"
-    result = _format_section(text, "DummySection")
+    result = format_section(text, "DummySection")
 
     assert result[0] == "\n"
     assert result.count("DummySection") == 2

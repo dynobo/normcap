@@ -15,7 +15,7 @@ from normcap.gui.settings import init_settings, log_settings
 from normcap.gui.settings_menu import SettingsMenu
 from normcap.gui.system_tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
-from normcap.logger import logger
+from normcap.logger import format_section, logger
 from normcap.magic import apply_magic
 from normcap.models import (
     FILE_ISSUE_TEXT,
@@ -33,7 +33,6 @@ from normcap.utils import get_icon, set_cursor
 
 
 class Communicate(QtCore.QObject):
-
     """Applications' communication bus."""
 
     on_region_selected = QtCore.Signal(Rect)
@@ -337,10 +336,12 @@ class MainWindow(BaseWindow):
 
     def copy_to_clipboard(self):
         """Copy results to clipboard."""
-        logger.info(f"Copying text to clipboard:\n{self.capture.transformed}")
+        text = format_section(self.capture.transformed, title="Text to Clipboard")
+        logger.info(f"Copying text to clipboard:{text}")
+
+        cb = QtWidgets.QApplication.clipboard()
+        cb.dataChanged.connect(self.com.on_copied_to_clipboard.emit)
+
         clipboard_copy = clipboard.init()
         clipboard_copy(self.capture.transformed)
-
         QtWidgets.QApplication.processEvents()
-        time.sleep(1.05)
-        self.com.on_copied_to_clipboard.emit()

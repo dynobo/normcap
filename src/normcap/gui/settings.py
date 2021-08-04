@@ -1,6 +1,8 @@
+import pprint
+
 from PySide2 import QtCore
 
-from normcap.logger import logger
+from normcap.logger import format_section, logger
 
 DEFAULTS = {
     "color": "#FF2E88",
@@ -14,12 +16,15 @@ DEFAULTS = {
 
 def log_settings(settings: QtCore.QSettings):
     """Print formated settings."""
-    settings_dict = {k: settings.value(k) for k in settings.allKeys()}
-    string = [
-        f"\t{k}: {v if v not in ['true', 'false'] else v=='true'}"
-        for k, v in settings_dict.items()
-    ]
-    logger.debug("Current settings:\n" + "\n".join(string))
+    settings_dict = {
+        k: settings.value(k)
+        if settings.value(k) not in ["true", "false"]
+        else settings.value(k) == "true"
+        for k in settings.allKeys()
+    }
+    string = pprint.pformat(settings_dict, indent=3)
+    string = format_section(string, title="Settings")
+    logger.debug(f"Current settings:{string}")
 
 
 def init_settings(args: dict) -> QtCore.QSettings:

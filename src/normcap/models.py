@@ -8,6 +8,8 @@ from typing import Dict, List, Optional, Tuple
 
 from PySide2 import QtGui
 
+from normcap.logger import format_section
+
 
 @dataclass
 class Urls:
@@ -27,13 +29,6 @@ FILE_ISSUE_TEXT = (
     "Please create a new issue with the output above on "
     f"{URLS.issues} . I'll see what I can do about it."
 )
-
-
-def _format_section(section: str, title: str) -> str:
-    """Wrap a string inside section delimiters."""
-    title_start = f" <{title}> "
-    title_end = f" </{title}> "
-    return f"\n{title_start:-^60s}\n{section.strip()}\n{title_end:-^60s}"
 
 
 @enum.unique
@@ -146,7 +141,7 @@ class SystemInfo:
 
     def __repr__(self):
         string = pprint.pformat(self.__dict__, indent=3)
-        string = _format_section(string, "SystemInfo")
+        string = format_section(string, "SystemInfo")
         return string
 
 
@@ -191,7 +186,7 @@ class Capture:
             # Per default just print
             string += f"{key}: {getattr(self, key)}\n"
         string = string.rstrip()
-        string = _format_section(string, "Capture")
+        string = format_section(string, "Capture")
         return string
 
     @property
