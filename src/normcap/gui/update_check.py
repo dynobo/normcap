@@ -31,7 +31,7 @@ class UpdateChecker(QtCore.QObject):
     def _check_if_new(self, text: str):
         """Check if retrieved version is new."""
         newest_version = self._parse_response(text)
-        logger.debug(f"Version found: {newest_version} (installed={__version__}).")
+        logger.debug(f"Version found: {newest_version} (installed={__version__})")
         if newest_version not in ["", __version__]:
             self.com.on_version_retrieved.emit(newest_version)
 
@@ -48,10 +48,10 @@ class UpdateChecker(QtCore.QObject):
                 data = json.loads(text)
                 newest_version = data["info"]["version"].strip()
         except Exception:  # pylint: disable=broad-except
-            logger.exception("Couldn't parse update check response.")
+            logger.exception("Couldn't parse update check response")
 
         if newest_version == "":
-            logger.error("Couldn't parse newest version.")
+            logger.error("Couldn't parse newest version")
 
         return newest_version
 

@@ -39,7 +39,7 @@ def save_image_in_tempfolder(
         now = datetime.datetime.now()
         file_name = f"{now:%Y-%m-%d_%H-%M-%S_%f}{postfix}.png"
         image.save(str(file_dir / file_name))
-        logger.debug(f"Image of selected region stored in: {file_dir / file_name}")
+        logger.debug(f"Debug image stored in: {file_dir / file_name}")
 
 
 def get_screen_idx_of_mouse() -> QtCore.QRect:
@@ -160,7 +160,7 @@ def get_tessdata_path() -> str:
     if path is None:
         return ""
 
-    raise ValueError(f"No valid path for tessdata found. {path} is invalid.")
+    raise ValueError(f"No valid path for tessdata found. {path} is invalid")
 
 
 def get_tesseract_languages() -> List[str]:
@@ -295,7 +295,7 @@ def get_config_directory() -> Path:
         appdata = os.getenv("APPDATA")
         if appdata:
             return Path(appdata)
-        raise ValueError("Couldn't determine the appdata directory.")
+        raise ValueError("Couldn't determine the appdata directory")
 
     # Linux and Mac
     xdg_config_home = os.getenv("XDG_CONFIG_HOME")

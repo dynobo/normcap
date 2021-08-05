@@ -74,7 +74,7 @@ class UrlMagic(BaseMagic):
         Returns:
             str -- URL(s), separated bye newline
         """
-        logger.info("Transforming with URL magic...")
+        logger.info("Transforming with URL magic")
 
         # Return as line separated list
         return os.linesep.join(self._urls)

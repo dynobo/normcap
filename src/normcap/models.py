@@ -137,7 +137,7 @@ class SystemInfo:
         for idx, screen in self.screens.items():
             if screen.is_primary:
                 return idx
-        raise ValueError("Unable to detect primary screen.")
+        raise ValueError("Unable to detect primary screen")
 
     def __repr__(self):
         string = pprint.pformat(self.__dict__, indent=3)

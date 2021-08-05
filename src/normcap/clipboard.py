@@ -1,4 +1,5 @@
 """Helper for clipboard manipulation"""
+from normcap.logger import format_section, logger
 
 
 def init():
@@ -13,6 +14,7 @@ def init():
         app = QtWidgets.QApplication()
 
     def copy_qt(text):
+        logger.debug(f"Copying to clipboard:{format_section(text, title='Clipboard')}")
         cb = app.clipboard()
         cb.setText(text)
 
