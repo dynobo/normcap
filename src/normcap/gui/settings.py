@@ -3,6 +3,7 @@ import pprint
 from PySide2 import QtCore
 
 from normcap.logger import format_section, logger
+from normcap.utils import get_config_directory
 
 DEFAULTS = {
     "color": "#FF2E88",
@@ -47,5 +48,18 @@ def init_settings(args: dict) -> QtCore.QSettings:
         if value and key in settings.allKeys():
             settings.setValue(key, value)
 
+    # Overwrite missing settings with defaults
+    for key in settings.allKeys():
+        if (settings.value(key) is None) and (key in DEFAULTS):
+            settings.setValue(key, DEFAULTS[key])
+
     log_settings(settings)
+
+    # Remove deprecated config file
+    # TODO: Remove in some month
+    config_file = get_config_directory() / "normcap" / "config.yaml"
+    if config_file.is_file():
+        logger.debug("Removing deprecated config file.")
+        config_file.unlink()
+
     return settings

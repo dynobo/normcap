@@ -154,9 +154,17 @@ def get_tessdata_path() -> str:
     if is_briefcase_package():
         path = resource_path
 
+    # TODO: Also look into
+    # /usr/share/tesseract-ocr/4.00/tessdata
+    # /usr/share/tessdata
+    # /usr/local/share/tessdata
+    # Windows?
+    # MacOS?
+
     if path and path.is_dir():
         return str(path.absolute()) + os.sep + "tessdata" + os.sep
 
+    # TODO: Doesn't seem right
     if path is None:
         return ""
 
@@ -283,27 +291,6 @@ def except_hook(cls, exception, traceback):
     sys.exit(1)
 
 
-def get_config_directory() -> Path:
-    """Retrieve platform specific configuration directory."""
-    platform_str = sys.platform.lower()
-
-    # Windows
-    if platform_str == "win":
-        local_appdata = os.getenv("LOCALAPPDATA")
-        if local_appdata:
-            return Path(local_appdata)
-        appdata = os.getenv("APPDATA")
-        if appdata:
-            return Path(appdata)
-        raise ValueError("Couldn't determine the appdata directory")
-
-    # Linux and Mac
-    xdg_config_home = os.getenv("XDG_CONFIG_HOME")
-    if xdg_config_home:
-        return Path(xdg_config_home)
-    return Path.home() / ".config"
-
-
 def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
     icon = None
@@ -329,3 +316,27 @@ def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None):
     else:
         QtWidgets.QApplication.restoreOverrideCursor()
     QtWidgets.QApplication.processEvents()
+
+
+def get_config_directory() -> Path:
+    """Retrieve platform specific configuration directory.
+
+    DEPRECATED! TODO: Remove in later point of time
+    """
+    platform_str = sys.platform.lower()
+
+    # Windows
+    if platform_str == "win":
+        local_appdata = os.getenv("LOCALAPPDATA")
+        if local_appdata:
+            return Path(local_appdata)
+        appdata = os.getenv("APPDATA")
+        if appdata:
+            return Path(appdata)
+        raise ValueError("Couldn't determine the appdata directory.")
+
+    # Linux and Mac
+    xdg_config_home = os.getenv("XDG_CONFIG_HOME")
+    if xdg_config_home:
+        return Path(xdg_config_home)
+    return Path.home() / ".config"

@@ -42,7 +42,7 @@ class Communicate(QtCore.QObject):
     on_window_positioned = QtCore.Signal()
     on_minimize_windows = QtCore.Signal()
     on_set_cursor_wait = QtCore.Signal()
-    on_quit_or_hide = QtCore.Signal()
+    on_quit_or_hide = QtCore.Signal(str)
     on_magics_applied = QtCore.Signal()
     on_update_available = QtCore.Signal(str)
     on_open_url_and_hide = QtCore.Signal(str)
@@ -89,14 +89,16 @@ class MainWindow(BaseWindow):
         self.settings_menu = SettingsMenu(self)
         self.settings_menu.com.on_setting_changed.connect(self._update_setting)
         self.settings_menu.com.on_open_url.connect(self.com.on_open_url_and_hide)
-        self.settings_menu.com.on_quit_or_hide.connect(self.com.on_quit_or_hide.emit)
+        self.settings_menu.com.on_quit_or_hide.connect(
+            lambda: self.com.on_quit_or_hide.emit("clicked close in menu")
+        )
         self.settings_menu.move(self.width() - self.settings_menu.width() - 20, 20)
         self.settings_menu.show()
 
     def _add_tray(self):
         self.tray = SystemTray(self)
         self.tray.com.on_capture.connect(self._show_windows)
-        self.tray.com.on_exit.connect(self._quit)
+        self.tray.com.on_exit.connect(lambda: self._quit("clicked exit in tray"))
         if self.settings.value("tray", type=bool):
             self.tray.show()
 
@@ -110,7 +112,9 @@ class MainWindow(BaseWindow):
     def _add_notifier(self):
         self.notifier = Notifier(self, self.system_info.platform)
         self.com.on_send_notification.connect(self.notifier.send_notification)
-        self.notifier.com.on_notification_sent.connect(self.com.on_quit_or_hide)
+        self.notifier.com.on_notification_sent.connect(
+            lambda: self.com.on_quit_or_hide.emit("notification sent")
+        )
 
     def _set_signals(self):
         """Setup signals to trigger program logic."""
@@ -185,7 +189,7 @@ class MainWindow(BaseWindow):
             # else:
             #     window.showFullScreen()
 
-    def _quit_or_minimize(self):
+    def _quit_or_minimize(self, reason: str):
         if self.settings.value("tray", type=bool):
             self._minimize_windows()
         else:
@@ -193,12 +197,12 @@ class MainWindow(BaseWindow):
             self.main_window.tray.hide()
             QtWidgets.QApplication.processEvents()
             time.sleep(0.05)
-            self._quit()
+            self._quit(reason)
 
     @staticmethod
-    def _quit():
+    def _quit(reason: str):
         logger.debug(f"Saved debug images: {tempfile.gettempdir()}{os.sep}normcap")
-        logger.info("Exit normcap")
+        logger.info(f"Exit normcap (reason: {reason})")
         QtWidgets.QApplication.quit()
 
     def _show_or_hide_tray_icon(self):
@@ -213,7 +217,7 @@ class MainWindow(BaseWindow):
         if self.settings.value("notification", type=bool):
             self.com.on_send_notification.emit(self.capture)
         else:
-            self.com.on_quit_or_hide()
+            self.com.on_quit_or_hide("detection completed")
 
     #########################
     # Helper                #
@@ -222,7 +226,7 @@ class MainWindow(BaseWindow):
     def _open_url_and_hide(self, url):
         """Open url in default browser, then hide to tray or exit."""
         QtGui.QDesktopServices.openUrl(url)
-        self.com.on_quit_or_hide.emit()
+        self.com.on_quit_or_hide.emit("opened web browser")
 
     def _copy_to_clipboard(self):
         """Copy results to clipboard."""
@@ -275,7 +279,7 @@ class MainWindow(BaseWindow):
             self.com.on_image_prepared.emit()
         else:
             logger.warning(f"Area of {self.capture.image_area} too small. Skip OCR")
-            self.com.on_quit_or_hide.emit()
+            self.com.on_quit_or_hide.emit("selection too small")
 
     def _capture_to_ocr(self):
         """Perform content recognition on grabed image."""

@@ -145,7 +145,7 @@ class BaseWindow(QtWidgets.QMainWindow):
                 self.update()
             else:
                 # Quit application
-                self.main_window.com.on_quit_or_hide.emit()
+                self.main_window.com.on_quit_or_hide.emit("esc button pressed")
 
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
