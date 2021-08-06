@@ -1,5 +1,5 @@
 """
- OCR-powered screen-capture tool to capture information instead of images.
+OCR-powered screen-capture tool to capture information instead of images.
 """
 import locale
 
@@ -15,21 +15,16 @@ from normcap.args import create_argparser
 from normcap.gui.main_window import MainWindow
 from normcap.logger import logger
 
-# TODO: Remove config yaml from older version
-
 
 def main():
     """Main entry point."""
     sys.excepthook = utils.except_hook
 
     args = vars(create_argparser().parse_args())
-
     if args["verbose"]:
         logger.setLevel("INFO")
-
     if args["very_verbose"]:
         logger.setLevel("DEBUG")
-
     if args["language"]:
         args["language"] = tuple(args["language"].split("+"))
 

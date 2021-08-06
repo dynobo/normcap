@@ -114,14 +114,9 @@ normcap
 
 ### General
 
+- Select a region on screen with your mouse to perform text recognition
+
 - Press `<esc>` key to abort a capture and quit the application.
-
-- Press `<space>` key while selecting a region with the mouse (left mouse button has to
-  be hold down) to switch between the two capture modes:
-
-  - **★ (parse):** Try to auto-detect the type of text using [magics](#Magics) and
-    format the text accordingly, then copy
-  - **☰ (raw):** Copy detected text line by line, without further modification
 
 ### Magics
 
