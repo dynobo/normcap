@@ -22,6 +22,7 @@ from normcap.models import (
     CaptureMode,
     DesktopEnvironment,
     DisplayManager,
+    Platform,
     Rect,
     SystemInfo,
 )
@@ -181,13 +182,15 @@ class MainWindow(BaseWindow):
     def _show_windows(self):
         """Make hidden windows visible again."""
         for window in self.all_windows.values():
-            window.set_fullscreen()
-            # if self.system_info.platform == Platform.MACOS:
-            #     window.show()
-            #     window.raise_()
-            #     window.activateWindow()
-            # else:
-            #     window.showFullScreen()
+            #window.set_fullscreen()
+            if self.system_info.platform == Platform.MACOS:
+                if window.macos_border_window:
+                    window.macos_border_window.show()
+                window.show()
+                window.raise_()
+                window.activateWindow()
+            else:
+                window.showFullScreen()
 
     def _quit_or_minimize(self, reason: str):
         if self.settings.value("tray", type=bool):
