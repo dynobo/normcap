@@ -1,12 +1,17 @@
 # Changelog
 
-## v0.2.5 (to be done)
+## v0.2.5 (2021-08-07)
 
 - Linux: Fix disappering menu bar on gnome
   [#121](https://github.com/dynobo/normcap/issues/121)
 - MacOS: Fix update checking
+- MacOS: Draw border above menubar & dock
+  [#119](https://github.com/dynobo/normcap/issues/119) (just cosmetic, both are still
+  not selectable)
+- All: Slightly better performance
 - All: More useful error message for issues with QT
-- All: Make settings icon a bit more visible
+- All: Application can now be cancelled via `<ctrl>+c` in terminal
+- All: Removed switching modes via `<space>`-key. Use the menu instead.
 
 ## v0.2.4 (2021-07-29)
 
