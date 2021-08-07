@@ -32,17 +32,10 @@ def init_settings(args: dict) -> QtCore.QSettings:
     """Load settings, apply defaults if necessary and overwrite from cli args."""
     settings = QtCore.QSettings("normcap", "settings")
     settings.setFallbacksEnabled(False)
-    if ("reset" in args and args["reset"]) or (not settings.allKeys()):
+    if not settings.allKeys() or args.get("reset", False):
         logger.debug("Adjust settings to default values")
-
-        # Reset settings to defaults
-        for key, value in DEFAULTS.items():
-            settings.setValue(key, value)
-
-        # Delete all leftover settings
         for key in settings.allKeys():
-            if key not in DEFAULTS:
-                settings.remove(key)
+            settings.remove(key)
 
     # Overwrite current with settings passed through cli arguments
     for key, value in args.items():

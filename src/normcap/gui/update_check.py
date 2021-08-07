@@ -78,21 +78,21 @@ class UpdateChecker(QtCore.QObject):
                 "Do you want to visit the release website now?"
             )
 
-        msgBox = QtWidgets.QMessageBox()
+        message_box = QtWidgets.QMessageBox()
 
         # Necessary on wayland for main window to regain focus:
-        msgBox.setWindowFlags(QtCore.Qt.Popup)
+        message_box.setWindowFlags(QtCore.Qt.Popup)
 
-        msgBox.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
-        msgBox.setText(text)
-        msgBox.setInformativeText(info_text)
-        msgBox.setStandardButtons(
+        message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
+        message_box.setText(text)
+        message_box.setInformativeText(info_text)
+        message_box.setStandardButtons(
             QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel
         )
-        msgBox.setDefaultButton(QtWidgets.QMessageBox.Ok)
+        message_box.setDefaultButton(QtWidgets.QMessageBox.Ok)
 
         set_cursor(QtCore.Qt.ArrowCursor)
-        choice = msgBox.exec_()
+        choice = message_box.exec_()
         set_cursor(QtCore.Qt.CrossCursor)
 
         if choice == 1024:
