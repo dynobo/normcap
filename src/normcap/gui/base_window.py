@@ -259,8 +259,9 @@ class BaseWindow(QtWidgets.QMainWindow):
             #       and doesn't set the crosshair cursor.
         )
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        
         # Full transparent bg makes window click trough. Therefore:
-        self.setStyleSheet("background-color:rgba(128,128,128,0.03)")
+        self.setStyleSheet("QFrame { background-color:rgba(128,128,128,0.07); }")
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
         screen_geometry = self.system_info.screens[self.screen_idx].geometry
