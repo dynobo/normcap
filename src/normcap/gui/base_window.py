@@ -197,10 +197,9 @@ class BaseWindow(QtWidgets.QMainWindow):
             self.main_window.com.on_window_positioned.emit()
         return super().changeEvent(event)
 
-    def hideEvent(self, event) -> None:
+    def hideEvent(self, _) -> None:
         if self.macos_border_window:
             self.macos_border_window.hide()
-
 
     ##################
     # Adjust UI

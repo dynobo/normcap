@@ -182,7 +182,6 @@ class MainWindow(BaseWindow):
     def _show_windows(self):
         """Make hidden windows visible again."""
         for window in self.all_windows.values():
-            #window.set_fullscreen()
             if self.system_info.platform == Platform.MACOS:
                 if window.macos_border_window:
                     window.macos_border_window.show()
