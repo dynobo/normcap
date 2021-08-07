@@ -23,7 +23,7 @@ def test_downloader_not_existing_url(qtbot):
     with qtbot.waitSignal(
         downloader.com.on_download_finished, raising=False, timeout=2
     ) as result:
-        downloader.get("http://not_existing_url.normcap")
+        downloader.get("https://not_existing_url.normcap")
 
     assert not result.args
     assert not result.signal_triggered

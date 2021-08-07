@@ -246,10 +246,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         logger.debug(f"Setting window for screen {self.screen_idx} to fullscreen")
 
         if self.system_info.platform == Platform.LINUX:
-            if self.system_info.display_manager == DisplayManager.WAYLAND:
-                self._set_fullscreen_linux_wayland()
-            else:
-                self._set_fullscreen_linux_wayland()
+            self._set_fullscreen_linux()
         elif self.system_info.platform == Platform.MACOS:
             self._set_fullscreen_macos()
         elif self.system_info.platform == Platform.WINDOWS:
@@ -259,7 +256,7 @@ class BaseWindow(QtWidgets.QMainWindow):
                 f"Platform {self.system_info.platform} not supported"
             )
 
-    def _set_fullscreen_linux_wayland(self):
+    def _set_fullscreen_linux(self):
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.BypassWindowManagerHint
