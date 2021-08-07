@@ -31,6 +31,7 @@ def log_settings(settings: QtCore.QSettings):
 def init_settings(args: dict) -> QtCore.QSettings:
     """Load settings, apply defaults if necessary and overwrite from cli args."""
     settings = QtCore.QSettings("normcap", "settings")
+    settings.setFallbacksEnabled(False)
     if ("reset" in args and args["reset"]) or (not settings.allKeys()):
         logger.debug("Adjust settings to default values")
 
@@ -49,8 +50,8 @@ def init_settings(args: dict) -> QtCore.QSettings:
             settings.setValue(key, value)
 
     # Overwrite missing settings with defaults
-    for key in settings.allKeys():
-        if (settings.value(key) is None) and (key in DEFAULTS):
+    for key, value in DEFAULTS.items():
+        if key not in settings.allKeys() or (settings.value(key) is None):
             settings.setValue(key, DEFAULTS[key])
 
     log_settings(settings)
