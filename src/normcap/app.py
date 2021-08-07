@@ -15,6 +15,9 @@ from normcap.args import create_argparser
 from normcap.gui.main_window import MainWindow
 from normcap.logger import logger
 
+# Might allow ctrl+c
+#import signal
+#signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 def main():
     """Main entry point."""
