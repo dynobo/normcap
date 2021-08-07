@@ -30,38 +30,40 @@ def create_argparser() -> argparse.ArgumentParser:
         "-m",
         "--mode",
         type=str,
-        default="parse",
         help="set capture mode to 'raw' or 'parse'",
     )
     parser.add_argument(
         "-l",
-        "--languages",
+        "--language",
         type=str,
-        default="eng",
-        help="set language(s) for text recognition, e.g. eng+deu",
+        help="set language(s) for text recognition, e.g. 'eng' or 'eng+deu'",
     )
     parser.add_argument(
-        "-c", "--color", type=str, default="#FF2E88", help="set primary color for UI"
+        "-c", "--color", type=str, help="set primary color for UI, e.g. 'FF2E88'"
     )
     parser.add_argument(
         "-n",
-        "--no-notifications",
-        action="store_true",
-        help="disable notifications shown after ocr detection",
-        default=False,
+        "--notification",
+        help="disable or enable notification after ocr detection with '0' or '1' ",
+        type=bool,
     )
     parser.add_argument(
         "-t",
         "--tray",
-        action="store_true",
-        help="keep running in system tray - experimental",
-        default=False,
+        help="disable or enable system tray with '0' or '1'",
+        type=bool,
     )
     parser.add_argument(
         "-u",
-        "--updates",
+        "--update",
+        help="disable or enable check for updates with '0' or '1'",
+        type=bool,
+    )
+    parser.add_argument(
+        "-r",
+        "--reset",
         action="store_true",
-        help="search for updates on startup - experimental",
+        help="reset all settings to default values",
         default=False,
     )
     parser.add_argument(

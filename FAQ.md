@@ -2,17 +2,15 @@
 
 - [General](#general)
   - [How can I add additional languages to NormCap?](#how-can-i-add-additional-languages-to-normcap)
-  - [What can I do improve the detection accuracy?](#what-can-i-do-improve-the-detection-accuracy)
+  - [How can I improve the detection accuracy?](#how-can-i-improve-the-detection-accuracy)
   - [Is my image analyzed in "the cloud"?](#is-my-image-analyzed-in-the-cloud)
-  - [What is the difference between using a pre-build package or a Python package?](#what-is-the-difference-between-using-a-pre-build-package-or-a-python-package)
-- [Linux](#linux)
-- [Windows](#windows)
-- [MacOS](#macos)
-  - [How can I start NormCap with a command line argument?](#how-can-i-start-normcap-with-a-command-line-argument)
-  - [How can I create a launcher to start NormCap with a certain command line argument?](#how-can-i-create-a-launcher-to-start-normcap-with-a-certain-command-line-argument)
+  - [What is the difference between the pre-build package and the Python package?](#what-is-the-difference-between-the-pre-build-package-and-the-python-package)
+  - [Can I start NormCap via a keyboard shortcut?](#can-i-start-normcap-via-a-keyboard-shortcut)
+  - [\[MacOS\] How can I start NormCap with a command line argument?](#macos-how-can-i-start-normcap-with-a-command-line-argument)
+  - [\[MacOs\] How can I create a launcher to start NormCap with command line arguments?](#macos-how-can-i-create-a-launcher-to-start-normcap-with-command-line-arguments)
 - [Troubleshooting](#troubleshooting)
   - [NormCap is not starting](#normcap-is-not-starting)
-  - [\[Linux\] NormCap fails with "Could not load the Qt platform plugin xcb ..."](#linux-normcap-fails-with-could-not-load-the-qt-platform-plugin-xcb-)
+  - [\[Linux\] Could not load the Qt platform plugin xcb](#linux-could-not-load-the-qt-platform-plugin-xcb)
   - [\[Linux\] Normcap does not show up in system tray](#linux-normcap-does-not-show-up-in-system-tray)
   - [\[Linux\] Normcap doesn't show a notification after capture](#linux-normcap-doesnt-show-a-notification-after-capture)
 - [Development](#development)
@@ -22,24 +20,24 @@
 
 ### How can I add additional languages to NormCap?
 
-The **prebuild packages** are shipped with the following languages English, German,
-Chinese, French, Spanish and Russian. If you miss a language, please
+The **prebuild packages** are shipped with the following languages English, Chinese,
+French, German, Japanese, Spanish and Russian. If you miss a language, please
 [open an issue](https://github.com/dynobo/normcap/issues).
 
 If you installed NormCap as **Python package**, refer to the online documentation on how
 to install additional language for Tesseract on your system.
 
-### What can I do improve the detection accuracy?
+### How can I improve the detection accuracy?
 
-The most import thing is to specify the correct language (via settings menu or the
-`--language` command line argument). But keep in mind, that selecting multiple languages
-at once slows down the recognition a bit.
+The most import thing is to specify the correct language(s) (via settings menu or the
+`--language` command line argument). Keep in mind: selecting multiple languages at once
+slows down the recognition a bit.
 
-Tesseract sometimes also struggles with recognizing text with just very view characters,
-like a single word. In this case it might help to select a larger portion of text.
+Sometimes Tesseract struggles with recognizing text with just very view characters, like
+a single word. In this case try selecting a larger portion of text.
 
-If you the results are still quite bad, please submit a screenshot of the text your are
-trying to recognize [as an issue](https://github.com/dynobo/normcap/issues).
+If the results are still bad, please submit a screenshot of the text your are trying to
+recognize [as an issue](https://github.com/dynobo/normcap/issues).
 
 ### Is my image analyzed in "the cloud"?
 
@@ -47,7 +45,7 @@ No. The text recognition is performed offline using the OCR framework
 [tesseract](https://github.com/tesseract-ocr/tesseract) and also no other data is send
 (e.g. no telemetry data).
 
-### What is the difference between using a pre-build package or a Python package?
+### What is the difference between the pre-build package and the Python package?
 
 Pre-build package:
 
@@ -61,13 +59,23 @@ Python package:
 - Might need less disk space (depending on your setup)
 - Easier to extend with different languages
 
-## Linux
+### Can I start NormCap via a keyboard shortcut?
 
-## Windows
+Yes, but you'll have to configure it on your own using your operating system's tools:
 
-## MacOS
+- Linux:
+  - Ubuntu/Gnome:
+    [Set Keyboard Shortcuts](https://help.ubuntu.com/stable/ubuntu-help/keyboard-shortcuts-set.html)
+  - Manjaro/XFCE, Plasma:
+    [Keyboard Shortcuts](https://wiki.manjaro.org/index.php?title=Keyboard_Shortcuts)
+- MacOS:
+  [Set a keyboard shortcut to open Mac apps](https://www.wikihow.com/Set-a-Keyboard-Shortcut-to-Open-Mac-Apps)
+- Windows 10:
+  [Open programs with keyboard shortcuts in Windows 10](https://www.cnet.com/tech/computing/open-programs-with-keyboard-shortcuts-in-windows-10/)
 
-### How can I start NormCap with a command line argument?
+(Your preferred search engine will very likely reveal even more options.)
+
+### \[MacOS\] How can I start NormCap with a command line argument?
 
 To run NormCap with an argument _once_, use `open` in the "Terminal" (in
 Applications/Utilities) and append NormCap's own options after the `--args` argument.
@@ -79,13 +87,13 @@ For example:
 
 (The command above will list and explain all available arguments.)
 
-### How can I create a launcher to start NormCap with a certain command line argument?
+### \[MacOs\] How can I create a launcher to start NormCap with command line arguments?
 
 Launch the "Script Editor" and make a new script with the desired command line
 arguments, e.g.:
 
 ```sh
-do shell script "exec /Applications/NormCap.app/Contents/MacOS/NormCap --tray"
+do shell script "exec /Applications/NormCap.app/Contents/MacOS/NormCap --tray"s
 ```
 
 Save the script as type "Application" in the folder "/Applications"
@@ -100,7 +108,7 @@ you know a way to avoid this, please open an issue)
 Please try to start again with the `-V` or `--very-verbose` option. This should reveal
 more information useful for problem solving.
 
-### \[Linux\] NormCap fails with "Could not load the Qt platform plugin xcb ..."
+### \[Linux\] Could not load the Qt platform plugin xcb
 
 In case you get the following output...
 

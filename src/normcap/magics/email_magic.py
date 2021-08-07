@@ -55,6 +55,6 @@ class EmailMagic(BaseMagic):
         Returns:
             str -- comma separated email adresses
         """
-        logger.info("Transforming with Email magic...")
+        logger.info("Transforming with Email magic")
         concat_emails = ", ".join(self._emails)
         return concat_emails

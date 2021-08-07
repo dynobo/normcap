@@ -14,7 +14,7 @@ class EnhanceImage:
 
     def __call__(self, capture: Capture) -> Capture:
         """Execute chain of optimizations."""
-        logger.info("Applying enhancements to image...")
+        logger.info("Applying enhancements to image")
 
         # Currently, the image is only enlarged
         # for other strategies see: https://stackoverflow.com/a/50762612

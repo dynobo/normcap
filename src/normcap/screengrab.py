@@ -26,7 +26,7 @@ class ScreenGrabber:
         self.capture = capture
 
         if not isinstance(capture.screen, ScreenInfo):
-            raise ValueError("Capture object doesn't contain screen information.")
+            raise ValueError("Capture object doesn't contain screen information")
 
         logger.debug(f"Capturing screen {self.capture.screen}")
         if (
@@ -141,7 +141,7 @@ class ScreenGrabber:
             utils.save_image_in_tempfolder(self.capture.image, postfix="_raw_dbus")
         except DBusErrorResponse as e:
             if "invalid params" in [d.lower() for d in e.data]:
-                logger.info("ScreenShot with DBUS failed with 'invalid params'.")
+                logger.info("ScreenShot with DBUS failed with 'invalid params'")
             else:
                 logger.exception("ScreenShot with DBUS through exception")
         finally:

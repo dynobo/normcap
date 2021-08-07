@@ -4,23 +4,31 @@ import os
 import pprint
 import statistics
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-import yaml
 from PySide2 import QtGui
+
+from normcap.logger import format_section
+
+
+@dataclass
+class Urls:
+    """URLs used on various places."""
+
+    releases = "https://github.com/dynobo/normcap/releases"
+    pypi = "https://pypi.org/pypi/normcap"
+    github = "https://github.com/dynobo/normcap"
+    issues = "https://github.com/dynobo/normcap/issues"
+    faqs = "https://github.com/dynobo/normcap/blob/main/FAQ.md"
+    xcb_error = f"{faqs}#linux-could-not-load-the-qt-platform-plugin-xcb"
+
+
+URLS = Urls()
 
 FILE_ISSUE_TEXT = (
     "Please create a new issue with the output above on "
-    "https://github.com/dynobo/normcap/issues . I'll see what I can do about it."
+    f"{URLS.issues} . I'll see what I can do about it."
 )
-
-
-def _format_section(section: str, title: str) -> str:
-    """Wrap a string inside section delimiters."""
-    title_start = f" <{title}> "
-    title_end = f" </{title}> "
-    return f"\n{title_start:-^60s}\n{section.strip()}\n{title_end:-^60s}"
 
 
 @enum.unique
@@ -129,99 +137,12 @@ class SystemInfo:
         for idx, screen in self.screens.items():
             if screen.is_primary:
                 return idx
-        raise ValueError("Unable to detect primary screen.")
+        raise ValueError("Unable to detect primary screen")
 
     def __repr__(self):
         string = pprint.pformat(self.__dict__, indent=3)
-        string = _format_section(string, "SystemInfo")
+        string = format_section(string, "SystemInfo")
         return string
-
-
-@dataclass
-class ConfigBase:
-    """User settings (set via CLI args)."""
-
-    color: str = "#FF2E88"
-    # TODO: Get's not initialized correctly.
-    languages: Tuple[str] = ("eng",)
-    mode: str = "parse"
-    notifications: bool = True
-    tray: bool = False
-    updates: bool = False
-
-    def __repr__(self):
-        fields = self.__dataclass_fields__  # pylint: disable=no-member
-        data = {k: getattr(self, k) for k in fields}
-        string = pprint.pformat(data, indent=3)
-        string = _format_section(string, "Config")
-        return string
-
-
-# pylint: disable=no-member # doesn't work with dataclasses
-
-
-class Config(ConfigBase):
-    """User settings (set via CLI args)."""
-
-    __dataclass_fields__: dict
-    init_complete: bool = False
-
-    def __init__(self, file_path: Path):
-        super().__init__()
-        self.__annotations__ = super().__annotations__
-
-        self.file_path = file_path
-        self._load_from_file()
-        self.init_complete = True
-
-    def __setattr__(self, name, value):
-        if (name in self.__dataclass_fields__) and (getattr(self, name) == value):
-            return
-
-        super().__setattr__(name, value)
-
-        if name == "file_path" or not self.init_complete:
-            return
-
-        self._save_to_file()
-
-    def _save_to_file(self):
-        """Save dataclass as yaml."""
-        if self.file_path.is_dir():
-            raise ValueError(
-                f"{self.file_path.absolute()} is an exisiting directory, not a file."
-            )
-
-        self.file_path.parent.mkdir(parents=True, exist_ok=True)
-
-        with open(self.file_path, "w") as f:
-            data = {}
-            for k in super().__annotations__:
-                value = getattr(self, k)
-                if isinstance(value, tuple):
-                    value = list(value)
-                data[k] = value
-            yaml.dump(data, f, allow_unicode=True)
-
-    def _load_from_file(self):
-        """Load dataclass from yaml."""
-        if not self.file_path.is_file():
-            return
-
-        with open(self.file_path, "r") as f:
-            config = yaml.load(f, Loader=yaml.FullLoader)
-
-        if not config:
-            return
-
-        for key, value in config.items():
-            if key in super().__annotations__:
-                if isinstance(value, list):
-                    value = tuple(value)
-                setattr(self, key, value)
-
-
-# pylint: enable=no-member
 
 
 @dataclass()
@@ -265,7 +186,7 @@ class Capture:
             # Per default just print
             string += f"{key}: {getattr(self, key)}\n"
         string = string.rstrip()
-        string = _format_section(string, "Capture")
+        string = format_section(string, "Capture")
         return string
 
     @property

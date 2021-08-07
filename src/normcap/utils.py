@@ -19,6 +19,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 from normcap import __version__
 from normcap.logger import logger
 from normcap.models import (
+    URLS,
     DesktopEnvironment,
     DisplayManager,
     Platform,
@@ -38,7 +39,7 @@ def save_image_in_tempfolder(
         now = datetime.datetime.now()
         file_name = f"{now:%Y-%m-%d_%H-%M-%S_%f}{postfix}.png"
         image.save(str(file_dir / file_name))
-        logger.debug(f"Image of selected region stored in: {file_dir / file_name}")
+        logger.debug(f"Debug image stored in: {file_dir / file_name}")
 
 
 def get_screen_idx_of_mouse() -> QtCore.QRect:
@@ -153,13 +154,21 @@ def get_tessdata_path() -> str:
     if is_briefcase_package():
         path = resource_path
 
+    # TODO: Also look into
+    # /usr/share/tesseract-ocr/4.00/tessdata
+    # /usr/share/tessdata
+    # /usr/local/share/tessdata
+    # Windows?
+    # MacOS?
+
     if path and path.is_dir():
         return str(path.absolute()) + os.sep + "tessdata" + os.sep
 
+    # TODO: Doesn't seem right
     if path is None:
         return ""
 
-    raise ValueError(f"No valid path for tessdata found. {path} is invalid.")
+    raise ValueError(f"No valid path for tessdata found. {path} is invalid")
 
 
 def get_tesseract_languages() -> List[str]:
@@ -195,15 +204,23 @@ def get_system_info() -> SystemInfo:
     )
 
 
-def qt_message_handler(mode, ctx, msg):
+def qt_message_handler(mode, _, msg):
     """Intercept QT message.
 
     Used to hide away unnecessary warnings by showing them only on higher
     log level (--very-verbose).
     """
     level = mode.name.decode("utf8")
-    logger.debug(f"[QT] L:{ctx.line}, func: {ctx.function}, file: {ctx.file}")
-    logger.debug(f"[QT] {level} - {msg}")
+
+    if level.lower() == "qtfatalmsg":
+        logger.error(f"[QT] {level} - {msg}")
+    elif "could not load the qt platform" in msg.lower():
+        logger.error(f"[QT] {level} - {msg}")
+        if "xcb" in msg.lower() and "it was found" + URLS.faqs in msg.lower():
+            logger.error(f"Try solving the problem as described here: {URLS.xcb_error}")
+            logger.error(f"If that doesn't help, please open an issue: {URLS.issues}")
+    else:
+        logger.debug(f"[QT] {level} - {msg}")
 
 
 @contextlib.contextmanager
@@ -274,28 +291,7 @@ def except_hook(cls, exception, traceback):
     sys.exit(1)
 
 
-def get_config_directory() -> Path:
-    """Retrieve platform specific configuration directory."""
-    platform_str = sys.platform.lower()
-
-    # Windows
-    if platform_str == "win":
-        local_appdata = os.getenv("LOCALAPPDATA")
-        if local_appdata:
-            return Path(local_appdata)
-        appdata = os.getenv("APPDATA")
-        if appdata:
-            return Path(appdata)
-        raise ValueError("Couldn't determine the appdata directory.")
-
-    # Linux and Mac
-    xdg_config_home = os.getenv("XDG_CONFIG_HOME")
-    if xdg_config_home:
-        return Path(xdg_config_home)
-    return Path.home() / ".config"
-
-
-def get_icon(icon_file: str, system_icon: Optional[str] = None):
+def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
     icon = None
     if system_icon:
@@ -322,7 +318,25 @@ def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None):
     QtWidgets.QApplication.processEvents()
 
 
-def open_url_and_hide(window, url):
-    """Open url and quit or hide NormCap."""
-    QtGui.QDesktopServices.openUrl(url)
-    window.com.onQuitOrHide.emit()
+def get_config_directory() -> Path:
+    """Retrieve platform specific configuration directory.
+
+    DEPRECATED! TODO: Remove in later point of time
+    """
+    platform_str = sys.platform.lower()
+
+    # Windows
+    if platform_str == "win":
+        local_appdata = os.getenv("LOCALAPPDATA")
+        if local_appdata:
+            return Path(local_appdata)
+        appdata = os.getenv("APPDATA")
+        if appdata:
+            return Path(appdata)
+        raise ValueError("Couldn't determine the appdata directory.")
+
+    # Linux and Mac
+    xdg_config_home = os.getenv("XDG_CONFIG_HOME")
+    if xdg_config_home:
+        return Path(xdg_config_home)
+    return Path.home() / ".config"

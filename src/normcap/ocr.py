@@ -30,7 +30,8 @@ class PerformOcr:
             languages, system_info.tesseract_languages
         )
 
-        logger.info(f"Using tessdata in '{self.tessdata_path}'")
+        # TODO: Tessdata Path empty?
+        logger.debug(f"Using tessdata in '{self.tessdata_path}'")
         logger.info(f"Using language '{self.languages}'")
 
         capture = self.extract(capture)
@@ -191,14 +192,14 @@ class PerformOcr:
 
         logger.warning(
             f"Languages {unavailable_langs} not found. "
-            + f"Available on the system are: {set_tesseract_languages}."
+            + f"Available on the system are: {set_tesseract_languages}"
         )
         if available_langs:
-            logger.warning(f"Fallback to languages {available_langs}.")
+            logger.warning(f"Fallback to languages {available_langs}")
             return available_langs
 
         fallback_language = set_tesseract_languages.pop()
-        logger.warning(f"Fallback to language {fallback_language}.")
+        logger.warning(f"Fallback to language {fallback_language}")
         return set([fallback_language])
 
 

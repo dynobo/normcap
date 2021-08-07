@@ -1,215 +1,212 @@
 """Create the settings button and its menu."""
 
+from typing import Any
+
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from normcap.models import Platform
-from normcap.utils import get_icon, open_url_and_hide
+from normcap.models import URLS
+from normcap.utils import get_icon
+
+_MENU_STYLE = """
+        QMenu {
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            right: 20px;
+            margin-right: 10px;
+        }
+        QMenu::separator {
+            background-color: rgba(255,255,255,0.2);
+            height: 1px;
+            margin-top: 5px;
+        }
+        QMenu::item {
+            padding: 3px 16px 3px 16px;
+            background-color: transparent;
+        }
+        QMenu::item:disabled {
+            color: $COLOR;
+        }
+        QMenu::item:selected {
+            background-color: rgba(150,150,150,0.5);
+        }
+        QMenu::indicator {
+            right: -5px;
+        }
+        QMenu::left-arrow,
+        QMenu::right-arrow  {
+            right: 15px;
+        }
+    """
+
+_BUTTON_STYLE = """
+        QToolButton { border:0px; }
+        QToolButton::menu-indicator { image: none; }
+    """
 
 
-class SettingsMenu(QtWidgets.QMenu):
-    """Settings menu and bindings to actions."""
+class Communicate(QtCore.QObject):
+    """SettingsMenu' communication bus."""
 
-    style_sheet = """
-            QMenu {
-                background-color: rgba(0,0,0,0.8);
-                color: white;
-            }
-            QMenu::separator {
-                background-color: rgba(255,255,255,0.2);
-                height: 1px;
-                margin-top: 5px;
-            }
-            QMenu::item {
-                padding: 3px 16px 3px 16px;
-                background-color: transparent;
-            }
-            QMenu::item:disabled {
-                color: $COLOR;
-            }
-            QMenu::item:selected {
-                background-color: rgba(150,150,150,0.5);
-            }
-            QMenu::indicator {
-                position: relative;
-                right: -5px;
-            }
-            QMenu::indicator:unchecked {
-            }
-            QMenu::indicator:checked {
-            }
-            QMenu::left-arrow,
-            QMenu::right-arrow {
-                margin: 5px;
-            }
-        """
-
-    def __init__(self, parent: QtWidgets.QWidget, window_main: QtWidgets.QMainWindow):
-        super().__init__(parent)
-        self.setObjectName("settings_menu")
-        self.window_main = window_main
-
-        self.setStyleSheet(self.style_sheet.replace("$COLOR", window_main.config.color))
-        self.title_font = self.get_title_font()
-
-        self.add_title("Settings")
-        self.add_settings_section()
-        self.addSeparator()
-        self.add_title("Capture mode")
-        self.add_mode_section()
-        self.addSeparator()
-        self.add_title("Languages")
-        self.add_languages_section()
-        self.addSeparator()
-        self.add_title("Application")
-        self.add_application_section()
-
-    @staticmethod
-    def get_title_font() -> QtGui.QFont:
-        """Define font for menu subtitles."""
-        font = QtGui.QFont()
-        font.setPixelSize(12)
-        font.setBold(True)
-        return font
-
-    def add_title(self, title: str):
-        """Add section title."""
-        action = QtWidgets.QAction(title, self)
-        action.setEnabled(False)
-        action.setFont(self.title_font)
-        self.addAction(action)
-
-    def add_settings_section(self):
-        """Add session options and actions."""
-        # pylint: disable=no-member  # action.triggered.connect is not resolved
-
-        action = QtWidgets.QAction("Show notifications", self)
-        action.setCheckable(True)
-        action.setChecked(self.window_main.config.notifications)
-        action.triggered.connect(
-            lambda check: self.window_main.set_config("notifications", check)
-        )
-        self.addAction(action)
-
-        action = QtWidgets.QAction("Keep in system tray", self)
-        action.setCheckable(True)
-        action.setChecked(self.window_main.config.tray)
-        action.triggered.connect(
-            lambda check: self.window_main.set_config("tray", check)
-        )
-        self.addAction(action)
-
-        action = QtWidgets.QAction("Check for updates", self)
-        action.setCheckable(True)
-        action.setChecked(self.window_main.config.updates)
-        action.triggered.connect(
-            lambda check: self.window_main.set_config("updates", check)
-        )
-        self.addAction(action)
-
-    def add_mode_section(self):
-        """Add caputure mode options and actions."""
-        # pylint: disable=no-member
-        mode_group = QtWidgets.QActionGroup(self)
-        mode_group.setExclusive(True)
-        action = QtWidgets.QAction("parse", self)
-        action.setCheckable(True)
-        action.triggered.connect(
-            lambda check=True, mode="parse": self.window_main.set_config("mode", mode)
-        )
-        action.setChecked(self.window_main.config.mode == "parse")
-        mode_group.addAction(action)
-        self.addAction(action)
-
-        action = QtWidgets.QAction("raw", self)
-        action.setCheckable(True)
-        action.triggered.connect(
-            lambda check=True, mode="raw": self.window_main.set_config("mode", mode)
-        )
-        action.setChecked(self.window_main.config.mode == "raw")
-        mode_group.addAction(action)
-        self.addAction(action)
-
-    def add_languages_section(self):
-        """Add multiselect for language option."""
-        # pylint: disable=no-member
-        for language in self.window_main.system_info.tesseract_languages:
-            action = QtWidgets.QAction(language, self)
-            action.setCheckable(True)
-            action.triggered.connect(
-                lambda check=True, language=language: self.window_main.set_config(
-                    "languages", language
-                )
-            )
-            action.setChecked(language in self.window_main.config.languages)
-            self.addAction(action)
-
-    def add_application_section(self):
-        """Add application related actions."""
-        # pylint: disable=no-member
-
-        submenu = QtWidgets.QMenu(self)
-        submenu.setObjectName("settings_menu_website")
-        submenu.setTitle("Website")
-
-        action = QtWidgets.QAction("Source code", submenu)
-        action.triggered.connect(
-            lambda: open_url_and_hide(
-                self.window_main, "https://github.com/dynobo/normcap"
-            )
-        )
-        submenu.addAction(action)
-
-        action = QtWidgets.QAction("Releases", submenu)
-        action.triggered.connect(
-            lambda: open_url_and_hide(
-                self.window_main, "https://github.com/dynobo/normcap/releases"
-            )
-        )
-        submenu.addAction(action)
-
-        action = QtWidgets.QAction("FAQ", submenu)
-        action.triggered.connect(
-            lambda: open_url_and_hide(
-                self.window_main, "https://github.com/dynobo/normcap/blob/main/FAQ.md"
-            )
-        )
-        submenu.addAction(action)
-
-        action = QtWidgets.QAction("Report a problem", submenu)
-        action.triggered.connect(
-            lambda: open_url_and_hide(
-                self.window_main, "https://github.com/dynobo/normcap/issues"
-            )
-        )
-        submenu.addAction(action)
-
-        self.addMenu(submenu)
-
-        action = QtWidgets.QAction("Close", self)
-        action.triggered.connect(self.window_main.com.onQuitOrHide.emit)
-        self.addAction(action)
+    on_setting_changed = QtCore.Signal(tuple)
+    on_open_url = QtCore.Signal(str)
+    on_quit_or_hide = QtCore.Signal()
 
 
-class SettingsButton(QtWidgets.QToolButton):
+class SettingsMenu(QtWidgets.QToolButton):
     """Button to adjust setting on main window top right."""
 
     def __init__(self, window_main: QtWidgets.QMainWindow):
-        super().__init__(window_main.ui.top_right_frame)
-        self.setObjectName("settings_button")
+        super().__init__(window_main.frame)
+        self.setObjectName("settings_icon")
+        self.settings = window_main.settings
+        self.system_info = window_main.system_info
+
+        self.setCursor(QtCore.Qt.ArrowCursor)
         self.setFixedSize(38, 38)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
-        self.setStyleSheet(
-            """
-            QToolButton::menu-indicator { image: none; }
-            """
-        )
+        self.setStyleSheet(_BUTTON_STYLE)
+
         self.setIcon(get_icon("settings.png"))
-        self.setIconSize(QtCore.QSize(24, 24))
+        self.setIconSize(QtCore.QSize(28, 28))
         self.setPopupMode(QtWidgets.QToolButton.InstantPopup)
 
-        if window_main.system_info.platform == Platform.MACOS:
-            self.move(0, 20)
+        self.title_font = QtGui.QFont(QtGui.QFont().family(), 10, QtGui.QFont.Bold)
+        self._add_menu()
 
-        menu = SettingsMenu(self, window_main)
-        window_main.settings_menu = menu
+        self.com = Communicate()
+
+    def _add_menu(self):
+        menu = QtWidgets.QMenu(self)
+        menu.setObjectName("settings_menu")
+        menu.setStyleSheet(_MENU_STYLE.replace("$COLOR", self.settings.value("color")))
+        menu.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+
+        self._add_title(menu, "Settings")
+        self._add_settings_section(menu)
+        menu.addSeparator()
+        self._add_title(menu, "Capture mode")
+        self._add_mode_section(menu)
+        menu.addSeparator()
+        self._add_title(menu, "Languages")
+        self._add_languages_section(menu)
+        menu.addSeparator()
+        self._add_title(menu, "Application")
+        self._add_application_section(menu)
+        menu.triggered.connect(self._on_item_click)  # pylint: disable=no-member
+
         self.setMenu(menu)
+
+    def _add_title(self, menu, title: str):
+        action = QtWidgets.QAction(title, menu)
+        action.setEnabled(False)
+        action.setFont(self.title_font)
+        menu.addAction(action)
+
+    def _on_item_click(self, action: QtWidgets.QAction):
+        group = action.actionGroup()
+        group_name = group.objectName() if group else None
+        value: Any = None
+        if action.objectName() == "close":
+            self.com.on_quit_or_hide.emit()
+            return
+
+        if group_name == "website_group":
+            url = action.objectName()
+            self.com.on_open_url.emit(url)
+            return
+
+        if group_name == "settings_group":
+            setting = action.objectName()
+            value = action.isChecked()
+        elif group_name == "mode_group":
+            setting = "mode"
+            value = action.objectName()
+        elif group_name == "language_group":
+            setting = "language"
+            value = tuple(a.objectName() for a in group.actions() if a.isChecked())
+            if len(value) < 1:
+                value = tuple(action.objectName())
+                action.setChecked(True)
+        self.com.on_setting_changed.emit((setting, value))
+
+    def _add_settings_section(self, menu):
+        settings_group = QtWidgets.QActionGroup(menu)
+        settings_group.setObjectName("settings_group")
+        settings_group.setExclusive(False)
+
+        action = QtWidgets.QAction("Show notification", settings_group)
+        action.setObjectName("notification")
+        action.setCheckable(True)
+        action.setChecked(bool(self.settings.value("notification", type=bool)))
+        menu.addAction(action)
+
+        action = QtWidgets.QAction("Keep in system tray", settings_group)
+        action.setObjectName("tray")
+        action.setCheckable(True)
+        action.setChecked(bool(self.settings.value("tray", type=bool)))
+        menu.addAction(action)
+
+        action = QtWidgets.QAction("Check for update", settings_group)
+        action.setObjectName("update")
+        action.setCheckable(True)
+        action.setChecked(bool(self.settings.value("update", type=bool)))
+        menu.addAction(action)
+
+    def _add_mode_section(self, menu):
+        mode_group = QtWidgets.QActionGroup(menu)
+        mode_group.setObjectName("mode_group")
+        mode_group.setExclusive(True)
+
+        action = QtWidgets.QAction("parse", mode_group)
+        action.setObjectName("parse")
+        action.setCheckable(True)
+        action.setChecked(self.settings.value("mode") == "parse")
+        menu.addAction(action)
+
+        action = QtWidgets.QAction("raw", mode_group)
+        action.setObjectName("raw")
+        action.setCheckable(True)
+        action.setChecked(self.settings.value("mode") == "raw")
+        menu.addAction(action)
+
+    def _add_languages_section(self, menu):
+        language_group = QtWidgets.QActionGroup(menu)
+        language_group.setObjectName("language_group")
+        language_group.setExclusive(False)
+        for language in self.system_info.tesseract_languages:
+            action = QtWidgets.QAction(language, language_group)
+            action.setObjectName(language)
+            action.setCheckable(True)
+            action.setChecked(language in self.settings.value("language"))
+            menu.addAction(action)
+
+    @staticmethod
+    def _add_application_section(menu):
+        submenu = QtWidgets.QMenu(menu)
+        submenu.setObjectName("settings_menu_website")
+        submenu.setTitle("Website")
+
+        website_group = QtWidgets.QActionGroup(menu)
+        website_group.setObjectName("website_group")
+
+        action = QtWidgets.QAction("Source code", website_group)
+        action.setObjectName(URLS.github)
+        submenu.addAction(action)
+
+        action = QtWidgets.QAction("Releases", website_group)
+        action.setObjectName(URLS.releases)
+        submenu.addAction(action)
+
+        action = QtWidgets.QAction("FAQ", website_group)
+        action.setObjectName(URLS.faqs)
+        submenu.addAction(action)
+
+        action = QtWidgets.QAction("Report a problem", website_group)
+        action.setObjectName(URLS.issues)
+        submenu.addAction(action)
+
+        menu.addMenu(submenu)
+
+        action = QtWidgets.QAction("Close", menu)
+        action.setObjectName("close")
+        menu.addAction(action)
