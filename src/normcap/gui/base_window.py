@@ -16,6 +16,9 @@ from normcap.utils import get_icon, move_active_window_to_position_on_gnome
 class BaseWindow(QtWidgets.QMainWindow):
     """Main (parent) window."""
 
+    # Helper window to extend the red border
+    macos_border_window: QtWidgets.QMainWindow
+
     def __init__(
         self, system_info: SystemInfo, screen_idx: int, color: str, parent=None
     ):
@@ -183,7 +186,6 @@ class BaseWindow(QtWidgets.QMainWindow):
             self.update()
 
     def changeEvent(self, event) -> None:
-        print(event.type())
         if (
             event.type() == QtCore.QEvent.Type.ActivationChange
             and self.system_info.display_manager == DisplayManager.WAYLAND
@@ -198,6 +200,42 @@ class BaseWindow(QtWidgets.QMainWindow):
     ##################
     # Adjust UI
     ##################
+
+    def _create_macos_border_window(self):
+        """Create 'fake' window to draw red border around whole screen on MacOS.
+        
+        The only way I found to draw a window on top of Mac's menu bar and dock is the
+        window flag QtCore.Qt.ToolTip.
+        The drawback of that flag is that the windows doesn't accept any keypress events
+        and can not change the mouse curser. Therefore, a "normal" window (self) is created 
+        as before, and a second window (macos_border_window) is drawn above it with the Tooltip 
+        flag.
+        """
+        frame = QtWidgets.QFrame()
+        frame.setStyleSheet(f"QFrame {{border: 3px solid {self.primary_color};}}")
+        frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        frame.setFrameShadow(QtWidgets.QFrame.Plain)
+        frame.setLineWidth(0)
+        
+        self.macos_border_window = QtWidgets.QMainWindow()
+        self.macos_border_window.setCentralWidget(frame)
+        self.macos_border_window.setWindowFlags(            
+            QtCore.Qt.FramelessWindowHint
+            | QtCore.Qt.BypassWindowManagerHint
+            | QtCore.Qt.NoDropShadowWindowHint
+            | QtCore.Qt.ToolTip)
+        
+        self.macos_border_window.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        self.macos_border_window.setStyleSheet("QFrame { background-color:rgba(0,0,0,0); }")
+
+        screen_geometry = self.system_info.screens[self.screen_idx].geometry
+        self.macos_border_window.setGeometry(
+            screen_geometry.left,
+            screen_geometry.top,
+            screen_geometry.width,
+            screen_geometry.height,
+        )
+        self.macos_border_window.show() 
 
     def set_fullscreen(self):
         """Set window to full screen using platform specific methods."""
@@ -235,33 +273,19 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.setMinimumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
         self.show()
 
-    def _set_fullscreen_linux_old(self):
-        """Set fullscreen on Linux platforms."""
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
-        self.setWindowFlags(
-            QtCore.Qt.FramelessWindowHint
-            | QtCore.Qt.CustomizeWindowHint
-            | QtCore.Qt.WindowStaysOnTopHint
-        )
-        self.setStyleSheet("background-color:transparent")
-        screen_geometry = self.system_info.screens[self.screen_idx].geometry
-        self.move(screen_geometry.left, screen_geometry.top)
-        self.showFullScreen()
 
     def _set_fullscreen_macos(self):
+        self._create_macos_border_window()
+
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.CustomizeWindowHint
             | QtCore.Qt.WindowStaysOnTopHint
             | QtCore.Qt.NoDropShadowWindowHint
-            # | QtCore.Qt.ToolTip
-            #    ^^ Sets window in front of dock, but doesn't receive keyPressEvents
-            #       and doesn't set the crosshair cursor.
         )
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
-        
         # Full transparent bg makes window click trough. Therefore:
-        self.setStyleSheet("QFrame { background-color:rgba(128,128,128,0.07); }")
+        self.setStyleSheet("QFrame { background-color:rgba(88,88,88,0.09); }")
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
         screen_geometry = self.system_info.screens[self.screen_idx].geometry
