@@ -61,6 +61,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         self.settings = window_main.settings
         self.system_info = window_main.system_info
 
+        self.setCursor(QtCore.Qt.ArrowCursor)
         self.setFixedSize(38, 38)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.setStyleSheet(_BUTTON_STYLE)
@@ -70,10 +71,9 @@ class SettingsMenu(QtWidgets.QToolButton):
         self.setPopupMode(QtWidgets.QToolButton.InstantPopup)
 
         self.title_font = QtGui.QFont(QtGui.QFont().family(), 10, QtGui.QFont.Bold)
+        self._add_menu()
 
         self.com = Communicate()
-
-        self._add_menu()
 
     def _add_menu(self):
         menu = QtWidgets.QMenu(self)

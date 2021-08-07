@@ -56,6 +56,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Plain)
         self.frame.setLineWidth(0)
+        self.frame.setCursor(QtCore.Qt.CrossCursor)
         self.setCentralWidget(self.frame)
 
     ##################
@@ -182,6 +183,7 @@ class BaseWindow(QtWidgets.QMainWindow):
             self.update()
 
     def changeEvent(self, event) -> None:
+        print(event.type())
         if (
             event.type() == QtCore.QEvent.Type.ActivationChange
             and self.system_info.display_manager == DisplayManager.WAYLAND
@@ -203,7 +205,10 @@ class BaseWindow(QtWidgets.QMainWindow):
         logger.debug(f"Setting window for screen {self.screen_idx} to fullscreen")
 
         if self.system_info.platform == Platform.LINUX:
-            self._set_fullscreen_linux()
+            if self.system_info.display_manager == DisplayManager.WAYLAND:
+                self._set_fullscreen_linux_wayland()
+            else:
+                self._set_fullscreen_linux_wayland()
         elif self.system_info.platform == Platform.MACOS:
             self._set_fullscreen_macos()
         elif self.system_info.platform == Platform.WINDOWS:
@@ -213,12 +218,11 @@ class BaseWindow(QtWidgets.QMainWindow):
                 f"Platform {self.system_info.platform} not supported"
             )
 
-    def _set_fullscreen_linux(self):
+    def _set_fullscreen_linux_wayland(self):
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.BypassWindowManagerHint
             | QtCore.Qt.WindowStaysOnTopHint
-            | QtCore.Qt.Popup
         )
 
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
@@ -230,6 +234,19 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.move(screen_geometry.left, screen_geometry.top)
         self.setMinimumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
         self.show()
+
+    def _set_fullscreen_linux_old(self):
+        """Set fullscreen on Linux platforms."""
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        self.setWindowFlags(
+            QtCore.Qt.FramelessWindowHint
+            | QtCore.Qt.CustomizeWindowHint
+            | QtCore.Qt.WindowStaysOnTopHint
+        )
+        self.setStyleSheet("background-color:transparent")
+        screen_geometry = self.system_info.screens[self.screen_idx].geometry
+        self.move(screen_geometry.left, screen_geometry.top)
+        self.showFullScreen()
 
     def _set_fullscreen_macos(self):
         self.setWindowFlags(
