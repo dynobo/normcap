@@ -6,6 +6,7 @@ import locale
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
+import signal
 import sys
 
 from PySide2 import QtCore, QtWidgets
@@ -15,12 +16,14 @@ from normcap.args import create_argparser
 from normcap.gui.main_window import MainWindow
 from normcap.logger import logger
 
-# Might allow ctrl+c
-#import signal
-#signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 def main():
     """Main entry point."""
+
+    # Allow to close QT app with CTRL+C in terminal
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+    # Global except hook
     sys.excepthook = utils.except_hook
 
     args = vars(create_argparser().parse_args())

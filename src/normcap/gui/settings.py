@@ -52,7 +52,7 @@ def init_settings(args: dict) -> QtCore.QSettings:
     # Overwrite missing settings with defaults
     for key, value in DEFAULTS.items():
         if key not in settings.allKeys() or (settings.value(key) is None):
-            settings.setValue(key, DEFAULTS[key])
+            settings.setValue(key, value)
 
     log_settings(settings)
 

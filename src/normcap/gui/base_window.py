@@ -203,12 +203,12 @@ class BaseWindow(QtWidgets.QMainWindow):
 
     def _create_macos_border_window(self):
         """Create 'fake' window to draw red border around whole screen on MacOS.
-        
+
         The only way I found to draw a window on top of Mac's menu bar and dock is the
         window flag QtCore.Qt.ToolTip.
         The drawback of that flag is that the windows doesn't accept any keypress events
-        and can not change the mouse curser. Therefore, a "normal" window (self) is created 
-        as before, and a second window (macos_border_window) is drawn above it with the Tooltip 
+        and can not change the mouse curser. Therefore, a "normal" window (self) is created
+        as before, and a second window (macos_border_window) is drawn above it with the Tooltip
         flag.
         """
         frame = QtWidgets.QFrame()
@@ -216,17 +216,20 @@ class BaseWindow(QtWidgets.QMainWindow):
         frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         frame.setFrameShadow(QtWidgets.QFrame.Plain)
         frame.setLineWidth(0)
-        
+
         self.macos_border_window = QtWidgets.QMainWindow()
         self.macos_border_window.setCentralWidget(frame)
-        self.macos_border_window.setWindowFlags(            
+        self.macos_border_window.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.BypassWindowManagerHint
             | QtCore.Qt.NoDropShadowWindowHint
-            | QtCore.Qt.ToolTip)
-        
+            | QtCore.Qt.ToolTip
+        )
+
         self.macos_border_window.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
-        self.macos_border_window.setStyleSheet("QFrame { background-color:rgba(0,0,0,0); }")
+        self.macos_border_window.setStyleSheet(
+            "QFrame { background-color:rgba(0,0,0,0); }"
+        )
 
         screen_geometry = self.system_info.screens[self.screen_idx].geometry
         self.macos_border_window.setGeometry(
@@ -235,7 +238,7 @@ class BaseWindow(QtWidgets.QMainWindow):
             screen_geometry.width,
             screen_geometry.height,
         )
-        self.macos_border_window.show() 
+        self.macos_border_window.show()
 
     def set_fullscreen(self):
         """Set window to full screen using platform specific methods."""
@@ -272,7 +275,6 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.move(screen_geometry.left, screen_geometry.top)
         self.setMinimumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
         self.show()
-
 
     def _set_fullscreen_macos(self):
         self._create_macos_border_window()
