@@ -156,30 +156,28 @@ def download_tessdata():
 def bundle_tesserocr_dylibs():
     """Include two dylibs needed by tesserocr into app package."""
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
-    libtess_path = "/usr/local/opt/tesseract/lib/libtesseract.4.dylib"
-    liblept_path = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
 
-    # Adjust dylib path in tesserocr module
-    cmd(
-        f"install_name_tool -change {libtess_path} "
-        + "@executable_path/../Resources/app_packages/libtesseract.4.dylib "
-        + f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
-    )
-    cmd(
-        f"install_name_tool -change {liblept_path} "
-        + "@executable_path/../Resources/app_packages/liblept.5.dylib "
-        + f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
-    )
+    libtess = "/usr/local/opt/tesseract/lib/libtesseract.4.dylib"
+    liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
+    libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"
+    tesserocr = f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
 
-    # copy dylibs to package folder and adjust permissions
-    target_path_tess = f"{app_pkg_path}/libtesseract.4.dylib"
-    target_path_lept = f"{app_pkg_path}/liblept.5.dylib"
+    changes = [
+        (liblept, libpng),
+        (tesserocr, libtess),
+        (tesserocr, liblept),
+    ]
 
-    shutil.copy(libtess_path, target_path_tess)
-    shutil.copy(liblept_path, target_path_lept)
-
-    os.chmod(target_path_tess, stat.S_IRWXU)
-    os.chmod(target_path_lept, stat.S_IRWXU)
+    for lib_path, link_path in changes:
+        link_filename = link_path.rsplit("/", maxsplit=1)[-1]
+        new_link_path = f"{app_pkg_path}/{link_filename}"
+        shutil.copy(link_path, new_link_path)
+        os.chmod(new_link_path, stat.S_IRWXU)
+        cmd(
+            f"install_name_tool -change {link_path} "
+            + f"@executable_path/../Resources/app_packages/{link_filename} "
+            + f"{lib_path}"
+        )
 
 
 def patch_file(file_path: Path, insert_above: str, lines: List[str]):
