@@ -137,11 +137,9 @@ def download_tessdata():
     target_path = Path.cwd() / "src" / "normcap" / "resources" / "tessdata"
     url_prefix = "https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.1.0"
     files = [
+        "ara.traineddata",
         "chi_sim.traineddata",
         "deu.traineddata",
-        "fra.traineddata",
-        "jpn.traineddata",
-        "jpn_vert.traineddata",
         "rus.traineddata",
         "spa.traineddata",
         "eng.traineddata",
