@@ -88,7 +88,8 @@ def test_get_tessdata_config_path(monkeypatch):
 
 
 def test_tesseract():
-    """Check tesseract sgstem info."""
+    """Check tesseract system info."""
+    system_info.tesseract.cache_clear()
     infos = system_info.tesseract()
 
     assert isinstance(infos, models.TesseractInfo)
@@ -102,6 +103,20 @@ def test_tesseract():
 
     assert isinstance(infos.languages, list)
     assert len(infos.languages) >= 1
+
+
+def test_tesseract_exceptions(monkeypatch, tmp_path):
+    """Check tesseract system info."""
+    monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
+    monkeypatch.setattr(
+        system_info,
+        "_get_tessdata_config_path",
+        lambda: str((tmp_path / "not-existing").absolute()),
+    )
+
+    with pytest.raises(RuntimeError):
+        system_info.tesseract.cache_clear()
+        _ = system_info.tesseract()
 
 
 def test_to_string():

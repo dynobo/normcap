@@ -12,6 +12,7 @@ import tesserocr  # type: ignore
 from PySide2 import QtGui, QtWidgets
 
 from normcap import __version__
+from normcap.data import FILE_ISSUE_TEXT
 from normcap.models import (
     DesktopEnvironment,
     DisplayManager,
@@ -99,9 +100,9 @@ def tesseract() -> TesseractInfo:
     except RuntimeError as e:
         traceback.print_tb(e.__traceback__)
         raise RuntimeError(
-            "Couldn't determine Tesseract information. You might "
-            + "have to put the directory of the tesseract executable into your systems "
-            + "PATH environment variable."
+            "Couldn't determine Tesseract information. If you pip installed NormCap "
+            + "make sure Tesseract is installed and configured correctly. Otherwise: "
+            + FILE_ISSUE_TEXT
         ) from e
 
     if len(languages) < 1:

@@ -29,6 +29,7 @@ class UpdateChecker(QtCore.QObject):
         self.com = Communicate()
         self.downloader = Downloader()
         self.downloader.com.on_download_finished.connect(self._check_if_new)
+        self.message_box = self._create_message_box()
 
     def _check_if_new(self, text: str):
         """Check if retrieved version is new."""
@@ -64,6 +65,20 @@ class UpdateChecker(QtCore.QObject):
         logger.debug(f"Search for new version on {url}")
         self.downloader.get(url)
 
+    @staticmethod
+    def _create_message_box():
+        message_box = QtWidgets.QMessageBox()
+
+        # Necessary on wayland for main window to regain focus:
+        message_box.setWindowFlags(QtCore.Qt.Popup)
+
+        message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
+        message_box.setStandardButtons(
+            QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel
+        )
+        message_box.setDefaultButton(QtWidgets.QMessageBox.Ok)
+        return message_box
+
     def show_update_message(self, new_version):
         """Show dialog informing about available update."""
 
@@ -83,21 +98,11 @@ class UpdateChecker(QtCore.QObject):
             )
             update_url = URLS.changelog
 
-        message_box = QtWidgets.QMessageBox()
-
-        # Necessary on wayland for main window to regain focus:
-        message_box.setWindowFlags(QtCore.Qt.Popup)
-
-        message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
-        message_box.setText(text)
-        message_box.setInformativeText(info_text)
-        message_box.setStandardButtons(
-            QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel
-        )
-        message_box.setDefaultButton(QtWidgets.QMessageBox.Ok)
+        self.message_box.setText(text)
+        self.message_box.setInformativeText(info_text)
 
         set_cursor(QtCore.Qt.ArrowCursor)
-        choice = message_box.exec_()
+        choice = self.message_box.exec_()
         set_cursor(QtCore.Qt.CrossCursor)
 
         if choice == 1024:

@@ -9,7 +9,7 @@ import normcap
 def test_version():
     """Check version string consistency"""
 
-    with open("pyproject.toml") as toml_file:
+    with open("pyproject.toml", encoding="utf8") as toml_file:
         pyproject_toml = toml.load(toml_file)
 
     briefcase_version = pyproject_toml["tool"]["briefcase"]["version"]
