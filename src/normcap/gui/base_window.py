@@ -4,12 +4,15 @@ Inherited for the main window, instantiated for the child windows (which get cre
 in multi display setups).
 """
 
+import sys
 from copy import deepcopy
+from typing import Optional
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
+from normcap import system_info
 from normcap.logger import logger
-from normcap.models import CaptureMode, DisplayManager, Platform, Rect, SystemInfo
+from normcap.models import CaptureMode, DisplayManager, Rect
 from normcap.utils import get_icon, move_active_window_to_position_on_gnome
 
 
@@ -17,13 +20,10 @@ class BaseWindow(QtWidgets.QMainWindow):
     """Main (parent) window."""
 
     # Helper window to extend the red border
-    macos_border_window: QtWidgets.QMainWindow
+    macos_border_window: Optional[QtWidgets.QMainWindow] = None
 
-    def __init__(
-        self, system_info: SystemInfo, screen_idx: int, color: str, parent=None
-    ):
+    def __init__(self, screen_idx: int, color: str, parent=None):
         super().__init__()
-        self.system_info: SystemInfo = system_info
         self.screen_idx: int = screen_idx
         self.primary_color: str = color
         self.main_window: QtWidgets.QMainWindow = parent if parent else self
@@ -69,7 +69,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         """Transform coordinates on display to global coordinates for multi screen"""
 
         # Reposition if necessary (multi monitor)
-        screen = self.system_info.screens[self.screen_idx]
+        screen = system_info.screens()[self.screen_idx]
         offset_x = screen.geometry.left
         offset_y = screen.geometry.top
         if offset_x != 0:
@@ -188,7 +188,7 @@ class BaseWindow(QtWidgets.QMainWindow):
     def changeEvent(self, event) -> None:
         if (
             event.type() == QtCore.QEvent.Type.ActivationChange
-            and self.system_info.display_manager == DisplayManager.WAYLAND
+            and system_info.display_manager() == DisplayManager.WAYLAND
             and self.isActiveWindow()
             and not self.is_positioned
         ):
@@ -211,7 +211,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         The only way I found to draw a window on top of Mac's menu bar and dock is the
         window flag QtCore.Qt.ToolTip.
         The drawback of that flag is that the windows doesn't accept any keypress events
-        and can not change the mouse curser. Therefore, a "normal" window (self) is created
+        and can not change the mouse curser. Therefore, a 'normal' window (self) is created
         as before, and a second window (macos_border_window) is drawn above it with the Tooltip
         flag.
         """
@@ -235,7 +235,7 @@ class BaseWindow(QtWidgets.QMainWindow):
             "QFrame { background-color:rgba(0,0,0,0); }"
         )
 
-        screen_geometry = self.system_info.screens[self.screen_idx].geometry
+        screen_geometry = system_info.screens()[self.screen_idx].geometry
         self.macos_border_window.setGeometry(
             screen_geometry.left,
             screen_geometry.top,
@@ -249,16 +249,14 @@ class BaseWindow(QtWidgets.QMainWindow):
 
         logger.debug(f"Setting window for screen {self.screen_idx} to fullscreen")
 
-        if self.system_info.platform == Platform.LINUX:
+        if sys.platform == "linux":
             self._set_fullscreen_linux()
-        elif self.system_info.platform == Platform.MACOS:
+        elif sys.platform == "darwin":
             self._set_fullscreen_macos()
-        elif self.system_info.platform == Platform.WINDOWS:
+        elif sys.platform == "win32":
             self._set_fullscreen_windows()
         else:
-            raise NotImplementedError(
-                f"Platform {self.system_info.platform} not supported"
-            )
+            raise NotImplementedError(f"Platform {sys.platform} not supported")
 
     def _set_fullscreen_linux(self):
         self.setWindowFlags(
@@ -272,7 +270,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.setWindowState(QtCore.Qt.WindowActive)
 
-        screen_geometry = self.system_info.screens[self.screen_idx].geometry
+        screen_geometry = system_info.screens()[self.screen_idx].geometry
         self.move(screen_geometry.left, screen_geometry.top)
         self.setMinimumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
         self.show()
@@ -291,7 +289,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.setStyleSheet("QFrame { background-color:rgba(88,88,88,0.09); }")
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
-        screen_geometry = self.system_info.screens[self.screen_idx].geometry
+        screen_geometry = system_info.screens()[self.screen_idx].geometry
         self.setGeometry(
             screen_geometry.left,
             screen_geometry.top,
@@ -308,13 +306,13 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         # Full transparent bg makes window click trough. Therefore:
         self.setStyleSheet("background-color:rgba(0,0,0,0.01)")
-        screen_geometry = self.system_info.screens[self.screen_idx].geometry
+        screen_geometry = system_info.screens()[self.screen_idx].geometry
         self.move(screen_geometry.left, screen_geometry.top)
         self.showFullScreen()
 
     def _position_windows_on_wayland(self):
         self.setFocus()
-        screen_geometry = self.system_info.screens[self.screen_idx].geometry
+        screen_geometry = system_info.screens()[self.screen_idx].geometry
         logger.debug(f"Moving window to screen {self.screen_idx} to {screen_geometry}")
         move_active_window_to_position_on_gnome(screen_geometry)
         self.is_positioned = True

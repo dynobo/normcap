@@ -1,11 +1,12 @@
 import os
+import sys
 import textwrap
 from typing import Tuple
 
 from PySide2 import QtCore
 
 from normcap.logger import logger
-from normcap.models import Capture, CaptureMode, Platform
+from normcap.models import Capture, CaptureMode
 from normcap.utils import get_icon
 
 
@@ -18,15 +19,14 @@ class Communicate(QtCore.QObject):
 class Notifier(QtCore.QObject):
     """Sends notifications"""
 
-    def __init__(self, parent, platform: Platform):
+    def __init__(self, parent):
         super().__init__(parent)
         self.com = Communicate()
-        self.platform = platform
 
     def send_notification(self, capture: Capture):
         """Show tray icon then send notification."""
 
-        on_windows = self.platform == Platform.WINDOWS
+        on_windows = sys.platform == "win32"
         icon_file = "normcap.png" if on_windows else "tray.png"
         notification_icon = get_icon(icon_file, "tool-magic-symbolic")
 
@@ -36,7 +36,7 @@ class Notifier(QtCore.QObject):
         logger.debug("Notification sent")
 
         # Delay quit or hide to get notification enough time to show up.
-        delay = 5000 if self.platform == Platform.WINDOWS else 500
+        delay = 5000 if sys.platform == "win32" else 500
         QtCore.QTimer.singleShot(delay, self.com.on_notification_sent.emit)
 
     @staticmethod

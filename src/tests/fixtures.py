@@ -1,16 +1,7 @@
 import pytest  # type: ignore
 from PySide2 import QtGui
 
-from normcap.models import (
-    Capture,
-    CaptureMode,
-    DesktopEnvironment,
-    DisplayManager,
-    Platform,
-    Rect,
-    ScreenInfo,
-    SystemInfo,
-)
+from normcap.models import Capture, CaptureMode, Rect
 
 # Allow pytest fixtures:
 # pylint: disable=redefined-outer-name
@@ -76,33 +67,4 @@ def capture() -> Capture:
                 "text": "three",
             },
         ],
-    )
-
-
-@pytest.fixture(scope="session")
-def system_info() -> SystemInfo:
-    """Create system info with two screens."""
-    return SystemInfo(
-        platform=Platform.LINUX,
-        display_manager=DisplayManager.X11,
-        desktop_environment=DesktopEnvironment.GNOME,
-        normcap_version="version-string",
-        tesseract_version="version-string",
-        tessdata_path="./",
-        tesseract_languages=["eng"],
-        briefcase_package=False,
-        screens={
-            0: ScreenInfo(
-                is_primary=False,
-                index=0,
-                device_pixel_ratio=1,
-                geometry=Rect(),
-            ),
-            1: ScreenInfo(
-                is_primary=True,
-                index=1,
-                device_pixel_ratio=1.5,
-                geometry=Rect(),
-            ),
-        },
     )

@@ -11,7 +11,7 @@ import sys
 
 from PySide2 import QtCore, QtWidgets
 
-from normcap import __version__, utils
+from normcap import __version__, system_info, utils
 from normcap.args import create_argparser
 from normcap.gui.main_window import MainWindow
 from normcap.logger import logger
@@ -20,41 +20,34 @@ from normcap.logger import logger
 def main():
     """Main entry point."""
 
-    # Allow to close QT app with CTRL+C in terminal
+    sys.excepthook = utils.except_hook
+    # Allow to close QT app with CTRL+C in terminal:
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    # Global except hook
-    sys.excepthook = utils.except_hook
-
     args = vars(create_argparser().parse_args())
-    if args["verbose"]:
+    if args.get("verbose", False):
         logger.setLevel("INFO")
-    if args["very_verbose"]:
+    if args.get("very_verbose", False):
         logger.setLevel("DEBUG")
-    if args["language"]:
-        args["language"] = tuple(args["language"].split("+"))
 
-    logger.info(f"Starting Normcap v{__version__}")
+    logger.info(f"Starting NormCap v{__version__}")
     logger.debug(f"CLI command: {' '.join(sys.argv)}")
+    logger.debug(f"QT LibraryPaths: {QtCore.QCoreApplication.libraryPaths()}")
 
-    lib_paths = QtCore.QCoreApplication.libraryPaths()
-    logger.debug(f"QT LibraryPaths: {lib_paths}")
+    # Wrap qt log messages with own logger
+    QtCore.qInstallMessageHandler(utils.qt_message_handler)
 
-    # Start Qt Application
-    with utils.temporary_environ(XCURSOR_SIZE=24):
-        # Wrap qt log messages
-        QtCore.qInstallMessageHandler(utils.qt_message_handler)
+    utils.init_tessdata()
 
-        # Init App
-        QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-        app = QtWidgets.QApplication(sys.argv)
-        app.setQuitOnLastWindowClosed(False)
+    # TODO: Check if still needed / other solution
+    # with utils.temporary_environ(XCURSOR_SIZE=24):
+    app = QtWidgets.QApplication(sys.argv)
+    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+    app.setQuitOnLastWindowClosed(False)
 
-        # Screen info needs to be gathered _after_ app is instanciated
-        system_info = utils.get_system_info()
-        logger.debug(f"Detected system info:{system_info}")
+    logger.debug(f"System info: {system_info.to_string()}")
 
-        window = MainWindow(system_info, args)
-        window.show()
+    window = MainWindow(args)
+    window.show()
 
-        sys.exit(app.exec_())
+    sys.exit(app.exec_())

@@ -2,25 +2,7 @@ import os
 
 import pytest  # type: ignore
 
-from normcap import models, utils
-
-
-def test_get_display_manager():
-    """Check if display manager enum is returned."""
-    dm = utils.get_display_manager()
-    assert dm in models.DisplayManager
-
-
-def test_get_desktop_environment():
-    """Check if display manager enum is returned."""
-    de = utils.get_desktop_environment()
-    assert de in models.DesktopEnvironment
-
-
-def test_get_platform():
-    """Check if platform enum is returned."""
-    platform = utils.get_platform()
-    assert platform in models.Platform
+from normcap import utils
 
 
 def test_environment_context_manager():

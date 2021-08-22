@@ -1,27 +1,14 @@
-import pytest  # type: ignore
 from PySide2 import QtGui
 
-from normcap.logger import format_section
-from normcap.models import Capture, Rect, SystemInfo
+from normcap.models import Capture, Rect
 
 # pylint: disable=unused-import
-from .fixtures import capture, system_info
+from .fixtures import capture
 
 # Allow pytest fixtures:
 # pylint: disable=redefined-outer-name
 # Allow usint privates:
 # pylint: disable=protected-access
-
-
-def test_format_section():
-    """Check if formatting works."""
-    text = "This Is a Dummy Text\n\n"
-    result = format_section(text, "DummySection")
-
-    assert result[0] == "\n"
-    assert result.count("DummySection") == 2
-    assert result[-1] != "\n"
-    assert result.count("\n\n") == 0
 
 
 def test_rect():
@@ -31,22 +18,6 @@ def test_rect():
     assert rect.height == 200
     assert rect.points == (10, 20, 110, 220)
     assert rect.geometry == (10, 20, 100, 200)
-
-
-def test_system_info(system_info: SystemInfo):
-    """Check if calulated properties are working correctely."""
-    assert system_info.primary_screen_idx == 1
-
-    system_info.screens[1].is_primary = False
-    with pytest.raises(ValueError):
-        _ = system_info.primary_screen_idx
-
-    string = str(system_info)
-    for field in system_info.__dict__:
-        assert field in string
-
-    assert isinstance(system_info.screens[0].width, int)
-    assert isinstance(system_info.screens[0].height, int)
 
 
 def test_capture(capture: Capture):

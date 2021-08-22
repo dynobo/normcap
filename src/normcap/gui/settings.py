@@ -1,59 +1,58 @@
-import pprint
-
 from PySide2 import QtCore
 
-from normcap.logger import format_section, logger
-from normcap.utils import get_config_directory
-
-DEFAULTS = {
-    "color": "#FF2E88",
-    "language": ("eng",),
-    "mode": "parse",
-    "notification": True,
-    "tray": False,
-    "update": False,
-}
+from normcap import system_info
+from normcap.data import DEFAULT_SETTINGS
+from normcap.logger import logger
 
 
-def log_settings(settings: QtCore.QSettings):
-    """Print formated settings."""
-    settings_dict = {
-        k: settings.value(k)
-        if settings.value(k) not in ["true", "false"]
-        else settings.value(k) == "true"
-        for k in settings.allKeys()
-    }
-    string = pprint.pformat(settings_dict, indent=3)
-    string = format_section(string, title="Settings")
-    logger.debug(f"Current settings:{string}")
+def init_settings(*args, initial: dict, reset=False) -> QtCore.QSettings:
+    """Prepare QT settings.
 
+    Apply defaults to missing setting and overwrite with initially
+    provided settings (e.g. from CLI args)."""
 
-def init_settings(args: dict) -> QtCore.QSettings:
-    """Load settings, apply defaults if necessary and overwrite from cli args."""
-    settings = QtCore.QSettings("normcap", "settings")
+    settings = QtCore.QSettings(*args)
     settings.setFallbacksEnabled(False)
-    if not settings.allKeys() or args.get("reset", False):
-        logger.debug("Adjust settings to default values")
-        for key in settings.allKeys():
-            settings.remove(key)
 
-    # Overwrite current with settings passed through cli arguments
-    for key, value in args.items():
-        if value and key in settings.allKeys():
-            settings.setValue(key, value)
+    if reset:
+        settings = _remove_all_keys(settings)
+    settings = _set_missing_to_default(settings, DEFAULT_SETTINGS)
+    settings = _update_from_dict(settings, initial)
+    settings.sync()
+    _remove_deprecated()
 
-    # Overwrite missing settings with defaults
-    for key, value in DEFAULTS.items():
+    return settings
+
+
+def _update_from_dict(settings, update_dict):
+    for key, value in update_dict.items():
+        if settings.contains(key):
+            if value is not None:
+                settings.setValue(key, value)
+        else:
+            logger.debug(f"Skip update of non existing setting ({key}:{value})")
+    return settings
+
+
+def _remove_all_keys(settings):
+    logger.info("Removing existing settings")
+    for key in settings.allKeys():
+        settings.remove(key)
+    return settings
+
+
+def _set_missing_to_default(settings, defaults):
+    for d in defaults:
+        key, value = d.key, d.value
         if key not in settings.allKeys() or (settings.value(key) is None):
+            logger.debug(f"Setting to default ({key}: {value})")
             settings.setValue(key, value)
+    return settings
 
-    log_settings(settings)
 
-    # Remove deprecated config file
+def _remove_deprecated():
     # TODO: Remove in some month
-    config_file = get_config_directory() / "normcap" / "config.yaml"
+    config_file = system_info.config_directory() / "config.yaml"
     if config_file.is_file():
         logger.debug("Removing deprecated config file.")
         config_file.unlink()
-
-    return settings

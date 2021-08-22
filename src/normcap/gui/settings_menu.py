@@ -1,10 +1,11 @@
 """Create the settings button and its menu."""
 
-from typing import Any
+from typing import Any, Optional
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from normcap.models import URLS
+from normcap import system_info
+from normcap.data import MESSAGE_LANGUAGES, URLS
 from normcap.utils import get_icon
 
 _MENU_STYLE = """
@@ -59,20 +60,24 @@ class SettingsMenu(QtWidgets.QToolButton):
         super().__init__(window_main.frame)
         self.setObjectName("settings_icon")
         self.settings = window_main.settings
-        self.system_info = window_main.system_info
 
         self.setCursor(QtCore.Qt.ArrowCursor)
         self.setFixedSize(38, 38)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
-        self.setStyleSheet(_BUTTON_STYLE)
 
         self.setIcon(get_icon("settings.png"))
         self.setIconSize(QtCore.QSize(28, 28))
         self.setPopupMode(QtWidgets.QToolButton.InstantPopup)
 
+        self.message_box = QtWidgets.QMessageBox()
+        # Necessary on wayland for main window to regain focus:
+        self.message_box.setWindowFlags(QtCore.Qt.Popup)
+        self.message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
+
         self.title_font = QtGui.QFont(QtGui.QFont().family(), 10, QtGui.QFont.Bold)
         self._add_menu()
 
+        self.setStyleSheet(_BUTTON_STYLE)
         self.com = Communicate()
 
     def _add_menu(self):
@@ -103,31 +108,36 @@ class SettingsMenu(QtWidgets.QToolButton):
         menu.addAction(action)
 
     def _on_item_click(self, action: QtWidgets.QAction):
+        action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None
-        value: Any = None
-        if action.objectName() == "close":
+        value: Optional[Any] = None
+        setting = None
+
+        if action_name == "close":
             self.com.on_quit_or_hide.emit()
-            return
-
-        if group_name == "website_group":
-            url = action.objectName()
+        elif action_name == "message_languages":
+            self.message_box.setText(MESSAGE_LANGUAGES)
+            self.message_box.exec_()
+        elif group_name == "website_group" or action_name.startswith("file:/"):
+            url = action_name
             self.com.on_open_url.emit(url)
-            return
-
-        if group_name == "settings_group":
-            setting = action.objectName()
+        elif group_name == "settings_group":
+            setting = action_name
             value = action.isChecked()
         elif group_name == "mode_group":
             setting = "mode"
-            value = action.objectName()
+            value = action_name
         elif group_name == "language_group":
             setting = "language"
-            value = tuple(a.objectName() for a in group.actions() if a.isChecked())
-            if len(value) < 1:
-                value = tuple(action.objectName())
+            languages = tuple(a.objectName() for a in group.actions() if a.isChecked())
+            if len(languages) < 1:
+                value = tuple(action_name)
                 action.setChecked(True)
-        self.com.on_setting_changed.emit((setting, value))
+            value = languages
+
+        if None not in [setting, value]:
+            self.com.on_setting_changed.emit((setting, value))
 
     def _add_settings_section(self, menu):
         settings_group = QtWidgets.QActionGroup(menu)
@@ -170,15 +180,32 @@ class SettingsMenu(QtWidgets.QToolButton):
         menu.addAction(action)
 
     def _add_languages_section(self, menu):
-        language_group = QtWidgets.QActionGroup(menu)
+        if len(system_info.tesseract().languages) <= 7:
+            language_menu = menu
+        else:
+            language_menu = QtWidgets.QMenu("select", menu)
+            language_menu.setObjectName("language_menu")
+            menu.addMenu(language_menu)
+
+        language_group = QtWidgets.QActionGroup(language_menu)
         language_group.setObjectName("language_group")
         language_group.setExclusive(False)
-        for language in self.system_info.tesseract_languages:
+        for language in system_info.tesseract().languages:
             action = QtWidgets.QAction(language, language_group)
             action.setObjectName(language)
             action.setCheckable(True)
             action.setChecked(language in self.settings.value("language"))
-            menu.addAction(action)
+            language_menu.addAction(action)
+
+        if system_info.is_briefcase_package():
+            action = QtWidgets.QAction("... open data folder", menu)
+            traineddata_path = system_info.config_directory() / "tessdata"
+            action.setObjectName(f"file://{traineddata_path.absolute()}")
+        else:
+            action = QtWidgets.QAction("... need more?", menu)
+            action.setObjectName("message_languages")
+        action.setFont(QtGui.QFont(QtGui.QFont().family(), 10, QtGui.QFont.StyleHint))
+        menu.addAction(action)
 
     @staticmethod
     def _add_application_section(menu):

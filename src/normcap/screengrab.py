@@ -1,5 +1,6 @@
 """Some utility functions."""
 
+import sys
 import tempfile
 from pathlib import Path
 
@@ -11,9 +12,9 @@ from jeepney.wrappers import (  # type: ignore
 )
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from normcap import utils
+from normcap import system_info, utils
 from normcap.logger import logger
-from normcap.models import Capture, DisplayManager, Platform, ScreenInfo, SystemInfo
+from normcap.models import Capture, DisplayManager, ScreenInfo
 
 
 class ScreenGrabber:
@@ -21,7 +22,7 @@ class ScreenGrabber:
 
     capture: Capture
 
-    def __call__(self, capture: Capture, system_info: SystemInfo) -> Capture:
+    def __call__(self, capture: Capture) -> Capture:
         """Grab screenshot of supplied region."""
         self.capture = capture
 
@@ -30,20 +31,21 @@ class ScreenGrabber:
 
         logger.debug(f"Capturing screen {self.capture.screen}")
         if (
-            system_info.platform == Platform.LINUX
-            and system_info.display_manager == DisplayManager.WAYLAND
+            sys.platform == "linux"
+            and system_info.display_manager() == DisplayManager.WAYLAND
         ):
             logger.debug("Using DBUS for screenshot")
             self.grab_with_dbus()
-        elif system_info.platform == Platform.MACOS:
+        elif sys.platform == "darwin":
             logger.debug("Using QT for screenshot by position")
             self.grab_with_qt_by_position()
             self.crop_to_selection()
-        else:
+        elif sys.platform == "win32":
             logger.debug("Using QT for screenshot by screen")
             self.grab_with_qt_by_screen()
             self.crop_to_selection()
-
+        else:
+            raise RuntimeError(f"Platform {sys.platform} not supported!")
         capture.image.setDevicePixelRatio(1)
         return capture
 
