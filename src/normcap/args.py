@@ -1,64 +1,22 @@
 """Define CLI arguments."""
-
 import argparse
+
+from normcap.data import DEFAULT_SETTINGS, DESCRIPTION
 
 
 def create_argparser() -> argparse.ArgumentParser:
-    """Parse command line arguments.
+    """Parse command line arguments."""
 
-    Returns:
-        ArgumentParser
-    """
+    parser = argparse.ArgumentParser(prog="normcap", description=DESCRIPTION)
 
-    class ArgFormatter(argparse.ArgumentDefaultsHelpFormatter):
-        """Custom formatter to increase intendation of help output.
+    for setting in DEFAULT_SETTINGS:
+        parser.add_argument(
+            f"-{setting.flag}",
+            f"--{setting.key}",
+            type=setting.type_,
+            help=setting.help,
+        )
 
-        Arguments:
-            argparse -- argpase object
-        """
-
-        def __init__(self, prog):
-            super().__init__(prog, max_help_position=30)
-
-    parser = argparse.ArgumentParser(
-        prog="normcap",
-        description="OCR-powered screen-capture tool "
-        + "to capture information instead of images.",
-        formatter_class=ArgFormatter,
-    )
-    parser.add_argument(
-        "-m",
-        "--mode",
-        type=str,
-        help="set capture mode to 'raw' or 'parse'",
-    )
-    parser.add_argument(
-        "-l",
-        "--language",
-        type=str,
-        help="set language(s) for text recognition, e.g. 'eng' or 'eng+deu'",
-    )
-    parser.add_argument(
-        "-c", "--color", type=str, help="set primary color for UI, e.g. 'FF2E88'"
-    )
-    parser.add_argument(
-        "-n",
-        "--notification",
-        help="disable or enable notification after ocr detection with '0' or '1' ",
-        type=bool,
-    )
-    parser.add_argument(
-        "-t",
-        "--tray",
-        help="disable or enable system tray with '0' or '1'",
-        type=bool,
-    )
-    parser.add_argument(
-        "-u",
-        "--update",
-        help="disable or enable check for updates with '0' or '1'",
-        type=bool,
-    )
     parser.add_argument(
         "-r",
         "--reset",

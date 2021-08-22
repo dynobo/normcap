@@ -16,7 +16,7 @@ class Downloader(QtCore.QObject):
     """Downloader using QNetworkAccessManager.
 
     It is async (provides signal) and avoids an issue on MacOS, where the import
-    of urllib.request fails with "no module named _scproxy" in the packaged version.
+    of urllib.request fails with 'no module named _scproxy' in the packaged version.
     """
 
     def __init__(self):
@@ -41,7 +41,5 @@ class Downloader(QtCore.QObject):
             self.com.on_download_failed.emit()
             return
 
-        bytes_string = reply.readAll()
-        source = str(bytes_string, "utf-8")
-
-        self.com.on_download_finished.emit(source)
+        raw_data = str(reply.readAll(), "utf-8")
+        self.com.on_download_finished.emit(raw_data)
