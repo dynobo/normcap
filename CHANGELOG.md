@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.2.6 (2021-08-XX)
+
+**Breaking changes:**
+
+- All: Your NormCap settings will be reset on upgrade!
+- Pre-build packages: A different set of languages is shipped! `jpn`, `jpn_vert` & `fra`
+  got removed, but you can now add them yourself (see below)
+
+**Further changes:**
+
+- All: Using native settings storage.
+- All: Improve settings menu in case of many languages
+- All: Slightly better performance
+- Pre-build packages: Allow extending with additional languages
+  [#137](https://github.com/dynobo/normcap/issues/137)
+  [#127](https://github.com/dynobo/normcap/issues/127)
+  [#104](https://github.com/dynobo/normcap/issues/104)
+- MacOS: Fix missing libpng in package
+  [#128](https://github.com/dynobo/normcap/issues/128)
+
 ## v0.2.5 (2021-08-07)
 
 - Linux: Fix disappering menu bar on gnome
