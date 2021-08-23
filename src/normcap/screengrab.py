@@ -30,22 +30,21 @@ class ScreenGrabber:
             raise ValueError("Capture object doesn't contain screen information")
 
         logger.debug(f"Capturing screen {self.capture.screen}")
-        if (
-            sys.platform == "linux"
-            and system_info.display_manager() == DisplayManager.WAYLAND
-        ):
-            logger.debug("Using DBUS for screenshot")
-            self.grab_with_dbus()
+        if sys.platform == "linux":
+            if system_info.display_manager() == DisplayManager.WAYLAND:
+                self.grab_with_dbus()
+            else:
+                self.grab_with_qt_by_position()
+                self.crop_to_selection()
         elif sys.platform == "darwin":
-            logger.debug("Using QT for screenshot by position")
             self.grab_with_qt_by_position()
             self.crop_to_selection()
         elif sys.platform == "win32":
-            logger.debug("Using QT for screenshot by screen")
             self.grab_with_qt_by_screen()
             self.crop_to_selection()
         else:
             raise RuntimeError(f"Platform {sys.platform} not supported!")
+
         capture.image.setDevicePixelRatio(1)
         return capture
 
@@ -54,6 +53,7 @@ class ScreenGrabber:
 
         Works well on MacOS, fails on multi monitor on X11.
         """
+        logger.debug("Using QT for screenshot by position")
         screen = QtWidgets.QApplication.screens()[self.capture.screen.index]
         screenshot = screen.grabWindow(
             0,
@@ -70,6 +70,7 @@ class ScreenGrabber:
 
         Works well on X11, fails on multi monitor MacOS.
         """
+        logger.debug("Using QT for screenshot by screen")
         screenshot = QtGui.QScreen.grabWindow(
             QtWidgets.QApplication.screens()[self.capture.screen.index], 0
         )
@@ -111,6 +112,7 @@ class ScreenGrabber:
 
     def grab_with_dbus(self):
         """Capture rect of screen on gnome systems using wayland."""
+        logger.debug("Using DBUS for screenshot")
 
         class DbusScreenshot(MessageGenerator):
             """Capture screenshot through dbus."""
