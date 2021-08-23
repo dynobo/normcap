@@ -198,8 +198,11 @@ class BaseWindow(QtWidgets.QMainWindow):
         return super().changeEvent(event)
 
     def hideEvent(self, _) -> None:
-        if self.macos_border_window:
-            self.macos_border_window.hide()
+        try:
+            if self.macos_border_window:
+                self.macos_border_window.hide()
+        except AttributeError:
+            logger.debug("No such attribute: self.macos_border_window")
 
     ##################
     # Adjust UI
