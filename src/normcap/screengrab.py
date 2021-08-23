@@ -34,7 +34,7 @@ class ScreenGrabber:
             if system_info.display_manager() == DisplayManager.WAYLAND:
                 self.grab_with_dbus()
             else:
-                self.grab_with_qt_by_position()
+                self.grab_with_qt_by_screen()
                 self.crop_to_selection()
         elif sys.platform == "darwin":
             self.grab_with_qt_by_position()
