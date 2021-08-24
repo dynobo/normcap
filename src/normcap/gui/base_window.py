@@ -311,8 +311,6 @@ class BaseWindow(QtWidgets.QMainWindow):
     def _position_windows_on_wayland(self):
         self.setFocus()
         screen_geometry = system_info.screens()[self.screen_idx].geometry
-        logger.debug(
-            "Moving window for screen %s to %s", self.screen_idx, screen_geometry
-        )
+        logger.debug("Move window %s to position  %s", self.screen_idx, screen_geometry)
         move_active_window_to_position_on_gnome(screen_geometry)
         self.is_positioned = True

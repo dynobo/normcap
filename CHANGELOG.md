@@ -6,11 +6,11 @@
 
 - All: Your NormCap settings will be reset on upgrade!
 - Pre-build packages: A different set of languages is shipped! `jpn`, `jpn_vert` & `fra`
-  got removed, but you can now add them yourself (see below)
+  got removed, but you can now add them yourself (Settings -> "open data folder")
 
 **Further changes:**
 
-- All: Using native settings storage.
+- All: Use native settings storage
 - All: Improve settings menu in case of many languages
 - All: Slightly better performance
 - Pre-build packages: Allow extending with additional languages
@@ -19,6 +19,7 @@
   [#104](https://github.com/dynobo/normcap/issues/104)
 - MacOS: Fix missing libpng in package
   [#128](https://github.com/dynobo/normcap/issues/128)
+- Linux: Fix AttributeError: 'MainWindow' object has no attribute 'macos_border_window'
 
 ## v0.2.5 (2021-08-07)
 

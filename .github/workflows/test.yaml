@@ -52,6 +52,7 @@ jobs:
       - name: Poetry install
         run: |
           poetry install
+          poetry run python build.py download-tessdata
 
       # TEST WORKFLOW SPECIFIC
       - name: Pylint
@@ -81,9 +82,7 @@ jobs:
           XDG_SESSION_TYPE: gnome
       - name: Pytest on Windows
         if: ${{ matrix.os  == 'windows-2019' }}
-        run: |
-          poetry run python build.py download-tessdata
-          poetry run pytest
+        run: poetry run pytest
         env:
           TESSDATA_PREFIX: D:\a\normcap\normcap\src\normcap\resources\tessdata
       - name: Pytest on MacOS
