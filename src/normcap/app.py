@@ -30,9 +30,9 @@ def main():
     if args.get("very_verbose", False):
         logger.setLevel("DEBUG")
 
-    logger.info(f"Starting NormCap v{__version__}")
-    logger.debug(f"CLI command: {' '.join(sys.argv)}")
-    logger.debug(f"QT LibraryPaths: {QtCore.QCoreApplication.libraryPaths()}")
+    logger.info("Start NormCap v%s", __version__)
+    logger.debug("CLI command: %s", " ".join(sys.argv))
+    logger.debug("QT LibraryPaths: %s", QtCore.QCoreApplication.libraryPaths())
 
     # Wrap qt log messages with own logger
     QtCore.qInstallMessageHandler(utils.qt_message_handler)
@@ -45,7 +45,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
-    logger.debug(f"System info: {system_info.to_string()}")
+    logger.debug("System info:\n%s", system_info.to_string())
 
     window = MainWindow(args)
     window.show()

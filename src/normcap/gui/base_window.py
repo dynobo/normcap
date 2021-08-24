@@ -46,7 +46,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.mode_indicator_font.setPixelSize(24)
 
         # Setup widgets and show
-        logger.debug(f"Creating window for screen {self.screen_idx}")
+        logger.debug("Create window for screen %s", self.screen_idx)
         self._add_central_widget()
         self.set_fullscreen()
 
@@ -192,7 +192,6 @@ class BaseWindow(QtWidgets.QMainWindow):
             and self.isActiveWindow()
             and not self.is_positioned
         ):
-            logger.debug(f"Positioning window on screen {self.screen_idx}")
             self._position_windows_on_wayland()
             self.main_window.com.on_window_positioned.emit()
         return super().changeEvent(event)
@@ -247,7 +246,7 @@ class BaseWindow(QtWidgets.QMainWindow):
     def set_fullscreen(self):
         """Set window to full screen using platform specific methods."""
 
-        logger.debug(f"Setting window for screen {self.screen_idx} to fullscreen")
+        logger.debug("Set window for screen %s to fullscreen", self.screen_idx)
 
         if sys.platform == "linux":
             self._set_fullscreen_linux()
@@ -312,6 +311,8 @@ class BaseWindow(QtWidgets.QMainWindow):
     def _position_windows_on_wayland(self):
         self.setFocus()
         screen_geometry = system_info.screens()[self.screen_idx].geometry
-        logger.debug(f"Moving window to screen {self.screen_idx} to {screen_geometry}")
+        logger.debug(
+            "Moving window for screen %s to %s", self.screen_idx, screen_geometry
+        )
         move_active_window_to_position_on_gnome(screen_geometry)
         self.is_positioned = True

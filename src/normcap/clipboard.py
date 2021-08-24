@@ -12,7 +12,7 @@ def init():
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
 
     def copy_qt(text):
-        logger.debug(f"Copy to clipboard:\n{text}")
+        logger.debug("Copy to clipboard:\n%s", text)
         cb = app.clipboard()
         cb.setText(text)
 

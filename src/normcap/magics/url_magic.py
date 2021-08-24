@@ -50,15 +50,18 @@ class UrlMagic(BaseMagic):
         )
         self._urls = re.findall(reg_url, text, flags=re.IGNORECASE)
         logger.info(
-            f"{len(self._urls)} URLs found"
-            f"{': ' + ' '.join(self._urls) if self._urls else ''}"
+            "%s URLs found %s",
+            len(self._urls),
+            [": " + " ".join(self._urls) if self._urls else ""],
         )
 
         # Calc chars & ratio
         url_chars = sum([len(e) for e in self._urls])
         overall_chars = max([len(text), 1])
         ratio = url_chars / overall_chars
-        logger.debug(f"{url_chars} of {overall_chars} chars in emails (ratio: {ratio})")
+        logger.debug(
+            "%s of %s chars in emails (ratio: %s)", url_chars, overall_chars, ratio
+        )
 
         # Map to score
         self._final_score = round(100 * (ratio * 0.85), 2)
@@ -74,7 +77,7 @@ class UrlMagic(BaseMagic):
         Returns:
             str -- URL(s), separated bye newline
         """
-        logger.info("Transforming with URL magic")
+        logger.info("Transform with URL magic")
 
         # Return as line separated list
         return os.linesep.join(self._urls)

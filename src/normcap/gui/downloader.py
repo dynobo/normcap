@@ -29,7 +29,7 @@ class Downloader(QtCore.QObject):
 
     def get(self, url: str):
         """Start downloading url. Emits signal, when done."""
-        logger.debug(f"Download {url}")
+        logger.debug("Download %s", url)
         request = QtNetwork.QNetworkRequest(QtCore.QUrl(url))
         self.manager.get(request)
 
@@ -37,7 +37,7 @@ class Downloader(QtCore.QObject):
         """Decode response and emit download finished signal."""
         er = reply.error()
         if er != QtNetwork.QNetworkReply.NoError:
-            logger.error(f"Error occurred during download {er}: {reply.errorString()}")
+            logger.error("Download failed due to %s: %s", er, reply.errorString())
             self.com.on_download_failed.emit()
             return
 

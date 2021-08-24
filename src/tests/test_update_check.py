@@ -42,7 +42,7 @@ def test_update_checker_cant_parse(caplog, packaged, text):
 
     checker = update_check.UpdateChecker(None, packaged=packaged)
 
-    version = checker._parse_response(text)
+    version = checker._parse_response_to_version(text)
 
     assert version is None
     assert "ERROR" in caplog.text

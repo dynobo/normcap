@@ -29,7 +29,7 @@ def save_image_in_tempfolder(
         now = datetime.datetime.now()
         file_name = f"{now:%Y-%m-%d_%H-%M-%S_%f}{postfix}.png"
         image.save(str(file_dir / file_name))
-        logger.debug(f"Debug image stored in: {file_dir / file_name}")
+        logger.debug("Store debug image in: %s", file_dir / file_name)
 
 
 def get_screen_idx_of_mouse() -> QtCore.QRect:
@@ -48,13 +48,13 @@ def qt_message_handler(mode, _, message):
     level = mode.name.decode("utf8").lower()
     msg = message.lower()
     if (level == "qtfatalmsg") or ("could not load the qt platform" in msg):
-        logger.error(f"[QT] {level} - {msg}")
+        logger.error("[QT] %s - %s", level, msg)
     else:
-        logger.debug(f"[QT] {level} - {msg}")
+        logger.debug("[QT] %s - %s", level, msg)
 
     if ("xcb" in msg) and ("it was found" in msg):
-        logger.error(f"Try solving the problem as described here: {URLS.xcb_error}")
-        logger.error(f"If that doesn't help, please open an issue: {URLS.issues}")
+        logger.error("Try solving the problem as described here: %s", URLS.xcb_error)
+        logger.error("If that doesn't help, please open an issue: %s", URLS.issues)
 
 
 def move_active_window_to_position_on_gnome(screen_geometry):
@@ -149,7 +149,7 @@ def init_tessdata():
     traineddata_files = list((resource_path / "tessdata").glob("*.traineddata"))
     doc_files = list((resource_path / "tessdata").glob("*.txt"))
 
-    logger.info(f"Copy {len(traineddata_files)} traineddata files to config directory")
+    logger.info("Copy %s traineddata files to config directory", len(traineddata_files))
     tessdata_path.mkdir(parents=True, exist_ok=True)
     for f in traineddata_files + doc_files:
         shutil.copy(f, tessdata_path / f.name)

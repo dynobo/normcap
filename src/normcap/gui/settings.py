@@ -29,13 +29,15 @@ def _update_from_dict(settings, update_dict):
         if settings.contains(key):
             if value is not None:
                 settings.setValue(key, value)
+        elif key in ["reset", "verbose", "very_verbose"]:
+            continue
         else:
-            logger.debug(f"Skip update of non existing setting ({key}:{value})")
+            logger.debug("Skip update of non existing setting (%s: %s)", key, value)
     return settings
 
 
 def _remove_all_keys(settings):
-    logger.info("Removing existing settings")
+    logger.info("Remove existing settings")
     for key in settings.allKeys():
         settings.remove(key)
     return settings
@@ -45,7 +47,7 @@ def _set_missing_to_default(settings, defaults):
     for d in defaults:
         key, value = d.key, d.value
         if key not in settings.allKeys() or (settings.value(key) is None):
-            logger.debug(f"Setting to default ({key}: {value})")
+            logger.debug("Setting to default (%s: %s)", key, value)
             settings.setValue(key, value)
     return settings
 
@@ -54,5 +56,5 @@ def _remove_deprecated():
     # TODO: Remove in some month
     config_file = system_info.config_directory() / "config.yaml"
     if config_file.is_file():
-        logger.debug("Removing deprecated config file.")
+        logger.debug("Remove deprecated config file.")
         config_file.unlink()

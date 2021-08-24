@@ -59,7 +59,7 @@ class PerformOcr:
             oem=tesserocr.OEM.LSTM_ONLY,
             psm=tesserocr.PSM.AUTO_OSD,
         )
-        logger.debug(f"Init tesseract with: {self.tess_args}")
+        logger.debug("Init tesseract with args: %s", self.tess_args)
         capture = self.extract(capture)
         return capture
 
@@ -182,11 +182,11 @@ class PerformOcr:
             + f"Available on the system are: {set_tesseract_languages}"
         )
         if available_langs:
-            logger.warning(f"Fallback to languages {available_langs}")
+            logger.warning("Fallback to languages %s", available_langs)
             return list(available_langs)
 
         fallback_language = set_tesseract_languages.pop()
-        logger.warning(f"Fallback to language {fallback_language}")
+        logger.warning("Fallback to language %s", fallback_language)
         return list(set([fallback_language]))
 
 

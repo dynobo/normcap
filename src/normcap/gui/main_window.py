@@ -146,10 +146,10 @@ class MainWindow(BaseWindow):
             self.com.on_window_positioned.connect(self._create_next_child_window)
         else:
             logger.error(
-                f"NormCap currently doesn't support multi monitor mode"
-                f"for {system_info.display_manager()} "
-                f"on {system_info.desktop_environment()}."
-                f"\n{FILE_ISSUE_TEXT}"
+                "NormCap currently doesn't support multi monitor mode for %s on %s\n%s",
+                system_info.display_manager(),
+                system_info.desktop_environment(),
+                FILE_ISSUE_TEXT,
             )
 
     def _create_next_child_window(self):
@@ -176,7 +176,7 @@ class MainWindow(BaseWindow):
 
     def _minimize_windows(self):
         """Hide all windows of normcap."""
-        logger.debug("Hiding windows")
+        logger.debug("Hide %s window(s)", len(self.all_windows))
         utils.set_cursor(None)
         for window in self.all_windows.values():
             window.hide()
@@ -197,7 +197,6 @@ class MainWindow(BaseWindow):
         if self.settings.value("tray", type=bool):
             self._minimize_windows()
         else:
-            logger.debug("Hiding tray & processing events")
             self.main_window.tray.hide()
             QtWidgets.QApplication.processEvents()
             time.sleep(0.05)
@@ -205,8 +204,8 @@ class MainWindow(BaseWindow):
 
     @staticmethod
     def _quit(reason: str):
-        logger.debug(f"Saved debug images: {tempfile.gettempdir()}{os.sep}normcap")
-        logger.info(f"Exit normcap (reason: {reason})")
+        logger.debug("Path to debug images: %s%snormcap", tempfile.gettempdir(), os.sep)
+        logger.info("Exit normcap (reason: %s)", reason)
         QtWidgets.QApplication.quit()
 
     def _show_or_hide_tray_icon(self):
@@ -259,8 +258,8 @@ class MainWindow(BaseWindow):
             )
 
         logger.debug(
-            "Settings:\n"
-            + f"{[(k, self.settings.value(k)) for k in  self.settings.allKeys()]}"
+            "Settings:\n%s",
+            [(k, self.settings.value(k)) for k in self.settings.allKeys()],
         )
 
     #####################
@@ -269,7 +268,7 @@ class MainWindow(BaseWindow):
 
     def _grab_image(self, grab_info: Tuple[Rect, int]):
         """Get image from selected region."""
-        logger.info(f"Taking screenshot on {grab_info[0].points}")
+        logger.info("Take screenshot of position %s", grab_info[0].points)
         self.capture.rect = grab_info[0]
         self.capture.screen = system_info.screens()[grab_info[1]]
         self.capture = grab_screen(capture=self.capture)
@@ -278,30 +277,30 @@ class MainWindow(BaseWindow):
     def _prepare_image(self):
         """Enhance image before performin OCR."""
         if self.capture.image_area > 25:
-            logger.debug("Preparing image for OCR")
+            logger.debug("Prepare image for OCR")
             self.capture = enhance_image(self.capture)
             self.com.on_image_prepared.emit()
         else:
-            logger.warning(f"Area of {self.capture.image_area} too small. Skip OCR")
+            logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
             self.com.on_quit_or_hide.emit("selection too small")
 
     def _capture_to_ocr(self):
         """Perform content recognition on grabed image."""
-        logger.debug("Performing OCR")
+        logger.debug("Perform OCR")
         self.capture = perform_ocr(
             languages=self.settings.value("language"),
             capture=self.capture,
         )
-        logger.info(f"Raw text from OCR:\n{self.capture.text}")
-        logger.debug(f"Result from OCR:\n{self.capture}")
+        logger.info("Raw text from OCR:\n%s", self.capture.text)
+        logger.debug("Result from OCR:\n%s", self.capture)
         self.com.on_ocr_performed.emit()
 
     def _apply_magics(self):
         """Beautify/parse content base on magic rules."""
         if self.capture.mode is CaptureMode.PARSE:
-            logger.debug("Applying Magics")
+            logger.debug("Apply Magics")
             self.capture = apply_magic(self.capture)
-            logger.debug(f"Result from applying Magics:\n{self.capture}")
+            logger.debug("Result from applying Magics:\n%s", self.capture)
         if self.capture.mode is CaptureMode.RAW:
             logger.debug("Raw mode. Skip applying Magics and use raw text")
             self.capture.transformed = self.capture.text.strip()

@@ -33,13 +33,15 @@ class UpdateChecker(QtCore.QObject):
 
     def _check_if_new(self, text: str):
         """Check if retrieved version is new."""
-        newest_version = self._parse_response(text)
+        newest_version = self._parse_response_to_version(text)
         if newest_version:
-            logger.debug(f"Version found: {newest_version} (installed={__version__})")
+            logger.debug(
+                "Newest version: %s (installed: %s)", newest_version, __version__
+            )
             if LooseVersion(newest_version) > LooseVersion(__version__):
                 self.com.on_version_retrieved.emit(newest_version)
 
-    def _parse_response(self, text: str) -> Optional[str]:
+    def _parse_response_to_version(self, text: str) -> Optional[str]:
         """Parse the tag version from the response and emit version retrieved signal."""
         newest_version = None
 
@@ -62,7 +64,7 @@ class UpdateChecker(QtCore.QObject):
     def check(self):
         """Start the update check."""
         url = URLS.releases if self.packaged else f"{URLS.pypi}/json"
-        logger.debug(f"Search for new version on {url}")
+        logger.debug("Search for new version on %s", url)
         self.downloader.get(url)
 
     @staticmethod

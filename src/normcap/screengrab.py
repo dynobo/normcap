@@ -29,7 +29,7 @@ class ScreenGrabber:
         if not isinstance(capture.screen, ScreenInfo):
             raise ValueError("Capture object doesn't contain screen information")
 
-        logger.debug(f"Capturing screen {self.capture.screen}")
+        logger.debug("Grab screen: %s", self.capture.screen)
         if sys.platform == "linux":
             if system_info.display_manager() == DisplayManager.WAYLAND:
                 self.grab_with_dbus()
@@ -53,7 +53,7 @@ class ScreenGrabber:
 
         Works well on MacOS, fails on multi monitor on X11.
         """
-        logger.debug("Using QT for screenshot by position")
+        logger.debug("Use capture method: QT by position")
         screen = QtWidgets.QApplication.screens()[self.capture.screen.index]
         screenshot = screen.grabWindow(
             0,
@@ -70,7 +70,7 @@ class ScreenGrabber:
 
         Works well on X11, fails on multi monitor MacOS.
         """
-        logger.debug("Using QT for screenshot by screen")
+        logger.debug("Use capture method: QT by screen")
         screenshot = QtGui.QScreen.grabWindow(
             QtWidgets.QApplication.screens()[self.capture.screen.index], 0
         )
@@ -100,19 +100,21 @@ class ScreenGrabber:
         )
 
         if box.width() <= 10 or box.height() <= 10:
-            logger.debug(f"Region selected is very small: {box}")
+            logger.debug("Region selected is very small: %s", box)
             box.setRect(0, 0, 1, 1)
 
-        logger.debug(f"Screen scale factor: {self.capture.scale_factor}")
-        logger.debug(f"Image devicePixelRatio: {self.capture.image.devicePixelRatio()}")
-        logger.debug(f"Image crop box rect: {box.getRect()}")
+        logger.debug("Screen scale factor: %s", self.capture.scale_factor)
+        logger.debug(
+            "Image devicePixelRatio: %s", self.capture.image.devicePixelRatio()
+        )
+        logger.debug("Image crop box rect: %s", box.getRect())
 
         self.capture.image = self.capture.image.copy(box)
         utils.save_image_in_tempfolder(self.capture.image, postfix="_cropped")
 
     def grab_with_dbus(self):
         """Capture rect of screen on gnome systems using wayland."""
-        logger.debug("Using DBUS for screenshot")
+        logger.debug("Use capture method: DBUS")
 
         class DbusScreenshot(MessageGenerator):
             """Capture screenshot through dbus."""

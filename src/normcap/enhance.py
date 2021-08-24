@@ -14,7 +14,7 @@ class EnhanceImage:
 
     def __call__(self, capture: Capture) -> Capture:
         """Execute chain of optimizations."""
-        logger.info("Applying enhancements to image")
+        logger.info("Apply enhancements to image")
 
         # Currently, the image is only enlarged
         # for other strategies see: https://stackoverflow.com/a/50762612
@@ -89,15 +89,13 @@ class EnhanceImage:
         Returns:
             Enlarged image
         """
-        img = img.scaled(
+        logger.debug("Resize screenshot by factor %s", factor)
+        return img.scaled(
             int(img.width() * factor),
             int(img.height() * factor),
             QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
             QtCore.Qt.TransformationMode.SmoothTransformation,
         )
-        logger.debug(f"Resized screenshot by factor {factor}")
-
-        return img
 
 
 enhance_image = EnhanceImage()

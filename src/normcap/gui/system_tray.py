@@ -18,7 +18,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     """System tray icon with menu."""
 
     def __init__(self, parent: QtCore.QObject):
-        logger.debug("Setting up tray icon")
+        logger.debug("Set up tray icon")
         super().__init__(parent)
         self.com = Communicate()
         self.setIcon(get_icon("tray.png", "tool-magic-symbolic"))
