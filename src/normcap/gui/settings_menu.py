@@ -62,11 +62,11 @@ class SettingsMenu(QtWidgets.QToolButton):
         self.settings = window_main.settings
 
         self.setCursor(QtCore.Qt.ArrowCursor)
-        self.setFixedSize(40, 40)
+        self.setFixedSize(38, 38)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
 
-        self.setIcon(get_icon("settings.png"))
-        self.setIconSize(QtCore.QSize(32, 32))
+        self.setIcon(get_icon("settings.svg"))
+        self.setIconSize(QtCore.QSize(26, 26))
         self.setPopupMode(QtWidgets.QToolButton.InstantPopup)
 
         self.message_box = QtWidgets.QMessageBox()

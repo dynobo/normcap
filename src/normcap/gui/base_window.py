@@ -266,7 +266,6 @@ class BaseWindow(QtWidgets.QMainWindow):
         )
 
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
-        self.setStyleSheet("background-color:transparent")
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.setWindowState(QtCore.Qt.WindowActive)
 

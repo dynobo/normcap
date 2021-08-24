@@ -39,10 +39,10 @@ def main():
 
     utils.init_tessdata()
 
-    # TODO: Check if still needed / other solution
-    # with utils.temporary_environ(XCURSOR_SIZE=24):
+    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
+
     app = QtWidgets.QApplication(sys.argv)
-    app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
     app.setQuitOnLastWindowClosed(False)
 
     logger.debug(f"System info: {system_info.to_string()}")

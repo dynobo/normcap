@@ -94,7 +94,7 @@ class MainWindow(BaseWindow):
         self.settings_menu.com.on_quit_or_hide.connect(
             lambda: self.com.on_quit_or_hide.emit("clicked close in menu")
         )
-        self.settings_menu.move(self.width() - self.settings_menu.width() - 50, 50)
+        self.settings_menu.move(self.width() - self.settings_menu.width() - 26, 26)
         self.settings_menu.show()
 
     def _add_tray(self):

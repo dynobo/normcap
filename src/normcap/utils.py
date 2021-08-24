@@ -1,10 +1,8 @@
 """Some utility functions."""
 
-import contextlib
 import datetime
 import functools
 import logging
-import os
 import shutil
 import sys
 import tempfile
@@ -57,23 +55,6 @@ def qt_message_handler(mode, _, message):
     if ("xcb" in msg) and ("it was found" in msg):
         logger.error(f"Try solving the problem as described here: {URLS.xcb_error}")
         logger.error(f"If that doesn't help, please open an issue: {URLS.issues}")
-
-
-@contextlib.contextmanager
-def temporary_environ(**modify_vars):
-    """Temporarily adjust environment variables."""
-    modify_vars = {k: str(v) for k, v in modify_vars.items()}
-    env = os.environ
-    vars_before = {k: dict(env).get(k, "NOT_EXISTING") for k in modify_vars}
-    try:
-        if len(modify_vars) > 0:
-            env.update(modify_vars)
-        yield
-    finally:
-        env.update(vars_before)
-        for var_name, var_value in vars_before.items():
-            if var_value == "NOT_EXISTING":
-                env.pop(var_name, default=None)
 
 
 def move_active_window_to_position_on_gnome(screen_geometry):
