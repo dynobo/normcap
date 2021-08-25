@@ -20,7 +20,7 @@ class BaseWindow(QtWidgets.QMainWindow):
     """Main (parent) window."""
 
     # Helper window to extend the red border
-    macos_border_window: Optional[QtWidgets.QMainWindow] = None
+    macos_border: Optional[QtWidgets.QMainWindow] = None
 
     def __init__(self, screen_idx: int, color: str, parent=None):
         super().__init__()
@@ -197,8 +197,8 @@ class BaseWindow(QtWidgets.QMainWindow):
         return super().changeEvent(event)
 
     def hideEvent(self, _) -> None:
-        if self.macos_border_window:
-            self.macos_border_window.hide()
+        if self.macos_border:
+            self.macos_border.hide()
 
     ##################
     # Adjust UI
@@ -220,28 +220,27 @@ class BaseWindow(QtWidgets.QMainWindow):
         frame.setFrameShadow(QtWidgets.QFrame.Plain)
         frame.setLineWidth(0)
 
-        self.macos_border_window = QtWidgets.QMainWindow()
-        self.macos_border_window.setCentralWidget(frame)
-        self.macos_border_window.setWindowFlags(
+        self.macos_border = QtWidgets.QMainWindow()
+        self.macos_border.setCentralWidget(frame)
+        self.macos_border.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.BypassWindowManagerHint
             | QtCore.Qt.NoDropShadowWindowHint
+            | QtCore.Qt.WindowTransparentForInput
             | QtCore.Qt.ToolTip
         )
 
-        self.macos_border_window.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
-        self.macos_border_window.setStyleSheet(
-            "QFrame { background-color:rgba(0,0,0,0); }"
-        )
+        self.macos_border.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        self.macos_border.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents, True)
 
         screen_geometry = system_info.screens()[self.screen_idx].geometry
-        self.macos_border_window.setGeometry(
+        self.macos_border.setGeometry(
             screen_geometry.left,
             screen_geometry.top,
             screen_geometry.width,
             screen_geometry.height,
         )
-        self.macos_border_window.show()
+        self.macos_border.show()
 
     def set_fullscreen(self):
         """Set window to full screen using platform specific methods."""
@@ -283,9 +282,9 @@ class BaseWindow(QtWidgets.QMainWindow):
             | QtCore.Qt.NoDropShadowWindowHint
         )
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
         # Full transparent bg makes window click trough. Therefore:
         self.setStyleSheet("QFrame { background-color:rgba(88,88,88,0.09); }")
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
         screen_geometry = system_info.screens()[self.screen_idx].geometry
         self.setGeometry(

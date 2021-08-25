@@ -157,27 +157,56 @@ def bundle_tesserocr_dylibs():
     """Include two dylibs needed by tesserocr into app package."""
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
 
+    # Copy libs to package dir
+
     libtess = "/usr/local/opt/tesseract/lib/libtesseract.4.dylib"
     liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
     libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"
-    tesserocr = f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
+    libjpeg = "/usr/local/opt/jpeg/lib/libjpeg.9.dylib"
+    libgif = "/usr/local/opt/giflib/lib/libgif.dylib"
+    libtiff = "/usr/local/opt/libtiff/lib/libtiff.5.dylib"
+    libopenjpeg = "/usr/local/opt/openjpeg/lib/libopenjp2.7.dylib"
+    libwebp = "/usr/local/opt/webp/lib/libwebp.7.dylib"
+    libwebpmux = "/usr/local/opt/webp/lib/libwebpmux.3.dylib"
 
-    changes = [
-        (liblept, libpng),
-        (tesserocr, libtess),
-        (tesserocr, liblept),
+    for lib_path in [
+        libtess,
+        liblept,
+        libpng,
+        libjpeg,
+        libgif,
+        libtiff,
+        libopenjpeg,
+        libwebp,
+        libwebpmux,
+    ]:
+        lib_filename = lib_path.rsplit("/", maxsplit=1)[-1]
+        new_lib_path = f"{app_pkg_path}/{lib_filename}"
+        shutil.copy(lib_path, new_lib_path)
+        os.chmod(new_lib_path, stat.S_IRWXU)
+
+    # Relink libs
+    tesserocr = f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
+    libwebp7 = "/usr/local/Cellar/webp/1.2.1/lib/libwebp.7.dylib"
+    changeset = [
+        (libtiff, [libjpeg]),
+        (libwebpmux, [libwebp7]),
+        (liblept, [libpng, libjpeg, libgif, libtiff, libopenjpeg, libwebp, libwebpmux]),
+        (libtess, [liblept]),
+        (tesserocr, [libtess, liblept]),
     ]
 
-    for lib_path, link_path in changes:
-        link_filename = link_path.rsplit("/", maxsplit=1)[-1]
-        new_link_path = f"{app_pkg_path}/{link_filename}"
-        shutil.copy(link_path, new_link_path)
-        os.chmod(new_link_path, stat.S_IRWXU)
-        cmd(
-            f"install_name_tool -change {link_path} "
-            + f"@executable_path/../Resources/app_packages/{link_filename} "
-            + f"{lib_path}"
-        )
+    for lib_path, link_paths in changeset:
+        lib_filename = lib_path.rsplit("/", maxsplit=1)[-1]
+        new_lib_path = f"{app_pkg_path}/{lib_filename}"
+
+        for link_path in link_paths:
+            link_filename = link_path.rsplit("/", maxsplit=1)[-1]
+            cmd(
+                f"install_name_tool -change {link_path} "
+                + f"@executable_path/../Resources/app_packages/{link_filename} "
+                + f"{new_lib_path}"
+            )
 
 
 def patch_file(file_path: Path, insert_above: str, lines: List[str]):
