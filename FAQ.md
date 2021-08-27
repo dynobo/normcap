@@ -21,11 +21,10 @@
 
 ### How can I add additional languages to NormCap?
 
-The **prebuild packages** are shipped with the following languages English, Chinese,
-French, German, Japanese, Spanish and Russian. If you miss a language, click the
-settings icon and "open data folder..." (in the "Languages" section), then follow the
-instructions in
-`[add_more_languages.txt](https://github.com/dynobo/normcap/blob/main/src/normcap/resources/tessdata/add_more_languages.txt)`.
+The **prebuild packages** are shipped with the following languages English, Arabic,
+Chinese, German, Spanish and Russian. If you miss a language, click the settings icon
+and "open data folder..." (in the "Languages" section), then follow the instructions in
+[`add_more_languages.txt`](https://github.com/dynobo/normcap/blob/main/src/normcap/resources/tessdata/add_more_languages.txt).
 
 If you installed NormCap as **Python package**, refer to the online documentation on how
 to install additional language for Tesseract on your system.
