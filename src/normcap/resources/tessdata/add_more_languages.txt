@@ -1,0 +1,29 @@
+Install more languages for NormCap
+------------------------------------
+
+1. Visit https://github.com/tesseract-ocr/tessdata_best/tree/4.1.0
+2. Download the .traineddata file for the desired language
+3. Check the resulting file size: It should be ~3 to ~12MB
+   (If it's less, you might have accidentially downloaded the
+   github HTML page instead)
+4. Move the .traineddata file into the directory of this
+   text file, just aside the other .traineddata files
+5. The new languages will become available after restarting NormCap
+
+
+
+Uninstall languages from NormCap
+----------------------------------
+
+1. Delete the corresponding .traineddata language file in the
+   directory of this text file
+2. Make sure that at least one language file remains!
+3. Restart NormCap
+
+
+
+Further information
+---------------------
+
+More information about the language data files can be found here:
+https://tesseract-ocr.github.io/tessdoc/Data-Files.html

@@ -2,6 +2,7 @@
 # Edit at https://www.gitignore.io/?templates=python
 
 # Own
+.temp
 .venv/
 linux/
 macOS/
@@ -16,6 +17,7 @@ coverage
 *.spec
 normcap/resources/icon
 normcap/resources/screencast
+normcap/src/normcap.dist-info
 .DS_Store
 *.traineddata
 

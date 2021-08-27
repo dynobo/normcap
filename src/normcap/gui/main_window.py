@@ -1,34 +1,32 @@
 """Normcap main window."""
 import os
+import sys
 import tempfile
 import time
 from typing import Dict, Tuple
 
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from normcap import clipboard
+from normcap import clipboard, system_info, utils
+from normcap.data import FILE_ISSUE_TEXT
 from normcap.enhance import enhance_image
 from normcap.gui.base_window import BaseWindow
 from normcap.gui.notifier import Notifier
-from normcap.gui.settings import init_settings, log_settings
+from normcap.gui.settings import init_settings
 from normcap.gui.settings_menu import SettingsMenu
 from normcap.gui.system_tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
 from normcap.logger import logger
 from normcap.magic import apply_magic
 from normcap.models import (
-    FILE_ISSUE_TEXT,
     Capture,
     CaptureMode,
     DesktopEnvironment,
     DisplayManager,
-    Platform,
     Rect,
-    SystemInfo,
 )
 from normcap.ocr import perform_ocr
 from normcap.screengrab import grab_screen
-from normcap.utils import set_cursor
 
 
 class Communicate(QtCore.QObject):
@@ -58,11 +56,14 @@ class MainWindow(BaseWindow):
     com = Communicate()
     capture = Capture()
 
-    def __init__(self, system_info: SystemInfo, args):
-        self.settings = init_settings(args)
-
+    def __init__(self, args):
+        self.settings = init_settings(
+            "normcap",
+            "settings",
+            initial=args,
+            reset=args.get("reset", False),
+        )
         super().__init__(
-            system_info=system_info,
             screen_idx=0,
             parent=None,
             color=str(self.settings.value("color")),
@@ -83,7 +84,7 @@ class MainWindow(BaseWindow):
         self._add_notifier()
 
         self.all_windows: Dict[int, BaseWindow] = {0: self}
-        if len(self.system_info.screens) > 1:
+        if len(system_info.screens()) > 1:
             self._init_child_windows()
 
     def _add_settings_menu(self):
@@ -93,7 +94,7 @@ class MainWindow(BaseWindow):
         self.settings_menu.com.on_quit_or_hide.connect(
             lambda: self.com.on_quit_or_hide.emit("clicked close in menu")
         )
-        self.settings_menu.move(self.width() - self.settings_menu.width() - 20, 20)
+        self.settings_menu.move(self.width() - self.settings_menu.width() - 26, 26)
         self.settings_menu.show()
 
     def _add_tray(self):
@@ -105,13 +106,13 @@ class MainWindow(BaseWindow):
 
     def _add_update_checker(self):
         if self.settings.value("update", type=bool):
-            checker = UpdateChecker(self, packaged=self.system_info.briefcase_package)
+            checker = UpdateChecker(self, packaged=system_info.is_briefcase_package())
             checker.com.on_version_retrieved.connect(checker.show_update_message)
             checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
             QtCore.QTimer.singleShot(500, checker.check)
 
     def _add_notifier(self):
-        self.notifier = Notifier(self, self.system_info.platform)
+        self.notifier = Notifier(self)
         self.com.on_send_notification.connect(self.notifier.send_notification)
         self.notifier.com.on_notification_sent.connect(
             lambda: self.com.on_quit_or_hide.emit("notification sent")
@@ -127,7 +128,9 @@ class MainWindow(BaseWindow):
         self.com.on_copied_to_clipboard.connect(self._notify_or_close)
 
         self.com.on_minimize_windows.connect(self._minimize_windows)
-        self.com.on_set_cursor_wait.connect(lambda: set_cursor(QtCore.Qt.WaitCursor))
+        self.com.on_set_cursor_wait.connect(
+            lambda: utils.set_cursor(QtCore.Qt.WaitCursor)
+        )
         self.com.on_quit_or_hide.connect(self._quit_or_minimize)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
 
@@ -137,27 +140,27 @@ class MainWindow(BaseWindow):
 
     def _init_child_windows(self):
         """Initialize child windows with method depending on system."""
-        if self.system_info.display_manager != DisplayManager.WAYLAND:
+        if system_info.display_manager() != DisplayManager.WAYLAND:
             self._create_all_child_windows()
-        elif self.system_info.desktop_environment == DesktopEnvironment.GNOME:
+        elif system_info.desktop_environment() == DesktopEnvironment.GNOME:
             self.com.on_window_positioned.connect(self._create_next_child_window)
         else:
             logger.error(
-                f"NormCap currently doesn't support multi monitor mode"
-                f"for {self.system_info.display_manager} "
-                f"on {self.system_info.desktop_environment}."
-                f"\n{FILE_ISSUE_TEXT}"
+                "NormCap currently doesn't support multi monitor mode for %s on %s\n%s",
+                system_info.display_manager(),
+                system_info.desktop_environment(),
+                FILE_ISSUE_TEXT,
             )
 
     def _create_next_child_window(self):
         """Opening child windows only for next display."""
-        if len(self.system_info.screens) > len(self.all_windows):
+        if len(system_info.screens()) > len(self.all_windows):
             index = max(self.all_windows.keys()) + 1
             self._create_child_window(index)
 
     def _create_all_child_windows(self):
         """Opening all child windows at once."""
-        for index in self.system_info.screens:
+        for index in system_info.screens():
             if index == self.screen_idx:
                 continue
             self._create_child_window(index)
@@ -165,7 +168,6 @@ class MainWindow(BaseWindow):
     def _create_child_window(self, index: int):
         """Open a child window for the specified screen."""
         self.all_windows[index] = BaseWindow(
-            system_info=self.system_info,
             screen_idx=index,
             parent=self,
             color=str(self.settings.value("color")),
@@ -174,17 +176,17 @@ class MainWindow(BaseWindow):
 
     def _minimize_windows(self):
         """Hide all windows of normcap."""
-        logger.debug("Hiding windows")
-        set_cursor(None)
+        logger.debug("Hide %s window(s)", len(self.all_windows))
+        utils.set_cursor(None)
         for window in self.all_windows.values():
             window.hide()
 
     def _show_windows(self):
         """Make hidden windows visible again."""
         for window in self.all_windows.values():
-            if self.system_info.platform == Platform.MACOS:
-                if window.macos_border_window:
-                    window.macos_border_window.show()
+            if sys.platform == "darwin":
+                if window.macos_border:
+                    window.macos_border.show()
                 window.show()
                 window.raise_()
                 window.activateWindow()
@@ -195,7 +197,6 @@ class MainWindow(BaseWindow):
         if self.settings.value("tray", type=bool):
             self._minimize_windows()
         else:
-            logger.debug("Hiding tray & processing events")
             self.main_window.tray.hide()
             QtWidgets.QApplication.processEvents()
             time.sleep(0.05)
@@ -203,8 +204,8 @@ class MainWindow(BaseWindow):
 
     @staticmethod
     def _quit(reason: str):
-        logger.debug(f"Saved debug images: {tempfile.gettempdir()}{os.sep}normcap")
-        logger.info(f"Exit normcap (reason: {reason})")
+        logger.debug("Path to debug images: %s%snormcap", tempfile.gettempdir(), os.sep)
+        logger.info("Exit normcap (reason: %s)", reason)
         QtWidgets.QApplication.quit()
 
     def _show_or_hide_tray_icon(self):
@@ -227,6 +228,7 @@ class MainWindow(BaseWindow):
 
     def _open_url_and_hide(self, url):
         """Open url in default browser, then hide to tray or exit."""
+        logger.debug("Open %s", url)
         QtGui.QDesktopServices.openUrl(url)
         self.com.on_quit_or_hide.emit("opened web browser")
 
@@ -256,7 +258,10 @@ class MainWindow(BaseWindow):
                 CaptureMode.PARSE if value == "parse" else CaptureMode.RAW
             )
 
-        log_settings(self.settings)
+        logger.debug(
+            "Settings:\n%s",
+            [(k, self.settings.value(k)) for k in self.settings.allKeys()],
+        )
 
     #####################
     # OCR Functionality #
@@ -264,43 +269,39 @@ class MainWindow(BaseWindow):
 
     def _grab_image(self, grab_info: Tuple[Rect, int]):
         """Get image from selected region."""
-        logger.info(f"Taking screenshot on {grab_info[0].points}")
+        logger.info("Take screenshot of position %s", grab_info[0].points)
         self.capture.rect = grab_info[0]
-        self.capture.screen = self.system_info.screens[grab_info[1]]
-        self.capture = grab_screen(
-            system_info=self.system_info,
-            capture=self.capture,
-        )
+        self.capture.screen = system_info.screens()[grab_info[1]]
+        self.capture = grab_screen(capture=self.capture)
         self.com.on_image_grabbed.emit()
 
     def _prepare_image(self):
         """Enhance image before performin OCR."""
         if self.capture.image_area > 25:
-            logger.debug("Preparing image for OCR")
+            logger.debug("Prepare image for OCR")
             self.capture = enhance_image(self.capture)
             self.com.on_image_prepared.emit()
         else:
-            logger.warning(f"Area of {self.capture.image_area} too small. Skip OCR")
+            logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
             self.com.on_quit_or_hide.emit("selection too small")
 
     def _capture_to_ocr(self):
         """Perform content recognition on grabed image."""
-        logger.debug("Performing OCR")
+        logger.debug("Perform OCR")
         self.capture = perform_ocr(
             languages=self.settings.value("language"),
             capture=self.capture,
-            system_info=self.system_info,
         )
-        logger.info(f"Raw text from OCR:\n{self.capture.text}")
-        logger.debug(f"Result from OCR:{self.capture}")
+        logger.info("Raw text from OCR:\n%s", self.capture.text)
+        logger.debug("Result from OCR:\n%s", self.capture)
         self.com.on_ocr_performed.emit()
 
     def _apply_magics(self):
         """Beautify/parse content base on magic rules."""
         if self.capture.mode is CaptureMode.PARSE:
-            logger.debug("Applying Magics")
+            logger.debug("Apply Magics")
             self.capture = apply_magic(self.capture)
-            logger.debug(f"Result from applying Magics:{self.capture}")
+            logger.debug("Result from applying Magics:\n%s", self.capture)
         if self.capture.mode is CaptureMode.RAW:
             logger.debug("Raw mode. Skip applying Magics and use raw text")
             self.capture.transformed = self.capture.text.strip()

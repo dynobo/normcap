@@ -7,6 +7,7 @@ import stat
 import subprocess
 import sys
 import urllib.request
+import zipfile
 from pathlib import Path
 from typing import List
 
@@ -127,6 +128,19 @@ def prepare_windows_installer():
     print("Installer prepared.")
 
 
+def download_openssl():
+    """Download openssl needed for QNetwork https connections."""
+    target_path = Path.cwd() / "src" / "normcap" / "resources" / "openssl"
+    target_path.mkdir()
+    zip_path = Path.cwd() / "openssl.zip"
+    urllib.request.urlretrieve(
+        "http://wiki.overbyte.eu/arch/openssl-1.1.1g-win64.zip", zip_path
+    )
+    with zipfile.ZipFile(zip_path, "r") as zip_ref:
+        zip_ref.extractall(target_path)
+    print("Openssl extracted")
+
+
 def download_tessdata():
     """Download trained data for tesseract.
 
@@ -137,11 +151,9 @@ def download_tessdata():
     target_path = Path.cwd() / "src" / "normcap" / "resources" / "tessdata"
     url_prefix = "https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.1.0"
     files = [
+        "ara.traineddata",
         "chi_sim.traineddata",
         "deu.traineddata",
-        "fra.traineddata",
-        "jpn.traineddata",
-        "jpn_vert.traineddata",
         "rus.traineddata",
         "spa.traineddata",
         "eng.traineddata",
@@ -158,30 +170,57 @@ def download_tessdata():
 def bundle_tesserocr_dylibs():
     """Include two dylibs needed by tesserocr into app package."""
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
-    libtess_path = "/usr/local/opt/tesseract/lib/libtesseract.4.dylib"
-    liblept_path = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
 
-    # Adjust dylib path in tesserocr module
-    cmd(
-        f"install_name_tool -change {libtess_path} "
-        + "@executable_path/../Resources/app_packages/libtesseract.4.dylib "
-        + f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
-    )
-    cmd(
-        f"install_name_tool -change {liblept_path} "
-        + "@executable_path/../Resources/app_packages/liblept.5.dylib "
-        + f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
-    )
+    # Copy libs to package dir
 
-    # copy dylibs to package folder and adjust permissions
-    target_path_tess = f"{app_pkg_path}/libtesseract.4.dylib"
-    target_path_lept = f"{app_pkg_path}/liblept.5.dylib"
+    libtess = "/usr/local/opt/tesseract/lib/libtesseract.4.dylib"
+    liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
+    libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"
+    libjpeg = "/usr/local/opt/jpeg/lib/libjpeg.9.dylib"
+    libgif = "/usr/local/opt/giflib/lib/libgif.dylib"
+    libtiff = "/usr/local/opt/libtiff/lib/libtiff.5.dylib"
+    libopenjpeg = "/usr/local/opt/openjpeg/lib/libopenjp2.7.dylib"
+    libwebp = "/usr/local/opt/webp/lib/libwebp.7.dylib"
+    libwebpmux = "/usr/local/opt/webp/lib/libwebpmux.3.dylib"
 
-    shutil.copy(libtess_path, target_path_tess)
-    shutil.copy(liblept_path, target_path_lept)
+    for lib_path in [
+        libtess,
+        liblept,
+        libpng,
+        libjpeg,
+        libgif,
+        libtiff,
+        libopenjpeg,
+        libwebp,
+        libwebpmux,
+    ]:
+        lib_filename = lib_path.rsplit("/", maxsplit=1)[-1]
+        new_lib_path = f"{app_pkg_path}/{lib_filename}"
+        shutil.copy(lib_path, new_lib_path)
+        os.chmod(new_lib_path, stat.S_IRWXU)
 
-    os.chmod(target_path_tess, stat.S_IRWXU)
-    os.chmod(target_path_lept, stat.S_IRWXU)
+    # Relink libs
+    tesserocr = f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
+    libwebp7 = "/usr/local/Cellar/webp/1.2.1/lib/libwebp.7.dylib"
+    changeset = [
+        (libtiff, [libjpeg]),
+        (libwebpmux, [libwebp7]),
+        (liblept, [libpng, libjpeg, libgif, libtiff, libopenjpeg, libwebp, libwebpmux]),
+        (libtess, [liblept]),
+        (tesserocr, [libtess, liblept]),
+    ]
+
+    for lib_path, link_paths in changeset:
+        lib_filename = lib_path.rsplit("/", maxsplit=1)[-1]
+        new_lib_path = f"{app_pkg_path}/{lib_filename}"
+
+        for link_path in link_paths:
+            link_filename = link_path.rsplit("/", maxsplit=1)[-1]
+            cmd(
+                f"install_name_tool -change {link_path} "
+                + f"@executable_path/../Resources/app_packages/{link_filename} "
+                + f"{new_lib_path}"
+            )
 
 
 def patch_file(file_path: Path, insert_above: str, lines: List[str]):
@@ -258,6 +297,7 @@ if __name__ == "__main__":
     if platform_str.lower().startswith("win"):
         app_dir = Path.cwd() / "windows" / "msi" / "NormCap" / "src" / "app_packages"
         download_tessdata()
+        download_openssl()
         cmd("briefcase create")
         rm_recursive(directory=app_dir, exclude=EXCLUDE_FROM_APP_PACKAGES)
         rm_recursive(directory=app_dir / "PySide2", exclude=EXCLUDE_FROM_PYSIDE2)

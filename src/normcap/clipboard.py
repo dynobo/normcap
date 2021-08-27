@@ -1,5 +1,5 @@
 """Helper for clipboard manipulation"""
-from normcap.logger import format_section, logger
+from normcap.logger import logger
 
 
 def init():
@@ -9,12 +9,10 @@ def init():
     """
     from PySide2 import QtWidgets  # pylint: disable=import-outside-toplevel
 
-    app = QtWidgets.QApplication.instance()
-    if app is None:
-        app = QtWidgets.QApplication()
+    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
 
     def copy_qt(text):
-        logger.debug(f"Copying to clipboard:{format_section(text, title='Clipboard')}")
+        logger.debug("Copy to clipboard:\n%s", text)
         cb = app.clipboard()
         cb.setText(text)
 

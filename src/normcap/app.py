@@ -2,16 +2,24 @@
 OCR-powered screen-capture tool to capture information instead of images.
 """
 import locale
+import os
+import signal
+import sys
+
+import importlib_resources
 
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
-import signal
-import sys
+# Add shipped openssl to path
+if sys.platform == "win32":
+    with importlib_resources.path("normcap.resources", "openssl") as p:
+        openssl_path = str(p.absolute())
+    os.environ["PATH"] += os.pathsep + openssl_path
 
-from PySide2 import QtCore, QtWidgets
+from PySide2 import QtCore, QtNetwork, QtWidgets
 
-from normcap import __version__, utils
+from normcap import __version__, system_info, utils
 from normcap.args import create_argparser
 from normcap.gui.main_window import MainWindow
 from normcap.logger import logger
@@ -20,41 +28,43 @@ from normcap.logger import logger
 def main():
     """Main entry point."""
 
-    # Allow to close QT app with CTRL+C in terminal
+    sys.excepthook = utils.except_hook
+    # Allow to close QT app with CTRL+C in terminal:
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    # Global except hook
-    sys.excepthook = utils.except_hook
-
     args = vars(create_argparser().parse_args())
-    if args["verbose"]:
+    if args.get("verbose", False):
         logger.setLevel("INFO")
-    if args["very_verbose"]:
+    if args.get("very_verbose", False):
         logger.setLevel("DEBUG")
-    if args["language"]:
-        args["language"] = tuple(args["language"].split("+"))
 
-    logger.info(f"Starting Normcap v{__version__}")
-    logger.debug(f"CLI command: {' '.join(sys.argv)}")
+    logger.info("Start NormCap v%s", __version__)
+    logger.debug("CLI command: %s", " ".join(sys.argv))
+    logger.debug("QT LibraryPaths: %s", QtCore.QCoreApplication.libraryPaths())
 
-    lib_paths = QtCore.QCoreApplication.libraryPaths()
-    logger.debug(f"QT LibraryPaths: {lib_paths}")
+    try:
+        print(
+            "QSslSocket: ",
+            QtNetwork.QSslSocket.sslLibraryBuildVersionString(),
+            QtNetwork.QSslSocket.supportsSsl(),
+        )
+    except Exception as e:  # pylint: disable=broad-except
+        print(e)
 
-    # Start Qt Application
-    with utils.temporary_environ(XCURSOR_SIZE=24):
-        # Wrap qt log messages
-        QtCore.qInstallMessageHandler(utils.qt_message_handler)
+    # Wrap qt log messages with own logger
+    QtCore.qInstallMessageHandler(utils.qt_message_handler)
 
-        # Init App
-        QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-        app = QtWidgets.QApplication(sys.argv)
-        app.setQuitOnLastWindowClosed(False)
+    utils.init_tessdata()
 
-        # Screen info needs to be gathered _after_ app is instanciated
-        system_info = utils.get_system_info()
-        logger.debug(f"Detected system info:{system_info}")
+    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
-        window = MainWindow(system_info, args)
-        window.show()
+    app = QtWidgets.QApplication(sys.argv)
+    app.setQuitOnLastWindowClosed(False)
 
-        sys.exit(app.exec_())
+    logger.debug("System info:\n%s", system_info.to_string())
+
+    window = MainWindow(args)
+    window.show()
+
+    sys.exit(app.exec_())

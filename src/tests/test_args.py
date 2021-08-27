@@ -46,7 +46,7 @@ def test_argparser_help_complete():
 
 def test_argparser_attributes_in_settings(argparser_defaults):
     """Check if every setting has an cli args an vice versa."""
-    settings = init_settings({})
+    settings = init_settings("normcap", "settings", initial={}, reset=False)
 
     for arg in argparser_defaults:
         if arg in ["verbose", "very_verbose", "reset"]:

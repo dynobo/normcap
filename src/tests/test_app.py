@@ -9,15 +9,9 @@ import normcap
 def test_version():
     """Check version string consistency"""
 
-    with open("pyproject.toml") as toml_file:
+    with open("pyproject.toml", encoding="utf8") as toml_file:
         pyproject_toml = toml.load(toml_file)
 
     briefcase_version = pyproject_toml["tool"]["briefcase"]["version"]
     poetry_version = pyproject_toml["tool"]["poetry"]["version"]
-    assert briefcase_version == poetry_version
-
-
-def test_package_provides_version():
-    """During test time, this is always 0.0.1."""
-
-    assert normcap.__version__ == "0.0.1"
+    assert briefcase_version == poetry_version == normcap.__version__

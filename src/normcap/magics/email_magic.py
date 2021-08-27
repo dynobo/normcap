@@ -31,8 +31,9 @@ class EmailMagic(BaseMagic):
         self._emails = re.findall(reg_email, text)
 
         logger.info(
-            f"{len(self._emails)} emails found"
-            f"{': ' + ' '.join(self._emails) if self._emails else ''}"
+            "%s emails found %s",
+            len(self._emails),
+            [": " + " ".join(self._emails) if self._emails else ""],
         )
 
         # Calc chars & ratio
@@ -40,7 +41,7 @@ class EmailMagic(BaseMagic):
         all_chars = max([len(text), 1])
         ratio = email_chars / (all_chars * 0.85)
 
-        logger.debug(f"{email_chars}/{all_chars} chars in emails. Ratio: {ratio})")
+        logger.debug("%s/%s chars in emails. Ratio: %s)", email_chars, all_chars, ratio)
 
         # Return final score as 100 * (email_chars / all_chars)
         return round(100 * ratio, 2)
@@ -55,6 +56,6 @@ class EmailMagic(BaseMagic):
         Returns:
             str -- comma separated email adresses
         """
-        logger.info("Transforming with Email magic")
+        logger.info("Transform with Email magic")
         concat_emails = ", ".join(self._emails)
         return concat_emails

@@ -70,7 +70,7 @@ class ApplyMagic:
         for name, magic in self._magics.items():
             scores[name] = magic.score(capture)
 
-        logger.debug(f"All scores: {scores}")
+        logger.debug("All scores: %s", scores)
         return scores
 
     @staticmethod
@@ -87,7 +87,7 @@ class ApplyMagic:
 
         best_magic = sorted_scores[0][0]
         best_score = sorted_scores[0][1]
-        logger.info(f"Highest scored magic: {best_magic} ({best_score})")
+        logger.info("Highest scored magic: %s (%s)", best_magic, best_score)
 
         return best_magic
 
