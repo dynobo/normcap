@@ -7,6 +7,7 @@ import stat
 import subprocess
 import sys
 import urllib.request
+import zipfile
 from pathlib import Path
 from typing import List
 
@@ -125,6 +126,19 @@ def prepare_windows_installer():
     else:
         raise ValueError("Couldn't patch wxs file!")
     print("Installer prepared.")
+
+
+def download_openssl():
+    """Download openssl needed for QNetwork https connections."""
+    target_path = Path.cwd() / "src" / "normcap" / "resources" / "openssl"
+    target_path.mkdir()
+    zip_path = Path.cwd() / "openssl.zip"
+    urllib.request.urlretrieve(
+        "http://wiki.overbyte.eu/arch/openssl-1.1.1g-win64.zip", zip_path
+    )
+    with zipfile.ZipFile(zip_path, "r") as zip_ref:
+        zip_ref.extractall(target_path)
+    print("Openssl extracted")
 
 
 def download_tessdata():
@@ -283,6 +297,7 @@ if __name__ == "__main__":
     if platform_str.lower().startswith("win"):
         app_dir = Path.cwd() / "windows" / "msi" / "NormCap" / "src" / "app_packages"
         download_tessdata()
+        download_openssl()
         cmd("briefcase create")
         rm_recursive(directory=app_dir, exclude=EXCLUDE_FROM_APP_PACKAGES)
         rm_recursive(directory=app_dir / "PySide2", exclude=EXCLUDE_FROM_PYSIDE2)

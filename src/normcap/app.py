@@ -2,14 +2,22 @@
 OCR-powered screen-capture tool to capture information instead of images.
 """
 import locale
+import os
+import signal
+import sys
+
+import importlib_resources
 
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
-import signal
-import sys
+# Add shipped openssl to path
+if sys.platform == "win32":
+    with importlib_resources.path("normcap.resources", "openssl") as p:
+        openssl_path = str(p.absolute())
+    os.environ["PATH"] += os.pathsep + openssl_path
 
-from PySide2 import QtCore, QtWidgets
+from PySide2 import QtCore, QtNetwork, QtWidgets
 
 from normcap import __version__, system_info, utils
 from normcap.args import create_argparser
@@ -33,6 +41,15 @@ def main():
     logger.info("Start NormCap v%s", __version__)
     logger.debug("CLI command: %s", " ".join(sys.argv))
     logger.debug("QT LibraryPaths: %s", QtCore.QCoreApplication.libraryPaths())
+
+    try:
+        print(
+            "QSslSocket: ",
+            QtNetwork.QSslSocket.sslLibraryBuildVersionString(),
+            QtNetwork.QSslSocket.supportsSsl(),
+        )
+    except Exception as e:  # pylint: disable=broad-except
+        print(e)
 
     # Wrap qt log messages with own logger
     QtCore.qInstallMessageHandler(utils.qt_message_handler)

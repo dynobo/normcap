@@ -185,8 +185,8 @@ class MainWindow(BaseWindow):
         """Make hidden windows visible again."""
         for window in self.all_windows.values():
             if sys.platform == "darwin":
-                if window.macos_border_window:
-                    window.macos_border_window.show()
+                if window.macos_border:
+                    window.macos_border.show()
                 window.show()
                 window.raise_()
                 window.activateWindow()
@@ -228,6 +228,7 @@ class MainWindow(BaseWindow):
 
     def _open_url_and_hide(self, url):
         """Open url in default browser, then hide to tray or exit."""
+        logger.debug("Open %s", url)
         QtGui.QDesktopServices.openUrl(url)
         self.com.on_quit_or_hide.emit("opened web browser")
 

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Dict
 
 import importlib_metadata
+import PySide2
 import tesserocr  # type: ignore
 from PySide2 import QtGui, QtWidgets
 
@@ -163,15 +164,17 @@ def to_string() -> str:
     """Cast all system infos to string for logging."""
     return pprint.pformat(
         dict(
+            is_briefcase_package=is_briefcase_package(),
             platform=sys.platform,
+            pyside2_version=PySide2.__version__,
+            qt_version=PySide2.QtCore.__version__,
             config_directory=config_directory(),
-            display_manager=display_manager(),
-            desktop_environment=desktop_environment(),
+            normcap_version=__version__,
             tesseract_version=tesseract().version,
             tesseract_languages=tesseract().languages,
             tessdata_path=tesseract().path,
-            normcap_version=__version__,
-            is_briefcase_package=is_briefcase_package(),
+            desktop_environment=desktop_environment(),
+            display_manager=display_manager(),
             screens=screens(),
         ),
         indent=3,

@@ -204,7 +204,7 @@ class BaseWindow(QtWidgets.QMainWindow):
     # Adjust UI
     ##################
 
-    def _create_macos_border_window(self):
+    def _create_macos_border(self):
         """Create 'fake' window to draw red border around whole screen on MacOS.
 
         The only way I found to draw a window on top of Mac's menu bar and dock is the
@@ -273,7 +273,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.show()
 
     def _set_fullscreen_macos(self):
-        self._create_macos_border_window()
+        self._create_macos_border()
 
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint

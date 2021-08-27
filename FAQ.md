@@ -3,9 +3,10 @@
 - [General](#general)
   - [How can I add additional languages to NormCap?](#how-can-i-add-additional-languages-to-normcap)
   - [How can I improve the detection accuracy?](#how-can-i-improve-the-detection-accuracy)
-  - [Is my image analyzed in "the cloud"?](#is-my-image-analyzed-in-the-cloud)
+  - [Is my image/text analyzed in "the cloud"?](#is-my-imagetext-analyzed-in-the-cloud)
   - [What is the difference between the pre-build package and the Python package?](#what-is-the-difference-between-the-pre-build-package-and-the-python-package)
   - [Can I start NormCap via a keyboard shortcut?](#can-i-start-normcap-via-a-keyboard-shortcut)
+  - [\[Windows\] How can I start NormCap with a command line argument?](#windows-how-can-i-start-normcap-with-a-command-line-argument)
   - [\[MacOS\] How can I start NormCap with a command line argument?](#macos-how-can-i-start-normcap-with-a-command-line-argument)
   - [\[MacOs\] How can I create a launcher to start NormCap with command line arguments?](#macos-how-can-i-create-a-launcher-to-start-normcap-with-command-line-arguments)
 - [Troubleshooting](#troubleshooting)
@@ -21,8 +22,10 @@
 ### How can I add additional languages to NormCap?
 
 The **prebuild packages** are shipped with the following languages English, Chinese,
-French, German, Japanese, Spanish and Russian. If you miss a language, please
-[open an issue](https://github.com/dynobo/normcap/issues).
+French, German, Japanese, Spanish and Russian. If you miss a language, click the
+settings icon and "open data folder..." (in the "Languages" section), then follow the
+instructions in
+`[add_more_languages.txt](https://github.com/dynobo/normcap/blob/main/src/normcap/resources/tessdata/add_more_languages.txt)`.
 
 If you installed NormCap as **Python package**, refer to the online documentation on how
 to install additional language for Tesseract on your system.
@@ -39,7 +42,7 @@ a single word. In this case try selecting a larger portion of text.
 If the results are still bad, please submit a screenshot of the text your are trying to
 recognize [as an issue](https://github.com/dynobo/normcap/issues).
 
-### Is my image analyzed in "the cloud"?
+### Is my image/text analyzed in "the cloud"?
 
 No. The text recognition is performed offline using the OCR framework
 [tesseract](https://github.com/tesseract-ocr/tesseract) and also no other data is send
@@ -57,7 +60,6 @@ Python package:
 
 - Slightly faster startup
 - Might need less disk space (depending on your setup)
-- Easier to extend with different languages
 
 ### Can I start NormCap via a keyboard shortcut?
 
@@ -73,13 +75,19 @@ Yes, but you'll have to configure it on your own using your operating system's t
 - Windows 10:
   [Open programs with keyboard shortcuts in Windows 10](https://www.cnet.com/tech/computing/open-programs-with-keyboard-shortcuts-in-windows-10/)
 
-(Your preferred search engine will very likely reveal even more options.)
+Ask your preferred search engine for support or different ways to do this..
+
+### \[Windows\] How can I start NormCap with a command line argument?
+
+To run NormCap with an argument _once_, run it in the "Terminal":
+
+```cmd
+C:\Users\<USER-NAME>\AppData\Local\Programs\NormCap\python\python.exe -m normcap --help
+```
 
 ### \[MacOS\] How can I start NormCap with a command line argument?
 
-To run NormCap with an argument _once_, use `open` in the "Terminal" (in
-Applications/Utilities) and append NormCap's own options after the `--args` argument.
-For example:
+To run NormCap with an argument _once_, run it in the "Terminal":
 
 ```sh
 /Applications/NormCap.app/Contents/MacOS/NormCap --help

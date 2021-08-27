@@ -68,6 +68,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         self.setIcon(get_icon("settings.svg"))
         self.setIconSize(QtCore.QSize(26, 26))
         self.setPopupMode(QtWidgets.QToolButton.InstantPopup)
+        self.setAutoRaise(True)
 
         self.message_box = QtWidgets.QMessageBox()
         # Necessary on wayland for main window to regain focus:
@@ -132,7 +133,7 @@ class SettingsMenu(QtWidgets.QToolButton):
             setting = "language"
             languages = tuple(a.objectName() for a in group.actions() if a.isChecked())
             if len(languages) < 1:
-                value = tuple(action_name)
+                languages = tuple(action_name)
                 action.setChecked(True)
             value = languages
 
@@ -200,7 +201,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         if system_info.is_briefcase_package():
             action = QtWidgets.QAction("... open data folder", menu)
             traineddata_path = system_info.config_directory() / "tessdata"
-            action.setObjectName(f"file://{traineddata_path.absolute()}")
+            action.setObjectName(f"file:///{traineddata_path.absolute()}")
         else:
             action = QtWidgets.QAction("... need more?", menu)
             action.setObjectName("message_languages")
