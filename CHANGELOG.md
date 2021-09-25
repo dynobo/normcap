@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.7 (2021-09-25)
+
+- Fixed NormCap error in case of disabled notifications
+  [#142](https://github.com/dynobo/normcap/issues/142)
+
 ## v0.2.6 (2021-08-27)
 
 **Breaking changes:**
