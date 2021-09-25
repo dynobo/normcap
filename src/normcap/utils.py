@@ -35,8 +35,7 @@ def save_image_in_tempfolder(
 def get_screen_idx_of_mouse() -> QtCore.QRect:
     """Detect screen index of display with mouse pointer."""
     desktop = QtWidgets.QApplication.desktop()
-    mouse_screen = desktop.screenNumber(QtGui.QCursor.pos())
-    return mouse_screen
+    return desktop.screenNumber(QtGui.QCursor.pos())
 
 
 def qt_message_handler(mode, _, message):
@@ -105,6 +104,7 @@ def except_hook(cls, exception, traceback):
     logger.error(
         "Uncaught exception! Quitting NormCap!", exc_info=(cls, exception, traceback)
     )
+    logger.error("Please open an issue with the output above on %s", URLS.issues)
     sys.exit(1)
 
 
@@ -138,8 +138,6 @@ def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None):
 
 def init_tessdata():
     """If packaged, copy language data files to config directory."""
-    # if not system_info.is_briefcase_package():
-    #    return
 
     tessdata_path = system_info.config_directory() / "tessdata"
     if len(list(tessdata_path.glob("*.traineddata"))) > 0:

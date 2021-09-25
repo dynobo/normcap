@@ -181,7 +181,7 @@ class Capture:
     @property
     def text(self) -> str:
         """OCR text as single line string."""
-        return " ".join([w["text"].strip() for w in self.words]).strip()
+        return " ".join(w["text"].strip() for w in self.words).strip()
 
     @property
     def lines(self) -> str:

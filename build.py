@@ -102,7 +102,7 @@ def prepare_windows_installer():
         shutil.copy(original, target)
 
     with open(
-        Path.cwd() / "windows" / "msi" / "NormCap" / "normcap.wxs", "r"
+        Path.cwd() / "windows" / "msi" / "NormCap" / "normcap.wxs", "r", encoding="utf8"
     ) as wxs_file:
         content = wxs_file.readlines()
 
@@ -120,7 +120,9 @@ def prepare_windows_installer():
             insert_idx, f'        <WixVariable Id="WixUIDialogBmp" Value="{left}" />\n'
         )
         with open(
-            Path.cwd() / "windows" / "msi" / "NormCap" / "normcap.wxs", "w"
+            Path.cwd() / "windows" / "msi" / "NormCap" / "normcap.wxs",
+            "w",
+            encoding="utf8",
         ) as wxs_file:
             wxs_file.writelines(content)
     else:
@@ -226,7 +228,7 @@ def bundle_tesserocr_dylibs():
 def patch_file(file_path: Path, insert_above: str, lines: List[str]):
     """Insert lines above given string of a file."""
 
-    with open(file_path, "r") as f:
+    with open(file_path, "r", encoding="utf8") as f:
         file_content = f.readlines()
 
     lines = (
@@ -251,7 +253,7 @@ def patch_file(file_path: Path, insert_above: str, lines: List[str]):
     for row in reversed(lines):
         file_content.insert(found_idx, f"{pad}{row}\n")
 
-    with open(file_path, "w") as f:
+    with open(file_path, "w", encoding="utf8") as f:
         print(f"Patching {file_path.absolute()}...")
         f.writelines(file_content)
 

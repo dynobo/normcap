@@ -37,7 +37,7 @@ class EmailMagic(BaseMagic):
         )
 
         # Calc chars & ratio
-        email_chars = sum([len(e) for e in self._emails])
+        email_chars = sum(len(e) for e in self._emails)
         all_chars = max([len(text), 1])
         ratio = email_chars / (all_chars * 0.85)
 
@@ -57,5 +57,4 @@ class EmailMagic(BaseMagic):
             str -- comma separated email adresses
         """
         logger.info("Transform with Email magic")
-        concat_emails = ", ".join(self._emails)
-        return concat_emails
+        return ", ".join(self._emails)

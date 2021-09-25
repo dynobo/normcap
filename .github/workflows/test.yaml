@@ -60,7 +60,7 @@ jobs:
       - name: Mypy
         run: poetry run mypy .
       - name: Black
-        run: poetry run black --check .
+        run: poetry run black --check --diff .
       - name: Isort
         run: poetry run isort --check .
       - name: Pytest on Linux

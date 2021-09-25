@@ -56,7 +56,7 @@ class UrlMagic(BaseMagic):
         )
 
         # Calc chars & ratio
-        url_chars = sum([len(e) for e in self._urls])
+        url_chars = sum(len(e) for e in self._urls)
         overall_chars = max([len(text), 1])
         ratio = url_chars / overall_chars
         logger.debug(

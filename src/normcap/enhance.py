@@ -58,19 +58,19 @@ class EnhanceImage:
         edge_colors = []
 
         # Top edge
-        for x in range(0, img.width()):
+        for x in range(img.width()):
             edge_colors.append(img.pixelColor(x, 0).name())
 
         # Bottom edge
-        for x in range(0, img.width()):
+        for x in range(img.width()):
             edge_colors.append(img.pixelColor(x, img.height() - 1).name())
 
         # Left edge
-        for y in range(0, img.height()):
+        for y in range(img.height()):
             edge_colors.append(img.pixelColor(0, y).name())
 
         # Right edge
-        for y in range(0, img.height()):
+        for y in range(img.height()):
             edge_colors.append(img.pixelColor(img.width() - 1, y).name())
 
         color_count = Counter(edge_colors)
