@@ -220,7 +220,7 @@ class MainWindow(BaseWindow):
         if self.settings.value("notification", type=bool):
             self.com.on_send_notification.emit(self.capture)
         else:
-            self.com.on_quit_or_hide("detection completed")
+            self.com.on_quit_or_hide.emit("detection completed")
 
     #########################
     # Helper                #
