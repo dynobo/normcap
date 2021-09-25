@@ -66,10 +66,7 @@ class ApplyMagic:
         Returns:
             dict -- Scores in format {<magic Name>: <score>}
         """
-        scores = {}
-        for name, magic in self._magics.items():
-            scores[name] = magic.score(capture)
-
+        scores = {name: magic.score(capture) for name, magic in self._magics.items()}
         logger.debug("All scores: %s", scores)
         return scores
 
