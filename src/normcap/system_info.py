@@ -106,7 +106,7 @@ def tesseract() -> TesseractInfo:
             + FILE_ISSUE_TEXT
         ) from e
 
-    if len(languages) < 1:
+    if not languages:
         raise ValueError(
             "Could not load any languages for tesseract. "
             + "On Windows, make sure that TESSDATA_PREFIX environment variable is set. "

@@ -11,7 +11,7 @@ DEFAULT_SETTINGS = (
     Setting(
         key="language",
         flag="l",
-        type_=lambda s: tuple(s.split("+")),
+        type_=lambda s: list(s.split("+")),
         value=("eng",),
         help="set language(s) for text recognition, e.g. 'eng' or 'eng+deu'",
     ),
