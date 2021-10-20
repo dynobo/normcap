@@ -131,9 +131,9 @@ class SettingsMenu(QtWidgets.QToolButton):
             value = action_name
         elif group_name == "language_group":
             setting = "language"
-            languages = tuple(a.objectName() for a in group.actions() if a.isChecked())
+            languages = [a.objectName() for a in group.actions() if a.isChecked()]
             if not languages:
-                languages = tuple(action_name)
+                languages = list(action_name)
                 action.setChecked(True)
             value = languages
 
