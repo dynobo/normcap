@@ -7,6 +7,7 @@ import stat
 import subprocess
 import sys
 import urllib.request
+import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 from typing import List
@@ -87,53 +88,62 @@ def cmd(cmd_str: str):
         )
 
 
-def prepare_windows_installer():
+def patch_windows_installer():
     """Customize wix-installer.
 
     Currently only branding is added.
     """
     print("Preparing installer...")
+
+    wxs_file = Path.cwd() / "windows" / "msi" / "NormCap" / "normcap.wxs"
+
+    # Cache header for inserting later
+    with open(wxs_file, encoding="utf-8") as f:
+        header_lines = f.readlines()[:3]
+
+    ns = "{http://schemas.microsoft.com/wix/2006/wi}"
+    ET.register_namespace("", ns[1:-1])
+
+    tree = ET.parse(wxs_file)
+    root = tree.getroot()
+    product = root.find(f"{ns}Product")
+
+    # Copy installer images
     left = "normcap_install_bg.bmp"
     top = "normcap_install_top.bmp"
-
     for image in [left, top]:
         original = Path.cwd() / "src" / "normcap" / "resources" / image
         target = Path.cwd() / "windows" / "msi" / "NormCap" / image
         shutil.copy(original, target)
 
-    with open(
-        Path.cwd() / "windows" / "msi" / "NormCap" / "normcap.wxs", "r", encoding="utf8"
-    ) as wxs_file:
-        content = wxs_file.readlines()
+    # Set installer images
+    ET.SubElement(product, "WixVariable", {"Id": "WixUIDialogBmp", "Value": f"{left}"})
+    ET.SubElement(product, "WixVariable", {"Id": "WixUIBannerBmp", "Value": f"{top}"})
 
-    insert_idx = None
-    for idx, line in enumerate(content):
-        if "normcap.ico" in line:
-            insert_idx = idx + 1
-            break
+    # Allow upgrades
+    major_upgrade = ET.SubElement(product, "MajorUpgrade")
+    major_upgrade.set("DowngradeErrorMessage", "Can't downgrade. Uninstall first.")
 
-    if insert_idx is not None:
-        content.insert(
-            insert_idx, f'        <WixVariable Id="WixUIBannerBmp" Value="{top}" />\n'
-        )
-        content.insert(
-            insert_idx, f'        <WixVariable Id="WixUIDialogBmp" Value="{left}" />\n'
-        )
-        with open(
-            Path.cwd() / "windows" / "msi" / "NormCap" / "normcap.wxs",
-            "w",
-            encoding="utf8",
-        ) as wxs_file:
-            wxs_file.writelines(content)
-    else:
-        raise ValueError("Couldn't patch wxs file!")
+    sequence = product.find(f"{ns}InstallExecuteSequence")
+    product.remove(sequence)
+
+    upgrade = product.find(f"{ns}Upgrade")
+    product.remove(upgrade)
+
+    # Write & fix header
+    tree.write(wxs_file, encoding="utf-8", xml_declaration=False)
+    with open(wxs_file, "r+", encoding="utf-8") as f:
+        lines = f.readlines()
+        f.seek(0)
+        f.writelines(header_lines + lines)
+
     print("Installer prepared.")
 
 
 def download_openssl():
     """Download openssl needed for QNetwork https connections."""
     target_path = Path.cwd() / "src" / "normcap" / "resources" / "openssl"
-    target_path.mkdir()
+    target_path.mkdir(exist_ok=True)
     zip_path = Path.cwd() / "openssl.zip"
     urllib.request.urlretrieve(
         "http://wiki.overbyte.eu/arch/openssl-1.1.1g-win64.zip", zip_path
@@ -265,7 +275,7 @@ def rm_recursive(directory, exclude):
         if any(e in path_str for e in exclude):
             if not path.exists():
                 continue
-            print(f"Removing: {str(path.absolute())}")
+            print(f"Removing: {path.absolute()}")
             if path.is_dir():
                 shutil.rmtree(path)
             if path.is_file():
@@ -304,7 +314,7 @@ if __name__ == "__main__":
         rm_recursive(directory=app_dir, exclude=EXCLUDE_FROM_APP_PACKAGES)
         rm_recursive(directory=app_dir / "PySide2", exclude=EXCLUDE_FROM_PYSIDE2)
         cmd("briefcase build")
-        prepare_windows_installer()
+        patch_windows_installer()
         cmd("briefcase package")
         cmd("mv windows/*.msi windows/NormCap-Windows.msi")
 
