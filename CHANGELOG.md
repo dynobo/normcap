@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.8 (2021-10-20)
+
+- Linux: Fix language option in settings.conf not human readable
+  [#143](https://github.com/dynobo/normcap/issues/143)
+- Pre-build packages: On Windows the msi-installer will now upgrade existing versions
+  [#148](https://github.com/dynobo/normcap/issues/148)
+
 ## v0.2.7 (2021-09-25)
 
 - Fixed NormCap error in case of disabled notifications
