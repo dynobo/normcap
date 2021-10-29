@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>eu.dynobo.normcap</id>
+
+  <name>NormCap</name>
+  <summary>OCR powered screen-capture tool to capture information instead of images.</summary>
+
+  <metadata_license>MIT</metadata_license>
+  <project_license>AGPL-3.0-or-later</project_license>
+
+  <description>
+    <p>
+      <em>
+      </em>Features:<em>
+    </em>
+  </p>
+  <p>
+    - On-screen recognition of selected text in many languages<br>
+    - Multi monitor support, incl. HDPI displays<br>
+    - Support for Wayland and X11<br>
+    - Parsing the text (optional, on by default)<br>
+    - Stay in system tray (optional)
+  </p>
+  <p>
+    <em>
+    </em>Basic usage:<em>
+  </em>
+</p>
+<p>
+  - Start NormCap<br>
+  - Select a region on screen with your mouse to perform text recognition<br>
+  - The text will be copied to the clipboard. Paste it anywhere with e.g. <code>ctrl + v</code><br>
+  - Press <code>&lt;esc&gt;</code> key to abort a capture and quit the application.
+</p>
+</description>
+
+<launchable type="desktop-id">eu.dynobo.normcap.desktop</launchable>
+<screenshots>
+  <screenshot type="default">
+    <image>https://github.com/dynobo/normcap/raw/main/assets/screenshot.png</image>
+  </screenshot>
+</screenshots>
+</component>

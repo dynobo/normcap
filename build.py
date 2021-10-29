@@ -301,6 +301,21 @@ def patch_briefcase_appimage():
     patch_file(file_path=file_path, insert_above=insert_above, lines=lines_to_insert)
 
 
+def add_metainfo_to_appimage():
+    """Copy metainfo file with info for appimage hub."""
+    metainfo = Path.cwd() / "src" / "normcap" / "resources" / "metainfo"
+    target_path = (
+        Path.cwd()
+        / "linux"
+        / "appimage"
+        / "NormCap"
+        / "NormCap.AppDir"
+        / "usr"
+        / "share"
+    )
+    shutil.copy(metainfo, target_path / "metainfo")
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "download-tessdata":
         download_tessdata()
