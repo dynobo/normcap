@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import List
 
 import briefcase  # type: ignore
+import toml
 
 platform_str = sys.platform.lower()
 
@@ -72,6 +73,12 @@ EXCLUDE_FROM_APP_PACKAGES = [
     "/tests/",
     "docs",
 ]
+
+
+def get_version() -> str:
+    with open("pyproject.toml", encoding="utf8") as toml_file:
+        pyproject_toml = toml.load(toml_file)
+    return pyproject_toml["tool"]["poetry"]["version"]
 
 
 def cmd(cmd_str: str):
@@ -331,7 +338,7 @@ if __name__ == "__main__":
         cmd("briefcase build")
         patch_windows_installer()
         cmd("briefcase package")
-        cmd("mv windows/*.msi windows/NormCap-Windows.msi")
+        cmd(f"mv windows/*.msi windows/NormCap-{get_version()}-Windows.msi")
 
     elif platform_str.lower().startswith("darwin"):
         app_dir = (
@@ -352,7 +359,7 @@ if __name__ == "__main__":
         rm_recursive(directory=app_dir / "PySide2", exclude=EXCLUDE_FROM_PYSIDE2)
         cmd("briefcase build")
         cmd("briefcase package macos app --no-sign")
-        cmd("mv macOS/*.dmg macOS/NormCap-MacOS.dmg")
+        cmd(f"mv macOS/*.dmg macOS/NormCap-{get_version()}-MacOS.dmg")
 
     elif platform_str.lower().startswith("linux"):
         print(f"Current User ID: {os.getuid()}")  # type: ignore
@@ -370,7 +377,7 @@ if __name__ == "__main__":
         cmd("briefcase create")
         cmd("briefcase build")
         cmd("briefcase package")
-        cmd("mv linux/*.AppImage linux/NormCap-Linux.AppImage")
+        cmd(f"mv linux/*.AppImage linux/NormCap-{get_version()}-x86_64.AppImage")
 
     else:
         raise ValueError("Unknown Operating System.")
