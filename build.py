@@ -76,6 +76,7 @@ EXCLUDE_FROM_APP_PACKAGES = [
 
 
 def get_version() -> str:
+    """Get versions string from pyproject.toml."""
     with open("pyproject.toml", encoding="utf8") as toml_file:
         pyproject_toml = toml.load(toml_file)
     return pyproject_toml["tool"]["poetry"]["version"]
@@ -377,7 +378,7 @@ if __name__ == "__main__":
         cmd("briefcase create")
         cmd("briefcase build")
         cmd("briefcase package")
-        cmd(f"mv linux/*.AppImage linux/NormCap-{get_version()}-x86_64.AppImage")
+        cmd(f"mv -f linux/*.AppImage linux/NormCap-{get_version()}-x86_64.AppImage")
 
     else:
         raise ValueError("Unknown Operating System.")
