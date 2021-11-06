@@ -47,7 +47,7 @@ class UpdateChecker(QtCore.QObject):
 
         try:
             if self.packaged:
-                match = re.search(r'title="v(\d+\.\d+\.\d+.*)"|$', text)
+                match = re.search(r"download/v(\d+\.\d+\.\d+.*)/|$", text)
                 if match and match.group(1):
                     newest_version = match.group(1)
             else:
