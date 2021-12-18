@@ -29,7 +29,7 @@ from normcap.models import (
 @functools.lru_cache
 def gnome_shell_version() -> str:
     """Get gnome-shell version (Linux, Gnome)."""
-    if sys.platform != "linux" and desktop_environment() != DesktopEnvironment.GNOME:
+    if sys.platform != "linux" or desktop_environment() != DesktopEnvironment.GNOME:
         return ""
 
     version = ""
