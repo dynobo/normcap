@@ -89,7 +89,7 @@ class PerformOcr:
         )
 
         capture.words = words
-        capture.psm_opt = self.tess_args["psm"]
+        capture.tess_args = self.tess_args
 
         return capture
 
@@ -121,7 +121,8 @@ class PerformOcr:
                 best_psm = psm_opt
 
         logger.info("Best PSM Mode: %s", best_psm)
-        capture = Capture(words=best_words, psm_opt=best_psm)
+        capture = Capture(words=best_words)
+        capture.tess_args["psm"] = best_psm
         logger.debug("Capture after OCR:%s", capture)
 
         return capture

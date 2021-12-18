@@ -4,7 +4,7 @@ import os
 import statistics
 from collections import namedtuple
 from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from PySide2 import QtGui
 
@@ -131,7 +131,7 @@ class Capture:
     transformed: str = ""  # Transformed result
 
     # Technical information
-    psm_opt: Optional[int] = None
+    tess_args: Dict = field(default_factory=dict)
 
     def __repr__(self) -> str:
         string = ""

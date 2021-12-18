@@ -21,7 +21,7 @@ def capture() -> Capture:
         rect=Rect(20, 30, 220, 330),
         transformed="",
         best_magic="",
-        psm_opt=2,
+        tess_args=dict(psm=2, lang="eng"),
         image=image,
         words=[
             {
