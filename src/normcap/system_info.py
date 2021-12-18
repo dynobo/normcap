@@ -23,6 +23,7 @@ from normcap.models import (
 )
 
 
+@functools.lru_cache
 def display_manager() -> DisplayManager:
     """Identify relevant display managers (Linux)."""
     XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "").lower()
@@ -34,6 +35,7 @@ def display_manager() -> DisplayManager:
     return DisplayManager.OTHER
 
 
+@functools.lru_cache
 def desktop_environment() -> DesktopEnvironment:
     """Detect used desktop environment (Linux)."""
     KDE_FULL_SESSION = os.environ.get("KDE_FULL_SESSION", "").lower()
@@ -51,7 +53,6 @@ def desktop_environment() -> DesktopEnvironment:
     return DesktopEnvironment.OTHER
 
 
-@functools.lru_cache(maxsize=None)
 def screens() -> Dict[int, ScreenInfo]:
     """Get informations about available monitors."""
     primary_screen = QtWidgets.QApplication.primaryScreen()
@@ -86,7 +87,7 @@ def primary_screen_idx() -> int:
     raise ValueError("Unable to detect primary screen")
 
 
-@functools.lru_cache(maxsize=None)
+@functools.lru_cache()
 def tesseract() -> TesseractInfo:
     """Get info abput tesseract setup."""
     kwargs = {}
@@ -122,7 +123,7 @@ def _get_tessdata_config_path() -> str:
 
     if not path.is_dir():
         raise RuntimeError(f"tessdata directory does not exist: {path}")
-    if len(list(path.glob("*.traineddata"))) < 1:
+    if not list(path.glob("*.traineddata")):
         raise RuntimeError(f"Could not find language data files in {path}")
 
     path_str = str(path.absolute())
