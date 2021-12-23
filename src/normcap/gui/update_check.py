@@ -8,9 +8,18 @@ from PySide2 import QtCore, QtWidgets
 
 from normcap import __version__
 from normcap.data import URLS
-from normcap.gui.downloader import Downloader
 from normcap.logger import logger
 from normcap.utils import get_icon, set_cursor
+
+try:
+    from normcap.gui.downloader_qtnetwork import Downloader
+
+    logger.debug("Using QtNetwork Downloader.")
+except ImportError as e:
+    logger.warning("Couldn't load QtNetwork Downloader: %s.", e)
+    from normcap.gui.downloader_requests import Downloader
+
+    logger.debug("Using Requests Downloader.")
 
 
 class Communicate(QtCore.QObject):

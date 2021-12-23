@@ -52,6 +52,7 @@ types-toml = "^0.10.1"
 mdformat-gfm = "^0.3.5"
 pytest-qt = "^4.0.2"
 pytest-xvfb = "^2.0.0"
+types-requests = "^2.26.2"
 
 [tool.black]
 line-length = 88
