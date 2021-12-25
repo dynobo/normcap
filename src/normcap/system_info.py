@@ -26,7 +26,7 @@ from normcap.models import (
 )
 
 
-@functools.lru_cache
+@functools.lru_cache()
 def gnome_shell_version() -> str:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux" or desktop_environment() != DesktopEnvironment.GNOME:
@@ -45,7 +45,7 @@ def gnome_shell_version() -> str:
     return parse_version(version)
 
 
-@functools.lru_cache
+@functools.lru_cache()
 def display_manager() -> DisplayManager:
     """Identify relevant display managers (Linux)."""
     XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "").lower()
@@ -57,7 +57,7 @@ def display_manager() -> DisplayManager:
     return DisplayManager.OTHER
 
 
-@functools.lru_cache
+@functools.lru_cache()
 def desktop_environment() -> DesktopEnvironment:
     """Detect used desktop environment (Linux)."""
     KDE_FULL_SESSION = os.environ.get("KDE_FULL_SESSION", "").lower()

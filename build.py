@@ -378,7 +378,5 @@ if __name__ == "__main__":
         cmd("briefcase create")
         cmd("briefcase build")
         cmd("briefcase package")
-        cmd(f"mv -f linux/*.AppImage linux/NormCap-{get_version()}-x86_64.AppImage")
-
     else:
         raise ValueError("Unknown Operating System.")
