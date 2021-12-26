@@ -1,14 +1,15 @@
-from PySide2 import QtNetwork
+import pytest
 
-from normcap.gui.update_check import Downloader
+from normcap.gui.downloader_qtnetwork import Downloader as QtNetworkDownloader
+from normcap.gui.downloader_requests import Downloader as RequestsDownloader
 
 # Allow pytest fixtures:
 # pylint: disable=redefined-outer-name,protected-access
 
 
-def test_downloader(qtbot):
+@pytest.mark.parametrize("downloader", [QtNetworkDownloader(), RequestsDownloader()])
+def test_downloader(qtbot, downloader):
     """Download a website's source."""
-    downloader = Downloader()
     with qtbot.waitSignal(downloader.com.on_download_finished) as result:
         downloader.get("https://github.com")
 
@@ -17,33 +18,22 @@ def test_downloader(qtbot):
     assert "</html>" in raw.lower()
 
 
-def test_downloader_not_existing_url(qtbot):
+@pytest.mark.parametrize("downloader", [RequestsDownloader(), QtNetworkDownloader()])
+def test_downloader_not_existing_url(caplog, qtbot, downloader):
     """Do not trigger download finished signal."""
-    downloader = Downloader()
+
+    # Do not trigger download finished signal
     with qtbot.waitSignal(
-        downloader.com.on_download_finished, raising=False, timeout=2
+        downloader.com.on_download_finished, raising=False, timeout=2000
     ) as result:
         downloader.get("https://not_existing_url.normcap")
 
     assert not result.args
     assert not result.signal_triggered
-
-
-def test_downloader_network_error(caplog, qtbot):
-    """Do not trigger download finished signal."""
-    downloader = Downloader()
-
-    class Reply(QtNetwork.QNetworkReply):
-        """Reply stub"""
-
-    reply = Reply()
-    reply.setError(QtNetwork.QNetworkReply.HostNotFoundError, "Not Found")
-
-    with qtbot.waitSignal(
-        downloader.com.on_download_failed, raising=False, timeout=1
-    ) as result:
-        downloader._on_get_finished(reply)
-
-    assert not result.args
-    assert result.signal_triggered
     assert "ERROR" in caplog.text
+
+    # Do trigger download failed signal
+    with qtbot.waitSignal(downloader.com.on_download_failed, timeout=2000) as result:
+        downloader.get("https://not_existing_url.normcap")
+
+    assert result.signal_triggered

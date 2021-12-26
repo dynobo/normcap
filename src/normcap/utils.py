@@ -111,9 +111,7 @@ def except_hook(cls, exception, traceback):
 @functools.lru_cache(maxsize=None)
 def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
-    icon = None
-    if system_icon:
-        icon = QtGui.QIcon.fromTheme(system_icon)
+    icon = QtGui.QIcon.fromTheme(system_icon) if system_icon else None
     if not icon:
         with importlib_resources.path("normcap.resources", icon_file) as fp:
             icon_path = str(fp.absolute())
@@ -140,7 +138,7 @@ def init_tessdata():
     """If packaged, copy language data files to config directory."""
 
     tessdata_path = system_info.config_directory() / "tessdata"
-    if len(list(tessdata_path.glob("*.traineddata"))) > 0:
+    if list(tessdata_path.glob("*.traineddata")):
         return
 
     resource_path = Path(importlib_resources.files("normcap.resources"))

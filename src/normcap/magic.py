@@ -55,7 +55,24 @@ class ApplyMagic:
             best_magic = self._magics[best_magic_name]
             capture.transformed = best_magic.transform(capture)
 
+        capture.transformed = self._post_process(capture)
+
         return capture
+
+    @staticmethod
+    def _post_process(capture: Capture) -> str:
+        """Apply postprocessing to transformed output."""
+        transformed = capture.transformed
+        selected_languages = set(capture.tess_args["lang"].split("+"))
+        languages_with_superfluous_spaces = {
+            "chi_sim",
+            "chi_sim_vert",
+            "chi_tra",
+            "chi_tra_vert",
+        }
+        if selected_languages.issubset(languages_with_superfluous_spaces):
+            transformed = transformed.replace(" ", "")
+        return transformed
 
     def _calc_scores(self, capture: Capture) -> Dict[str, float]:
         """Calculate score for every loaded magic.

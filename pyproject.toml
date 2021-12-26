@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "normcap"
-version = "0.2.8"
+version = "0.2.9"
 description = "OCR-powered screen-capture tool to capture information instead of images."
 keywords = ["screenshot", "ocr", "capture", "clipboard"]
 license = "GPLv3"
@@ -30,28 +30,30 @@ tesserocr = [
     { version = "2.4.0", platform = "win32" },
 ]
 python = ">=3.7.1,<3.10"
-importlib-metadata = "^4.8.1"
-importlib-resources = "^5.2.2"
+importlib-metadata = "^4.10.0"
+importlib-resources = "^5.4.0"
 jeepney = "^0.7.1"
 PySide2 = "^5.15.2"
+packaging = "^21.3"
 
 [tool.poetry.dev-dependencies]
 briefcase = "^0.3.5"
-black = { version = "^21.9b0", allow-prereleases = true }
-coveralls = "^3.2.0"
-isort = "^5.9.3"
-mypy = "^0.910"
-pre-commit = "^2.15"
+black = { version = "^21.12b0", allow-prereleases = true }
+isort = "^5.10.1"
+mypy = "^0.930"
+pre-commit = "^2.16"
 pydocstyle = "^6.1.1"
-pylint = "^2.11.1"
+pylint = "^2.12.2"
 pytest = "^6.2.5"
-pytest-cov = "^2.12.1"
-rope = "^0.20.1"
-toml = "^0.10.2"
-types-toml = "^0.1.5"
-mdformat-gfm = "^0.3.3"
+pytest-cov = "^3.0.0"
 pytest-qt = "^4.0.2"
 pytest-xvfb = "^2.0.0"
+rope = "^0.22.0"
+toml = "^0.10.2"
+types-toml = "^0.10.1"
+types-requests = "^2.26.2"
+mdformat-gfm = "^0.3.5"
+coveralls = "^3.3.1"
 
 [tool.black]
 line-length = 88
@@ -92,8 +94,6 @@ disable = [
     "duplicate-code",
     "fixme",
     "invalid-name",
-    #    "logging-fstring-interpolation",
-    #    "logging-not-lazy",
     "missing-module-docstring",
     "too-few-public-arguments",
     "too-few-public-methods",
@@ -115,7 +115,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.briefcase]
 project_name = "NormCap"
 bundle = "eu.dynobo"
-version = "0.2.8"
+version = "0.2.9"
 url = "https://github.com/dynobo/normcap"
 license = "GPLv3"
 author = 'dynobo'
@@ -128,7 +128,13 @@ sources = ["src/normcap"]
 icon = "src/normcap/resources/normcap"
 installer_icon = "src/normcap/resources/normcap_install"
 installer_background = "src/normcap/resources/normcap_install_bg"
-requires = ["pyside2", "jeepney", "importlib-metadata", "importlib-resources"]
+requires = [
+    "pyside2",
+    "jeepney",
+    "importlib-metadata",
+    "importlib-resources",
+    "packaging",
+]
 
 [tool.briefcase.app.normcap.macOS]
 requires = ["tesserocr==2.4.1"]

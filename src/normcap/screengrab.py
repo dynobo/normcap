@@ -1,20 +1,76 @@
 """Some utility functions."""
 
+import secrets
 import sys
 import tempfile
 from pathlib import Path
+from urllib.parse import urlparse
 
-from jeepney.io.blocking import open_dbus_connection  # type: ignore
+from jeepney import MessageType  # type: ignore
+from jeepney.bus_messages import MatchRule, message_bus  # type: ignore
+from jeepney.io.blocking import Proxy, open_dbus_connection  # type: ignore
 from jeepney.wrappers import (  # type: ignore
     DBusErrorResponse,
     MessageGenerator,
     new_method_call,
 )
+from packaging.version import parse as parse_version
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from normcap import system_info, utils
 from normcap.logger import logger
 from normcap.models import Capture, DisplayManager, ScreenInfo
+
+
+class GnomeShellScreenshot(MessageGenerator):
+    """Capture screenshot through dbus."""
+
+    interface = "org.gnome.Shell.Screenshot"
+
+    def __init__(self):
+        """Init jeepney message generator."""
+        super().__init__(
+            object_path="/org/gnome/Shell/Screenshot",
+            bus_name="org.gnome.Shell.Screenshot",
+        )
+
+    def grab(self, filename):
+        """Grab specific section to file with flash disabled."""
+        return new_method_call(
+            self,
+            "Screenshot",
+            "bbs",
+            (True, False, filename),
+        )
+
+    def grab_rect(self, x, y, width, height, filename):
+        """Grab specific section to file with flash disabled."""
+        return new_method_call(
+            self,
+            "ScreenshotArea",
+            "iiiibs",
+            (x, y, width, height, False, filename),
+        )
+
+
+class FreedesktopPortalScreenshot(MessageGenerator):
+    """Using Portal API to get screenshot.
+
+    This has to be used for gnome-shell 41.+ on Wayland.
+    """
+
+    interface = "org.freedesktop.portal.Screenshot"
+
+    def __init__(self):
+        """Init jeepney message generator."""
+        super().__init__(
+            object_path="/org/freedesktop/portal/desktop",
+            bus_name="org.freedesktop.portal.Desktop",
+        )
+
+    def grab(self, parent_window, options):
+        """Ask for screenshot."""
+        return new_method_call(self, "Screenshot", "sa{sv}", (parent_window, options))
 
 
 class ScreenGrabber:
@@ -30,20 +86,25 @@ class ScreenGrabber:
             raise ValueError("Capture object doesn't contain screen information")
 
         logger.debug("Grab screen: %s", self.capture.screen)
+        crop = True
         if sys.platform == "linux":
             if system_info.display_manager() == DisplayManager.WAYLAND:
-                self.grab_with_dbus()
+                if system_info.gnome_shell_version() < parse_version("41"):
+                    self.grab_with_dbus_shell()
+                    crop = False
+                else:
+                    self.grab_with_dbus_portal()
             else:
                 self.grab_with_qt_by_screen()
-                self.crop_to_selection()
         elif sys.platform == "darwin":
             self.grab_with_qt_by_position()
-            self.crop_to_selection()
         elif sys.platform == "win32":
             self.grab_with_qt_by_screen()
-            self.crop_to_selection()
         else:
             raise RuntimeError(f"Platform {sys.platform} not supported!")
+
+        if crop:
+            self.crop_to_selection()
 
         capture.image.setDevicePixelRatio(1)
         return capture
@@ -112,38 +173,67 @@ class ScreenGrabber:
         self.capture.image = self.capture.image.copy(box)
         utils.save_image_in_tempfolder(self.capture.image, postfix="_cropped")
 
-    def grab_with_dbus(self):
+    def grab_with_dbus_shell(self):
         """Capture rect of screen on gnome systems using wayland."""
-        logger.debug("Use capture method: DBUS")
+        logger.debug("Use capture method: DBUS Shell")
 
-        class DbusScreenshot(MessageGenerator):
-            """Capture screenshot through dbus."""
-
-            interface = "org.gnome.Shell.Screenshot"
-
-            def __init__(self):
-                """Init jeepney message generator."""
-                super().__init__(
-                    object_path="/org/gnome/Shell/Screenshot",
-                    bus_name="org.gnome.Shell.Screenshot",
-                )
-
-            def grab_rect(self, x, y, width, height, filename):
-                """Grab specific section to file with flash disabled."""
-                return new_method_call(
-                    self,
-                    "ScreenshotArea",
-                    "iiiibs",
-                    (x, y, width, height, False, filename),
-                )
-
-        rect = self.capture.rect
         _, temp_name = tempfile.mkstemp(prefix="normcap")
         try:
             connection = open_dbus_connection(bus="SESSION")
-            msg = DbusScreenshot().grab_rect(*rect.geometry, temp_name)
-            _ = connection.send_and_get_reply(msg)
+            msg = GnomeShellScreenshot().grab_rect(
+                *self.capture.rect.geometry, temp_name
+            )
+            result = connection.send_and_get_reply(msg)
+            if result.header.message_type == MessageType.error:
+                logger.error(
+                    "Couldn't take screenshot with DBUS: %s", ", ".join(result.body)
+                )
+                raise RuntimeError(
+                    "DBUS returned failure. Unable to capture screenshot."
+                )
             self.capture.image = QtGui.QImage(temp_name)
+            utils.save_image_in_tempfolder(self.capture.image, postfix="_raw_dbus")
+        except DBusErrorResponse as e:
+            if "invalid params" in [d.lower() for d in e.data]:
+                logger.info("ScreenShot with DBUS failed with 'invalid params'")
+            else:
+                logger.exception("ScreenShot with DBUS through exception")
+        finally:
+            Path(temp_name).unlink()
+
+    def grab_with_dbus_portal(self):
+        """Capture rect of screen on gnome systems using wayland."""
+        logger.debug("Use capture method: DBUS portal")
+
+        _, temp_name = tempfile.mkstemp(prefix="normcap")
+        try:
+            connection = open_dbus_connection(bus="SESSION")
+
+            token = f"normcap_{secrets.token_hex(8)}"
+            sender_name = connection.unique_name[1:].replace(".", "_")
+            handle = f"/org/freedesktop/portal/desktop/request/{sender_name}/{token}"
+
+            response_rule = MatchRule(
+                type="signal", interface="org.freedesktop.portal.Request", path=handle
+            )
+            Proxy(message_bus, connection).AddMatch(response_rule)
+
+            with connection.filter(response_rule) as responses:
+                msg = FreedesktopPortalScreenshot().grab(
+                    "", {"handle_token": ("s", token)}
+                )
+                connection.send_and_get_reply(msg)
+                response = connection.recv_until_filtered(responses)
+
+            response_code, response_body = response.body
+            if response_code != 0 or "uri" not in response_body:
+                logger.error(
+                    "Couldn't take screenshot with DBUS: %s", ", ".join(response.body)
+                )
+                raise RuntimeError(
+                    "DBUS returned failure. Unable to capture screenshot."
+                )
+            self.capture.image = QtGui.QImage(urlparse(response_body["uri"][1]).path)
             utils.save_image_in_tempfolder(self.capture.image, postfix="_raw_dbus")
         except DBusErrorResponse as e:
             if "invalid params" in [d.lower() for d in e.data]:

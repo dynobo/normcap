@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.9 (2021-12-26)
+
+- All: Mitigate superfluous spaces in chinese languages
+  [#158](https://github.com/dynobo/normcap/issues/158)
+- Linux: Fix OCR not working on Gnome 41+ by using the offical screenshot API
+  [#159](https://github.com/dynobo/normcap/issues/159)
+
 ## v0.2.8 (2021-10-20)
 
 - Linux: Fix language option in settings.conf not human readable

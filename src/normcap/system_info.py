@@ -2,6 +2,8 @@
 import functools
 import os
 import pprint
+import re
+import subprocess
 import sys
 import traceback
 from pathlib import Path
@@ -10,6 +12,7 @@ from typing import Dict
 import importlib_metadata
 import PySide2
 import tesserocr  # type: ignore
+from packaging.version import parse as parse_version
 from PySide2 import QtGui, QtWidgets
 
 from normcap import __version__
@@ -23,6 +26,26 @@ from normcap.models import (
 )
 
 
+@functools.lru_cache()
+def gnome_shell_version() -> str:
+    """Get gnome-shell version (Linux, Gnome)."""
+    if sys.platform != "linux" or desktop_environment() != DesktopEnvironment.GNOME:
+        return ""
+
+    version = ""
+    try:
+        output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
+        output = output_raw.decode().strip()
+        result = re.search(r"\s+([\d.]+)", output)
+        if result:
+            version = result.groups()[0]
+    except subprocess.CalledProcessError:
+        pass
+
+    return parse_version(version)
+
+
+@functools.lru_cache()
 def display_manager() -> DisplayManager:
     """Identify relevant display managers (Linux)."""
     XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "").lower()
@@ -34,6 +57,7 @@ def display_manager() -> DisplayManager:
     return DisplayManager.OTHER
 
 
+@functools.lru_cache()
 def desktop_environment() -> DesktopEnvironment:
     """Detect used desktop environment (Linux)."""
     KDE_FULL_SESSION = os.environ.get("KDE_FULL_SESSION", "").lower()
@@ -51,7 +75,6 @@ def desktop_environment() -> DesktopEnvironment:
     return DesktopEnvironment.OTHER
 
 
-@functools.lru_cache(maxsize=None)
 def screens() -> Dict[int, ScreenInfo]:
     """Get informations about available monitors."""
     primary_screen = QtWidgets.QApplication.primaryScreen()
@@ -86,7 +109,7 @@ def primary_screen_idx() -> int:
     raise ValueError("Unable to detect primary screen")
 
 
-@functools.lru_cache(maxsize=None)
+@functools.lru_cache()
 def tesseract() -> TesseractInfo:
     """Get info abput tesseract setup."""
     kwargs = {}
@@ -122,7 +145,7 @@ def _get_tessdata_config_path() -> str:
 
     if not path.is_dir():
         raise RuntimeError(f"tessdata directory does not exist: {path}")
-    if len(list(path.glob("*.traineddata"))) < 1:
+    if not list(path.glob("*.traineddata")):
         raise RuntimeError(f"Could not find language data files in {path}")
 
     path_str = str(path.absolute())
@@ -175,6 +198,7 @@ def to_string() -> str:
             tessdata_path=tesseract().path,
             desktop_environment=desktop_environment(),
             display_manager=display_manager(),
+            gnome_shell_version=gnome_shell_version(),
             screens=screens(),
         ),
         indent=3,

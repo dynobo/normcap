@@ -8,13 +8,13 @@ def test_init_tessdata(tmp_path, monkeypatch):
 
     traineddatas = list(tessdata_path.glob("*.traineddata"))
     txts = list(tessdata_path.glob("*.txt"))
-    assert len(traineddatas) == 0
-    assert len(txts) == 0
+    assert not traineddatas
+    assert not txts
 
     for _ in range(3):
         utils.init_tessdata()
 
         traineddatas = list(tessdata_path.glob("*.traineddata"))
         txts = list(tessdata_path.glob("*.txt"))
-        assert len(traineddatas) >= 1
+        assert traineddatas
         assert len(txts) == 1

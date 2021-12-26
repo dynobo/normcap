@@ -17,7 +17,7 @@ if sys.platform == "win32":
         openssl_path = str(p.absolute())
     os.environ["PATH"] += os.pathsep + openssl_path
 
-from PySide2 import QtCore, QtNetwork, QtWidgets
+from PySide2 import QtCore, QtWidgets
 
 from normcap import __version__, system_info, utils
 from normcap.args import create_argparser
@@ -41,15 +41,6 @@ def main():
     logger.info("Start NormCap v%s", __version__)
     logger.debug("CLI command: %s", " ".join(sys.argv))
     logger.debug("QT LibraryPaths: %s", QtCore.QCoreApplication.libraryPaths())
-
-    try:
-        print(
-            "QSslSocket: ",
-            QtNetwork.QSslSocket.sslLibraryBuildVersionString(),
-            QtNetwork.QSslSocket.supportsSsl(),
-        )
-    except Exception as e:  # pylint: disable=broad-except
-        print(e)
 
     # Wrap qt log messages with own logger
     QtCore.qInstallMessageHandler(utils.qt_message_handler)
