@@ -34,7 +34,7 @@ def gnome_shell_version() -> str:
 
     version = ""
     try:
-        output_raw = subprocess.check_output("gnome-shell --version", shell=True)
+        output_raw = subprocess.check_output(["gnome-shell", "--version"])
         output = output_raw.decode().strip()
         result = re.search(r"\s+([\d.]+)", output)
         if result:
