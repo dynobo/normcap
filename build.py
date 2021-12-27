@@ -192,7 +192,6 @@ def bundle_tesserocr_dylibs():
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
 
     # Copy libs to package dir
-
     libtess = "/usr/local/opt/tesseract/lib/libtesseract.4.dylib"
     liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
     libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"
@@ -202,7 +201,6 @@ def bundle_tesserocr_dylibs():
     libopenjpeg = "/usr/local/opt/openjpeg/lib/libopenjp2.7.dylib"
     libwebp = "/usr/local/opt/webp/lib/libwebp.7.dylib"
     libwebpmux = "/usr/local/opt/webp/lib/libwebpmux.3.dylib"
-
     for lib_path in [
         libtess,
         liblept,
@@ -221,7 +219,7 @@ def bundle_tesserocr_dylibs():
 
     # Relink libs
     tesserocr = f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
-    libwebp7 = "/usr/local/Cellar/webp/1.2.1/lib/libwebp.7.dylib"
+    libwebp7 = "/usr/local/Cellar/webp/1.2.1_1/lib/libwebp.7.dylib"
     changeset = [
         (libtiff, [libjpeg]),
         (libwebpmux, [libwebp7]),
