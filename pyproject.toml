@@ -183,7 +183,6 @@ search = '__version__ = "{current_version}"'
 
 [[tool.tbump.file]]
 src = "docs/index.html"
-search = '__version__ = "{current_version}"'
 
 [[tool.tbump.before_commit]]
 name = "check changelog"
