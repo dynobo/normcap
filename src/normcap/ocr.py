@@ -35,7 +35,7 @@ Tesseract options (for reference):
 
 import csv
 import statistics
-from typing import List
+from typing import List, Union
 
 from PySide2 import QtGui
 
@@ -50,7 +50,7 @@ class PerformOcr:
 
     tess_args: dict
 
-    def __call__(self, languages: List[str], capture: Capture) -> Capture:
+    def __call__(self, languages: Union[str, List[str]], capture: Capture) -> Capture:
         """Apply OCR on selected image section."""
         languages = self.sanatize_language(languages, system_info.tesseract().languages)
         self.tess_args = dict(
@@ -167,9 +167,12 @@ class PerformOcr:
 
     @staticmethod
     def sanatize_language(
-        config_languages: List[str], tesseract_languages: List[str]
+        config_languages: Union[str, List[str]], tesseract_languages: List[str]
     ) -> List[str]:
         """Retrieve tesseract version number."""
+        if isinstance(config_languages, str):
+            config_languages = [config_languages]
+
         set_config_languages = set(config_languages)
         set_tesseract_languages = set(tesseract_languages)
         unavailable_langs = set_config_languages.difference(set_tesseract_languages)
