@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "normcap"
-version = "0.2.9"
+version = "0.2.10"
 description = "OCR-powered screen-capture tool to capture information instead of images."
 keywords = ["screenshot", "ocr", "capture", "clipboard"]
 license = "GPLv3"
@@ -119,7 +119,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.briefcase]
 project_name = "NormCap"
 bundle = "eu.dynobo"
-version = "0.2.9"
+version = "0.2.10"
 url = "https://github.com/dynobo/normcap"
 license = "GPLv3"
 author = 'dynobo'
@@ -156,7 +156,7 @@ requires = [
 # github_url = "https://github.com/<user or organization>/<project>/"
 
 [tool.tbump.version]
-current = "0.2.9"
+current = "0.2.10"
 
 # Example of a semver regexp.
 # Make sure this matches current_version before
