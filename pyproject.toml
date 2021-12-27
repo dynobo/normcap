@@ -54,6 +54,7 @@ types-toml = "^0.10.1"
 types-requests = "^2.26.2"
 mdformat-gfm = "^0.3.5"
 coveralls = "^3.3.1"
+tbump = "^6.7.0"
 
 [tool.black]
 line-length = 88
@@ -106,7 +107,10 @@ disable = [
 addopts = "--cov normcap --cov-report xml:cov.xml --cov-report html"
 testpaths = ["src/tests"]
 qt_api = "pyside2"
-markers = ["skip_on_gh_linux: do not run during CI/CD on github runner linux"]
+markers = [
+    "skip_on_gh_linux: do not run during CI/CD on github runner linux",
+    "skip_on_gh: do not run during CI/CD on github",
+]
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "briefcase"]
@@ -129,7 +133,7 @@ icon = "src/normcap/resources/normcap"
 installer_icon = "src/normcap/resources/normcap_install"
 installer_background = "src/normcap/resources/normcap_install_bg"
 requires = [
-    "pyside2",
+    "PySide2",
     "jeepney",
     "importlib-metadata",
     "importlib-resources",
@@ -147,3 +151,46 @@ requires = ["tesserocr==2.4.1"]
 requires = [
     "https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl",
 ]
+[tool.tbump]
+# Uncomment this if your project is hosted on GitHub:
+# github_url = "https://github.com/<user or organization>/<project>/"
+
+[tool.tbump.version]
+current = "0.2.9"
+
+# Example of a semver regexp.
+# Make sure this matches current_version before
+# using tbump
+regex = '''
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  '''
+
+[tool.tbump.git]
+message_template = "Bump to {new_version}"
+tag_template = "v{new_version}"
+
+[[tool.tbump.file]]
+src = "pyproject.toml"
+search = 'version = "{current_version}"'
+
+[[tool.tbump.file]]
+src = "src/normcap/__init__.py"
+search = '__version__ = "{current_version}"'
+
+[[tool.tbump.file]]
+src = "docs/index.html"
+search = '__version__ = "{current_version}"'
+
+[[tool.tbump.before_commit]]
+name = "check changelog"
+cmd = "grep -q {new_version} CHANGELOG.md"
+
+# Or run some commands after the git tag and the branch
+# have been pushed:
+#  [[tool.tbump.after_push]]
+#  name = "publish"
+#  cmd = "./publish.sh"

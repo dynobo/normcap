@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.10 (2021-12-27)
+
+- All: Fix language settings not working if only a single language is selected
+- MacOS: Fix crash at start of prebuild package due to missing dependency
+
 ## v0.2.9 (2021-12-26)
 
 - All: Mitigate superfluous spaces in chinese languages

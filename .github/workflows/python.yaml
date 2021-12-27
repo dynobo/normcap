@@ -1,0 +1,184 @@
+# Infos on current github runners:
+# https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#about-github-hosted-runners
+
+name: Build
+on: [pull_request, push]
+
+jobs:
+  # Run tests on all pull requests or when triggered via [test] tag
+  test:
+    name: Linting & Tests
+    runs-on: ${{ matrix.os }}
+    if: |
+      github.event_name == 'pull_request'
+      || contains(github.event.head_commit.message, '[test]')
+      || startsWith(github.ref, 'refs/tags/v')
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-10.15, windows-2019, ubuntu-20.04]
+    steps:
+      # SETUP ENVIRONMENT
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - uses: abatilo/actions-poetry@v2.1.0
+        with:
+          poetry-version: 1.1.5
+
+      - name: Prepare Linux
+        if: ${{ matrix.os  == 'ubuntu-20.04' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            libleptonica-dev \
+            libtesseract-dev \
+            python3-pil \
+            tesseract-ocr \
+            tesseract-ocr-eng
+
+      - name: Prepare MacOS
+        if: ${{ matrix.os  == 'macos-10.15' }}
+        run: |
+          brew install pkg-config tesseract
+          brew info tesseract
+          ls -R /usr/local/Cellar/tesseract/
+          ls -R /usr/local/Cellar/leptonica/
+
+      - name: Prepare Windows
+        if: ${{ matrix.os  == 'windows-2019' }}
+        shell: bash -l {0}
+        run: |
+          (poetry install) || true
+          poetry run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
+
+      - name: Poetry install
+        run: |
+          poetry install
+          poetry run python build.py download-tessdata
+
+      # PERFORM TESTS
+      - name: Pylint
+        run: poetry run pylint src/normcap src/tests/
+      - name: Mypy
+        run: poetry run mypy .
+      - name: Black
+        run: poetry run black --check --diff .
+      - name: Isort
+        run: poetry run isort --check .
+      - name: Pytest on Linux
+        if: ${{ matrix.os  == 'ubuntu-20.04' }}
+        # libxkbcommon and xvfb is needed to test qt/ui specific things
+        run: |
+          sudo apt-get install \
+            xvfb \
+            libxkbcommon-x11-0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-xinerama0 \
+            libxcb-xfixes0
+          poetry run pytest -m "not skip_on_gh_linux and not skip_on_gh"
+        env:
+          XDG_SESSION_TYPE: gnome
+      - name: Pytest on Windows
+        if: ${{ matrix.os  == 'windows-2019' }}
+        run: poetry run pytest -m "not skip_on_gh"
+        env:
+          TESSDATA_PREFIX: D:\a\normcap\normcap\src\normcap\resources\tessdata
+      - name: Pytest on MacOS
+        if: ${{ matrix.os  == 'macos-10.15' }}
+        run: poetry run pytest -m "not skip_on_gh"
+      - name: Coveralls
+        if: ${{ matrix.os  == 'ubuntu-20.04' }}
+        run: poetry run coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+
+      # BUILD TEST PACKAGES
+      - name: Run build tools
+        shell: bash -l {0}
+        run: poetry run python build.py
+      - name: Publish latest release
+        uses: ncipollo/release-action@v1
+        with:
+          body: "Builds intended **only** for developing purposes! You're better off using the latest v0.\\*.\\* build instead!"
+          artifacts: "macOS/*.dmg,linux/*.AppImage,windows\\*.msi"
+          allowUpdates: true
+          artifactErrorsFailBuild: false
+          prerelease: true
+          draft: true
+          tag: "unstable"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-python:
+    name: Build and release new Python package
+    needs: test
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - uses: abatilo/actions-poetry@v2.1.0
+        with:
+          poetry-version: 1.1.5
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            libleptonica-dev \
+            libtesseract-dev \
+            python3-pil \
+            tesseract-ocr \
+            tesseract-ocr-eng
+      - name: Poetry publish
+        run: |
+          poetry config repositories.testpypi https://test.pypi.org/simple/
+          poetry publish --build --repository testpypi --username __token__ --password {{ secrets.TESTPYPI_TOKEN }}
+
+  build-packages:
+    name: Build packages and prepare release
+    needs: test
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, macos-10.15, windows-2019]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install briefcase and run build
+        shell: bash -l {0}
+        run: |
+          pip3 install briefcase
+          python3 build.py
+      - name: Draft release
+        uses: ncipollo/release-action@v1
+        with:
+          body: See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) for details.
+          artifacts: "macOS/*.dmg,linux/*.AppImage,windows\\*.msi"
+          allowUpdates: true
+          artifactErrorsFailBuild: false
+          draft: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-pages:
+    name: Deploy github pages
+    needs: build-packages
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public

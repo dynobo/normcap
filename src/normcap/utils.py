@@ -113,8 +113,8 @@ def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
     icon = QtGui.QIcon.fromTheme(system_icon) if system_icon else None
     if not icon:
-        with importlib_resources.path("normcap.resources", icon_file) as fp:
-            icon_path = str(fp.absolute())
+        fp = importlib_resources.files("normcap.resources").joinpath(icon_file)
+        icon_path = str(fp.absolute())
         icon = QtGui.QIcon()
         icon.addFile(icon_path)
     return icon
