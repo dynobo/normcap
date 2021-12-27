@@ -218,7 +218,11 @@ def bundle_tesserocr_dylibs():
         os.chmod(new_lib_path, stat.S_IRWXU)
 
     # Relink libs
-    tesserocr = f"{app_pkg_path}/tesserocr.cpython-37m-darwin.so"
+    if sys.version_info[0] == 3 and sys.version_info[1] == 7:
+        tesserocr = f"{app_pkg_path}/tesserocr.cpython-37m-darwin.so"
+    else:
+        tesserocr = f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
+
     libwebp7 = "/usr/local/Cellar/webp/1.2.1_1/lib/libwebp.7.dylib"
     changeset = [
         (libtiff, [libjpeg]),

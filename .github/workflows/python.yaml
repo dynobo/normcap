@@ -138,8 +138,7 @@ jobs:
             tesseract-ocr-eng
       - name: Poetry publish
         run: |
-          poetry config repositories.testpypi https://test.pypi.org/simple/
-          poetry publish --build --repository testpypi --username __token__ --password {{ secrets.TESTPYPI_TOKEN }}
+          poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
 
   build-packages:
     name: Build packages and prepare release
