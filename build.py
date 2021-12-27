@@ -218,7 +218,7 @@ def bundle_tesserocr_dylibs():
         os.chmod(new_lib_path, stat.S_IRWXU)
 
     # Relink libs
-    tesserocr = f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
+    tesserocr = f"{app_pkg_path}/tesserocr.cpython-37m-darwin.so"
     libwebp7 = "/usr/local/Cellar/webp/1.2.1_1/lib/libwebp.7.dylib"
     changeset = [
         (libtiff, [libjpeg]),
@@ -227,6 +227,8 @@ def bundle_tesserocr_dylibs():
         (libtess, [liblept]),
         (tesserocr, [libtess, liblept]),
     ]
+
+    print(*Path(app_pkg_path).iterdir(), sep="\n")
 
     for lib_path, link_paths in changeset:
         lib_filename = lib_path.rsplit("/", maxsplit=1)[-1]
