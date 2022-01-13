@@ -33,16 +33,16 @@ Tesseract options (for reference):
         DEFAULT: Run both and combine results - best accuracy.
 """
 
-import csv
 import statistics
+import tempfile
 from typing import List, Union
 
+import pytesseract  # type: ignore
 from PySide2 import QtGui
 
 from normcap import system_info
 from normcap.logger import logger
 from normcap.models import Capture
-from normcap.system_info import tesserocr
 
 
 class PerformOcr:
@@ -56,8 +56,8 @@ class PerformOcr:
         self.tess_args = dict(
             path=system_info.tesseract().path,
             lang="+".join(languages),
-            oem=tesserocr.OEM.LSTM_ONLY,
-            psm=tesserocr.PSM.AUTO_OSD,
+            oem="2",  # LSTM_ONLY
+            psm="2",  # AUTO_OSD,
         )
         logger.debug("Init tesseract with args: %s", self.tess_args)
         capture = self.extract(capture)
@@ -65,20 +65,19 @@ class PerformOcr:
 
     def extract(self, capture: Capture) -> Capture:
         """Recognize text in image and return structured dict."""
-
         if not isinstance(capture.image, QtGui.QImage):
             raise TypeError("No image for OCR available!")
 
-        with tesserocr.PyTessBaseAPI(**self.tess_args) as api:
-            img = capture.image
-            api.SetImageBytes(
-                bytes(img.constBits()),
-                img.width(),
-                img.height(),
-                img.depth() // 8,
-                img.bytesPerLine(),
+        with tempfile.NamedTemporaryFile(delete=False) as fp:
+            capture.image.save(fp.name)
+            tsv_data = pytesseract.image_to_data(
+                fp.name,
+                lang=self.tess_args["lang"],
+                output_type=pytesseract.Output.DICT,
+                timeout=30,
+                config=system_info.get_tesseract_config(),
             )
-            tsv_data = api.GetTSVText(0)
+
         words = self.tsv_to_list_of_dicts(tsv_data)
 
         mean_conf = statistics.mean([w.get("conf", 0) for w in words] + [0])
@@ -93,76 +92,17 @@ class PerformOcr:
 
         return capture
 
-    def extract_best(self, img) -> Capture:
-        """Recognize text in image and return structured dict."""
-
-        # Workaround for a pyinstaller bug on Windows:
-        img.format = "PNG"
-
-        psm_opts = [2, 4, 6, 7]
-
-        best_psm = 0  # For diagnostics
-        best_mean_conf = 0
-        best_words: list = []
-
-        for psm_opt in psm_opts:
-            # OCR
-            with tesserocr.PyTessBaseAPI(**self.tess_args, psm=psm_opt) as api:
-                api.SetImage(img)
-                tsv_data = api.GetTSVText(0)
-            words = self.tsv_to_list_of_dicts(tsv_data)
-
-            # Calc confidence, store best
-            mean_conf = statistics.mean([w.get("conf", 0) for w in words] + [0])
-            logger.info("PSM Mode: %s, Mean Conf: %s", psm_opt, mean_conf)
-            if mean_conf > best_mean_conf:
-                best_mean_conf = mean_conf
-                best_words = words
-                best_psm = psm_opt
-
-        logger.info("Best PSM Mode: %s", best_psm)
-        capture = Capture(words=best_words)
-        capture.tess_args["psm"] = best_psm
-        logger.debug("Capture after OCR:%s", capture)
-
-        return capture
-
     @staticmethod
-    def tsv_to_list_of_dicts(tsv_data) -> list:
-        """Convert tab separated values to list of dicts."""
-        tsv_columns = [
-            "level",
-            "page_num",
-            "block_num",
-            "par_num",
-            "line_num",
-            "word_num",
-            "left",
-            "top",
-            "width",
-            "height",
-            "conf",
-            "text",
-        ]
-
-        # Read tsv to list of dicts
-        words = list(
-            csv.DictReader(
-                tsv_data.splitlines(),
-                fieldnames=tsv_columns,
-                delimiter="\t",
-                quoting=csv.QUOTE_NONE,
-            )
-        )
-
-        # Cast types
-        for idx, word in enumerate(words):
-            for key, value in word.items():
-                if key != "text":
-                    words[idx][key] = int(value)  # type: ignore # (casting on purpose)
+    def tsv_to_list_of_dicts(tsv_data: dict) -> List[dict]:
+        """Transpose tsv dict from k:List[v] to List[Dict[k:v]]."""
+        words: List[dict] = [{} for l in tsv_data["level"]]
+        for k, values in tsv_data.items():
+            for idx, v in enumerate(values):
+                words[idx][k] = v
 
         # Filter empty words
         words = [w for w in words if w["text"].strip()]
+
         return words
 
     @staticmethod

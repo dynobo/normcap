@@ -123,7 +123,7 @@ class Capture:
     rect: Rect = Rect()
 
     # Result of OCR
-    words: list = field(default_factory=list)  # Words+metadata detected by OCR
+    words: List = field(default_factory=list)  # Words+metadata detected by OCR
 
     # Result of magics
     scores: dict = field(default_factory=dict)  # magics with scores
@@ -148,7 +148,7 @@ class Capture:
         return string.strip()
 
     @staticmethod
-    def _format_list_of_dicts_output(list_of_dicts: list) -> str:
+    def _format_list_of_dicts_output(list_of_dicts: List) -> str:
         string = ""
         for dic in list_of_dicts:
             for key, val in dic.items():

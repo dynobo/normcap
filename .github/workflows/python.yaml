@@ -46,13 +46,6 @@ jobs:
           ls -R /usr/local/Cellar/tesseract/
           ls -R /usr/local/Cellar/leptonica/
 
-      - name: Prepare Windows
-        if: ${{ matrix.os  == 'windows-2019' }}
-        shell: bash -l {0}
-        run: |
-          (poetry install) || true
-          poetry run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
-
       - name: Poetry install
         run: |
           poetry install
