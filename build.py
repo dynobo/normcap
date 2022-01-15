@@ -192,7 +192,7 @@ def bundle_pytesseract_dylibs():
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
 
     # Copy libs to package dir
-    libtess = "/usr/local/opt/tesseract/lib/libtesseract.4.dylib"
+    libtess = "/usr/local/opt/tesseract/lib/libtesseract.5.dylib"
     liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
     libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"
     libjpeg = "/usr/local/opt/jpeg/lib/libjpeg.9.dylib"
