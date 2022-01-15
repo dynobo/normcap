@@ -78,7 +78,7 @@ def test_get_tessdata_path(monkeypatch):
         path_briefcase = system_info._get_tessdata_path()
 
         monkeypatch.setattr(system_info, "is_briefcase_package", lambda: False)
-        monkeypatch.setenv("TESSDATA_PREFIX", data_file.parent.parent.resolve())
+        monkeypatch.setenv("TESSDATA_PREFIX", str(data_file.parent.parent.resolve()))
         path_env_var = system_info._get_tessdata_path()
 
         monkeypatch.setattr(system_info, "is_briefcase_package", lambda: False)
