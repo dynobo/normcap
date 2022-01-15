@@ -49,7 +49,7 @@ jobs:
       - name: Poetry install
         run: |
           poetry install
-          poetry run python build.py download-tessdata
+          poetry run python build.py download-deps-for-tests
 
       # PERFORM TESTS
       - name: Pylint

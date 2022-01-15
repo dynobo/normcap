@@ -1,6 +1,7 @@
 """Adjustments executed while packaging with briefcase during CI/CD."""
 
 import inspect
+import io
 import os
 import shutil
 import stat
@@ -9,10 +10,13 @@ import sys
 import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
+from asyncore import file_wrapper
 from pathlib import Path
+from time import process_time_ns
 from typing import List
 
 import briefcase  # type: ignore
+import requests
 import toml
 
 platform_str = sys.platform.lower()
@@ -187,6 +191,33 @@ def download_tessdata():
     print("Download done.")
 
 
+def download_tesseract_windows_build():
+    # Link to download artifact might change
+    # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
+
+    target_path = Path.cwd() / "src" / "normcap" / "resources" / "tesseract"
+    target_path.mkdir(exist_ok=True)
+
+    r = requests.get(
+        "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
+    )
+    r.raise_for_status()
+    fh = io.BytesIO(r.content)
+    artifact_zip = zipfile.ZipFile(fh)
+    for name in artifact_zip.filelist:
+        if ".test." in name.filename or ".training." in name.filename:
+            continue
+        artifact_zip.extract(name, target_path)
+    fh.close()
+    print("Tesseract binaries downloaded")
+
+    os.rename(
+        target_path / "google.tesseract.tesseract-master.exe",
+        target_path / "tesseract.exe",
+    )
+    print("Tesseract.exe renamed")
+
+
 def bundle_pytesseract_dylibs():
     """Include two dylibs needed by tesserocr into app package."""
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
@@ -329,12 +360,16 @@ def add_metainfo_to_appimage():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "download-tessdata":
+
+    if len(sys.argv) > 1 and sys.argv[1] == "download-deps-for-tests":
         download_tessdata()
+        if platform_str.lower().startswith("win"):
+            download_tesseract_windows_build()
         sys.exit(0)
 
     if platform_str.lower().startswith("win"):
         app_dir = Path.cwd() / "windows" / "msi" / "NormCap" / "src" / "app_packages"
+        download_tesseract_windows_build()
         download_tessdata()
         download_openssl()
         cmd("briefcase create")
