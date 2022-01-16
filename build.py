@@ -193,27 +193,33 @@ def download_tesseract_windows_build():
     # Link to download artifact might change
     # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
 
-    target_path = Path.cwd() / "src" / "normcap" / "resources" / "tesseract"
-    target_path.mkdir(exist_ok=True)
+    resources_path = Path.cwd() / "src" / "normcap" / "resources"
 
     r = requests.get(
         "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
     )
     r.raise_for_status()
     fh = io.BytesIO(r.content)
-    artifact_zip = zipfile.ZipFile(fh)
-    for name in artifact_zip.filelist:
-        if ".test." in name.filename or ".training." in name.filename:
-            continue
-        artifact_zip.extract(name, target_path)
+    with zipfile.ZipFile(fh) as artifact_zip:
+        members = [
+            m
+            for m in artifact_zip.namelist()
+            if ".test." not in m and ".training." not in m
+        ]
+        subdir = members[0].split("/")[0]
+        artifact_zip.extractall(path=resources_path, members=members)
     fh.close()
     print("Tesseract binaries downloaded")
 
     os.rename(
-        target_path / "google.tesseract.tesseract-master.exe",
-        target_path / "tesseract.exe",
+        resources_path / subdir,
+        resources_path / "tesseract",
     )
-    print("Tesseract.exe renamed")
+    os.rename(
+        resources_path / "tesseract" / "google.tesseract.tesseract-master.exe",
+        resources_path / "tesseract" / "tesseract.exe",
+    )
+    print("Tesseract.exe renamed.")
 
 
 def bundle_pytesseract_dylibs():
@@ -358,11 +364,10 @@ def add_metainfo_to_appimage():
 
 
 if __name__ == "__main__":
-
     if len(sys.argv) > 1 and sys.argv[1] == "download-deps-for-tests":
-        download_tessdata()
         if platform_str.lower().startswith("win"):
             download_tesseract_windows_build()
+        download_tessdata()
         sys.exit(0)
 
     if platform_str.lower().startswith("win"):

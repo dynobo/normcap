@@ -52,13 +52,6 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
-    if sys.platform == "win32" and (
-        system_info.is_briefcase_package()
-        or os.environ.get("GITHUB_ACTIONS", "false") == "true"
-    ):
-        t = importlib_resources.files("normcap.resources").joinpath("tesseract")
-        os.environ["PATH"] = str(t.resolve()) + os.pathsep + os.environ["PATH"]
-
     logger.debug("System info:\n%s", system_info.to_string())
 
     window = MainWindow(args)

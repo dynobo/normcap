@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Dict
 
 import importlib_metadata
+import importlib_resources
 import PySide2
 import pytesseract  # type:ignore
 from packaging.version import parse as parse_version
@@ -137,6 +138,13 @@ def config_directory() -> Path:
     return Path.home() / ".config" / postfix
 
 
+def add_tesseract_to_path():
+    """Adds shipped tesseract to PATH env on Windows."""
+    if sys.platform == "win32":
+        p = importlib_resources.files("normcap.resources").joinpath("tesseract")
+        os.environ["PATH"] += os.pathsep + str(p.resolve())
+
+
 def _get_tessdata_path() -> str:
     """Deside which path for tesseract language files to use."""
     prefix = os.environ.get("TESSDATA_PREFIX", None)
@@ -154,8 +162,8 @@ def _get_tessdata_path() -> str:
         raise RuntimeError(f"Could not find language data files in {path}")
 
     path_str = str(path.absolute())
-    if not path_str.endswith(os.sep):
-        path_str += os.sep
+    if path_str.endswith(os.sep):
+        path_str = path_str[:-1]
 
     return path_str
 
@@ -170,6 +178,7 @@ def get_tesseract_config() -> str:
 def tesseract() -> TesseractInfo:
     """Get info abput tesseract setup."""
     try:
+        add_tesseract_to_path()
         tessdata_path = _get_tessdata_path()
         languages = sorted(pytesseract.get_languages(config=get_tesseract_config()))
         version = str(pytesseract.get_tesseract_version()).splitlines()[0]

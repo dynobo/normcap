@@ -68,6 +68,8 @@ class PerformOcr:
         if not isinstance(capture.image, QtGui.QImage):
             raise TypeError("No image for OCR available!")
 
+        system_info.add_tesseract_to_path()
+
         with tempfile.NamedTemporaryFile(delete=False) as fp:
             capture.image.save(fp.name)
             tsv_data = pytesseract.image_to_data(

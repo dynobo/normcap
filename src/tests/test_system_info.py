@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import importlib_metadata
@@ -87,8 +86,8 @@ def test_get_tessdata_path(monkeypatch):
     finally:
         data_file.unlink()
 
-    assert path_briefcase.endswith("tessdata" + os.sep)
-    assert path_env_var.endswith("tessdata" + os.sep)
+    assert path_briefcase.endswith("tessdata")
+    assert path_env_var.endswith("tessdata")
     assert path_non == ""
 
     # mock directory but _no_ language data:
