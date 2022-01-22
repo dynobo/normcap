@@ -6,9 +6,9 @@ import re
 import subprocess
 import sys
 import traceback
+from distutils.version import LooseVersion
 from pathlib import Path
 from typing import Dict
-from distutils.version import LooseVersion
 
 import importlib_metadata
 import importlib_resources
@@ -28,8 +28,13 @@ from normcap.models import (
 )
 
 
-def set_tesseract_path():
-    tesseract_path = importlib_resources.files("normcap.resources").joinpath("tesseract").joinpath("tesseract.exe")
+def set_tesseract_cmd_on_windows():
+    """Set pytesseract to use bundled windows binary."""
+    tesseract_path = (
+        importlib_resources.files("normcap.resources")
+        .joinpath("tesseract")
+        .joinpath("tesseract.exe")
+    )
     pytesseract.pytesseract.tesseract_cmd = str(tesseract_path.resolve())
     pytesseract.get_tesseract_version = lambda: LooseVersion("5.0")
     pytesseract.pytesseract.get_tesseract_version = lambda: LooseVersion("5.0")
@@ -145,6 +150,7 @@ def config_directory() -> Path:
         return Path(xdg_config_home) / postfix
     return Path.home() / ".config" / postfix
 
+
 def _get_tessdata_path() -> str:
     """Deside which path for tesseract language files to use."""
     prefix = os.environ.get("TESSDATA_PREFIX", None)
@@ -178,8 +184,10 @@ def get_tesseract_config() -> str:
 def tesseract() -> TesseractInfo:
     """Get info abput tesseract setup."""
     try:
-        if sys.platform == "win32" and (is_briefcase_package() or "GITHUB_ACTIONS" in os.environ):
-            set_tesseract_path()
+        if sys.platform == "win32" and (
+            is_briefcase_package() or "GITHUB_ACTIONS" in os.environ
+        ):
+            set_tesseract_cmd_on_windows()
         tessdata_path = _get_tessdata_path()
         languages = sorted(pytesseract.get_languages(config=get_tesseract_config()))
         version = str(pytesseract.get_tesseract_version()).splitlines()[0]

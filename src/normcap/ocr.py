@@ -40,18 +40,20 @@ from typing import List, Union
 from PySide2 import QtGui
 
 from normcap import system_info
-from normcap.system_info import pytesseract
-
 from normcap.logger import logger
 from normcap.models import Capture
+from normcap.system_info import pytesseract
+
 
 class PerformOcr:
     """Handles the text recognition task."""
 
     tess_args: dict
+
     def __init__(self):
+        """Set up pytesseract."""
         if sys.platform == "win32" and system_info.is_briefcase_package():
-            system_info.set_tesseract_path()
+            system_info.set_tesseract_cmd_on_windows()
 
     def __call__(self, languages: Union[str, List[str]], capture: Capture) -> Capture:
         """Apply OCR on selected image section."""
@@ -74,7 +76,7 @@ class PerformOcr:
         with tempfile.NamedTemporaryFile(delete=False) as fp:
             capture.image.save(fp.name + ".png")
             tsv_data = pytesseract.image_to_data(
-                fp.name+ ".png",
+                fp.name + ".png",
                 lang=self.tess_args["lang"],
                 output_type=pytesseract.Output.DICT,
                 timeout=30,
