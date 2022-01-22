@@ -32,23 +32,26 @@ Tesseract options (for reference):
         TESSERACT_CUBE_COMBINED: Run Cube only - better accuracy, but slower.
         DEFAULT: Run both and combine results - best accuracy.
 """
-
 import statistics
+import sys
 import tempfile
 from typing import List, Union
 
-import pytesseract  # type: ignore
 from PySide2 import QtGui
 
 from normcap import system_info
+from normcap.system_info import pytesseract
+
 from normcap.logger import logger
 from normcap.models import Capture
-
 
 class PerformOcr:
     """Handles the text recognition task."""
 
     tess_args: dict
+    def __init__(self):
+        if sys.platform == "win32" and system_info.is_briefcase_package():
+            system_info.set_tesseract_path()
 
     def __call__(self, languages: Union[str, List[str]], capture: Capture) -> Capture:
         """Apply OCR on selected image section."""
@@ -68,12 +71,10 @@ class PerformOcr:
         if not isinstance(capture.image, QtGui.QImage):
             raise TypeError("No image for OCR available!")
 
-        system_info.add_tesseract_to_path()
-
         with tempfile.NamedTemporaryFile(delete=False) as fp:
-            capture.image.save(fp.name)
+            capture.image.save(fp.name + ".png")
             tsv_data = pytesseract.image_to_data(
-                fp.name,
+                fp.name+ ".png",
                 lang=self.tess_args["lang"],
                 output_type=pytesseract.Output.DICT,
                 timeout=30,
@@ -82,7 +83,7 @@ class PerformOcr:
 
         words = self.tsv_to_list_of_dicts(tsv_data)
 
-        mean_conf = statistics.mean([w.get("conf", 0) for w in words] + [0])
+        mean_conf = statistics.mean([float(w.get("conf", 0)) for w in words] + [0])
         logger.info(
             f"PSM Mode: {self.tess_args['psm']}, "
             + f"OSM Mode: {self.tess_args['oem']}, "

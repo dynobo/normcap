@@ -175,7 +175,7 @@ class Capture:
     def mean_conf(self) -> float:
         """Average confidence value of OCR result."""
         if self.words:
-            return statistics.mean([w.get("conf", 0) for w in self.words])
+            return statistics.mean([float(w.get("conf", 0)) for w in self.words])
         return 0
 
     @property
