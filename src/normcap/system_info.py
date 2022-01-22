@@ -36,8 +36,8 @@ def set_tesseract_cmd_on_windows():
         .joinpath("tesseract.exe")
     )
     pytesseract.pytesseract.tesseract_cmd = str(tesseract_path.resolve())
-    pytesseract.get_tesseract_version = lambda: LooseVersion("5.0")
-    pytesseract.pytesseract.get_tesseract_version = lambda: LooseVersion("5.0")
+    pytesseract.get_tesseract_version = lambda: LooseVersion("5.0.0")
+    pytesseract.pytesseract.get_tesseract_version = lambda: LooseVersion("5.0.0")
 
 
 @functools.lru_cache()

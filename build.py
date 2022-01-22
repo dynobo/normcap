@@ -194,11 +194,13 @@ def download_tesseract_windows_build():
     # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
 
     resources_path = Path.cwd() / "src" / "normcap" / "resources"
+    tesseract_path = resources_path / "tesseract"
 
     r = requests.get(
         "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
     )
     r.raise_for_status()
+
     fh = io.BytesIO(r.content)
     with zipfile.ZipFile(fh) as artifact_zip:
         members = [
@@ -211,14 +213,17 @@ def download_tesseract_windows_build():
     fh.close()
     print("Tesseract binaries downloaded")
 
+    shutil.rmtree(tesseract_path, ignore_errors=True)
+
     os.rename(
         resources_path / subdir,
-        resources_path / "tesseract",
+        tesseract_path,
     )
     os.rename(
-        resources_path / "tesseract" / "google.tesseract.tesseract-master.exe",
-        resources_path / "tesseract" / "tesseract.exe",
+        tesseract_path / "google.tesseract.tesseract-master.exe",
+        tesseract_path / "tesseract.exe",
     )
+
     print("Tesseract.exe renamed.")
 
 
