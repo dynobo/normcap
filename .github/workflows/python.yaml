@@ -46,17 +46,10 @@ jobs:
           ls -R /usr/local/Cellar/tesseract/
           ls -R /usr/local/Cellar/leptonica/
 
-      - name: Prepare Windows
-        if: ${{ matrix.os  == 'windows-2019' }}
-        shell: bash -l {0}
-        run: |
-          (poetry install) || true
-          poetry run pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
-
       - name: Poetry install
         run: |
           poetry install
-          poetry run python build.py download-tessdata
+          poetry run python build.py download-deps-for-tests
 
       # PERFORM TESTS
       - name: Pylint
@@ -88,7 +81,7 @@ jobs:
         if: ${{ matrix.os  == 'windows-2019' }}
         run: poetry run pytest -m "not skip_on_gh"
         env:
-          TESSDATA_PREFIX: D:\a\normcap\normcap\src\normcap\resources\tessdata
+          TESSDATA_PREFIX: D:\a\normcap\normcap\src\normcap\resources
       - name: Pytest on MacOS
         if: ${{ matrix.os  == 'macos-10.15' }}
         run: poetry run pytest -m "not skip_on_gh"
@@ -105,7 +98,9 @@ jobs:
       - name: Publish latest release
         uses: ncipollo/release-action@v1
         with:
-          body: "Builds intended **only** for developing purposes! You're better off using the latest v0.\\*.\\* build instead!"
+          body:
+            "Builds intended **only** for developing purposes! You're better off
+            using the latest v0.\\*.\\* build instead!"
           artifacts: "macOS/*.dmg,linux/*.AppImage,windows\\*.msi"
           allowUpdates: true
           artifactErrorsFailBuild: false
@@ -162,7 +157,10 @@ jobs:
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:
-          body: See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) for details.
+          body:
+            See
+            [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md)
+            for details.
           artifacts: "macOS/*.dmg,linux/*.AppImage,windows\\*.msi"
           allowUpdates: true
           artifactErrorsFailBuild: false

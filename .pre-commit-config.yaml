@@ -51,6 +51,8 @@ repos:
         name: pytest
         stages: [commit]
         language: system
-        entry: poetry run pytest src/tests/ --cov normcap --cov-report xml:cov.xml --cov-report html
+        entry:
+          poetry run pytest src/tests/ --cov normcap --cov-report xml:cov.xml
+          --cov-report html
         types: [python]
         pass_filenames: false

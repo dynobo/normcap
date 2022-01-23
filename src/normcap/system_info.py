@@ -6,12 +6,14 @@ import re
 import subprocess
 import sys
 import traceback
+from distutils.version import LooseVersion
 from pathlib import Path
 from typing import Dict
 
 import importlib_metadata
+import importlib_resources
 import PySide2
-import tesserocr  # type: ignore
+import pytesseract  # type:ignore
 from packaging.version import parse as parse_version
 from PySide2 import QtGui, QtWidgets
 
@@ -24,6 +26,18 @@ from normcap.models import (
     ScreenInfo,
     TesseractInfo,
 )
+
+
+def set_tesseract_cmd_on_windows():
+    """Set pytesseract to use bundled windows binary."""
+    tesseract_path = (
+        importlib_resources.files("normcap.resources")
+        .joinpath("tesseract")
+        .joinpath("tesseract.exe")
+    )
+    pytesseract.pytesseract.tesseract_cmd = str(tesseract_path.resolve())
+    pytesseract.get_tesseract_version = lambda: LooseVersion("5.0.0")
+    pytesseract.pytesseract.get_tesseract_version = lambda: LooseVersion("5.0.0")
 
 
 @functools.lru_cache()
@@ -109,52 +123,6 @@ def primary_screen_idx() -> int:
     raise ValueError("Unable to detect primary screen")
 
 
-@functools.lru_cache()
-def tesseract() -> TesseractInfo:
-    """Get info abput tesseract setup."""
-    kwargs = {}
-    if is_briefcase_package():
-        kwargs["path"] = _get_tessdata_config_path()
-
-    try:
-        with tesserocr.PyTessBaseAPI(**kwargs) as api:
-            languages = sorted(api.GetAvailableLanguages())
-            version = api.Version()
-            tessdata = api.GetDatapath()
-    except RuntimeError as e:
-        traceback.print_tb(e.__traceback__)
-        raise RuntimeError(
-            "Couldn't determine Tesseract information. If you pip installed NormCap "
-            + "make sure Tesseract is installed and configured correctly. Otherwise: "
-            + FILE_ISSUE_TEXT
-        ) from e
-
-    if not languages:
-        raise ValueError(
-            "Could not load any languages for tesseract. "
-            + "On Windows, make sure that TESSDATA_PREFIX environment variable is set. "
-            + "On Linux/MacOS see if 'tesseract --list-langs' work is the command line."
-        )
-
-    return TesseractInfo(version=version, languages=languages, path=tessdata)
-
-
-def _get_tessdata_config_path() -> str:
-    """Deside which path for tesseract language files to use."""
-    path = config_directory() / "tessdata"
-
-    if not path.is_dir():
-        raise RuntimeError(f"tessdata directory does not exist: {path}")
-    if not list(path.glob("*.traineddata")):
-        raise RuntimeError(f"Could not find language data files in {path}")
-
-    path_str = str(path.absolute())
-    if not path_str.endswith(os.sep):
-        path_str += os.sep
-
-    return path_str
-
-
 def is_briefcase_package() -> bool:
     """Check if script is executed in briefcase package."""
     app_module = sys.modules["__main__"].__package__
@@ -181,6 +149,64 @@ def config_directory() -> Path:
     if xdg_config_home:
         return Path(xdg_config_home) / postfix
     return Path.home() / ".config" / postfix
+
+
+def _get_tessdata_path() -> str:
+    """Deside which path for tesseract language files to use."""
+    prefix = os.environ.get("TESSDATA_PREFIX", None)
+
+    if is_briefcase_package():
+        path = config_directory() / "tessdata"
+    elif prefix:
+        path = Path(prefix) / "tessdata"
+    else:
+        return ""
+
+    if not path.is_dir():
+        raise RuntimeError(f"tessdata directory does not exist: {path}")
+    if not list(path.glob("*.traineddata")):
+        raise RuntimeError(f"Could not find language data files in {path}")
+
+    path_str = str(path.absolute())
+    if path_str.endswith(os.sep):
+        path_str = path_str[:-1]
+
+    return path_str
+
+
+def get_tesseract_config() -> str:
+    """Get string with cli args to be passed into tesseract api."""
+    tessdata_path = _get_tessdata_path()
+    return f'--tessdata-dir "{tessdata_path}"' if tessdata_path else ""
+
+
+@functools.lru_cache()
+def tesseract() -> TesseractInfo:
+    """Get info abput tesseract setup."""
+    try:
+        if sys.platform == "win32" and (
+            is_briefcase_package() or "GITHUB_ACTIONS" in os.environ
+        ):
+            set_tesseract_cmd_on_windows()
+        tessdata_path = _get_tessdata_path()
+        languages = sorted(pytesseract.get_languages(config=get_tesseract_config()))
+        version = str(pytesseract.get_tesseract_version()).splitlines()[0]
+    except RuntimeError as e:
+        traceback.print_tb(e.__traceback__)
+        raise RuntimeError(
+            "Couldn't determine Tesseract information. If you pip installed NormCap "
+            + "make sure Tesseract is installed and configured correctly. Otherwise: "
+            + FILE_ISSUE_TEXT
+        ) from e
+
+    if not languages:
+        raise ValueError(
+            "Could not load any languages for tesseract. "
+            + "On Windows, make sure that TESSDATA_PREFIX environment variable is set. "
+            + "On Linux/MacOS see if 'tesseract --list-langs' work is the command line."
+        )
+
+    return TesseractInfo(version=version, languages=languages, path=tessdata_path)
 
 
 def to_string() -> str:

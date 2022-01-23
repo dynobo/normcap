@@ -17,6 +17,7 @@ coverage
 *.spec
 normcap/resources/icon
 normcap/resources/screencast
+src/normcap/resources/tesseract/
 normcap/src/normcap.dist-info
 .DS_Store
 *.traineddata

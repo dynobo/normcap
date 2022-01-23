@@ -1,6 +1,7 @@
 """Adjustments executed while packaging with briefcase during CI/CD."""
 
 import inspect
+import io
 import os
 import shutil
 import stat
@@ -13,6 +14,7 @@ from pathlib import Path
 from typing import List
 
 import briefcase  # type: ignore
+import requests
 import toml
 
 platform_str = sys.platform.lower()
@@ -187,12 +189,50 @@ def download_tessdata():
     print("Download done.")
 
 
-def bundle_tesserocr_dylibs():
+def download_tesseract_windows_build():
+    # Link to download artifact might change
+    # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
+
+    resources_path = Path.cwd() / "src" / "normcap" / "resources"
+    tesseract_path = resources_path / "tesseract"
+
+    r = requests.get(
+        "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
+    )
+    r.raise_for_status()
+
+    fh = io.BytesIO(r.content)
+    with zipfile.ZipFile(fh) as artifact_zip:
+        members = [
+            m
+            for m in artifact_zip.namelist()
+            if ".test." not in m and ".training." not in m
+        ]
+        subdir = members[0].split("/")[0]
+        artifact_zip.extractall(path=resources_path, members=members)
+    fh.close()
+    print("Tesseract binaries downloaded")
+
+    shutil.rmtree(tesseract_path, ignore_errors=True)
+
+    os.rename(
+        resources_path / subdir,
+        tesseract_path,
+    )
+    os.rename(
+        tesseract_path / "google.tesseract.tesseract-master.exe",
+        tesseract_path / "tesseract.exe",
+    )
+
+    print("Tesseract.exe renamed.")
+
+
+def bundle_pytesseract_dylibs():
     """Include two dylibs needed by tesserocr into app package."""
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
 
     # Copy libs to package dir
-    libtess = "/usr/local/opt/tesseract/lib/libtesseract.4.dylib"
+    libtess = "/usr/local/opt/tesseract/lib/libtesseract.5.dylib"
     liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
     libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"
     libjpeg = "/usr/local/opt/jpeg/lib/libjpeg.9.dylib"
@@ -218,10 +258,10 @@ def bundle_tesserocr_dylibs():
         os.chmod(new_lib_path, stat.S_IRWXU)
 
     # Relink libs
-    if sys.version_info[0] == 3 and sys.version_info[1] == 7:
-        tesserocr = f"{app_pkg_path}/tesserocr.cpython-37m-darwin.so"
-    else:
-        tesserocr = f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
+    # if sys.version_info[0] == 3 and sys.version_info[1] == 7:
+    #    tesserocr = f"{app_pkg_path}/tesserocr.cpython-37m-darwin.so"
+    # else:
+    #    tesserocr = f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
 
     libwebp7 = "/usr/local/Cellar/webp/1.2.1_1/lib/libwebp.7.dylib"
     changeset = [
@@ -229,7 +269,7 @@ def bundle_tesserocr_dylibs():
         (libwebpmux, [libwebp7]),
         (liblept, [libpng, libjpeg, libgif, libtiff, libopenjpeg, libwebp, libwebpmux]),
         (libtess, [liblept]),
-        (tesserocr, [libtess, liblept]),
+        #    (tesserocr, [libtess, liblept]),
     ]
 
     print(*Path(app_pkg_path).iterdir(), sep="\n")
@@ -329,12 +369,15 @@ def add_metainfo_to_appimage():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "download-tessdata":
+    if len(sys.argv) > 1 and sys.argv[1] == "download-deps-for-tests":
+        if platform_str.lower().startswith("win"):
+            download_tesseract_windows_build()
         download_tessdata()
         sys.exit(0)
 
     if platform_str.lower().startswith("win"):
         app_dir = Path.cwd() / "windows" / "msi" / "NormCap" / "src" / "app_packages"
+        download_tesseract_windows_build()
         download_tessdata()
         download_openssl()
         cmd("briefcase create")
@@ -359,7 +402,7 @@ if __name__ == "__main__":
         download_tessdata()
         cmd("brew install tesseract")
         cmd("briefcase create")
-        bundle_tesserocr_dylibs()
+        bundle_pytesseract_dylibs()
         rm_recursive(directory=app_dir, exclude=EXCLUDE_FROM_APP_PACKAGES)
         rm_recursive(directory=app_dir / "PySide2", exclude=EXCLUDE_FROM_PYSIDE2)
         cmd("briefcase build")

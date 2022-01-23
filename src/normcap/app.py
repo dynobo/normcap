@@ -14,8 +14,7 @@ locale.setlocale(locale.LC_ALL, "C")
 # Add shipped openssl to path
 if sys.platform == "win32":
     p = importlib_resources.files("normcap.resources").joinpath("openssl")
-    openssl_path = str(p.absolute())
-    os.environ["PATH"] += os.pathsep + openssl_path
+    os.environ["PATH"] += os.pathsep + str(p.resolve())
 
 from PySide2 import QtCore, QtWidgets
 
