@@ -41,10 +41,13 @@ jobs:
       - name: Prepare MacOS
         if: ${{ matrix.os  == 'macos-10.15' }}
         run: |
-          brew install pkg-config tesseract
+          brew install pkg-config 
+          brew tap-new $USER/local-tap
+          brew extract --version=4.1.3 tesseract $USER/local-tap
+          brew install tesseract@4.1.3
           brew info tesseract
-          ls -R /usr/local/Cellar/tesseract/
-          ls -R /usr/local/Cellar/leptonica/
+      # ls -R /usr/local/Cellar/tesseract/
+      # ls -R /usr/local/Cellar/leptonica/
 
       - name: Prepare Windows
         if: ${{ matrix.os  == 'windows-2019' }}
@@ -105,7 +108,9 @@ jobs:
       - name: Publish latest release
         uses: ncipollo/release-action@v1
         with:
-          body: "Builds intended **only** for developing purposes! You're better off using the latest v0.\\*.\\* build instead!"
+          body:
+            "Builds intended **only** for developing purposes! You're better off
+            using the latest v0.\\*.\\* build instead!"
           artifacts: "macOS/*.dmg,linux/*.AppImage,windows\\*.msi"
           allowUpdates: true
           artifactErrorsFailBuild: false
@@ -162,7 +167,10 @@ jobs:
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:
-          body: See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) for details.
+          body:
+            See
+            [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md)
+            for details.
           artifacts: "macOS/*.dmg,linux/*.AppImage,windows\\*.msi"
           allowUpdates: true
           artifactErrorsFailBuild: false

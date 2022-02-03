@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.11 (2022-02-03)
+
+- Linux: Fix error on systems without gnome-shell
+  [#168](https://github.com/dynobo/normcap/issues/168)
+
 ## v0.2.10 (2021-12-27)
 
 - All: Fix language settings not working if only a single language is selected

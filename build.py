@@ -357,7 +357,12 @@ if __name__ == "__main__":
             / "app_packages"
         )
         download_tessdata()
-        cmd("brew install tesseract")
+        try:
+            cmd("brew tap-new $USER/local-tap")
+            cmd("brew extract --version=4.1.3 tesseract $USER/local-tap")
+        except Exception:
+            print("Local tap already existing")
+        cmd("brew install tesseract@4.1.3")
         cmd("briefcase create")
         bundle_tesserocr_dylibs()
         rm_recursive(directory=app_dir, exclude=EXCLUDE_FROM_APP_PACKAGES)

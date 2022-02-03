@@ -17,6 +17,7 @@ from PySide2 import QtGui, QtWidgets
 
 from normcap import __version__
 from normcap.data import FILE_ISSUE_TEXT
+from normcap.logger import logger
 from normcap.models import (
     DesktopEnvironment,
     DisplayManager,
@@ -39,8 +40,10 @@ def gnome_shell_version() -> str:
         result = re.search(r"\s+([\d.]+)", output)
         if result:
             version = result.groups()[0]
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         pass
+    except Exception as e:  # pylint: disable=broad-except
+        logger.error("Exception when trying to get gnome-shell version %s", e)
 
     return parse_version(version)
 
