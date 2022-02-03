@@ -123,7 +123,7 @@ class Capture:
     rect: Rect = Rect()
 
     # Result of OCR
-    words: List = field(default_factory=list)  # Words+metadata detected by OCR
+    words: list = field(default_factory=list)  # Words+metadata detected by OCR
 
     # Result of magics
     scores: dict = field(default_factory=dict)  # magics with scores
@@ -148,7 +148,7 @@ class Capture:
         return string.strip()
 
     @staticmethod
-    def _format_list_of_dicts_output(list_of_dicts: List) -> str:
+    def _format_list_of_dicts_output(list_of_dicts: list) -> str:
         string = ""
         for dic in list_of_dicts:
             for key, val in dic.items():
@@ -175,7 +175,7 @@ class Capture:
     def mean_conf(self) -> float:
         """Average confidence value of OCR result."""
         if self.words:
-            return statistics.mean([float(w.get("conf", 0)) for w in self.words])
+            return statistics.mean([w.get("conf", 0) for w in self.words])
         return 0
 
     @property

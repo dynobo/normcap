@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import importlib_metadata
@@ -53,7 +54,7 @@ def test_is_briefcase_package(monkeypatch):
     assert system_info.is_briefcase_package()
 
 
-def test_screens(qtbot):  # pylint: disable=unused-argument
+def test_screens():
     """Check screen info types and content."""
     screens = system_info.screens()
     assert len(screens) >= 1
@@ -64,7 +65,7 @@ def test_screens(qtbot):  # pylint: disable=unused-argument
     assert isinstance(screens[0].height, int)
 
 
-def test_get_tessdata_path(monkeypatch):
+def test_get_tessdata_config_path(monkeypatch):
     """Check tessdata path in / outside package."""
     # pylint: disable=protected-access
 
@@ -73,28 +74,17 @@ def test_get_tessdata_path(monkeypatch):
     data_file.touch(exist_ok=True)
 
     try:
-        monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
-        path_briefcase = system_info._get_tessdata_path()
-
-        monkeypatch.setattr(system_info, "is_briefcase_package", lambda: False)
-        monkeypatch.setenv("TESSDATA_PREFIX", str(data_file.parent.parent.resolve()))
-        path_env_var = system_info._get_tessdata_path()
-
-        monkeypatch.setattr(system_info, "is_briefcase_package", lambda: False)
-        monkeypatch.setenv("TESSDATA_PREFIX", "")
-        path_non = system_info._get_tessdata_path()
+        path = system_info._get_tessdata_config_path()
     finally:
         data_file.unlink()
 
-    assert path_briefcase.endswith("tessdata")
-    assert path_env_var.endswith("tessdata")
-    assert path_non == ""
+    assert isinstance(path, str)
+    assert path.endswith("tessdata" + os.sep)
 
-    # mock directory but _no_ language data:
+    # mock _no_ language data:
     monkeypatch.setattr(system_info, "config_directory", lambda: Path("/tmp"))
-    monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
     with pytest.raises(RuntimeError):
-        _ = system_info._get_tessdata_path()
+        _ = system_info._get_tessdata_config_path()
 
 
 def test_tesseract():
@@ -108,24 +98,20 @@ def test_tesseract():
     assert version[0].isdigit()
     assert len(version) == 3
 
+    assert infos.path[-1] in ["\\", "/"]
     assert Path(infos.path).exists()
 
     assert isinstance(infos.languages, list)
     assert len(infos.languages) >= 1
 
 
-@pytest.mark.skip_on_gh
-def test_tesseract_exceptions(monkeypatch):
-    """Check tesseract system info.
-
-    Fails on Windows, because get_tesseract_version is already monkey patched here.
-    """
-
-    def simulate_raise():
-        raise RuntimeError()
-
+def test_tesseract_exceptions(monkeypatch, tmp_path):
+    """Check tesseract system info."""
+    monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
     monkeypatch.setattr(
-        system_info.pytesseract, "get_tesseract_version", simulate_raise
+        system_info,
+        "_get_tessdata_config_path",
+        lambda: str((tmp_path / "not-existing").absolute()),
     )
 
     with pytest.raises(RuntimeError):
@@ -135,7 +121,6 @@ def test_tesseract_exceptions(monkeypatch):
 
 def test_to_string():
     """Check if str represeentation contains expected infos."""
-    system_info.tesseract.cache_clear()
     string = system_info.to_string()
     expected = []
     for item in expected:
