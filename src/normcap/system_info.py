@@ -1,77 +1,53 @@
 """Gather relevant system information."""
 import functools
+import logging
 import os
 import pprint
 import re
 import subprocess
 import sys
-import traceback
 from distutils.version import LooseVersion
+from importlib import metadata
 from pathlib import Path
-from typing import Dict
+from typing import Optional
 
-import importlib_metadata
-import importlib_resources
-import PySide2
-import pytesseract  # type:ignore
-from packaging.version import parse as parse_version
-from PySide2 import QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import __version__ as PySide6_version
 
 from normcap import __version__
-from normcap.data import FILE_ISSUE_TEXT
-from normcap.models import (
-    DesktopEnvironment,
-    DisplayManager,
-    Rect,
-    ScreenInfo,
-    TesseractInfo,
-)
+from normcap.models import DesktopEnvironment, Rect, Screen
 
-
-def set_tesseract_cmd_on_windows():
-    """Set pytesseract to use bundled windows binary."""
-    tesseract_path = (
-        importlib_resources.files("normcap.resources")
-        .joinpath("tesseract")
-        .joinpath("tesseract.exe")
-    )
-    pytesseract.pytesseract.tesseract_cmd = str(tesseract_path.resolve())
-    pytesseract.get_tesseract_version = lambda: LooseVersion("5.0.0")
-    pytesseract.pytesseract.get_tesseract_version = lambda: LooseVersion("5.0.0")
+logger = logging.getLogger(__name__)
 
 
 @functools.lru_cache()
-def gnome_shell_version() -> str:
+def gnome_shell_version() -> Optional[LooseVersion]:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux" or desktop_environment() != DesktopEnvironment.GNOME:
-        return ""
+        return None
 
-    version = ""
+    version = None
     try:
         output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
         output = output_raw.decode().strip()
-        result = re.search(r"\s+([\d.]+)", output)
-        if result:
-            version = result.groups()[0]
-    except subprocess.CalledProcessError:
+        if result := re.search(r"\s+([\d.]+)", output):
+            version = LooseVersion(result.groups()[0])
+    except (subprocess.CalledProcessError, FileNotFoundError):
         pass
+    except Exception as e:  # pylint: disable=broad-except
+        logger.error("Exception when trying to get gnome-shell version %s", e)
+    return version
 
-    return parse_version(version)
 
-
-@functools.lru_cache()
-def display_manager() -> DisplayManager:
+@functools.cache
+def display_manager_is_wayland() -> bool:
     """Identify relevant display managers (Linux)."""
     XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "").lower()
     WAYLAND_DISPLAY = os.environ.get("WAYLAND_DISPLAY", "").lower()
-    if "wayland" in WAYLAND_DISPLAY or "wayland" in XDG_SESSION_TYPE:
-        return DisplayManager.WAYLAND
-    if "x11" in XDG_SESSION_TYPE:
-        return DisplayManager.X11
-    return DisplayManager.OTHER
+    return "wayland" in WAYLAND_DISPLAY or "wayland" in XDG_SESSION_TYPE
 
 
-@functools.lru_cache()
+@functools.cache
 def desktop_environment() -> DesktopEnvironment:
     """Detect used desktop environment (Linux)."""
     KDE_FULL_SESSION = os.environ.get("KDE_FULL_SESSION", "").lower()
@@ -89,7 +65,7 @@ def desktop_environment() -> DesktopEnvironment:
     return DesktopEnvironment.OTHER
 
 
-def screens() -> Dict[int, ScreenInfo]:
+def screens() -> dict[int, Screen]:
     """Get informations about available monitors."""
     primary_screen = QtWidgets.QApplication.primaryScreen()
     screens_dict = {}
@@ -106,7 +82,7 @@ def screens() -> Dict[int, ScreenInfo]:
             right=geometry.left() + geometry.width(),
         )
 
-        screens_dict[idx] = ScreenInfo(
+        screens_dict[idx] = Screen(
             is_primary=is_primary,
             device_pixel_ratio=device_pixel_ratio,
             geometry=geometry_rect,
@@ -126,8 +102,10 @@ def primary_screen_idx() -> int:
 def is_briefcase_package() -> bool:
     """Check if script is executed in briefcase package."""
     app_module = sys.modules["__main__"].__package__
-    metadata = importlib_metadata.metadata(app_module)
-    return "Briefcase-Version" in metadata
+    if not app_module:
+        return False
+
+    return "Briefcase-Version" in metadata.metadata(app_module)
 
 
 def config_directory() -> Path:
@@ -136,22 +114,19 @@ def config_directory() -> Path:
 
     # Windows
     if sys.platform == "win32":
-        local_appdata = os.getenv("LOCALAPPDATA")
-        if local_appdata:
+        if local_appdata := os.getenv("LOCALAPPDATA"):
             return Path(local_appdata) / postfix
-        appdata = os.getenv("APPDATA")
-        if appdata:
+        if appdata := os.getenv("APPDATA"):
             return Path(appdata) / postfix
-        raise ValueError("Couldn't determine the appdata directory.")
+        raise ValueError("Could not determine the appdata directory.")
 
     # Linux and Mac
-    xdg_config_home = os.getenv("XDG_CONFIG_HOME")
-    if xdg_config_home:
+    if xdg_config_home := os.getenv("XDG_CONFIG_HOME"):
         return Path(xdg_config_home) / postfix
     return Path.home() / ".config" / postfix
 
 
-def _get_tessdata_path() -> str:
+def get_tessdata_path() -> str:
     """Deside which path for tesseract language files to use."""
     prefix = os.environ.get("TESSDATA_PREFIX", None)
 
@@ -174,56 +149,21 @@ def _get_tessdata_path() -> str:
     return path_str
 
 
-def get_tesseract_config() -> str:
-    """Get string with cli args to be passed into tesseract api."""
-    tessdata_path = _get_tessdata_path()
-    return f'--tessdata-dir "{tessdata_path}"' if tessdata_path else ""
-
-
-@functools.lru_cache()
-def tesseract() -> TesseractInfo:
-    """Get info abput tesseract setup."""
-    try:
-        if sys.platform == "win32" and (
-            is_briefcase_package() or "GITHUB_ACTIONS" in os.environ
-        ):
-            set_tesseract_cmd_on_windows()
-        tessdata_path = _get_tessdata_path()
-        languages = sorted(pytesseract.get_languages(config=get_tesseract_config()))
-        version = str(pytesseract.get_tesseract_version()).splitlines()[0]
-    except RuntimeError as e:
-        traceback.print_tb(e.__traceback__)
-        raise RuntimeError(
-            "Couldn't determine Tesseract information. If you pip installed NormCap "
-            + "make sure Tesseract is installed and configured correctly. Otherwise: "
-            + FILE_ISSUE_TEXT
-        ) from e
-
-    if not languages:
-        raise ValueError(
-            "Could not load any languages for tesseract. "
-            + "On Windows, make sure that TESSDATA_PREFIX environment variable is set. "
-            + "On Linux/MacOS see if 'tesseract --list-langs' work is the command line."
-        )
-
-    return TesseractInfo(version=version, languages=languages, path=tessdata_path)
-
-
 def to_string() -> str:
     """Cast all system infos to string for logging."""
     return pprint.pformat(
         dict(
+            cli_args=" ".join(sys.argv),
             is_briefcase_package=is_briefcase_package(),
             platform=sys.platform,
-            pyside2_version=PySide2.__version__,
-            qt_version=PySide2.QtCore.__version__,
+            pyside6_version=PySide6_version,
+            qt_version=QtCore.qVersion(),
+            qt_library_path=", ".join(QtCore.QCoreApplication.libraryPaths()),
             config_directory=config_directory(),
             normcap_version=__version__,
-            tesseract_version=tesseract().version,
-            tesseract_languages=tesseract().languages,
-            tessdata_path=tesseract().path,
+            tessdata_path=get_tessdata_path(),
             desktop_environment=desktop_environment(),
-            display_manager=display_manager(),
+            display_manager_is_wayland=display_manager_is_wayland(),
             gnome_shell_version=gnome_shell_version(),
             screens=screens(),
         ),

@@ -1,12 +1,10 @@
 import pytest  # type: ignore
 
-from normcap.magics.url_magic import UrlMagic
+from normcap.ocr.magics.url_magic import UrlMagic
 
-# pylint: disable=unused-import
-from .fixtures import capture
+from .ocr_fixtures import ocr_result  # pylint: disable=unused-import
 
-# Allow pytest fixtures:
-# pylint: disable=redefined-outer-name
+# pylint: disable=redefined-outer-name,protected-access,unused-argument
 
 
 @pytest.mark.parametrize(
@@ -38,12 +36,12 @@ from .fixtures import capture
         ),
     ],
 )
-def test_url_magic_transforms(capture, words, transformed_expected, score_expected):
+def test_url_magic_transforms(ocr_result, words, transformed_expected, score_expected):
     """Check some transformations from raw to url."""
-    capture.words = words
+    ocr_result.words = words
     url_magic = UrlMagic()
-    score = url_magic.score(capture)
-    transformed = url_magic.transform(capture)
+    score = url_magic.score(ocr_result)
+    transformed = url_magic.transform(ocr_result)
 
     assert score > score_expected - 3
     assert score < score_expected + 3

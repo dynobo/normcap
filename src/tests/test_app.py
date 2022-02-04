@@ -1,17 +1,55 @@
+import logging
+from pathlib import Path
+
+import pytest
 import toml
+from PySide6 import QtCore, QtGui
 
 import normcap
+from normcap.args import create_argparser
+from normcap.gui.main_window import MainWindow
 
-# PyLint can't handle fixtures correctly. Ignore.
-# pylint: disable=redefined-outer-name
+from .ocr_testcases import TESTCASES
+
+logger = logging.getLogger(__name__)
+
+# Specific settings for pytest
+# pylint: disable=redefined-outer-name,protected-access,unused-argument
 
 
 def test_version():
-    """Check version string consistency"""
-
     with open("pyproject.toml", encoding="utf8") as toml_file:
         pyproject_toml = toml.load(toml_file)
 
     briefcase_version = pyproject_toml["tool"]["briefcase"]["version"]
     poetry_version = pyproject_toml["tool"]["poetry"]["version"]
     assert briefcase_version == poetry_version == normcap.__version__
+
+
+@pytest.mark.parametrize(
+    "testcase",
+    TESTCASES,
+)
+def test_app(monkeypatch, qtbot, xvfb, testcase):
+    """Tests complete OCR workflow."""
+    logger.setLevel("DEBUG")
+    args = create_argparser().parse_args([f"--language={testcase['language']}"])
+    test_file = Path(__file__).parent / "testcase_images" / testcase["image"]
+    monkeypatch.setattr(
+        normcap.gui.main_window,
+        "grab_screens",
+        lambda: [QtGui.QImage(test_file.absolute())],
+    )
+
+    window = MainWindow(vars(args))
+    window.show()
+    qtbot.addWidget(window)
+
+    qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*testcase["tl"]))
+    qtbot.mouseMove(window, pos=QtCore.QPoint(*testcase["br"]))
+    qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*testcase["br"]))
+
+    def check_result():
+        assert window.main_window.capture.ocr_text == testcase["transformed"]
+
+    qtbot.waitUntil(check_result)

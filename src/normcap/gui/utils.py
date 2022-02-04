@@ -6,24 +6,25 @@ import logging
 import shutil
 import sys
 import tempfile
+from importlib import resources
 from pathlib import Path
 from typing import Optional
 
-import importlib_resources
 from jeepney.io.blocking import open_dbus_connection  # type: ignore
 from jeepney.wrappers import MessageGenerator, new_method_call  # type: ignore
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import system_info
-from normcap.data import URLS
-from normcap.logger import logger
+from normcap.constants import URLS
+
+logger = logging.getLogger(__name__)
 
 
 def save_image_in_tempfolder(
     image: QtGui.QImage, postfix: str = "", log_level=logging.DEBUG
 ):
     """For debugging it can be useful to store the cropped image."""
-    if logger.level == log_level:
+    if logger.root.level == log_level:
         file_dir = Path(tempfile.gettempdir()) / "normcap"
         file_dir.mkdir(exist_ok=True)
         now = datetime.datetime.now()
@@ -32,13 +33,7 @@ def save_image_in_tempfolder(
         logger.debug("Store debug image in: %s", file_dir / file_name)
 
 
-def get_screen_idx_of_mouse() -> QtCore.QRect:
-    """Detect screen index of display with mouse pointer."""
-    desktop = QtWidgets.QApplication.desktop()
-    return desktop.screenNumber(QtGui.QCursor.pos())
-
-
-def qt_message_handler(mode, _, message):
+def qt_log_wrapper(mode, _, message):
     """Intercept QT message.
 
     Used to hide away unnecessary warnings by showing them only on higher
@@ -99,7 +94,7 @@ def move_active_window_to_position_on_gnome(screen_geometry):
     _ = connection.send_and_get_reply(msg)
 
 
-def except_hook(cls, exception, traceback):
+def hook_exceptions(cls, exception, traceback):
     """Print traceback and quit application."""
     logger.error(
         "Uncaught exception! Quitting NormCap!", exc_info=(cls, exception, traceback)
@@ -111,22 +106,18 @@ def except_hook(cls, exception, traceback):
 @functools.lru_cache(maxsize=None)
 def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
-    icon = QtGui.QIcon.fromTheme(system_icon) if system_icon else None
-    if not icon:
-        fp = importlib_resources.files("normcap.resources").joinpath(icon_file)
-        icon_path = str(fp.absolute())
-        icon = QtGui.QIcon()
-        icon.addFile(icon_path)
+    if system_icon:
+        return QtGui.QIcon.fromTheme(system_icon)
+
+    icon = QtGui.QIcon()
+    with resources.path("normcap.resources", icon_file) as icon_path:
+        icon.addFile(str(icon_path.absolute()))
+
     return icon
 
 
 def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None):
-    """Show in-progress cursor for application.
-
-    QtCore.Qt.WaitCursor
-    QtCore.Qt.CrossCursor
-    QtCore.Qt.ArrowCursor
-    """
+    """Show in-progress cursor for application."""
     if cursor is not None:
         QtWidgets.QApplication.setOverrideCursor(cursor)
     else:
@@ -134,14 +125,13 @@ def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None):
     QtWidgets.QApplication.processEvents()
 
 
-def init_tessdata():
+def copy_tessdata_files_to_config_dir():
     """If packaged, copy language data files to config directory."""
-
     tessdata_path = system_info.config_directory() / "tessdata"
     if list(tessdata_path.glob("*.traineddata")):
         return
 
-    resource_path = Path(importlib_resources.files("normcap.resources"))
+    resource_path = Path(resources.files("normcap.resources"))
     traineddata_files = list((resource_path / "tessdata").glob("*.traineddata"))
     doc_files = list((resource_path / "tessdata").glob("*.txt"))
 
@@ -149,3 +139,22 @@ def init_tessdata():
     tessdata_path.mkdir(parents=True, exist_ok=True)
     for f in traineddata_files + doc_files:
         shutil.copy(f, tessdata_path / f.name)
+
+
+def copy_to_clipboard():
+    """Initialize a wrapper around qt clipboard.
+
+    Necesessary to avoid some wired results on Wayland, where text sometimes get
+    copied, and sometimes not.
+    """
+    # TODO: Test if workaround still necessary with Qt6
+    from PySide6 import QtWidgets  # pylint: disable=all
+
+    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
+
+    def copy_qt(text):
+        logger.debug("Copy to clipboard:\n%s", text)
+        cb = app.clipboard()
+        cb.setText(text)
+
+    return copy_qt

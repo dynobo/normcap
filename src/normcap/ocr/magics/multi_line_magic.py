@@ -1,14 +1,14 @@
 """Magic Class to handle multi line text selection."""
 
-from normcap.magics.base_magic import BaseMagic
-from normcap.models import Capture
+from normcap.ocr.magics.base_magic import BaseMagic
+from normcap.ocr.models import OcrResult
 
 
 class MultiLineMagic(BaseMagic):
     """Format multi line text."""
 
-    def score(self, capture: Capture) -> float:
-        """Calc score based on amount of lines and breaks
+    def score(self, ocr_result: OcrResult) -> float:
+        """Calc score based on amount of lines and breaks.
 
         Arguments:
             BaseMagic {class} -- Base class for magics
@@ -18,15 +18,15 @@ class MultiLineMagic(BaseMagic):
             float -- score between 0-100 (100 = more likely)
         """
         if (
-            (capture.num_lines > 1)
-            and (capture.num_blocks == 1)
-            and (capture.num_pars == 1)
+            (ocr_result.num_lines > 1)
+            and (ocr_result.num_blocks == 1)
+            and (ocr_result.num_pars == 1)
         ):
             self._final_score = 50.0
 
         return self._final_score
 
-    def transform(self, capture: Capture) -> str:
+    def transform(self, ocr_result: OcrResult) -> str:
         """Just transform into multiple lines of text.
 
         Arguments:
@@ -36,4 +36,4 @@ class MultiLineMagic(BaseMagic):
             str -- Lines of text
         """
         # Just return concatenated text
-        return capture.lines
+        return ocr_result.lines

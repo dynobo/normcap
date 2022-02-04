@@ -1,19 +1,20 @@
 """Magic Class to handle e-mail adresses contained in the text."""
 
+import logging
 import re
-from typing import List
 
-from normcap.logger import logger
-from normcap.magics.base_magic import BaseMagic
-from normcap.models import Capture
+from normcap.ocr.magics.base_magic import BaseMagic
+from normcap.ocr.models import OcrResult
+
+logger = logging.getLogger(__name__)
 
 
 class EmailMagic(BaseMagic):
     """Detect and extract email adress(es) in the OCR results."""
 
-    _emails: List[str] = []
+    _emails: list[str] = []
 
-    def score(self, capture: Capture) -> float:
+    def score(self, ocr_result: OcrResult) -> float:
         """Calc score based on chars in email adresses vs. overall chars.
 
         Arguments:
@@ -24,7 +25,7 @@ class EmailMagic(BaseMagic):
             float -- score between 0-100 (100 = more likely)
         """
         # Get concatenated lines
-        text = capture.text
+        text = ocr_result.text
 
         # Search email addresses in line
         reg_email = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+"
@@ -46,8 +47,9 @@ class EmailMagic(BaseMagic):
         # Return final score as 100 * (email_chars / all_chars)
         return round(100 * ratio, 2)
 
-    def transform(self, capture: Capture) -> str:
+    def transform(self, ocr_result: OcrResult) -> str:
         """Transform to comma separated string of email adresses.
+
         Other chars not contained in email adresses are discarded.
 
         Arguments:

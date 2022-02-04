@@ -1,6 +1,6 @@
 """Base class for templating magics."""
 
-from normcap.models import Capture
+from normcap.ocr.models import OcrResult
 
 # pylint: disable=unused-argument, no-self-use
 
@@ -11,7 +11,7 @@ class BaseMagic:
     def __init__(self):
         self._final_score = 0  # Initial score
 
-    def score(self, capture: Capture) -> float:
+    def score(self, ocr_result: OcrResult) -> float:
         """Calculate the score of a magic.
 
         Score should be between 0-100, where 0 means 'should never be handled
@@ -25,7 +25,7 @@ class BaseMagic:
         """
         return 0.0
 
-    def transform(self, capture: Capture) -> str:
+    def transform(self, ocr_result: OcrResult) -> str:
         """Transform detected lineboxes into single(!) string.
 
         Arguments:

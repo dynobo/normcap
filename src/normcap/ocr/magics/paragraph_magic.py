@@ -2,14 +2,14 @@
 
 import os
 
-from normcap.magics.base_magic import BaseMagic
-from normcap.models import Capture
+from normcap.ocr.magics.base_magic import BaseMagic
+from normcap.ocr.models import OcrResult
 
 
 class ParagraphMagic(BaseMagic):
     """Detect and extract plain text formatted in paragraphs."""
 
-    def score(self, capture: Capture) -> float:
+    def score(self, ocr_result: OcrResult) -> float:
         """Calc score based on layout of amount of paragraphs and blocks.
 
         Arguments:
@@ -19,12 +19,12 @@ class ParagraphMagic(BaseMagic):
         Returns:
             float -- score between 0-100 (100 = more likely)
         """
-        breaks = capture.num_blocks + capture.num_pars - 1
+        breaks = ocr_result.num_blocks + ocr_result.num_pars - 1
         self._final_score = 100 - (100 / (breaks))
 
         return self._final_score
 
-    def transform(self, capture: Capture) -> str:
+    def transform(self, ocr_result: OcrResult) -> str:
         """Transform wordboxes into nicely formatted paragraphs.
 
         Arguments:
@@ -36,7 +36,7 @@ class ParagraphMagic(BaseMagic):
         result = ""
         current_par_num = 1
         current_block_num = 1
-        for word in capture.words:
+        for word in ocr_result.words:
             breaks = 0
             if word["par_num"] != current_par_num:
                 current_par_num = word["par_num"]

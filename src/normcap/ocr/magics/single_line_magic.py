@@ -1,14 +1,14 @@
 """Magic Class to handle very simple single line text selection."""
 
-from normcap.magics.base_magic import BaseMagic
-from normcap.models import Capture
+from normcap.ocr.magics.base_magic import BaseMagic
+from normcap.ocr.models import OcrResult
 
 
 class SingleLineMagic(BaseMagic):
     """Format a single line of text."""
 
-    def score(self, capture: Capture) -> float:
-        """Calc score based on amount of lines
+    def score(self, ocr_result: OcrResult) -> float:
+        """Calc score based on amount of lines.
 
         Arguments:
             BaseMagic {class} -- Base class for magics
@@ -17,14 +17,14 @@ class SingleLineMagic(BaseMagic):
         Returns:
             float -- score between 0-100 (100 = more likely)
         """
-        if capture.num_lines == 1:
+        if ocr_result.num_lines == 1:
             self._final_score = 50
-        if len(capture.text) == 0:
+        if len(ocr_result.text) == 0:
             self._final_score = 1
 
         return self._final_score
 
-    def transform(self, capture: Capture) -> str:
+    def transform(self, ocr_result: OcrResult) -> str:
         """Just transform into single line of text.
 
         Arguments:
@@ -34,4 +34,4 @@ class SingleLineMagic(BaseMagic):
             str -- Single line of text
         """
         # Just return concatenated text
-        return capture.text.strip()
+        return ocr_result.text.strip()

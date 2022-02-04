@@ -1,12 +1,10 @@
 """Various Data Models."""
 import enum
-import os
-import statistics
 from collections import namedtuple
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Optional
 
-from PySide2 import QtGui
+from PySide6 import QtCore, QtGui
 
 Setting = namedtuple("Setting", "key flag type_ value help")
 
@@ -20,17 +18,9 @@ class Urls:
     pypi: str
     github: str
     issues: str
+    website: str
     faqs: str
     xcb_error: str
-
-
-@enum.unique
-class DisplayManager(enum.IntEnum):
-    """Display manager that need to be handled."""
-
-    OTHER = 0
-    WAYLAND = 1
-    X11 = 2
 
 
 @enum.unique
@@ -52,15 +42,6 @@ class CaptureMode(enum.IntEnum):
 
 
 @dataclass()
-class TesseractInfo:
-    """Info about system's tesseract setup."""
-
-    version: str
-    path: str
-    languages: List[str]
-
-
-@dataclass()
 class Rect:
     """Rectangular selection on screen."""
 
@@ -70,12 +51,12 @@ class Rect:
     bottom: int = 0
 
     @property
-    def geometry(self) -> Tuple[int, int, int, int]:
+    def geometry(self) -> tuple[int, int, int, int]:
         """Expose rect for usage with QT."""
         return self.left, self.top, self.width, self.height
 
     @property
-    def points(self) -> Tuple[int, int, int, int]:
+    def points(self) -> tuple[int, int, int, int]:
         """Expose rect as tuple of coordinates."""
         return self.left, self.top, self.right, self.bottom
 
@@ -89,15 +70,32 @@ class Rect:
         """Height of rect."""
         return self.bottom - self.top
 
+    def normalize(self):
+        """Ensure that non-negative dimensions by flipping coordinates, if necessary."""
+        if self.top > self.bottom:
+            self.top, self.bottom = self.bottom, self.top
+        if self.left > self.right:
+            self.right, self.left = self.left, self.right
+
+    def scale(self, factor: float):
+        """Scale coordinates and dimensions by provided factor."""
+        self.left = int(self.left * factor)
+        self.top = int(self.top * factor)
+        self.right = int(self.right * factor)
+        self.bottom = int(self.bottom * factor)
+
 
 @dataclass()
-class ScreenInfo:
+class Screen:
     """About an attached display."""
 
     is_primary: bool
     device_pixel_ratio: float
     geometry: Rect
     index: int
+
+    raw_screenshot: Optional[QtGui.QImage] = None
+    scaled_screenshot: Optional[QtGui.QImage] = None
 
     @property
     def width(self):
@@ -109,111 +107,56 @@ class ScreenInfo:
         """Get screen height."""
         return self.geometry.height
 
+    @property
+    def screen_window_ratio(self):
+        """Calculate ratio between raw and scaled screenshot.
+
+        This is useful because the scaled screenshot (scaled to screen resolution) not
+        necessary equals the size of the raw screenshot. This is the case e.g. if there
+        are two differently scaled screeenshots (one HiDPI, one normal) or a monitor
+        is set to fractional scaling.
+        """
+        return self.raw_screenshot.width() / self.scaled_screenshot.width()
+
+    def get_scaled_screenshot(self, new_size: QtCore.QSize):
+        """Resize screenshot to the provided dimensions and cache in attribute."""
+        if not isinstance(self.raw_screenshot, QtGui.QImage):
+            raise TypeError(
+                f"Raw screenshot should be QImage but is {self.raw_screenshot}."
+            )
+
+        if (
+            isinstance(self.scaled_screenshot, QtGui.QImage)
+            and self.scaled_screenshot.size() == new_size
+        ):
+            return self.scaled_screenshot
+
+        if new_size.width() == self.raw_screenshot.width():
+            self.scaled_screenshot = self.raw_screenshot
+        else:
+            self.scaled_screenshot = self.raw_screenshot.scaled(
+                new_size, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation
+            )
+
+        return self.scaled_screenshot
+
 
 @dataclass()
 class Capture:
-    """Store all information about selected region."""
+    """Store all information like screenshot and selected region."""
 
     mode: CaptureMode = CaptureMode.PARSE
 
     # Image of selected region
     image: QtGui.QImage = QtGui.QImage()
-    screen: Optional[ScreenInfo] = None
+    screen: Optional[Screen] = None
     scale_factor: float = 1
     rect: Rect = Rect()
 
-    # Result of OCR
-    words: List = field(default_factory=list)  # Words+metadata detected by OCR
-
-    # Result of magics
-    scores: dict = field(default_factory=dict)  # magics with scores
-    best_magic: str = ""  # Highest scored magic
-    transformed: str = ""  # Transformed result
-
-    # Technical information
-    tess_args: Dict = field(default_factory=dict)
-
-    def __repr__(self) -> str:
-        string = ""
-        for key in dir(self):
-            # Skip internal classes
-            if key.startswith("_"):
-                continue
-            # Nicer format tesseract output
-            if key == "words":
-                string += f"{key}: \n{self._format_list_of_dicts_output(getattr(self, key))}\n"
-                continue
-            # Per default just print
-            string += f"{key}: {getattr(self, key)}\n"
-        return string.strip()
-
-    @staticmethod
-    def _format_list_of_dicts_output(list_of_dicts: List) -> str:
-        string = ""
-        for dic in list_of_dicts:
-            for key, val in dic.items():
-                if key in ["left", "top", "width", "height"]:
-                    string += f"{key}:{val: <5}| "
-                elif key == "text":
-                    string += f"{key}:{val}"
-                else:
-                    string += f"{key}:{val: <3}| "
-            string += "\n"
-        return string
-
-    def _count_unique_sections(self, level: str) -> int:
-        postfix = "_num"
-        unique_sections = {w[level + postfix] for w in self.words}
-        return len(unique_sections)
-
-    @property
-    def image_size(self):
-        """Get image dimensions."""
-        return self.image.size().toTuple()
-
-    @property
-    def mean_conf(self) -> float:
-        """Average confidence value of OCR result."""
-        if self.words:
-            return statistics.mean([float(w.get("conf", 0)) for w in self.words])
-        return 0
-
-    @property
-    def text(self) -> str:
-        """OCR text as single line string."""
-        return " ".join(w["text"].strip() for w in self.words).strip()
-
-    @property
-    def lines(self) -> str:
-        """OCR text as multi line string."""
-        current_line_num = 0
-        all_lines = []
-        for word in self.words:
-            if word["line_num"] != current_line_num:
-                current_line_num = word["line_num"]
-                all_lines.append(word["text"])
-            else:
-                all_lines[-1] += " " + word["text"]
-
-        all_lines = list(filter(None, all_lines))  # Remove empty
-        return os.linesep.join(all_lines)
-
-    @property
-    def num_lines(self) -> int:
-        """Number of lines in OCR text."""
-        return self._count_unique_sections("line")
-
-    @property
-    def num_pars(self) -> int:
-        """Number of paragraphs in OCR text."""
-        return self._count_unique_sections("par")
-
-    @property
-    def num_blocks(self) -> int:
-        """Number of text blocks in OCR text."""
-        return self._count_unique_sections("block")
+    ocr_text: Optional[str] = None
+    ocr_applied_magic: Optional[str] = None
 
     @property
     def image_area(self) -> int:
-        """Area of cropped image in px²."""
-        return self.image_size[0] * self.image_size[1] if self.image else 0
+        """Provide area of cropped image in px²."""
+        return self.image.width() * self.image.height() if self.image else 0

@@ -1,15 +1,17 @@
 """Find new version on github or pypi."""
 import json
+import logging
 import re
 from distutils.version import LooseVersion
 from typing import Optional
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__
-from normcap.data import URLS
-from normcap.logger import logger
-from normcap.utils import get_icon, set_cursor
+from normcap.constants import URLS
+from normcap.gui.utils import get_icon, set_cursor
+
+logger = logging.getLogger(__name__)
 
 try:
     from normcap.gui.downloader_qtnetwork import Downloader
@@ -92,7 +94,6 @@ class UpdateChecker(QtCore.QObject):
 
     def show_update_message(self, new_version):
         """Show dialog informing about available update."""
-
         text = f"<b>NormCap v{new_version} is available.</b> (You have v{__version__})"
         if self.packaged:
             info_text = (

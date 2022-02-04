@@ -1,32 +1,28 @@
 """Normcap main window."""
+import logging
 import os
 import sys
 import tempfile
 import time
-from typing import Dict, Tuple
+from distutils.version import LooseVersion
+from importlib import resources
 
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import clipboard, system_info, utils
-from normcap.data import FILE_ISSUE_TEXT
-from normcap.enhance import enhance_image
+from normcap import ocr, system_info
+from normcap.constants import FILE_ISSUE_TEXT
+from normcap.gui import utils
 from normcap.gui.base_window import BaseWindow
 from normcap.gui.notifier import Notifier
 from normcap.gui.settings import init_settings
 from normcap.gui.settings_menu import SettingsMenu
 from normcap.gui.system_tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
-from normcap.logger import logger
-from normcap.magic import apply_magic
-from normcap.models import (
-    Capture,
-    CaptureMode,
-    DesktopEnvironment,
-    DisplayManager,
-    Rect,
-)
-from normcap.ocr import perform_ocr
-from normcap.screengrab import grab_screen
+from normcap.models import Capture, CaptureMode, DesktopEnvironment, Rect
+from normcap.ocr.enhance import enhance_image
+from normcap.screengrab import grab_screens
+
+logger = logging.getLogger(__name__)
 
 
 class Communicate(QtCore.QObject):
@@ -42,7 +38,6 @@ class Communicate(QtCore.QObject):
     on_minimize_windows = QtCore.Signal()
     on_set_cursor_wait = QtCore.Signal()
     on_quit_or_hide = QtCore.Signal(str)
-    on_magics_applied = QtCore.Signal()
     on_update_available = QtCore.Signal(str)
     on_open_url_and_hide = QtCore.Signal(str)
 
@@ -57,12 +52,23 @@ class MainWindow(BaseWindow):
     capture = Capture()
 
     def __init__(self, args):
+        """Initialize main application window."""
         self.settings = init_settings(
             "normcap",
             "settings",
             initial=args,
             reset=args.get("reset", False),
         )
+        self.capture.mode = (
+            CaptureMode.PARSE
+            if self.settings.value("mode") == "parse"
+            else CaptureMode.RAW
+        )
+        self.screens = system_info.screens()
+        for idx, screenshot in enumerate(grab_screens()):
+            utils.save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
+            self.screens[idx].raw_screenshot = screenshot
+
         super().__init__(
             screen_idx=0,
             parent=None,
@@ -71,20 +77,14 @@ class MainWindow(BaseWindow):
 
         self.clipboard = QtWidgets.QApplication.clipboard()
 
-        self.capture.mode = (
-            CaptureMode.PARSE
-            if self.settings.value("mode") == "parse"
-            else CaptureMode.RAW
-        )
-
         self._set_signals()
         self._add_settings_menu()
         self._add_tray()
         self._add_update_checker()
         self._add_notifier()
 
-        self.all_windows: Dict[int, BaseWindow] = {0: self}
-        if len(system_info.screens()) > 1:
+        self.all_windows: dict[int, BaseWindow] = {0: self}
+        if len(self.screens) > 1:
             self._init_child_windows()
 
     def _add_settings_menu(self):
@@ -119,12 +119,11 @@ class MainWindow(BaseWindow):
         )
 
     def _set_signals(self):
-        """Setup signals to trigger program logic."""
-        self.com.on_region_selected.connect(self._grab_image)
+        """Set up signals to trigger program logic."""
+        self.com.on_region_selected.connect(self._crop_image)
         self.com.on_image_grabbed.connect(self._prepare_image)
         self.com.on_image_prepared.connect(self._capture_to_ocr)
-        self.com.on_ocr_performed.connect(self._apply_magics)
-        self.com.on_magics_applied.connect(self._copy_to_clipboard)
+        self.com.on_ocr_performed.connect(self._copy_to_clipboard)
         self.com.on_copied_to_clipboard.connect(self._notify_or_close)
 
         self.com.on_minimize_windows.connect(self._minimize_windows)
@@ -140,26 +139,25 @@ class MainWindow(BaseWindow):
 
     def _init_child_windows(self):
         """Initialize child windows with method depending on system."""
-        if system_info.display_manager() != DisplayManager.WAYLAND:
+        if not system_info.display_manager_is_wayland():
             self._create_all_child_windows()
         elif system_info.desktop_environment() == DesktopEnvironment.GNOME:
             self.com.on_window_positioned.connect(self._create_next_child_window)
         else:
             logger.error(
-                "NormCap currently doesn't support multi monitor mode for %s on %s\n%s",
-                system_info.display_manager(),
+                "NormCap currently doesn't support multi monitor mode on %s\n%s",
                 system_info.desktop_environment(),
                 FILE_ISSUE_TEXT,
             )
 
     def _create_next_child_window(self):
-        """Opening child windows only for next display."""
+        """Open child window only for next display."""
         if len(system_info.screens()) > len(self.all_windows):
             index = max(self.all_windows.keys()) + 1
             self._create_child_window(index)
 
     def _create_all_child_windows(self):
-        """Opening all child windows at once."""
+        """Open all child windows at once."""
         for index in system_info.screens():
             if index == self.screen_idx:
                 continue
@@ -239,8 +237,8 @@ class MainWindow(BaseWindow):
         self.clipboard.dataChanged.connect(self.com.on_copied_to_clipboard.emit)
         self.clipboard.dataChanged.connect(self.clipboard.dataChanged.disconnect)
 
-        clipboard_copy = clipboard.init()
-        clipboard_copy(self.capture.transformed)
+        copy = utils.copy_to_clipboard()
+        copy(self.capture.ocr_text)
         QtWidgets.QApplication.processEvents()
 
     #########################
@@ -267,12 +265,19 @@ class MainWindow(BaseWindow):
     # OCR Functionality #
     #####################
 
-    def _grab_image(self, grab_info: Tuple[Rect, int]):
+    def _crop_image(self, grab_info: tuple[Rect, int]):
         """Get image from selected region."""
         logger.info("Take screenshot of position %s", grab_info[0].points)
-        self.capture.rect = grab_info[0]
-        self.capture.screen = system_info.screens()[grab_info[1]]
-        self.capture = grab_screen(capture=self.capture)
+        rect, screen_idx = grab_info
+
+        screenshot = self.screens[screen_idx].raw_screenshot
+
+        self.capture.rect = rect
+        self.capture.screen = system_info.screens()[screen_idx]
+        self.capture.image = screenshot.copy(QtCore.QRect(*rect.geometry))
+
+        utils.save_image_in_tempfolder(self.capture.image)
+
         self.com.on_image_grabbed.emit()
 
     def _prepare_image(self):
@@ -285,24 +290,37 @@ class MainWindow(BaseWindow):
             logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
             self.com.on_quit_or_hide.emit("selection too small")
 
+    @staticmethod
+    def _set_tesseract_cmd_on_windows():
+        """Set pytesseract to use bundled windows binary."""
+        if sys.platform == "win32" and (
+            system_info.is_briefcase_package() or "GITHUB_ACTIONS" in os.environ
+        ):
+            tesseract_path = (
+                resources.files("normcap.resources")
+                .joinpath("tesseract")
+                .joinpath("tesseract.exe")
+            )
+            ocr.pytesseract.pytesseract.tesseract_cmd = str(tesseract_path.resolve())
+            ocr.pytesseract.get_tesseract_version = lambda: LooseVersion("5.0.0")
+            ocr.pytesseract.pytesseract.get_tesseract_version = lambda: LooseVersion(
+                "5.0.0"
+            )
+
     def _capture_to_ocr(self):
         """Perform content recognition on grabed image."""
         logger.debug("Perform OCR")
-        self.capture = perform_ocr(
-            languages=self.settings.value("language"),
-            capture=self.capture,
-        )
-        logger.info("Raw text from OCR:\n%s", self.capture.text)
-        logger.debug("Result from OCR:\n%s", self.capture)
-        self.com.on_ocr_performed.emit()
+        self._set_tesseract_cmd_on_windows()
 
-    def _apply_magics(self):
-        """Beautify/parse content base on magic rules."""
-        if self.capture.mode is CaptureMode.PARSE:
-            logger.debug("Apply Magics")
-            self.capture = apply_magic(self.capture)
-            logger.debug("Result from applying Magics:\n%s", self.capture)
-        if self.capture.mode is CaptureMode.RAW:
-            logger.debug("Raw mode. Skip applying Magics and use raw text")
-            self.capture.transformed = self.capture.text.strip()
-        self.com.on_magics_applied.emit()
+        ocr_result = ocr.recognize(
+            languages=self.settings.value("language"),
+            image=self.capture.image,
+            tessdata_path=system_info.get_tessdata_path(),
+            parse=self.capture.mode is CaptureMode.PARSE,
+        )
+        self.capture.ocr_text = ocr_result.text
+        self.capture.ocr_applied_magic = ocr_result.best_scored_magic
+
+        logger.info("Text from OCR:\n%s", self.capture.ocr_text)
+
+        self.com.on_ocr_performed.emit()

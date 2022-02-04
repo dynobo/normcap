@@ -31,11 +31,19 @@ repos:
         entry: poetry run black src/normcap src/tests/
         types: [python]
 
+      - id: pydocstyle
+        name: pydocstyle
+        stages: [commit]
+        language: system
+        entry: poetry run pydocstyle
+        types: [python]
+        pass_filenames: false
+
       - id: pylint
         name: pylint
         stages: [commit]
         language: system
-        entry: poetry run pylint src/normcap src/tests/
+        entry: poetry run pylint src/normcap src/tests
         types: [python]
         pass_filenames: false
 
@@ -54,5 +62,15 @@ repos:
         entry:
           poetry run pytest src/tests/ --cov normcap --cov-report xml:cov.xml
           --cov-report html
+        types: [python]
+        pass_filenames: false
+
+      - id: pydeps
+        name: pydeps
+        stages: [commit]
+        language: system
+        entry:
+          poetry run pydeps src/normcap --max-bacon=1 --cluster
+          --max-cluster-size=1 --no-show -o=dependency_graph.png -T=png
         types: [python]
         pass_filenames: false

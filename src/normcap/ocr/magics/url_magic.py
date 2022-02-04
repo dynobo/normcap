@@ -1,28 +1,32 @@
 """Magic to handle URL(s) in selection."""
 
+import logging
 import os
 import re
-from typing import List
 
-from normcap.logger import logger
-from normcap.magics.base_magic import BaseMagic
-from normcap.models import Capture
+from normcap.ocr.magics.base_magic import BaseMagic
+from normcap.ocr.models import OcrResult
+
+logger = logging.getLogger(__name__)
 
 
 class UrlMagic(BaseMagic):
     """Detect and extract urls adress(es) in the OCR results."""
 
-    _urls: List[str] = []
+    _urls: list[str] = []
     _manual_correction_table = {
         r"h\w{0,1}t+\w{0,1}ps\s*\:\s*\/+\s*": "https://",
         r"(\w),(\w{1,4}\s*$)": r"\1.\2",  # e.g. gle,com -> gle.com
         r"[wW]{3}\s*\.\s*": "www.",
         r"qithub\.com": "github.com",
         r"[gq]oo[gq]le": "google",
+        r"(\s+)(wikipedia\.\w{2,3}\s)+": r"\1www.\2",  # wp.de -> www.wp.de
+        r"nttp://": r"http://",
+        r"nttps://": r"https://",
     }
 
-    def score(self, capture: Capture) -> float:
-        """Calculate score based on chars in URLs vs. overall chars.
+    def score(self, ocr_result: OcrResult) -> float:
+        """Calculate score based on chars in URLs vs overall chars.
 
         Arguments:
             BaseMagic {class} -- Base class for magics
@@ -32,7 +36,7 @@ class UrlMagic(BaseMagic):
             float -- score between 0-100 (100 = more likely)
         """
         # Get concatenated lines
-        text = capture.text
+        text = ocr_result.text
 
         # Remove whitespace between two chars
         # because OCR will often read e.g. "http: //github.com"
@@ -60,7 +64,7 @@ class UrlMagic(BaseMagic):
         overall_chars = max([len(text), 1])
         ratio = url_chars / overall_chars
         logger.debug(
-            "%s of %s chars in emails (ratio: %s)", url_chars, overall_chars, ratio
+            "%s of %s chars in urls (ratio: %s)", url_chars, overall_chars, ratio
         )
 
         # Map to score
@@ -68,7 +72,7 @@ class UrlMagic(BaseMagic):
 
         return self._final_score
 
-    def transform(self, capture: Capture) -> str:
+    def transform(self, ocr_result: OcrResult) -> str:
         """Parse URLs and return as newline separated string.
 
         Arguments:

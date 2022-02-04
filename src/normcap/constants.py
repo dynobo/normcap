@@ -1,3 +1,5 @@
+"""Global constants."""
+
 from normcap.models import Setting, Urls
 
 DEFAULT_SETTINGS = (
@@ -51,7 +53,8 @@ URLS = Urls(
     pypi="https://pypi.org/pypi/normcap",
     github="https://github.com/dynobo/normcap",
     issues="https://github.com/dynobo/normcap/issues",
-    faqs="https://github.com/dynobo/normcap/blob/main/FAQ.md",
+    faqs="https://dynobo.github.io/normcap/#faqs",
+    website="https://dynobo.github.io/normcap",
     xcb_error="https://github.com/dynobo/normcap/blob/main/FAQ.md"
     + "#linux-could-not-load-the-qt-platform-plugin-xcb",
 )
@@ -68,5 +71,5 @@ DESCRIPTION = (
 MESSAGE_LANGUAGES = (
     "You are not using the prebuild package version of NormCap. "
     "Please refer to the documentation of Tesseract for your "
-    "Operating System on how to install additional languages."
+    "operating system on how to install additional languages."
 )

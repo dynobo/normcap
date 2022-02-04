@@ -86,7 +86,7 @@ pip install normcap
 
 ### On Windows
 
-1\. Install "Tesseract **4.1**", e.g. by using the
+1\. Install `Tesseract` by using the
 [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
 
 2\. Set the environment variable `TESSDATA_PREFIX` to Tesseract's data folder, e.g.:
@@ -172,7 +172,7 @@ poetry run python -m normcap
 
 This project uses the following non-standard libraries:
 
-- [pyside2](https://pypi.org/project/PySide2/) _- bindings for Qt UI Framework_
+- [pyside6](https://pypi.org/project/PySide6/) _- bindings for Qt UI Framework_
 - [pytesseract](https://pypi.org/project/pytesseract/) _- wrapper for tesseract's API_
 - [jeepney](https://pypi.org/project/jeepney/) _- DBUS client_
 

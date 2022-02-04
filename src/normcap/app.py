@@ -1,60 +1,65 @@
-"""
-OCR-powered screen-capture tool to capture information instead of images.
-"""
+"""Main application entry point."""
+
 import locale
+import logging
 import os
 import signal
 import sys
-
-import importlib_resources
+from importlib import resources
 
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
 # Add shipped openssl to path
 if sys.platform == "win32":
-    p = importlib_resources.files("normcap.resources").joinpath("openssl")
-    os.environ["PATH"] += os.pathsep + str(p.resolve())
+    openssl_path = resources.files("normcap.resources").joinpath("openssl")
+    os.environ["PATH"] += os.pathsep + str(openssl_path.absolute())
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
-from normcap import __version__, system_info, utils
+from normcap import __version__, system_info
 from normcap.args import create_argparser
+from normcap.gui import utils
 from normcap.gui.main_window import MainWindow
-from normcap.logger import logger
+
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s",
+    datefmt="%H:%M:%S",
+    level="WARNING",
+)
+
+# TODO: Overall wrap exceptions with FILE ISSUE hint
 
 
 def main():
-    """Main entry point."""
+    """Start main application logic."""
+    logger = logging.getLogger("normcap")
+    # Application wide exception hook
+    sys.excepthook = utils.hook_exceptions
 
-    sys.excepthook = utils.except_hook
-    # Allow to close QT app with CTRL+C in terminal:
+    # Allow closing QT app with CTRL+C in terminal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    args = vars(create_argparser().parse_args())
-    if args.get("verbose", False):
+    args = create_argparser().parse_args()
+    if args.verbose:
         logger.setLevel("INFO")
-    if args.get("very_verbose", False):
+    if args.very_verbose:
         logger.setLevel("DEBUG")
 
     logger.info("Start NormCap v%s", __version__)
-    logger.debug("CLI command: %s", " ".join(sys.argv))
-    logger.debug("QT LibraryPaths: %s", QtCore.QCoreApplication.libraryPaths())
 
-    # Wrap qt log messages with own logger
-    QtCore.qInstallMessageHandler(utils.qt_message_handler)
+    # QT has 32 as default cursor size on wayland, while it should be 24
+    if "XCURSOR_SIZE" not in os.environ and system_info.display_manager_is_wayland():
+        logger.debug("Setting XCURSOR_SIZE=24")
+        os.environ["XCURSOR_SIZE"] = "24"
 
-    utils.init_tessdata()
-
-    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
+    QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
+    utils.copy_tessdata_files_to_config_dir()
 
     app = QtWidgets.QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
     logger.debug("System info:\n%s", system_info.to_string())
 
-    window = MainWindow(args)
-    window.show()
-
+    MainWindow(vars(args)).show()
     sys.exit(app.exec_())

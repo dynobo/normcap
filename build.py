@@ -11,7 +11,6 @@ import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
-from typing import List
 
 import briefcase  # type: ignore
 import requests
@@ -20,7 +19,7 @@ import toml
 platform_str = sys.platform.lower()
 
 
-EXCLUDE_FROM_PYSIDE2 = [
+EXCLUDE_FROM_PySide6 = [
     "3danimation",
     "3dcore",
     "3dextras",
@@ -85,7 +84,7 @@ def get_version() -> str:
 
 
 def cmd(cmd_str: str):
-    """Wraps subprocess.run()."""
+    """Run command in subprocess.run()."""
     completed_proc = subprocess.run(  # pylint: disable=subprocess-run-check
         cmd_str, shell=True
     )
@@ -287,9 +286,8 @@ def bundle_pytesseract_dylibs():
             )
 
 
-def patch_file(file_path: Path, insert_above: str, lines: List[str]):
+def patch_file(file_path: Path, insert_above: str, lines: list[str]):
     """Insert lines above given string of a file."""
-
     with open(file_path, "r", encoding="utf8") as f:
         file_content = f.readlines()
 
@@ -336,7 +334,6 @@ def rm_recursive(directory, exclude):
 
 def patch_briefcase_appimage():
     """Insert code into briefcase source code to remove unnecessary libs."""
-
     # Convert function to string
     def_rm_recursive = inspect.getsource(rm_recursive).splitlines()
 
@@ -344,7 +341,7 @@ def patch_briefcase_appimage():
     lines_to_insert = ['import shutil, os'] + def_rm_recursive + [
         'app_dir = self.appdir_path(app) / "usr" / "app_packages"',
         f'rm_recursive(directory=app_dir, exclude={EXCLUDE_FROM_APP_PACKAGES})',
-        f'rm_recursive(directory=app_dir / "PySide2", exclude={EXCLUDE_FROM_PYSIDE2})'
+        f'rm_recursive(directory=app_dir / "PySide6", exclude={EXCLUDE_FROM_PySide6})'
     ]
     # fmt: on
 
@@ -382,7 +379,7 @@ if __name__ == "__main__":
         download_openssl()
         cmd("briefcase create")
         rm_recursive(directory=app_dir, exclude=EXCLUDE_FROM_APP_PACKAGES)
-        rm_recursive(directory=app_dir / "PySide2", exclude=EXCLUDE_FROM_PYSIDE2)
+        rm_recursive(directory=app_dir / "PySide6", exclude=EXCLUDE_FROM_PySide6)
         cmd("briefcase build")
         patch_windows_installer()
         cmd("briefcase package")
@@ -404,7 +401,7 @@ if __name__ == "__main__":
         cmd("briefcase create")
         bundle_pytesseract_dylibs()
         rm_recursive(directory=app_dir, exclude=EXCLUDE_FROM_APP_PACKAGES)
-        rm_recursive(directory=app_dir / "PySide2", exclude=EXCLUDE_FROM_PYSIDE2)
+        rm_recursive(directory=app_dir / "PySide6", exclude=EXCLUDE_FROM_PySide6)
         cmd("briefcase build")
         cmd("briefcase package macos app --no-sign")
         cmd(f"mv macOS/*.dmg macOS/NormCap-{get_version()}-MacOS.dmg")
@@ -426,4 +423,4 @@ if __name__ == "__main__":
         cmd("briefcase build")
         cmd("briefcase package")
     else:
-        raise ValueError("Unknown Operating System.")
+        raise ValueError("Unknown operating system.")
