@@ -5,15 +5,22 @@ import logging
 import os
 import signal
 import sys
-from importlib import resources
+from importlib import metadata, resources
 
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
-# Add shipped openssl to path
-if sys.platform == "win32":
-    openssl_path = resources.files("normcap.resources").joinpath("openssl")
-    os.environ["PATH"] += os.pathsep + str(openssl_path.absolute())
+# Add openssl shipped with briefcase package to path
+package = sys.modules["__main__"].__package__
+if (
+    sys.platform == "win32"
+    and package
+    and "Briefcase-Version" in metadata.metadata(package)
+):
+    with resources.as_file(resources.files("normcap.resources")) as openssl_path:
+        os.environ["PATH"] += os.pathsep + str(
+            openssl_path.absolute().joinpath("openssl")
+        )
 
 from PySide6 import QtCore, QtWidgets
 

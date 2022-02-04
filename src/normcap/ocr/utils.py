@@ -1,10 +1,10 @@
 import functools
 import logging
 import traceback
-from distutils.version import LooseVersion
 from typing import Union
 
 import pytesseract
+from packaging import version
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +80,6 @@ def get_tesseract_languages(tessdata_path) -> list[str]:
 
 
 @functools.lru_cache()
-def get_tesseract_version() -> LooseVersion:
+def get_tesseract_version() -> version.Version:
     """Get info abput tesseract setup."""
-    return pytesseract.get_tesseract_version()
+    return version.parse(pytesseract.get_tesseract_version())

@@ -1,10 +1,10 @@
 import subprocess
 import sys
-from distutils.version import LooseVersion
 from importlib import metadata
 from pathlib import Path
 
 import pytest
+from packaging import version
 
 from normcap import models, system_info
 
@@ -13,14 +13,21 @@ from normcap import models, system_info
 
 
 def test_gnome_shell_version_on_gnome(monkeypatch):
-    version = LooseVersion("40.1")
+    gnome_version = version.parse("40.1.13")
     monkeypatch.setattr(
         subprocess,
         "check_output",
-        lambda cmd, shell: f"Gnome Shell {version}\n ".encode("utf-8"),
+        lambda cmd, shell: f"Gnome Shell {gnome_version}\n ".encode("utf-8"),
+    )
+    monkeypatch.setattr(
+        system_info, "desktop_environment", lambda: models.DesktopEnvironment.GNOME
     )
     system_info.gnome_shell_version.cache_clear()
-    assert system_info.gnome_shell_version() == version
+
+    if sys.platform == "linux":
+        assert system_info.gnome_shell_version() == gnome_version
+    else:
+        assert system_info.gnome_shell_version() is None
 
 
 def test_gnome_shell_version_on_linux_without_gnome(monkeypatch):

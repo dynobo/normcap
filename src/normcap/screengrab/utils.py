@@ -4,9 +4,9 @@ import os
 import re
 import subprocess
 import sys
-from distutils.version import LooseVersion
 from typing import Optional
 
+from packaging import version
 from PySide6 import QtCore, QtGui, QtWidgets
 
 logger = logging.getLogger(__name__)
@@ -41,7 +41,7 @@ def display_manager_is_wayland() -> bool:
 
 
 @functools.lru_cache()
-def gnome_shell_version() -> Optional[LooseVersion]:
+def gnome_shell_version() -> Optional[version.Version]:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux":
         return None
@@ -52,14 +52,14 @@ def gnome_shell_version() -> Optional[LooseVersion]:
     ):
         return None
 
-    version = None
+    shell_version = None
     try:
         output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
         output = output_raw.decode().strip()
         if result := re.search(r"\s+([\d.]+)", output):
-            version = LooseVersion(result.groups()[0])
+            shell_version = version.parse(result.groups()[0])
     except (subprocess.CalledProcessError, FileNotFoundError):
         pass
     except Exception as e:  # pylint: disable=broad-except
         logger.error("Exception when trying to get gnome-shell version %s", e)
-    return version
+    return shell_version

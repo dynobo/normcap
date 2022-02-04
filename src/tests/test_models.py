@@ -48,7 +48,7 @@ def test_screen_get_scaled_screenshot():
 
     # Raise exception if no screenshot in Screen object
     with pytest.raises(TypeError):
-        scaled = screen.get_scaled_screenshot(QtCore.QSize(160, 90))
+        _ = screen.get_scaled_screenshot(QtCore.QSize(160, 90))
 
     screen.raw_screenshot = QtGui.QImage(1920, 1080, QtGui.QImage.Format.Format_RGB32)
 

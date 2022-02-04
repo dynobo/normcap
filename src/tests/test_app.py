@@ -27,14 +27,14 @@ def test_version():
 
 
 @pytest.mark.parametrize(
-    "testcase",
+    "data",
     TESTCASES,
 )
-def test_app(monkeypatch, qtbot, xvfb, testcase):
+def test_app(monkeypatch, qtbot, xvfb, data):
     """Tests complete OCR workflow."""
     logger.setLevel("DEBUG")
-    args = create_argparser().parse_args([f"--language={testcase['language']}"])
-    test_file = Path(__file__).parent / "testcase_images" / testcase["image"]
+    args = create_argparser().parse_args([f"--language={data['language']}"])
+    test_file = Path(__file__).parent / "testcase_images" / data["image"]
     monkeypatch.setattr(
         normcap.gui.main_window,
         "grab_screens",
@@ -45,11 +45,9 @@ def test_app(monkeypatch, qtbot, xvfb, testcase):
     window.show()
     qtbot.addWidget(window)
 
-    qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*testcase["tl"]))
-    qtbot.mouseMove(window, pos=QtCore.QPoint(*testcase["br"]))
-    qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*testcase["br"]))
+    with qtbot.waitSignal(window.main_window.com.on_copied_to_clipboard):
+        qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["tl"]))
+        qtbot.mouseMove(window, pos=QtCore.QPoint(*data["br"]))
+        qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["br"]))
 
-    def check_result():
-        assert window.main_window.capture.ocr_text == testcase["transformed"]
-
-    qtbot.waitUntil(check_result)
+    assert window.main_window.capture.ocr_text == data["transformed"]

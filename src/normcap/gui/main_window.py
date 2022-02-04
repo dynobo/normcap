@@ -4,9 +4,9 @@ import os
 import sys
 import tempfile
 import time
-from distutils.version import LooseVersion
 from importlib import resources
 
+from packaging import version
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import ocr, system_info
@@ -302,8 +302,8 @@ class MainWindow(BaseWindow):
                 .joinpath("tesseract.exe")
             )
             ocr.pytesseract.pytesseract.tesseract_cmd = str(tesseract_path.resolve())
-            ocr.pytesseract.get_tesseract_version = lambda: LooseVersion("5.0.0")
-            ocr.pytesseract.pytesseract.get_tesseract_version = lambda: LooseVersion(
+            ocr.pytesseract.get_tesseract_version = lambda: version.Version("5.0.0")
+            ocr.pytesseract.pytesseract.get_tesseract_version = lambda: version.Version(
                 "5.0.0"
             )
 

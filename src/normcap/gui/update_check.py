@@ -2,9 +2,9 @@
 import json
 import logging
 import re
-from distutils.version import LooseVersion
 from typing import Optional
 
+from packaging import version
 from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__
@@ -44,12 +44,11 @@ class UpdateChecker(QtCore.QObject):
 
     def _check_if_new(self, text: str):
         """Check if retrieved version is new."""
-        newest_version = self._parse_response_to_version(text)
-        if newest_version:
+        if newest_version := self._parse_response_to_version(text):
             logger.debug(
                 "Newest version: %s (installed: %s)", newest_version, __version__
             )
-            if LooseVersion(newest_version) > LooseVersion(__version__):
+            if version.parse(newest_version) > version.parse(__version__):
                 self.com.on_version_retrieved.emit(newest_version)
 
     def _parse_response_to_version(self, text: str) -> Optional[str]:

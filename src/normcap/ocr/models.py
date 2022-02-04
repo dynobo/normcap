@@ -1,11 +1,11 @@
 import os
 import statistics
 from dataclasses import dataclass, field
-from distutils.version import LooseVersion
 from enum import IntEnum
 from os import PathLike
 from typing import Optional
 
+from packaging import version
 from PySide6 import QtGui
 
 
@@ -17,7 +17,7 @@ class TessArgs:
     lang: list[str]
     oem: int
     psm: int
-    version: LooseVersion
+    version: version.Version
 
 
 @dataclass

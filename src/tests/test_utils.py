@@ -68,12 +68,13 @@ def test_save_image_in_tempfolder():
     assert "unittest" in str(list(png_files)[0])
 
 
-def test_get_icon(qtbot):
-    # Custom icon
+def test_get_icon_custom(qtbot):
     icon = utils.get_icon("normcap.png")
     assert len(icon.availableSizes()) == 1
 
-    # System icon
+
+@pytest.mark.skip_on_gh
+def test_get_icon_sytem(qtbot):
     icon = utils.get_icon("not-relevant", "edit-undo")
     assert len(icon.availableSizes()) >= 3
 

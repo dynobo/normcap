@@ -28,6 +28,7 @@ python = ">=3.9,<3.11"
 jeepney = "^0.7.1"
 PySide6 = "^6.2.3"
 pytesseract = "^0.3.8"
+packaging = "^21.3"
 
 [tool.poetry.dev-dependencies]
 briefcase = "^0.3.5"
@@ -139,7 +140,7 @@ sources = ["src/normcap"]
 icon = "src/normcap/resources/normcap"
 installer_icon = "src/normcap/resources/normcap_install"
 installer_background = "src/normcap/resources/normcap_install_bg"
-requires = ["PySide6", "jeepney", "pytesseract"]
+requires = ["PySide6", "jeepney", "pytesseract", "packaging"]
 
 [tool.briefcase.app.normcap.macOS]
 
@@ -149,15 +150,9 @@ system_requires = ["libtesseract-dev", "libleptonica-dev", "pkg-config"]
 [tool.briefcase.app.normcap.windows]
 
 [tool.tbump]
-# Uncomment this if your project is hosted on GitHub:
-# github_url = "https://github.com/<user or organization>/<project>/"
 
 [tool.tbump.version]
 current = "0.2.10"
-
-# Example of a semver regexp.
-# Make sure this matches current_version before
-# using tbump
 regex = '''
   (?P<major>\d+)
   \.

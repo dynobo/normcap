@@ -1,5 +1,4 @@
-from distutils.version import LooseVersion
-
+from packaging import version
 from PySide6 import QtGui
 
 from normcap.screengrab import dbus_portal, dbus_shell, qt
@@ -12,7 +11,7 @@ def grab_screens() -> list[QtGui.QImage]:
         return qt.grab_screens()
 
     if shell_version := gnome_shell_version():
-        if shell_version >= LooseVersion("41"):
+        if shell_version >= version.parse("41"):
             return dbus_portal.grab_screens()
 
     return dbus_shell.grab_screens()

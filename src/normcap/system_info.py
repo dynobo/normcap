@@ -6,11 +6,11 @@ import pprint
 import re
 import subprocess
 import sys
-from distutils.version import LooseVersion
 from importlib import metadata
 from pathlib import Path
 from typing import Optional
 
+from packaging import version
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as PySide6_version
 
@@ -21,22 +21,22 @@ logger = logging.getLogger(__name__)
 
 
 @functools.lru_cache()
-def gnome_shell_version() -> Optional[LooseVersion]:
+def gnome_shell_version() -> Optional[version.Version]:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux" or desktop_environment() != DesktopEnvironment.GNOME:
         return None
 
-    version = None
+    shell_version = None
     try:
         output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
         output = output_raw.decode().strip()
         if result := re.search(r"\s+([\d.]+)", output):
-            version = LooseVersion(result.groups()[0])
+            shell_version = version.parse(result.groups()[0])
     except (subprocess.CalledProcessError, FileNotFoundError):
         pass
     except Exception as e:  # pylint: disable=broad-except
         logger.error("Exception when trying to get gnome-shell version %s", e)
-    return version
+    return shell_version
 
 
 @functools.cache
@@ -101,11 +101,9 @@ def primary_screen_idx() -> int:
 
 def is_briefcase_package() -> bool:
     """Check if script is executed in briefcase package."""
-    app_module = sys.modules["__main__"].__package__
-    if not app_module:
-        return False
-
-    return "Briefcase-Version" in metadata.metadata(app_module)
+    if app_module := sys.modules["__main__"].__package__:
+        return "Briefcase-Version" in metadata.metadata(app_module)
+    return False
 
 
 def config_directory() -> Path:

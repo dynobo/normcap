@@ -366,6 +366,7 @@ def add_metainfo_to_appimage():
 
 
 if __name__ == "__main__":
+    # TODO: deps for test no longer needed?
     if len(sys.argv) > 1 and sys.argv[1] == "download-deps-for-tests":
         if platform_str.lower().startswith("win"):
             download_tesseract_windows_build()

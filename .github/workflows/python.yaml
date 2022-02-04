@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - uses: abatilo/actions-poetry@v2.1.0
+      - uses: abatilo/actions-poetry@v2.1.4
         with:
           poetry-version: 1.1.12
 
@@ -37,6 +37,7 @@ jobs:
             python3-pil \
             tesseract-ocr \
             tesseract-ocr-eng
+          ls -la
 
       - name: Prepare MacOS
         if: ${{ matrix.os  == 'macos-10.15' }}
@@ -45,11 +46,24 @@ jobs:
           brew info tesseract
           ls -R /usr/local/Cellar/tesseract/
           ls -R /usr/local/Cellar/leptonica/
+          ls -la
+
+      - name: Prepare Windows
+        if: ${{ matrix.os  == 'windows-2019' }}
+        run: |
+          $url = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.1.20220118.exe"
+          $dest = "tesseract_installer.exe"
+          Invoke-WebRequest -Uri $url -OutFile $dest
+          .\tesseract_installer.exe /S
+          dir "C:\"
+          where tesseract.exe
+          dir "D:\"
+          dir "D:\a\"
+          echo "TESSDATA_PREFIX=C:\Program Files\Tesseract-OCR" >> $env:GITHUB_ENV
+          dir
 
       - name: Poetry install
-        run: |
-          poetry install
-          poetry run python build.py download-deps-for-tests
+        run: poetry install
 
       # PERFORM TESTS
       - name: Pylint
@@ -129,18 +143,9 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - uses: abatilo/actions-poetry@v2.1.0
+      - uses: abatilo/actions-poetry@v2.1.4
         with:
           poetry-version: 1.1.12
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install \
-            libleptonica-dev \
-            libtesseract-dev \
-            python3-pil \
-            tesseract-ocr \
-            tesseract-ocr-eng
       - name: Poetry publish
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
