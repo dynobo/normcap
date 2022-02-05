@@ -86,23 +86,35 @@ pip install normcap
 
 ### On Windows
 
-1\. Install `Tesseract` by using the
+1\. Install `Tesseract 5` by using the
 [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
 
-2\. Set the environment variable `TESSDATA_PREFIX` to Tesseract's data folder, e.g.:
+2\. Adjust environment variables:
 
-```cmd
-setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"
-```
+- Create a environment variable `TESSDATA_PREFIX` and set it to Tesseract's data folder,
+  e.g.:
 
-3\. Install [tesserocr](https://pypi.org/project/tesserocr/) using the
-[Windows specific wheel](https://github.com/simonflueckiger/tesserocr-windows_build) and
-NormCap afterwards:
+  ```cmd
+  setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"
+  ```
+
+- Append Tesseract's location to the environment variable `Path`, e.g.:
+
+  ```cmd
+  setx Path "%Path%;C:\Program Files\Tesseract-OCR\tessdata"
+  ```
+
+- Make sure to close and reopen your current terminal window to make sure the variables
+  have been applied. Test it by running:
+
+  ```cmd
+  tesseract --version
+  tesseract --list-langs
+  ```
+
+3\. Install and run NormCap:
 
 ```bash
-# Install tesserocr package
-pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
-
 # Install normcap
 pip install normcap
 

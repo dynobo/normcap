@@ -1,9 +1,10 @@
 import logging
 from pathlib import Path
 
+import Levenshtein
 import pytest
 import toml
-from PySide6 import QtCore, QtGui
+from PySide6 import QtCore, QtGui, QtWidgets
 
 import normcap
 from normcap.args import create_argparser
@@ -35,10 +36,18 @@ def test_app(monkeypatch, qtbot, xvfb, data):
     logger.setLevel("DEBUG")
     args = create_argparser().parse_args([f"--language={data['language']}"])
     test_file = Path(__file__).parent / "testcase_images" / data["image"]
+    test_image = QtGui.QImage(test_file.absolute())
+
+    app = QtWidgets.QApplication.instance()
+    screen_rect = app.primaryScreen().size()
+
+    if screen_rect.width() != 1920 or screen_rect.height() != 1080:
+        pytest.xfail("Skipped due to wrong screen resolution.")
+
     monkeypatch.setattr(
         normcap.gui.main_window,
         "grab_screens",
-        lambda: [QtGui.QImage(test_file.absolute())],
+        lambda: [test_image],
     )
 
     window = MainWindow(vars(args))
@@ -50,4 +59,12 @@ def test_app(monkeypatch, qtbot, xvfb, data):
         qtbot.mouseMove(window, pos=QtCore.QPoint(*data["br"]))
         qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["br"]))
 
-    assert window.main_window.capture.ocr_text == data["transformed"]
+    capture = window.main_window.capture
+
+    # Text output is not 100% predictable across different machines:
+    similarity = Levenshtein.ratio(capture.ocr_text, data["transformed"])
+
+    assert (
+        capture.ocr_applied_magic == data["ocr_applied_magic"]
+    ), f"{capture.ocr_text=}"
+    assert similarity >= 0.98, f"{capture.ocr_text=}"

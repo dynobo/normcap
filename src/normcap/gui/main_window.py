@@ -6,7 +6,6 @@ import tempfile
 import time
 from importlib import resources
 
-from packaging import version
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import ocr, system_info
@@ -293,19 +292,15 @@ class MainWindow(BaseWindow):
     @staticmethod
     def _set_tesseract_cmd_on_windows():
         """Set pytesseract to use bundled windows binary."""
-        if sys.platform == "win32" and (
-            system_info.is_briefcase_package() or "GITHUB_ACTIONS" in os.environ
-        ):
+        if sys.platform == "win32" and system_info.is_briefcase_package():
             tesseract_path = (
                 resources.files("normcap.resources")
                 .joinpath("tesseract")
                 .joinpath("tesseract.exe")
             )
             ocr.pytesseract.pytesseract.tesseract_cmd = str(tesseract_path.resolve())
-            ocr.pytesseract.get_tesseract_version = lambda: version.Version("5.0.0")
-            ocr.pytesseract.pytesseract.get_tesseract_version = lambda: version.Version(
-                "5.0.0"
-            )
+            ocr.pytesseract.get_tesseract_version = lambda: "5.0.0"
+            ocr.pytesseract.pytesseract.get_tesseract_version = lambda: "5.0.0"
 
     def _capture_to_ocr(self):
         """Perform content recognition on grabed image."""

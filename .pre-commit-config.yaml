@@ -60,8 +60,8 @@ repos:
         stages: [commit]
         language: system
         entry:
-          poetry run pytest src/tests/ --cov normcap --cov-report xml:cov.xml
-          --cov-report html
+          poetry run pytest --log-cli-level=10 src/tests/ --cov normcap
+          --cov-report xml:cov.xml --cov-report html
         types: [python]
         pass_filenames: false
 

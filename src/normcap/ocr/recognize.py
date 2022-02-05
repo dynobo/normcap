@@ -32,6 +32,7 @@ def recognize(
         version=utils.get_tesseract_version,  # type: ignore
     )
     logger.debug("Init tesseract with args: %s", tess_args)
+    logger.debug("Image size: %s", image.size())
 
     with tempfile.NamedTemporaryFile(delete=False) as fp:
         image.save(fp.name + ".png")
@@ -44,9 +45,9 @@ def recognize(
         )
 
     result = OcrResult(tess_args=tess_args, words=utils.tsv_to_list_of_dicts(tsv_data))
-    logger.info("Mean Conf: %s", result.mean_conf)
-
+    logger.debug("OCR result: %s", result)
     if parse:
         result = magic.apply_magic(result)
+        logger.debug("Transformed text: %s", result.transformed)
 
     return result

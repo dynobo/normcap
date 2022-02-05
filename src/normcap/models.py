@@ -1,10 +1,13 @@
 """Various Data Models."""
 import enum
+import logging
 from collections import namedtuple
 from dataclasses import dataclass
 from typing import Optional
 
 from PySide6 import QtCore, QtGui
+
+logger = logging.getLogger(__name__)
 
 Setting = namedtuple("Setting", "key flag type_ value help")
 
@@ -116,6 +119,10 @@ class Screen:
         are two differently scaled screeenshots (one HiDPI, one normal) or a monitor
         is set to fractional scaling.
         """
+        if not self.raw_screenshot:
+            raise ValueError("Raw screenshot is None.")
+        if not self.scaled_screenshot:
+            raise ValueError("Scaled screenshot is None.")
         return self.raw_screenshot.width() / self.scaled_screenshot.width()
 
     def get_scaled_screenshot(self, new_size: QtCore.QSize):
@@ -134,6 +141,7 @@ class Screen:
         if new_size.width() == self.raw_screenshot.width():
             self.scaled_screenshot = self.raw_screenshot
         else:
+            logger.debug("Resizing screenshot to %s", new_size)
             self.scaled_screenshot = self.raw_screenshot.scaled(
                 new_size, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation
             )

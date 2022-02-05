@@ -106,7 +106,7 @@ def hook_exceptions(cls, exception, traceback):
 @functools.lru_cache(maxsize=None)
 def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
-    if system_icon:
+    if system_icon and QtGui.QIcon.hasThemeIcon(system_icon):
         return QtGui.QIcon.fromTheme(system_icon)
 
     icon = QtGui.QIcon()

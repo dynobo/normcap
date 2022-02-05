@@ -37,13 +37,27 @@ jobs:
             python3-pil \
             tesseract-ocr \
             tesseract-ocr-eng
+          sudo apt-get install \
+            xvfb \
+            libxkbcommon-x11-0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-xinerama0 \
+            libxcb-xfixes0 \
+            libegl1 \
+            libegl1-mesa
           ls -la
+          echo "XDG_SESSION_TYPE=gnome" >> $env:GITHUB_ENV
 
       - name: Prepare MacOS
         if: ${{ matrix.os  == 'macos-10.15' }}
         run: |
           brew install pkg-config tesseract
           brew info tesseract
+          "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
           ls -R /usr/local/Cellar/tesseract/
           ls -R /usr/local/Cellar/leptonica/
           ls -la
@@ -52,15 +66,18 @@ jobs:
         if: ${{ matrix.os  == 'windows-2019' }}
         run: |
           $url = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.1.20220118.exe"
-          $dest = "tesseract_installer.exe"
-          Invoke-WebRequest -Uri $url -OutFile $dest
-          .\tesseract_installer.exe /S
-          dir "C:\"
-          where tesseract.exe
-          dir "D:\"
-          dir "D:\a\"
-          echo "TESSDATA_PREFIX=C:\Program Files\Tesseract-OCR" >> $env:GITHUB_ENV
+          Invoke-WebRequest -Uri $url -OutFile "tesseract_installer.exe"
+          7z x tesseract_installer.exe -O"C:\Program Files\Tesseract-OCR"
+          $tesseract = "C:\Program Files\Tesseract-OCR\"
+          echo "$tesseract" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "TESSDATA_PREFIX=$tesseract" >> $env:GITHUB_ENV
+          Set-DisplayResolution -Width 1920 -Height 1080 -Force
           dir
+
+      - name: Test tesseract
+        run: |
+          tesseract --version
+          tesseract --list-langs
 
       - name: Poetry install
         run: poetry install
@@ -82,33 +99,17 @@ jobs:
       - name: Pydocstyle
         if: always()
         run: poetry run pydocstyle
-      - name: Pytest on Linux
-        if: ${{ matrix.os  == 'ubuntu-20.04' }}
-        # libxkbcommon and xvfb is needed to test qt/ui specific things
-        run: |
-          sudo apt-get install \
-            xvfb \
-            libxkbcommon-x11-0 \
-            libxcb-icccm4 \
-            libxcb-image0 \
-            libxcb-keysyms1 \
-            libxcb-randr0 \
-            libxcb-render-util0 \
-            libxcb-xinerama0 \
-            libxcb-xfixes0 \
-            libegl1 \
-            libegl1-mesa
-          poetry run pytest -m "not skip_on_gh_linux and not skip_on_gh"
-        env:
-          XDG_SESSION_TYPE: gnome
-      - name: Pytest on Windows
-        if: ${{ matrix.os  == 'windows-2019' }}
-        run: poetry run pytest -m "not skip_on_gh"
-        env:
-          TESSDATA_PREFIX: D:\a\normcap\normcap\src\normcap\resources
-      - name: Pytest on MacOS
-        if: ${{ matrix.os  == 'macos-10.15' }}
-        run: poetry run pytest -m "not skip_on_gh"
+      - name: Pytest
+        run: poetry run pytest --log-cli-level=10 -m "not skip_on_gh"
+
+      # - name: Start SSH session
+      #   if: ${{ matrix.os  == 'windows-2019' }}
+      #   uses: luchihoratiu/debug-via-ssh@main
+      #   with:
+      #     NGROK_REGION: eu
+      #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+      #     SSH_PASS: ${{ secrets.SSH_PASS }}
+
       - name: Coveralls
         if: ${{ matrix.os  == 'ubuntu-20.04' }}
         run: poetry run coveralls
@@ -125,7 +126,7 @@ jobs:
           body:
             "Builds intended **only** for developing purposes! You're better off
             using the latest v0.\\*.\\* build instead!"
-          artifacts: "macOS/*.dmg,linux/*.AppImage,windows\\*.msi"
+          artifacts: "*/*.+(dmg|AppImage|msi)"
           allowUpdates: true
           artifactErrorsFailBuild: false
           prerelease: true
@@ -176,7 +177,7 @@ jobs:
             See
             [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md)
             for details.
-          artifacts: "macOS/*.dmg,linux/*.AppImage,windows\\*.msi"
+          artifacts: "*/*.+(dmg|AppImage|msi)"
           allowUpdates: true
           artifactErrorsFailBuild: false
           draft: false

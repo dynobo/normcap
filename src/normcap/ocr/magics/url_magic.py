@@ -15,14 +15,12 @@ class UrlMagic(BaseMagic):
 
     _urls: list[str] = []
     _manual_correction_table = {
-        r"h\w{0,1}t+\w{0,1}ps\s*\:\s*\/+\s*": "https://",
+        r"[hn]\w{0,1}t+\w{0,1}ps\s*\:\s*\/+\s*": "https://",
         r"(\w),(\w{1,4}\s*$)": r"\1.\2",  # e.g. gle,com -> gle.com
         r"[wW]{3}\s*\.\s*": "www.",
         r"qithub\.com": "github.com",
         r"[gq]oo[gq]le": "google",
-        r"(\s+)(wikipedia\.\w{2,3}\s)+": r"\1www.\2",  # wp.de -> www.wp.de
-        r"nttp://": r"http://",
-        r"nttps://": r"https://",
+        r"(\s+)([A-Za-z0-9-]+\.[A-Za-z0-9-]+)": r"\1https://\2",  # append https://
     }
 
     def score(self, ocr_result: OcrResult) -> float:

@@ -7,11 +7,13 @@ TESTCASES = [
         "transformed": "\n".join(
             [
                 "https://github.com/dynobo/normcap",
-                "www.wikipedia.de",
-                "www.python.com",
+                "https://wikipedia.de",
+                "https://www.python.com",
                 "https://en.wikipedia.org/wiki/Tesseract",
+                "https://pypi.org/project/lmdiag/",
             ]
         ),
+        "ocr_applied_magic": "UrlMagic",
     },
     {
         "language": "eng",
@@ -19,5 +21,6 @@ TESTCASES = [
         "tl": (312, 550),
         "br": (470, 572),
         "transformed": "https://regex101.com",
+        "ocr_applied_magic": "UrlMagic",
     },
 ]
