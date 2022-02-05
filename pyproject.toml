@@ -144,7 +144,14 @@ requires = ["PySide6", "jeepney", "pytesseract", "packaging"]
 [tool.briefcase.app.normcap.macOS]
 
 [tool.briefcase.app.normcap.linux]
-system_requires = ["libtesseract-dev", "libleptonica-dev", "pkg-config"]
+requires = ["Pillow==7.2.0"]
+system_requires = [
+  "libtesseract-dev",
+  "libleptonica-dev",
+  "tesseract-ocr",
+  "pkg-config",
+  "libtiff-dev",
+]
 
 [tool.briefcase.app.normcap.windows]
 

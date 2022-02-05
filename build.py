@@ -366,13 +366,6 @@ def add_metainfo_to_appimage():
 
 
 if __name__ == "__main__":
-    # TODO: deps for test no longer needed?
-    if len(sys.argv) > 1 and sys.argv[1] == "download-deps-for-tests":
-        if platform_str.lower().startswith("win"):
-            download_tesseract_windows_build()
-        download_tessdata()
-        sys.exit(0)
-
     if platform_str.lower().startswith("win"):
         app_dir = Path.cwd() / "windows" / "msi" / "NormCap" / "src" / "app_packages"
         download_tesseract_windows_build()
@@ -412,7 +405,9 @@ if __name__ == "__main__":
         github_actions_uid = 1001
         if os.getuid() == github_actions_uid:  # type: ignore
             cmd("sudo apt update")
-            cmd("sudo apt install libleptonica-dev libtesseract-dev")
+            cmd(
+                "sudo apt install libleptonica-dev libtesseract-dev python3-pil tesseract-ocr"
+            )
         else:
             print(
                 "Dependencies installed? Otherwise, execute:\n"
