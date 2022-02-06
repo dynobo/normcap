@@ -100,7 +100,8 @@ jobs:
         if: always()
         run: poetry run pydocstyle
       - name: Pytest
-        run: poetry run pytest --log-cli-level=10 -m "not skip_on_gh"
+        run: |
+          poetry run pytest -m "not skip_on_gh" --log-cli-level=10 --cov --cov-report=xml
 
       # - name: Start SSH session
       #   if: ${{ matrix.os  == 'windows-2019' }}
@@ -115,6 +116,13 @@ jobs:
         run: poetry run coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+
+      - name: SonarCloud
+        if: ${{ matrix.os  == 'ubuntu-20.04' }}
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       # BUILD TEST PACKAGES
       - name: Run build tools

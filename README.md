@@ -122,6 +122,8 @@ pip install normcap
 normcap
 ```
 
+TODO: Remove usage infos (are in docs)
+
 ## Usage
 
 ### General
@@ -160,8 +162,7 @@ See [XKCD](https://xkcd.com):
 
 ### Setup Environment
 
-Prerequisites are **Python >=3.7.1**, **Poetry**, **Tesseract** (incl. **language
-data**).
+Prerequisites are **Python >=3.9**, **Poetry**, **Tesseract** (incl. **language data**).
 
 ```sh
 # Clone repository
@@ -184,6 +185,8 @@ poetry run python -m normcap
 
 This project uses the following non-standard libraries:
 
+TODO: Update deps
+
 - [pyside6](https://pypi.org/project/PySide6/) _- bindings for Qt UI Framework_
 - [pytesseract](https://pypi.org/project/pytesseract/) _- wrapper for tesseract's API_
 - [jeepney](https://pypi.org/project/jeepney/) _- DBUS client_
@@ -198,6 +201,8 @@ And it depends on external software
 - [tesseract](https://github.com/tesseract-ocr/tesseract) - _OCR engine_
 
 Thanks to the maintainers of those nice libraries!
+
+TODO: Add similar projects
 
 ## Certification
 

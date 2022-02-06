@@ -18,6 +18,8 @@ from normcap.gui.settings_menu import SettingsMenu
 from normcap.gui.system_tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
 from normcap.models import Capture, CaptureMode, DesktopEnvironment, Rect
+
+# TODO: Move enhance method to gui
 from normcap.ocr.enhance import enhance_image
 from normcap.screengrab import grab_screens
 

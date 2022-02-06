@@ -271,19 +271,12 @@ def bundle_pytesseract_dylibs():
         shutil.copy(lib_path, new_lib_path)
         os.chmod(new_lib_path, stat.S_IRWXU)
 
-    # Relink libs
-    # if sys.version_info[0] == 3 and sys.version_info[1] == 7:
-    #    tesserocr = f"{app_pkg_path}/tesserocr.cpython-37m-darwin.so"
-    # else:
-    #    tesserocr = f"{app_pkg_path}/tesserocr.cpython-39-darwin.so"
-
     libwebp7 = "/usr/local/Cellar/webp/1.2.1_1/lib/libwebp.7.dylib"
     changeset = [
         (libtiff, [libjpeg]),
         (libwebpmux, [libwebp7]),
         (liblept, [libpng, libjpeg, libgif, libtiff, libopenjpeg, libwebp, libwebpmux]),
         (libtess, [liblept]),
-        #    (tesserocr, [libtess, liblept]),
     ]
 
     print(*Path(app_pkg_path).iterdir(), sep="\n")
@@ -328,7 +321,7 @@ rm_recursive(directory=app_dir, exclude={EXCLUDE_FROM_APP_PACKAGES})
 rm_recursive(directory=app_dir / "PySide6", exclude={EXCLUDE_FROM_PySide6})
 """
     insert_after = 'print("[{app.app_name}] Building AppImage...".format(app=app))'
-    patch_file_below(file_path=file_path, insert_after=insert_after, patch=patch)
+    patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
 
 def patch_briefcase_appimage_to_include_tesseract():
@@ -339,10 +332,10 @@ def patch_briefcase_appimage_to_include_tesseract():
 "--executable",
 "/usr/bin/tesseract",
 """
-    patch_file_below(file_path=file_path, insert_after=insert_after, patch=patch)
+    patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
 
-def patch_file_below(file_path: Path, insert_after: str, patch: str):
+def patch_file(file_path: Path, insert_after: str, patch: str):
     """Insert lines in file, if not already done.
 
     Indents the patch like the line after which it is inserted.
@@ -383,7 +376,7 @@ if "linux" in str(bundle_path):
             line = line.replace(line, line + patch)
         print(line, end="")
 """
-    patch_file_below(file_path=file_path, insert_after=insert_after, patch=patch)
+    patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
 
 def add_metainfo_to_appimage():
@@ -439,7 +432,7 @@ if __name__ == "__main__":
     elif platform_str.lower().startswith("linux"):
         if system_requires := get_system_requires("linux"):
             github_actions_uid = 1001
-            if os.getuid() == github_actions_uid: # type: ignore
+            if os.getuid() == github_actions_uid:  # type: ignore
                 cmd("sudo apt update")
                 cmd(f"sudo apt install {' '.join(system_requires)}")
         download_tessdata()
