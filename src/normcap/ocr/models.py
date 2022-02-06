@@ -14,7 +14,7 @@ class TessArgs:
     """Arguments used when envoking tesseract."""
 
     path: PathLike
-    lang: list[str]
+    lang: str
     oem: int
     psm: int
     version: version.Version

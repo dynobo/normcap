@@ -35,7 +35,7 @@ repos:
         name: pydocstyle
         stages: [commit]
         language: system
-        entry: poetry run pydocstyle
+        entry: poetry run pydocstyle src/normcap src/tests/
         types: [python]
         pass_filenames: false
 

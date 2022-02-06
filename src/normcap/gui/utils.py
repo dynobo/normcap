@@ -3,9 +3,11 @@
 import datetime
 import functools
 import logging
+import pprint
 import shutil
 import sys
 import tempfile
+import traceback
 from importlib import resources
 from pathlib import Path
 from typing import Optional
@@ -16,6 +18,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import system_info
 from normcap.constants import URLS
+from normcap.models import Capture
 
 logger = logging.getLogger(__name__)
 
@@ -94,12 +97,71 @@ def move_active_window_to_position_on_gnome(screen_geometry):
     _ = connection.send_and_get_reply(msg)
 
 
-def hook_exceptions(cls, exception, traceback):
+def hook_exceptions(exc_type, exc_value, exc_traceback):
     """Print traceback and quit application."""
-    logger.error(
-        "Uncaught exception! Quitting NormCap!", exc_info=(cls, exception, traceback)
-    )
-    logger.error("Please open an issue with the output above on %s", URLS.issues)
+    try:
+        logger.critical("Uncaught exception! Quitting NormCap!")
+
+        formatted_exc = "".join(
+            "  " + l for l in traceback.format_exception_only(exc_type, exc_value)
+        )
+
+        formatted_tb = "".join(traceback.format_tb(exc_traceback))
+
+        local_vars = {}
+        while exc_traceback:
+            name = exc_traceback.tb_frame.f_code.co_name
+            local_vars[name] = exc_traceback.tb_frame.f_locals
+            exc_traceback = exc_traceback.tb_next
+
+        filter_vars = [
+            "tsv_data",
+            "words",
+            "self",
+            "text",
+            "transformed",
+            "v",
+        ]
+        for func_name, func_vars in local_vars.items():
+            for f in filter_vars:
+                if f in func_vars:
+                    local_vars[func_name][f] = "REDICTED"
+            for k, v in func_vars.items():
+                if isinstance(v, Capture):
+                    func_vars[k].ocr_text = "REDICTED"
+
+        print("\n### System:")
+        print("```")
+        pprint.pprint(
+            system_info.to_dict(),
+            compact=True,
+            width=80,
+            depth=2,
+            indent=3,
+            sort_dicts=True,
+        )
+        print("```\n")
+
+        print("### Variables:")
+        print("```")
+        pprint.pprint(
+            local_vars, compact=True, width=80, depth=2, indent=3, sort_dicts=True
+        )
+        print("```\n")
+
+        print("### Exception:")
+        print(f"```\n{formatted_exc}\n```\n")
+
+        print("### Traceback:")
+        print(f"```\n{formatted_tb}\n```\n")
+
+    except Exception:
+        logger.critical(
+            "Uncaught exception! Quitting NormCap!",
+            exc_info=(exc_type, exc_value, exc_traceback),
+        )
+
+    logger.critical("Please open an issue with the output above on %s", URLS.issues)
     sys.exit(1)
 
 
@@ -111,7 +173,7 @@ def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
 
     icon = QtGui.QIcon()
     with resources.path("normcap.resources", icon_file) as icon_path:
-        icon.addFile(str(icon_path.absolute()))
+        icon.addFile(str(icon_path.resolve()))
 
     return icon
 

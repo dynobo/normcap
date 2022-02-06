@@ -1,10 +1,10 @@
 """Normcap main window."""
+
 import logging
 import os
 import sys
 import tempfile
 import time
-from importlib import resources
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -289,24 +289,9 @@ class MainWindow(BaseWindow):
             logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
             self.com.on_quit_or_hide.emit("selection too small")
 
-    @staticmethod
-    def _set_tesseract_cmd_on_windows():
-        """Set pytesseract to use bundled windows binary."""
-        if sys.platform == "win32" and system_info.is_briefcase_package():
-            tesseract_path = (
-                resources.files("normcap.resources")
-                .joinpath("tesseract")
-                .joinpath("tesseract.exe")
-            )
-            ocr.pytesseract.pytesseract.tesseract_cmd = str(tesseract_path.resolve())
-            ocr.pytesseract.get_tesseract_version = lambda: "5.0.0"
-            ocr.pytesseract.pytesseract.get_tesseract_version = lambda: "5.0.0"
-
     def _capture_to_ocr(self):
         """Perform content recognition on grabed image."""
         logger.debug("Perform OCR")
-        self._set_tesseract_cmd_on_windows()
-
         ocr_result = ocr.recognize(
             languages=self.settings.value("language"),
             image=self.capture.image,

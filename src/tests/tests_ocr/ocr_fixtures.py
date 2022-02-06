@@ -15,7 +15,7 @@ def ocr_result() -> OcrResult:
     """Create argparser and provide its default values."""
     return OcrResult(
         tess_args=TessArgs(
-            path=Path(), lang=["eng"], oem=2, psm=2, version=version.parse("5.0.0")
+            path=Path(), lang="eng", oem=2, psm=2, version=version.parse("5.0.0")
         ),
         image=QtGui.QImage(),
         magic_scores={},

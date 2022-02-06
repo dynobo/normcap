@@ -214,7 +214,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         if system_info.is_briefcase_package():
             action = QtGui.QAction("... open data folder", menu)
             traineddata_path = system_info.config_directory() / "tessdata"
-            action.setObjectName(f"file:///{traineddata_path.absolute()}")
+            action.setObjectName(f"file:///{traineddata_path.resolve()}")
         else:
             action = QtGui.QAction("... need more?", menu)
             action.setObjectName("message_languages")

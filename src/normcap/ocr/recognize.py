@@ -21,15 +21,14 @@ def recognize(
     parse: bool = True,
 ) -> OcrResult:
     """Apply OCR on selected image section."""
-    languages = utils.sanatize_language(
-        languages, utils.get_tesseract_languages(tessdata_path)
-    )
+    utils.configure_tesseract_binary()
+
     tess_args = TessArgs(
         path=tessdata_path,
-        lang=languages,
+        lang=languages if isinstance(languages, str) else "+".join(languages),
         oem=OEM.LSTM_ONLY,
         psm=PSM.AUTO_OSD,
-        version=utils.get_tesseract_version,  # type: ignore
+        version=utils.get_tesseract_version(),
     )
     logger.debug("Init tesseract with args: %s", tess_args)
     logger.debug("Image size: %s", image.size())
@@ -38,7 +37,7 @@ def recognize(
         image.save(fp.name + ".png")
         tsv_data = pytesseract.image_to_data(
             fp.name + ".png",
-            lang="+".join(tess_args.lang),
+            lang=tess_args.lang,
             output_type=pytesseract.Output.DICT,
             timeout=30,
             config=utils.get_tesseract_config(tessdata_path),

@@ -1,5 +1,7 @@
 """Adjustments executed while packaging with briefcase during CI/CD."""
 
+import fileinput
+import hashlib
 import inspect
 import io
 import os
@@ -81,6 +83,15 @@ def get_version() -> str:
     with open("pyproject.toml", encoding="utf8") as toml_file:
         pyproject_toml = toml.load(toml_file)
     return pyproject_toml["tool"]["poetry"]["version"]
+
+
+def get_system_requires(platform) -> list[str]:
+    """Get versions string from pyproject.toml."""
+    with open("pyproject.toml", encoding="utf8") as toml_file:
+        pyproject_toml = toml.load(toml_file)
+    return pyproject_toml["tool"]["briefcase"]["app"]["normcap"][platform][
+        "system_requires"
+    ]
 
 
 def cmd(cmd_str: str):
@@ -167,8 +178,6 @@ def download_tessdata():
 
     Necessary to include it in the packages.
     """
-    print("Downloading language data...")
-
     target_path = Path.cwd() / "src" / "normcap" / "resources" / "tessdata"
     url_prefix = "https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/4.1.0"
     files = [
@@ -179,6 +188,12 @@ def download_tessdata():
         "spa.traineddata",
         "eng.traineddata",
     ]
+
+    if len(list(target_path.glob("*.traineddata"))) >= len(files):
+        print("Language data already present. Skipping download.")
+        return
+
+    print("Downloading language data...")
     for file_name in files:
         urllib.request.urlretrieve(f"{url_prefix}/{file_name}", target_path / file_name)
         print(
@@ -286,68 +301,89 @@ def bundle_pytesseract_dylibs():
             )
 
 
-def patch_file(file_path: Path, insert_above: str, lines: list[str]):
-    """Insert lines above given string of a file."""
-    with open(file_path, "r", encoding="utf8") as f:
-        file_content = f.readlines()
-
-    lines = (
-        ["", "# dynobo: patch start >>>>>>>>>>>>>>>>>>>>>>>>>"]
-        + lines
-        + ["# dynobo: patch end <<<<<<<<<<<<<<<<<<<<<<<<<<<", ""]
-    )
-
-    found_idx = None
-    for idx, line in enumerate(file_content):
-        if "# dynobo:" in line:
-            print("Patch was already applied!")
-            return
-        if insert_above in line:
-            found_idx = idx
-            break
-
-    if not found_idx:
-        raise ValueError("Line to manipulate not found!")
-
-    pad = file_content[found_idx].index(insert_above[0]) * " "
-    for row in reversed(lines):
-        file_content.insert(found_idx, f"{pad}{row}\n")
-
-    with open(file_path, "w", encoding="utf8") as f:
-        print(f"Patching {file_path.absolute()}...")
-        f.writelines(file_content)
-
-
 def rm_recursive(directory, exclude):
     """Remove excluded files from package."""
-    for path in directory.glob(r"**/*"):
-        path_str = str(path.absolute()).lower()
+    for package_path in directory.glob(r"**/*"):
+        path_str = str(package_path.absolute()).lower()
         if any(e in path_str for e in exclude):
-            if not path.exists():
+            if not package_path.exists():
                 continue
-            print(f"Removing: {path.absolute()}")
-            if path.is_dir():
-                shutil.rmtree(path)
-            if path.is_file():
-                os.remove(path)
+            print(f"Removing: {package_path.absolute()}")
+            if package_path.is_dir():
+                shutil.rmtree(package_path)
+            if package_path.is_file():
+                os.remove(package_path)
 
 
-def patch_briefcase_appimage():
-    """Insert code into briefcase source code to remove unnecessary libs."""
-    # Convert function to string
-    def_rm_recursive = inspect.getsource(rm_recursive).splitlines()
+def patch_briefcase_appimage_to_prune_deps():
+    """Insert code into briefcase appimage code to remove unnecessary libs."""
+    def_rm_recursive = inspect.getsource(rm_recursive)
 
-    # fmt: off
-    lines_to_insert = ['import shutil, os'] + def_rm_recursive + [
-        'app_dir = self.appdir_path(app) / "usr" / "app_packages"',
-        f'rm_recursive(directory=app_dir, exclude={EXCLUDE_FROM_APP_PACKAGES})',
-        f'rm_recursive(directory=app_dir / "PySide6", exclude={EXCLUDE_FROM_PySide6})'
-    ]
-    # fmt: on
-
-    insert_above = "so_folders = set()"
     file_path = Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
-    patch_file(file_path=file_path, insert_above=insert_above, lines=lines_to_insert)
+    patch = f"""
+import shutil, os
+{def_rm_recursive}
+app_dir = self.appdir_path(app) / "usr" / "app_packages"
+rm_recursive(directory=app_dir, exclude={EXCLUDE_FROM_APP_PACKAGES})
+rm_recursive(directory=app_dir / "PySide6", exclude={EXCLUDE_FROM_PySide6})
+"""
+    insert_after = 'print("[{app.app_name}] Building AppImage...".format(app=app))'
+    patch_file_below(file_path=file_path, insert_after=insert_after, patch=patch)
+
+
+def patch_briefcase_appimage_to_include_tesseract():
+    """Insert code into briefcase appimage code to remove unnecessary libs."""
+    file_path = Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
+    insert_after = '"-o", "appimage",'
+    patch = """
+"--executable",
+"/usr/bin/tesseract",
+"""
+    patch_file_below(file_path=file_path, insert_after=insert_after, patch=patch)
+
+
+def patch_file_below(file_path: Path, insert_after: str, patch: str):
+    """Insert lines in file, if not already done.
+
+    Indents the patch like the line after which it is inserted.
+    """
+    patch_hash = hashlib.md5(patch.encode()).hexdigest()
+
+    with open(file_path, "r", encoding="utf8") as f:
+        if f.read().find(patch_hash) > -1:
+            print("Skipping patch. Already applied.")
+            return
+
+    print(f"Patching file {file_path.resolve()}")
+    patch = (
+        f"# dynobo: {patch_hash} >>>>>>>>>>>>>>"
+        + patch
+        + f"# dynobo: {patch_hash} <<<<<<<<<<<<<<\n"
+    )
+    for line in fileinput.FileInput(file_path, inplace=True):
+        if insert_after in line:
+            pad = len(line) - len(line.lstrip(" "))
+            patch = patch.replace("\n", f"\n{pad * ' '}")
+            line = line.replace(line, line + pad * " " + patch + "\n")
+        print(line, end="")
+
+
+def patch_briefcase_create_to_adjust_dockerfile():
+    """Add code to add tesseract ppa to Dockerfile."""
+    file_path = Path(briefcase.__file__).parent / "commands" / "create.py"
+    insert_after = "self.install_app_support_package(app=app)"
+    patch = """
+if "linux" in str(bundle_path):
+    print()
+    print("Patching Dockerfile on Linux")
+    import fileinput
+    patch = "\\nRUN apt-add-repository ppa:alex-p/tesseract-ocr-devel"
+    for line in fileinput.FileInput(bundle_path / "Dockerfile", inplace=1):
+        if "RUN apt-add-repository ppa:deadsnakes/ppa" in line:
+            line = line.replace(line, line + patch)
+        print(line, end="")
+"""
+    patch_file_below(file_path=file_path, insert_after=insert_after, patch=patch)
 
 
 def add_metainfo_to_appimage():
@@ -401,22 +437,18 @@ if __name__ == "__main__":
         cmd(f"mv macOS/*.dmg macOS/NormCap-{get_version()}-MacOS.dmg")
 
     elif platform_str.lower().startswith("linux"):
-        print(f"Current User ID: {os.getuid()}")  # type: ignore
-        github_actions_uid = 1001
-        if os.getuid() == github_actions_uid:  # type: ignore
-            cmd("sudo apt update")
-            cmd(
-                "sudo apt install libleptonica-dev libtesseract-dev python3-pil tesseract-ocr"
-            )
-        else:
-            print(
-                "Dependencies installed? Otherwise, execute:\n"
-                "sudo apt install libleptonica-dev libtesseract-dev"
-            )
+        if system_requires := get_system_requires("linux"):
+            github_actions_uid = 1001
+            if os.getuid() == github_actions_uid: # type: ignore
+                cmd("sudo apt update")
+                cmd(f"sudo apt install {' '.join(system_requires)}")
         download_tessdata()
-        patch_briefcase_appimage()
+        patch_briefcase_appimage_to_prune_deps()
+        patch_briefcase_appimage_to_include_tesseract()
+        patch_briefcase_create_to_adjust_dockerfile()
         cmd("briefcase create")
         cmd("briefcase build")
         cmd("briefcase package")
+
     else:
         raise ValueError("Unknown operating system.")

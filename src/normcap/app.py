@@ -10,17 +10,25 @@ from importlib import metadata, resources
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
-# Add openssl shipped with briefcase package to path
+# Some overrides when running in briefcase package
 package = sys.modules["__main__"].__package__
-if (
-    sys.platform == "win32"
-    and package
-    and "Briefcase-Version" in metadata.metadata(package)
-):
-    with resources.as_file(resources.files("normcap.resources")) as openssl_path:
-        os.environ["PATH"] += os.pathsep + str(
-            openssl_path.absolute().joinpath("openssl")
-        )
+if package and "Briefcase-Version" in metadata.metadata(package):
+    if sys.platform == "linux":
+        # Use bundled tesseract binary
+        with resources.as_file(resources.files("normcap")) as normcap_path:
+            tesseract_path = normcap_path.parent.parent / "bin" / "tesseract"
+            os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
+
+    elif sys.platform == "win32":
+        with resources.as_file(resources.files("normcap.resources")) as resource_path:
+            # Add openssl shipped with briefcase package to path
+            openssl_path = resource_path / "openssl"
+            os.environ["PATH"] += os.pathsep + str(openssl_path.resolve())
+
+            # Use bundled tesseract binary
+            tesseract_path = resource_path / "tesseract" / "tesseract.exe"
+            os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
+            os.environ["TESSERACT_VERSION"] = "5.0.0"
 
 from PySide6 import QtCore, QtWidgets
 
@@ -34,8 +42,6 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
     level="WARNING",
 )
-
-# TODO: Overall wrap exceptions with FILE ISSUE hint
 
 
 def main():
@@ -66,7 +72,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
-    logger.debug("System info:\n%s", system_info.to_string())
+    logger.debug("System info:\n%s", system_info.to_dict())
 
     MainWindow(vars(args)).show()
     sys.exit(app.exec_())

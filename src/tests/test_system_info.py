@@ -231,7 +231,7 @@ def test_config_directory_retrieved_on_linux_macos(monkeypatch, tmp_path):
 
 
 def test_to_string():
-    string = system_info.to_string()
+    string = system_info.to_dict()
     expected = [
         "cli_args",
         "is_briefcase_package",

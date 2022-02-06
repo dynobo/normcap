@@ -1,7 +1,7 @@
 import functools
 import logging
+import os
 import traceback
-from typing import Union
 
 import pytesseract
 from packaging import version
@@ -17,37 +17,7 @@ def tsv_to_list_of_dicts(tsv_data: dict) -> list[dict]:
             words[idx][k] = v
 
     # Filter empty words
-    words = [w for w in words if w["text"].strip()]
-
-    return words
-
-
-def sanatize_language(
-    config_languages: Union[str, list[str]], tesseract_languages: list[str]
-) -> list[str]:
-    """Retrieve tesseract version number."""
-    if isinstance(config_languages, str):
-        config_languages = [config_languages]
-
-    set_config_languages = set(config_languages)
-    set_tesseract_languages = set(tesseract_languages)
-    unavailable_langs = set_config_languages.difference(set_tesseract_languages)
-    available_langs = set_config_languages.intersection(set_tesseract_languages)
-
-    if not unavailable_langs:
-        return list(set_config_languages)
-
-    logger.warning(
-        f"Languages {unavailable_langs} not found. "
-        + f"Available on the system are: {set_tesseract_languages}"
-    )
-    if available_langs:
-        logger.warning("Fallback to languages %s", available_langs)
-        return list(available_langs)
-
-    fallback_language = set_tesseract_languages.pop()
-    logger.warning("Fallback to language %s", fallback_language)
-    return list(set([fallback_language]))
+    return [w for w in words if w["text"].strip()]
 
 
 def get_tesseract_config(tessdata_path) -> str:
@@ -55,9 +25,20 @@ def get_tesseract_config(tessdata_path) -> str:
     return f'--tessdata-dir "{tessdata_path}"' if tessdata_path else ""
 
 
+def configure_tesseract_binary():
+    """Override tesseract command and version, if applicable."""
+    if tesseract_cmd := os.environ.get("TESSERACT_CMD", ""):
+        pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+    if tesseract_version := os.environ.get("TESSERACT_VERSION", ""):
+        pytesseract.get_tesseract_version = lambda: tesseract_version
+        pytesseract.pytesseract.get_tesseract_version = lambda: tesseract_version
+
+
 @functools.lru_cache()
 def get_tesseract_languages(tessdata_path) -> list[str]:
     """Get info abput tesseract setup."""
+    configure_tesseract_binary()
+
     try:
         languages = sorted(
             pytesseract.get_languages(config=get_tesseract_config(tessdata_path))
@@ -82,4 +63,5 @@ def get_tesseract_languages(tessdata_path) -> list[str]:
 @functools.lru_cache()
 def get_tesseract_version() -> version.Version:
     """Get info abput tesseract setup."""
-    return version.parse(pytesseract.get_tesseract_version())
+    tesseract_version = str(pytesseract.get_tesseract_version()).splitlines()[0]
+    return version.parse(tesseract_version)

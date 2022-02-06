@@ -2,7 +2,6 @@
 import functools
 import logging
 import os
-import pprint
 import re
 import subprocess
 import sys
@@ -140,30 +139,32 @@ def get_tessdata_path() -> str:
     if not list(path.glob("*.traineddata")):
         raise RuntimeError(f"Could not find language data files in {path}")
 
-    path_str = str(path.absolute())
+    path_str = str(path.resolve())
     if path_str.endswith(os.sep):
         path_str = path_str[:-1]
 
     return path_str
 
 
-def to_string() -> str:
+def to_dict() -> dict:
     """Cast all system infos to string for logging."""
-    return pprint.pformat(
-        dict(
-            cli_args=" ".join(sys.argv),
-            is_briefcase_package=is_briefcase_package(),
-            platform=sys.platform,
-            pyside6_version=PySide6_version,
-            qt_version=QtCore.qVersion(),
-            qt_library_path=", ".join(QtCore.QCoreApplication.libraryPaths()),
-            config_directory=config_directory(),
-            normcap_version=__version__,
-            tessdata_path=get_tessdata_path(),
-            desktop_environment=desktop_environment(),
-            display_manager_is_wayland=display_manager_is_wayland(),
-            gnome_shell_version=gnome_shell_version(),
-            screens=screens(),
-        ),
-        indent=3,
+    return dict(
+        cli_args=" ".join(sys.argv),
+        is_briefcase_package=is_briefcase_package(),
+        platform=sys.platform,
+        pyside6_version=PySide6_version,
+        qt_version=QtCore.qVersion(),
+        qt_library_path=", ".join(QtCore.QCoreApplication.libraryPaths()),
+        config_directory=config_directory(),
+        normcap_version=__version__,
+        tessdata_path=get_tessdata_path(),
+        envs={
+            "TESSERACT_CMD": os.environ.get("TESSERACT_CMD", None),
+            "TESSERACT_VERSION": os.environ.get("TESSERACT_VERSION", None),
+            "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX", None),
+        },
+        desktop_environment=desktop_environment(),
+        display_manager_is_wayland=display_manager_is_wayland(),
+        gnome_shell_version=gnome_shell_version(),
+        screens=screens(),
     )
