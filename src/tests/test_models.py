@@ -1,7 +1,7 @@
 import pytest
 from PySide6 import QtCore, QtGui
 
-from normcap.models import Capture, Rect, Screen
+from normcap.gui.models import Capture, Rect, Screen
 
 from .fixtures import capture  # pylint: disable=unused-import
 

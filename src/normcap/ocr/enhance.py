@@ -5,13 +5,10 @@ from collections import Counter
 
 from PySide6 import QtCore, QtGui
 
-from normcap.gui import utils
-from normcap.models import Capture
-
 logger = logging.getLogger(__name__)
 
 
-def _add_padding(img: QtGui.QImage, padding=80) -> QtGui.QImage:
+def add_padding(img: QtGui.QImage, padding=80) -> QtGui.QImage:
     """Pad the selected part of the image.
 
     Tesseract is optimized for e.g. scans or documents and therefore
@@ -21,6 +18,7 @@ def _add_padding(img: QtGui.QImage, padding=80) -> QtGui.QImage:
     TODO: Test padding strategy where the edge colors are extended
             (might be useful in case of bars etc, but problematic on images)
     """
+    logger.debug("Padding image by %s px", padding)
     bg_col = _identify_most_frequent_edge_color(img)
 
     padded_img = img.scaled(img.width() + padding * 2, img.height() + padding * 2)
@@ -52,7 +50,7 @@ def _identify_most_frequent_edge_color(img: QtGui.QImage) -> QtGui.QColor:
     return QtGui.QColor(most_frequent_color)
 
 
-def _enlarge_dpi(image: QtGui.QImage, factor: float = 3.2) -> QtGui.QImage:
+def resize_image(image: QtGui.QImage, factor: float = 3.2) -> QtGui.QImage:
     """Resize image to get equivalent of 300dpi.
 
     Useful because most displays are around ~100dpi, while Tesseract works best ~300dpi.
@@ -64,18 +62,3 @@ def _enlarge_dpi(image: QtGui.QImage, factor: float = 3.2) -> QtGui.QImage:
         QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
         QtCore.Qt.TransformationMode.SmoothTransformation,
     )
-
-
-def enhance_image(capture: Capture) -> Capture:
-    """Execute chain of optimizations."""
-    logger.info("Apply enhancements to image")
-
-    # Currently, the image is only enlarged and padded.
-    # for other strategies see: https://stackoverflow.com/a/50762612
-    if capture.image:
-        capture.image = _enlarge_dpi(capture.image)
-        utils.save_image_in_tempfolder(capture.image, postfix="_enlarged")
-
-        capture.image = _add_padding(capture.image)
-        utils.save_image_in_tempfolder(capture.image, postfix="_padded")
-    return capture

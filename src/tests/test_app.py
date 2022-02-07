@@ -44,6 +44,12 @@ def test_app(monkeypatch, qtbot, xvfb, data):
     if screen_rect.width() != 1920 or screen_rect.height() != 1080:
         pytest.xfail("Skipped due to wrong screen resolution.")
 
+    # Avoid flickering on wayland during test
+    monkeypatch.setattr(
+        normcap.gui.main_window.BaseWindow,
+        "_position_windows_on_wayland",
+        lambda _: True,
+    )
     monkeypatch.setattr(
         normcap.gui.main_window,
         "grab_screens",

@@ -10,9 +10,9 @@ from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import system_info
+from normcap.gui import system_info
+from normcap.gui.models import CaptureMode, Rect
 from normcap.gui.utils import get_icon, move_active_window_to_position_on_gnome
-from normcap.models import CaptureMode, Rect
 
 logger = logging.getLogger(__name__)
 
@@ -162,6 +162,7 @@ class BaseWindow(QtWidgets.QMainWindow):
             and self.isActiveWindow()
             and not self.is_positioned
         ):
+
             self._position_windows_on_wayland()
             self.main_window.com.on_window_positioned.emit()
         return super().changeEvent(event)

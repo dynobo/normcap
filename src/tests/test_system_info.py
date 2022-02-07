@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from packaging import version
 
-from normcap import models, system_info
+from normcap.gui import models, system_info
 
 # Specific settings for pytest
 # pylint: disable=redefined-outer-name,protected-access,unused-argument
@@ -43,6 +43,16 @@ def test_gnome_shell_version_on_windows(monkeypatch):
     monkeypatch.setattr(sys, "platform", "win32")
     system_info.gnome_shell_version.cache_clear()
     assert system_info.gnome_shell_version() is None
+
+
+def test_gnome_shell_version_catch_unknown_exception(caplog, monkeypatch):
+    def raise_unknown_error(*args, **kwargs):
+        raise Exception("Some Unknown Error")
+
+    monkeypatch.setattr(subprocess, "check_output", raise_unknown_error)
+    system_info.gnome_shell_version.cache_clear()
+    assert system_info.gnome_shell_version() is None
+    assert "ERROR" in caplog.text
 
 
 def test_display_manager_is_wayland(monkeypatch):
@@ -152,6 +162,9 @@ def test_is_briefcase_package(monkeypatch):
     monkeypatch.setattr(metadata, "metadata", lambda _: {"Briefcase-Version": "9.9.9"})
     monkeypatch.setattr(sys.modules["__main__"], "__package__", "normcap")
     assert system_info.is_briefcase_package()
+
+    monkeypatch.setattr(sys.modules["__main__"], "__package__", "")
+    assert not system_info.is_briefcase_package()
 
 
 def test_screens(qtbot):

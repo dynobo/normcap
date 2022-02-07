@@ -8,19 +8,16 @@ import time
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import ocr, system_info
-from normcap.constants import FILE_ISSUE_TEXT
-from normcap.gui import utils
+from normcap import ocr
+from normcap.gui import system_info, utils
 from normcap.gui.base_window import BaseWindow
+from normcap.gui.constants import FILE_ISSUE_TEXT
+from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect
 from normcap.gui.notifier import Notifier
 from normcap.gui.settings import init_settings
 from normcap.gui.settings_menu import SettingsMenu
 from normcap.gui.system_tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
-from normcap.models import Capture, CaptureMode, DesktopEnvironment, Rect
-
-# TODO: Move enhance method to gui
-from normcap.ocr.enhance import enhance_image
 from normcap.screengrab import grab_screens
 
 logger = logging.getLogger(__name__)
@@ -30,9 +27,8 @@ class Communicate(QtCore.QObject):
     """Applications' communication bus."""
 
     on_region_selected = QtCore.Signal(Rect)
-    on_image_grabbed = QtCore.Signal()
+    on_image_cropped = QtCore.Signal()
     on_ocr_performed = QtCore.Signal()
-    on_image_prepared = QtCore.Signal()
     on_copied_to_clipboard = QtCore.Signal()
     on_send_notification = QtCore.Signal(Capture)
     on_window_positioned = QtCore.Signal()
@@ -122,8 +118,7 @@ class MainWindow(BaseWindow):
     def _set_signals(self):
         """Set up signals to trigger program logic."""
         self.com.on_region_selected.connect(self._crop_image)
-        self.com.on_image_grabbed.connect(self._prepare_image)
-        self.com.on_image_prepared.connect(self._capture_to_ocr)
+        self.com.on_image_cropped.connect(self._capture_to_ocr)
         self.com.on_ocr_performed.connect(self._copy_to_clipboard)
         self.com.on_copied_to_clipboard.connect(self._notify_or_close)
 
@@ -279,26 +274,22 @@ class MainWindow(BaseWindow):
 
         utils.save_image_in_tempfolder(self.capture.image)
 
-        self.com.on_image_grabbed.emit()
-
-    def _prepare_image(self):
-        """Enhance image before performin OCR."""
-        if self.capture.image_area > 25:
-            logger.debug("Prepare image for OCR")
-            self.capture = enhance_image(self.capture)
-            self.com.on_image_prepared.emit()
-        else:
-            logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
-            self.com.on_quit_or_hide.emit("selection too small")
+        self.com.on_image_cropped.emit()
 
     def _capture_to_ocr(self):
         """Perform content recognition on grabed image."""
+        if self.capture.image_area < 25:
+            logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
+            self.com.on_quit_or_hide.emit("selection too small")
+
         logger.debug("Perform OCR")
         ocr_result = ocr.recognize(
             languages=self.settings.value("language"),
             image=self.capture.image,
             tessdata_path=system_info.get_tessdata_path(),
             parse=self.capture.mode is CaptureMode.PARSE,
+            resize_factor=3.2,
+            padding_size=80,
         )
         self.capture.ocr_text = ocr_result.text
         self.capture.ocr_applied_magic = ocr_result.best_scored_magic

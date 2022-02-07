@@ -2,12 +2,13 @@
 
 import logging
 import tempfile
-from typing import Union
+from typing import Optional, Union
 
 import pytesseract  # type: ignore
 from PySide6 import QtGui
 
 from normcap.ocr import utils
+from normcap.ocr.enhance import add_padding, resize_image
 from normcap.ocr.magics import magic
 from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
 
@@ -19,9 +20,16 @@ def recognize(
     image: QtGui.QImage,
     tessdata_path=None,
     parse: bool = True,
+    resize_factor: Optional[float] = None,
+    padding_size: Optional[int] = None,
 ) -> OcrResult:
     """Apply OCR on selected image section."""
     utils.configure_tesseract_binary()
+
+    if resize_factor:
+        image = resize_image(image, factor=resize_factor)
+    if padding_size:
+        image = add_padding(image, padding=padding_size)
 
     tess_args = TessArgs(
         path=tessdata_path,

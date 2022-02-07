@@ -8,7 +8,7 @@ from packaging import version
 from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__
-from normcap.constants import URLS
+from normcap.gui.constants import URLS
 from normcap.gui.utils import get_icon, set_cursor
 
 logger = logging.getLogger(__name__)

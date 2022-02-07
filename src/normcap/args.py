@@ -2,7 +2,7 @@
 
 import argparse
 
-from normcap.constants import DEFAULT_SETTINGS, DESCRIPTION
+from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION
 
 
 def create_argparser() -> argparse.ArgumentParser:

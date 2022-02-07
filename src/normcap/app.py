@@ -7,10 +7,19 @@ import signal
 import sys
 from importlib import metadata, resources
 
+# TODO: Manual test multi screen
+# TODO: Streamline Logging
+# TODO: Get rid of PySide6 for OCR
+# TODO: Save debug images
+# TODO: Test exception hook
+# TODO: Improve test coverage
+# TODO: Slim down packages
+
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
 # Some overrides when running in briefcase package
+# TODO: Make testable function
 package = sys.modules["__main__"].__package__
 if package and "Briefcase-Version" in metadata.metadata(package):
     if sys.platform == "linux":
@@ -32,9 +41,9 @@ if package and "Briefcase-Version" in metadata.metadata(package):
 
 from PySide6 import QtCore, QtWidgets
 
-from normcap import __version__, system_info
+from normcap import __version__
 from normcap.args import create_argparser
-from normcap.gui import utils
+from normcap.gui import system_info, utils
 from normcap.gui.main_window import MainWindow
 
 logging.basicConfig(
@@ -47,7 +56,6 @@ logging.basicConfig(
 def main():
     """Start main application logic."""
     logger = logging.getLogger("normcap")
-    # Application wide exception hook
     sys.excepthook = utils.hook_exceptions
 
     # Allow closing QT app with CTRL+C in terminal

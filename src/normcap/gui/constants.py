@@ -1,6 +1,6 @@
 """Global constants."""
 
-from normcap.models import Setting, Urls
+from normcap.gui.models import Setting, Urls
 
 DEFAULT_SETTINGS = (
     Setting(

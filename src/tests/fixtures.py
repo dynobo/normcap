@@ -1,7 +1,7 @@
 import pytest  # type: ignore
 from PySide6 import QtGui
 
-from normcap.models import Capture, CaptureMode, Rect
+from normcap.gui.models import Capture, CaptureMode, Rect
 
 
 @pytest.fixture(scope="session")

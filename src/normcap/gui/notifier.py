@@ -5,8 +5,8 @@ import textwrap
 
 from PySide6 import QtCore
 
+from normcap.gui.models import Capture, CaptureMode
 from normcap.gui.utils import get_icon
-from normcap.models import Capture, CaptureMode
 
 logger = logging.getLogger(__name__)
 

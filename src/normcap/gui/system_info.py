@@ -14,7 +14,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as PySide6_version
 
 from normcap import __version__
-from normcap.models import DesktopEnvironment, Rect, Screen
+from normcap.gui.models import DesktopEnvironment, Rect, Screen
 
 logger = logging.getLogger(__name__)
 
@@ -139,11 +139,7 @@ def get_tessdata_path() -> str:
     if not list(path.glob("*.traineddata")):
         raise RuntimeError(f"Could not find language data files in {path}")
 
-    path_str = str(path.resolve())
-    if path_str.endswith(os.sep):
-        path_str = path_str[:-1]
-
-    return path_str
+    return str(path.resolve())
 
 
 def to_dict() -> dict:

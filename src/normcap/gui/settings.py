@@ -2,7 +2,7 @@ import logging
 
 from PySide6 import QtCore
 
-from normcap.constants import DEFAULT_SETTINGS
+from normcap.gui.constants import DEFAULT_SETTINGS
 
 logger = logging.getLogger(__name__)
 

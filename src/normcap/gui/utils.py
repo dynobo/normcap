@@ -16,9 +16,9 @@ from jeepney.io.blocking import open_dbus_connection  # type: ignore
 from jeepney.wrappers import MessageGenerator, new_method_call  # type: ignore
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import system_info
-from normcap.constants import URLS
-from normcap.models import Capture
+from normcap.gui import system_info
+from normcap.gui.constants import URLS
+from normcap.gui.models import Capture
 
 logger = logging.getLogger(__name__)
 
