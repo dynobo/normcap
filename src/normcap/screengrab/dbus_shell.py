@@ -4,54 +4,62 @@ import logging
 import tempfile
 from pathlib import Path
 
-from jeepney import MessageType  # type: ignore
-from jeepney.io.blocking import open_dbus_connection  # type: ignore
-from jeepney.wrappers import (  # type: ignore
-    DBusErrorResponse,
-    MessageGenerator,
-    new_method_call,
-)
-from PySide6 import QtGui, QtWidgets
+from PySide6 import QtDBus, QtGui, QtWidgets
 
 from normcap.screengrab.utils import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)
 
 
-class GnomeShellScreenshot(MessageGenerator):
+class GnomeShellScreenshot:
     """Capture screenshot through dbus."""
 
+
+def get_screenshot_interface():
+    item = "org.gnome.Shell.Screenshot"
     interface = "org.gnome.Shell.Screenshot"
+    path = "/org/gnome/Shell/Screenshot"
 
-    def __init__(self):
-        """Init jeepney message generator."""
-        super().__init__(
-            object_path="/org/gnome/Shell/Screenshot",
-            bus_name="org.gnome.Shell.Screenshot",
-        )
+    bus = QtDBus.QDBusConnection.sessionBus()
+    if not bus.isConnected():
+        logger.error("Not connected to dbus!")
+    return QtDBus.QDBusInterface(item, path, interface, bus)
 
-    def grab(self, filename):
-        """Grab specific section to file with flash disabled."""
-        return new_method_call(
-            self,
-            "Screenshot",
-            "bbs",
-            (True, False, filename),
-        )
 
-    def grab_rect(self, x, y, width, height, filename):
-        """Grab specific section to file with flash disabled."""
-        return new_method_call(
-            self,
+def grab(filename):
+    """Grab specific section to file with flash disabled."""
+    screenshot_interface = get_screenshot_interface()
+    if screenshot_interface.isValid():
+        x = screenshot_interface.call("Screenshot", True, False, filename)
+        if x.errorName():
+            logger.error("Failed move Window!")
+            logger.error(x.errorMessage())
+    else:
+        logger.error("Invalid dbus interface")
+    return x.arguments()[1]
+
+
+def grab_rect(x, y, width, height, filename):
+    screenshot_interface = get_screenshot_interface()
+    if screenshot_interface.isValid():
+        x = screenshot_interface.callWithArgumentList(
+            QtDBus.QDBus.AutoDetect,
             "ScreenshotArea",
-            "iiiibs",
-            (x, y, width, height, False, filename),
+            [x, y, width, height, False, filename],
         )
+        if x.errorName():
+            logger.error("Failed move Window!")
+            logger.error(x.errorMessage())
+    else:
+        logger.error("Invalid dbus interface")
+
+    return x.arguments()[1]
 
 
 def grab_full_desktop() -> QtGui.QImage:
     """Capture rect of screen on gnome systems using wayland."""
     virtual_geometry = QtWidgets.QApplication.primaryScreen().virtualGeometry()
+    # TODO: Use grab instead grab_rect?
     x = virtual_geometry.x()
     y = virtual_geometry.y()
     width = virtual_geometry.width()
@@ -59,20 +67,8 @@ def grab_full_desktop() -> QtGui.QImage:
 
     _, temp_file = tempfile.mkstemp(prefix="normcap")
     try:
-        msg = GnomeShellScreenshot().grab_rect(x, y, width, height, temp_file)
-        connection = open_dbus_connection(bus="SESSION")
-        result = connection.send_and_get_reply(msg)
-        if result.header.message_type == MessageType.error:
-            logger.error("Screenshot with DBUS failed: %s", ", ".join(result.body))
-            raise RuntimeError("DBUS returned failure.")
-
+        temp_file = grab_rect(x, y, width, height, temp_file)
         image = QtGui.QImage(temp_file)
-
-    except DBusErrorResponse as e:
-        if "invalid params" in [d.lower() for d in e.data]:
-            logger.info("ScreenShot with DBUS failed with 'invalid params'.")
-        else:
-            logger.exception("ScreenShot with DBUS failed with exception.")
     finally:
         Path(temp_file).unlink()
 

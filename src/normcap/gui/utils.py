@@ -12,9 +12,7 @@ from importlib import resources
 from pathlib import Path
 from typing import Optional
 
-from jeepney.io.blocking import open_dbus_connection  # type: ignore
-from jeepney.wrappers import MessageGenerator, new_method_call  # type: ignore
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtDBus, QtGui, QtWidgets
 
 from normcap.gui import system_info
 from normcap.gui.constants import URLS
@@ -75,26 +73,22 @@ def move_active_window_to_position_on_gnome(screen_geometry):
         }}
     }});
     """
+    item = "org.gnome.Shell"
+    interface = "org.gnome.Shell"
+    path = "/org/gnome/Shell"
 
-    class MoveWindow(MessageGenerator):
-        """Move window through dbus."""
+    bus = QtDBus.QDBusConnection.sessionBus()
+    if not bus.isConnected():
+        logger.error("Not connected to dbus!")
 
-        interface = "org.gnome.Shell"
-
-        def __init__(self):
-            """Init jeepney message generator."""
-            super().__init__(
-                object_path="/org/gnome/Shell",
-                bus_name="org.gnome.Shell",
-            )
-
-        def move(self):
-            """Grab specific section to file with flash disabled."""
-            return new_method_call(self, "Eval", "s", (JS_CODE,))
-
-    connection = open_dbus_connection(bus="SESSION")
-    msg = MoveWindow().move()
-    _ = connection.send_and_get_reply(msg)
+    shell_interface = QtDBus.QDBusInterface(item, path, interface, bus)
+    if shell_interface.isValid():
+        x = shell_interface.call("Eval", JS_CODE)
+        if x.errorName():
+            logger.error("Failed move Window!")
+            logger.error(x.errorMessage())
+    else:
+        logger.error("Invalid dbus interface")
 
 
 def hook_exceptions(exc_type, exc_value, exc_traceback):

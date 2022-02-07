@@ -13,6 +13,7 @@ from importlib import metadata, resources
 # TODO: Test exception hook
 # TODO: Improve test coverage
 # TODO: Slim down packages
+# TODO: Test screenshot mechanism on different system
 
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")

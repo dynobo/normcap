@@ -15,6 +15,9 @@ from jeepney.wrappers import (  # type: ignore
 )
 from PySide6 import QtGui
 
+# TODO: Get rid of jeepney
+
+
 logger = logging.getLogger(__name__)
 from normcap.screengrab.utils import split_full_desktop_to_screens
 
