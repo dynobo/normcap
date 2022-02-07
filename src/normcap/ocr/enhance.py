@@ -2,13 +2,33 @@
 
 import logging
 from collections import Counter
+from typing import cast
 
-from PySide6 import QtCore, QtGui
+from PIL import Image
 
 logger = logging.getLogger(__name__)
 
 
-def add_padding(img: QtGui.QImage, padding=80) -> QtGui.QImage:
+def _identify_most_frequent_edge_color(img: Image.Image) -> tuple:
+    """Heuristically find color for padding."""
+    edge_colors = []
+
+    # Top and bottom edge
+    for x in range(img.width):
+        edge_colors.append(img.getpixel((x, 0)))
+        edge_colors.append(img.getpixel((x, img.height - 1)))
+
+    # Left and right edge
+    for y in range(img.height):
+        edge_colors.append(img.getpixel((0, y)))
+        edge_colors.append(img.getpixel((img.width - 1, y)))
+
+    color_count = Counter(edge_colors)
+
+    return color_count.most_common()[0][0]
+
+
+def add_padding(img: Image.Image, padding=80) -> Image.Image:
     """Pad the selected part of the image.
 
     Tesseract is optimized for e.g. scans or documents and therefore
@@ -19,46 +39,25 @@ def add_padding(img: QtGui.QImage, padding=80) -> QtGui.QImage:
             (might be useful in case of bars etc, but problematic on images)
     """
     logger.debug("Padding image by %s px", padding)
+
     bg_col = _identify_most_frequent_edge_color(img)
 
-    padded_img = img.scaled(img.width() + padding * 2, img.height() + padding * 2)
-    padded_img.fill(bg_col)
-
-    painter = QtGui.QPainter(padded_img)
-    painter.drawImage(padding, padding, img)
-
+    padded_img = Image.new(
+        cast("Image._Mode", img.mode),
+        (img.width + padding * 2, img.height + padding * 2),
+        bg_col,
+    )
+    padded_img.paste(img, (padding, padding))
     return padded_img
 
 
-def _identify_most_frequent_edge_color(img: QtGui.QImage) -> QtGui.QColor:
-    """Heuristically find color for padding."""
-    edge_colors = []
-
-    # Top and bottom edge
-    for x in range(img.width()):
-        edge_colors.append(img.pixelColor(x, 0).name())
-        edge_colors.append(img.pixelColor(x, img.height() - 1).name())
-
-    # Left and right edge
-    for y in range(img.height()):
-        edge_colors.append(img.pixelColor(0, y).name())
-        edge_colors.append(img.pixelColor(img.width() - 1, y).name())
-
-    color_count = Counter(edge_colors)
-    most_frequent_color = color_count.most_common()[0][0]
-
-    return QtGui.QColor(most_frequent_color)
-
-
-def resize_image(image: QtGui.QImage, factor: float = 3.2) -> QtGui.QImage:
+def resize_image(image: Image.Image, factor: float = 3.2) -> Image.Image:
     """Resize image to get equivalent of 300dpi.
 
     Useful because most displays are around ~100dpi, while Tesseract works best ~300dpi.
     """
     logger.debug("Resize screenshot by factor %s", factor)
-    return image.scaled(
-        int(image.width() * factor),
-        int(image.height() * factor),
-        QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
-        QtCore.Qt.TransformationMode.SmoothTransformation,
+    return image.resize(
+        size=(int(image.width * factor), int(image.height * factor)),
+        resample=Image.ANTIALIAS,
     )

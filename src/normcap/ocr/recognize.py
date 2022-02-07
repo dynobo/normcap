@@ -5,7 +5,7 @@ import tempfile
 from typing import Optional, Union
 
 import pytesseract  # type: ignore
-from PySide6 import QtGui
+from PIL import Image
 
 from normcap.ocr import utils
 from normcap.ocr.enhance import add_padding, resize_image
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def recognize(
     languages: Union[str, list[str]],
-    image: QtGui.QImage,
+    image: Image.Image,
     tessdata_path=None,
     parse: bool = True,
     resize_factor: Optional[float] = None,
@@ -39,7 +39,7 @@ def recognize(
         version=utils.get_tesseract_version(),
     )
     logger.debug("Init tesseract with args: %s", tess_args)
-    logger.debug("Image size: %s", image.size())
+    logger.debug("Image size: %s", image.size)
 
     with tempfile.NamedTemporaryFile(delete=False) as fp:
         image.save(fp.name + ".png")
@@ -53,6 +53,7 @@ def recognize(
 
     result = OcrResult(tess_args=tess_args, words=utils.tsv_to_list_of_dicts(tsv_data))
     logger.debug("OCR result: %s", result)
+
     if parse:
         result = magic.apply_magic(result)
         logger.debug("Transformed text: %s", result.transformed)

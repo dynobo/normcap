@@ -70,7 +70,7 @@ repos:
         stages: [commit]
         language: system
         entry:
-          poetry run pydeps src/normcap --max-bacon=1 --cluster
+          poetry run pydeps src/normcap --max-bacon=2 --cluster
           --max-cluster-size=1 --no-show -o=dependency_graph.png -T=png
         types: [python]
         pass_filenames: false
