@@ -284,7 +284,7 @@ class MainWindow(BaseWindow):
         ba = QtCore.QByteArray()
         buffer = QtCore.QBuffer(ba)
         buffer.open(QtCore.QIODevice.ReadWrite)
-        image.save(buffer, b"PNG")
+        image.save(buffer, "PNG")  # type:ignore
         return Image.open(io.BytesIO(buffer.data()))
 
     def _capture_to_ocr(self):

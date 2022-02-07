@@ -13,11 +13,18 @@ logger = logging.getLogger(__name__)
 
 
 def split_full_desktop_to_screens(full_image: QtGui.QImage) -> list[QtGui.QImage]:
-    """Split full desktop image into list of images per screen."""
+    """Split full desktop image into list of images per screen.
+
+    Also resizes screens according to image:virtual-geometry ratio.
+    """
     # TODO: Debug blurry ratio on Fedora (here or later?) through portal
     virtual_geometry = QtWidgets.QApplication.primaryScreen().virtualGeometry()
 
     ratio = full_image.rect().width() / virtual_geometry.width()
+
+    logger.debug("Virtual geometry width: %s", virtual_geometry.width())
+    logger.debug("Image width: %s", full_image.rect().width())
+    logger.debug("Resizing screens by ratio %s", ratio)
 
     images = []
     for screen in QtWidgets.QApplication.screens():

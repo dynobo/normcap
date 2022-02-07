@@ -9,7 +9,6 @@ from importlib import metadata, resources
 
 # TODO: Manual test multi screen
 # TODO: Streamline Logging
-# TODO: Get rid of PySide6 for OCR
 # TODO: Save debug images
 # TODO: Test exception hook
 # TODO: Improve test coverage
@@ -19,25 +18,30 @@ from importlib import metadata, resources
 locale.setlocale(locale.LC_ALL, "C")
 
 # Some overrides when running in briefcase package
-# TODO: Make testable function
-package = sys.modules["__main__"].__package__
-if package and "Briefcase-Version" in metadata.metadata(package):
-    if sys.platform == "linux":
-        # Use bundled tesseract binary
-        with resources.as_file(resources.files("normcap")) as normcap_path:
-            tesseract_path = normcap_path.parent.parent / "bin" / "tesseract"
-            os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
-
-    elif sys.platform == "win32":
-        with resources.as_file(resources.files("normcap.resources")) as resource_path:
-            # Add openssl shipped with briefcase package to path
-            openssl_path = resource_path / "openssl"
-            os.environ["PATH"] += os.pathsep + str(openssl_path.resolve())
-
+def _set_environ_for_briefcase():
+    package = sys.modules["__main__"].__package__
+    if package and "Briefcase-Version" in metadata.metadata(package):
+        if sys.platform == "linux":
             # Use bundled tesseract binary
-            tesseract_path = resource_path / "tesseract" / "tesseract.exe"
-            os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
-            os.environ["TESSERACT_VERSION"] = "5.0.0"
+            with resources.as_file(resources.files("normcap")) as normcap_path:
+                tesseract_path = normcap_path.parent.parent / "bin" / "tesseract"
+                os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
+
+        elif sys.platform == "win32":
+            with resources.as_file(
+                resources.files("normcap.resources")
+            ) as resource_path:
+                # Add openssl shipped with briefcase package to path
+                openssl_path = resource_path / "openssl"
+                os.environ["PATH"] += os.pathsep + str(openssl_path.resolve())
+
+                # Use bundled tesseract binary
+                tesseract_path = resource_path / "tesseract" / "tesseract.exe"
+                os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
+                os.environ["TESSERACT_VERSION"] = "5.0.0"
+
+
+_set_environ_for_briefcase()
 
 from PySide6 import QtCore, QtWidgets
 

@@ -51,7 +51,9 @@ def recognize(
             config=utils.get_tesseract_config(tessdata_path),
         )
 
-    result = OcrResult(tess_args=tess_args, words=utils.tsv_to_list_of_dicts(tsv_data))
+    result = OcrResult(
+        tess_args=tess_args, words=utils.tsv_to_list_of_dicts(tsv_data), image=image
+    )
     logger.debug("OCR result: %s", result)
 
     if parse:

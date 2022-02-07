@@ -6,7 +6,7 @@ from os import PathLike
 from typing import Optional
 
 from packaging import version
-from PySide6 import QtGui
+from PIL import Image
 
 
 @dataclass
@@ -26,7 +26,7 @@ class OcrResult:
 
     tess_args: TessArgs
     words: list[dict]  # Words+metadata detected by OCR
-    image: QtGui.QImage = QtGui.QImage()
+    image: Image.Image
     magic_scores: dict[str, float] = field(default_factory=dict)  # magics with scores
     transformed: str = ""  # Transformed result
 
