@@ -10,9 +10,18 @@ import tempfile
 import traceback
 from importlib import resources
 from pathlib import Path
+from types import ModuleType
 from typing import Optional
 
-from PySide6 import QtCore, QtDBus, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
+
+try:
+    from PySide6 import QtDBus
+
+    HAVE_QTDBUS = True
+except ImportError:
+    HAVE_QTDBUS = False
+
 
 from normcap.gui import system_info
 from normcap.gui.constants import URLS
@@ -58,6 +67,9 @@ def move_active_window_to_position_on_gnome(screen_geometry):
     This is a workaround for not being able to reposition windows on wayland.
     It only works on Gnome Shell.
     """
+    if not HAVE_QTDBUS:
+        raise TypeError("QtDBus should not be called on non Linux systems!")
+
     JS_CODE = f"""
     const GLib = imports.gi.GLib;
     global.get_window_actors().forEach(function (w) {{
@@ -97,7 +109,7 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
         logger.critical("Uncaught exception! Quitting NormCap!")
 
         formatted_exc = "".join(
-            "  " + l for l in traceback.format_exception_only(exc_type, exc_value)
+            f"  {l}" for l in traceback.format_exception_only(exc_type, exc_value)
         )
 
         formatted_tb = "".join(traceback.format_tb(exc_traceback))

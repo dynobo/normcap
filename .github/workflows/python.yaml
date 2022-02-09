@@ -131,9 +131,7 @@ jobs:
       - name: Publish latest release
         uses: ncipollo/release-action@v1
         with:
-          body:
-            "Builds intended **only** for developing purposes! You're better off
-            using the latest v0.\\*.\\* build instead!"
+          body: "Only for internal tests. Should not be published."
           artifacts: "*/*.+(dmg|AppImage|msi)"
           allowUpdates: true
           artifactErrorsFailBuild: false
@@ -158,6 +156,39 @@ jobs:
       - name: Poetry publish
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+
+  build-dev-packages:
+    name: Build and release unstable develop packages
+    needs: test
+    if: ${{ startsWith(github.ref, 'refs/heads/dev') }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, macos-10.15, windows-2019]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install briefcase and run build
+        shell: bash -l {0}
+        run: |
+          pip3 install briefcase
+          python3 build.py dev
+      - name: Draft release
+        uses: ncipollo/release-action@v1
+        with:
+          name: Unstable development builds
+          body:
+            "Builds intended **only** for developing purposes! You're better off
+            using the latest v0.\\*.\\* build instead!"
+          artifacts: "*/*.+(dmg|AppImage|msi)"
+          removeArtifacts: true
+          artifactErrorsFailBuild: false
+          draft: true
+          prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   build-packages:
     name: Build packages and prepare release

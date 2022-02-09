@@ -5,6 +5,7 @@ import tempfile
 from importlib import resources
 from pathlib import Path
 
+import pytest
 from PySide6 import QtCore, QtGui
 
 from normcap.gui import utils
@@ -79,6 +80,16 @@ def test_get_icon_sytem(qtbot):
     icon = utils.get_icon("normcap.png", "edit-undo")
     # TODO: check if system or fallback got retrieved
     assert len(icon.availableSizes()) >= 1
+
+
+def test_hook_exception(monkeypatch, caplog):
+    # TODO: Test redacting of potentially sensitive data
+    monkeypatch.setattr(sys, "exit", lambda _: True)
+    with pytest.raises(RuntimeError) as excinfo:
+        raise RuntimeError
+
+    utils.hook_exceptions(excinfo.typename, excinfo.value, excinfo.tb)
+    assert "RuntimeError" in caplog.text
 
 
 def test_set_cursor(qtbot):

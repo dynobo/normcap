@@ -3,7 +3,7 @@ from PySide6 import QtCore, QtGui
 
 from normcap.gui.models import Capture, Rect, Screen
 
-from .fixtures import capture  # pylint: disable=unused-import
+from ..fixtures import capture  # pylint: disable=unused-import
 
 # Specific settings for pytest
 # pylint: disable=redefined-outer-name,protected-access,unused-argument

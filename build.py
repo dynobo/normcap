@@ -1,5 +1,6 @@
 """Adjustments executed while packaging with briefcase during CI/CD."""
 
+import datetime
 import fileinput
 import hashlib
 import inspect
@@ -85,6 +86,12 @@ def get_version() -> str:
     return pyproject_toml["tool"]["poetry"]["version"]
 
 
+def get_timestamp() -> str:
+    """Get timestamp for development builds."""
+    now = datetime.datetime.now()
+    return now.strftime("%Y%m%d-%H%M")
+
+
 def get_system_requires(platform) -> list[str]:
     """Get versions string from pyproject.toml."""
     with open("pyproject.toml", encoding="utf8") as toml_file:
@@ -166,7 +173,7 @@ def download_openssl():
     target_path.mkdir(exist_ok=True)
     zip_path = Path.cwd() / "openssl.zip"
     urllib.request.urlretrieve(
-        "http://wiki.overbyte.eu/arch/openssl-1.1.1g-win64.zip", zip_path
+        "http://wiki.overbyte.eu/arch/openssl-1.1.1m-win64.zip", zip_path
     )
     with zipfile.ZipFile(zip_path, "r") as zip_ref:
         zip_ref.extractall(target_path)
@@ -406,7 +413,10 @@ if __name__ == "__main__":
         cmd("briefcase build")
         patch_windows_installer()
         cmd("briefcase package")
-        cmd(f"mv windows/*.msi windows/NormCap-{get_version()}-Windows.msi")
+        if "dev" in sys.argv:
+            cmd(f"mv windows/*.msi windows/NormCap-{get_timestamp()}-Windows.msi")
+        else:
+            cmd(f"mv windows/*.msi windows/NormCap-{get_version()}-Windows.msi")
 
     elif platform_str.lower().startswith("darwin"):
         app_dir = (
@@ -427,7 +437,10 @@ if __name__ == "__main__":
         rm_recursive(directory=app_dir / "PySide6", exclude=EXCLUDE_FROM_PySide6)
         cmd("briefcase build")
         cmd("briefcase package macos app --no-sign")
-        cmd(f"mv macOS/*.dmg macOS/NormCap-{get_version()}-MacOS.dmg")
+        if "dev" in sys.argv:
+            cmd(f"mv macOS/*.dmg macOS/NormCap-{get_timestamp()}-MacOS.dmg")
+        else:
+            cmd(f"mv macOS/*.dmg macOS/NormCap-{get_version()}-MacOS.dmg")
 
     elif platform_str.lower().startswith("linux"):
         if system_requires := get_system_requires("linux"):
@@ -442,6 +455,7 @@ if __name__ == "__main__":
         cmd("briefcase create")
         cmd("briefcase build")
         cmd("briefcase package")
-
+        if "dev" in sys.argv:
+            cmd(f"mv linux/*.AppImage linux/NormCap-{get_timestamp()}-x86_64.AppImage")
     else:
         raise ValueError("Unknown operating system.")

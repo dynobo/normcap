@@ -49,6 +49,12 @@ def test_gnome_shell_version_catch_unknown_exception(caplog, monkeypatch):
     def raise_unknown_error(*args, **kwargs):
         raise Exception("Some Unknown Error")
 
+    monkeypatch.setattr(sys, "platform", "linux")
+    monkeypatch.setattr(
+        system_info,
+        "desktop_environment",
+        lambda: models.DesktopEnvironment.GNOME,
+    )
     monkeypatch.setattr(subprocess, "check_output", raise_unknown_error)
     system_info.gnome_shell_version.cache_clear()
     assert system_info.gnome_shell_version() is None

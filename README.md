@@ -25,7 +25,7 @@
 - On-screen recognition of selected text
 - Multi platform support for Linux, Windows, MacOS
 - Multi monitor support, incl. HDPI displays
-- "[Magically](#magics)" parsing the text (optional, on by default)
+- Parsing the text based on heuristics (optional, on by default)
 - Show notifications (optional)
 - Stay in system tray (optional)
 - Check for updates (optional, off by default)
@@ -44,12 +44,17 @@ If you experience issues please look at the
 "Security & Privacy" → "General" → "Open anyway". You might also need to allow NormCap
 to take screenshots.)
 
+For more info, take a look at the
+[NormCap landing page](https://dynobo.github.io/normcap/)
+
 ## Python package
 
 As an _alternative_ to a pre-build package you can install the
 [NormCap Python package](https://pypi.org/project/normcap/):
 
 ### On Linux
+
+TODO: Check which deps are still necessary
 
 ```sh
 # Install dependencies (Ubuntu/Debian)
@@ -122,36 +127,6 @@ pip install normcap
 normcap
 ```
 
-TODO: Remove usage infos (are in docs)
-
-## Usage
-
-### General
-
-- Select a region on screen with your mouse to perform text recognition
-
-- Press `<esc>` key to abort a capture and quit the application.
-
-### Magics
-
-"Magics" are like add-ons providing automated functionality to intelligently detect and
-format the captured input.
-
-First, every "magic" calculates a "**score**" to determine the likelihood of being
-responsible for this type of text. Second, the "magic" which achieved the highest
-"score" takes the necessary actions to **"transform"** the input text according to its
-type.
-
-Currently implemented Magics:
-
-| Magic           | Score                                                | Transform                                                                            |
-| --------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| **Single line** | Only single line is detected                         | Trim unnecessary whitespace                                                          |
-| **Multi line**  | Multi lines, but single Paragraph                    | Separated by line breaks and trim each lined                                         |
-| **Paragraph**   | Multiple blocks of lines or multiple paragraphs      | Join every paragraph into a single line, separate different paragraphs by empty line |
-| **E-Mail**      | Number of chars in email addresses vs. overall chars | Transform to a comma-separated list of email addresses                               |
-| **URL**         | Number of chars in URLs vs. overall chars            | Transform to line-break separated URLs                                               |
-
 ## Why "NormCap"?
 
 See [XKCD](https://xkcd.com):
@@ -202,7 +177,13 @@ And it depends on external software
 
 Thanks to the maintainers of those nice libraries!
 
-TODO: Add similar projects
+## Similar OpenSource Projects
+
+- [TextSnatcher](https://github.com/RajSolai/TextSnatcher)
+- [GreenShot](https://getgreenshot.org/)
+- [TextShot](https://github.com/ianzhao05/textshot)
+- [gImageReader](https://github.com/manisandro/gImageReader)
+- [Capture2Text](https://sourceforge.net/projects/capture2text)
 
 ## Certification
 
