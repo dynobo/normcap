@@ -1,7 +1,7 @@
 TESTCASES = [
     {
         "language": "eng",
-        "image": "ocr_test.png",
+        "image": "ocr_test_1.png",
         "tl": (46, 745),
         "br": (500, 950),
         "transformed": "\n".join(
@@ -17,7 +17,7 @@ TESTCASES = [
     },
     {
         "language": "eng",
-        "image": "ocr_test.png",
+        "image": "ocr_test_1.png",
         "tl": (312, 550),
         "br": (470, 572),
         "transformed": "https://regex101.com",

@@ -59,7 +59,7 @@ def grab_rect(x, y, width, height, filename):
 def grab_full_desktop() -> QtGui.QImage:
     """Capture rect of screen on gnome systems using wayland."""
     virtual_geometry = QtWidgets.QApplication.primaryScreen().virtualGeometry()
-    # TODO: Use grab instead grab_rect?
+    # TODO: Use grab instead grab_rect? Test on multi monitor!
     x = virtual_geometry.x()
     y = virtual_geometry.y()
     width = virtual_geometry.width()

@@ -43,6 +43,8 @@ def split_full_desktop_to_screens(full_image: QtGui.QImage) -> list[QtGui.QImage
 
 def display_manager_is_wayland() -> bool:
     """Identify relevant display managers (Linux)."""
+    if sys.platform != "linux":
+        return False
     XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "").lower()
     WAYLAND_DISPLAY = os.environ.get("WAYLAND_DISPLAY", "").lower()
     return "wayland" in WAYLAND_DISPLAY or "wayland" in XDG_SESSION_TYPE
