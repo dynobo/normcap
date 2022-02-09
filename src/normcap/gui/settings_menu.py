@@ -2,35 +2,27 @@
 
 from typing import Any, Optional
 
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide2 import QtCore, QtGui, QtWidgets
 
-from normcap import __version__, ocr
-from normcap.gui import system_info
-from normcap.gui.constants import MESSAGE_LANGUAGES, URLS
-from normcap.gui.utils import get_icon
+from normcap import system_info
+from normcap.data import MESSAGE_LANGUAGES, URLS
+from normcap.utils import get_icon
 
 _MENU_STYLE = """
         QMenu {
             background-color: rgba(0,0,0,0.8);
             color: white;
+            right: 20px;
+            margin-right: 10px;
         }
         QMenu::separator {
             background-color: rgba(255,255,255,0.2);
             height: 1px;
             margin-top: 5px;
         }
-        QMenu::scroller {
-            background: qlineargradient(
-                x1:1, y1:0, x2:1, y2:1,
-                stop:0 rgba(0,0,0,0),
-                stop:0.5 rgba(150,150,150,0.1),
-                stop:1 rgba(0,0,0,0)
-            )
-        }
         QMenu::item {
             padding: 3px 16px 3px 16px;
             background-color: transparent;
-            right: 10px;
         }
         QMenu::item:disabled {
             color: $COLOR;
@@ -83,10 +75,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         self.message_box.setWindowFlags(QtCore.Qt.Popup)
         self.message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
 
-        self.title_font = QtGui.QFont()
-        self.title_font.setBold(True)
-        self.title_font.setPointSize(10)
-
+        self.title_font = QtGui.QFont(QtGui.QFont().family(), 10, QtGui.QFont.Bold)
         self._add_menu()
 
         self.setStyleSheet(_BUTTON_STYLE)
@@ -113,13 +102,13 @@ class SettingsMenu(QtWidgets.QToolButton):
 
         self.setMenu(menu)
 
-    def _add_title(self, menu, text: str, action_parent=None):
-        action = QtGui.QAction(text, action_parent or menu)
+    def _add_title(self, menu, title: str):
+        action = QtWidgets.QAction(title, menu)
         action.setEnabled(False)
         action.setFont(self.title_font)
         menu.addAction(action)
 
-    def _on_item_click(self, action: QtGui.QAction):
+    def _on_item_click(self, action: QtWidgets.QAction):
         action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None
@@ -152,107 +141,100 @@ class SettingsMenu(QtWidgets.QToolButton):
             self.com.on_setting_changed.emit((setting, value))
 
     def _add_settings_section(self, menu):
-        settings_group = QtGui.QActionGroup(menu)
+        settings_group = QtWidgets.QActionGroup(menu)
         settings_group.setObjectName("settings_group")
         settings_group.setExclusive(False)
 
-        action = QtGui.QAction("Show notification", settings_group)
+        action = QtWidgets.QAction("Show notification", settings_group)
         action.setObjectName("notification")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("notification", type=bool)))
         menu.addAction(action)
 
-        action = QtGui.QAction("Keep in system tray", settings_group)
+        action = QtWidgets.QAction("Keep in system tray", settings_group)
         action.setObjectName("tray")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("tray", type=bool)))
         menu.addAction(action)
 
-        action = QtGui.QAction("Check for update", settings_group)
+        action = QtWidgets.QAction("Check for update", settings_group)
         action.setObjectName("update")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("update", type=bool)))
         menu.addAction(action)
 
     def _add_mode_section(self, menu):
-        mode_group = QtGui.QActionGroup(menu)
+        mode_group = QtWidgets.QActionGroup(menu)
         mode_group.setObjectName("mode_group")
         mode_group.setExclusive(True)
 
-        action = QtGui.QAction("parse", mode_group)
+        action = QtWidgets.QAction("parse", mode_group)
         action.setObjectName("parse")
         action.setCheckable(True)
         action.setChecked(self.settings.value("mode") == "parse")
         menu.addAction(action)
 
-        action = QtGui.QAction("raw", mode_group)
+        action = QtWidgets.QAction("raw", mode_group)
         action.setObjectName("raw")
         action.setCheckable(True)
         action.setChecked(self.settings.value("mode") == "raw")
         menu.addAction(action)
 
     def _add_languages_section(self, menu):
-        tesseract_languages = ocr.utils.get_tesseract_languages(
-            tessdata_path=system_info.get_tessdata_path()
-        )
-        if len(tesseract_languages) <= 7:
+        if len(system_info.tesseract().languages) <= 7:
             language_menu = menu
         else:
             language_menu = QtWidgets.QMenu("select", menu)
             language_menu.setObjectName("language_menu")
             menu.addMenu(language_menu)
 
-        language_group = QtGui.QActionGroup(language_menu)
+        language_group = QtWidgets.QActionGroup(language_menu)
         language_group.setObjectName("language_group")
         language_group.setExclusive(False)
-        for language in tesseract_languages:
-            action = QtGui.QAction(language, language_group)
+        for language in system_info.tesseract().languages:
+            action = QtWidgets.QAction(language, language_group)
             action.setObjectName(language)
             action.setCheckable(True)
             action.setChecked(language in self.settings.value("language"))
             language_menu.addAction(action)
 
         if system_info.is_briefcase_package():
-            action = QtGui.QAction("... open data folder", menu)
+            action = QtWidgets.QAction("... open data folder", menu)
             traineddata_path = system_info.config_directory() / "tessdata"
-            action.setObjectName(f"file:///{traineddata_path.resolve()}")
+            action.setObjectName(f"file:///{traineddata_path.absolute()}")
         else:
-            action = QtGui.QAction("... need more?", menu)
+            action = QtWidgets.QAction("... need more?", menu)
             action.setObjectName("message_languages")
+        action.setFont(QtGui.QFont(QtGui.QFont().family(), 10, QtGui.QFont.StyleHint))
         menu.addAction(action)
 
-    def _add_application_section(self, menu):
+    @staticmethod
+    def _add_application_section(menu):
         submenu = QtWidgets.QMenu(menu)
         submenu.setObjectName("settings_menu_website")
-        submenu.setTitle("About")
+        submenu.setTitle("Website")
 
-        about_group = QtGui.QActionGroup(menu)
-        about_group.setObjectName("website_group")
+        website_group = QtWidgets.QActionGroup(menu)
+        website_group.setObjectName("website_group")
 
-        self._add_title(submenu, f"Normcap v{__version__}", about_group)
-
-        action = QtGui.QAction("Website", about_group)
-        action.setObjectName(URLS.website)
-        submenu.addAction(action)
-
-        action = QtGui.QAction("FAQs", about_group)
-        action.setObjectName(URLS.faqs)
-        submenu.addAction(action)
-
-        action = QtGui.QAction("Source code", about_group)
+        action = QtWidgets.QAction("Source code", website_group)
         action.setObjectName(URLS.github)
         submenu.addAction(action)
 
-        action = QtGui.QAction("Releases", about_group)
+        action = QtWidgets.QAction("Releases", website_group)
         action.setObjectName(URLS.releases)
         submenu.addAction(action)
 
-        action = QtGui.QAction("Report a problem", about_group)
+        action = QtWidgets.QAction("FAQ", website_group)
+        action.setObjectName(URLS.faqs)
+        submenu.addAction(action)
+
+        action = QtWidgets.QAction("Report a problem", website_group)
         action.setObjectName(URLS.issues)
         submenu.addAction(action)
 
         menu.addMenu(submenu)
 
-        action = QtGui.QAction("Close", menu)
+        action = QtWidgets.QAction("Close", menu)
         action.setObjectName("close")
         menu.addAction(action)

@@ -1,12 +1,10 @@
 """Create system tray and its menu."""
-import logging
 
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide2 import QtCore, QtWidgets
 
 from normcap import __version__
-from normcap.gui.utils import get_icon
-
-logger = logging.getLogger(__name__)
+from normcap.logger import logger
+from normcap.utils import get_icon
 
 
 class Communicate(QtCore.QObject):
@@ -30,11 +28,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Create menu for system tray."""
         menu = QtWidgets.QMenu()
 
-        action = QtGui.QAction("Capture", menu)
+        action = QtWidgets.QAction("Capture", menu)
         action.triggered.connect(self.com.on_capture.emit)  # pylint: disable=no-member
         menu.addAction(action)
 
-        action = QtGui.QAction("Exit", menu)
+        action = QtWidgets.QAction("Exit", menu)
         action.triggered.connect(self.com.on_exit.emit)  # pylint: disable=no-member
         menu.addAction(action)
 
