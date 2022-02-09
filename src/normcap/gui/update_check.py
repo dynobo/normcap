@@ -1,15 +1,17 @@
 """Find new version on github or pypi."""
 import json
+import logging
 import re
-from distutils.version import LooseVersion
 from typing import Optional
 
-from PySide2 import QtCore, QtWidgets
+from packaging import version
+from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__
-from normcap.data import URLS
-from normcap.logger import logger
-from normcap.utils import get_icon, set_cursor
+from normcap.gui.constants import URLS
+from normcap.gui.utils import get_icon, set_cursor
+
+logger = logging.getLogger(__name__)
 
 try:
     from normcap.gui.downloader_qtnetwork import Downloader
@@ -42,12 +44,11 @@ class UpdateChecker(QtCore.QObject):
 
     def _check_if_new(self, text: str):
         """Check if retrieved version is new."""
-        newest_version = self._parse_response_to_version(text)
-        if newest_version:
+        if newest_version := self._parse_response_to_version(text):
             logger.debug(
                 "Newest version: %s (installed: %s)", newest_version, __version__
             )
-            if LooseVersion(newest_version) > LooseVersion(__version__):
+            if version.parse(newest_version) > version.parse(__version__):
                 self.com.on_version_retrieved.emit(newest_version)
 
     def _parse_response_to_version(self, text: str) -> Optional[str]:
@@ -92,7 +93,6 @@ class UpdateChecker(QtCore.QObject):
 
     def show_update_message(self, new_version):
         """Show dialog informing about available update."""
-
         text = f"<b>NormCap v{new_version} is available.</b> (You have v{__version__})"
         if self.packaged:
             info_text = (
