@@ -2,6 +2,8 @@
 # Edit at https://www.gitignore.io/?templates=python
 
 # Own
+dependency_graph.png
+result.json
 .temp
 .venv/
 linux/

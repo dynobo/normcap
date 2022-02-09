@@ -1,13 +1,14 @@
+import logging
 import os
 import sys
 import textwrap
-from typing import Tuple
 
-from PySide2 import QtCore
+from PySide6 import QtCore
 
-from normcap.logger import logger
-from normcap.models import Capture, CaptureMode
-from normcap.utils import get_icon
+from normcap.gui.models import Capture, CaptureMode
+from normcap.gui.utils import get_icon
+
+logger = logging.getLogger(__name__)
 
 
 class Communicate(QtCore.QObject):
@@ -17,7 +18,7 @@ class Communicate(QtCore.QObject):
 
 
 class Notifier(QtCore.QObject):
-    """Sends notifications"""
+    """Sends notifications."""
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -25,7 +26,6 @@ class Notifier(QtCore.QObject):
 
     def send_notification(self, capture: Capture):
         """Show tray icon then send notification."""
-
         logger.debug("Send notification")
         on_windows = sys.platform == "win32"
         icon_file = "normcap.png" if on_windows else "tray.png"
@@ -40,11 +40,10 @@ class Notifier(QtCore.QObject):
         QtCore.QTimer.singleShot(delay, self.com.on_notification_sent.emit)
 
     @staticmethod
-    def compose_notification(capture) -> Tuple[str, str]:
+    def compose_notification(capture) -> tuple[str, str]:
         """Extract message text out of captures object and include icon."""
-
         # Message text
-        text = capture.transformed.replace(os.linesep, " ")
+        text = capture.ocr_text.replace(os.linesep, " ")
         text = textwrap.shorten(text, width=45)
         if len(text) < 1:
             text = "Please try again."
@@ -52,25 +51,25 @@ class Notifier(QtCore.QObject):
         # Message title
         title = ""
         count = 0
-        if len(capture.transformed) < 1:
+        if len(capture.ocr_text) < 1:
             title += "Nothing!"
-        elif capture.best_magic == "ParagraphMagic":
-            count = capture.transformed.count(os.linesep * 2) + 1
+        elif capture.ocr_applied_magic == "ParagraphMagic":
+            count = capture.ocr_text.count(os.linesep * 2) + 1
             title += f"{count} paragraph"
-        elif capture.best_magic == "EmailMagic":
-            count = capture.transformed.count("@")
+        elif capture.ocr_applied_magic == "EmailMagic":
+            count = capture.ocr_text.count("@")
             title += f"{count} email"
-        elif capture.best_magic == "SingleLineMagic":
-            count = capture.transformed.count(" ") + 1
+        elif capture.ocr_applied_magic == "SingleLineMagic":
+            count = capture.ocr_text.count(" ") + 1
             title += f"{count} word"
-        elif capture.best_magic == "MultiLineMagic":
-            count = capture.transformed.count("\n") + 1
+        elif capture.ocr_applied_magic == "MultiLineMagic":
+            count = capture.ocr_text.count("\n") + 1
             title += f"{count} line"
-        elif capture.best_magic == "UrlMagic":
-            count = capture.transformed.count("http")
+        elif capture.ocr_applied_magic == "UrlMagic":
+            count = capture.ocr_text.count("\n") + 1
             title += f"{count} URL"
         elif capture.mode == CaptureMode.RAW:
-            count = len(capture.transformed)
+            count = len(capture.ocr_text)
             title += f"{count} char"
         title += f"{'s' if count > 1 else ''} captured"
 

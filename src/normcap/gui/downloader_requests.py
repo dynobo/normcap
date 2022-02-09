@@ -1,9 +1,10 @@
 """Find new version on github or pypi."""
+import logging
 
 import requests
-from PySide2 import QtCore
+from PySide6 import QtCore
 
-from normcap.logger import logger
+logger = logging.getLogger(__name__)
 
 
 class Communicate(QtCore.QObject):
