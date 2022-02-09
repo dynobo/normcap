@@ -1,16 +1,14 @@
-import logging
-
 import toml
 
 import normcap
 
-logger = logging.getLogger(__name__)
-
-# Specific settings for pytest
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
+# PyLint can't handle fixtures correctly. Ignore.
+# pylint: disable=redefined-outer-name
 
 
 def test_version():
+    """Check version string consistency"""
+
     with open("pyproject.toml", encoding="utf8") as toml_file:
         pyproject_toml = toml.load(toml_file)
 
