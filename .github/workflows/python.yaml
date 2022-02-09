@@ -13,6 +13,7 @@ jobs:
       github.event_name == 'pull_request'
       || contains(github.event.head_commit.message, '[test]')
       || startsWith(github.ref, 'refs/tags/v')
+      || startsWith(github.ref, 'refs/heads/dev')
     strategy:
       fail-fast: false
       matrix:
@@ -131,13 +132,14 @@ jobs:
       - name: Publish latest release
         uses: ncipollo/release-action@v1
         with:
+          name: "Internal"
           body: "Only for internal tests. Should not be published."
           artifacts: "*/*.+(dmg|AppImage|msi)"
           allowUpdates: true
           artifactErrorsFailBuild: false
           prerelease: true
           draft: true
-          tag: "unstable"
+          tag: "internal"
           token: ${{ secrets.GITHUB_TOKEN }}
 
   build-python:
@@ -179,16 +181,17 @@ jobs:
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:
-          name: Unstable development builds
+          name: Unstable
           body:
-            "Builds intended **only** for developing purposes! You're better off
-            using the latest v0.\\*.\\* build instead!"
+            "Intended only for developing purposes! You're better off using the
+            latest v0.\\*.\\* build instead!"
           artifacts: "*/*.+(dmg|AppImage|msi)"
-          removeArtifacts: true
           artifactErrorsFailBuild: false
+          allowUpdates: true
           draft: true
           prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: "unstable"
 
   build-packages:
     name: Build packages and prepare release

@@ -86,12 +86,6 @@ def get_version() -> str:
     return pyproject_toml["tool"]["poetry"]["version"]
 
 
-def get_timestamp() -> str:
-    """Get timestamp for development builds."""
-    now = datetime.datetime.now()
-    return now.strftime("%Y%m%d-%H%M")
-
-
 def get_system_requires(platform) -> list[str]:
     """Get versions string from pyproject.toml."""
     with open("pyproject.toml", encoding="utf8") as toml_file:
@@ -414,7 +408,7 @@ if __name__ == "__main__":
         patch_windows_installer()
         cmd("briefcase package")
         if "dev" in sys.argv:
-            cmd(f"mv windows/*.msi windows/NormCap-{get_timestamp()}-Windows.msi")
+            cmd("mv windows/*.msi windows/NormCap-unstable-Windows.msi")
         else:
             cmd(f"mv windows/*.msi windows/NormCap-{get_version()}-Windows.msi")
 
@@ -438,7 +432,7 @@ if __name__ == "__main__":
         cmd("briefcase build")
         cmd("briefcase package macos app --no-sign")
         if "dev" in sys.argv:
-            cmd(f"mv macOS/*.dmg macOS/NormCap-{get_timestamp()}-MacOS.dmg")
+            cmd("mv macOS/*.dmg macOS/NormCap-unstable-MacOS.dmg")
         else:
             cmd(f"mv macOS/*.dmg macOS/NormCap-{get_version()}-MacOS.dmg")
 
@@ -456,6 +450,6 @@ if __name__ == "__main__":
         cmd("briefcase build")
         cmd("briefcase package")
         if "dev" in sys.argv:
-            cmd(f"mv linux/*.AppImage linux/NormCap-{get_timestamp()}-x86_64.AppImage")
+            cmd("mv linux/*.AppImage linux/NormCap-unstable-x86_64.AppImage")
     else:
         raise ValueError("Unknown operating system.")
