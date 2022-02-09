@@ -1,61 +1,91 @@
-"""
-OCR-powered screen-capture tool to capture information instead of images.
-"""
+"""Main application entry point."""
+
 import locale
+import logging
 import os
 import signal
 import sys
+from importlib import metadata, resources
 
-import importlib_resources
+# TODO: Manual test multi screen
+# TODO: Streamline Logging
+# TODO: Save debug images
+# TODO: Test exception hook
+# TODO: Improve test coverage
+# TODO: Slim down packages
+# TODO: Test screenshot mechanism on different system
 
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
-# Add shipped openssl to path
-if sys.platform == "win32":
-    p = importlib_resources.files("normcap.resources").joinpath("openssl")
-    openssl_path = str(p.absolute())
-    os.environ["PATH"] += os.pathsep + openssl_path
+# Some overrides when running in briefcase package
+def _set_environ_for_briefcase():
+    package = sys.modules["__main__"].__package__
+    if package and "Briefcase-Version" in metadata.metadata(package):
+        if sys.platform == "linux":
+            # Use bundled tesseract binary
+            with resources.as_file(resources.files("normcap")) as normcap_path:
+                tesseract_path = normcap_path.parent.parent / "bin" / "tesseract"
+                os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
 
-from PySide2 import QtCore, QtWidgets
+        elif sys.platform == "win32":
+            with resources.as_file(
+                resources.files("normcap.resources")
+            ) as resource_path:
+                # Add openssl shipped with briefcase package to path
+                openssl_path = resource_path / "openssl"
+                os.environ["PATH"] += os.pathsep + str(openssl_path.resolve())
 
-from normcap import __version__, system_info, utils
+                # Use bundled tesseract binary
+                tesseract_path = resource_path / "tesseract" / "tesseract.exe"
+                os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
+                os.environ["TESSERACT_VERSION"] = "5.0.0"
+
+
+_set_environ_for_briefcase()
+
+from PySide6 import QtCore, QtWidgets
+
+from normcap import __version__
 from normcap.args import create_argparser
+from normcap.gui import system_info, utils
 from normcap.gui.main_window import MainWindow
-from normcap.logger import logger
+
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s",
+    datefmt="%H:%M:%S",
+    level="WARNING",
+)
 
 
 def main():
-    """Main entry point."""
+    """Start main application logic."""
+    logger = logging.getLogger("normcap")
+    sys.excepthook = utils.hook_exceptions
 
-    sys.excepthook = utils.except_hook
-    # Allow to close QT app with CTRL+C in terminal:
+    # Allow closing QT app with CTRL+C in terminal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    args = vars(create_argparser().parse_args())
-    if args.get("verbose", False):
+    args = create_argparser().parse_args()
+    if args.verbose:
         logger.setLevel("INFO")
-    if args.get("very_verbose", False):
+    if args.very_verbose:
         logger.setLevel("DEBUG")
 
     logger.info("Start NormCap v%s", __version__)
-    logger.debug("CLI command: %s", " ".join(sys.argv))
-    logger.debug("QT LibraryPaths: %s", QtCore.QCoreApplication.libraryPaths())
 
-    # Wrap qt log messages with own logger
-    QtCore.qInstallMessageHandler(utils.qt_message_handler)
+    # QT has 32 as default cursor size on wayland, while it should be 24
+    if "XCURSOR_SIZE" not in os.environ and system_info.display_manager_is_wayland():
+        logger.debug("Setting XCURSOR_SIZE=24")
+        os.environ["XCURSOR_SIZE"] = "24"
 
-    utils.init_tessdata()
-
-    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
+    QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
+    utils.copy_tessdata_files_to_config_dir()
 
     app = QtWidgets.QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
-    logger.debug("System info:\n%s", system_info.to_string())
+    logger.debug("System info:\n%s", system_info.to_dict())
 
-    window = MainWindow(args)
-    window.show()
-
+    MainWindow(vars(args)).show()
     sys.exit(app.exec_())
