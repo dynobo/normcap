@@ -64,9 +64,11 @@ class MainWindow(BaseWindow):
             else CaptureMode.RAW
         )
         self.screens = system_info.screens()
-        for idx, screenshot in enumerate(grab_screens()):
-            utils.save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
-            self.screens[idx].raw_screenshot = screenshot
+        try:
+            self._update_screenshots()
+        except AssertionError:
+            logger.warning("Screenshots not available. Exiting NormCap.")
+            sys.exit(1)
 
         super().__init__(
             screen_idx=0,
@@ -85,6 +87,12 @@ class MainWindow(BaseWindow):
         self.all_windows: dict[int, BaseWindow] = {0: self}
         if len(self.screens) > 1:
             self._init_child_windows()
+
+    def _update_screenshots(self):
+        for idx, screenshot in enumerate(grab_screens()):
+            utils.save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
+            self.screens[idx].raw_screenshot = screenshot
+            self.screens[idx].scaled_screenshot = None
 
     def _add_settings_menu(self):
         self.settings_menu = SettingsMenu(self)
@@ -179,6 +187,12 @@ class MainWindow(BaseWindow):
 
     def _show_windows(self):
         """Make hidden windows visible again."""
+        try:
+            self._update_screenshots()
+        except AssertionError:
+            logger.debug("Abort showing windows.")
+            return
+
         for window in self.all_windows.values():
             if sys.platform == "darwin":
                 if window.macos_border:
@@ -264,8 +278,8 @@ class MainWindow(BaseWindow):
     #####################
 
     def _crop_image(self, grab_info: tuple[Rect, int]):
-        """Get image from selected region."""
-        logger.info("Take screenshot of position %s", grab_info[0].points)
+        """Crop image to selected region."""
+        logger.info("Crop image to selected region %s", grab_info[0].points)
         rect, screen_idx = grab_info
 
         screenshot = self.screens[screen_idx].raw_screenshot
@@ -274,7 +288,7 @@ class MainWindow(BaseWindow):
         self.capture.screen = system_info.screens()[screen_idx]
         self.capture.image = screenshot.copy(QtCore.QRect(*rect.geometry))
 
-        utils.save_image_in_tempfolder(self.capture.image)
+        utils.save_image_in_tempfolder(self.capture.image, postfix="_cropped")
 
         self.com.on_image_cropped.emit()
 
@@ -293,7 +307,7 @@ class MainWindow(BaseWindow):
             logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
             self.com.on_quit_or_hide.emit("selection too small")
 
-        logger.debug("Perform OCR")
+        logger.debug("Start OCR")
         ocr_result = ocr.recognize(
             languages=self.settings.value("language"),
             image=self._qimage_to_pil_image(self.capture.image),
@@ -302,9 +316,10 @@ class MainWindow(BaseWindow):
             resize_factor=3.2,
             padding_size=80,
         )
+        utils.save_image_in_tempfolder(ocr_result.image, postfix="_enhanced")
+
         self.capture.ocr_text = ocr_result.text
         self.capture.ocr_applied_magic = ocr_result.best_scored_magic
 
         logger.info("Text from OCR:\n%s", self.capture.ocr_text)
-
         self.com.on_ocr_performed.emit()

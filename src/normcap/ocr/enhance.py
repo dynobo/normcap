@@ -38,7 +38,7 @@ def add_padding(img: Image.Image, padding=80) -> Image.Image:
     TODO: Test padding strategy where the edge colors are extended
             (might be useful in case of bars etc, but problematic on images)
     """
-    logger.debug("Padding image by %s px", padding)
+    logger.debug("Pad image by %s px", padding)
 
     bg_col = _identify_most_frequent_edge_color(img)
 

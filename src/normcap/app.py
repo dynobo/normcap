@@ -8,10 +8,6 @@ import sys
 from importlib import metadata, resources
 
 # TODO: Manual test multi screen
-# TODO: Streamline Logging
-# TODO: Save debug images
-# TODO: Test exception hook
-# TODO: Improve test coverage
 # TODO: Slim down packages
 # TODO: Test screenshot mechanism on different system
 
@@ -76,7 +72,7 @@ def main():
 
     # QT has 32 as default cursor size on wayland, while it should be 24
     if "XCURSOR_SIZE" not in os.environ and system_info.display_manager_is_wayland():
-        logger.debug("Setting XCURSOR_SIZE=24")
+        logger.debug("Set XCURSOR_SIZE=24")
         os.environ["XCURSOR_SIZE"] = "24"
 
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)

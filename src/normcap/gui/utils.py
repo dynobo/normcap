@@ -4,6 +4,7 @@ import datetime
 import functools
 import logging
 import pprint
+import re
 import shutil
 import sys
 import tempfile
@@ -26,6 +27,7 @@ except ImportError:
 from normcap.gui import system_info
 from normcap.gui.constants import URLS
 from normcap.gui.models import Capture
+from normcap.ocr.models import OcrResult
 
 logger = logging.getLogger(__name__)
 
@@ -128,17 +130,20 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
             "transformed",
             "v",
         ]
+        redacted = "REDACTED"
         for func_name, func_vars in local_vars.items():
             for f in filter_vars:
                 if f in func_vars:
-                    local_vars[func_name][f] = "REDICTED"
+                    local_vars[func_name][f] = redacted
             for k, v in func_vars.items():
                 if isinstance(v, Capture):
-                    func_vars[k].ocr_text = "REDICTED"
+                    func_vars[k].ocr_text = redacted
+                if isinstance(v, OcrResult):
+                    func_vars[k].words = redacted
+                    func_vars[k].transformed = redacted
 
-        print("\n### System:")
-        print("```")
-        pprint.pprint(
+        message = "\n### System:\n```\n"
+        message += pprint.pformat(
             system_info.to_dict(),
             compact=True,
             width=80,
@@ -146,20 +151,23 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
             indent=3,
             sort_dicts=True,
         )
-        print("```\n")
-
-        print("### Variables:")
-        print("```")
-        pprint.pprint(
+        message += "\n```\n\n### Variables:\n```"
+        message += pprint.pformat(
             local_vars, compact=True, width=80, depth=2, indent=3, sort_dicts=True
         )
-        print("```\n")
+        message += "\n```\n\n### Exception:\n"
+        message += f"```\n{formatted_exc}```\n"
 
-        print("### Exception:")
-        print(f"```\n{formatted_exc}\n```\n")
+        message += "\n### Traceback:\n"
+        message += f"```\n{formatted_tb}```\n"
 
-        print("### Traceback:")
-        print(f"```\n{formatted_tb}\n```\n")
+        message = re.sub(
+            r"((?:home|users)[/\\])(\w+)([/\\])",
+            r"\1REDACTED\3",
+            message,
+            flags=re.IGNORECASE,
+        )
+        print(message)
 
     except Exception:
         logger.critical(
