@@ -62,18 +62,20 @@ def grab_full_desktop() -> QtGui.QImage:
         Proxy(message_bus, connection).AddMatch(response_rule)
 
         with connection.filter(response_rule) as responses:
-            msg = FreedesktopPortalScreenshot().grab("", {"handle_token": ("s", token)})
+            msg = FreedesktopPortalScreenshot().grab(
+                "", {"handle_token": ("s", token), "interactive": ("b", False)}
+            )
             connection.send_and_get_reply(msg)
             response = connection.recv_until_filtered(responses)
 
         response_code, response_body = response.body
-        if response_code != 0 or "uri" not in response_body:
-            logger.error(
-                "Couldn't take screenshot with DBUS: %s", ", ".join(response.body)
-            )
-            raise RuntimeError("DBUS returned failure. Unable to capture screenshot.")
+        assert response_code == 0 and "uri" in response_body
+
         image = QtGui.QImage(urlparse(response_body["uri"][1]).path)
 
+    except AssertionError as e:
+        logger.warning("Couldn't take screenshot with DBUS. Got cancelled?")
+        raise e from e
     except DBusErrorResponse as e:
         if "invalid params" in [d.lower() for d in e.data]:
             logger.info("ScreenShot with DBUS failed with 'invalid params'")
