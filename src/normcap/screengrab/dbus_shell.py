@@ -4,18 +4,24 @@ import logging
 import tempfile
 from pathlib import Path
 
-from PySide6 import QtDBus, QtGui, QtWidgets
+from PySide6 import QtGui, QtWidgets
+
+try:
+    from PySide6 import QtDBus
+
+    HAVE_QTDBUS = True
+except ImportError:
+    HAVE_QTDBUS = False
 
 from normcap.screengrab.utils import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)
 
 
-class GnomeShellScreenshot:
-    """Capture screenshot through dbus."""
-
-
 def get_screenshot_interface():
+    if not HAVE_QTDBUS:
+        raise ModuleNotFoundError("QtDBUS not available.")
+
     item = "org.gnome.Shell.Screenshot"
     interface = "org.gnome.Shell.Screenshot"
     path = "/org/gnome/Shell/Screenshot"
@@ -40,6 +46,9 @@ def grab(filename):
 
 
 def grab_rect(x, y, width, height, filename):
+    if not HAVE_QTDBUS:
+        raise ModuleNotFoundError("QtDBUS not available.")
+
     screenshot_interface = get_screenshot_interface()
     if screenshot_interface.isValid():
         x = screenshot_interface.callWithArgumentList(
