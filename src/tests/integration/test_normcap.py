@@ -47,8 +47,8 @@ def test_app(monkeypatch, qtbot, xvfb, data):
     )
 
     window = MainWindow(vars(args))
-    window.show()
     qtbot.addWidget(window)
+    window.show()
 
     with qtbot.waitSignal(window.main_window.com.on_copied_to_clipboard):
         qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["tl"]))
@@ -56,6 +56,8 @@ def test_app(monkeypatch, qtbot, xvfb, data):
         qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["br"]))
 
     capture = window.main_window.capture
+    print(capture.rect)
+    print(data["br"])
 
     # Text output is not 100% predictable across different machines:
     similarity = Levenshtein.ratio(capture.ocr_text, data["transformed"])
