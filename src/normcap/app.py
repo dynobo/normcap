@@ -9,7 +9,6 @@ from importlib import metadata, resources
 
 # TODO: Manual test multi screen
 # TODO: Slim down packages
-# TODO: Test screenshot mechanism on different system
 
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
@@ -70,10 +69,15 @@ def main():
 
     logger.info("Start NormCap v%s", __version__)
 
-    # QT has 32 as default cursor size on wayland, while it should be 24
-    if "XCURSOR_SIZE" not in os.environ and system_info.display_manager_is_wayland():
-        logger.debug("Set XCURSOR_SIZE=24")
-        os.environ["XCURSOR_SIZE"] = "24"
+    if system_info.display_manager_is_wayland():
+        # QT has 32 as default cursor size on wayland, while it should be 24
+        if "XCURSOR_SIZE" not in os.environ:
+            logger.debug("Set XCURSOR_SIZE=24")
+            os.environ["XCURSOR_SIZE"] = "24"
+        # Make sure to select wayland extension for better rendering
+        if "QT_QPA_PLATFORM" not in os.environ:
+            logger.debug("Set QT_QPA_PLATFORM=wayland")
+            os.environ["QT_QPA_PLATFORM"] = "wayland"
 
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
     utils.copy_tessdata_files_to_config_dir()

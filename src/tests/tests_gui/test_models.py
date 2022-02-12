@@ -1,7 +1,6 @@
-import pytest
-from PySide6 import QtCore, QtGui
+from PySide6 import QtGui
 
-from normcap.gui.models import Capture, Rect, Screen
+from normcap.gui.models import Capture, Rect, Screen, Selection
 
 from ..fixtures import capture  # pylint: disable=unused-import
 
@@ -15,13 +14,26 @@ def test_rect_properties():
     assert rect.height == 200
     assert rect.points == (10, 20, 110, 220)
     assert rect.geometry == (10, 20, 100, 200)
-    rect.scale(0.5)
-    assert rect.geometry == (5, 10, 50, 100)
 
-    rect = Rect(left=20, top=20, right=10, bottom=0)
-    assert rect.geometry == (20, 20, -10, -20)
-    rect.normalize()
-    assert rect.geometry == (10, 0, 10, 20)
+
+def test_selection_init():
+    selection = Selection()
+    assert selection.start_x == selection.end_x == 0
+    assert selection.start_y == selection.end_y == 0
+    assert selection.rect.geometry == (0, 0, 0, 0)
+    assert selection.scaled_rect.geometry == (0, 0, 0, 0)
+
+
+def test_selection_normalize():
+    selection = Selection(start_x=100, end_x=0, start_y=50, end_y=0)
+    assert selection.rect.points == (0, 0, 100, 50)
+
+
+def test_selection_scale():
+    selection = Selection(start_x=100, end_x=0, start_y=60, end_y=0)
+    selection.scale_factor = 1.5
+    assert selection.rect.points == (0, 0, 100, 60)
+    assert selection.scaled_rect.points == (0, 0, 150, 90)
 
 
 def test_capture_image_area(capture: Capture):
@@ -39,30 +51,3 @@ def test_screen_properties():
 
     assert screen.width == 1920
     assert screen.height == 1080
-
-
-def test_screen_get_scaled_screenshot():
-    screen = Screen(
-        is_primary=True, device_pixel_ratio=2, geometry=Rect(0, 0, 1920, 1080), index=1
-    )
-
-    # Raise exception if no screenshot in Screen object
-    with pytest.raises(TypeError):
-        _ = screen.get_scaled_screenshot(QtCore.QSize(160, 90))
-
-    screen.raw_screenshot = QtGui.QImage(1920, 1080, QtGui.QImage.Format.Format_RGB32)
-
-    # Scale to raw image size
-    scaled = screen.get_scaled_screenshot(QtCore.QSize(1920, 1080))
-    assert scaled == screen.raw_screenshot
-
-    # Scale to smaller size
-    scaled = screen.get_scaled_screenshot(QtCore.QSize(192, 108))
-    assert scaled == screen.scaled_screenshot
-    assert scaled.width() == 192
-    assert scaled.height() == 108
-    assert screen.screen_window_ratio == 10
-
-    # Scale to same smaller size
-    scaled_again = screen.get_scaled_screenshot(QtCore.QSize(192, 108))
-    assert scaled == scaled_again

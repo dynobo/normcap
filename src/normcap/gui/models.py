@@ -5,7 +5,7 @@ from collections import namedtuple
 from dataclasses import dataclass
 from typing import Optional
 
-from PySide6 import QtCore, QtGui
+from PySide6 import QtGui
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +53,12 @@ class Rect:
     right: int = 0
     bottom: int = 0
 
+    def __str__(self) -> str:
+        return (
+            f"(top={self.top}, left={self.left}, "
+            f"bottom={self.bottom}, right={self.right})"
+        )
+
     @property
     def geometry(self) -> tuple[int, int, int, int]:
         """Expose rect for usage with QT."""
@@ -73,19 +79,36 @@ class Rect:
         """Height of rect."""
         return self.bottom - self.top
 
-    def normalize(self):
-        """Ensure that non-negative dimensions by flipping coordinates, if necessary."""
-        if self.top > self.bottom:
-            self.top, self.bottom = self.bottom, self.top
-        if self.left > self.right:
-            self.right, self.left = self.left, self.right
 
-    def scale(self, factor: float):
-        """Scale coordinates and dimensions by provided factor."""
-        self.left = int(self.left * factor)
-        self.top = int(self.top * factor)
-        self.right = int(self.right * factor)
-        self.bottom = int(self.bottom * factor)
+@dataclass
+class Selection:
+    """Represents selection on screen."""
+
+    start_x: int = 0
+    start_y: int = 0
+    end_x: int = 0
+    end_y: int = 0
+
+    scale_factor: float = 1.0
+
+    @property
+    def rect(self) -> Rect:
+        """Normalize position and return as Rect."""
+        top = min(self.start_y, self.end_y)
+        bottom = max(self.start_y, self.end_y)
+        left = min(self.start_x, self.end_x)
+        right = max(self.start_x, self.end_x)
+        return Rect(top=top, left=left, bottom=bottom, right=right)
+
+    @property
+    def scaled_rect(self) -> Rect:
+        """Resize rect by scale_factor."""
+        rect = self.rect
+        rect.top = int(rect.top * self.scale_factor)
+        rect.bottom = int(rect.bottom * self.scale_factor)
+        rect.left = int(rect.left * self.scale_factor)
+        rect.right = int(rect.right * self.scale_factor)
+        return rect
 
 
 @dataclass()
@@ -97,8 +120,7 @@ class Screen:
     geometry: Rect
     index: int
 
-    raw_screenshot: Optional[QtGui.QImage] = None
-    scaled_screenshot: Optional[QtGui.QImage] = None
+    screenshot: Optional[QtGui.QImage] = None
 
     @property
     def width(self):
@@ -109,44 +131,6 @@ class Screen:
     def height(self):
         """Get screen height."""
         return self.geometry.height
-
-    @property
-    def screen_window_ratio(self):
-        """Calculate ratio between raw and scaled screenshot.
-
-        This is useful because the scaled screenshot (scaled to screen resolution) not
-        necessary equals the size of the raw screenshot. This is the case e.g. if there
-        are two differently scaled screeenshots (one HiDPI, one normal) or a monitor
-        is set to fractional scaling.
-        """
-        if not self.raw_screenshot:
-            raise ValueError("Raw screenshot is None.")
-        if not self.scaled_screenshot:
-            raise ValueError("Scaled screenshot is None.")
-        return self.raw_screenshot.width() / self.scaled_screenshot.width()
-
-    def get_scaled_screenshot(self, new_size: QtCore.QSize):
-        """Resize screenshot to the provided dimensions and cache in attribute."""
-        if not isinstance(self.raw_screenshot, QtGui.QImage):
-            raise TypeError(
-                f"Raw screenshot should be QImage but is {self.raw_screenshot}."
-            )
-
-        if (
-            isinstance(self.scaled_screenshot, QtGui.QImage)
-            and self.scaled_screenshot.size() == new_size
-        ):
-            return self.scaled_screenshot
-
-        if new_size.width() == self.raw_screenshot.width():
-            self.scaled_screenshot = self.raw_screenshot
-        else:
-            logger.debug("Resizing screenshot to %s", new_size)
-            self.scaled_screenshot = self.raw_screenshot.scaled(
-                new_size, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation
-            )
-
-        return self.scaled_screenshot
 
 
 @dataclass()
@@ -167,4 +151,4 @@ class Capture:
     @property
     def image_area(self) -> int:
         """Provide area of cropped image in px²."""
-        return self.image.width() * self.image.height() if self.image else 0
+        return self.rect.width * self.rect.height if self.image else 0
