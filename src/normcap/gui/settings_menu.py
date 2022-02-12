@@ -65,7 +65,7 @@ class SettingsMenu(QtWidgets.QToolButton):
     """Button to adjust setting on main window top right."""
 
     def __init__(self, window_main: QtWidgets.QMainWindow):
-        super().__init__(window_main.frame)
+        super().__init__(window_main)
         self.setObjectName("settings_icon")
         self.settings = window_main.settings
 

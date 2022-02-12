@@ -108,7 +108,7 @@ disable = [
 
 [tool.pydocstyle]
 convention = "google"
-add-ignore = "D107,D104,D103,D100"
+add-ignore = "D107,D104,D103,D100,D105"
 
 
 [tool.pytest.ini_options]

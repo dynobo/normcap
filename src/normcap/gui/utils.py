@@ -224,7 +224,7 @@ def copy_to_clipboard():
     copied, and sometimes not.
     """
     # TODO: Test if workaround still necessary with Qt6
-    from PySide6 import QtWidgets  # pylint: disable=all
+    # from PySide6 import QtWidgets  # pylint: disable=all
 
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
 

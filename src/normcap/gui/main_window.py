@@ -14,7 +14,7 @@ from normcap import ocr
 from normcap.gui import system_info, utils
 from normcap.gui.base_window import BaseWindow
 from normcap.gui.constants import FILE_ISSUE_TEXT
-from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect
+from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.notifier import Notifier
 from normcap.gui.settings import init_settings
 from normcap.gui.settings_menu import SettingsMenu
@@ -63,7 +63,7 @@ class MainWindow(BaseWindow):
             if self.settings.value("mode") == "parse"
             else CaptureMode.RAW
         )
-        self.screens = system_info.screens()
+        self.screens: dict[int, Screen] = system_info.screens()
         try:
             self._update_screenshots()
         except AssertionError:
@@ -79,8 +79,8 @@ class MainWindow(BaseWindow):
         self.clipboard = QtWidgets.QApplication.clipboard()
 
         self._set_signals()
-        self._add_settings_menu()
         self._add_tray()
+        self._add_settings_menu()
         self._add_update_checker()
         self._add_notifier()
 
@@ -91,7 +91,7 @@ class MainWindow(BaseWindow):
     def _update_screenshots(self):
         for idx, screenshot in enumerate(grab_screens()):
             utils.save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
-            self.screens[idx].raw_screenshot = screenshot
+            self.screens[idx].screenshot = screenshot
             self.screens[idx].scaled_screenshot = None
 
     def _add_settings_menu(self):
@@ -232,6 +232,12 @@ class MainWindow(BaseWindow):
         else:
             self.com.on_quit_or_hide.emit("detection completed")
 
+    def resizeEvent(self, event: QtGui.QResizeEvent) -> None:
+        """Reposition settings menu on resize."""
+        if hasattr(self, "settings_menu"):
+            self.settings_menu.move(self.width() - self.settings_menu.width() - 26, 26)
+        return super().resizeEvent(event)
+
     #########################
     # Helper                #
     #########################
@@ -282,10 +288,12 @@ class MainWindow(BaseWindow):
         logger.info("Crop image to selected region %s", grab_info[0].points)
         rect, screen_idx = grab_info
 
-        screenshot = self.screens[screen_idx].raw_screenshot
+        screenshot = self.screens[screen_idx].screenshot
+        if not screenshot:
+            raise TypeError("Screenshot is None!")
 
         self.capture.rect = rect
-        self.capture.screen = system_info.screens()[screen_idx]
+        self.capture.screen = self.screens[screen_idx]
         self.capture.image = screenshot.copy(QtCore.QRect(*rect.geometry))
 
         utils.save_image_in_tempfolder(self.capture.image, postfix="_cropped")
@@ -306,6 +314,7 @@ class MainWindow(BaseWindow):
         if self.capture.image_area < 25:
             logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
             self.com.on_quit_or_hide.emit("selection too small")
+            return
 
         logger.debug("Start OCR")
         ocr_result = ocr.recognize(

@@ -72,8 +72,7 @@ def screens() -> dict[int, Screen]:
         is_primary = primary_screen == screen
         device_pixel_ratio = QtGui.QScreen.devicePixelRatio(screen)
 
-        geometry = QtGui.QScreen.geometry(screen)
-
+        geometry = screen.geometry()
         geometry_rect = Rect(
             top=geometry.top(),
             left=geometry.left(),
