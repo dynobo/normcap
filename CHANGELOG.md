@@ -3,7 +3,8 @@
 ## v0.3.0-beta (2022-02-13)
 
 - All: Update to PySide6 (Qt6) and Python 3.9
-- All: Add support for Tesseract 5 [#170](https://github.com/dynobo/normcap/issues/170)
+- All: Add support for Tesseract 5 with better OCR
+  [#170](https://github.com/dynobo/normcap/issues/170)
 - Linux: Add support for Gnome Shell 41+ (using Screenshot Portal)
   (#153)\[https://github.com/dynobo/normcap/issues/153\]
   (#157)\[https://github.com/dynobo/normcap/issues/157\]
