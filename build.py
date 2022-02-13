@@ -1,6 +1,5 @@
 """Adjustments executed while packaging with briefcase during CI/CD."""
 
-import datetime
 import fileinput
 import hashlib
 import inspect

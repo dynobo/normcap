@@ -223,8 +223,7 @@ def copy_to_clipboard():
     Necesessary to avoid some wired results on Wayland, where text sometimes get
     copied, and sometimes not.
     """
-    # TODO: Test if workaround still necessary with Qt6
-    # from PySide6 import QtWidgets  # pylint: disable=all
+    from PySide6 import QtWidgets  # pylint: disable=all
 
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
 

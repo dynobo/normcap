@@ -34,7 +34,7 @@ def recognize(
     tess_args = TessArgs(
         path=tessdata_path,
         lang=languages if isinstance(languages, str) else "+".join(languages),
-        oem=OEM.LSTM_ONLY,
+        oem=OEM.TESSERACT_LSTM_COMBINED,
         psm=PSM.AUTO_OSD,
         version=utils.get_tesseract_version(),
     )
@@ -42,9 +42,9 @@ def recognize(
     logger.debug("Image size: %s", image.size)
 
     with tempfile.NamedTemporaryFile(delete=False) as fp:
-        image.save(fp.name + ".png")
+        image.save(f"{fp.name}.png")
         tsv_data = pytesseract.image_to_data(
-            fp.name + ".png",
+            f"{fp.name}.png",
             lang=tess_args.lang,
             output_type=pytesseract.Output.DICT,
             timeout=30,
