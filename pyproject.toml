@@ -125,7 +125,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.briefcase]
 project_name = "NormCap"
 bundle = "eu.dynobo"
-version = "0.3.0-beta"
+version = "0.3.0"
 url = "https://github.com/dynobo/normcap"
 license = "GPLv3"
 author = 'dynobo'
@@ -168,8 +168,15 @@ message_template = "Bump to {new_version}"
 tag_template = "v{new_version}"
 
 [[tool.tbump.file]]
+# Poetry version
 src = "pyproject.toml"
-search = 'version = "{current_version}"'
+search = 'name = "normcap"\nversion = "{current_version}"'
+
+[[tool.tbump.file]]
+# Briefcase version
+src = "pyproject.toml"
+version_template = '{major}.{minor}.{patch}'
+search = 'bundle = "eu.dynobo"version = "{current_version}"'
 
 [[tool.tbump.file]]
 src = "src/normcap/__init__.py"
