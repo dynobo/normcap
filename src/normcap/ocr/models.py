@@ -65,7 +65,7 @@ class OcrResult:
                 current_line_num = word["line_num"]
                 all_lines.append(word["text"])
             else:
-                all_lines[-1] += " " + word["text"]
+                all_lines[-1] += f' {word["text"]}'
 
         all_lines = list(filter(None, all_lines))  # Remove empty
         return os.linesep.join(all_lines)

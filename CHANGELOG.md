@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.3.0-beta (2022-02-13)
+
+- All: Update to PySide6 (Qt6) and Python 3.9
+- All: Add support for Tesseract 5 with better OCR
+  [#170](https://github.com/dynobo/normcap/issues/170)
+- Linux: Add support for Gnome Shell 41+ (using Screenshot Portal)
+  (#153)\[https://github.com/dynobo/normcap/issues/153\]
+  (#157)\[https://github.com/dynobo/normcap/issues/157\]
+- Linux: Fix issues with transparency / black window
+  (#154)\[https://github.com/dynobo/normcap/issues/154\]
+  (#155)\[https://github.com/dynobo/normcap/issues/155\]
+- Linux: Fix crash on non Gnome Shell systems
+  (#168)\[https://github.com/dynobo/normcap/issues/168\]
+- MacOS: Full screen border and selection
+  (#119)\[https://github.com/dynobo/normcap/issues/119\]
+
 ## v0.2.10 (2021-12-27)
 
 - All: Fix language settings not working if only a single language is selected

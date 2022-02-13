@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "normcap"
-version = "0.2.10"
+version = "0.3.0-beta"
 description = "OCR-powered screen-capture tool to capture information instead of images."
 keywords = ["screenshot", "ocr", "capture", "clipboard"]
 license = "GPLv3"
@@ -126,7 +126,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.briefcase]
 project_name = "NormCap"
 bundle = "eu.dynobo"
-version = "0.2.10"
+version = "0.3.0"
 url = "https://github.com/dynobo/normcap"
 license = "GPLv3"
 author = 'dynobo'
@@ -152,13 +152,16 @@ system_requires = ["tesseract-ocr", "pkg-config", "libtiff-dev"]
 [tool.tbump]
 
 [tool.tbump.version]
-current = "0.2.10"
+current = "0.3.0-beta"
 regex = '''
   (?P<major>\d+)
   \.
   (?P<minor>\d+)
   \.
   (?P<patch>\d+)
+  (\-
+    (?P<extra>.+)
+  )?
   '''
 
 [tool.tbump.git]
@@ -166,8 +169,15 @@ message_template = "Bump to {new_version}"
 tag_template = "v{new_version}"
 
 [[tool.tbump.file]]
+# Poetry version
 src = "pyproject.toml"
-search = 'version = "{current_version}"'
+search = 'name = "normcap"\nversion = "{current_version}"'
+
+[[tool.tbump.file]]
+# Briefcase version
+src = "pyproject.toml"
+version_template = '{major}.{minor}.{patch}'
+search = 'bundle = "eu.dynobo"version = "{current_version}"'
 
 [[tool.tbump.file]]
 src = "src/normcap/__init__.py"

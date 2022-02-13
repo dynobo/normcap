@@ -228,8 +228,8 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.CustomizeWindowHint
-            # | QtCore.Qt.WindowStaysOnTopHint
-            # | QtCore.Qt.NoDropShadowWindowHint
+            | QtCore.Qt.WindowStaysOnTopHint
+            | QtCore.Qt.NoDropShadowWindowHint
         )
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
