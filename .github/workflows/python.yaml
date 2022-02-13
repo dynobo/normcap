@@ -125,23 +125,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      # BUILD TEST PACKAGES
-      - name: Run build tools
-        shell: bash -l {0}
-        run: poetry run python build.py
-      - name: Publish latest release
-        uses: ncipollo/release-action@v1
-        with:
-          name: "Internal"
-          body: "Only for internal tests. Should not be published."
-          artifacts: "*/*.+(dmg|AppImage|msi)"
-          allowUpdates: true
-          artifactErrorsFailBuild: false
-          prerelease: true
-          draft: true
-          tag: "internal"
-          token: ${{ secrets.GITHUB_TOKEN }}
-
   build-python:
     name: Build and release new Python package
     needs: test
@@ -192,6 +175,38 @@ jobs:
           prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: "unstable"
+
+  build-test-packages:
+    name: Build and release unstable develop packages
+    needs: test
+    if: ${{ !startsWith(github.ref, 'refs/heads/dev') }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, macos-10.15, windows-2019]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install briefcase and run build
+        shell: bash -l {0}
+        run: |
+          pip3 install briefcase
+          python3 build.py
+      - name: Publish internal release
+        uses: ncipollo/release-action@v1
+        with:
+          name: "Internal"
+          body: "Only for internal tests. Should not be published."
+          artifacts: "*/*.+(dmg|AppImage|msi)"
+          allowUpdates: true
+          artifactErrorsFailBuild: false
+          prerelease: true
+          draft: true
+          tag: "internal"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   build-packages:
     name: Build packages and prepare release
