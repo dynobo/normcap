@@ -158,6 +158,9 @@ regex = '''
   (?P<minor>\d+)
   \.
   (?P<patch>\d+)
+  (\-
+    (?P<extra>.+)
+  )?
   '''
 
 [tool.tbump.git]

@@ -48,6 +48,6 @@ def _set_missing_to_default(settings, defaults):
     for d in defaults:
         key, value = d.key, d.value
         if key not in settings.allKeys() or (settings.value(key) is None):
-            logger.debug("Setting to default (%s: %s)", key, value)
+            logger.debug("Reset settings to (%s: %s)", key, value)
             settings.setValue(key, value)
     return settings
