@@ -210,13 +210,12 @@ def download_tesseract_windows_build():
     resources_path = Path.cwd() / "src" / "normcap" / "resources"
     tesseract_path = resources_path / "tesseract"
 
-    r = requests.get(
-        "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
+    cmd(
+        "curl -L -o tesseract.zip "
+        + "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
     )
-    r.raise_for_status()
-
-    fh = io.BytesIO(r.content)
-    with zipfile.ZipFile(fh) as artifact_zip:
+    zip_file = Path("tesseract.zip")
+    with zipfile.ZipFile(zip_file) as artifact_zip:
         members = [
             m
             for m in artifact_zip.namelist()
@@ -224,7 +223,6 @@ def download_tesseract_windows_build():
         ]
         subdir = members[0].split("/")[0]
         artifact_zip.extractall(path=resources_path, members=members)
-    fh.close()
     print("Tesseract binaries downloaded")
 
     shutil.rmtree(tesseract_path, ignore_errors=True)
@@ -246,8 +244,12 @@ def bundle_pytesseract_dylibs():
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
 
     # Copy libs to package dir
-    libtess = "/usr/local/opt/tesseract/lib/libtesseract.5.dylib"
+    tesseract = "/usr/local/bin/tesseract"
+    libtess = "/usr/local/Cellar/tesseract/5.0.1/lib/libtesseract.5.dylib"
     liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
+    libarchive = "/usr/local/opt/libarchive/lib/libarchive.13.dylib"
+    # libc = "/usr/lib/libc++.1.dylib"
+    # libsystemb = "/usr/lib/libSystem.B.dylib"
     libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"
     libjpeg = "/usr/local/opt/jpeg/lib/libjpeg.9.dylib"
     libgif = "/usr/local/opt/giflib/lib/libgif.dylib"
@@ -256,6 +258,8 @@ def bundle_pytesseract_dylibs():
     libwebp = "/usr/local/opt/webp/lib/libwebp.7.dylib"
     libwebpmux = "/usr/local/opt/webp/lib/libwebpmux.3.dylib"
     for lib_path in [
+        tesseract,
+        libarchive,
         libtess,
         liblept,
         libpng,
@@ -273,6 +277,7 @@ def bundle_pytesseract_dylibs():
 
     libwebp7 = "/usr/local/Cellar/webp/1.2.1_1/lib/libwebp.7.dylib"
     changeset = [
+        (tesseract, [liblept, libtess, libarchive]),
         (libtiff, [libjpeg]),
         (libwebpmux, [libwebp7]),
         (liblept, [libpng, libjpeg, libgif, libtiff, libopenjpeg, libwebp, libwebpmux]),
@@ -287,11 +292,18 @@ def bundle_pytesseract_dylibs():
 
         for link_path in link_paths:
             link_filename = link_path.rsplit("/", maxsplit=1)[-1]
-            cmd(
-                f"install_name_tool -change {link_path} "
-                + f"@executable_path/../Resources/app_packages/{link_filename} "
-                + f"{new_lib_path}"
-            )
+            if new_lib_path.endswith("tesseract"):
+                cmd(
+                    f"install_name_tool -change {link_path} "
+                    + f"@executable_path/{link_filename} "
+                    + f"{new_lib_path}"
+                )
+            else:
+                cmd(
+                    f"install_name_tool -change {link_path} "
+                    + f"@executable_path/../Resources/app_packages/{link_filename} "
+                    + f"{new_lib_path}"
+                )
 
 
 def rm_recursive(directory, exclude):
@@ -324,6 +336,23 @@ rm_recursive(directory=app_dir / "PySide6", exclude={EXCLUDE_FROM_PySide6})
     patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
 
+def patch_info_plist_for_proper_fullscreen():
+    """Set attribute to keep dock and menubar hidden in fullscreen.
+
+    See details:
+    https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-113616
+    """
+    file_path = Path("macOS/app/NormCap/NormCap.app/Contents") / "Info.plist"
+    patch = """
+    <key>LSUIPresentationMode</key>
+    <integer>3</integer>
+"""
+    insert_after = "<string>normcap</string>"
+    patch_file(
+        file_path=file_path, insert_after=insert_after, patch=patch, mark_patched=False
+    )
+
+
 def patch_briefcase_appimage_to_include_tesseract():
     """Insert code into briefcase appimage code to remove unnecessary libs."""
     file_path = Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
@@ -335,7 +364,9 @@ def patch_briefcase_appimage_to_include_tesseract():
     patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
 
-def patch_file(file_path: Path, insert_after: str, patch: str):
+def patch_file(
+    file_path: Path, insert_after: str, patch: str, mark_patched: bool = True
+):
     """Insert lines in file, if not already done.
 
     Indents the patch like the line after which it is inserted.
@@ -348,11 +379,12 @@ def patch_file(file_path: Path, insert_after: str, patch: str):
             return
 
     print(f"Patching file {file_path.resolve()}")
-    patch = (
-        f"# dynobo: {patch_hash} >>>>>>>>>>>>>>"
-        + patch
-        + f"# dynobo: {patch_hash} <<<<<<<<<<<<<<\n"
-    )
+    if mark_patched:
+        patch = (
+            f"# dynobo: {patch_hash} >>>>>>>>>>>>>>"
+            + patch
+            + f"# dynobo: {patch_hash} <<<<<<<<<<<<<<\n"
+        )
     for line in fileinput.FileInput(file_path, inplace=True):
         if insert_after in line:
             pad = len(line) - len(line.lstrip(" "))
@@ -429,6 +461,7 @@ if __name__ == "__main__":
         rm_recursive(directory=app_dir, exclude=EXCLUDE_FROM_APP_PACKAGES)
         rm_recursive(directory=app_dir / "PySide6", exclude=EXCLUDE_FROM_PySide6)
         cmd("briefcase build")
+        patch_info_plist_for_proper_fullscreen()
         cmd("briefcase package macos app --no-sign")
         if "dev" in sys.argv:
             cmd("mv macOS/*.dmg macOS/NormCap-unstable-MacOS.dmg")

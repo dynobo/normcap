@@ -33,8 +33,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install \
-            libleptonica-dev \
-            libtesseract-dev \
             python3-pil \
             tesseract-ocr \
             tesseract-ocr-eng
@@ -104,14 +102,6 @@ jobs:
         run: |
           poetry run pytest -m "not skip_on_gh" --log-cli-level=10 --cov --cov-report=xml
 
-      # - name: Start SSH session
-      #   if: ${{ matrix.os  == 'windows-2019' }}
-      #   uses: luchihoratiu/debug-via-ssh@main
-      #   with:
-      #     NGROK_REGION: eu
-      #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-      #     SSH_PASS: ${{ secrets.SSH_PASS }}
-
       - name: Coveralls
         if: ${{ matrix.os  == 'ubuntu-20.04' }}
         run: poetry run coveralls
@@ -124,6 +114,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # Build test package
+      - name: Install briefcase and run build
+        shell: bash -l {0}
+        run: |
+          pip3 install briefcase
+          python3 build.py dev
+
+      # Release test package
+      - name: Draft release
+        uses: ncipollo/release-action@v1
+        with:
+          name: Internal
+          body: "Only for internal tests. Should not be published."
+          artifacts: "*/*.+(dmg|AppImage|msi)"
+          artifactErrorsFailBuild: false
+          allowUpdates: true
+          draft: true
+          prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: "internal"
 
   build-python:
     name: Build and release new Python package
@@ -142,74 +153,8 @@ jobs:
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
 
-  build-dev-packages:
-    name: Build and release unstable develop packages
-    needs: test
-    if: ${{ startsWith(github.ref, 'refs/heads/dev') }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-20.04, macos-10.15, windows-2019]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install briefcase and run build
-        shell: bash -l {0}
-        run: |
-          pip3 install briefcase
-          python3 build.py dev
-      - name: Draft release
-        uses: ncipollo/release-action@v1
-        with:
-          name: Unstable
-          body:
-            "Intended only for developing purposes! You're better off using the
-            latest v0.\\*.\\* build instead!"
-          artifacts: "*/*.+(dmg|AppImage|msi)"
-          artifactErrorsFailBuild: false
-          allowUpdates: true
-          draft: true
-          prerelease: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "unstable"
-
-  build-test-packages:
-    name: Build and release unstable develop packages
-    needs: test
-    if: ${{ !startsWith(github.ref, 'refs/heads/dev') }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-20.04, macos-10.15, windows-2019]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install briefcase and run build
-        shell: bash -l {0}
-        run: |
-          pip3 install briefcase
-          python3 build.py
-      - name: Publish internal release
-        uses: ncipollo/release-action@v1
-        with:
-          name: "Internal"
-          body: "Only for internal tests. Should not be published."
-          artifacts: "*/*.+(dmg|AppImage|msi)"
-          allowUpdates: true
-          artifactErrorsFailBuild: false
-          prerelease: true
-          draft: true
-          tag: "internal"
-          token: ${{ secrets.GITHUB_TOKEN }}
-
   build-packages:
-    name: Build packages and prepare release
+    name: Build and release packages
     needs: test
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ${{ matrix.os }}
@@ -219,9 +164,14 @@ jobs:
         os: [ubuntu-20.04, macos-10.15, windows-2019]
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
+      - name: Extract version from tag
+        id: extract_version
+        uses: damienaicheh/extract-version-from-tag-action@v1.0.0
       - name: Install briefcase and run build
         shell: bash -l {0}
         run: |
@@ -234,10 +184,12 @@ jobs:
             [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md)
             for details.
           artifacts: "*/*.+(dmg|AppImage|msi)"
-          allowUpdates: true
           artifactErrorsFailBuild: false
-          draft: false
+          allowUpdates: true
+          draft: true
+          prerelease: ${{ steps.extract_version.outputs.PRE_RELEASE != ''}}
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: "unstable"
 
   deploy-pages:
     name: Deploy github pages

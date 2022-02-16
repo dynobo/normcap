@@ -23,6 +23,14 @@ def _set_environ_for_briefcase():
                 tesseract_path = normcap_path.parent.parent / "bin" / "tesseract"
                 os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
 
+        if sys.platform == "darwin":
+            # Use bundled tesseract binary
+            with resources.as_file(resources.files("normcap")) as normcap_path:
+                tesseract_path = (
+                    normcap_path.parent.parent / "app_packages" / "tesseract"
+                )
+                os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
+
         elif sys.platform == "win32":
             with resources.as_file(
                 resources.files("normcap.resources")
