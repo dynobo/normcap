@@ -23,7 +23,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         """Initialize window."""
         super().__init__()
         self.screen_idx: int = screen_idx
-        self.primary_color: QtGui.QColor = QtGui.QColor(color)
+        self.color: QtGui.QColor = QtGui.QColor(color)
         self.main_window: QtWidgets.QMainWindow = parent or self
 
         # Window properties
@@ -56,7 +56,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.ui_layer = QtWidgets.QLabel(self)
         self.ui_layer.setObjectName("ui_layer")
         self.ui_layer.setStyleSheet(
-            f"#ui_layer {{border: 3px solid {self.primary_color.name()};}}"
+            f"#ui_layer {{border: 3px solid {self.color.name()};}}"
         )
         self.ui_layer.setCursor(QtCore.Qt.CrossCursor)
         self.ui_layer.setScaledContents(True)
@@ -72,14 +72,6 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.image_layer.setPixmap(pixmap)
 
     ##################
-    # Utility
-    ##################
-    def _get_mode_indicator_icon(self):
-        if self.main_window.capture.mode is CaptureMode.PARSE:
-            return get_icon("parse.svg")
-        return get_icon("raw.svg")
-
-    ##################
     # Events
     ##################
 
@@ -88,11 +80,10 @@ class BaseWindow(QtWidgets.QMainWindow):
         painter = QtGui.QPainter(self.ui_layer)
 
         if logger.parent.level == logging.DEBUG:
+            # Draw debug information on screen
             screen = self.main_window.screens[self.screen_idx]
             x = y = 25
-            painter.setPen(
-                QtGui.QPen(self.primary_color, self.pen_width, QtCore.Qt.DashLine)
-            )
+            painter.setPen(QtGui.QPen(self.color))
             painter.drawText(x, y * 1, f"QScreen: {screen.geometry}")
             painter.drawText(x, y * 2, f"Image: {screen.screenshot.size().toTuple()}")
             painter.drawText(x, y * 3, f"Pos QScreen: {self.selection.rect}")
@@ -105,16 +96,16 @@ class BaseWindow(QtWidgets.QMainWindow):
 
         # Draw selection rectangle
         rect = self.selection.rect
-        painter.setPen(
-            QtGui.QPen(self.primary_color, self.pen_width, QtCore.Qt.DashLine)
-        )
+        painter.setPen(QtGui.QPen(self.color, self.pen_width, QtCore.Qt.DashLine))
         painter.drawRect(*rect.geometry)
 
         # Draw Mode indicator
-        size = 24
-        self.mode_indicator.paint(
-            painter, rect.right - size, rect.top - size - 4, size, size
-        )
+        if self.main_window.capture.mode is CaptureMode.PARSE:
+            mode_indicator = get_icon("parse.svg")
+        else:
+            mode_indicator = get_icon("raw.svg")
+        mode_indicator.paint(painter, rect.right - 24, rect.top - 20, 24, 24)
+
         painter.end()
 
     def keyPressEvent(self, event):
@@ -131,16 +122,11 @@ class BaseWindow(QtWidgets.QMainWindow):
     def mousePressEvent(self, event):
         """Handle left mouse button clicked."""
         if event.button() == QtCore.Qt.LeftButton:
-            self.is_selecting = True
-            self.mode_indicator = self._get_mode_indicator_icon()
-
             screen = self.main_window.screens[self.screen_idx]
-            self.selection.scale_factor = (
-                screen.screenshot.width() / screen.width  # * screen.device_pixel_ratio
-            )
-
+            self.selection.scale_factor = screen.screenshot.width() / screen.width
             self.selection.start_y = self.selection.end_y = event.position().y()
             self.selection.start_x = self.selection.end_x = event.position().x()
+            self.is_selecting = True
             self.update()
 
     def mouseMoveEvent(self, event):
@@ -154,13 +140,13 @@ class BaseWindow(QtWidgets.QMainWindow):
         if (event.button() == QtCore.Qt.LeftButton) and self.is_selecting:
             self.selection.end_y = event.position().y()
             self.selection.end_x = event.position().x()
-            self.is_selecting = False
             self.main_window.com.on_set_cursor_wait.emit()
             self.main_window.com.on_minimize_windows.emit()
             self.main_window.com.on_region_selected.emit(
                 (self.selection.scaled_rect, self.screen_idx)
             )
             self.selection = Selection()
+            self.is_selecting = False
             self.update()
 
     def changeEvent(self, event) -> None:

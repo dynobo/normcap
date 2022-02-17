@@ -13,7 +13,6 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from normcap import ocr
 from normcap.gui import system_info, utils
 from normcap.gui.base_window import BaseWindow
-from normcap.gui.constants import FILE_ISSUE_TEXT
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.notifier import Notifier
 from normcap.gui.settings import init_settings
@@ -148,12 +147,6 @@ class MainWindow(BaseWindow):
             self._create_all_child_windows()
         elif system_info.desktop_environment() == DesktopEnvironment.GNOME:
             self.com.on_window_positioned.connect(self._create_next_child_window)
-        else:
-            logger.error(
-                "NormCap currently doesn't support multi monitor mode on %s\n%s",
-                system_info.desktop_environment(),
-                FILE_ISSUE_TEXT,
-            )
 
     def _create_next_child_window(self):
         """Open child window only for next display."""
