@@ -92,7 +92,6 @@ class MainWindow(BaseWindow):
         for idx, screenshot in enumerate(grab_screens()):
             utils.save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
             self.screens[idx].screenshot = screenshot
-            self.screens[idx].scaled_screenshot = None
 
     def _add_settings_menu(self):
         self.settings_menu = SettingsMenu(self)
