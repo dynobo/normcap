@@ -91,7 +91,7 @@ def main():
     utils.copy_tessdata_files_to_config_dir()
 
     app = QtWidgets.QApplication(sys.argv)
-    app.setQuitOnLastWindowClosed(False)
+    app.setQuitOnLastWindowClosed(True)
 
     logger.debug("System info:\n%s", system_info.to_dict())
 
