@@ -47,33 +47,29 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.set_fullscreen()
 
     def _add_image_layer(self):
-        # TODO: Update image layer on new screenshot!
         self.image_layer = QtWidgets.QLabel()
         self.image_layer.setObjectName("central_widget")
-        self.image_layer.setFrameShape(QtWidgets.QLabel.NoFrame)
-        self.image_layer.setLineWidth(0)
         self.image_layer.setScaledContents(True)
-        screen = self.main_window.screens[self.screen_idx]
-        pixmap = QtGui.QPixmap()
-        pixmap.convertFromImage(screen.screenshot)
-        self.image_layer.setPixmap(pixmap)
         self.setCentralWidget(self.image_layer)
 
     def _add_ui_layer(self):
-        self.ui_layer = QtWidgets.QLabel()
+        self.ui_layer = QtWidgets.QLabel(self)
         self.ui_layer.setObjectName("ui_layer")
         self.ui_layer.setStyleSheet(
             f"#ui_layer {{border: 3px solid {self.primary_color.name()};}}"
         )
-        self.ui_layer.setFrameShape(QtWidgets.QLabel.NoFrame)
-        self.ui_layer.setFrameShadow(QtWidgets.QLabel.Plain)
-        self.ui_layer.setLineWidth(0)
         self.ui_layer.setCursor(QtCore.Qt.CrossCursor)
         self.ui_layer.setScaledContents(True)
-        self.ui_layer.setParent(self)
         self.ui_layer.setGeometry(self.image_layer.geometry())
         self.ui_layer.paintEvent = self._ui_layer_paintEvent
         self.ui_layer.raise_()
+
+    def draw_background_image(self):
+        """Draw screenshot as background image."""
+        screen = self.main_window.screens[self.screen_idx]
+        pixmap = QtGui.QPixmap()
+        pixmap.convertFromImage(screen.screenshot)
+        self.image_layer.setPixmap(pixmap)
 
     ##################
     # Utility
@@ -183,6 +179,11 @@ class BaseWindow(QtWidgets.QMainWindow):
         """Adjust child widget on resize."""
         self.ui_layer.resize(self.size())
         return super().resizeEvent(event)
+
+    def showEvent(self, event: QtGui.QShowEvent) -> None:
+        """Update background image on show/reshow."""
+        self.draw_background_image()
+        return super().showEvent(event)
 
     ##################
     # Adjust UI
