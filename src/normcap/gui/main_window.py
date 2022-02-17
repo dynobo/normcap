@@ -180,6 +180,8 @@ class MainWindow(BaseWindow):
     def _show_windows(self):
         """Make hidden windows visible again."""
         try:
+            # Give the menu some time to close before taking screenshot
+            time.sleep(0.05)
             self._update_screenshots()
         except AssertionError:
             logger.debug("Abort showing windows.")
