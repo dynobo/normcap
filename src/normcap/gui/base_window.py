@@ -6,7 +6,6 @@ in multi display setups).
 
 import logging
 import sys
-from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -19,9 +18,6 @@ logger = logging.getLogger(__name__)
 
 class BaseWindow(QtWidgets.QMainWindow):
     """Used for child windows and as base class for MainWindow."""
-
-    # Helper window to extend the red border
-    macos_border: Optional[QtWidgets.QMainWindow] = None
 
     def __init__(self, screen_idx: int, color: str, parent=None):
         """Initialize window."""
@@ -51,6 +47,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.set_fullscreen()
 
     def _add_image_layer(self):
+        # TODO: Update image layer on new screenshot!
         self.image_layer = QtWidgets.QLabel()
         self.image_layer.setObjectName("central_widget")
         self.image_layer.setFrameShape(QtWidgets.QLabel.NoFrame)
@@ -186,11 +183,6 @@ class BaseWindow(QtWidgets.QMainWindow):
         """Adjust child widget on resize."""
         self.ui_layer.resize(self.size())
         return super().resizeEvent(event)
-
-    def hideEvent(self, _) -> None:
-        """Make sure MacOS border window is hidden."""
-        if self.macos_border:
-            self.macos_border.hide()
 
     ##################
     # Adjust UI

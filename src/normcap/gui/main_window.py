@@ -195,8 +195,6 @@ class MainWindow(BaseWindow):
 
         for window in self.all_windows.values():
             if sys.platform == "darwin":
-                if window.macos_border:
-                    window.macos_border.show()
                 window.show()
                 window.raise_()
                 window.activateWindow()
