@@ -3,7 +3,6 @@
 import fileinput
 import hashlib
 import inspect
-import io
 import os
 import shutil
 import stat
@@ -15,7 +14,6 @@ import zipfile
 from pathlib import Path
 
 import briefcase  # type: ignore
-import requests
 import toml
 
 platform_str = sys.platform.lower()
@@ -292,18 +290,11 @@ def bundle_pytesseract_dylibs():
 
         for link_path in link_paths:
             link_filename = link_path.rsplit("/", maxsplit=1)[-1]
-            if new_lib_path.endswith("tesseract"):
-                cmd(
-                    f"install_name_tool -change {link_path} "
-                    + f"@executable_path/{link_filename} "
-                    + f"{new_lib_path}"
-                )
-            else:
-                cmd(
-                    f"install_name_tool -change {link_path} "
-                    + f"@executable_path/../Resources/app_packages/{link_filename} "
-                    + f"{new_lib_path}"
-                )
+            cmd(
+                f"install_name_tool -change {link_path} "
+                + f"@executable_path/{link_filename} "
+                + f"{new_lib_path}"
+            )
 
 
 def rm_recursive(directory, exclude):
