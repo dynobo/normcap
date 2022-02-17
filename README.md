@@ -101,14 +101,13 @@ pip install normcap
 - Append Tesseract's location to the environment variable `Path`, e.g.:
 
   ```cmd
-  setx Path "%Path%;C:\Program Files\Tesseract-OCR\tessdata"
+  setx Path "%Path%;C:\Program Files\Tesseract-OCR"
   ```
 
-- Make sure to close and reopen your current terminal window to make sure the variables
-  have been applied. Test it by running:
+- Make sure to close and reopen your current terminal window to apply the new variables.
+  Test it by running:
 
   ```cmd
-  tesseract --version
   tesseract --list-langs
   ```
 
@@ -154,8 +153,6 @@ poetry run python -m normcap
 ## Credits
 
 This project uses the following non-standard libraries:
-
-TODO: Update deps
 
 - [pyside6](https://pypi.org/project/PySide6/) _- bindings for Qt UI Framework_
 - [pytesseract](https://pypi.org/project/pytesseract/) _- wrapper for tesseract's API_

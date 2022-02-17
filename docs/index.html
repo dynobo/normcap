@@ -238,24 +238,7 @@
         </li>
       </ul>
       <h5>Not at all satisfied with NormCap?</h5>
-      <p>Try one of the similar OpenSource projects:</p>
-      <ul>
-        <li>
-          <a href="https://github.com/RajSolai/TextSnatcher">TextSnatcher</a>
-        </li>
-        <li>
-          <a ref="https://github.com/ianzhao05/textshot">TextShot</a>
-        </li>
-        <li>
-          <a ref="https://github.com/manisandro/gImageReader">gImageReader</a>
-        </li>
-        <li>
-          <a ref="https://getgreenshot.org">GreenShot</a>
-        </li>
-        <li>
-          <a ref="https://sourceforge.net/projects/capture2text">Capture2Text</a>
-        </li>
-      </ul>
+      <p>Try an <a href="#faqs-alternatives">alternative applications</a> and see if they work better for you.</p>
     </article>
 
     <article id="faqs">
@@ -264,7 +247,7 @@
         <h3>A knowledge base for common issues and additional information.</h3>
       </div>
       <h4>General</h4>
-      <details>
+      <details id="faqs-languages">
         <summary>How can I add additional languages to NormCap?</summary>
         <p>
           The <strong>prebuild packages</strong> are shipped with the following languages English,
@@ -298,14 +281,14 @@
           <a href="https://github.com/dynobo/normcap/issues">as an issue</a>.
         </p>
       </details>
-      <details>
+      <details id="faqs-cloud">
         <summary>Is my image/text analyzed in "the cloud"?</summary>
         <p>
           No. The text recognition is performed offline using the OCR framework
           <a href="https://github.com/tesseract-ocr/tesseract">Tesseract</a>.
         </p>
       </details>
-      <details>
+      <details id="faqs-data-sent">
         <summary>Is any other data send to the internet?</summary>
         <p>
           No telemetry data is collected and by default also no other data is send anywhere.
@@ -322,7 +305,7 @@
           </li>
         </ul>
       </details>
-      <details>
+      <details id="faqs-shortcuts">
         <summary>Can I start NormCap via a keyboard shortcut?</summary>
         <p>
           Yes, but you'll have to configure it on your own using your operating system's
@@ -358,7 +341,22 @@
           Ask your preferred search engine for support or different ways to do this.
         </p>
       </details>
-      <details>
+      <details id="faqs-alternatives">
+        <summary>
+          Are there alternatives to NormCap?
+        </summary>
+        <p>
+          Some applications offer similar features like NormCap and might be a good or even better alternative
+          for you: It completely depends on your use case and requirements. Some similar OpenSource Projects are:</p>
+        <ul>
+          <li><a href="https://github.com/RajSolai/TextSnatcher">TextSnatcher</a></li>
+          <li><a href="https://getgreenshot.org">GreenShot</a></li>
+          <li><a href="https://github.com/ianzhao05/textshot">TextShot</a></li>
+          <li><a href="https://github.com/manisandro/gImageReader">gImageReader</a></li>
+          <li><a href="https://sourceforge.net/projects/capture2text">Capture2Text</a></li>
+        </ul>
+      </details>
+      <details id="faqs-windows-cli">
         <summary>
           [Windows] How can I start NormCap with a command line argument?
         </summary>
@@ -367,7 +365,7 @@
         </p>
         <pre><code>C:\Users\&lt;USER-NAME&gt;\AppData\Local\Programs\NormCap\python\python.exe -m normcap --help</code></pre>
       </details>
-      <details>
+      <details id="faqs-macos-cli">
         <summary>
           [MacOS] How can I start NormCap with a command line argument?
         </summary>
@@ -510,22 +508,18 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</pre></code>
         <ol>
           <li>
             Install dependencies:
-            TODO: Update instructions (Or link to readme)
             <ul>
               <li>
                 Ubuntu/Debian:
-                <pre><code>sudo apt install tesseract-ocr tesseract-ocr-eng \
-    libtesseract-dev libleptonica-dev \
-    python3-dev</code></pre>
+                <pre><code>sudo apt install tesseract-ocr tesseract-ocr-eng</code></pre>
               </li>
               <li>
                 Arch:
-                <pre><code>sudo pacman -S tesseract tesseract-data-eng leptonica</code></pre>
+                <pre><code>sudo pacman -S tesseract tesseract-data-eng</code></pre>
               </li>
               <li>
                 Fedora:
-                <pre><code>sudo dnf install tesseract tesseract-devel \
-    libleptonica-devel python3-devel</code></pre>
+                <pre><code>sudo dnf install tesseract tesseract-devel</code></pre>
               </li>
             </ul>
           </li>
@@ -561,7 +555,7 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</pre></code>
         <div>
           <ol>
             <li>
-              Install "Tesseract 4.1", e.g. by using the
+              Install "Tesseract 5", e.g. by using the
               <a href="https://github.com/UB-Mannheim/tesseract/wiki">installer provided by UB Mannheim</a>.
             </li>
             <li>
@@ -570,13 +564,13 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</pre></code>
               <pre><code>setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"</code></pre>
             </li>
             <li>
-              Install
-              <a href="https://pypi.org/project/tesserocr/">tesserocr</a>
-              using the
-              <a
-                href="pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl">Windows
-                specific wheel</a>:
-              <pre><code>pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl</code></pre>
+              Append Tesseract's location to the environment variable "Path", e.g.:
+              <pre><code>setx Path "%Path%;C:\Program Files\Tesseract-OCR"</code></pre>
+            </li>
+            <li>
+              Make sure to close and reopen your current terminal window to apply the new
+              variables. Test it by running:
+              <pre><code>tesseract --list-langs</code></pre>
             </li>
             <li>
               Install NormCap:
@@ -600,4 +594,5 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</pre></code>
 
   <script src="script.js"></script>
 </body>
+
 </html>
