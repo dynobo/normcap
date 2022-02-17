@@ -42,9 +42,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.is_positioned: bool = False
         self.pen_width: int = 2
         self.is_selecting: bool = False
-        self.mode_indicator: str = "?"
-        self.mode_indicator_font = QtGui.QFont()
-        self.mode_indicator_font.setPixelSize(24)
+        self.mode_indicator: QtGui.QIcon = QtGui.QIcon()
 
         # Setup widgets and show
         logger.debug("Create window for screen %s", self.screen_idx)
@@ -83,12 +81,10 @@ class BaseWindow(QtWidgets.QMainWindow):
     ##################
     # Utility
     ##################
-    def _get_mode_indicator_char(self):
-        if self.main_window.capture.mode is CaptureMode.RAW:
-            return "☰"
+    def _get_mode_indicator_icon(self):
         if self.main_window.capture.mode is CaptureMode.PARSE:
-            return "★"
-        return ""
+            return get_icon("parse.svg")
+        return get_icon("raw.svg")
 
     ##################
     # Events
@@ -122,8 +118,10 @@ class BaseWindow(QtWidgets.QMainWindow):
         painter.drawRect(*rect.geometry)
 
         # Draw Mode indicator
-        painter.setFont(self.mode_indicator_font)
-        painter.drawText(rect.right - 18, rect.top - 8, self.mode_indicator)
+        size = 24
+        self.mode_indicator.paint(
+            painter, rect.right - size, rect.top - size - 4, size, size
+        )
         painter.end()
 
     def keyPressEvent(self, event):
@@ -141,7 +139,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         """Handle left mouse button clicked."""
         if event.button() == QtCore.Qt.LeftButton:
             self.is_selecting = True
-            self.mode_indicator = self._get_mode_indicator_char()
+            self.mode_indicator = self._get_mode_indicator_icon()
 
             screen = self.main_window.screens[self.screen_idx]
             self.selection.scale_factor = (
