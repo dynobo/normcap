@@ -18,6 +18,7 @@ try:
 
     logger.debug("Using QtNetwork Downloader.")
 except ImportError as e:
+    # TODO: Is this still an issue?
     logger.warning("Couldn't load QtNetwork Downloader: %s.", e)
     from normcap.gui.downloader_requests import Downloader
 

@@ -16,7 +16,8 @@
 [FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md)
 
 **Content:** [Quickstart](#Quickstart) | [Python package](#Python-package) |
-[Usage](#Usage) | [Contribute](#Contribute) | [Credits](#Credits)
+[Contribute](#Contribute) | [Credits](#Credits) |
+[Similar tools](#Similar-open-source-tools)
 
 [![Screencast](https://user-images.githubusercontent.com/11071876/123133596-3107d080-d450-11eb-8451-6dcebb7876ad.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
@@ -33,7 +34,7 @@
 ## Quickstart
 
 **❱❱
-[Download & run a pre-build package for Linux, MacOS or Windows](https://github.com/dynobo/normcap/releases)
+[Download pre-build package for Linux, MacOS or Windows](https://github.com/dynobo/normcap/releases)
 ❰❰**
 
 If you experience issues please look at the
@@ -169,7 +170,7 @@ And it depends on external software
 
 Thanks to the maintainers of those nice libraries!
 
-## Similar OpenSource Projects
+## Similar open source tools
 
 - [TextSnatcher](https://github.com/RajSolai/TextSnatcher)
 - [GreenShot](https://getgreenshot.org/)
