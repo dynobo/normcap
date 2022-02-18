@@ -79,7 +79,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         """Draw screenshot and selection rectangle on window."""
         painter = QtGui.QPainter(self.ui_layer)
 
-        if logger.parent.level == logging.DEBUG:
+        if logger.getEffectiveLevel() == logging.DEBUG:
             # Draw debug information on screen
             screen = self.main_window.screens[self.screen_idx]
             x = y = 25
