@@ -104,7 +104,7 @@ class BaseWindow(QtWidgets.QMainWindow):
             mode_indicator = get_icon("parse.svg")
         else:
             mode_indicator = get_icon("raw.svg")
-        mode_indicator.paint(painter, rect.right - 24, rect.top - 20, 24, 24)
+        mode_indicator.paint(painter, rect.right - 24, rect.top - 30, 24, 24)
 
         painter.end()
 
