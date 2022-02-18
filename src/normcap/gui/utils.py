@@ -11,7 +11,6 @@ import tempfile
 import traceback
 from importlib import resources
 from pathlib import Path
-from types import ModuleType
 from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -36,7 +35,7 @@ def save_image_in_tempfolder(
     image: QtGui.QImage, postfix: str = "", log_level=logging.DEBUG
 ):
     """For debugging it can be useful to store the cropped image."""
-    if logger.root.level == log_level:
+    if logger.getEffectiveLevel() == log_level:
         file_dir = Path(tempfile.gettempdir()) / "normcap"
         file_dir.mkdir(exist_ok=True)
         now = datetime.datetime.now()
