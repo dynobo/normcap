@@ -144,7 +144,7 @@ class SettingsMenu(QtWidgets.QToolButton):
             setting = "language"
             languages = [a.objectName() for a in group.actions() if a.isChecked()]
             if not languages:
-                languages = list(action_name)
+                languages = [action_name]
                 action.setChecked(True)
             value = languages
 
