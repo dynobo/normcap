@@ -275,11 +275,11 @@ def bundle_pytesseract_dylibs():
 
     libwebp7 = "/usr/local/Cellar/webp/1.2.1_1/lib/libwebp.7.dylib"
     changeset = [
-        (tesseract, [liblept, libtess, libarchive]),
         (libtiff, [libjpeg]),
         (libwebpmux, [libwebp7]),
         (liblept, [libpng, libjpeg, libgif, libtiff, libopenjpeg, libwebp, libwebpmux]),
-        (libtess, [liblept]),
+        (libtess, [liblept, libarchive]),
+        (tesseract, [liblept, libtess, libarchive]),
     ]
 
     print(*Path(app_pkg_path).iterdir(), sep="\n")
