@@ -55,6 +55,9 @@ orjson = "^3.6.6"
 radon = "^5.1.0"
 pydeps = "^1.10.12"
 Levenshtein = "^0.17.0"
+# Necessary because incompatibility of markupsafe > 2.1.0 with Jinja2 < 3.0.0
+# but briefcase currently depends on Jinjia < 3.0.0
+markupsafe = "2.0.1"
 
 [tool.black]
 line-length = 88
