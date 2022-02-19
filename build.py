@@ -11,6 +11,7 @@ import sys
 import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
+from enum import Enum
 from pathlib import Path
 
 import briefcase  # type: ignore
@@ -241,45 +242,70 @@ def bundle_pytesseract_dylibs():
     """Include two dylibs needed by tesserocr into app package."""
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
 
-    # Copy libs to package dir
-    tesseract = "/usr/local/bin/tesseract"
-    libtess = "/usr/local/Cellar/tesseract/5.0.1/lib/libtesseract.5.dylib"
-    liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
-    libarchive = "/usr/local/opt/libarchive/lib/libarchive.13.dylib"
-    # libc = "/usr/lib/libc++.1.dylib"
-    # libsystemb = "/usr/lib/libSystem.B.dylib"
-    libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"
-    libjpeg = "/usr/local/opt/jpeg/lib/libjpeg.9.dylib"
-    libgif = "/usr/local/opt/giflib/lib/libgif.dylib"
-    libtiff = "/usr/local/opt/libtiff/lib/libtiff.5.dylib"
-    libopenjpeg = "/usr/local/opt/openjpeg/lib/libopenjp2.7.dylib"
-    libwebp = "/usr/local/opt/webp/lib/libwebp.7.dylib"
-    libwebpmux = "/usr/local/opt/webp/lib/libwebpmux.3.dylib"
-    for lib_path in [
-        tesseract,
-        libarchive,
-        libtess,
-        liblept,
-        libpng,
-        libjpeg,
-        libgif,
-        libtiff,
-        libopenjpeg,
-        libwebp,
-        libwebpmux,
-    ]:
-        lib_filename = lib_path.rsplit("/", maxsplit=1)[-1]
+    class Libs(str, Enum):
+        """Libraries to be packaged."""
+
+        # libc = "/usr/lib/libc++.1.dylib"
+        tesseract = "/usr/local/bin/tesseract"
+        libtess = "/usr/local/Cellar/tesseract/5.0.1/lib/libtesseract.5.dylib"
+        liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
+        libarchive = "/usr/local/opt/libarchive/lib/libarchive.13.dylib"
+        libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"
+        libjpeg = "/usr/local/opt/jpeg/lib/libjpeg.9.dylib"
+        libgif = "/usr/local/opt/giflib/lib/libgif.dylib"
+        libtiff = "/usr/local/opt/libtiff/lib/libtiff.5.dylib"
+        libopenjpeg = "/usr/local/opt/openjpeg/lib/libopenjp2.7.dylib"
+        libwebp = "/usr/local/opt/webp/lib/libwebp.7.dylib"
+        libwebpmux = "/usr/local/opt/webp/lib/libwebpmux.3.dylib"
+
+        libiconv = "/usr/lib/libiconv.2.dylib"
+        libexpat = "/usr/lib/libexpat.1.dylib"
+        liblzma = "/usr/local/opt/xz/lib/liblzma.5.dylib"
+        libzstd = "/usr/local/opt/zstd/lib/libzstd.1.dylib"
+        liblz = "/usr/local/opt/lz4/lib/liblz4.1.dylib"
+        libb = "/usr/local/opt/libb2/lib/libb2.1.dylib"
+        libbz = "/usr/lib/libbz2.1.0.dylib"
+        libsystemb = "/usr/lib/libSystem.B.dylib"
+        libz = "/usr/lib/libz.1.dylib"
+
+    for lib_path in Libs:
+        lib_filename = lib_path.value.rsplit("/", maxsplit=1)[-1]
         new_lib_path = f"{app_pkg_path}/{lib_filename}"
-        shutil.copy(lib_path, new_lib_path)
+        shutil.copy(lib_path.value, new_lib_path)
         os.chmod(new_lib_path, stat.S_IRWXU)
 
-    libwebp7 = "/usr/local/Cellar/webp/1.2.1_1/lib/libwebp.7.dylib"
+    libwebp7 = "/usr/local/Cellar/webp/1.2.2/lib/libwebp.7.dylib"
     changeset = [
-        (libtiff, [libjpeg]),
-        (libwebpmux, [libwebp7]),
-        (liblept, [libpng, libjpeg, libgif, libtiff, libopenjpeg, libwebp, libwebpmux]),
-        (libtess, [liblept, libarchive]),
-        (tesseract, [liblept, libtess, libarchive]),
+        (Libs.libtiff, [Libs.libjpeg]),
+        (Libs.libwebpmux, [libwebp7]),
+        (
+            Libs.liblept,
+            [
+                Libs.libpng,
+                Libs.libjpeg,
+                Libs.libgif,
+                Libs.libtiff,
+                Libs.libopenjpeg,
+                Libs.libwebp,
+                Libs.libwebpmux,
+            ],
+        ),
+        (
+            Libs.libarchive,
+            [
+                Libs.libzstd,
+                Libs.libiconv,
+                Libs.libexpat,
+                Libs.liblzma,
+                Libs.liblz,
+                Libs.libb,
+                Libs.libbz,
+                Libs.libz,
+                Libs.libsystemb,
+            ],
+        ),
+        (Libs.libtess, [Libs.liblept, Libs.libarchive]),
+        (Libs.tesseract, [Libs.liblept, Libs.libtess, Libs.libarchive]),
     ]
 
     print(*Path(app_pkg_path).iterdir(), sep="\n")
