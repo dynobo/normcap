@@ -119,8 +119,7 @@ jobs:
       - name: Install briefcase and run build
         shell: bash -l {0}
         run: |
-          pip3 install briefcase
-          python3 build.py dev
+          poetry run python build.py dev
 
       # Release test package
       - name: Draft internal release
@@ -169,14 +168,17 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
+      - uses: abatilo/actions-poetry@v2.1.4
+        with:
+          poetry-version: 1.1.12
       - name: Extract version from tag
         id: extract_version
         uses: damienaicheh/extract-version-from-tag-action@v1.0.0
       - name: Install briefcase and run build
         shell: bash -l {0}
         run: |
-          pip3 install briefcase
-          python3 build.py
+          poetry install
+          poetry run python build.py
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:
