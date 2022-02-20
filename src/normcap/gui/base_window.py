@@ -116,10 +116,7 @@ class BaseWindow(QtWidgets.QMainWindow):
                 self.is_selecting = False
                 self.update()
             else:
-                if self.main_window.settings.value("tray", type=bool):
-                    self.main_window.com.on_minimize_windows.emit()
-                else:
-                    self.main_window.com.on_quit_or_hide.emit("esc button pressed")
+                self.main_window.com.on_quit_or_hide.emit("esc button pressed")
 
     def mousePressEvent(self, event):
         """Handle left mouse button clicked."""
@@ -161,12 +158,6 @@ class BaseWindow(QtWidgets.QMainWindow):
         ):
             self._position_windows_on_wayland()
             self.main_window.com.on_window_positioned.emit()
-
-        if event.type() == QtCore.QEvent.WindowStateChange:
-            if self.windowState() & QtCore.Qt.WindowMaximized:
-                #event.ignore()
-                self.hide()
-                return
 
         return super().changeEvent(event)
 

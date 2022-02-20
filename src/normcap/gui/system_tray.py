@@ -13,7 +13,7 @@ class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
     on_capture = QtCore.Signal()
-    on_exit = QtCore.Signal()
+    on_quit = QtCore.Signal()
 
 
 class SystemTray(QtWidgets.QSystemTrayIcon):
@@ -35,7 +35,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         menu.addAction(action)
 
         action = QtGui.QAction("Exit", menu)
-        action.triggered.connect(self.com.on_exit.emit)  # pylint: disable=no-member
+        action.triggered.connect(self.com.on_quit.emit)  # pylint: disable=no-member
         menu.addAction(action)
 
         self.setContextMenu(menu)
