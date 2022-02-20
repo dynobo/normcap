@@ -134,7 +134,7 @@ class MainWindow(BaseWindow):
         self.com.on_set_cursor_wait.connect(
             lambda: utils.set_cursor(QtCore.Qt.WaitCursor)
         )
-        self.com.on_quit_or_hide.connect(self._quit_or_minimize)
+        self.com.on_quit_or_hide.connect(self._quit)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
 
     ###################
@@ -175,7 +175,11 @@ class MainWindow(BaseWindow):
         logger.debug("Hide %s window(s)", len(self.all_windows))
         utils.set_cursor(None)
         for window in self.all_windows.values():
-            window.hide()
+            # Leaving fullscreen before calling .hide() is necessary on MacOS, where the 
+            # fullscreen space otherwise stays occupied (black).  
+            window.showNormal()
+
+        QtCore.QTimer.singleShot(20000, self._quit)
 
     def _show_windows(self):
         """Make hidden windows visible again."""
@@ -189,23 +193,18 @@ class MainWindow(BaseWindow):
 
         for window in self.all_windows.values():
             if sys.platform == "darwin":
-                window.show()
-                window.raise_()
-                window.activateWindow()
+                window.showFullScreen()
+                #window.show()
+                #window.raise_()
+                #window.activateWindow()
             else:
                 window.showFullScreen()
+                
+    def _quit(self, reason: str):
+        self.main_window.tray.hide()
+        QtWidgets.QApplication.processEvents()
+        time.sleep(0.05)
 
-    def _quit_or_minimize(self, reason: str):
-        if self.settings.value("tray", type=bool):
-            self._minimize_windows()
-        else:
-            self.main_window.tray.hide()
-            QtWidgets.QApplication.processEvents()
-            time.sleep(0.05)
-            self._quit(reason)
-
-    @staticmethod
-    def _quit(reason: str):
         logger.debug("Path to debug images: %s%snormcap", tempfile.gettempdir(), os.sep)
         logger.info("Exit normcap (reason: %s)", reason)
         QtWidgets.QApplication.quit()
