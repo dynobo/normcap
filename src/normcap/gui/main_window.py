@@ -105,7 +105,9 @@ class MainWindow(BaseWindow):
     def _add_tray(self):
         self.tray = SystemTray(self)
         self.tray.com.on_capture.connect(self._show_windows)
-        self.tray.com.on_exit.connect(lambda: self._quit("clicked exit in tray"))
+        self.tray.com.on_quit.connect(
+            lambda: self._quit_application("clicked exit in tray")
+        )
         if self.settings.value("tray", type=bool):
             self.tray.show()
 
@@ -130,11 +132,11 @@ class MainWindow(BaseWindow):
         self.com.on_ocr_performed.connect(self._copy_to_clipboard)
         self.com.on_copied_to_clipboard.connect(self._notify_or_close)
 
-        self.com.on_minimize_windows.connect(self._minimize_windows)
+        self.com.on_minimize_windows.connect(self._hide_windows)
         self.com.on_set_cursor_wait.connect(
             lambda: utils.set_cursor(QtCore.Qt.WaitCursor)
         )
-        self.com.on_quit_or_hide.connect(self._quit)
+        self.com.on_quit_or_hide.connect(self._quit_or_hide)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
 
     ###################
@@ -170,16 +172,20 @@ class MainWindow(BaseWindow):
         )
         self.all_windows[index].show()
 
-    def _minimize_windows(self):
+    def _hide_windows(self):
         """Hide all windows of normcap."""
         logger.debug("Hide %s window(s)", len(self.all_windows))
         utils.set_cursor(None)
         for window in self.all_windows.values():
-            # Leaving fullscreen before calling .hide() is necessary on MacOS, where the 
-            # fullscreen space otherwise stays occupied (black).  
-            window.showNormal()
+            # Root cause: https://bugreports.qt.io/browse/QTBUG-46701
+            # https://stackoverflow.com/questions/24266446/qt-5-3-mac-full-screen
+            window.setParent(None)
+            # TODO: Another thing to try:
+            # https://github.com/supercollider/supercollider/pull/1816/files
+            # https://doc.qt.io/qtforpython/PySide6/QtCore/QMetaObject.html
+            window.hide()
 
-        QtCore.QTimer.singleShot(20000, self._quit)
+        QtCore.QTimer.singleShot(20000, self._quit_application)
 
     def _show_windows(self):
         """Make hidden windows visible again."""
@@ -192,19 +198,20 @@ class MainWindow(BaseWindow):
             return
 
         for window in self.all_windows.values():
-            if sys.platform == "darwin":
-                window.showFullScreen()
-                #window.show()
-                #window.raise_()
-                #window.activateWindow()
-            else:
-                window.showFullScreen()
-                
-    def _quit(self, reason: str):
+            # window.setEnabled(False)
+            window.setParent(None)
+            window.showFullScreen()
+
+    def _quit_or_hide(self, reason: str):
+        if self.settings.value("tray", type=bool):
+            self._hide_windows()
+        else:
+            self._quit_application(reason)
+
+    def _quit_application(self, reason: str):
         self.main_window.tray.hide()
         QtWidgets.QApplication.processEvents()
         time.sleep(0.05)
-
         logger.debug("Path to debug images: %s%snormcap", tempfile.gettempdir(), os.sep)
         logger.info("Exit normcap (reason: %s)", reason)
         QtWidgets.QApplication.quit()
