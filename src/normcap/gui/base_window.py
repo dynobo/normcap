@@ -116,7 +116,6 @@ class BaseWindow(QtWidgets.QMainWindow):
                 self.is_selecting = False
                 self.update()
             else:
-                # Quit application
                 self.main_window.com.on_quit_or_hide.emit("esc button pressed")
 
     def mousePressEvent(self, event):
@@ -159,6 +158,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         ):
             self._position_windows_on_wayland()
             self.main_window.com.on_window_positioned.emit()
+
         return super().changeEvent(event)
 
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:
@@ -170,6 +170,18 @@ class BaseWindow(QtWidgets.QMainWindow):
         """Update background image on show/reshow."""
         self.draw_background_image()
         return super().showEvent(event)
+
+    def hide(self):
+        """Patch for MacOS to avoid blank full screen."""
+        if sys.platform == "darwin":
+            # Workaround to avoid black screen in MacOS.
+            # TODO: replace by using tray as main application and close windows instead hide
+            # Root cause: https://bugreports.qt.io/browse/QTBUG-46701
+            self.showNormal()
+            QtCore.QTimer.singleShot(800, super().hide)
+            return True
+
+        return super().hide()
 
     ##################
     # Adjust UI
