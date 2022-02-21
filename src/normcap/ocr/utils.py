@@ -30,8 +30,9 @@ def configure_tesseract_binary():
     if tesseract_cmd := os.environ.get("TESSERACT_CMD", ""):
         pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
     if tesseract_version := os.environ.get("TESSERACT_VERSION", ""):
-        pytesseract.get_tesseract_version = lambda: tesseract_version
-        pytesseract.pytesseract.get_tesseract_version = lambda: tesseract_version
+        patched_get_tesseract_version = lambda: version.Version(tesseract_version)
+        pytesseract.get_tesseract_version = patched_get_tesseract_version
+        pytesseract.pytesseract.get_tesseract_version = patched_get_tesseract_version
 
 
 @functools.lru_cache()
