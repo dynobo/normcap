@@ -171,6 +171,18 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.draw_background_image()
         return super().showEvent(event)
 
+    def hide(self):
+        """Patch for MacOS to avoid blank full screen."""
+        if sys.platform == "darwin":
+            # Workaround to avoid black screen in MacOS.
+            # TODO: replace by using tray as main application and close windows instead hide
+            # Root cause: https://bugreports.qt.io/browse/QTBUG-46701
+            self.showNormal()
+            QtCore.QTimer.singleShot(800, super().hide)
+            return True
+
+        return super().hide()
+
     ##################
     # Adjust UI
     ##################

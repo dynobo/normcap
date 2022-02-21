@@ -177,15 +177,7 @@ class MainWindow(BaseWindow):
         logger.debug("Hide %s window(s)", len(self.all_windows))
         utils.set_cursor(None)
         for window in self.all_windows.values():
-            # Root cause: https://bugreports.qt.io/browse/QTBUG-46701
-            # https://stackoverflow.com/questions/24266446/qt-5-3-mac-full-screen
-            window.setParent(None)
-            # TODO: Another thing to try:
-            # https://github.com/supercollider/supercollider/pull/1816/files
-            # https://doc.qt.io/qtforpython/PySide6/QtCore/QMetaObject.html
             window.hide()
-
-        QtCore.QTimer.singleShot(20000, self._quit_application)
 
     def _show_windows(self):
         """Make hidden windows visible again."""
@@ -198,8 +190,6 @@ class MainWindow(BaseWindow):
             return
 
         for window in self.all_windows.values():
-            # window.setEnabled(False)
-            window.setParent(None)
             window.showFullScreen()
 
     def _quit_or_hide(self, reason: str):
