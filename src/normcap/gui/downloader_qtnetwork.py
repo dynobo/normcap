@@ -32,6 +32,7 @@ class Downloader(QtCore.QObject):
         """Start downloading url. Emits signal, when done."""
         logger.debug("Download %s", url)
         request = QtNetwork.QNetworkRequest(QtCore.QUrl(url))
+        request.setTransferTimeout(3000)
         self.manager.get(request)
 
     def _on_get_finished(self, reply):

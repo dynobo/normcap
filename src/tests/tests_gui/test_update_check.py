@@ -11,7 +11,7 @@ from normcap.gui import update_check
 def test_update_checker_new_version(monkeypatch, qtbot, packaged):
     monkeypatch.setattr(update_check, "__version__", "0.0.0")
     checker = update_check.UpdateChecker(None, packaged=packaged)
-    with qtbot.waitSignal(checker.com.on_version_retrieved, timeout=3000) as result:
+    with qtbot.waitSignal(checker.com.on_version_retrieved, timeout=4000) as result:
         checker.check()
     version = result.args[0]
 
@@ -27,7 +27,7 @@ def test_update_checker_no_new_version(monkeypatch, qtbot, packaged):
     monkeypatch.setattr(update_check, "__version__", "9.9.9")
     checker = update_check.UpdateChecker(None, packaged=packaged)
     with qtbot.waitSignal(
-        checker.com.on_version_retrieved, raising=False, timeout=3000
+        checker.com.on_version_retrieved, raising=False, timeout=4000
     ) as result:
         checker.check()
     assert not result.signal_triggered
