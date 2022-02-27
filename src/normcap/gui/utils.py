@@ -3,6 +3,7 @@
 import datetime
 import functools
 import logging
+import os
 import pprint
 import re
 import shutil
@@ -25,7 +26,7 @@ except ImportError:
 
 from normcap.gui import system_info
 from normcap.gui.constants import URLS
-from normcap.gui.models import Capture
+from normcap.gui.models import Capture, DesktopEnvironment
 from normcap.ocr.models import OcrResult
 
 logger = logging.getLogger(__name__)
@@ -60,6 +61,14 @@ def qt_log_wrapper(mode, _, message):
     if ("xcb" in msg) and ("it was found" in msg):
         logger.error("Try solving the problem as described here: %s", URLS.xcb_error)
         logger.error("If that doesn't help, please open an issue: %s", URLS.issues)
+
+
+def move_active_window_to_position(screen_geometry):
+    """Move currently active window to a certain position with appropriate method."""
+    if system_info.desktop_environment() == DesktopEnvironment.GNOME:
+        move_active_window_to_position_on_gnome(screen_geometry)
+    elif system_info.desktop_environment() == DesktopEnvironment.KDE:
+        move_active_window_to_position_on_kde(screen_geometry)
 
 
 def move_active_window_to_position_on_gnome(screen_geometry):
@@ -102,6 +111,48 @@ def move_active_window_to_position_on_gnome(screen_geometry):
             logger.error(x.errorMessage())
     else:
         logger.error("Invalid dbus interface")
+
+
+def move_active_window_to_position_on_kde(screen_geometry):
+    """Move currently active window to a certain position.
+
+    This is a workaround for not being able to reposition windows on wayland.
+    It only works on KDE.
+    """
+    if not HAVE_QTDBUS:
+        raise TypeError("QtDBus should not be called on non Linux systems!")
+
+    JS_CODE = f"""
+    client = workspace.activeClient;
+    client.geometry = {{
+        "x": {screen_geometry.left},
+        "y": {screen_geometry.top},
+        "width": {screen_geometry.width},
+        "height": {screen_geometry.height}
+    }};
+    """
+    script_file = tempfile.NamedTemporaryFile(delete=False, suffix=".js")
+    script_file.write(JS_CODE.encode())
+    script_file.close()
+
+    bus = QtDBus.QDBusConnection.sessionBus()
+    if not bus.isConnected():
+        logger.error("Not connected to dbus!")
+
+    item = "org.kde.KWin"
+    interface = "org.kde.kwin.Scripting"
+    path = "/Scripting"
+    shell_interface = QtDBus.QDBusInterface(item, path, interface, bus)
+    if shell_interface.isValid():
+        x = shell_interface.call("loadScript", script_file.name)
+        y = shell_interface.call("start")
+        if x.errorName() or y.errorName():
+            logger.error("Failed move Window!")
+            logger.error(x.errorMessage(), y.errorMessage())
+    else:
+        logger.error("Invalid dbus interface")
+
+    os.unlink(script_file.name)
 
 
 def hook_exceptions(exc_type, exc_value, exc_traceback):
