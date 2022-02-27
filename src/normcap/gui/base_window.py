@@ -11,7 +11,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.gui import system_info
 from normcap.gui.models import CaptureMode, Selection
-from normcap.gui.utils import get_icon, move_active_window_to_position_on_gnome
+from normcap.gui.utils import get_icon, move_active_window_to_position
 
 logger = logging.getLogger(__name__)
 
@@ -245,5 +245,5 @@ class BaseWindow(QtWidgets.QMainWindow):
         self.setFocus()
         screen_geometry = self.main_window.screens[self.screen_idx].geometry
         logger.debug("Move window %s to position  %s", self.screen_idx, screen_geometry)
-        move_active_window_to_position_on_gnome(screen_geometry)
+        move_active_window_to_position(screen_geometry)
         self.is_positioned = True
