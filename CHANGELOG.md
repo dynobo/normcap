@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.0beta1 (2022-02-13)
+## v0.3.0beta1 (2022-02-27)
 
 - All: Update to PySide6 (Qt6) and Python 3.9
 - All: Add support for Tesseract 5 with better OCR

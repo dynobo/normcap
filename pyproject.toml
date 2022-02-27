@@ -190,9 +190,3 @@ src = "docs/index.html"
 [[tool.tbump.before_commit]]
 name = "check changelog"
 cmd = "grep -q {new_version} CHANGELOG.md"
-
-# Or run some commands after the git tag and the branch
-# have been pushed:
-#  [[tool.tbump.after_push]]
-#  name = "publish"
-#  cmd = "./publish.sh"
