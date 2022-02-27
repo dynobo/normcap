@@ -147,7 +147,10 @@ class MainWindow(BaseWindow):
         """Initialize child windows with method depending on system."""
         if not system_info.display_manager_is_wayland():
             self._create_all_child_windows()
-        elif system_info.desktop_environment() == DesktopEnvironment.GNOME:
+        elif system_info.desktop_environment() in [
+            DesktopEnvironment.GNOME,
+            DesktopEnvironment.KDE,
+        ]:
             self.com.on_window_positioned.connect(self._create_next_child_window)
 
     def _create_next_child_window(self):
@@ -170,7 +173,7 @@ class MainWindow(BaseWindow):
             parent=self,
             color=str(self.settings.value("color")),
         )
-        self.all_windows[index].show()
+        # self.all_windows[index].show()
 
     def _hide_windows(self):
         """Hide all windows of normcap."""
