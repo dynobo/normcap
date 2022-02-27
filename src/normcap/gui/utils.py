@@ -63,13 +63,13 @@ def qt_log_wrapper(mode, _, message):
         logger.error("If that doesn't help, please open an issue: %s", URLS.issues)
 
 
-# TODO: Implement KDE version
 def move_active_window_to_position(screen_geometry):
     """Move currently active window to a certain position with appropriate method."""
     if system_info.desktop_environment() == DesktopEnvironment.GNOME:
         move_active_window_to_position_on_gnome(screen_geometry)
     elif system_info.desktop_environment() == DesktopEnvironment.KDE:
         move_active_window_to_position_on_kde(screen_geometry)
+
 
 def move_active_window_to_position_on_gnome(screen_geometry):
     """Move currently active window to a certain position.
@@ -113,7 +113,6 @@ def move_active_window_to_position_on_gnome(screen_geometry):
         logger.error("Invalid dbus interface")
 
 
-
 def move_active_window_to_position_on_kde(screen_geometry):
     """Move currently active window to a certain position.
 
@@ -136,7 +135,6 @@ def move_active_window_to_position_on_kde(screen_geometry):
     script_file.write(JS_CODE.encode())
     script_file.close()
 
-
     bus = QtDBus.QDBusConnection.sessionBus()
     if not bus.isConnected():
         logger.error("Not connected to dbus!")
@@ -155,6 +153,7 @@ def move_active_window_to_position_on_kde(screen_geometry):
         logger.error("Invalid dbus interface")
 
     os.unlink(script_file.name)
+
 
 def hook_exceptions(exc_type, exc_value, exc_traceback):
     """Print traceback and quit application."""

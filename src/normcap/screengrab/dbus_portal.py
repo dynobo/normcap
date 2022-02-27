@@ -1,4 +1,4 @@
-"""Some utility functions."""
+"""Capture screenshots for all screens using org.freedesktop.portal.Desktop."""
 
 import logging
 import secrets
@@ -85,65 +85,6 @@ def grab_full_desktop() -> QtGui.QImage:
         Path(temp_name).unlink()
 
     return image
-
-
-# FIRST TESTS WITH QTDBUS
-
-# def grab_full_desktop() -> QtGui.QImage:
-#     """Capture rect of screen on gnome systems using wayland.
-#     QDBusInterface interface(QStringLiteral("org.freedesktop.portal.Desktop"),
-#     QStringLiteral("/org/freedesktop/portal/Screenshot"),
-#     QStringLiteral("org.freedesktop.portal.Screenshot"));
-#         QDBusPendingReply<QDBusObjectPath> reply;
-
-#         reply = interface.call(QStringLiteral("Screenshot"), "", QVariantMap());
-
-#         if (reply.isError()) {
-#                 qCritical("Invalid reply from DBus: %s", qPrintable(reply.error().message()));
-#         } else {
-#             qCritical("Dbus success: %s", qPrintable(reply.argumentAt<0>().path()));
-#         }
-#     """
-#     item = "org.freedesktop.portal.Desktop"
-#     path = "/org/freedesktop/portal/desktop"
-#     interface = "org.freedesktop.portal.Screenshot"
-#     method = "Screenshot"
-#     token = f"normcap_{secrets.token_hex(8)}"
-
-#     bus = QtDBus.QDBusConnection.sessionBus()
-#     if not bus.isConnected():
-#         logger.error("Not connected to dbus!")
-
-#     interface = QtDBus.QDBusInterface(item, path, interface, bus)
-#     reply = interface.call(method, "", {"handle_token": token, "interactive": False})
-
-#     class DbusTest(QtCore.QObject):
-#         def __init__(self, path, bus):
-#             super(DbusTest, self).__init__()
-#             # bus = QtDBus.QDBusConnection.sessionBus()
-#             print("Connected")
-
-#         @QtCore.Slot(str)
-#         @QtCore.Slot(QtDBus.QDBusMessage)
-#         def testMessage(self, msg):
-#             print("re")
-#             print(msg)
-#             exit(0)
-
-#     app = QtWidgets.QApplication.instance()
-#     path = "/" + "/".join(str(reply).split("/")[1:]).split("]")[0]
-#     discoverer = DbusTest("/" + path, bus)
-
-#     # bus.registerObject("/", discoverer)
-#     interface2 = QtDBus.QDBusInterface("org.freedesktop.portal.Desktop", path, "", bus)
-#     s = interface2.connect(
-#         "Response",
-#         discoverer,
-#         "testMessage",
-#     )
-#     result = app.exec_()
-
-#     logger.debug("Use capture method: DBUS portal")
 
 
 def grab_screens() -> list[QtGui.QImage]:

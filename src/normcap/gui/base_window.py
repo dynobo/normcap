@@ -202,15 +202,18 @@ class BaseWindow(QtWidgets.QMainWindow):
 
     def _set_fullscreen_linux(self):
         self.setWindowFlags(
-            QtCore.Qt.FramelessWindowHint  # | QtCore.Qt.BypassWindowManagerHint
+            QtCore.Qt.FramelessWindowHint
+            | QtCore.Qt.CustomizeWindowHint
+            | QtCore.Qt.WindowStaysOnTopHint
+            | QtCore.Qt.BypassWindowManagerHint
         )
 
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.setWindowState(QtCore.Qt.WindowActive)
 
         screen_geometry = self.main_window.screens[self.screen_idx].geometry
         self.move(screen_geometry.left, screen_geometry.top)
         self.setMinimumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
+        self.setMaximumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
         self.showFullScreen()
 
     def _set_fullscreen_macos(self):
