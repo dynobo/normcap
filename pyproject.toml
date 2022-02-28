@@ -171,14 +171,9 @@ message_template = "Bump to {new_version}"
 tag_template = "v{new_version}"
 
 [[tool.tbump.file]]
-# Poetry version
+# Poetry version and Briefcase version
 src = "pyproject.toml"
-search = 'name = "normcap"\nversion = "{current_version}"'
-
-[[tool.tbump.file]]
-# Briefcase version
-src = "pyproject.toml"
-search = 'bundle = "eu.dynobo"version = "{current_version}"'
+search = 'version = "{current_version}"'
 
 [[tool.tbump.file]]
 src = "src/normcap/__init__.py"
