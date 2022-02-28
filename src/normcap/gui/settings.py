@@ -1,4 +1,6 @@
 import logging
+from pickle import FALSE
+import sys
 
 from PySide6 import QtCore
 
@@ -20,6 +22,9 @@ def init_settings(*args, initial: dict, reset=False) -> QtCore.QSettings:
         settings = _remove_all_keys(settings)
     settings = _set_missing_to_default(settings, DEFAULT_SETTINGS)
     settings = _update_from_dict(settings, initial)
+    if sys.platform == "darwin":
+        # TODO: Remove after adding working tray support to MacOS
+        settings.setValue("tray", "false")
     settings.sync()
 
     return settings

@@ -1,5 +1,6 @@
 """Create the settings button and its menu."""
 
+import sys
 from typing import Any, Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -162,11 +163,13 @@ class SettingsMenu(QtWidgets.QToolButton):
         action.setChecked(bool(self.settings.value("notification", type=bool)))
         menu.addAction(action)
 
-        action = QtGui.QAction("Keep in system tray", settings_group)
-        action.setObjectName("tray")
-        action.setCheckable(True)
-        action.setChecked(bool(self.settings.value("tray", type=bool)))
-        menu.addAction(action)
+        if sys.platform != "darwin":
+            # TODO: Fix issues with tray icon in MacOS
+            action = QtGui.QAction("Keep in system tray", settings_group)
+            action.setObjectName("tray")
+            action.setCheckable(True)
+            action.setChecked(bool(self.settings.value("tray", type=bool)))
+            menu.addAction(action)
 
         action = QtGui.QAction("Check for update", settings_group)
         action.setObjectName("update")
