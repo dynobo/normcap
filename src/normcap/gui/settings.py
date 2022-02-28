@@ -1,5 +1,4 @@
 import logging
-from pickle import FALSE
 import sys
 
 from PySide6 import QtCore
