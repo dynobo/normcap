@@ -8,15 +8,15 @@
 - Pre-build packages: Switched to shipping "fast" language models to reduce package
   size.
 - Linux: Add support for Gnome Shell 41+ (using Screenshot Portal)
-  (#153)\[https://github.com/dynobo/normcap/issues/153\]
-  (#157)\[https://github.com/dynobo/normcap/issues/157\]
+  [#153](https://github.com/dynobo/normcap/issues/153)
+  [#157](https://github.com/dynobo/normcap/issues/157)
 - Linux: Fix issues with transparency / black window
-  (#154)\[https://github.com/dynobo/normcap/issues/154\]
-  (#155)\[https://github.com/dynobo/normcap/issues/155\]
+  [#154](https://github.com/dynobo/normcap/issues/154)
+  [#155](https://github.com/dynobo/normcap/issues/155)
 - Linux: Fix crash on non Gnome Shell systems
-  (#168)\[https://github.com/dynobo/normcap/issues/168\]
+  [#168](https://github.com/dynobo/normcap/issues/168)
 - MacOS: Full screen border and selection
-  (#119)\[https://github.com/dynobo/normcap/issues/119\]
+  [#119](https://github.com/dynobo/normcap/issues/119)
 
 ## v0.2.10 (2021-12-27)
 
