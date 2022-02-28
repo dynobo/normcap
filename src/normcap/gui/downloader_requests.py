@@ -1,9 +1,10 @@
 """Find new version on github or pypi."""
+import logging
 
 import requests
-from PySide2 import QtCore
+from PySide6 import QtCore
 
-from normcap.logger import logger
+logger = logging.getLogger(__name__)
 
 
 class Communicate(QtCore.QObject):
@@ -28,7 +29,7 @@ class Downloader(QtCore.QObject):
         """Start downloading url. Emits signal, when done."""
         logger.debug("Download %s", url)
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=3)
             response.raise_for_status()
             self.com.on_download_finished.emit(response.text)
         except requests.exceptions.RequestException as e:

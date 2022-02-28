@@ -1,12 +1,12 @@
-"""Define CLI arguments."""
+"""Definition of CLI arguments."""
+
 import argparse
 
-from normcap.data import DEFAULT_SETTINGS, DESCRIPTION
+from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION
 
 
 def create_argparser() -> argparse.ArgumentParser:
     """Parse command line arguments."""
-
     parser = argparse.ArgumentParser(prog="normcap", description=DESCRIPTION)
 
     for setting in DEFAULT_SETTINGS:

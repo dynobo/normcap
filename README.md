@@ -16,7 +16,8 @@
 [FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md)
 
 **Content:** [Quickstart](#Quickstart) | [Python package](#Python-package) |
-[Usage](#Usage) | [Contribute](#Contribute) | [Credits](#Credits)
+[Contribute](#Contribute) | [Credits](#Credits) |
+[Similar tools](#Similar-open-source-tools)
 
 [![Screencast](https://user-images.githubusercontent.com/11071876/123133596-3107d080-d450-11eb-8451-6dcebb7876ad.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
@@ -25,7 +26,7 @@
 - On-screen recognition of selected text
 - Multi platform support for Linux, Windows, MacOS
 - Multi monitor support, incl. HDPI displays
-- "[Magically](#magics)" parsing the text (optional, on by default)
+- Parsing the text based on heuristics (optional, on by default)
 - Show notifications (optional)
 - Stay in system tray (optional)
 - Check for updates (optional, off by default)
@@ -33,7 +34,7 @@
 ## Quickstart
 
 **❱❱
-[Download & run a pre-build package for Linux, MacOS or Windows](https://github.com/dynobo/normcap/releases)
+[Download pre-build package for Linux, MacOS or Windows](https://github.com/dynobo/normcap/releases)
 ❰❰**
 
 If you experience issues please look at the
@@ -44,6 +45,9 @@ If you experience issues please look at the
 "Security & Privacy" → "General" → "Open anyway". You might also need to allow NormCap
 to take screenshots.)
 
+For more info, take a look at the
+[NormCap landing page](https://dynobo.github.io/normcap/)
+
 ## Python package
 
 As an _alternative_ to a pre-build package you can install the
@@ -53,16 +57,13 @@ As an _alternative_ to a pre-build package you can install the
 
 ```sh
 # Install dependencies (Ubuntu/Debian)
-sudo apt install tesseract-ocr tesseract-ocr-eng \
-                 libtesseract-dev libleptonica-dev \
-                 python3-dev
+sudo apt install tesseract-ocr tesseract-ocr-eng
 
 ## Install dependencies (Arch)
-sudo pacman -S tesseract tesseract-data-eng leptonica
+sudo pacman -S tesseract tesseract-data-eng
 
 ## Install dependencies (Fedora)
-sudo dnf install tesseract tesseract-devel \
-                 libleptonica-devel python3-devel
+sudo dnf install tesseract
 
 # Install normcap
 pip install normcap
@@ -86,57 +87,40 @@ pip install normcap
 
 ### On Windows
 
-1\. Install "Tesseract **4.1**", e.g. by using the
+1\. Install `Tesseract 5` by using the
 [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
 
-2\. Set the environment variable `TESSDATA_PREFIX` to Tesseract's data folder, e.g.:
+2\. Adjust environment variables:
 
-```cmd
-setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"
-```
+- Create a environment variable `TESSDATA_PREFIX` and set it to Tesseract's data folder,
+  e.g.:
 
-3\. Install [tesserocr](https://pypi.org/project/tesserocr/) using the
-[Windows specific wheel](https://github.com/simonflueckiger/tesserocr-windows_build) and
-NormCap afterwards:
+  ```cmd
+  setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"
+  ```
+
+- Append Tesseract's location to the environment variable `Path`, e.g.:
+
+  ```cmd
+  setx Path "%Path%;C:\Program Files\Tesseract-OCR"
+  ```
+
+- Make sure to close and reopen your current terminal window to apply the new variables.
+  Test it by running:
+
+  ```cmd
+  tesseract --list-langs
+  ```
+
+3\. Install and run NormCap:
 
 ```bash
-# Install tesserocr package
-pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.4.0-tesseract-4.0.0/tesserocr-2.4.0-cp37-cp37m-win_amd64.whl
-
 # Install normcap
 pip install normcap
 
 # Run
 normcap
 ```
-
-## Usage
-
-### General
-
-- Select a region on screen with your mouse to perform text recognition
-
-- Press `<esc>` key to abort a capture and quit the application.
-
-### Magics
-
-"Magics" are like add-ons providing automated functionality to intelligently detect and
-format the captured input.
-
-First, every "magic" calculates a "**score**" to determine the likelihood of being
-responsible for this type of text. Second, the "magic" which achieved the highest
-"score" takes the necessary actions to **"transform"** the input text according to its
-type.
-
-Currently implemented Magics:
-
-| Magic           | Score                                                | Transform                                                                            |
-| --------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| **Single line** | Only single line is detected                         | Trim unnecessary whitespace                                                          |
-| **Multi line**  | Multi lines, but single Paragraph                    | Separated by line breaks and trim each lined                                         |
-| **Paragraph**   | Multiple blocks of lines or multiple paragraphs      | Join every paragraph into a single line, separate different paragraphs by empty line |
-| **E-Mail**      | Number of chars in email addresses vs. overall chars | Transform to a comma-separated list of email addresses                               |
-| **URL**         | Number of chars in URLs vs. overall chars            | Transform to line-break separated URLs                                               |
 
 ## Why "NormCap"?
 
@@ -148,8 +132,7 @@ See [XKCD](https://xkcd.com):
 
 ### Setup Environment
 
-Prerequisites are **Python >=3.7.1**, **Poetry**, **Tesseract** (incl. **language
-data**).
+Prerequisites are **Python >=3.9**, **Poetry**, **Tesseract** (incl. **language data**).
 
 ```sh
 # Clone repository
@@ -172,7 +155,7 @@ poetry run python -m normcap
 
 This project uses the following non-standard libraries:
 
-- [pyside2](https://pypi.org/project/PySide2/) _- bindings for Qt UI Framework_
+- [pyside6](https://pypi.org/project/PySide6/) _- bindings for Qt UI Framework_
 - [pytesseract](https://pypi.org/project/pytesseract/) _- wrapper for tesseract's API_
 - [jeepney](https://pypi.org/project/jeepney/) _- DBUS client_
 
@@ -186,6 +169,14 @@ And it depends on external software
 - [tesseract](https://github.com/tesseract-ocr/tesseract) - _OCR engine_
 
 Thanks to the maintainers of those nice libraries!
+
+## Similar open source tools
+
+- [TextSnatcher](https://github.com/RajSolai/TextSnatcher)
+- [GreenShot](https://getgreenshot.org/)
+- [TextShot](https://github.com/ianzhao05/textshot)
+- [gImageReader](https://github.com/manisandro/gImageReader)
+- [Capture2Text](https://sourceforge.net/projects/capture2text)
 
 ## Certification
 

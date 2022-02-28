@@ -1,8 +1,9 @@
 """Find new version on github or pypi."""
+import logging
 
-from PySide2 import QtCore, QtNetwork
+from PySide6 import QtCore, QtNetwork
 
-from normcap.logger import logger
+logger = logging.getLogger(__name__)
 
 
 class Communicate(QtCore.QObject):
@@ -31,6 +32,7 @@ class Downloader(QtCore.QObject):
         """Start downloading url. Emits signal, when done."""
         logger.debug("Download %s", url)
         request = QtNetwork.QNetworkRequest(QtCore.QUrl(url))
+        request.setTransferTimeout(3000)
         self.manager.get(request)
 
     def _on_get_finished(self, reply):
