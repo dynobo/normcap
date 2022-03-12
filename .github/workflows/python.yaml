@@ -191,7 +191,6 @@ jobs:
           draft: true
           prerelease: ${{ steps.extract_version.outputs.PRE_RELEASE != ''}}
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "unstable"
 
   deploy-pages:
     name: Deploy github pages
