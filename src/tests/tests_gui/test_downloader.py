@@ -1,15 +1,14 @@
 import pytest
 
-from normcap.gui.downloader_qtnetwork import Downloader as QtNetworkDownloader
-from normcap.gui.downloader_requests import Downloader as RequestsDownloader
-
 # Specific settings for pytest
 # pylint: disable=redefined-outer-name,protected-access,unused-argument
 
 
 @pytest.mark.skip_on_gh
-@pytest.mark.parametrize("downloader", [QtNetworkDownloader(), RequestsDownloader()])
-def test_downloader_retrieves_website(qtbot, downloader):
+@pytest.mark.parametrize("downloader", ["qt_network_downloader", "requests_downloader"])
+def test_downloader_retrieves_website(qtbot, downloader, request):
+    downloader = request.getfixturevalue(downloader)
+
     with qtbot.waitSignal(downloader.com.on_download_finished) as result:
         downloader.get("https://www.google.com")
 
@@ -18,8 +17,10 @@ def test_downloader_retrieves_website(qtbot, downloader):
     assert "</html>" in raw.lower()
 
 
-@pytest.mark.parametrize("downloader", [RequestsDownloader(), QtNetworkDownloader()])
-def test_downloader_handles_not_existing_url(caplog, qtbot, downloader):
+@pytest.mark.parametrize("downloader", ["qt_network_downloader", "requests_downloader"])
+def test_downloader_handles_not_existing_url(caplog, qtbot, downloader, request):
+    downloader = request.getfixturevalue(downloader)
+
     # Do not trigger download finished signal on error
     with qtbot.waitSignal(
         downloader.com.on_download_finished, raising=False, timeout=4000
