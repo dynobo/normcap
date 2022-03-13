@@ -9,20 +9,10 @@ from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__
 from normcap.gui.constants import URLS
+from normcap.gui.downloader_qtnetwork import Downloader
 from normcap.gui.utils import get_icon, set_cursor
 
 logger = logging.getLogger(__name__)
-
-try:
-    from normcap.gui.downloader_qtnetwork import Downloader
-
-    logger.debug("Using QtNetwork Downloader.")
-except ImportError as e:
-    # TODO: Is this still an issue?
-    logger.warning("Couldn't load QtNetwork Downloader: %s.", e)
-    from normcap.gui.downloader_requests import Downloader
-
-    logger.debug("Using Requests Downloader.")
 
 
 class Communicate(QtCore.QObject):

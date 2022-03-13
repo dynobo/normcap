@@ -32,8 +32,8 @@ class Notifier(QtCore.QObject):
         notification_icon = get_icon(icon_file, "tool-magic-symbolic")
 
         title, message = self.compose_notification(capture)
-        self.parent().tray.show()
-        self.parent().tray.showMessage(title, message, notification_icon)
+        self.parent().show()
+        self.parent().showMessage(title, message, notification_icon)
 
         # Delay quit or hide to get notification enough time to show up.
         delay = 5000 if sys.platform == "win32" else 500

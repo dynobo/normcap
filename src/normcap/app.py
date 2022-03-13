@@ -52,7 +52,6 @@ from PySide6 import QtCore, QtWidgets
 from normcap import __version__
 from normcap.args import create_argparser
 from normcap.gui import system_info, utils
-from normcap.gui.main_window import MainWindow
 from normcap.gui.system_tray import SystemTray
 
 logging.basicConfig(

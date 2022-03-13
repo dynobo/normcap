@@ -7,7 +7,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 import normcap
 from normcap.args import create_argparser
-from normcap.gui.main_window import MainWindow
+from normcap.gui.window import Window
 
 from .testcases.data import TESTCASES
 
@@ -36,26 +36,26 @@ def test_app(monkeypatch, qtbot, xvfb, data):
 
     # Avoid flickering on wayland during test
     monkeypatch.setattr(
-        normcap.gui.main_window.BaseWindow,
+        normcap.gui.window.Window,
         "_position_windows_on_wayland",
         lambda _: True,
     )
     monkeypatch.setattr(
-        normcap.gui.main_window,
+        normcap.gui.window,
         "grab_screens",
         lambda: [test_image],
     )
 
-    window = MainWindow(vars(args))
+    window = Window(vars(args))
     qtbot.addWidget(window)
     window.show()
 
-    with qtbot.waitSignal(window.main_window.com.on_copied_to_clipboard):
+    with qtbot.waitSignal(window.tray.com.on_copied_to_clipboard):
         qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["tl"]))
         qtbot.mouseMove(window, pos=QtCore.QPoint(*data["br"]))
         qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["br"]))
 
-    capture = window.main_window.capture
+    capture = window.tray.capture
     print(capture.rect)
     print(data["br"])
 

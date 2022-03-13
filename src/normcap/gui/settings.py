@@ -1,5 +1,4 @@
 import logging
-import sys
 
 from PySide6 import QtCore
 
@@ -8,50 +7,41 @@ from normcap.gui.constants import DEFAULT_SETTINGS
 logger = logging.getLogger(__name__)
 
 
-def init_settings(*args, initial: dict, reset=False) -> QtCore.QSettings:
-    """Prepare QT settings.
+class Settings(QtCore.QSettings):
+    """Customized settings."""
 
-    Apply defaults to missing setting and overwrite with initially
-    provided settings (e.g. from CLI args).
-    """
-    settings = QtCore.QSettings(*args)
-    settings.setFallbacksEnabled(False)
+    def __init__(self, *args, initial: dict, reset=False):
+        super().__init__(*args)
+        self.setFallbacksEnabled(False)
 
-    if reset:
-        settings = _remove_all_keys(settings)
-    settings = _set_missing_to_default(settings, DEFAULT_SETTINGS)
-    settings = _update_from_dict(settings, initial)
-    if sys.platform == "darwin":
-        # TODO: Remove after adding working tray support to MacOS
-        settings.setValue("tray", "false")
-    settings.sync()
+        # Do nicer?
+        if reset:
+            self.reset()
 
-    return settings
+        self._set_missing_to_default(DEFAULT_SETTINGS)
+        self._update_from_dict(initial)
 
+        self.sync()
 
-def _update_from_dict(settings, update_dict):
-    for key, value in update_dict.items():
-        if settings.contains(key):
-            if value is not None:
-                settings.setValue(key, value)
-        elif key in ["reset", "verbose", "very_verbose"]:
-            continue
-        else:
-            logger.debug("Skip update of non existing setting (%s: %s)", key, value)
-    return settings
+    def reset(self):
+        """Remove all existing settings and values."""
+        logger.info("Remove existing settings")
+        for key in self.allKeys():
+            self.remove(key)
 
+    def _set_missing_to_default(self, defaults):
+        for d in defaults:
+            key, value = d.key, d.value
+            if key not in self.allKeys() or (self.value(key) is None):
+                logger.debug("Reset settings to (%s: %s)", key, value)
+                self.setValue(key, value)
 
-def _remove_all_keys(settings):
-    logger.info("Remove existing settings")
-    for key in settings.allKeys():
-        settings.remove(key)
-    return settings
-
-
-def _set_missing_to_default(settings, defaults):
-    for d in defaults:
-        key, value = d.key, d.value
-        if key not in settings.allKeys() or (settings.value(key) is None):
-            logger.debug("Reset settings to (%s: %s)", key, value)
-            settings.setValue(key, value)
-    return settings
+    def _update_from_dict(self, settings_dict):
+        for key, value in settings_dict.items():
+            if self.contains(key):
+                if value is not None:
+                    self.setValue(key, value)
+            elif key in ["reset", "verbose", "very_verbose"]:
+                continue
+            else:
+                logger.debug("Skip update of non existing setting (%s: %s)", key, value)
