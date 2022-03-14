@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from PySide6 import QtCore
 
@@ -10,34 +11,36 @@ logger = logging.getLogger(__name__)
 class Settings(QtCore.QSettings):
     """Customized settings."""
 
-    def __init__(self, *args, initial: dict, reset=False):
+    default_settings = DEFAULT_SETTINGS
+    init_settings = Optional[dict]
+
+    def __init__(self, *args, init_settings: dict):
         super().__init__(*args)
         self.setFallbacksEnabled(False)
-
-        # Do nicer?
-        if reset:
-            self.reset()
-
-        self._set_missing_to_default(DEFAULT_SETTINGS)
-        self._update_from_dict(initial)
-
-        self.sync()
+        self.init_settings = init_settings
+        self._prepare_and_sync()
 
     def reset(self):
         """Remove all existing settings and values."""
-        logger.info("Remove existing settings")
+        logger.info("Reset settings to defaults")
         for key in self.allKeys():
             self.remove(key)
+        self._prepare_and_sync()
 
-    def _set_missing_to_default(self, defaults):
-        for d in defaults:
+    def _prepare_and_sync(self):
+        self._set_missing_to_default()
+        self._update_from_init_settings()
+        self.sync()
+
+    def _set_missing_to_default(self):
+        for d in self.default_settings:
             key, value = d.key, d.value
             if key not in self.allKeys() or (self.value(key) is None):
                 logger.debug("Reset settings to (%s: %s)", key, value)
                 self.setValue(key, value)
 
-    def _update_from_dict(self, settings_dict):
-        for key, value in settings_dict.items():
+    def _update_from_init_settings(self):
+        for key, value in self.init_settings.items():
             if self.contains(key):
                 if value is not None:
                     self.setValue(key, value)

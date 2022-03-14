@@ -22,6 +22,7 @@ class Window(QtWidgets.QMainWindow):
     """Used for child windows and as base class for MainWindow."""
 
     settings_menu: Optional[QtWidgets.QToolButton] = None
+    ui_layer_css: str = ""
 
     def __init__(self, screen_idx: int, color: str, parent=None):
         """Initialize window."""
@@ -29,6 +30,8 @@ class Window(QtWidgets.QMainWindow):
         self.screen_idx: int = screen_idx
         self.color: QtGui.QColor = QtGui.QColor(color)
         self.tray: QtWidgets.QMainWindow = parent or self
+        self.ui_layer_css = f"#ui_layer {{border: 3px solid {self.color.name()};}}"
+        self.is_positioned: bool = False
 
         # Window properties
         self.setObjectName(f"window-{self.screen_idx}")
@@ -39,29 +42,27 @@ class Window(QtWidgets.QMainWindow):
 
         # Prepare selection rectangle
         self.selection: Selection = Selection()
-        self.is_positioned: bool = False
-        self.pen_width: int = 2
         self.is_selecting: bool = False
         self.mode_indicator: QtGui.QIcon = QtGui.QIcon()
+        self.pen_width: int = 2
 
         # Setup widgets and show
         logger.debug("Create window for screen %s", self.screen_idx)
         self._add_image_layer()
         self._add_ui_layer()
-        self.set_fullscreen()
 
     def _add_image_layer(self):
+        """Add widget showing screenshot."""
         self.image_layer = QtWidgets.QLabel()
         self.image_layer.setObjectName("central_widget")
         self.image_layer.setScaledContents(True)
         self.setCentralWidget(self.image_layer)
 
     def _add_ui_layer(self):
+        """Add widget for showing selection rectangle and settings button."""
         self.ui_layer = QtWidgets.QLabel(self)
         self.ui_layer.setObjectName("ui_layer")
-        self.ui_layer.setStyleSheet(
-            f"#ui_layer {{border: 3px solid {self.color.name()};}}"
-        )
+        self.ui_layer.setStyleSheet(self.ui_layer_css)
         self.ui_layer.setCursor(QtCore.Qt.CrossCursor)
         self.ui_layer.setScaledContents(True)
         self.ui_layer.setGeometry(self.image_layer.geometry())
@@ -188,18 +189,6 @@ class Window(QtWidgets.QMainWindow):
         """Update background image on show/reshow."""
         self.draw_background_image()
         return super().showEvent(event)
-
-    def hide(self):
-        """Patch for MacOS to avoid blank full screen."""
-        if sys.platform == "darwin":
-            # Workaround to avoid black screen in MacOS.
-            # TODO: replace by using tray as main application and close windows instead hide
-            # Root cause: https://bugreports.qt.io/browse/QTBUG-46701
-            self.showNormal()
-            QtCore.QTimer.singleShot(800, super().hide)
-            return True
-
-        return super().hide()
 
     ##################
     # Adjust UI
