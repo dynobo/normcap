@@ -1,7 +1,7 @@
 import pytest  # type: ignore
 
 from normcap.args import create_argparser
-from normcap.gui.settings import init_settings
+from normcap.gui.settings import Settings
 
 # Specific settings for pytest
 # pylint: disable=redefined-outer-name,protected-access,unused-argument
@@ -40,7 +40,7 @@ def test_argparser_help_is_complete():
 
 
 def test_all_argparser_attributes_in_settings(argparser_defaults):
-    settings = init_settings("normcap", "settings", initial={}, reset=False)
+    settings = Settings("normcap", "settings", initial={}, reset=False)
 
     for arg in argparser_defaults:
         if arg in ["verbose", "very_verbose", "reset"]:

@@ -114,9 +114,8 @@ disable = [
 convention = "google"
 add-ignore = "D107,D104,D103,D100,D105"
 
-
 [tool.pytest.ini_options]
-addopts = "--cov normcap --cov-report xml:cov.xml --cov-report html"
+#addopts = "--cov normcap --cov-report xml:cov.xml --cov-report html"
 testpaths = ["src/tests"]
 qt_api = "pyside6"
 markers = ["skip_on_gh: do not run during CI/CD on github"]

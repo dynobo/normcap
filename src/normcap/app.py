@@ -8,7 +8,6 @@ import sys
 from importlib import metadata, resources
 
 # TODO: Manual test multi screen
-# TODO: Slim down packages
 
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
@@ -52,7 +51,7 @@ from PySide6 import QtCore, QtWidgets
 from normcap import __version__
 from normcap.args import create_argparser
 from normcap.gui import system_info, utils
-from normcap.gui.main_window import MainWindow
+from normcap.gui.tray import SystemTray
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s",
@@ -91,9 +90,11 @@ def main():
     utils.copy_tessdata_files_to_config_dir()
 
     app = QtWidgets.QApplication(sys.argv)
-    app.setQuitOnLastWindowClosed(True)
+    app.setQuitOnLastWindowClosed(False)
 
     logger.debug("System info:\n%s", system_info.to_dict())
 
-    MainWindow(vars(args)).show()
+    tray = SystemTray(app, vars(args))
+    tray.setVisible(True)
+
     sys.exit(app.exec_())

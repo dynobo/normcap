@@ -1,6 +1,5 @@
 TESTCASES = [
     {
-        "language": "eng",
         "image": "ocr_test_1.png",
         "tl": (46, 745),
         "br": (500, 950),
@@ -16,7 +15,6 @@ TESTCASES = [
         "ocr_applied_magic": "UrlMagic",
     },
     {
-        "language": "eng",
         "image": "ocr_test_1.png",
         "tl": (312, 550),
         "br": (470, 572),
