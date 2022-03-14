@@ -7,8 +7,6 @@ import signal
 import sys
 from importlib import metadata, resources
 
-# TODO: Manual test multi screen
-
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 

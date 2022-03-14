@@ -40,7 +40,7 @@ def test_argparser_help_is_complete():
 
 
 def test_all_argparser_attributes_in_settings(argparser_defaults):
-    settings = Settings("normcap", "settings", initial={}, reset=False)
+    settings = Settings("normcap", "settings", init_settings={})
 
     for arg in argparser_defaults:
         if arg in ["verbose", "very_verbose", "reset"]:

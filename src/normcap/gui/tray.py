@@ -49,12 +49,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         super().__init__(parent)
 
         self.com = Communicate()
-        self.settings = Settings(
-            "normcap",
-            "settings",
-            initial=args,
-            reset=args.get("reset", False),
-        )
+        self.settings = Settings("normcap", "settings", init_settings=args)
+        if args.get("reset", False):
+            self.settings.reset()
 
         self.capture.mode = (
             CaptureMode.PARSE
@@ -104,6 +101,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
 
     def _update_screenshots(self):
+        """Get new screenshots and cache them."""
         screens = grab_screens()
         for idx, screenshot in enumerate(screens):
             utils.save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
@@ -151,6 +149,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if index == 0:
             new_window.add_settings_menu(self)
 
+        new_window.set_fullscreen()
         self.windows[index] = new_window
 
     #####################
