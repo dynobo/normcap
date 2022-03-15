@@ -80,8 +80,8 @@ class Window(QtWidgets.QMainWindow):
         """Add settings menu to current window."""
         self.settings_menu = SettingsMenu(self, tray.settings)
         self.settings_menu.com.on_open_url.connect(tray.com.on_open_url_and_hide)
-        self.settings_menu.com.on_quit_or_hide.connect(
-            lambda: self.com.on_quit_or_hide.emit("clicked close in menu")
+        self.settings_menu.com.on_close_in_settings.connect(
+            lambda: self.tray.com.on_close_or_exit.emit("clicked close in menu")
         )
         self.settings_menu.move(self.width() - self.settings_menu.width() - 26, 26)
         self.settings_menu.show()
@@ -131,7 +131,7 @@ class Window(QtWidgets.QMainWindow):
                 self.is_selecting = False
                 self.update()
             else:
-                self.tray.com.on_quit_or_hide.emit("esc button pressed")
+                self.tray.com.on_close_or_exit.emit("esc button pressed")
 
     def mousePressEvent(self, event):
         """Handle left mouse button clicked."""

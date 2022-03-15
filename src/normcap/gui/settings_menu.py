@@ -58,7 +58,7 @@ class Communicate(QtCore.QObject):
     """SettingsMenu' communication bus."""
 
     on_open_url = QtCore.Signal(str)
-    on_quit_or_hide = QtCore.Signal(str)
+    on_close_in_settings = QtCore.Signal(str)
 
 
 class SettingsMenu(QtWidgets.QToolButton):
@@ -127,7 +127,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         setting = None
 
         if action_name == "close":
-            self.com.on_quit_or_hide.emit("Clicked close in settings")
+            self.com.on_close_in_settings.emit("Clicked close in settings")
         elif action_name == "message_languages":
             self.message_box.setText(MESSAGE_LANGUAGES)
             self.message_box.exec_()
