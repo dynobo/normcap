@@ -76,13 +76,16 @@ def main():
         if "XCURSOR_SIZE" not in os.environ:
             logger.debug("Set XCURSOR_SIZE=24")
             os.environ["XCURSOR_SIZE"] = "24"
-        # Make sure to select wayland extension for better rendering
+        # Select wayland extension for better rendering
         if "QT_QPA_PLATFORM" not in os.environ:
             logger.debug("Set QT_QPA_PLATFORM=wayland")
             os.environ["QT_QPA_PLATFORM"] = "wayland"
 
+    # Wrap QT logging output
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
-    utils.copy_tessdata_files_to_config_dir()
+
+    if system_info.is_briefcase_package():
+        utils.copy_tessdata_files_to_config_dir()
 
     app = QtWidgets.QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
