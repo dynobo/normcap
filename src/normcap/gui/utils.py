@@ -55,7 +55,7 @@ def qt_log_wrapper(mode, _, message):
     """Intercept QT message.
 
     Used to hide away unnecessary warnings by showing them only on higher
-    log level (--very-verbose).
+    log level (--debug-level debug).
     """
     level = mode.name.decode("utf8").lower()
     msg = message.lower()

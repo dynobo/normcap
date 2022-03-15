@@ -44,7 +44,7 @@ class Settings(QtCore.QSettings):
             if self.contains(key):
                 if value is not None:
                     self.setValue(key, value)
-            elif key in ["reset", "verbose", "very_verbose"]:
+            elif key in ["reset", "debug_level"]:
                 continue
             else:
                 logger.debug("Skip update of non existing setting (%s: %s)", key, value)

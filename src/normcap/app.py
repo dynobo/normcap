@@ -67,11 +67,8 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     args = create_argparser().parse_args()
-    if args.verbose:
-        logger.setLevel("INFO")
-    if args.very_verbose:
-        logger.setLevel("DEBUG")
 
+    logger.setLevel(args.debug_level.upper())
     logger.info("Start NormCap v%s", __version__)
 
     if system_info.display_manager_is_wayland():
