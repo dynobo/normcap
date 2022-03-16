@@ -32,8 +32,8 @@ class Notifier(QtCore.QObject):
         notification_icon = get_icon(icon_file, "tool-magic-symbolic")
 
         title, message = self.compose_notification(capture)
-        self.parent().tray.show()
-        self.parent().tray.showMessage(title, message, notification_icon)
+        self.parent().show()
+        self.parent().showMessage(title, message, notification_icon)
 
         # Delay quit or hide to get notification enough time to show up.
         delay = 5000 if sys.platform == "win32" else 500
@@ -49,28 +49,30 @@ class Notifier(QtCore.QObject):
             text = "Please try again."
 
         # Message title
-        title = ""
-        count = 0
         if len(capture.ocr_text) < 1:
-            title += "Nothing!"
+            title = "Nothing!"
         elif capture.ocr_applied_magic == "ParagraphMagic":
             count = capture.ocr_text.count(os.linesep * 2) + 1
-            title += f"{count} paragraph"
+            title = f"{count} paragraph"
         elif capture.ocr_applied_magic == "EmailMagic":
             count = capture.ocr_text.count("@")
-            title += f"{count} email"
+            title = f"{count} email"
         elif capture.ocr_applied_magic == "SingleLineMagic":
             count = capture.ocr_text.count(" ") + 1
-            title += f"{count} word"
+            title = f"{count} word"
         elif capture.ocr_applied_magic == "MultiLineMagic":
             count = capture.ocr_text.count("\n") + 1
-            title += f"{count} line"
+            title = f"{count} line"
         elif capture.ocr_applied_magic == "UrlMagic":
             count = capture.ocr_text.count("\n") + 1
-            title += f"{count} URL"
+            title = f"{count} URL"
         elif capture.mode == CaptureMode.RAW:
             count = len(capture.ocr_text)
-            title += f"{count} char"
+            title = f"{count} char"
+        else:
+            count = 0
+            title = ""
+
         title += f"{'s' if count > 1 else ''} captured"
 
         return title, text

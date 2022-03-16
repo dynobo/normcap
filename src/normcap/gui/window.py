@@ -6,25 +6,32 @@ in multi display setups).
 
 import logging
 import sys
+from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.gui import system_info
 from normcap.gui.models import CaptureMode, Selection
+from normcap.gui.settings_menu import SettingsMenu
 from normcap.gui.utils import get_icon, move_active_window_to_position
 
 logger = logging.getLogger(__name__)
 
 
-class BaseWindow(QtWidgets.QMainWindow):
+class Window(QtWidgets.QMainWindow):
     """Used for child windows and as base class for MainWindow."""
+
+    settings_menu: Optional[QtWidgets.QToolButton] = None
+    ui_layer_css: str = ""
 
     def __init__(self, screen_idx: int, color: str, parent=None):
         """Initialize window."""
         super().__init__()
         self.screen_idx: int = screen_idx
         self.color: QtGui.QColor = QtGui.QColor(color)
-        self.main_window: QtWidgets.QMainWindow = parent or self
+        self.tray: QtWidgets.QMainWindow = parent or self
+        self.ui_layer_css = f"#ui_layer {{border: 3px solid {self.color.name()};}}"
+        self.is_positioned: bool = False
 
         # Window properties
         self.setObjectName(f"window-{self.screen_idx}")
@@ -35,29 +42,27 @@ class BaseWindow(QtWidgets.QMainWindow):
 
         # Prepare selection rectangle
         self.selection: Selection = Selection()
-        self.is_positioned: bool = False
-        self.pen_width: int = 2
         self.is_selecting: bool = False
         self.mode_indicator: QtGui.QIcon = QtGui.QIcon()
+        self.pen_width: int = 2
 
         # Setup widgets and show
         logger.debug("Create window for screen %s", self.screen_idx)
         self._add_image_layer()
         self._add_ui_layer()
-        self.set_fullscreen()
 
     def _add_image_layer(self):
+        """Add widget showing screenshot."""
         self.image_layer = QtWidgets.QLabel()
         self.image_layer.setObjectName("central_widget")
         self.image_layer.setScaledContents(True)
         self.setCentralWidget(self.image_layer)
 
     def _add_ui_layer(self):
+        """Add widget for showing selection rectangle and settings button."""
         self.ui_layer = QtWidgets.QLabel(self)
         self.ui_layer.setObjectName("ui_layer")
-        self.ui_layer.setStyleSheet(
-            f"#ui_layer {{border: 3px solid {self.color.name()};}}"
-        )
+        self.ui_layer.setStyleSheet(self.ui_layer_css)
         self.ui_layer.setCursor(QtCore.Qt.CrossCursor)
         self.ui_layer.setScaledContents(True)
         self.ui_layer.setGeometry(self.image_layer.geometry())
@@ -66,10 +71,20 @@ class BaseWindow(QtWidgets.QMainWindow):
 
     def draw_background_image(self):
         """Draw screenshot as background image."""
-        screen = self.main_window.screens[self.screen_idx]
+        screen = self.tray.screens[self.screen_idx]
         pixmap = QtGui.QPixmap()
         pixmap.convertFromImage(screen.screenshot)
         self.image_layer.setPixmap(pixmap)
+
+    def add_settings_menu(self, tray):
+        """Add settings menu to current window."""
+        self.settings_menu = SettingsMenu(self, tray.settings)
+        self.settings_menu.com.on_open_url.connect(tray.com.on_open_url_and_hide)
+        self.settings_menu.com.on_close_in_settings.connect(
+            lambda: self.tray.com.on_close_or_exit.emit("clicked close in menu")
+        )
+        self.settings_menu.move(self.width() - self.settings_menu.width() - 26, 26)
+        self.settings_menu.show()
 
     ##################
     # Events
@@ -81,7 +96,7 @@ class BaseWindow(QtWidgets.QMainWindow):
 
         if logger.getEffectiveLevel() == logging.DEBUG:
             # Draw debug information on screen
-            screen = self.main_window.screens[self.screen_idx]
+            screen = self.tray.screens[self.screen_idx]
             x = y = 25
             painter.setPen(QtGui.QPen(self.color))
             painter.drawText(x, y * 1, f"QScreen: {screen.geometry}")
@@ -100,7 +115,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         painter.drawRect(*rect.geometry)
 
         # Draw Mode indicator
-        if self.main_window.capture.mode is CaptureMode.PARSE:
+        if CaptureMode[self.tray.settings.value("mode").upper()] is CaptureMode.PARSE:
             mode_indicator = get_icon("parse.svg")
         else:
             mode_indicator = get_icon("raw.svg")
@@ -116,12 +131,12 @@ class BaseWindow(QtWidgets.QMainWindow):
                 self.is_selecting = False
                 self.update()
             else:
-                self.main_window.com.on_quit_or_hide.emit("esc button pressed")
+                self.tray.com.on_close_or_exit.emit("esc button pressed")
 
     def mousePressEvent(self, event):
         """Handle left mouse button clicked."""
         if event.button() == QtCore.Qt.LeftButton:
-            screen = self.main_window.screens[self.screen_idx]
+            screen = self.tray.screens[self.screen_idx]
             self.selection.scale_factor = screen.screenshot.width() / screen.width
             self.selection.start_y = self.selection.end_y = event.position().y()
             self.selection.start_x = self.selection.end_x = event.position().x()
@@ -139,9 +154,9 @@ class BaseWindow(QtWidgets.QMainWindow):
         if (event.button() == QtCore.Qt.LeftButton) and self.is_selecting:
             self.selection.end_y = event.position().y()
             self.selection.end_x = event.position().x()
-            self.main_window.com.on_set_cursor_wait.emit()
-            self.main_window.com.on_minimize_windows.emit()
-            self.main_window.com.on_region_selected.emit(
+            self.tray.com.on_set_cursor_wait.emit()
+            self.tray.com.on_minimize_windows.emit()
+            self.tray.com.on_region_selected.emit(
                 (self.selection.scaled_rect, self.screen_idx)
             )
             self.selection = Selection()
@@ -157,31 +172,23 @@ class BaseWindow(QtWidgets.QMainWindow):
             and not self.is_positioned
         ):
             self._position_windows_on_wayland()
-            self.main_window.com.on_window_positioned.emit()
+            self.tray.com.on_window_positioned.emit()
 
         return super().changeEvent(event)
 
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:
         """Adjust child widget on resize."""
         self.ui_layer.resize(self.size())
+        if self.settings_menu:
+            # Reposition settings menu
+            self.settings_menu.move(self.width() - self.settings_menu.width() - 26, 26)
+
         return super().resizeEvent(event)
 
     def showEvent(self, event: QtGui.QShowEvent) -> None:
         """Update background image on show/reshow."""
         self.draw_background_image()
         return super().showEvent(event)
-
-    def hide(self):
-        """Patch for MacOS to avoid blank full screen."""
-        if sys.platform == "darwin":
-            # Workaround to avoid black screen in MacOS.
-            # TODO: replace by using tray as main application and close windows instead hide
-            # Root cause: https://bugreports.qt.io/browse/QTBUG-46701
-            self.showNormal()
-            QtCore.QTimer.singleShot(800, super().hide)
-            return True
-
-        return super().hide()
 
     ##################
     # Adjust UI
@@ -210,7 +217,7 @@ class BaseWindow(QtWidgets.QMainWindow):
 
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
-        screen_geometry = self.main_window.screens[self.screen_idx].geometry
+        screen_geometry = self.tray.screens[self.screen_idx].geometry
         self.move(screen_geometry.left, screen_geometry.top)
         self.setMinimumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
         self.setMaximumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
@@ -225,7 +232,7 @@ class BaseWindow(QtWidgets.QMainWindow):
         )
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
-        screen_geometry = self.main_window.screens[self.screen_idx].geometry
+        screen_geometry = self.tray.screens[self.screen_idx].geometry
         self.setGeometry(
             screen_geometry.left,
             screen_geometry.top,
@@ -240,13 +247,13 @@ class BaseWindow(QtWidgets.QMainWindow):
             | QtCore.Qt.CustomizeWindowHint
             | QtCore.Qt.WindowStaysOnTopHint
         )
-        screen_geometry = self.main_window.screens[self.screen_idx].geometry
+        screen_geometry = self.tray.screens[self.screen_idx].geometry
         self.move(screen_geometry.left, screen_geometry.top)
         self.showFullScreen()
 
     def _position_windows_on_wayland(self):
         self.setFocus()
-        screen_geometry = self.main_window.screens[self.screen_idx].geometry
+        screen_geometry = self.tray.screens[self.screen_idx].geometry
         logger.debug("Move window %s to position  %s", self.screen_idx, screen_geometry)
         move_active_window_to_position(screen_geometry)
         self.is_positioned = True

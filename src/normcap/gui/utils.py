@@ -26,10 +26,16 @@ except ImportError:
 
 from normcap.gui import system_info
 from normcap.gui.constants import URLS
-from normcap.gui.models import Capture, DesktopEnvironment
+from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment
 from normcap.ocr.models import OcrResult
 
 logger = logging.getLogger(__name__)
+
+
+def get_capture_mode(mode_text: str) -> CaptureMode:
+    """"""
+
+    return CaptureMode.PARSE if mode_text.lower() == "parse" else CaptureMode.RAW
 
 
 def save_image_in_tempfolder(
@@ -49,7 +55,7 @@ def qt_log_wrapper(mode, _, message):
     """Intercept QT message.
 
     Used to hide away unnecessary warnings by showing them only on higher
-    log level (--very-verbose).
+    log level (--debug-level debug).
     """
     level = mode.name.decode("utf8").lower()
     msg = message.lower()

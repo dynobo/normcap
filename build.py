@@ -247,7 +247,7 @@ def bundle_pytesseract_dylibs():
 
         # libc = "/usr/lib/libc++.1.dylib"
         tesseract = "/usr/local/bin/tesseract"
-        libtess = "/usr/local/Cellar/tesseract/5.0.1/lib/libtesseract.5.dylib"
+        libtess = "/usr/local/Cellar/tesseract/5.1.0/lib/libtesseract.5.dylib"
         liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
         libarchive = "/usr/local/opt/libarchive/lib/libarchive.13.dylib"
         libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"

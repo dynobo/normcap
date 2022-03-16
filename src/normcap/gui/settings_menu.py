@@ -57,18 +57,17 @@ _BUTTON_STYLE = """
 class Communicate(QtCore.QObject):
     """SettingsMenu' communication bus."""
 
-    on_setting_changed = QtCore.Signal(tuple)
     on_open_url = QtCore.Signal(str)
-    on_quit_or_hide = QtCore.Signal(str)
+    on_close_in_settings = QtCore.Signal(str)
 
 
 class SettingsMenu(QtWidgets.QToolButton):
     """Button to adjust setting on main window top right."""
 
-    def __init__(self, window_main: QtWidgets.QMainWindow):
-        super().__init__(window_main)
+    def __init__(self, parent: QtWidgets.QMainWindow, settings: QtCore.QSettings):
+        super().__init__(parent)
         self.setObjectName("settings_icon")
-        self.settings = window_main.settings
+        self.settings = settings
 
         self.setCursor(QtCore.Qt.ArrowCursor)
         self.setFixedSize(38, 38)
@@ -128,7 +127,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         setting = None
 
         if action_name == "close":
-            self.com.on_quit_or_hide.emit("Clicked close in settings")
+            self.com.on_close_in_settings.emit("Clicked close in settings")
         elif action_name == "message_languages":
             self.message_box.setText(MESSAGE_LANGUAGES)
             self.message_box.exec_()
@@ -150,7 +149,7 @@ class SettingsMenu(QtWidgets.QToolButton):
             value = languages
 
         if None not in [setting, value]:
-            self.com.on_setting_changed.emit((setting, value))
+            self.settings.setValue(str(setting), value)
 
     def _add_settings_section(self, menu):
         settings_group = QtGui.QActionGroup(menu)

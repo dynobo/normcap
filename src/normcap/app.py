@@ -7,9 +7,6 @@ import signal
 import sys
 from importlib import metadata, resources
 
-# TODO: Manual test multi screen
-# TODO: Slim down packages
-
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
@@ -52,7 +49,7 @@ from PySide6 import QtCore, QtWidgets
 from normcap import __version__
 from normcap.args import create_argparser
 from normcap.gui import system_info, utils
-from normcap.gui.main_window import MainWindow
+from normcap.gui.tray import SystemTray
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s",
@@ -70,11 +67,8 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     args = create_argparser().parse_args()
-    if args.verbose:
-        logger.setLevel("INFO")
-    if args.very_verbose:
-        logger.setLevel("DEBUG")
 
+    logger.setLevel(args.debug_level.upper())
     logger.info("Start NormCap v%s", __version__)
 
     if system_info.display_manager_is_wayland():
@@ -82,18 +76,23 @@ def main():
         if "XCURSOR_SIZE" not in os.environ:
             logger.debug("Set XCURSOR_SIZE=24")
             os.environ["XCURSOR_SIZE"] = "24"
-        # Make sure to select wayland extension for better rendering
+        # Select wayland extension for better rendering
         if "QT_QPA_PLATFORM" not in os.environ:
             logger.debug("Set QT_QPA_PLATFORM=wayland")
             os.environ["QT_QPA_PLATFORM"] = "wayland"
 
+    # Wrap QT logging output
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
-    utils.copy_tessdata_files_to_config_dir()
+
+    if system_info.is_briefcase_package():
+        utils.copy_tessdata_files_to_config_dir()
 
     app = QtWidgets.QApplication(sys.argv)
-    app.setQuitOnLastWindowClosed(True)
+    app.setQuitOnLastWindowClosed(False)
 
     logger.debug("System info:\n%s", system_info.to_dict())
 
-    MainWindow(vars(args)).show()
+    tray = SystemTray(app, vars(args))
+    tray.setVisible(True)
+
     sys.exit(app.exec_())

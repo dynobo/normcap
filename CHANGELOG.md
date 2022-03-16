@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.0b2 ()
+
+- All: Removed cli options `--verbose` and `--very-verbose` in favor of the new
+  `--debug-level` which accepts `{error, warning, info, debug}`.
+
 ## v0.3.0b1 (2022-02-28)
 
 - All: Update to PySide6 (Qt6) and Python 3.9

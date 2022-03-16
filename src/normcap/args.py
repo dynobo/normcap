@@ -15,8 +15,8 @@ def create_argparser() -> argparse.ArgumentParser:
             f"--{setting.key}",
             type=setting.type_,
             help=setting.help,
+            choices=setting.choices,
         )
-
     parser.add_argument(
         "-r",
         "--reset",
@@ -25,17 +25,11 @@ def create_argparser() -> argparse.ArgumentParser:
         default=False,
     )
     parser.add_argument(
-        "-v",
-        "--verbose",
-        action="store_true",
-        help="print debug information to console",
-        default=False,
-    )
-    parser.add_argument(
-        "-V",
-        "--very-verbose",
-        action="store_true",
-        help="print more debug information to console",
-        default=False,
+        "-d",
+        "--debug-level",
+        default="warning",
+        action="store",
+        choices=["error", "warning", "info", "debug"],
+        help="set level of detail for console output (default: %(default)s)",
     )
     return parser
