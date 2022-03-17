@@ -32,12 +32,6 @@ from normcap.ocr.models import OcrResult
 logger = logging.getLogger(__name__)
 
 
-def get_capture_mode(mode_text: str) -> CaptureMode:
-    """"""
-
-    return CaptureMode.PARSE if mode_text.lower() == "parse" else CaptureMode.RAW
-
-
 def save_image_in_tempfolder(
     image: QtGui.QImage, postfix: str = "", log_level=logging.DEBUG
 ):
@@ -223,11 +217,11 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
             message,
             flags=re.IGNORECASE,
         )
-        print(message)
+        print(message, file=sys.stderr)
 
     except Exception:
         logger.critical(
-            "Uncaught exception! Quitting NormCap!",
+            "Uncaught exception! Quitting NormCap! (debug output limited)",
             exc_info=(exc_type, exc_value, exc_traceback),
         )
 

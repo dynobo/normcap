@@ -65,11 +65,6 @@ URLS = Urls(
     + "#linux-could-not-load-the-qt-platform-plugin-xcb",
 )
 
-FILE_ISSUE_TEXT = (
-    "Please create a new issue with the output above on "
-    f"{URLS.issues} . I'll see what I can do about it."
-)
-
 DESCRIPTION = (
     "OCR-powered screen-capture tool to capture information instead of images."
 )
