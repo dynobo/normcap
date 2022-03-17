@@ -42,13 +42,13 @@ class Notifier(QtCore.QObject):
     @staticmethod
     def compose_notification(capture) -> tuple[str, str]:
         """Extract message text out of captures object and include icon."""
-        # Message text
+        # Compose message text
         text = capture.ocr_text.replace(os.linesep, " ")
         text = textwrap.shorten(text, width=45)
         if len(text) < 1:
             text = "Please try again."
 
-        # Message title
+        # Compose message title
         if len(capture.ocr_text) < 1:
             title = "Nothing!"
         elif capture.ocr_applied_magic == "ParagraphMagic":

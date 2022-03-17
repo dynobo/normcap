@@ -56,6 +56,7 @@ class ApplyMagic:
         """Apply postprocessing to transformed output."""
         transformed = ocr_result.transformed
         selected_languages = set(ocr_result.tess_args.lang)
+        # TODO: Check if still necessary:
         languages_with_superfluous_spaces = {
             "chi_sim",
             "chi_sim_vert",
