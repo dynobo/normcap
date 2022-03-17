@@ -4,7 +4,6 @@ import pytest  # type: ignore
 from PySide6 import QtGui
 
 from normcap.gui.downloader_qtnetwork import Downloader as QtNetworkDownloader
-from normcap.gui.downloader_requests import Downloader as RequestsDownloader
 from normcap.gui.models import Capture, CaptureMode, Rect
 
 
@@ -24,12 +23,5 @@ def capture() -> Generator[Capture, None, None]:
 
 
 @pytest.fixture(scope="session")
-def qt_network_downloader():
-    """Create QtNetworkDownloader."""
+def downloader() -> Generator[QtNetworkDownloader, None, None]:
     yield QtNetworkDownloader()
-
-
-@pytest.fixture(scope="session")
-def requests_downloader():
-    """Create RequestsDownloader."""
-    yield RequestsDownloader()
