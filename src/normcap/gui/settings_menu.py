@@ -1,6 +1,5 @@
 """Create the settings button and its menu."""
 
-import sys
 from typing import Any, Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -50,6 +49,14 @@ _MENU_STYLE = """
 
 _BUTTON_STYLE = """
         QToolButton { border:0px; }
+        QToolButton::hover {
+            background: qradialgradient(
+                cx: 0.5, cy: 0.5,
+                fx: 0.5, fy: 0.5,
+                radius: 0.5,
+                stop: 0 rgba(0,0,0,0) stop: 0.25 rgba(255,255,255,80) stop: 0.95 rgba(0,0,0,0)
+            );
+        }
         QToolButton::menu-indicator { image: none; }
     """
 
@@ -63,6 +70,8 @@ class Communicate(QtCore.QObject):
 
 class SettingsMenu(QtWidgets.QToolButton):
     """Button to adjust setting on main window top right."""
+
+    title_font = QtGui.QFont(QtGui.QFont().family(), pointSize=10, weight=600)
 
     def __init__(self, parent: QtWidgets.QMainWindow, settings: QtCore.QSettings):
         super().__init__(parent)
@@ -79,13 +88,9 @@ class SettingsMenu(QtWidgets.QToolButton):
         self.setAutoRaise(True)
 
         self.message_box = QtWidgets.QMessageBox()
+        self.message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
         # Necessary on wayland for main window to regain focus:
         self.message_box.setWindowFlags(QtCore.Qt.Popup)
-        self.message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
-
-        self.title_font = QtGui.QFont()
-        self.title_font.setBold(True)
-        self.title_font.setPointSize(10)
 
         self._add_menu()
 
@@ -151,7 +156,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         if None not in [setting, value]:
             self.settings.setValue(str(setting), value)
 
-    def _add_settings_section(self, menu):
+    def _add_settings_section(self, menu):  # sourcery skip: class-extract-method
         settings_group = QtGui.QActionGroup(menu)
         settings_group.setObjectName("settings_group")
         settings_group.setExclusive(False)
@@ -162,13 +167,11 @@ class SettingsMenu(QtWidgets.QToolButton):
         action.setChecked(bool(self.settings.value("notification", type=bool)))
         menu.addAction(action)
 
-        if sys.platform != "darwin":
-            # TODO: Fix issues with tray icon in MacOS
-            action = QtGui.QAction("Keep in system tray", settings_group)
-            action.setObjectName("tray")
-            action.setCheckable(True)
-            action.setChecked(bool(self.settings.value("tray", type=bool)))
-            menu.addAction(action)
+        action = QtGui.QAction("Keep in system tray", settings_group)
+        action.setObjectName("tray")
+        action.setCheckable(True)
+        action.setChecked(bool(self.settings.value("tray", type=bool)))
+        menu.addAction(action)
 
         action = QtGui.QAction("Check for update", settings_group)
         action.setObjectName("update")
