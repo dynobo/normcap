@@ -212,7 +212,6 @@ class Window(QtWidgets.QMainWindow):
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.CustomizeWindowHint
             | QtCore.Qt.WindowStaysOnTopHint
-            | QtCore.Qt.BypassWindowManagerHint
         )
 
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
