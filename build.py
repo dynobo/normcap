@@ -478,7 +478,8 @@ if __name__ == "__main__":
         rm_recursive(directory=app_dir, exclude=EXCLUDE_FROM_APP_PACKAGES)
         rm_recursive(directory=app_dir / "PySide6", exclude=EXCLUDE_FROM_PySide6)
         cmd("briefcase build")
-        patch_info_plist_for_proper_fullscreen()
+        # TODO: Re-enable if we have a solution for unfocusing on MacOS
+        # patch_info_plist_for_proper_fullscreen()
         cmd("briefcase package macos app --no-sign")
         if "dev" in sys.argv:
             cmd("mv macOS/*.dmg macOS/NormCap-unstable-MacOS.dmg")
