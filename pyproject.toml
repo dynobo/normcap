@@ -60,6 +60,7 @@ briefcase = ">=0.3.5"
 # Necessary because incompatibility of markupsafe > 2.1.0 with Jinja2 < 3.0.0
 # but briefcase currently depends on Jinjia < 3.0.0
 markupsafe = "2.0.1"
+vulture = "^2.3"
 
 [tool.black]
 line-length = 88

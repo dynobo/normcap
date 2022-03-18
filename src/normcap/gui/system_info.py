@@ -89,14 +89,6 @@ def screens() -> dict[int, Screen]:
     return screens_dict
 
 
-def primary_screen_idx() -> int:
-    """Get index from primary monitor."""
-    for idx, screen in screens().items():
-        if screen.is_primary:
-            return idx
-    raise ValueError("Unable to detect primary screen")
-
-
 def is_briefcase_package() -> bool:
     """Check if script is executed in briefcase package."""
     if app_module := sys.modules["__main__"].__package__:

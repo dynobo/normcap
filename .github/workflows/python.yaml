@@ -121,12 +121,15 @@ jobs:
         run: |
           poetry run python build.py dev
 
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+
       # Release test package
       - name: Draft internal release
         uses: ncipollo/release-action@v1
         with:
           name: Internal
-          body: "Only for internal tests. Should not be published."
+          body: "Only for internal tests. Should not be published. [${{ env.NOW }}]"
           artifacts: "*/*.+(dmg|AppImage|msi)"
           artifactErrorsFailBuild: false
           allowUpdates: true

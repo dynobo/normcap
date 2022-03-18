@@ -21,7 +21,7 @@ from .ocr_fixtures import ocr_result  # pylint: disable=unused-import
         ),
         (
             [{"text": "wWw.qithub,com"}],
-            "www.github.com",
+            "https://www.github.com",
             85,
         ),
         (

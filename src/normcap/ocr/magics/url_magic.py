@@ -17,10 +17,10 @@ class UrlMagic(BaseMagic):
     _manual_correction_table = {
         r"[hn]\w{0,1}t+\w{0,1}ps\s*\:\s*\/+\s*": "https://",
         r"(\w),(\w{1,4}\s*$)": r"\1.\2",  # e.g. gle,com -> gle.com
-        r"[wW]{3}\s*\.\s*": "www.",
+        r"(https?:\/\/)*[wW]{3}\s*\.\s*": "https://www.",
         r"qithub\.com": "github.com",
         r"[gq]oo[gq]le": "google",
-        r"(\s+)([A-Za-z0-9-]+\.[A-Za-z0-9-]+)": r"\1https://\2",  # append https://
+        r"(\s+)([A-Za-z0-9-]{4,}\.[A-Za-z0-9-]{2,4})": r"\1https://\2",  # add https://
     }
 
     def score(self, ocr_result: OcrResult) -> float:

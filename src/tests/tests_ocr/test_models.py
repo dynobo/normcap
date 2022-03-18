@@ -4,7 +4,7 @@ from .ocr_fixtures import ocr_result  # pylint: disable=unused-import
 # pylint: disable=redefined-outer-name,protected-access,unused-argument
 
 
-def test_capture(ocr_result):
+def test_ocr_result(ocr_result):
     """Check if calulated properties are working correctely."""
     assert isinstance(ocr_result.text, str)
     assert ocr_result.text.count("\n") == 0
@@ -23,3 +23,7 @@ def test_capture(ocr_result):
     assert ocr_result.mean_conf == 30
     ocr_result.words = []
     assert ocr_result.mean_conf == 0
+
+    assert ocr_result.best_scored_magic is None
+    ocr_result.magic_scores = dict(email=1.0, url=0.7, paragraph=0)
+    assert ocr_result.best_scored_magic == "email"

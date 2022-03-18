@@ -6,9 +6,12 @@ from importlib import resources
 from pathlib import Path
 
 import pytest
+from PIL import Image
 from PySide6 import QtCore, QtGui
 
 from normcap.gui import utils
+from normcap.gui.models import Capture
+from normcap.ocr.models import OcrResult
 
 # Specific settings for pytest
 # pylint: disable=redefined-outer-name,protected-access,unused-argument
@@ -82,14 +85,50 @@ def test_get_icon_sytem(qtbot):
     assert len(icon.availableSizes()) >= 1
 
 
-def test_hook_exception(monkeypatch, caplog):
-    # TODO: Test redacting of potentially sensitive data
+def test_hook_exception(monkeypatch, caplog, capsys):
+    monkeypatch.setattr(sys, "exit", lambda _: True)
+    with pytest.raises(RuntimeError) as excinfo:
+        text = words = tsv_data = "secret"  # pylint: disable=unused-variable
+        transformed = v = self = "secret"  # pylint: disable=unused-variable
+        other_variable = "should be printed"  # pylint: disable=unused-variable
+        capture = Capture(ocr_text="secret")  # pylint: disable=unused-variable
+        ocr_result = OcrResult(  # pylint: disable=unused-variable
+            tess_args=None,
+            image=Image.Image(),
+            words="secret",
+            transformed="secret",
+        )
+        raise RuntimeError
+
+    utils.hook_exceptions(excinfo.type, excinfo.value, excinfo.tb)
+    captured = capsys.readouterr()
+
+    assert "Uncaught exception! Quitting NormCap!" in caplog.text
+    assert "debug output limited" not in caplog.text
+
+    assert "System:" in captured.err
+    assert "Variables:" in captured.err
+    assert "Traceback:" in captured.err
+    assert "Exception:" in captured.err
+    assert "RuntimeError" in captured.err
+
+    assert "secret" not in captured.err
+    assert "Capture(" in captured.err
+    assert "OcrResult(" in captured.err
+    assert "should be printed" in captured.err
+
+
+def test_hook_exception_fails(monkeypatch, caplog):
     monkeypatch.setattr(sys, "exit", lambda _: True)
     with pytest.raises(RuntimeError) as excinfo:
         raise RuntimeError
 
-    utils.hook_exceptions(excinfo.typename, excinfo.value, excinfo.tb)
-    assert "RuntimeError" in caplog.text
+    # Cause exception _inside_ the exception hook
+    monkeypatch.setattr(utils.pprint, "pformat", lambda _: 1 / 0)
+    utils.hook_exceptions(excinfo.type, excinfo.value, excinfo.tb)
+
+    assert "Uncaught exception! Quitting NormCap!" in caplog.text
+    assert "debug output limited" in caplog.text
 
 
 def test_set_cursor(qtbot):

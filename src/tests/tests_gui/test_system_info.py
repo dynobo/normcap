@@ -137,31 +137,6 @@ def test_desktop_environment_other(monkeypatch):
     assert system_info.desktop_environment() == models.DesktopEnvironment.OTHER
 
 
-def test_primary_screen_idx(monkeypatch):
-    def _screens(has_primary: bool):
-        return {
-            0: models.Screen(
-                is_primary=False,
-                index=0,
-                device_pixel_ratio=1,
-                geometry=models.Rect(),
-            ),
-            1: models.Screen(
-                is_primary=has_primary,
-                index=1,
-                device_pixel_ratio=1.5,
-                geometry=models.Rect(),
-            ),
-        }
-
-    monkeypatch.setattr(system_info, "screens", lambda: _screens(True))
-    assert system_info.primary_screen_idx() == 1
-
-    monkeypatch.setattr(system_info, "screens", lambda: _screens(False))
-    with pytest.raises(ValueError):
-        _ = system_info.primary_screen_idx()
-
-
 def test_is_briefcase_package(monkeypatch):
     assert not system_info.is_briefcase_package()
 

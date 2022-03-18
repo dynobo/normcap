@@ -25,7 +25,6 @@ class Communicate(QtCore.QObject):
 
     on_capture = QtCore.Signal()
     on_quit = QtCore.Signal()
-    on_update_available = QtCore.Signal(str)
     on_ocr_performed = QtCore.Signal()
     on_copied_to_clipboard = QtCore.Signal()
     on_send_notification = QtCore.Signal(Capture)
