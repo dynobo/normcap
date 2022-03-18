@@ -24,7 +24,7 @@ def test_argparser_defaults_are_complete(argparser_defaults):
             "reset",
             "tray",
             "update",
-            "debug_level",
+            "verbosity",
         ]
     )
     assert args_keys == expected_options
@@ -42,7 +42,7 @@ def test_all_argparser_attributes_in_settings(argparser_defaults):
     settings = Settings("normcap", "settings", init_settings={})
 
     for arg in argparser_defaults:
-        if arg in ["debug_level", "reset"]:
+        if arg in ["verbosity", "reset"]:
             continue
         assert arg in settings.allKeys()
 
@@ -52,6 +52,6 @@ def test_all_argparser_attributes_in_settings(argparser_defaults):
 
 def test_argparser_defaults_are_correct(argparser_defaults):
     assert argparser_defaults.pop("reset") is False
-    assert argparser_defaults.pop("debug_level") == "warning"
+    assert argparser_defaults.pop("verbosity") == "warning"
     for value in argparser_defaults.values():
         assert value is None

@@ -25,8 +25,8 @@ def create_argparser() -> argparse.ArgumentParser:
         default=False,
     )
     parser.add_argument(
-        "-d",
-        "--debug-level",
+        "-v",
+        "--verbosity",
         default="warning",
         action="store",
         choices=["error", "warning", "info", "debug"],
