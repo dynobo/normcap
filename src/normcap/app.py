@@ -68,7 +68,7 @@ def main():
 
     args = create_argparser().parse_args()
 
-    logger.setLevel(args.debug_level.upper())
+    logger.setLevel(args.verbosity.upper())
     logger.info("Start NormCap v%s", __version__)
 
     if system_info.display_manager_is_wayland():

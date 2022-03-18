@@ -2,8 +2,8 @@
 
 ## v0.3.0b2 ()
 
-- All: Removed cli options `--verbose` and `--very-verbose` in favor of the new
-  `--debug-level` which accepts `{error, warning, info, debug}`.
+- All: Removed cli options `-v, --verbose` and `-V, --very-verbose` in favor of the new
+  `-v, --verbosity` which accepts on of the options: `{error, warning, info, debug}`.
 
 ## v0.3.0b1 (2022-02-28)
 
