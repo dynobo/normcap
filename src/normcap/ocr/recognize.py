@@ -2,6 +2,7 @@
 
 import logging
 import tempfile
+from os import PathLike
 from typing import Optional, Union
 
 import pytesseract  # type: ignore
@@ -18,7 +19,7 @@ logger = logging.getLogger(__name__)
 def recognize(
     languages: Union[str, list[str]],
     image: Image.Image,
-    tessdata_path=None,
+    tessdata_path: Optional[PathLike] = None,
     parse: bool = True,
     resize_factor: Optional[float] = None,
     padding_size: Optional[int] = None,

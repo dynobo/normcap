@@ -13,7 +13,7 @@ from PIL import Image
 class TessArgs:
     """Arguments used when envoking tesseract."""
 
-    path: PathLike
+    path: Optional[PathLike]
     lang: str
     oem: int
     psm: int
