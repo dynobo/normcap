@@ -35,7 +35,7 @@ def recognize(
     tess_args = TessArgs(
         path=tessdata_path,
         lang=languages if isinstance(languages, str) else "+".join(languages),
-        oem=OEM.TESSERACT_LSTM_COMBINED,
+        oem=OEM.DEFAULT,
         psm=PSM.AUTO_OSD,
         version=utils.get_tesseract_version(),
     )
@@ -49,7 +49,7 @@ def recognize(
             lang=tess_args.lang,
             output_type=pytesseract.Output.DICT,
             timeout=30,
-            config=utils.get_tesseract_config(tessdata_path),
+            config=tess_args.to_config_str(),
         )
 
     result = OcrResult(
