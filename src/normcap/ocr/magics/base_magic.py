@@ -8,9 +8,6 @@ from normcap.ocr.models import OcrResult
 class BaseMagic:
     """Base Class to be instantiated."""
 
-    def __init__(self):
-        self._final_score = 0  # Initial score
-
     def score(self, ocr_result: OcrResult) -> float:
         """Calculate the score of a magic.
 

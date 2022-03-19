@@ -22,9 +22,11 @@ class MultiLineMagic(BaseMagic):
             and (ocr_result.num_blocks == 1)
             and (ocr_result.num_pars == 1)
         ):
-            self._final_score = 50.0
+            score = 50.0
+        else:
+            score = 0
 
-        return self._final_score
+        return score
 
     def transform(self, ocr_result: OcrResult) -> str:
         """Just transform into multiple lines of text.

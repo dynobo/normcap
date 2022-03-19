@@ -38,9 +38,9 @@ class OcrResult:
     @property
     def best_scored_magic(self) -> Optional[str]:
         """Magic with highest score."""
-        if not self.magic_scores:
-            return None
-        return max(self.magic_scores, key=lambda k: self.magic_scores[k])
+        if self.magic_scores:
+            return max(self.magic_scores, key=lambda k: self.magic_scores[k])
+        return None
 
     @property
     def mean_conf(self) -> float:

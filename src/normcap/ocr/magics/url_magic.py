@@ -66,9 +66,8 @@ class UrlMagic(BaseMagic):
         )
 
         # Map to score
-        self._final_score = round(100 * (ratio * 0.85), 2)
-
-        return self._final_score
+        score = round(100 * (ratio * 0.85), 2)
+        return score
 
     def transform(self, ocr_result: OcrResult) -> str:
         """Parse URLs and return as newline separated string.
