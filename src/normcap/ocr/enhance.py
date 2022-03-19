@@ -46,7 +46,7 @@ def add_padding(img: Image.Image, padding=80) -> Image.Image:
     return padded_img
 
 
-def resize_image(image: Image.Image, factor: float = 3.7) -> Image.Image:
+def resize_image(image: Image.Image, factor: float = 4) -> Image.Image:
     """Resize image to get equivalent of 300dpi.
 
     Useful because most displays are around ~100dpi, while Tesseract works best ~300dpi.

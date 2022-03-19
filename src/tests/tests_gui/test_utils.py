@@ -80,6 +80,7 @@ def test_get_icon_custom(qtbot):
     assert len(icon.availableSizes()) == 1
 
 
+@pytest.mark.skip_on_gh
 def test_get_icon_sytem(qtbot):
     icon = utils.get_icon("normcap.png", "edit-undo")
     assert icon.name() == "edit-undo"
