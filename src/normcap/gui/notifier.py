@@ -46,12 +46,12 @@ class Notifier(QtCore.QObject):
         text = capture.ocr_text.replace(os.linesep, " ")
         text = textwrap.shorten(text, width=45)
         if len(text) < 1:
+            title = "Nothing captured!"
             text = "Please try again."
+            return title, text
 
         # Compose message title
-        if len(capture.ocr_text) < 1:
-            title = "Nothing!"
-        elif capture.ocr_applied_magic == "ParagraphMagic":
+        if capture.ocr_applied_magic == "ParagraphMagic":
             count = capture.ocr_text.count(os.linesep * 2) + 1
             title = f"{count} paragraph"
         elif capture.ocr_applied_magic == "EmailMagic":

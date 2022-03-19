@@ -76,13 +76,21 @@ def test_save_image_in_tempfolder():
 
 def test_get_icon_custom(qtbot):
     icon = utils.get_icon("normcap.png")
+    assert icon.name() == ""
     assert len(icon.availableSizes()) == 1
 
 
+@pytest.mark.skip_on_gh
 def test_get_icon_sytem(qtbot):
     icon = utils.get_icon("normcap.png", "edit-undo")
-    # TODO: check if system or fallback got retrieved
+    assert icon.name() == "edit-undo"
     assert len(icon.availableSizes()) >= 1
+
+
+def test_get_icon_sytem_use_fallback(qtbot):
+    icon = utils.get_icon("normcap.png", "not-existing-icon")
+    assert icon.name() == ""
+    assert len(icon.availableSizes()) == 1
 
 
 def test_hook_exception(monkeypatch, caplog, capsys):

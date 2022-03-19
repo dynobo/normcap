@@ -13,11 +13,21 @@ from PIL import Image
 class TessArgs:
     """Arguments used when envoking tesseract."""
 
-    path: PathLike
+    path: Optional[PathLike]
     lang: str
     oem: int
     psm: int
     version: version.Version
+
+    def to_config_str(self):
+        """Generate command line args for pytesseract/tesseract.
+
+        The language is ommited, as pytesseract takes an extra argument for that.
+        """
+        config_str = f"--oem {self.oem} --psm {self.psm}"
+        if self.path:
+            config_str += f' --tessdata-dir "{self.path}"'
+        return config_str
 
 
 @dataclass
@@ -38,9 +48,9 @@ class OcrResult:
     @property
     def best_scored_magic(self) -> Optional[str]:
         """Magic with highest score."""
-        if not self.magic_scores:
-            return None
-        return max(self.magic_scores, key=lambda k: self.magic_scores[k])
+        if self.magic_scores:
+            return max(self.magic_scores, key=lambda k: self.magic_scores[k])
+        return None
 
     @property
     def mean_conf(self) -> float:
@@ -89,34 +99,28 @@ class OcrResult:
 class PSM(IntEnum):
     """Available tesseract mode options."""
 
-    OSD_ONLY = 1  # Orientation and script detection (OSD) only.
-    AUTO_OSD = 2  # Automatic page segmentation with orientation & script detection.
-    AUTO_ONLY = 3  # Automatic page segmentation, but no OSD, or OCR.
-    AUTO = 4  # Fully automatic page segmentation, but no OSD. (`tesserocr` default)
-    SINGLE_COLUMN = 5  # Assume a single column of text of variable sizes.
-    SINGLE_BLOCK_VERT_TEXT = 6  # Assume a  uniform block of vertically aligned text.
-    SINGLE_BLOCK = 7  # Assume a single uniform block of text.
-    SINGLE_LINE = 8  # Treat the image as a single text line.
-    SINGLE_WORD = 9  # Treat the image as a single word.
-    CIRCLE_WORD = 10  # Treat the image as a single word in a circle.
-    SINGLE_CHAR = 11  # Treat the image as a single character.
-    SPARSE_TEXT = 12  # Find as much text as possible in no particular order.
-    SPARSE_TEXT_OSD = 13  # Sparse text with orientation and script det.
-    RAW_LINE = 14  # Treat the image as a single text line, bypassing Tesseract hacks.
-    COUNT = 15  # Number of enum entries.
+    OSD_ONLY = 0  # Orientation and script detection (OSD) only.
+    AUTO_OSD = 1  # Automatic page segmentation with orientation & script detection.
+    AUTO_ONLY = 2  # Automatic page segmentation, but no OSD, or OCR.
+    AUTO = 3  # Fully automatic page segmentation, but no OSD. (`tesserocr` default)
+    SINGLE_COLUMN = 4  # Assume a single column of text of variable sizes.
+    SINGLE_BLOCK_VERT_TEXT = 5  # Assume a  uniform block of vertically aligned text.
+    SINGLE_BLOCK = 6  # Assume a single uniform block of text.
+    SINGLE_LINE = 7  # Treat the image as a single text line.
+    SINGLE_WORD = 8  # Treat the image as a single word.
+    CIRCLE_WORD = 9  # Treat the image as a single word in a circle.
+    SINGLE_CHAR = 10  # Treat the image as a single character.
+    SPARSE_TEXT = 11  # Find as much text as possible in no particular order.
+    SPARSE_TEXT_OSD = 12  # Sparse text with orientation and script det.
+    RAW_LINE = 13  # Treat the image as a single text line, bypassing Tesseract hacks.
+    COUNT = 14  # Number of enum entries.
 
 
 class OEM(IntEnum):
     """Available tesseract model options."""
 
-    TESSERACT_ONLY = 1  # Run Tesseract only - fastest
-    LSTM_ONLY = 2  # Run just the LSTM line recognizer. (>=v4.00)
-    TESSERACT_LSTM_COMBINED = 3  # Run the LSTM recognizer, but allow fallback
+    TESSERACT_ONLY = 0  # Run Tesseract only - fastest
+    LSTM_ONLY = 1  # Run just the LSTM line recognizer. (>=v4.00)
+    TESSERACT_LSTM_COMBINED = 2  # Run the LSTM recognizer, but allow fallback
     # to Tesseract when things get difficult. (>=v4.00)
-    CUBE_ONLY = 4  # Specify this mode when calling Init*(), to indicate that
-    # any of the above modes should be automatically inferred from the
-    # variables in the language-specific config, command-line configs, or
-    # if not specified in any of the above should be set to the default
-    # `OEM.TESSERACT_ONLY`.
-    TESSERACT_CUBE_COMBINED = 5  # Run Cube only - better accuracy, but slower.
-    DEFAULT = 6  # Run both and combine results - best accuracy.
+    DEFAULT = 3  # Run both and combine results - best accuracy.

@@ -8,6 +8,7 @@ class MultiLineMagic(BaseMagic):
     """Format multi line text."""
 
     def score(self, ocr_result: OcrResult) -> float:
+        # sourcery skip: assign-if-exp, inline-immediately-returned-variable
         """Calc score based on amount of lines and breaks.
 
         Arguments:
@@ -22,9 +23,9 @@ class MultiLineMagic(BaseMagic):
             and (ocr_result.num_blocks == 1)
             and (ocr_result.num_pars == 1)
         ):
-            self._final_score = 50.0
+            return 50.0
 
-        return self._final_score
+        return 0
 
     def transform(self, ocr_result: OcrResult) -> str:
         """Just transform into multiple lines of text.

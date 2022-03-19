@@ -2,29 +2,24 @@
 
 import logging
 from collections import Counter
-from typing import cast
+from typing import Optional, cast
 
-from PIL import Image
+from PIL import Image, ImageOps, ImageStat
 
 logger = logging.getLogger(__name__)
 
 
 def _identify_most_frequent_edge_color(img: Image.Image) -> tuple:
     """Heuristically find color for padding."""
-    edge_colors = []
-
     # Top and bottom edge
-    for x in range(img.width):
-        edge_colors.append(img.getpixel((x, 0)))
-        edge_colors.append(img.getpixel((x, img.height - 1)))
+    edge_colors = [img.getpixel((x, 0)) for x in range(img.width)]
+    edge_colors += [img.getpixel((x, img.height - 1)) for x in range(img.width)]
 
     # Left and right edge
-    for y in range(img.height):
-        edge_colors.append(img.getpixel((0, y)))
-        edge_colors.append(img.getpixel((img.width - 1, y)))
+    edge_colors += [img.getpixel((0, y)) for y in range(img.height)]
+    edge_colors += [img.getpixel((img.width - 1, y)) for y in range(img.height)]
 
     color_count = Counter(edge_colors)
-
     return color_count.most_common()[0][0]
 
 
@@ -61,3 +56,32 @@ def resize_image(image: Image.Image, factor: float = 3.2) -> Image.Image:
         size=(int(image.width * factor), int(image.height * factor)),
         resample=Image.ANTIALIAS,
     )
+
+
+def invert_image(image: Image.Image) -> Image.Image:
+    """Invert image.
+
+    Improves detection in case of bright text on dark background.
+    """
+    logger.debug("Inverting screenshot")
+    return ImageOps.invert(image)
+
+
+def is_dark(image: Image.Image) -> Image.Image:
+    """Detect if mean pixel brightness is below 125."""
+    image_grayscale = image.convert("L")
+    stat = ImageStat.Stat(image_grayscale)
+    return stat.mean[0] < 125
+
+
+def preprocess(
+    image: Image.Image, resize_factor: Optional[float], padding: Optional[int]
+) -> Image.Image:
+    image = image.convert("RGB")
+    if resize_factor:
+        image = resize_image(image, factor=resize_factor)
+    if padding:
+        image = add_padding(image, padding=padding)
+    if is_dark(image):
+        image = invert_image(image)
+    return image

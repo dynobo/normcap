@@ -58,6 +58,7 @@ def gnome_shell_version() -> Optional[version.Version]:
     if (
         os.environ.get("GNOME_DESKTOP_SESSION_ID", "") == ""
         and "gnome" not in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+        and "unity" not in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
     ):
         return None
 

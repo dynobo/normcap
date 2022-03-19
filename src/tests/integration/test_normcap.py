@@ -49,5 +49,5 @@ def test_app(monkeypatch, qtbot, qapp, xvfb, data):
     # Text output is not 100% predictable across different machines:
     similarity = Levenshtein.ratio(capture.ocr_text, data["transformed"])
 
-    assert capture.ocr_applied_magic == data["ocr_applied_magic"], capture
+    assert capture.ocr_applied_magic == data["ocr_applied_magic"], capture.ocr_text
     assert similarity >= 0.98, f"{capture.ocr_text=}"
