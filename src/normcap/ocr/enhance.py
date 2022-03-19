@@ -11,20 +11,15 @@ logger = logging.getLogger(__name__)
 
 def _identify_most_frequent_edge_color(img: Image.Image) -> tuple:
     """Heuristically find color for padding."""
-    edge_colors = []
-
     # Top and bottom edge
-    for x in range(img.width):
-        edge_colors.append(img.getpixel((x, 0)))
-        edge_colors.append(img.getpixel((x, img.height - 1)))
+    edge_colors = [img.getpixel((x, 0)) for x in range(img.width)]
+    edge_colors += [img.getpixel((x, img.height - 1)) for x in range(img.width)]
 
     # Left and right edge
-    for y in range(img.height):
-        edge_colors.append(img.getpixel((0, y)))
-        edge_colors.append(img.getpixel((img.width - 1, y)))
+    edge_colors += [img.getpixel((0, y)) for y in range(img.height)]
+    edge_colors += [img.getpixel((img.width - 1, y)) for y in range(img.height)]
 
     color_count = Counter(edge_colors)
-
     return color_count.most_common()[0][0]
 
 
