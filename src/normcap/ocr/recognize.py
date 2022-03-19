@@ -8,8 +8,7 @@ from typing import Optional, Union
 import pytesseract  # type: ignore
 from PIL import Image
 
-from normcap.ocr import utils
-from normcap.ocr.enhance import add_padding, resize_image
+from normcap.ocr import enhance, utils
 from normcap.ocr.magics import magic
 from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
 
@@ -27,10 +26,7 @@ def recognize(
     """Apply OCR on selected image section."""
     utils.configure_tesseract_binary()
 
-    if resize_factor:
-        image = resize_image(image, factor=resize_factor)
-    if padding_size:
-        image = add_padding(image, padding=padding_size)
+    image = enhance.preprocess(image, resize_factor=resize_factor, padding=padding_size)
 
     tess_args = TessArgs(
         path=tessdata_path,
