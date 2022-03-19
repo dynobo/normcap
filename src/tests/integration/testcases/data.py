@@ -21,4 +21,11 @@ TESTCASES = [
         "transformed": "https://regex101.com",
         "ocr_applied_magic": "UrlMagic",
     },
+    {
+        "image": "ocr_test_1.png",
+        "tl": (1115, 530),
+        "br": (1305, 570),
+        "transformed": "*Untitled Document 1",
+        "ocr_applied_magic": "SingleLineMagic",
+    },
 ]
