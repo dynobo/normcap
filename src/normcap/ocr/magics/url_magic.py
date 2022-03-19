@@ -59,15 +59,10 @@ class UrlMagic(BaseMagic):
 
         # Calc chars & ratio
         url_chars = sum(len(e) for e in self._urls)
-        overall_chars = max([len(text), 1])
-        ratio = url_chars / overall_chars
-        logger.debug(
-            "%s of %s chars in urls (ratio: %s)", url_chars, overall_chars, ratio
-        )
-
-        # Map to score
-        score = round(100 * (ratio * 0.85), 2)
-        return score
+        all_chars = max([len(text), 1])
+        ratio = url_chars / all_chars
+        logger.debug("%s of %s chars in urls (ratio: %s)", url_chars, all_chars, ratio)
+        return round(100 * (ratio * 0.85), 2)
 
     def transform(self, ocr_result: OcrResult) -> str:
         """Parse URLs and return as newline separated string.

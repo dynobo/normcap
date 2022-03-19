@@ -20,9 +20,7 @@ class ParagraphMagic(BaseMagic):
             float -- score between 0-100 (100 = more likely)
         """
         breaks = ocr_result.num_blocks + ocr_result.num_pars - 1
-        score = 100 - (100 / (breaks))
-
-        return score
+        return 100 - (100 / (breaks))
 
     def transform(self, ocr_result: OcrResult) -> str:
         """Transform wordboxes into nicely formatted paragraphs.

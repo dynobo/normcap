@@ -17,15 +17,13 @@ class SingleLineMagic(BaseMagic):
         Returns:
             float -- score between 0-100 (100 = more likely)
         """
-        score = 0
+        if len(ocr_result.text) == 0:
+            return 1
 
         if ocr_result.num_lines == 1:
-            score = 50
+            return 50
 
-        if len(ocr_result.text) == 0:
-            score = 1
-
-        return score
+        return 0
 
     def transform(self, ocr_result: OcrResult) -> str:
         """Just transform into single line of text.
