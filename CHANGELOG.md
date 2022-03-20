@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.0 (2022-XX-XX)
+## v0.3.0 (2022-03-20)
 
 - All: Removed cli options `-v, --verbose` and `-V, --very-verbose` in favor of the new
   `-v, --verbosity` which accepts on of the options: `{error, warning, info, debug}`.
