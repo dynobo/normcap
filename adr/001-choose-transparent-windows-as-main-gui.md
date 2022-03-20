@@ -1,6 +1,6 @@
 # Choose transparent windows as main GUI
 
-- Status: accepted
+- Status: deprecated
 - Deciders: @dynobo
 - Date: 2021-10-26
 
