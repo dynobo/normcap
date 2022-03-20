@@ -98,6 +98,9 @@ jobs:
       - name: Pydocstyle
         if: always()
         run: poetry run pydocstyle
+      - name: Bandit
+        if: always()
+        run: poetry run bandit --quiet --severity-level medium -r src/normcap
       - name: Pytest
         run: |
           poetry run pytest -m "not skip_on_gh" --log-cli-level=10 --cov --cov-report=xml
@@ -129,7 +132,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           name: Internal
-          body: "Only for internal tests. Should not be published. [${{ env.NOW }}]"
+          body:
+            "Only for internal tests. Should not be published. [${{ env.NOW }}]"
           artifacts: "*/*.+(dmg|AppImage|msi)"
           artifactErrorsFailBuild: false
           allowUpdates: true
@@ -185,7 +189,8 @@ jobs:
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:
-          body: See
+          body:
+            See
             [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md)
             for details.
           artifacts: "*/*.+(dmg|AppImage|msi)"

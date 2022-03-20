@@ -39,6 +39,14 @@ repos:
         types: [python]
         pass_filenames: false
 
+      - id: bandit
+        name: bandit
+        stages: [commit]
+        language: system
+        entry: poetry run bandit --quiet --severity-level medium -r src/normcap
+        types: [python]
+        pass_filenames: false
+
       - id: pylint
         name: pylint
         stages: [commit]
@@ -59,7 +67,8 @@ repos:
         name: pytest
         stages: [commit]
         language: system
-        entry: poetry run pytest --log-cli-level=10 src/tests/ --cov normcap
+        entry:
+          poetry run pytest --log-cli-level=10 src/tests/ --cov normcap
           --cov-report xml:cov.xml --cov-report html
         types: [python]
         pass_filenames: false
@@ -68,7 +77,8 @@ repos:
         name: pydeps
         stages: [commit]
         language: system
-        entry: poetry run pydeps src/normcap --max-bacon=2 --cluster
+        entry:
+          poetry run pydeps src/normcap --max-bacon=2 --cluster
           --max-cluster-size=1 --no-show -o=dependency_graph.png -T=png
         types: [python]
         pass_filenames: false
