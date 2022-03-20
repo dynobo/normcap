@@ -1,16 +1,5 @@
-import pytest  # type: ignore
-
 from normcap.args import create_argparser
 from normcap.gui.settings import Settings
-
-# Specific settings for pytest
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
-
-
-@pytest.fixture(scope="session")
-def argparser_defaults():
-    argparser = create_argparser()
-    return vars(argparser.parse_args([]))
 
 
 def test_argparser_defaults_are_complete(argparser_defaults):
@@ -33,7 +22,7 @@ def test_argparser_defaults_are_complete(argparser_defaults):
 def test_argparser_help_is_complete():
     argparser = create_argparser()
     assert len(argparser.description) > 10
-    for action in argparser._actions:
+    for action in argparser._actions:  # pylint: disable=protected-access
         assert len(action.help) > 10
     assert True
 

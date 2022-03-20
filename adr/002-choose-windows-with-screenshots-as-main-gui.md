@@ -1,8 +1,8 @@
-# Choose transparent windows as main GUI
+# Choose windows with screenshots as main GUI
 
-- Status: tryout
+- Status: accepted
 - Deciders: @dynobo
-- Date: 2022-01-02
+- Date: 2022-03-20
 
 **Revision of ADR [#001](001-choose-transparent-windows-as-main-gui.md)**
 

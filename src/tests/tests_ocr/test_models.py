@@ -1,9 +1,3 @@
-from .ocr_fixtures import ocr_result  # pylint: disable=unused-import
-
-# Specific settings for pytest
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
-
-
 def test_ocr_result(ocr_result):
     """Check if calulated properties are working correctely."""
     assert isinstance(ocr_result.text, str)

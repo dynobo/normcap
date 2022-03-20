@@ -2,9 +2,6 @@ from PySide6 import QtGui
 
 from normcap.gui.models import Capture, Rect, Screen, Selection
 
-# Specific settings for pytest
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
-
 
 def test_rect_properties():
     rect = Rect(left=10, top=20, right=110, bottom=220)

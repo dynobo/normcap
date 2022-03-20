@@ -8,9 +8,6 @@ from packaging import version
 
 from normcap.gui import models, system_info
 
-# Specific settings for pytest
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
-
 
 def test_gnome_shell_version_on_gnome(monkeypatch):
     gnome_version = version.parse("40.1.13")
@@ -148,7 +145,7 @@ def test_is_briefcase_package(monkeypatch):
     assert not system_info.is_briefcase_package()
 
 
-def test_screens(qtbot):
+def test_screens():
     screens = system_info.screens()
     assert len(screens) >= 1
     assert all(isinstance(i, int) for i in screens)
