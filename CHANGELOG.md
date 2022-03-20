@@ -7,6 +7,8 @@
 - All: Update to PySide6 (Qt6) and Python 3.9
 - All: Add support for Tesseract 5 with better OCR
   [#170](https://github.com/dynobo/normcap/issues/170)
+- All: Improve image processing for better detection accuracy, especially for bright
+  text on dark backgrounds.
 - Pre-build packages: Switched to shipping "fast" language models to reduce package
   size.
 - Linux: Add support for Gnome Shell 41+ (using Screenshot Portal)
