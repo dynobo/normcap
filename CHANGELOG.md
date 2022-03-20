@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.1 (2022-03-20)
+
+- All: Fix pasting to clipboard sometimes not working
+
 ## v0.3.0 (2022-03-20)
 
 - All: Removed cli options `-v, --verbose` and `-V, --very-verbose` in favor of the new

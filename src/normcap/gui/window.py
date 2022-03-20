@@ -155,7 +155,6 @@ class Window(QtWidgets.QMainWindow):
             self.selection.end_y = event.position().y()
             self.selection.end_x = event.position().x()
             self.tray.com.on_set_cursor_wait.emit()
-            self.tray.com.on_minimize_windows.emit()
             self.tray.com.on_region_selected.emit(
                 (self.selection.scaled_rect, self.screen_idx)
             )
