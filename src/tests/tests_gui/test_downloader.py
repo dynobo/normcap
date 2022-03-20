@@ -1,8 +1,5 @@
 import pytest
 
-# Specific settings for pytest
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
-
 
 @pytest.mark.skip_on_gh
 def test_downloader_retrieves_website(qtbot, downloader):

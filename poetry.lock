@@ -729,6 +729,18 @@ toml = ">=0.9.2"
 typing-extensions = {version = ">=3.10.0", markers = "python_version < \"3.10\""}
 
 [[package]]
+name = "pylint-pytest"
+version = "1.1.2"
+description = "A Pylint plugin to suppress pytest-related false positives."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+pylint = "*"
+pytest = ">=4.6"
+
+[[package]]
 name = "pyparsing"
 version = "3.0.7"
 description = "Python parsing module"
@@ -1174,7 +1186,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.11"
-content-hash = "ce6880f36a38b1c9d5b4a3f9cf560334f1a3c628040b0ac43557a401e4922799"
+content-hash = "655d1c1c447e9825a62462fca603066b6980c0152725c32087a044d033d15f93"
 
 [metadata.files]
 arrow = [
@@ -1768,6 +1780,9 @@ pydocstyle = [
 pylint = [
     {file = "pylint-2.12.2-py3-none-any.whl", hash = "sha256:daabda3f7ed9d1c60f52d563b1b854632fd90035bcf01443e234d3dc794e3b74"},
     {file = "pylint-2.12.2.tar.gz", hash = "sha256:9d945a73640e1fec07ee34b42f5669b770c759acd536ec7b16d7e4b87a9c9ff9"},
+]
+pylint-pytest = [
+    {file = "pylint_pytest-1.1.2-py2.py3-none-any.whl", hash = "sha256:fb20ef318081cee3d5febc631a7b9c40fa356b05e4f769d6e60a337e58c8879b"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.7-py3-none-any.whl", hash = "sha256:a6c06a88f252e6c322f65faf8f418b16213b51bdfaece0524c1c1bc30c63c484"},

@@ -61,6 +61,7 @@ briefcase = ">=0.3.5"
 # but briefcase currently depends on Jinjia < 3.0.0
 markupsafe = "2.0.1"
 vulture = "^2.3"
+pylint-pytest = "^1.1.2"
 
 [tool.black]
 line-length = 88
@@ -93,7 +94,8 @@ ignore_errors = true
 
 [tool.pylint.master]
 extension-pkg-allow-list = ["PySide6", "pytesseract"]
-jobs = 1
+load-plugins= ["pylint_pytest"]
+jobs = 3
 
 [tool.pylint.'MESSAGES CONTROL']
 load-plugins = "pylint.extensions.mccabe"

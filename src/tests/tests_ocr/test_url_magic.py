@@ -1,10 +1,6 @@
-import pytest  # type: ignore
+import pytest
 
 from normcap.ocr.magics.url_magic import UrlMagic
-
-from .ocr_fixtures import ocr_result  # pylint: disable=unused-import
-
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
 
 
 @pytest.mark.parametrize(

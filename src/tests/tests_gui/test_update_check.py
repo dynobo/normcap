@@ -2,9 +2,6 @@ import pytest
 
 from normcap.gui import update_check
 
-# Specific settings for pytest
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
-
 
 @pytest.mark.skip_on_gh
 @pytest.mark.parametrize("packaged", [True, False])
@@ -41,6 +38,7 @@ def test_update_checker_no_new_version(monkeypatch, qtbot, packaged):
 def test_update_checker_cant_parse(caplog, packaged, text):
     checker = update_check.UpdateChecker(None, packaged=packaged)
 
+    # pylint: disable=protected-access
     version = checker._parse_response_to_version(text)
 
     assert version is None

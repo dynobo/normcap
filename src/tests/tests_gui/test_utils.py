@@ -13,9 +13,6 @@ from normcap.gui import utils
 from normcap.gui.models import Capture
 from normcap.ocr.models import OcrResult
 
-# Specific settings for pytest
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
-
 
 def test_init_tessdata_copies_files(tmp_path, monkeypatch):
     # Create placeholder for traineddata files, if they don't exist
@@ -96,11 +93,12 @@ def test_get_icon_sytem_use_fallback(qtbot):
 def test_hook_exception(monkeypatch, caplog, capsys):
     monkeypatch.setattr(sys, "exit", lambda _: True)
     with pytest.raises(RuntimeError) as excinfo:
-        text = words = tsv_data = "secret"  # pylint: disable=unused-variable
-        transformed = v = self = "secret"  # pylint: disable=unused-variable
-        other_variable = "should be printed"  # pylint: disable=unused-variable
-        capture = Capture(ocr_text="secret")  # pylint: disable=unused-variable
-        ocr_result = OcrResult(  # pylint: disable=unused-variable
+        # pylint: disable=unused-variable
+        text = words = tsv_data = "secret"
+        transformed = v = self = "secret"
+        other_variable = "should be printed"
+        capture = Capture(ocr_text="secret")
+        ocr_result = OcrResult(
             tess_args=None,
             image=Image.Image(),
             words="secret",

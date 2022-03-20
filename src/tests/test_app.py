@@ -7,9 +7,6 @@ import normcap
 
 logger = logging.getLogger(__name__)
 
-# Specific settings for pytest
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
-
 
 def test_version():
     with open("pyproject.toml", encoding="utf8") as toml_file:
