@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.2 (2022-03-23)
+
+- MacOS: Fixed crash in prebuild dmg package
+  [#199](https://github.com/dynobo/normcap/issues/199).
+
 ## v0.3.1 (2022-03-20)
 
 - All: Fix pasting to clipboard sometimes not working
