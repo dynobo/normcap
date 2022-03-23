@@ -239,88 +239,20 @@ def download_tesseract_windows_build():
 
 
 def bundle_pytesseract_dylibs():
-    """Include two dylibs needed by tesserocr into app package."""
+    print("Bundling tesseract libs...")
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
-
-    class Libs(str, Enum):
-        """Libraries to be packaged."""
-
-        # libc = "/usr/lib/libc++.1.dylib"
-        tesseract = "/usr/local/bin/tesseract"
-        libtess = "/usr/local/Cellar/tesseract/5.1.0/lib/libtesseract.5.dylib"
-        liblept = "/usr/local/opt/leptonica/lib/liblept.5.dylib"
-        libarchive = "/usr/local/opt/libarchive/lib/libarchive.13.dylib"
-        libpng = "/usr/local/opt/libpng/lib/libpng16.16.dylib"
-        libjpeg = "/usr/local/opt/jpeg/lib/libjpeg.9.dylib"
-        libgif = "/usr/local/opt/giflib/lib/libgif.dylib"
-        libtiff = "/usr/local/opt/libtiff/lib/libtiff.5.dylib"
-        libopenjpeg = "/usr/local/opt/openjpeg/lib/libopenjp2.7.dylib"
-        libwebp = "/usr/local/opt/webp/lib/libwebp.7.dylib"
-        libwebpmux = "/usr/local/opt/webp/lib/libwebpmux.3.dylib"
-
-        libiconv = "/usr/lib/libiconv.2.dylib"
-        libexpat = "/usr/lib/libexpat.1.dylib"
-        liblzma = "/usr/local/opt/xz/lib/liblzma.5.dylib"
-        libzstd = "/usr/local/opt/zstd/lib/libzstd.1.dylib"
-        liblz = "/usr/local/opt/lz4/lib/liblz4.1.dylib"
-        libb = "/usr/local/opt/libb2/lib/libb2.1.dylib"
-        libbz = "/usr/lib/libbz2.1.0.dylib"
-        libsystemb = "/usr/lib/libSystem.B.dylib"
-        libz = "/usr/lib/libz.1.dylib"
-
-    for lib_path in Libs:
-        lib_filename = lib_path.value.rsplit("/", maxsplit=1)[-1]
-        new_lib_path = f"{app_pkg_path}/{lib_filename}"
-        shutil.copy(lib_path.value, new_lib_path)
-        os.chmod(new_lib_path, stat.S_IRWXU)
-
-    libwebp7 = "/usr/local/Cellar/webp/1.2.2/lib/libwebp.7.dylib"
-    changeset = [
-        (Libs.libtiff, [Libs.libjpeg]),
-        (Libs.libwebpmux, [libwebp7]),
-        (
-            Libs.liblept,
-            [
-                Libs.libpng,
-                Libs.libjpeg,
-                Libs.libgif,
-                Libs.libtiff,
-                Libs.libopenjpeg,
-                Libs.libwebp,
-                Libs.libwebpmux,
-            ],
-        ),
-        (
-            Libs.libarchive,
-            [
-                Libs.libzstd,
-                Libs.libiconv,
-                Libs.libexpat,
-                Libs.liblzma,
-                Libs.liblz,
-                Libs.libb,
-                Libs.libbz,
-                Libs.libz,
-                Libs.libsystemb,
-            ],
-        ),
-        (Libs.libtess, [Libs.liblept, Libs.libarchive]),
-        (Libs.tesseract, [Libs.liblept, Libs.libtess, Libs.libarchive]),
-    ]
-
-    print(*Path(app_pkg_path).iterdir(), sep="\n")
-
-    for lib_path, link_paths in changeset:
-        lib_filename = lib_path.rsplit("/", maxsplit=1)[-1]
-        new_lib_path = f"{app_pkg_path}/{lib_filename}"
-
-        for link_path in link_paths:
-            link_filename = link_path.rsplit("/", maxsplit=1)[-1]
-            cmd(
-                f"install_name_tool -change {link_path} "
-                + f"@executable_path/{link_filename} "
-                + f"{new_lib_path}"
-            )
+    tesseract_source = "/usr/local/bin/tesseract"
+    tesseract_target = app_pkg_path + "/tesseract"
+    install_path = "@executable_path/"
+    cmd(
+        "dylibbundler "
+        + f"--fix-file {tesseract_source} "
+        + f"--dest-dir {app_pkg_path} "
+        + f"--install-path {install_path} "
+        + "--bundle-deps "
+        + "--overwrite-files"
+    )
+    shutil.copy(tesseract_source, tesseract_target)
 
 
 def rm_recursive(directory, exclude):
@@ -473,6 +405,7 @@ if __name__ == "__main__":
         )
         download_tessdata()
         cmd("brew install tesseract")
+        cmd("brew install dylibbundler")
         cmd("briefcase create")
         bundle_pytesseract_dylibs()
         rm_recursive(directory=app_dir, exclude=EXCLUDE_FROM_APP_PACKAGES)
