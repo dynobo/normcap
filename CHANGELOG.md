@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.3 (2022-03-25)
+
+- All: Fixes screenshots not updated when capturing from tray menu
+  [#181](https://github.com/dynobo/normcap/issues/199).
+
 ## v0.3.2 (2022-03-23)
 
 - MacOS: Fixed crash in prebuild dmg package
