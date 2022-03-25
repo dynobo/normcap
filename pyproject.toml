@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "normcap"
-version = "0.3.2"
+version = "0.3.3"
 description = "OCR-powered screen-capture tool to capture information instead of images."
 keywords = ["screenshot", "ocr", "capture", "clipboard"]
 license = "GPLv3"
@@ -133,7 +133,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.briefcase]
 project_name = "NormCap"
 bundle = "eu.dynobo"
-version = "0.3.2"
+version = "0.3.3"
 url = "https://github.com/dynobo/normcap"
 license = "GPLv3"
 author = 'dynobo'
@@ -159,7 +159,7 @@ system_requires = ["tesseract-ocr", "pkg-config", "libtiff-dev"]
 [tool.tbump]
 
 [tool.tbump.version]
-current = "0.3.2"
+current = "0.3.3"
 regex = '''
   (?P<major>\d+)
   \.
