@@ -19,11 +19,13 @@ from normcap.screengrab import grab_screens
 
 logger = logging.getLogger(__name__)
 
+# TODO: Remove pylint disable no-member when https://github.com/PyCQA/pylint/issues/5378
+
 
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
-    on_capture = QtCore.Signal()
+    on_tray_menu_capture = QtCore.Signal()
     on_quit = QtCore.Signal()
     on_ocr_performed = QtCore.Signal()
     on_copied_to_clipboard = QtCore.Signal()
@@ -35,6 +37,7 @@ class Communicate(QtCore.QObject):
     on_region_selected = QtCore.Signal(Rect)
     on_image_cropped = QtCore.Signal()
     on_minimize_windows = QtCore.Signal()
+    on_screenshots_updated = QtCore.Signal()
 
 
 class SystemTray(QtWidgets.QSystemTrayIcon):
@@ -60,18 +63,17 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.clipboard = QtWidgets.QApplication.clipboard()
         self.screens: dict[int, Screen] = system_info.screens()
 
-        self._update_screenshots()
-
         self.setIcon(utils.get_icon("tray.png", "tool-magic-symbolic"))
         self._add_tray_menu()
         self._add_update_checker()
         self._add_notifier()
         self._set_signals()
-        self._show_windows()
+        self._update_screenshots()
 
     def _set_signals(self):
         """Set up signals to trigger program logic."""
-        self.com.on_capture.connect(self._show_windows)
+        self.com.on_tray_menu_capture.connect(self._delayed_update_screenshots)
+        self.com.on_screenshots_updated.connect(self._show_windows)
         self.com.on_quit.connect(lambda: self._exit_application("clicked exit in tray"))
         self.com.on_region_selected.connect(self._crop_image)
         self.com.on_image_cropped.connect(self._capture_to_ocr)
@@ -102,16 +104,33 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _update_screenshots(self):
         """Get new screenshots and cache them."""
         screens = grab_screens()
+
+        if not screens:
+            logger.error("Could not grab screenshots.")
+            return
+
         for idx, screenshot in enumerate(screens):
             utils.save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
             self.screens[idx].screenshot = screenshot
+
+        self.com.on_screenshots_updated.emit()
+
+    def _delayed_update_screenshots(self):
+        """Wait before updating screenshot to allow tray menu to hide.
+
+        Avoids having the tray menu itself on the screenshot.
+        """
+        time.sleep(0.15)
+        self._update_screenshots()
 
     def _add_tray_menu(self):
         """Create menu for system tray."""
         menu = QtWidgets.QMenu()
 
         action = QtGui.QAction("Capture", menu)
-        action.triggered.connect(self.com.on_capture.emit)  # pylint: disable=no-member
+        action.triggered.connect(  # pylint: disable=no-member
+            self.com.on_tray_menu_capture.emit
+        )
         menu.addAction(action)
 
         action = QtGui.QAction("Exit", menu)
