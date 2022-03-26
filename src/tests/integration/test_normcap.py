@@ -6,8 +6,8 @@ import pytest
 from PySide6 import QtCore, QtGui
 
 import normcap
-from normcap.args import create_argparser
 from normcap.gui.tray import SystemTray
+from normcap.utils import create_argparser
 
 from .testcases.data import TESTCASES
 
