@@ -26,27 +26,32 @@
 - On-screen recognition of selected text
 - Multi platform support for Linux, Windows, MacOS
 - Multi monitor support, incl. HDPI displays
-- Parsing the text based on heuristics (optional, on by default)
-- Show notifications (optional)
-- Stay in system tray (optional)
-- Check for updates (optional, off by default)
+- Parsing the text based on heuristics (can be turned off)
 
 ## Quickstart
 
-**❱❱
-[Download pre-build package for Linux, MacOS or Windows](https://github.com/dynobo/normcap/releases)
-❰❰**
+Install a pre-build release:
+
+- **Windows**:
+  [NormCap-0.3.3-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.3.3/NormCap-0.3.3-Windows.msi)
+- **Linux**:
+  [NormCap-0.3.3-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.3.3/NormCap-0.3.3-x86_64.AppImage)
+- **macOS**:
+  [NormCap-0.3.3-MacOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.3.3/NormCap-0.3.3-MacOS.dmg)
+  \
+  <small>(On macOS, allow the unsigned application on first start: "System
+  Preferences" → "Security & Privacy" → "General" → "Open anyway". You might also need
+  to allow NormCap to take screenshots. Background:
+  [#135](https://github.com/dynobo/normcap/issues/135))</small>
+
+Install from your systems repository:
+
+- **Arch / Manjaro**: Install package
+  [`normcap`](https://aur.archlinux.org/packages/normcap) from AUR.
 
 If you experience issues please look at the
 [FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md) or
 [open an issue](https://github.com/dynobo/normcap/issues).
-
-(On **MacOS**, allow the unsigned application on first start: "System Preferences" →
-"Security & Privacy" → "General" → "Open anyway". You might also need to allow NormCap
-to take screenshots.)
-
-For more info, take a look at the
-[NormCap landing page](https://dynobo.github.io/normcap/)
 
 ## Python package
 

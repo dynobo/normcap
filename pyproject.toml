@@ -185,6 +185,14 @@ search = '__version__ = "{current_version}"'
 [[tool.tbump.file]]
 src = "docs/index.html"
 
+[[tool.tbump.file]]
+src = "README.md"
+search = 'NormCap-{current_version}-'
+
+[[tool.tbump.file]]
+src = "README.md"
+search = 'download/v{current_version}/'
+
 [[tool.tbump.before_commit]]
 name = "check changelog"
 cmd = "grep -q {new_version} CHANGELOG.md"
