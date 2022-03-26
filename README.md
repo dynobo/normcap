@@ -15,10 +15,6 @@
 [Changelog](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) |
 [FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md)
 
-**Content:** [Quickstart](#Quickstart) | [Python package](#Python-package) |
-[Contribute](#Contribute) | [Credits](#Credits) |
-[Similar tools](#Similar-open-source-tools)
-
 [![Screencast](https://user-images.githubusercontent.com/11071876/123133596-3107d080-d450-11eb-8451-6dcebb7876ad.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
 ## Quickstart
@@ -32,15 +28,15 @@ Install a pre-build release:
 - **macOS**:
   [NormCap-0.3.3-MacOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.3.3/NormCap-0.3.3-MacOS.dmg)
   \
-  <small>(On macOS, allow the unsigned application on first start: "System
-  Preferences" → "Security & Privacy" → "General" → "Open anyway". You might also need
-  to allow NormCap to take screenshots. Background:
-  [#135](https://github.com/dynobo/normcap/issues/135))</small>
+  <sub>(On macOS, allow the unsigned application on first start: "System Preferences"
+  → "Security & Privacy" → "General" → "Open anyway". You might also need to allow
+  NormCap to take screenshots. Background:
+  [#135](https://github.com/dynobo/normcap/issues/135))</sub>
 
-Install from your systems repository:
+Install from system repository:
 
-- **Arch / Manjaro**: Install package
-  [`normcap`](https://aur.archlinux.org/packages/normcap) from AUR.
+- **Arch / Manjaro**: Install the
+  [`normcap`](https://aur.archlinux.org/packages/normcap) package from AUR.
 
 If you experience issues please look at the
 [FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md) or
@@ -51,7 +47,7 @@ If you experience issues please look at the
 As an _alternative_ to a pre-build package you can install the
 [NormCap Python package](https://pypi.org/project/normcap/):
 
-### On Linux
+#### On Linux
 
 ```sh
 # Install dependencies (Ubuntu/Debian)
@@ -70,7 +66,7 @@ pip install normcap
 ./normcap
 ```
 
-### On MacOS
+#### On MacOS
 
 ```sh
 # Install dependencies
@@ -83,7 +79,7 @@ pip install normcap
 ./normcap
 ```
 
-### On Windows
+#### On Windows
 
 1\. Install `Tesseract 5` by using the
 [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
@@ -126,11 +122,10 @@ See [XKCD](https://xkcd.com):
 
 [![Comic](https://imgs.xkcd.com/comics/norm_normal_file_format.png)](https://xkcd.com/2116/)
 
-## Contribute
+## Development
 
-### Setup Environment
-
-Prerequisites are **Python >=3.9**, **Poetry**, **Tesseract** (incl. **language data**).
+Prerequisites for setting up a development environment are: **Python >=3.9**, **Poetry**
+and **Tesseract** (incl. **language data**).
 
 ```sh
 # Clone repository
@@ -169,6 +164,8 @@ And it depends on external software
 Thanks to the maintainers of those nice libraries!
 
 ## Similar open source tools
+
+Try those to see which one suits your needs:
 
 - [TextSnatcher](https://github.com/RajSolai/TextSnatcher)
 - [GreenShot](https://getgreenshot.org/)
