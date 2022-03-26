@@ -21,13 +21,6 @@
 
 [![Screencast](https://user-images.githubusercontent.com/11071876/123133596-3107d080-d450-11eb-8451-6dcebb7876ad.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
-## Features
-
-- On-screen recognition of selected text
-- Multi platform support for Linux, Windows, MacOS
-- Multi monitor support, incl. HDPI displays
-- Parsing the text based on heuristics (can be turned off)
-
 ## Quickstart
 
 Install a pre-build release:
