@@ -172,6 +172,7 @@ Try those to see which one suits your needs:
 - [TextShot](https://github.com/ianzhao05/textshot)
 - [gImageReader](https://github.com/manisandro/gImageReader)
 - [Capture2Text](https://sourceforge.net/projects/capture2text)
+- [Frog](https://github.com/TenderOwl/Frog)
 
 ## Certification
 
