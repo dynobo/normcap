@@ -27,7 +27,23 @@ class TessArgs:
         config_str = f"--oem {self.oem} --psm {self.psm}"
         if self.path:
             config_str += f' --tessdata-dir "{self.path}"'
+        if self.is_language_without_spaces():
+            config_str += " -c preserve_interword_spaces=1"
         return config_str
+
+    def is_language_without_spaces(self) -> bool:
+        """Check if selected languages are only languages w/o spaces between words."""
+        languages_without_spaces = {
+            "chi_sim",
+            "chi_sim_vert",
+            "chi_tra",
+            "chi_tra_vert",
+            "jpn",
+            "jpn_vert",
+            "kor",
+        }
+        selected_languages = set(self.lang.split("+"))
+        return selected_languages.issubset(languages_without_spaces)
 
 
 @dataclass
