@@ -66,7 +66,7 @@ sudo pacman -S tesseract tesseract-data-eng
 sudo dnf install tesseract
 
 ## Install dependencies (openSUSE)
-sudo zypper install python3-devel tesseract-ocr python3-pytesseract
+sudo zypper install python3-devel tesseract-ocr tesseract-ocr-devel
 
 # Install normcap
 pip install normcap
