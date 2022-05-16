@@ -57,7 +57,7 @@ As an _alternative_ to a pre-build package you can install the
 
 ```sh
 # Install dependencies (Ubuntu/Debian)
-sudo apt install tesseract-ocr tesseract-ocr-eng
+sudo apt install tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev
 
 ## Install dependencies (Arch)
 sudo pacman -S tesseract tesseract-data-eng
