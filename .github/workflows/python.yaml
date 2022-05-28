@@ -98,6 +98,9 @@ jobs:
       - name: Pydocstyle
         if: always()
         run: poetry run pydocstyle
+      - name: Safety
+        if: always()
+        run: poetry run safety check
       - name: Bandit
         if: always()
         run: poetry run bandit --quiet --severity-level medium -r src/normcap

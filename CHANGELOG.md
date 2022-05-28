@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.4 (unpublished)
+
+- All: Smaller size by updating to Pyside 6.3 without addons.
+
 ## v0.3.3 (2022-03-25)
 
 - All: Fixes screenshots not updated when capturing from tray menu
