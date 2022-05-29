@@ -2,6 +2,7 @@
 
 import logging
 import secrets
+from typing import Optional
 from urllib.parse import urlparse
 
 from jeepney.bus_messages import MatchRule, message_bus  # type: ignore
@@ -41,11 +42,11 @@ class FreedesktopPortalScreenshot(MessageGenerator):
         return new_method_call(self, "Screenshot", "sa{sv}", (parent_window, options))
 
 
-def grab_full_desktop() -> QtGui.QImage:
+def grab_full_desktop() -> Optional[QtGui.QImage]:
     """Capture rect of screen on gnome systems using wayland."""
     logger.debug("Use capture method: DBUS portal")
 
-    image = QtGui.QImage()
+    image = None
 
     try:
         connection = open_dbus_connection(bus="SESSION")
@@ -73,7 +74,6 @@ def grab_full_desktop() -> QtGui.QImage:
 
     except AssertionError as e:
         logger.warning("Couldn't take screenshot with DBUS. Got cancelled?")
-        raise e from e
     except DBusErrorResponse as e:
         if "invalid params" in [d.lower() for d in e.data]:
             logger.info("ScreenShot with DBUS failed with 'invalid params'")
@@ -89,4 +89,7 @@ def grab_screens() -> list[QtGui.QImage]:
     This methods works gnome-shell >=v41 and wayland.
     """
     full_image = grab_full_desktop()
+    if not full_image:
+        return []
+
     return split_full_desktop_to_screens(full_image)
