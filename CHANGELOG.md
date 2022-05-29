@@ -3,6 +3,7 @@
 ## v0.3.4 (unpublished)
 
 - All: Smaller size by updating to Pyside 6.3 without addons.
+- Linux: Start a bit faster on Gnome
 
 ## v0.3.3 (2022-03-25)
 

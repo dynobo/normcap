@@ -58,7 +58,6 @@ vulture = "^2.4"
 bandit = "^1.7.4"
 briefcase = ">=0.3.7"
 safety = "^1.10.3"
-perflint = "^0.7.3"
 pip = "^22.1.1"
 
 [tool.black]
@@ -92,7 +91,7 @@ ignore_errors = true
 
 [tool.pylint.master]
 extension-pkg-allow-list = ["PySide6", "pytesseract"]
-load-plugins= ["pylint_pytest", "perflint"]
+load-plugins= ["pylint_pytest"]
 jobs = 3
 
 [tool.pylint.'MESSAGES CONTROL']

@@ -2,8 +2,6 @@
 
 import logging
 import secrets
-import tempfile
-from pathlib import Path
 from urllib.parse import urlparse
 
 from jeepney.bus_messages import MatchRule, message_bus  # type: ignore
@@ -39,6 +37,7 @@ class FreedesktopPortalScreenshot(MessageGenerator):
 
     def grab(self, parent_window, options):
         """Ask for screenshot."""
+        # method_name = "org.freedesktop.portal.Screenshot"
         return new_method_call(self, "Screenshot", "sa{sv}", (parent_window, options))
 
 
@@ -48,7 +47,6 @@ def grab_full_desktop() -> QtGui.QImage:
 
     image = QtGui.QImage()
 
-    _, temp_name = tempfile.mkstemp(prefix="normcap")
     try:
         connection = open_dbus_connection(bus="SESSION")
 
@@ -66,7 +64,7 @@ def grab_full_desktop() -> QtGui.QImage:
                 "", {"handle_token": ("s", token), "interactive": ("b", False)}
             )
             connection.send_and_get_reply(msg)
-            response = connection.recv_until_filtered(responses)
+            response = connection.recv_until_filtered(responses, timeout=15)
 
         response_code, response_body = response.body
         assert response_code == 0 and "uri" in response_body
@@ -81,8 +79,6 @@ def grab_full_desktop() -> QtGui.QImage:
             logger.info("ScreenShot with DBUS failed with 'invalid params'")
         else:
             logger.exception("ScreenShot with DBUS through exception")
-    finally:
-        Path(temp_name).unlink()
 
     return image
 

@@ -676,17 +676,6 @@ optional = false
 python-versions = ">=2.6"
 
 [[package]]
-name = "perflint"
-version = "0.7.3"
-description = "Pylint extension with performance anti-patterns"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-pylint = ">=2.12.0,<3.0"
-
-[[package]]
 name = "pillow"
 version = "9.1.1"
 description = "Python Imaging Library (Fork)"
@@ -1283,7 +1272,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.11"
-content-hash = "6f4a4a7318a4b5eb0ddbc2fed656717659076d8b6c4b19216d499242ddd6dc5f"
+content-hash = "92d53279e4e8aea0ed03802c2523d71b5b417f97c3ba4457dda80e83f238c786"
 
 [metadata.files]
 arrow = [
@@ -1795,10 +1784,6 @@ pathspec = [
 pbr = [
     {file = "pbr-5.9.0-py2.py3-none-any.whl", hash = "sha256:e547125940bcc052856ded43be8e101f63828c2d94239ffbe2b327ba3d5ccf0a"},
     {file = "pbr-5.9.0.tar.gz", hash = "sha256:e8dca2f4b43560edef58813969f52a56cef023146cbb8931626db80e6c1c4308"},
-]
-perflint = [
-    {file = "perflint-0.7.3-py2.py3-none-any.whl", hash = "sha256:e556a82495925ec956ce607b6333564a54a6ebe2146fd47753d4b32aab82c85b"},
-    {file = "perflint-0.7.3.tar.gz", hash = "sha256:8569248d246c21974201b950af1330218ad058db285e2316cbb0044997d47554"},
 ]
 pillow = [
     {file = "Pillow-9.1.1-cp310-cp310-macosx_10_10_x86_64.whl", hash = "sha256:42dfefbef90eb67c10c45a73a9bc1599d4dac920f7dfcbf4ec6b80cb620757fe"},

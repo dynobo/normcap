@@ -4,6 +4,7 @@ import os
 import re
 import subprocess
 import sys
+from pathlib import Path
 from typing import Optional
 
 from packaging import version
@@ -49,6 +50,14 @@ def display_manager_is_wayland() -> bool:
     return "wayland" in WAYLAND_DISPLAY or "wayland" in XDG_SESSION_TYPE
 
 
+def _get_gnome_version_xml() -> str:
+    gnome_version_xml = Path("/usr/share/gnome/gnome-version.xml")
+    if gnome_version_xml.exists():
+        return gnome_version_xml.read_text(encoding="utf-8")
+
+    raise FileNotFoundError
+
+
 @functools.lru_cache()
 def gnome_shell_version() -> Optional[version.Version]:
     """Get gnome-shell version (Linux, Gnome)."""
@@ -62,7 +71,25 @@ def gnome_shell_version() -> Optional[version.Version]:
     ):
         return None
 
+    # Try parsing gnome-version xml file
     shell_version = None
+    try:
+        content = _get_gnome_version_xml()
+        if result := re.search(r"(?<=<platform>)\d+(?=<\/platform>)", content):
+            platform = int(result.group(0))
+        else:
+            raise ValueError
+        if result := re.search(r"(?<=<minor>)\d+(?=<\/minor>)", content):
+            minor = int(result.group(0))
+        else:
+            raise ValueError
+        shell_version = version.parse(f"{platform}.{minor}")
+    except Exception as e:  # pylint: disable=broad-except
+        logger.error("Exception when trying to get gnome-shell version %s", e)
+    else:
+        return shell_version
+
+    # Try parsing gnome-shell output
     try:
         output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
         output = output_raw.decode().strip()
