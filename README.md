@@ -59,6 +59,9 @@ sudo pacman -S tesseract tesseract-data-eng
 ## Install dependencies (Fedora)
 sudo dnf install tesseract
 
+## Install dependencies (openSUSE)
+sudo zypper install python3-devel tesseract-ocr tesseract-ocr-devel
+
 # Install normcap
 pip install normcap
 
