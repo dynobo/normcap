@@ -730,7 +730,8 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
               <ul>
                 <li>
                   Ubuntu/Debian:
-                  <pre><code>sudo apt install tesseract-ocr tesseract-ocr-eng</code></pre>
+                  <pre><code>sudo apt install tesseract-ocr tesseract-ocr-eng
+                    libtesseract-dev libleptonica-dev</code></pre>
                 </li>
                 <li>
                   Arch:
@@ -738,7 +739,12 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
                 </li>
                 <li>
                   Fedora:
-                  <pre><code>sudo dnf install tesseract tesseract-devel</code></pre>
+                  <pre><code>sudo dnf install tesseract</code></pre>
+                </li>
+                <li>
+                  openSUSE:
+                  <pre><code>sudo zypper install python3-devel tesseract-ocr
+                    tesseract-ocr-devel</code></pre>
                 </li>
               </ul>
             </li>
