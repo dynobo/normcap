@@ -110,7 +110,7 @@ jobs:
 
       - name: Coveralls
         if:
-          ${{ matrix.os  == 'ubuntu-20.04' }} && ${{ github.repository ==
+          ${{ matrix.os  == 'ubuntu-20.04' && github.repository ==
           'dynobo/normcap' }}
         run: poetry run coveralls
         env:
@@ -118,8 +118,8 @@ jobs:
 
       - name: SonarCloud
         if:
-          ${{ matrix.os  == 'ubuntu-20.04' }} && ${{ github.repository ==
-          'dynobo/normcap' }}
+          ${{ matrix.os  == 'ubuntu-20.04' && github.repository
+          =='dynobo/normcap' }}
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
