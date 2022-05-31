@@ -109,13 +109,17 @@ jobs:
           poetry run pytest -m "not skip_on_gh" --log-cli-level=10 --cov --cov-report=xml
 
       - name: Coveralls
-        if: ${{ matrix.os  == 'ubuntu-20.04' }}
+        if:
+          ${{ matrix.os  == 'ubuntu-20.04' }} && ${{ github.repository ==
+          'dynobo/normcap' }}
         run: poetry run coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
 
       - name: SonarCloud
-        if: ${{ matrix.os  == 'ubuntu-20.04' }}
+        if:
+          ${{ matrix.os  == 'ubuntu-20.04' }} && ${{ github.repository ==
+          'dynobo/normcap' }}
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -133,6 +137,7 @@ jobs:
       # Release test package
       - name: Draft internal release
         uses: ncipollo/release-action@v1
+        if: ${{ github.repository == 'dynobo/normcap' }}
         with:
           name: Internal
           body:
