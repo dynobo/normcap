@@ -22,11 +22,11 @@
 Install a pre-build release:
 
 - **Windows**:
-  [NormCap-0.3.3-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.3.3/NormCap-0.3.3-Windows.msi)
+  [NormCap-0.3.4-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.3.4/NormCap-0.3.4-Windows.msi)
 - **Linux**:
-  [NormCap-0.3.3-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.3.3/NormCap-0.3.3-x86_64.AppImage)
+  [NormCap-0.3.4-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.3.4/NormCap-0.3.4-x86_64.AppImage)
 - **macOS**:
-  [NormCap-0.3.3-MacOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.3.3/NormCap-0.3.3-MacOS.dmg)
+  [NormCap-0.3.4-MacOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.3.4/NormCap-0.3.4-MacOS.dmg)
   \
   <sub>(On macOS, allow the unsigned application on first start: "System Preferences"
   → "Security & Privacy" → "General" → "Open anyway". You might also need to allow
