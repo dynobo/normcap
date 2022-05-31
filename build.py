@@ -279,7 +279,7 @@ app_dir = self.appdir_path(app) / "usr" / "app_packages"
 rm_recursive(directory=app_dir, exclude={EXCLUDE_FROM_APP_PACKAGES})
 rm_recursive(directory=app_dir / "PySide6", exclude={EXCLUDE_FROM_PySide6})
 """
-    insert_after = 'print("[{app.app_name}] Building AppImage...".format(app=app))'
+    insert_after = 'self.logger.info(f"[{app.app_name}] Building AppImage...")'
     patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
 
@@ -318,6 +318,7 @@ def patch_file(
 
     Indents the patch like the line after which it is inserted.
     """
+    patch_applied = False
     patch_hash = hashlib.md5(patch.encode()).hexdigest()
 
     with open(file_path, "r", encoding="utf8") as f:
@@ -337,7 +338,14 @@ def patch_file(
             pad = len(line) - len(line.lstrip(" "))
             patch = patch.replace("\n", f"\n{pad * ' '}")
             line = line.replace(line, line + pad * " " + patch + "\n")
+            patch_applied = True
         print(line, end="")
+
+    if not patch_applied:
+        raise RuntimeError(
+            f"Couldn't apply patch to file {file_path}! "
+            + f"Line '{insert_after}' not found!"
+        )
 
 
 def patch_briefcase_create_to_adjust_dockerfile():
