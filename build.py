@@ -23,6 +23,7 @@ EXCLUDE_FROM_PySide6 = [
     "3dcore",
     "3dextras",
     "3drender",
+    "assistant",
     "audio",
     "bluetooth",
     "canbus",
@@ -45,9 +46,9 @@ EXCLUDE_FROM_PySide6 = [
     "openglfunct",
     "pdf",
     "purchasing",
-    "qt3d",
-    "qt53d",
-    "qt5quick",
+    "qt63d",
+    "qt6quick",
+    "qt6shadertools",
     "qtopengl",
     "qtquick",
     "rcc",
@@ -73,6 +74,8 @@ EXCLUDE_FROM_APP_PACKAGES = [
     "/tests/",
     "docs",
 ]
+
+EXCLUDE_FROM_LIB = ["qt6qml"]
 
 
 def get_version() -> str:
@@ -278,8 +281,11 @@ import shutil, os
 app_dir = self.appdir_path(app) / "usr" / "app_packages"
 rm_recursive(directory=app_dir, exclude={EXCLUDE_FROM_APP_PACKAGES})
 rm_recursive(directory=app_dir / "PySide6", exclude={EXCLUDE_FROM_PySide6})
+
+lib_dir = self.appdir_path(app) / "usr" / "lib"
+rm_recursive(directory=lib_dir / "PySide6", exclude={EXCLUDE_FROM_PySide6})
 """
-    insert_after = 'print("[{app.app_name}] Building AppImage...".format(app=app))'
+    insert_after = 'self.logger.info(f"[{app.app_name}] Building AppImage...")'
     patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
 
@@ -318,6 +324,7 @@ def patch_file(
 
     Indents the patch like the line after which it is inserted.
     """
+    patch_applied = False
     patch_hash = hashlib.md5(patch.encode()).hexdigest()
 
     with open(file_path, "r", encoding="utf8") as f:
@@ -337,7 +344,14 @@ def patch_file(
             pad = len(line) - len(line.lstrip(" "))
             patch = patch.replace("\n", f"\n{pad * ' '}")
             line = line.replace(line, line + pad * " " + patch + "\n")
+            patch_applied = True
         print(line, end="")
+
+    if not patch_applied:
+        raise RuntimeError(
+            f"Couldn't apply patch to file {file_path}! "
+            + f"Line '{insert_after}' not found!"
+        )
 
 
 def patch_briefcase_create_to_adjust_dockerfile():
