@@ -13,7 +13,7 @@
 [PyPi](https://pypi.org/project/normcap) |
 [Releases](https://github.com/dynobo/normcap/releases) |
 [Changelog](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) |
-[FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md)
+[FAQs](https://dynobo.github.io/normcap/#faqs)
 
 [![Screencast](https://user-images.githubusercontent.com/11071876/123133596-3107d080-d450-11eb-8451-6dcebb7876ad.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
