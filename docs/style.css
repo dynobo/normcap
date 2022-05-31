@@ -149,7 +149,7 @@ small {
   color: #e1e6ea;
 }
 
-.feature > b {
+.feature > strong {
   display: block;
   background-color: rgba(39, 43, 44, 0.65);
   text-align: center;
