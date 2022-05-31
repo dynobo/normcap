@@ -1,61 +1,10 @@
-import subprocess
 import sys
 from importlib import metadata
 from pathlib import Path
 
 import pytest
-from packaging import version
 
 from normcap.gui import models, system_info
-
-
-def test_gnome_shell_version_on_gnome(monkeypatch):
-    gnome_version = version.parse("40.1.13")
-    monkeypatch.setattr(
-        subprocess,
-        "check_output",
-        lambda cmd, shell: f"Gnome Shell {gnome_version}\n ".encode("utf-8"),
-    )
-    monkeypatch.setattr(
-        system_info, "desktop_environment", lambda: models.DesktopEnvironment.GNOME
-    )
-    system_info.gnome_shell_version.cache_clear()
-
-    if sys.platform == "linux":
-        assert system_info.gnome_shell_version() == gnome_version
-    else:
-        assert system_info.gnome_shell_version() is None
-
-
-def test_gnome_shell_version_on_linux_without_gnome(monkeypatch):
-    def raise_process_error(*args, **kwargs):
-        raise subprocess.CalledProcessError(1, "gnome-shell --version")
-
-    monkeypatch.setattr(subprocess, "check_output", raise_process_error)
-    system_info.gnome_shell_version.cache_clear()
-    assert system_info.gnome_shell_version() is None
-
-
-def test_gnome_shell_version_on_windows(monkeypatch):
-    monkeypatch.setattr(sys, "platform", "win32")
-    system_info.gnome_shell_version.cache_clear()
-    assert system_info.gnome_shell_version() is None
-
-
-def test_gnome_shell_version_catch_unknown_exception(caplog, monkeypatch):
-    def raise_unknown_error(*args, **kwargs):
-        raise Exception("Some Unknown Error")
-
-    monkeypatch.setattr(sys, "platform", "linux")
-    monkeypatch.setattr(
-        system_info,
-        "desktop_environment",
-        lambda: models.DesktopEnvironment.GNOME,
-    )
-    monkeypatch.setattr(subprocess, "check_output", raise_unknown_error)
-    system_info.gnome_shell_version.cache_clear()
-    assert system_info.gnome_shell_version() is None
-    assert "ERROR" in caplog.text
 
 
 def test_display_manager_is_wayland(monkeypatch):

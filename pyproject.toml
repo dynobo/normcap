@@ -25,44 +25,40 @@ normcap = "normcap.app:main"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"
+PySide6-Essentials = "^6.3.0"
 jeepney = ">=0.7"
-PySide6 = ">=6.2.3"
 pytesseract = ">=0.3.9"
 packaging = ">=21.0"
 
 [tool.poetry.dev-dependencies]
-black = ">=22.1.0"
+black = ">=22.3.0"
 isort = ">=5.10.1"
-mypy = ">=0.931"
-pre-commit = ">=2.16"
+mypy = ">=0.960"
+pre-commit = ">=2.19"
 pydocstyle = ">=6.1.1"
-pylint = ">=2.12.2"
-pytest = ">=7.0.0"
+pylint = ">=2.13.9"
+pytest = ">=7.1.2"
 pytest-cov = ">=3.0.0"
-pytest-qt = ">=4.0.0"
+pytest-qt = ">=4.0.2"
 pytest-xvfb = ">=2.0.0"
-rope = ">=0.22.0"
+pylint-pytest = "^1.1.2"
 toml = ">=0.10.2"
 mdformat-gfm = ">=0.3.5"
 coveralls = ">=3.3.1"
-tbump = ">=6.7.0"
-Levenshtein = ">=0.17.0"
-# Types
-types-toml = ">=0.10.1"
-types-requests = ">=2.26.2"
-types-Pillow = ">=9.0.4"
-# Additional analysis tools
+tbump = ">=6.9.0"
+Levenshtein = ">=0.18.1"
+rope = ">=1.1.1"
+types-toml = ">=0.10.7"
+types-requests = ">=2.27.29"
+types-Pillow = ">=9.0.19"
 radon = ">=5.1.0"
-pydeps = ">=1.10.12"
-viztracer = ">=0.14.5"
-# Build tools
-briefcase = ">=0.3.5"
-# Necessary because incompatibility of markupsafe > 2.1.0 with Jinja2 < 3.0.0
-# but briefcase currently depends on Jinjia < 3.0.0
-markupsafe = "2.0.1"
-vulture = "^2.3"
-pylint-pytest = "^1.1.2"
+pydeps = ">=1.10.18"
+viztracer = ">=0.15.2"
+vulture = "^2.4"
 bandit = "^1.7.4"
+briefcase = ">=0.3.7"
+safety = "^1.10.3"
+pip = "^22.1.1"
 
 [tool.black]
 line-length = 88
@@ -146,9 +142,10 @@ sources = ["src/normcap"]
 icon = "src/normcap/resources/normcap"
 installer_icon = "src/normcap/resources/normcap_install"
 installer_background = "src/normcap/resources/normcap_install_bg"
-requires = ["PySide6", "jeepney", "pytesseract", "packaging"]
+requires = ["pyside6", "jeepney", "pytesseract", "packaging"]
 
 [tool.briefcase.app.normcap.macOS]
+requires = ["std-nslog==1.0.0"]
 
 [tool.briefcase.app.normcap.linux]
 requires = ["Pillow==7.2.0"]
@@ -184,6 +181,14 @@ search = '__version__ = "{current_version}"'
 
 [[tool.tbump.file]]
 src = "docs/index.html"
+
+[[tool.tbump.file]]
+src = "README.md"
+search = 'NormCap-{current_version}-'
+
+[[tool.tbump.file]]
+src = "README.md"
+search = 'download/v{current_version}/'
 
 [[tool.tbump.before_commit]]
 name = "check changelog"

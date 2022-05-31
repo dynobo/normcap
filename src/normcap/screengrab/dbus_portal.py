@@ -2,8 +2,7 @@
 
 import logging
 import secrets
-import tempfile
-from pathlib import Path
+from typing import Optional
 from urllib.parse import urlparse
 
 from jeepney.bus_messages import MatchRule, message_bus  # type: ignore
@@ -39,16 +38,16 @@ class FreedesktopPortalScreenshot(MessageGenerator):
 
     def grab(self, parent_window, options):
         """Ask for screenshot."""
+        # method_name = "org.freedesktop.portal.Screenshot"
         return new_method_call(self, "Screenshot", "sa{sv}", (parent_window, options))
 
 
-def grab_full_desktop() -> QtGui.QImage:
+def grab_full_desktop() -> Optional[QtGui.QImage]:
     """Capture rect of screen on gnome systems using wayland."""
     logger.debug("Use capture method: DBUS portal")
 
-    image = QtGui.QImage()
+    image = None
 
-    _, temp_name = tempfile.mkstemp(prefix="normcap")
     try:
         connection = open_dbus_connection(bus="SESSION")
 
@@ -66,7 +65,7 @@ def grab_full_desktop() -> QtGui.QImage:
                 "", {"handle_token": ("s", token), "interactive": ("b", False)}
             )
             connection.send_and_get_reply(msg)
-            response = connection.recv_until_filtered(responses)
+            response = connection.recv_until_filtered(responses, timeout=15)
 
         response_code, response_body = response.body
         assert response_code == 0 and "uri" in response_body
@@ -75,14 +74,11 @@ def grab_full_desktop() -> QtGui.QImage:
 
     except AssertionError as e:
         logger.warning("Couldn't take screenshot with DBUS. Got cancelled?")
-        raise e from e
     except DBusErrorResponse as e:
         if "invalid params" in [d.lower() for d in e.data]:
             logger.info("ScreenShot with DBUS failed with 'invalid params'")
         else:
             logger.exception("ScreenShot with DBUS through exception")
-    finally:
-        Path(temp_name).unlink()
 
     return image
 
@@ -93,4 +89,7 @@ def grab_screens() -> list[QtGui.QImage]:
     This methods works gnome-shell >=v41 and wayland.
     """
     full_image = grab_full_desktop()
+    if not full_image:
+        return []
+
     return split_full_desktop_to_screens(full_image)

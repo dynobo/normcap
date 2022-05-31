@@ -34,7 +34,24 @@ def test_gnome_shell_version_on_windows(monkeypatch):
     assert version is None
 
 
-def test_gnome_shell_version_on_linux(monkeypatch):
+def test_gnome_shell_version_on_linux_from_cmd(monkeypatch):
+    monkeypatch.setattr(utils.sys, "platform", "linux")
+
+    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
+    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "wayland")
+    version = utils.gnome_shell_version.__wrapped__()
+    assert version is None
+
+    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
+    monkeypatch.setattr(utils, "_get_gnome_version_xml", lambda *args, **kwargs: 1 / 0)
+    monkeypatch.setattr(
+        utils.subprocess, "check_output", lambda *args, **kwargs: b"GNOME Shell 33.3\n"
+    )
+    version = utils.gnome_shell_version.__wrapped__()
+    assert str(version) == "33.3"
+
+
+def test_gnome_shell_version_on_linux_from_xml(monkeypatch):
     monkeypatch.setattr(utils.sys, "platform", "linux")
 
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
@@ -44,10 +61,17 @@ def test_gnome_shell_version_on_linux(monkeypatch):
 
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
     monkeypatch.setattr(
+        utils,
+        "_get_gnome_version_xml",
+        lambda: '<?xml version="1.0"?>\n<gnome-version>\n<platform>22</platform>\n'
+        + "<minor>2</minor>\n<micro>0</micro>\n<distributor>Arch Linux</distributor>\n"
+        + "<!--<date></date>-->\n</gnome-version>",
+    )
+    monkeypatch.setattr(
         utils.subprocess, "check_output", lambda *args, **kwargs: b"GNOME Shell 33.3\n"
     )
     version = utils.gnome_shell_version.__wrapped__()
-    assert str(version) == "33.3"
+    assert str(version) == "22.2"
 
 
 def test_gnome_shell_version_on_linux_file_not_found(monkeypatch):
@@ -58,6 +82,8 @@ def test_gnome_shell_version_on_linux_file_not_found(monkeypatch):
 
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
     monkeypatch.setattr(utils.subprocess, "check_output", _mocked_subprocess)
+    monkeypatch.setattr(utils, "_get_gnome_version_xml", lambda *args, **kwargs: 1 / 0)
+
     version = utils.gnome_shell_version.__wrapped__()
     assert version is None
 
@@ -70,6 +96,8 @@ def test_gnome_shell_version_on_linux_unknown_exception(monkeypatch, caplog):
 
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
     monkeypatch.setattr(utils.subprocess, "check_output", _mocked_subprocess)
+    monkeypatch.setattr(utils, "_get_gnome_version_xml", lambda *args, **kwargs: 1 / 0)
+
     version = utils.gnome_shell_version.__wrapped__()
     assert version is None
     assert "exception when trying to get gnome-shell" in caplog.text.lower()

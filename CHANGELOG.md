@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.3.4 (2022-03-31)
+
+- All: Various speed improvements.
+- All: Smaller size by updating to Pyside 6.3 without addons.
+- All: In README, complement dependencies for installing pip package. Thx,
+  [@thecoder-001](https://github.com/thecoder-001) &
+  [@faveoled](https://github.com/faveoled).
+- Linux: Avoid crash on denied screenshot on Wayland.
+
 ## v0.3.3 (2022-03-25)
 
 - All: Fixes screenshots not updated when capturing from tray menu

@@ -47,6 +47,14 @@ repos:
         types: [python]
         pass_filenames: false
 
+      - id: safety
+        name: safety
+        stages: [commit]
+        language: system
+        entry: poetry run safety check
+        types: [python]
+        pass_filenames: false
+
       - id: pylint
         name: pylint
         stages: [commit]

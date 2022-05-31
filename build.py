@@ -5,13 +5,11 @@ import hashlib
 import inspect
 import os
 import shutil
-import stat
 import subprocess
 import sys
 import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
-from enum import Enum
 from pathlib import Path
 
 import briefcase  # type: ignore

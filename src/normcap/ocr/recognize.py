@@ -1,7 +1,6 @@
 """Detect OCR tool & language and perform OCR on selected part of image."""
 
 import logging
-import tempfile
 from os import PathLike
 from typing import Optional, Union
 
@@ -38,15 +37,13 @@ def recognize(
     logger.debug("Init tesseract with args: %s", tess_args)
     logger.debug("Image size: %s", image.size)
 
-    with tempfile.NamedTemporaryFile(delete=False) as fp:
-        image.save(f"{fp.name}.png")
-        tsv_data = pytesseract.image_to_data(
-            f"{fp.name}.png",
-            lang=tess_args.lang,
-            output_type=pytesseract.Output.DICT,
-            timeout=30,
-            config=tess_args.to_config_str(),
-        )
+    tsv_data = pytesseract.image_to_data(
+        image,
+        lang=tess_args.lang,
+        output_type=pytesseract.Output.DICT,
+        timeout=30,
+        config=tess_args.to_config_str(),
+    )
 
     result = OcrResult(
         tess_args=tess_args, words=utils.tsv_to_list_of_dicts(tsv_data), image=image

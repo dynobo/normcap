@@ -57,6 +57,7 @@ class ApplyMagic:
         transformed = ocr_result.transformed
         selected_languages = set(ocr_result.tess_args.lang)
         # TODO: Check if still necessary:
+        # https://github.com/tesseract-ocr/tesseract/issues/2702
         languages_with_superfluous_spaces = {
             "chi_sim",
             "chi_sim_vert",
