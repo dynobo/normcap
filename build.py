@@ -310,6 +310,7 @@ def patch_briefcase_appimage_to_include_tesseract():
     """Insert code into briefcase appimage code to remove unnecessary libs."""
     file_path = Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
     insert_after = '"-o", "appimage",'
+    # TODO: Try running with linuxdeploy-plugin-qt. Has to be installed first.
     patch = """
 "--executable",
 "/usr/bin/tesseract",
