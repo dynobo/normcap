@@ -2,7 +2,7 @@
 
 from normcap.ocr.models import OcrResult
 
-# pylint: disable=unused-argument, no-self-use
+# pylint: disable=unused-argument
 
 
 class BaseMagic:

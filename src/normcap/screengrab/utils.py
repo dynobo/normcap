@@ -71,7 +71,15 @@ def gnome_shell_version() -> Optional[version.Version]:
     ):
         return None
 
-    # Try parsing gnome-version xml file
+    shell_version = _parse_gnome_version_from_xml()
+    if not shell_version:
+        shell_version = _parse_gnome_version_from_shell_cmd()
+
+    return shell_version
+
+
+def _parse_gnome_version_from_xml():
+    """Try parsing gnome-version xml file."""
     shell_version = None
     try:
         content = _get_gnome_version_xml()
@@ -86,10 +94,13 @@ def gnome_shell_version() -> Optional[version.Version]:
         shell_version = version.parse(f"{platform}.{minor}")
     except Exception as e:  # pylint: disable=broad-except
         logger.error("Exception when trying to get gnome-shell version %s", e)
-    else:
-        return shell_version
 
-    # Try parsing gnome-shell output
+    return shell_version
+
+
+def _parse_gnome_version_from_shell_cmd():
+    """Try parsing gnome-shell output."""
+    shell_version = None
     try:
         output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
         output = output_raw.decode().strip()
@@ -99,4 +110,5 @@ def gnome_shell_version() -> Optional[version.Version]:
         pass
     except Exception as e:  # pylint: disable=broad-except
         logger.error("Exception when trying to get gnome-shell version %s", e)
+
     return shell_version

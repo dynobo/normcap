@@ -13,6 +13,8 @@ from normcap.gui import utils
 from normcap.gui.models import Capture
 from normcap.ocr.models import OcrResult
 
+# pylint: disable=unused-argument
+
 
 def test_init_tessdata_copies_files(tmp_path, monkeypatch):
     # Create placeholder for traineddata files, if they don't exist
