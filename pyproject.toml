@@ -51,14 +51,16 @@ rope = ">=1.1.1"
 types-toml = ">=0.10.7"
 types-requests = ">=2.27.29"
 types-Pillow = ">=9.0.19"
-radon = ">=5.1.0"
 pydeps = ">=1.10.18"
-viztracer = ">=0.15.2"
-vulture = "^2.4"
 bandit = "^1.7.4"
 briefcase = ">=0.3.7"
 safety = "^1.10.3"
-pip = "^22.1.1"
+radon = { version = ">=5.1.0", optional = true }
+viztracer = { version = ">=0.15.2", optional = true }
+vulture = { version = "^2.4", optional = true }
+
+[tool.poetry.extras]
+analysis = ["radon", "vistracer", "vulture"]
 
 [tool.black]
 line-length = 88
@@ -91,7 +93,7 @@ ignore_errors = true
 
 [tool.pylint.master]
 extension-pkg-allow-list = ["PySide6", "pytesseract"]
-load-plugins= ["pylint_pytest"]
+load-plugins = ["pylint_pytest"]
 jobs = 3
 
 [tool.pylint.'MESSAGES CONTROL']
@@ -102,7 +104,6 @@ disable = [
   "fixme",
   "invalid-name",
   "missing-module-docstring",
-  "too-few-public-arguments",
   "too-few-public-methods",
   "too-many-arguments",
   "too-many-instance-attributes",
