@@ -243,7 +243,7 @@ def bundle_pytesseract_dylibs():
     print("Bundling tesseract libs...")
     app_pkg_path = "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
     tesseract_source = "/usr/local/bin/tesseract"
-    tesseract_target = app_pkg_path + "/tesseract"
+    tesseract_target = f"{app_pkg_path}/tesseract"
     install_path = "@executable_path/"
     cmd(
         "dylibbundler "
@@ -310,7 +310,6 @@ def patch_briefcase_appimage_to_include_tesseract():
     """Insert code into briefcase appimage code to remove unnecessary libs."""
     file_path = Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
     insert_after = '"-o", "appimage",'
-    # TODO: Try running with linuxdeploy-plugin-qt. Has to be installed first.
     patch = """
 "--executable",
 "/usr/bin/tesseract",

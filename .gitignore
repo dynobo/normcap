@@ -19,10 +19,14 @@ coverage
 *.spec
 normcap/resources/icon
 normcap/resources/screencast
-src/normcap/resources/tesseract/
+src/normcap/resources/tesseract/*
+!src/normcap/resources/tesseract/.keep
 normcap/src/normcap.dist-info
 .DS_Store
 *.traineddata
+app.build/
+app.dist/
+app.bin
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

@@ -28,7 +28,6 @@ def test_argparser_help_is_complete():
     assert len(argparser.description) > 10
     for action in argparser._actions:  # pylint: disable=protected-access
         assert len(action.help) > 10
-    assert True
 
 
 def test_all_argparser_attributes_in_settings(argparser_defaults):
@@ -58,7 +57,7 @@ def test_set_environ_for_briefcase_not_packaged(monkeypatch, os_str):
     tesseract_cmd = os.environ.get("TESSERACT_CMD", None)
     tesseract_version = os.environ.get("TESSERACT_VERSION", None)
 
-    utils.set_environ_for_briefcase()  # pylint: disable=protected-access
+    utils.set_environ_for_prebuild_package()  # pylint: disable=protected-access
 
     assert tesseract_cmd == os.environ.get("TESSERACT_CMD", None)
     assert tesseract_version == os.environ.get("TESSERACT_VERSION", None)
@@ -74,7 +73,7 @@ def test_set_environ_for_briefcase_is_packaged(monkeypatch, os_str):
     monkeypatch.setenv("TESSERACT_CMD", "")
     monkeypatch.setenv("TESSERACT_VERSION", "")
 
-    utils.set_environ_for_briefcase()  # pylint: disable=protected-access
+    utils.set_environ_for_prebuild_package()
 
     if os_str == "win32":
         assert os.environ.get("TESSERACT_CMD").endswith("tesseract.exe")
