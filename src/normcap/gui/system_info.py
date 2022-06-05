@@ -15,6 +15,19 @@ from normcap.screengrab import gnome_shell_version
 
 logger = logging.getLogger(__name__)
 
+@functools.cache
+def is_prebuild_package():
+    package = sys.modules["__main__"].__package__
+    if package and "Briefcase-Version" in metadata.metadata(package):
+        # Briefcase package
+        return True
+
+    if hasattr(sys.modules["__main__"], "__compiled__"):
+        # Nuitka package
+        return True
+
+    return False
+
 
 @functools.cache
 def display_manager_is_wayland() -> bool:
@@ -67,13 +80,6 @@ def screens() -> dict[int, Screen]:
     return screens_dict
 
 
-def is_briefcase_package() -> bool:
-    """Check if script is executed in briefcase package."""
-    if app_module := sys.modules["__main__"].__package__:
-        return "Briefcase-Version" in metadata.metadata(app_module)
-    return False
-
-
 def config_directory() -> Path:
     """Retrieve platform specific configuration directory."""
     postfix = "normcap"
@@ -96,7 +102,7 @@ def get_tessdata_path() -> str:
     """Deside which path for tesseract language files to use."""
     prefix = os.environ.get("TESSDATA_PREFIX", None)
 
-    if is_briefcase_package():
+    if is_prebuild_package():
         path = config_directory() / "tessdata"
     elif prefix:
         path = Path(prefix) / "tessdata"
@@ -115,7 +121,7 @@ def to_dict() -> dict:
     """Cast all system infos to string for logging."""
     return dict(
         cli_args=" ".join(sys.argv),
-        is_briefcase_package=is_briefcase_package(),
+        is_briefcase_package=is_prebuild_package(),
         platform=sys.platform,
         pyside6_version=PySide6_version,
         qt_version=QtCore.qVersion(),

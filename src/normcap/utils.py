@@ -4,7 +4,7 @@ import sys
 from importlib import metadata, resources
 
 from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION
-
+from normcap.gui import system_info
 
 def create_argparser() -> argparse.ArgumentParser:
     """Parse command line arguments."""
@@ -36,23 +36,11 @@ def create_argparser() -> argparse.ArgumentParser:
     return parser
 
 
-def is_prebuild_package():
-    package = sys.modules["__main__"].__package__
-    if package and "Briefcase-Version" in metadata.metadata(package):
-        # Briefcase package
-        return True
-
-    if hasattr(sys.modules["__main__"], "__compiled__"):
-        # Nuitka package
-        return True
-
-    return False
-
 
 # Some overrides when running in prebuild package
 def set_environ_for_prebuild_package():
 
-    if not is_prebuild_package():
+    if not system_info.is_prebuild_package():
         return
 
     if sys.platform == "linux":

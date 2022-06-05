@@ -84,14 +84,14 @@ def test_desktop_environment_other(monkeypatch):
 
 
 def test_is_briefcase_package(monkeypatch):
-    assert not system_info.is_briefcase_package()
+    assert not system_info.is_prebuild_package()
 
     monkeypatch.setattr(metadata, "metadata", lambda _: {"Briefcase-Version": "9.9.9"})
     monkeypatch.setattr(sys.modules["__main__"], "__package__", "normcap")
-    assert system_info.is_briefcase_package()
+    assert system_info.is_prebuild_package()
 
     monkeypatch.setattr(sys.modules["__main__"], "__package__", "")
-    assert not system_info.is_briefcase_package()
+    assert not system_info.is_prebuild_package()
 
 
 def test_screens():

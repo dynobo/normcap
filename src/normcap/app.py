@@ -50,7 +50,7 @@ def main():
     # Wrap QT logging output
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
-    if system_info.is_briefcase_package():
+    if system_info.is_prebuild_package():
         utils.copy_tessdata_files_to_config_dir()
 
     app = QtWidgets.QApplication(sys.argv)
