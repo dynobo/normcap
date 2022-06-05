@@ -3,8 +3,9 @@ import os
 import sys
 from importlib import metadata, resources
 
-from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION
 from normcap.gui import system_info
+from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION
+
 
 def create_argparser() -> argparse.ArgumentParser:
     """Parse command line arguments."""
@@ -34,7 +35,6 @@ def create_argparser() -> argparse.ArgumentParser:
         help="set level of detail for console output (default: %(default)s)",
     )
     return parser
-
 
 
 # Some overrides when running in prebuild package

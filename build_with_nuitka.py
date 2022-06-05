@@ -5,13 +5,10 @@ import shutil
 import subprocess
 import sys
 import urllib.request
-import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
 import toml
-
-platform_str = sys.platform.lower()
 
 
 def get_version() -> str:
@@ -44,71 +41,6 @@ def cmd(cmd_str: str):
         )
 
 
-def patch_windows_installer():
-    """Customize wix-installer.
-
-    Currently only branding is added.
-    """
-    print("Preparing installer...")
-
-    wxs_file = Path.cwd() / "windows" / "msi" / "NormCap" / "normcap.wxs"
-
-    # Cache header for inserting later
-    with open(wxs_file, encoding="utf-8") as f:
-        header_lines = f.readlines()[:3]
-
-    ns = "{http://schemas.microsoft.com/wix/2006/wi}"
-    ET.register_namespace("", ns[1:-1])
-
-    tree = ET.parse(wxs_file)
-    root = tree.getroot()
-    product = root.find(f"{ns}Product")
-
-    # Copy installer images
-    left = "normcap_install_bg.bmp"
-    top = "normcap_install_top.bmp"
-    for image in [left, top]:
-        original = Path.cwd() / "src" / "normcap" / "resources" / image
-        target = Path.cwd() / "windows" / "msi" / "NormCap" / image
-        shutil.copy(original, target)
-
-    # Set installer images
-    ET.SubElement(product, "WixVariable", {"Id": "WixUIDialogBmp", "Value": f"{left}"})
-    ET.SubElement(product, "WixVariable", {"Id": "WixUIBannerBmp", "Value": f"{top}"})
-
-    # Allow upgrades
-    major_upgrade = ET.SubElement(product, "MajorUpgrade")
-    major_upgrade.set("DowngradeErrorMessage", "Can't downgrade. Uninstall first.")
-
-    sequence = product.find(f"{ns}InstallExecuteSequence")
-    product.remove(sequence)
-
-    upgrade = product.find(f"{ns}Upgrade")
-    product.remove(upgrade)
-
-    # Write & fix header
-    tree.write(wxs_file, encoding="utf-8", xml_declaration=False)
-    with open(wxs_file, "r+", encoding="utf-8") as f:
-        lines = f.readlines()
-        f.seek(0)
-        f.writelines(header_lines + lines)
-
-    print("Installer prepared.")
-
-
-def download_openssl():
-    """Download openssl needed for QNetwork https connections."""
-    target_path = Path.cwd() / "src" / "normcap" / "resources" / "openssl"
-    target_path.mkdir(exist_ok=True)
-    zip_path = Path.cwd() / "openssl.zip"
-    urllib.request.urlretrieve(
-        "http://wiki.overbyte.eu/arch/openssl-1.1.1m-win64.zip", zip_path
-    )
-    with zipfile.ZipFile(zip_path, "r") as zip_ref:
-        zip_ref.extractall(target_path)
-    print("Openssl extracted")
-
-
 def download_tessdata():
     """Download trained data for tesseract.
 
@@ -139,19 +71,22 @@ def download_tessdata():
     print("Download done.")
 
 
-def download_tesseract_windows_build():
+def bundle_tesseract_for_windows():
     # Link to download artifact might change
     # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
 
     resources_path = Path.cwd() / "src" / "normcap" / "resources"
     tesseract_path = resources_path / "tesseract"
 
+    if (tesseract_path / "tesseract.exe").exists():
+        print("Tesseract binary already present. Skipping download.")
+        return
+
     cmd(
         "curl -L -o tesseract.zip "
         + "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
     )
-    zip_file = Path("tesseract.zip")
-    with zipfile.ZipFile(zip_file) as artifact_zip:
+    with zipfile.ZipFile(Path("tesseract.zip")) as artifact_zip:
         members = [
             m
             for m in artifact_zip.namelist()
@@ -161,18 +96,13 @@ def download_tesseract_windows_build():
         artifact_zip.extractall(path=resources_path, members=members)
     print("Tesseract binaries downloaded")
 
-    shutil.rmtree(tesseract_path, ignore_errors=True)
-
-    os.rename(
-        resources_path / subdir,
-        tesseract_path,
+    for each_file in Path(resources_path / subdir).glob("*.*"):
+        each_file.rename(tesseract_path / each_file.name)
+    (tesseract_path / "google.tesseract.tesseract-master.exe").rename(
+        tesseract_path / "tesseract.exe"
     )
-    os.rename(
-        tesseract_path / "google.tesseract.tesseract-master.exe",
-        tesseract_path / "tesseract.exe",
-    )
-
-    print("Tesseract.exe renamed.")
+    shutil.rmtree(resources_path / subdir)
+    print("Binaries moved. Tesseract.exe renamed.")
 
 
 def bundle_pytesseract_dylibs():
@@ -207,9 +137,28 @@ def bundle_tesseract_for_linux():
 
 if __name__ == "__main__":
     download_tessdata()
-    if platform_str.lower().startswith("win"):
-        raise NotImplementedError
+    platform_str = sys.platform.lower()
+    version = "unstable" if "dev" in sys.argv else get_version()
 
+    if platform_str.lower().startswith("win"):
+        bundle_tesseract_for_windows()
+        cmd(
+            "python -m nuitka "
+            + "--standalone "
+            + "--assume-yes-for-downloads "
+            + "--windows-company-name=dynobo "
+            + "--windows-product-name=NormCap "
+            + '--windows-file-description="OCR powered screen-capture tool to capture information instead of images." '
+            + f"--windows-product-version={get_version()} "
+            + "--windows-icon-from-ico=src/normcap/resources/normcap.ico "
+            + "--windows-disable-console "
+            + "--enable-plugin=pyside6 "
+            + "--include-package=normcap.resources "
+            + "--include-package-data=normcap.resources "
+            + "--include-data-files=src/normcap/resources/tesseract/*.dll=normcap/resources/tesseract/ "
+            + "src/normcap/app.py"
+        )
+        
     elif platform_str.lower().startswith("darwin"):
         raise NotImplementedError
 
@@ -221,17 +170,15 @@ if __name__ == "__main__":
                 cmd(f"sudo apt install {' '.join(system_requires)}")
         bundle_tesseract_for_linux()
         cmd(
-            "nuitka3 "
-            + "--onefile "  # Use for building distribution packages
-            # + "--standalone "  # Use for debugging build process
+            "python -m "
+            + "--onefile "
             + "--assume-yes-for-downloads "
             + "--linux-onefile-icon=src/normcap/resources/normcap.svg "
             + "--enable-plugin=pyside6 "
             + "--include-package=normcap.resources "
             + "--include-package-data=normcap.resources "
+            + f"-o NormCap-{version}-x86_64.AppImage "
             + "src/normcap/app.py"
         )
-        version = "unstable" if "dev" in sys.argv else get_version()
-        cmd(f"mv app.bin NormCap-{version}-x86_64.AppImage")
     else:
         raise ValueError("Unknown operating system.")

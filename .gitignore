@@ -26,7 +26,10 @@ normcap/src/normcap.dist-info
 *.traineddata
 app.build/
 app.dist/
+app.onefile-build/
 app.bin
+app.exe
+tesseract.zip
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
