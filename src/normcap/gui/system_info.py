@@ -16,7 +16,6 @@ from normcap.screengrab import gnome_shell_version
 logger = logging.getLogger(__name__)
 
 
-@functools.cache
 def is_prebuild_package():
     package = sys.modules["__main__"].__package__
     if package and "Briefcase-Version" in metadata.metadata(package):
@@ -122,7 +121,7 @@ def to_dict() -> dict:
     """Cast all system infos to string for logging."""
     return dict(
         cli_args=" ".join(sys.argv),
-        is_briefcase_package=is_prebuild_package(),
+        is_prebuild_package=is_prebuild_package(),
         platform=sys.platform,
         pyside6_version=PySide6_version,
         qt_version=QtCore.qVersion(),

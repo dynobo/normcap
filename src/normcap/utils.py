@@ -1,7 +1,7 @@
 import argparse
 import os
 import sys
-from importlib import metadata, resources
+from importlib import resources
 
 from normcap.gui import system_info
 from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION

@@ -158,7 +158,7 @@ if __name__ == "__main__":
             + "--include-data-files=src/normcap/resources/tesseract/*.dll=normcap/resources/tesseract/ "
             + "src/normcap/app.py"
         )
-        
+
     elif platform_str.lower().startswith("darwin"):
         raise NotImplementedError
 

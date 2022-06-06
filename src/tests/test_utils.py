@@ -51,7 +51,6 @@ def test_argparser_defaults_are_correct(argparser_defaults):
 
 @pytest.mark.parametrize("os_str", ("linux", "win32", "darwin"))
 def test_set_environ_for_briefcase_not_packaged(monkeypatch, os_str):
-    monkeypatch.setattr(utils.metadata, "metadata", lambda _: [])
     monkeypatch.setattr(utils.sys, "platform", os_str)
 
     tesseract_cmd = os.environ.get("TESSERACT_CMD", None)
