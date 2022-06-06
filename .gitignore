@@ -30,6 +30,7 @@ app.onefile-build/
 app.bin
 app.exe
 tesseract.zip
+wix/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

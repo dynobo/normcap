@@ -7,6 +7,7 @@ import sys
 import urllib.request
 import zipfile
 from pathlib import Path
+from typing import Union
 
 import toml
 
@@ -27,10 +28,13 @@ def get_system_requires(platform) -> list[str]:
     ]
 
 
-def cmd(cmd_str: str):
+def cmd(cmd_str: Union[str, list], cwd=None):
     """Run command in subprocess.run()."""
+    if not isinstance(cmd_str, str):
+        cmd_str = " ".join(cmd_str)
+
     completed_proc = subprocess.run(  # pylint: disable=subprocess-run-check
-        cmd_str, shell=True
+        cmd_str, shell=True, cwd=cwd
     )
     if completed_proc.returncode != 0:
         raise subprocess.CalledProcessError(
@@ -135,29 +139,118 @@ def bundle_tesseract_for_linux():
         print("'tesseract' already copied.")
 
 
+def download_wix_toolset():
+    wix_path = Path.cwd() / "wix"
+    wix_path.mkdir(exist_ok=True)
+    wix_zip = wix_path / "wix-binaries.zip"
+    if wix_zip.exists():
+        return "Skip downloading wix toolkit. Already there."
+
+    print("Downloading wix toolkit...")
+    url = "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip"
+    urllib.request.urlretrieve(f"{url}", wix_zip)
+
+    print(f"Downloaded {url} to {wix_zip.absolute()}")
+    with zipfile.ZipFile(wix_zip, "r") as zip_ref:
+        zip_ref.extractall(wix_path)
+
+
+def prepare_windows_installer():
+    print("Copying wxs configuration file to app.dist folder...")
+    wxs = Path.cwd() / "assets" / "normcap.wxs"
+    shutil.copy(wxs, Path.cwd() / "app.dist")
+
+    print("Copying images to app.dist folder...")
+    resource_path = Path.cwd() / "src" / "normcap" / "resources"
+    shutil.copy(resource_path / "normcap_install_bg.bmp", Path.cwd() / "app.dist")
+    shutil.copy(resource_path / "normcap_install_top.bmp", Path.cwd() / "app.dist")
+    shutil.copy(resource_path / "normcap.ico", Path.cwd() / "app.dist")
+
+    print("Compiling application manifest...")
+    wix_path = Path().cwd() / "wix"
+    cmd(
+        [
+            str((wix_path / "heat.exe").resolve()),
+            "dir",
+            "app.dist",
+            "-nologo",  # Don't display startup text
+            "-gg",  # Generate GUIDs
+            "-sfrag",  # Suppress fragment generation for directories
+            "-sreg",  # Suppress registry harvesting
+            "-srd",  # Suppress harvesting the root directory
+            "-scom",  # Suppress harvesting COM components
+            "-dr",
+            "normcap_ROOTDIR",  # Root directory reference name
+            "-cg",
+            "normcap_COMPONENTS",  # Root component group name
+            "-var",
+            "var.SourceDir",  # variable to use as the source dir
+            "-out",
+            "app.dist/normcap-manifest.wxs",
+        ]
+    )
+    print("Compiling installer...")
+    cmd(
+        [
+            str((wix_path / "candle.exe").resolve()),
+            "-nologo",  # Don't display startup text
+            "-ext",
+            "WixUtilExtension",
+            "-ext",
+            "WixUIExtension",
+            "-dSourceDir=.",
+            f"normcap.wxs",
+            f"normcap-manifest.wxs",
+        ],
+        cwd="app.dist"
+    )
+    print("Linking installer...")
+    cmd(
+        [
+            str((wix_path / "light.exe").resolve()),
+            "-nologo",  # Don't display startup text
+            "-ext",
+            "WixUtilExtension",
+            "-ext",
+            "WixUIExtension",
+            "-o",
+            "normcap.msi",
+            "normcap.wixobj",
+            "normcap-manifest.wixobj",
+        ],
+        cwd="app.dist"
+    )
+
+
 if __name__ == "__main__":
     download_tessdata()
     platform_str = sys.platform.lower()
     version = "unstable" if "dev" in sys.argv else get_version()
 
     if platform_str.lower().startswith("win"):
-        bundle_tesseract_for_windows()
-        cmd(
-            "python -m nuitka "
-            + "--standalone "
-            + "--assume-yes-for-downloads "
-            + "--windows-company-name=dynobo "
-            + "--windows-product-name=NormCap "
-            + '--windows-file-description="OCR powered screen-capture tool to capture information instead of images." '
-            + f"--windows-product-version={get_version()} "
-            + "--windows-icon-from-ico=src/normcap/resources/normcap.ico "
-            + "--windows-disable-console "
-            + "--enable-plugin=pyside6 "
-            + "--include-package=normcap.resources "
-            + "--include-package-data=normcap.resources "
-            + "--include-data-files=src/normcap/resources/tesseract/*.dll=normcap/resources/tesseract/ "
-            + "src/normcap/app.py"
-        )
+        # TODO: Rename app.exe to NormCap.exe
+        # TODO: Adjust run path in normcap wxs
+        # TODO: Adjust version number dynamically in wxs
+        # TODO: File handling cleaner
+        # bundle_tesseract_for_windows()
+        # download_wix_toolset()
+        # cmd(
+        #     "python -m nuitka "
+        #     + "--standalone "
+        #     + "--assume-yes-for-downloads "
+        #     + "--windows-company-name=dynobo "
+        #     + "--windows-product-name=NormCap "
+        #     + '--windows-file-description="OCR powered screen-capture tool to capture information instead of images." '
+        #     + f"--windows-product-version={get_version()} "
+        #     + "--windows-icon-from-ico=src/normcap/resources/normcap.ico "
+        #     + "--windows-disable-console "
+        #     + "--enable-plugin=pyside6 "
+        #     + "--include-package=normcap.resources "
+        #     + "--include-package-data=normcap.resources "
+        #     + "--include-data-files=src/normcap/resources/tesseract/*.dll=normcap/resources/tesseract/ "
+        #     + "src/normcap/app.py"
+        # )
+        prepare_windows_installer()
 
     elif platform_str.lower().startswith("darwin"):
         raise NotImplementedError
