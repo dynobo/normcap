@@ -20,6 +20,9 @@ TESSERACT_PATH = RESOURCE_PATH / "tesseract"
 
 def get_version() -> str:
     """Get versions string from pyproject.toml."""
+    if "dev" in sys.argv:
+        return "unstable"
+
     with open("pyproject.toml", encoding="utf8") as toml_file:
         pyproject_toml = toml.load(toml_file)
     return pyproject_toml["tool"]["poetry"]["version"]
@@ -203,7 +206,7 @@ def windows_build_installer():
             -nologo \
             -ext WixUtilExtension \
             -ext WixUIExtension \
-            -o normcap.msi \
+            -o {(BUILD_PATH / f"NormCap-{get_version()}-Windows.msi").resolve()} \
             normcap.wixobj \
             normcap-manifest.wixobj
         """,
@@ -228,7 +231,7 @@ def linux_nuitka():
                 --enable-plugin=pyside6 \
                 --include-package=normcap.resources \
                 --include-package-data=normcap.resources \
-                -o NormCap-{version}-x86_64.AppImage \
+                -o NormCap-{get_version()}-x86_64.AppImage \
                 {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
         """,
         cwd=BUILD_PATH,
@@ -248,8 +251,8 @@ def windows_nuitka():
                 --windows-product-version={get_version()} \
                 --windows-icon-from-ico={(IMG_PATH / "normcap.ico").resolve()} \
                 --windows-disable-console \
-                --windows-force-stdout-spec=%%TEMP%%\\normcap\\normcap.log \
-                --windows-force-stderr-spec=%%TEMP%%\\normcap\\normcap.log \
+                --windows-force-stdout-spec=%PROGRAM%.log \
+                --windows-force-stderr-spec=%PROGRAM%.log \
                 --enable-plugin=pyside6 \
                 --include-package=normcap.resources \
                 --include-package-data=normcap.resources \
@@ -267,7 +270,6 @@ def windows_nuitka():
 if __name__ == "__main__":
     download_tessdata()
     platform_str = sys.platform.lower()
-    version = "unstable" if "dev" in sys.argv else get_version()
 
     if platform_str.lower().startswith("win"):
         windows_bundle_tesseract()

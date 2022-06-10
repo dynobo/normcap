@@ -6,19 +6,12 @@ dependency_graph.png
 result.json
 .temp
 .venv/
-linux/
-macOS/
-windows/
-Windows/
-shortcut-properties.nsh
 .vscode/
 cov.xml
 coverage
 .coverage
 .coveralls.yml
 *.spec
-normcap/resources/icon
-normcap/resources/screencast
 src/normcap/resources/tesseract/*
 !src/normcap/resources/tesseract/.keep
 normcap/src/normcap.dist-info
@@ -27,10 +20,10 @@ normcap/src/normcap.dist-info
 app.build/
 app.dist/
 app.onefile-build/
-app.bin
-app.exe
 tesseract.zip
 wix/
+*.wixpdb
+*.msi
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
