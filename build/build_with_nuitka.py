@@ -230,7 +230,7 @@ def linux_nuitka():
                 --include-package=normcap.resources \
                 --include-package-data=normcap.resources \
                 -o NormCap-{version}-x86_64.AppImage \
-                src/normcap/app.py
+                {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
         """,
         cwd=BUILD_PATH,
     )
