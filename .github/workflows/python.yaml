@@ -125,10 +125,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       # Build test package
-      - name: Install briefcase and run build
+      - name: Build test package
         shell: bash -l {0}
         run: |
-          poetry run python build_with_nuitka.py dev
+          poetry run python build/build_with_nuitka.py dev
 
       - name: Set current date as env variable
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
@@ -192,7 +192,7 @@ jobs:
         shell: bash -l {0}
         run: |
           poetry install
-          poetry run build/python build_with_nuitka.py
+          poetry run python build/build_with_nuitka.py
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:

@@ -22,7 +22,7 @@ VENV_PATH = Path(os.environ["VIRTUAL_ENV"])
 def get_version() -> str:
     """Get versions string from pyproject.toml."""
     if "dev" in sys.argv:
-        return "unstable"
+        return "0.0.1"
 
     with open("pyproject.toml", encoding="utf8") as toml_file:
         pyproject_toml = toml.load(toml_file)
