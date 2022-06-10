@@ -15,6 +15,7 @@ PROJECT_PATH = Path("__file__").parent.parent
 BUILD_PATH = PROJECT_PATH / "build"
 IMG_PATH = BUILD_PATH / "imgs"
 RESOURCE_PATH = PROJECT_PATH / "src" / "normcap" / "resources"
+TESSERACT_PATH = RESOURCE_PATH / "tesseract"
 
 
 def get_version() -> str:
@@ -81,9 +82,7 @@ def windows_bundle_tesseract():
 
     # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
 
-    tesseract_path = RESOURCE_PATH / "tesseract"
-
-    if (tesseract_path / "tesseract.exe").exists():
+    if (TESSERACT_PATH / "tesseract.exe").exists():
         print("Tesseract.exe already present. Skipping download.")
         return
 
@@ -102,9 +101,9 @@ def windows_bundle_tesseract():
     print("Tesseract binaries downloaded.")
 
     for each_file in Path(RESOURCE_PATH / subdir).glob("*.*"):
-        each_file.rename(tesseract_path / each_file.name)
-    (tesseract_path / "google.tesseract.tesseract-master.exe").rename(
-        tesseract_path / "tesseract.exe"
+        each_file.rename(TESSERACT_PATH / each_file.name)
+    (TESSERACT_PATH / "google.tesseract.tesseract-master.exe").rename(
+        TESSERACT_PATH / "tesseract.exe"
     )
     shutil.rmtree(RESOURCE_PATH / subdir)
     print("Binaries moved. Tesseract.exe renamed.")
@@ -237,6 +236,8 @@ def linux_nuitka():
 
 
 def windows_nuitka():
+    VENV_PATH = Path(os.environ["VIRTUAL_ENV"])
+    TLS_PATH = VENV_PATH / "lib" / "site-packages" / "PySide6" / "plugins" / "tls"
     run(
         cmd=f"""python -m nuitka \
                 --standalone \
@@ -246,20 +247,21 @@ def windows_nuitka():
                 --windows-file-description="OCR powered screen-capture tool to capture information instead of images." \
                 --windows-product-version={get_version()} \
                 --windows-icon-from-ico={(IMG_PATH / "normcap.ico").resolve()} \
+                --windows-disable-console \
+                --windows-force-stdout-spec=%PROGRAM%.log \
+                --windows-force-stderr-spec=%PROGRAM%.log \
                 --enable-plugin=pyside6 \
                 --include-package=normcap.resources \
                 --include-package-data=normcap.resources \
-                --include-data-files=src/normcap/resources/tesseract/*.dll=normcap/resources/tesseract/ \
-                src/normcap/app.py
+                --include-data-files={(TESSERACT_PATH).resolve()}/*.dll=normcap/resources/tesseract/ \
+                --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
+                {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
             """,
-        cwd=PROJECT_PATH,
+        cwd=BUILD_PATH,
     )
-    #            --windows-disable-console \
-    #            --windows-force-stdout-spec=%PROGRAM%.log \
-    #            --windows-force-stderr-spec=%PROGRAM%.log \
-    normcap_exe = PROJECT_PATH / "app.dist" / "NormCap.exe"
+    normcap_exe = BUILD_PATH / "app.dist" / "NormCap.exe"
     normcap_exe.unlink(missing_ok=True)
-    (PROJECT_PATH / "app.dist" / "app.exe").rename(normcap_exe)
+    (BUILD_PATH / "app.dist" / "app.exe").rename(normcap_exe)
 
 
 if __name__ == "__main__":
