@@ -159,12 +159,12 @@ def windows_download_wix():
 def windows_build_installer():
     print("Copying wxs configuration file to app.dist folder...")
     wxs = BUILD_PATH / "normcap.wxs"
-    shutil.copy(wxs, PROJECT_PATH / "app.dist")
+    shutil.copy(wxs, BUILD_PATH / "app.dist")
 
     print("Copying images to app.dist folder...")
-    shutil.copy(IMG_PATH / "normcap_install_bg.bmp", PROJECT_PATH / "app.dist")
-    shutil.copy(IMG_PATH / "normcap_install_top.bmp", PROJECT_PATH / "app.dist")
-    shutil.copy(IMG_PATH / "normcap.ico", PROJECT_PATH / "app.dist")
+    shutil.copy(IMG_PATH / "normcap_install_bg.bmp", BUILD_PATH / "app.dist")
+    shutil.copy(IMG_PATH / "normcap_install_top.bmp", BUILD_PATH / "app.dist")
+    shutil.copy(IMG_PATH / "normcap.ico", BUILD_PATH / "app.dist")
 
     print("Compiling application manifest...")
     wix_path = BUILD_PATH / "wix"
@@ -181,9 +181,9 @@ def windows_build_installer():
             -dr normcap_ROOTDIR \
             -cg normcap_COMPONENTS \
             -var var.SourceDir \
-            -out app.dist/normcap-manifest.wxs
+            -out {(BUILD_PATH / "app.dist" / "normcap-manifest.wxs").resolve()}
         """,
-        cwd=PROJECT_PATH,
+        cwd=BUILD_PATH,
     )
     print("Compiling installer...")
     run(
@@ -195,7 +195,7 @@ def windows_build_installer():
             normcap.wxs \
             normcap-manifest.wxs
         """,
-        cwd=PROJECT_PATH / "app.dist",
+        cwd=BUILD_PATH / "app.dist",
     )
     print("Linking installer...")
     run(
@@ -207,7 +207,7 @@ def windows_build_installer():
             normcap.wixobj \
             normcap-manifest.wixobj
         """,
-        cwd=PROJECT_PATH / "app.dist",
+        cwd=BUILD_PATH / "app.dist",
     )
 
 
@@ -248,8 +248,8 @@ def windows_nuitka():
                 --windows-product-version={get_version()} \
                 --windows-icon-from-ico={(IMG_PATH / "normcap.ico").resolve()} \
                 --windows-disable-console \
-                --windows-force-stdout-spec=%PROGRAM%.log \
-                --windows-force-stderr-spec=%PROGRAM%.log \
+                --windows-force-stdout-spec=%%TEMP%%\\normcap\\normcap.log \
+                --windows-force-stderr-spec=%%TEMP%%\\normcap\\normcap.log \
                 --enable-plugin=pyside6 \
                 --include-package=normcap.resources \
                 --include-package-data=normcap.resources \
