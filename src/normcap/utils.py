@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 from importlib import resources
+from pathlib import Path
 
 from normcap.gui import system_info
 from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION
@@ -44,11 +45,14 @@ def set_environ_for_prebuild_package():
         return
 
     if sys.platform == "linux":
-        with resources.as_file(resources.files("normcap.resources")) as resource_path:
-            tesseract_libs = resource_path.parent / "resources" / "tesseract"
-            tesseract_bin = tesseract_libs / "tesseract"
-            os.environ["LD_LIBRARY_PATH"] = str(tesseract_libs.resolve())
-            os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
+        # resources are currently not resolved on linux by nuitka:
+        # https://github.com/Nuitka/Nuitka/issues/1451
+        # Workround with using __file__
+        resource_path = Path(__file__).parent / "resources"
+        tesseract_libs = resource_path / "tesseract"
+        tesseract_bin = tesseract_libs / "tesseract"
+        os.environ["LD_LIBRARY_PATH"] = str(tesseract_libs.resolve())
+        os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
 
     if sys.platform == "darwin":
         with resources.as_file(resources.files("normcap")) as normcap_path:
@@ -57,12 +61,6 @@ def set_environ_for_prebuild_package():
 
     elif sys.platform == "win32":
         with resources.as_file(resources.files("normcap.resources")) as resource_path:
-            # TODO: Check if this is still necessary:
-            # Add openssl shipped with briefcase package to path
-            openssl_path = resource_path / "openssl"
-            os.environ["PATH"] += os.pathsep + str(openssl_path.resolve())
-
-            # Use bundled tesseract binary
             tesseract_bin = resource_path / "tesseract" / "tesseract.exe"
             os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
             os.environ["TESSERACT_VERSION"] = "5.0.0"

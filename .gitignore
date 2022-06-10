@@ -24,6 +24,8 @@ tesseract.zip
 wix/
 *.wixpdb
 *.msi
+*.AppImage
+*.dmg
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

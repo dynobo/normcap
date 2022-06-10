@@ -16,6 +16,7 @@ BUILD_PATH = PROJECT_PATH / "build"
 IMG_PATH = BUILD_PATH / "imgs"
 RESOURCE_PATH = PROJECT_PATH / "src" / "normcap" / "resources"
 TESSERACT_PATH = RESOURCE_PATH / "tesseract"
+VENV_PATH = Path(os.environ["VIRTUAL_ENV"])
 
 
 def get_version() -> str:
@@ -223,6 +224,16 @@ def linux_system_deps():
 
 
 def linux_nuitka():
+    TLS_PATH = (
+        VENV_PATH
+        / "lib"
+        / "python3.10"
+        / "site-packages"
+        / "PySide6"
+        / "Qt"
+        / "plugins"
+        / "tls"
+    )
     run(
         cmd=f"""python -m nuitka \
                 --onefile \
@@ -231,6 +242,7 @@ def linux_nuitka():
                 --enable-plugin=pyside6 \
                 --include-package=normcap.resources \
                 --include-package-data=normcap.resources \
+                --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
                 -o NormCap-{get_version()}-x86_64.AppImage \
                 {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
         """,
@@ -239,8 +251,8 @@ def linux_nuitka():
 
 
 def windows_nuitka():
-    VENV_PATH = Path(os.environ["VIRTUAL_ENV"])
     TLS_PATH = VENV_PATH / "lib" / "site-packages" / "PySide6" / "plugins" / "tls"
+
     run(
         cmd=f"""python -m nuitka \
                 --standalone \
