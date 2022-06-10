@@ -225,7 +225,7 @@ def linux_nuitka():
         cmd=f"""python -m nuitka \
                 --onefile \
                 --assume-yes-for-downloads \
-                --linux-onefile-icon=src/normcap/resources/normcap.svg \
+                --linux-onefile-icon={(IMG_PATH / "normcap.svg").resolve()} \
                 --enable-plugin=pyside6 \
                 --include-package=normcap.resources \
                 --include-package-data=normcap.resources \
