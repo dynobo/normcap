@@ -188,11 +188,11 @@ jobs:
       - name: Extract version from tag
         id: extract_version
         uses: damienaicheh/extract-version-from-tag-action@v1.0.0
-      - name: Install briefcase and run build
+      - name: Install nuitka and run build
         shell: bash -l {0}
         run: |
           poetry install
-          poetry run python build_with_nuitka.py
+          poetry run build/python build_with_nuitka.py
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:

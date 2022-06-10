@@ -27,7 +27,7 @@
             <Directory Id="ProgramMenuFolder">
                 <Directory Id="ProgramMenuSubfolder" Name="NormCap">
                     <Component Id="ApplicationShortcuts" Guid="*">
-                        <Shortcut Id="ApplicationShortcut1" Name="NormCap" Icon="ProductIcon" Description="OCR-powered screen-capture tool to capture information instead of images" Target="[normcap_ROOTDIR]python\pythonw.exe" WorkingDirectory="normcap_ROOTDIR" Arguments="-m normcap" />
+                        <Shortcut Id="ApplicationShortcut1" Name="NormCap" Icon="ProductIcon" Description="OCR-powered screen-capture tool to capture information instead of images" Target="[normcap_ROOTDIR]NormCap.exe" WorkingDirectory="normcap_ROOTDIR" Arguments="-m normcap" />
                         <RegistryValue Root="HKCU" Key="Software\dynobo\NormCap" Name="installed" Type="integer" Value="1" KeyPath="yes" />
                         <RemoveFolder Id="ProgramMenuSubfolder" On="uninstall" />
                     </Component>
