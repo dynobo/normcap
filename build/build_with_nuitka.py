@@ -39,7 +39,7 @@ def get_system_requires(platform) -> list[str]:
 
 
 def run(cmd: Union[str, list], cwd=None):
-    """Run command in subprocess.run()."""
+    """Executes a shell command and raises in case of error."""
     if not isinstance(cmd, str):
         cmd = " ".join(cmd)
 

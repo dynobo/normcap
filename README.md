@@ -159,6 +159,8 @@ Packaging is done with:
 
 - [briefcase](https://pypi.org/project/briefcase/) _- converting Python projects into_
   _standalone apps_
+- [nuitka](https://pypi.org/project/Nuitka/) _- compiling Python projects into_
+  _standalone apps_
 
 And it depends on external software
 
@@ -168,7 +170,7 @@ Thanks to the maintainers of those nice libraries!
 
 ## Similar open source tools
 
-Try those to see which one suits your needs:
+If NormCap doesn't fit your needs, try those alternatives:
 
 - [TextSnatcher](https://github.com/RajSolai/TextSnatcher)
 - [GreenShot](https://getgreenshot.org/)
