@@ -6,16 +6,16 @@
         <Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package" InstallScope="perUser" /><Property Id="ALLUSERS" Value="2" />
         <Property Id="MSIINSTALLPERUSER" Value="1" />
 
-        
+
         <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 
         <Icon Id="ProductIcon" SourceFile="normcap.ico" />
 
         <Property Id="ARPPRODUCTICON" Value="ProductIcon" />
         <Property Id="ARPURLINFOABOUT" Value="https://github.com/dynobo/normcap" />
-        
+
         <Property Id="ARPCONTACT" Value="dynobo@mailbox.org" />
-        
+
         <Property Id="ARPNOREPAIR" Value="1" />
         <Property Id="ARPNOMODIFY" Value="1" />
 

@@ -202,7 +202,7 @@ def prepare_windows_installer():
             f"normcap.wxs",
             f"normcap-manifest.wxs",
         ],
-        cwd="app.dist"
+        cwd="app.dist",
     )
     print("Linking installer...")
     cmd(
@@ -218,7 +218,7 @@ def prepare_windows_installer():
             "normcap.wixobj",
             "normcap-manifest.wixobj",
         ],
-        cwd="app.dist"
+        cwd="app.dist",
     )
 
 
