@@ -128,7 +128,7 @@ jobs:
       - name: Build test package
         shell: bash -l {0}
         run: |
-          poetry run python build/build_with_nuitka.py dev
+          poetry run python package/build.py --framework=nuitka
 
       - name: Set current date as env variable
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV

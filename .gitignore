@@ -27,6 +27,7 @@ wix/
 *.msi
 *.AppImage
 *.zip
+linux/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

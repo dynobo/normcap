@@ -1,5 +1,7 @@
 """Adjustments executed while packaging with briefcase during CI/CD."""
 
+# mypy: ignore-errors
+
 import fileinput
 import hashlib
 import inspect
@@ -256,40 +258,7 @@ def bundle_pytesseract_dylibs():
     shutil.copy(tesseract_source, tesseract_target)
 
 
-def rm_recursive(directory, exclude):
-    """Remove excluded files from package."""
-    for package_path in directory.glob(r"**/*"):
-        path_str = str(package_path.absolute()).lower()
-        if any(e in path_str for e in exclude):
-            if not package_path.exists():
-                continue
-            print(f"Removing: {package_path.absolute()}")
-            if package_path.is_dir():
-                shutil.rmtree(package_path)
-            if package_path.is_file():
-                os.remove(package_path)
-
-
-def patch_briefcase_appimage_to_prune_deps():
-    """Insert code into briefcase appimage code to remove unnecessary libs."""
-    def_rm_recursive = inspect.getsource(rm_recursive)
-
-    file_path = Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
-    patch = f"""
-import shutil, os
-{def_rm_recursive}
-app_dir = self.appdir_path(app) / "usr" / "app_packages"
-rm_recursive(directory=app_dir, exclude={EXCLUDE_FROM_APP_PACKAGES})
-rm_recursive(directory=app_dir / "PySide6", exclude={EXCLUDE_FROM_PySide6})
-
-lib_dir = self.appdir_path(app) / "usr" / "lib"
-rm_recursive(directory=lib_dir / "PySide6", exclude={EXCLUDE_FROM_PySide6})
-"""
-    insert_after = 'self.logger.info(f"[{app.app_name}] Building AppImage...")'
-    patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
-
-
-def patch_info_plist_for_proper_fullscreen():
+def patch_info_plist_for_proper_fullscreen(self):
     """Set attribute to keep dock and menubar hidden in fullscreen.
 
     See details:
@@ -301,75 +270,9 @@ def patch_info_plist_for_proper_fullscreen():
     <integer>3</integer>
 """
     insert_after = "<string>normcap</string>"
-    patch_file(
+    self.patch_file(
         file_path=file_path, insert_after=insert_after, patch=patch, mark_patched=False
     )
-
-
-def patch_briefcase_appimage_to_include_tesseract():
-    """Insert code into briefcase appimage code to remove unnecessary libs."""
-    file_path = Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
-    insert_after = '"-o", "appimage",'
-    patch = """
-"--executable",
-"/usr/bin/tesseract",
-"""
-    patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
-
-
-def patch_file(
-    file_path: Path, insert_after: str, patch: str, mark_patched: bool = True
-):
-    """Insert lines in file, if not already done.
-
-    Indents the patch like the line after which it is inserted.
-    """
-    patch_applied = False
-    patch_hash = hashlib.md5(patch.encode()).hexdigest()
-
-    with open(file_path, "r", encoding="utf8") as f:
-        if f.read().find(patch_hash) > -1:
-            print("Skipping patch. Already applied.")
-            return
-
-    print(f"Patching file {file_path.resolve()}")
-    if mark_patched:
-        patch = (
-            f"# dynobo: {patch_hash} >>>>>>>>>>>>>>"
-            + patch
-            + f"# dynobo: {patch_hash} <<<<<<<<<<<<<<\n"
-        )
-    for line in fileinput.FileInput(file_path, inplace=True):
-        if insert_after in line:
-            pad = len(line) - len(line.lstrip(" "))
-            patch = patch.replace("\n", f"\n{pad * ' '}")
-            line = line.replace(line, line + pad * " " + patch + "\n")
-            patch_applied = True
-        print(line, end="")
-
-    if not patch_applied:
-        raise RuntimeError(
-            f"Couldn't apply patch to file {file_path}! "
-            + f"Line '{insert_after}' not found!"
-        )
-
-
-def patch_briefcase_create_to_adjust_dockerfile():
-    """Add code to add tesseract ppa to Dockerfile."""
-    file_path = Path(briefcase.__file__).parent / "commands" / "create.py"
-    insert_after = "self.install_app_support_package(app=app)"
-    patch = """
-if "linux" in str(bundle_path):
-    print()
-    print("Patching Dockerfile on Linux")
-    import fileinput
-    patch = "\\nRUN apt-add-repository ppa:alex-p/tesseract-ocr-devel"
-    for line in fileinput.FileInput(bundle_path / "Dockerfile", inplace=1):
-        if "RUN apt-add-repository ppa:deadsnakes/ppa" in line:
-            line = line.replace(line, line + patch)
-        print(line, end="")
-"""
-    patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
 
 def add_metainfo_to_appimage():
@@ -430,21 +333,3 @@ if __name__ == "__main__":
             cmd("mv macOS/*.dmg macOS/NormCap-unstable-MacOS.dmg")
         else:
             cmd(f"mv macOS/*.dmg macOS/NormCap-{get_version()}-MacOS.dmg")
-
-    elif platform_str.lower().startswith("linux"):
-        if system_requires := get_system_requires("linux"):
-            github_actions_uid = 1001
-            if os.getuid() == github_actions_uid:  # type: ignore
-                cmd("sudo apt update")
-                cmd(f"sudo apt install {' '.join(system_requires)}")
-        download_tessdata()
-        patch_briefcase_appimage_to_prune_deps()
-        patch_briefcase_appimage_to_include_tesseract()
-        patch_briefcase_create_to_adjust_dockerfile()
-        cmd("briefcase create")
-        cmd("briefcase build")
-        cmd("briefcase package")
-        if "dev" in sys.argv:
-            cmd("mv linux/*.AppImage linux/NormCap-unstable-x86_64.AppImage")
-    else:
-        raise ValueError("Unknown operating system.")
