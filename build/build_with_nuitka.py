@@ -242,8 +242,8 @@ def linux_nuitka():
                 --assume-yes-for-downloads \
                 --linux-onefile-icon={(IMG_PATH / "normcap.svg").resolve()} \
                 --enable-plugin=pyside6 \
-                --include-data-files={(RESOURCE_PATH).resolve()}=normcap/resources \
-                --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
+                --include-data-data={(RESOURCE_PATH).resolve()}=normcap/resources \
+                --include-data-dir={(TLS_PATH).resolve()}=PySide6/qt-plugins/tls \
                 --include-data-files={(BUILD_PATH / "metainfo").resolve()}=usr/share/ \
                 --include-data-files={(BUILD_PATH / ".cache").resolve()}/*.*=./ \
                 -o NormCap-{get_version()}-x86_64.AppImage \
@@ -269,8 +269,8 @@ def windows_nuitka():
                 --windows-force-stdout-spec=%PROGRAM%.log \
                 --windows-force-stderr-spec=%PROGRAM%.log \
                 --enable-plugin=pyside6 \
-                --include-data-files={(RESOURCE_PATH).resolve()}=normcap/resources \
-                --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
+                --include-data-dir={(RESOURCE_PATH).resolve()}=normcap/resources \
+                --include-data-dir={(TLS_PATH).resolve()}=PySide6/qt-plugins/tls \
                 {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
             """,
         cwd=BUILD_PATH,
@@ -294,7 +294,7 @@ def macos_nuitka():
                 --macos-app-version={get_version()} \
                 --enable-plugin=pyside6 \
                 --include-data-dir={(RESOURCE_PATH).resolve()}=resources\
-                --include-data-files={(BUILD_PATH / ".cache").resolve()}/*.*=PySide6/qt-plugins/tls/ \
+                --include-data-dir={(BUILD_PATH / ".cache").resolve()}=PySide6/qt-plugins/tls \
                 {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
             """,
         cwd=BUILD_PATH,
@@ -334,6 +334,7 @@ def macos_bundle_tesseract():
 def macos_bundle_tls():
     print("Bundling tesseract libs...")
     cache_path = BUILD_PATH / ".cache"
+    cache_path.mkdir(exist_ok=True)
     shutil.rmtree(cache_path)
     TLS_PATH = (
         VENV_PATH
