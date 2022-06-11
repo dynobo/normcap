@@ -134,15 +134,14 @@ def bundle_pytesseract_dylibs():
 def linux_bundle_tesseract():
     target_path = RESOURCE_PATH / "tesseract"
     target_path.mkdir(exist_ok=True)
-    run(
-        "ldd /bin/bash | grep \"=> /\" | awk '{print $3}' | xargs -I '{}' cp -v '{}' "
-        + str(target_path.resolve())
-    )
     try:
         shutil.copy("/usr/bin/tesseract", target_path)
     except shutil.SameFileError:
         print("'tesseract' already copied.")
-
+    run(
+        "ldd /bin/bash | grep \"=> /\" | awk '{print $3}' | xargs -I '{}' cp -v '{}' "
+        + str((target_path / "tesseract").resolve())
+    )
 
 def windows_download_wix():
     wix_path = BUILD_PATH / "wix"
@@ -296,10 +295,10 @@ def macos_nuitka():
         cmd=f"""python -m nuitka \
                 --standalone \
                 --assume-yes-for-downloads \
-                --macos-target-arch=universal \
+                --macos-target-arch=x86_64 \
                 --macos-create-app-bundle \
                 --macos-disable-console \
-                --macos-app-icon={IMG_PATH / "normcap.icns"} \
+                --macos-app-icon={(IMG_PATH / "normcap.icns").resolve()} \
                 --macos-signed-app-name=eu.dynobo.normcap \
                 --macos-app-name=NormCap \
                 --macos-app-version={get_version()} \
@@ -307,7 +306,7 @@ def macos_nuitka():
                 --enable-plugin=pyside6 \
                 --include-package=normcap.resources \
                 --include-package-data=normcap.resources \
-                --include-data-files={(TESSERACT_PATH).resolve()}/*.dll=normcap/resources/tesseract/ \
+                --include-data-files={(TESSERACT_PATH).resolve()}/*.*=normcap/resources/tesseract/ \
                 --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
                 {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
             """,
@@ -325,7 +324,7 @@ def macos_bundle_tesseract():
     run(
         cmd="dylibbundler "
         + f"--fix-file {tesseract_source} "
-        + f"--dest-dir {TESSERACT_PATH} "
+        + f"--dest-dir {TESSERACT_PATH.resolve()} "
         + f"--install-path {install_path} "
         + "--bundle-deps "
         + "--overwrite-files",
