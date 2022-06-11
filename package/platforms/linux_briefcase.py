@@ -11,7 +11,7 @@ from .utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
 
 
 class LinuxBriefcase(BuilderBase):
-    """Create prebuild package for Linux using Nuitka."""
+    """Create prebuild package for Linux using Briefcase."""
 
     binary_prefix = "_legacy"
 
@@ -88,6 +88,7 @@ if "linux" in str(bundle_path):
     def run_framework(self):  # noqa: D102
         self.run(cmd="briefcase create", cwd=self.PROJECT_PATH)
         self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
+        self.add_metainfo_to_appimage()
         self.run(cmd="briefcase package", cwd=self.PROJECT_PATH)
 
     def rename_package_file(self):  # noqa: D102
@@ -98,6 +99,20 @@ if "linux" in str(bundle_path):
         )
         target.unlink(missing_ok=True)
         shutil.move(source, target)
+
+    def add_metainfo_to_appimage(self):
+        """Copy metainfo file with info for appimage hub."""
+        metainfo = self.BUILD_PATH / "metainfo"
+        target_path = (
+            self.PROJECT_PATH
+            / "linux"
+            / "appimage"
+            / "NormCap"
+            / "NormCap.AppDir"
+            / "usr"
+            / "share"
+        )
+        shutil.copy(metainfo, target_path / "metainfo")
 
     def create(self):  # noqa: D102
         self.download_tessdata()

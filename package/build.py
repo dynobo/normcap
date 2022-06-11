@@ -3,16 +3,10 @@ import sys
 
 from platforms.linux_briefcase import LinuxBriefcase
 from platforms.linux_nuitka import LinuxNuitka
+from platforms.macos_briefcase import MacBriefcase
 from platforms.macos_nuitka import MacNuitka
+from platforms.windows_briefcase import WindowsBriefcase
 from platforms.windows_nuitka import WindowsNuitka
-
-
-class Empty:
-    """Placeholder."""
-
-    def create(self):
-        print("Not implemented.")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -28,10 +22,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if sys.platform.startswith("win"):
-        builder = WindowsNuitka if args.framework == "nuitka" else Empty
+        builder = WindowsNuitka if args.framework == "nuitka" else WindowsBriefcase
 
     elif sys.platform.startswith("darwin"):
-        builder = MacNuitka if args.framework == "nuitka" else Empty
+        builder = MacNuitka if args.framework == "nuitka" else MacBriefcase
 
     elif sys.platform.startswith("linux"):
         builder = LinuxNuitka if args.framework == "nuitka" else LinuxBriefcase

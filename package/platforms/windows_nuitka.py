@@ -45,7 +45,8 @@ class WindowsNuitka(BuilderBase):
         wix_path.mkdir(exist_ok=True)
         wix_zip = wix_path / "wix-binaries.zip"
         if wix_zip.exists():
-            return "Skip downloading wix toolkit. Already there."
+            print("Skip downloading wix toolkit. Already there.")
+            return
 
         print("Downloading wix toolkit...")
         url = "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip"
