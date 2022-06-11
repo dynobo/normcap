@@ -280,6 +280,65 @@ def windows_nuitka():
     (BUILD_PATH / "app.dist" / "app.exe").rename(normcap_exe)
 
 
+def macos_nuitka():
+    TLS_PATH = (
+        VENV_PATH
+        / "lib"
+        / "python3.10"
+        / "site-packages"
+        / "PySide6"
+        / "Qt"
+        / "plugins"
+        / "tls"
+    )
+
+    run(
+        cmd=f"""python -m nuitka \
+                --standalone \
+                --assume-yes-for-downloads \
+                --macos-target-arch=universal \
+                --macos-create-app-bundle \
+                --macos-disable-console \
+                --macos-app-icon={IMG_PATH / "normcap.icns"} \
+                --macos-signed-app-name=eu.dynobo.normcap \
+                --macos-app-name=NormCap \
+                --macos-app-version={get_version()} \
+                --macos-app-protected-resource= \
+                --enable-plugin=pyside6 \
+                --include-package=normcap.resources \
+                --include-package-data=normcap.resources \
+                --include-data-files={(TESSERACT_PATH).resolve()}/*.dll=normcap/resources/tesseract/ \
+                --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
+                {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
+            """,
+        cwd=BUILD_PATH,
+    )
+    normcap_dmg = BUILD_PATH / "app.dist" / "NormCap.dmg"
+    normcap_dmg.unlink(missing_ok=True)
+    (BUILD_PATH / "app.dist" / "app.dmg").rename(normcap_dmg)
+
+
+def macos_bundle_tesseract():
+    print("Bundling tesseract libs...")
+    tesseract_source = "/usr/local/bin/tesseract"
+    install_path = "@executable_path/"
+    run(
+        cmd="dylibbundler "
+        + f"--fix-file {tesseract_source} "
+        + f"--dest-dir {TESSERACT_PATH} "
+        + f"--install-path {install_path} "
+        + "--bundle-deps "
+        + "--overwrite-files",
+        cwd=BUILD_PATH,
+    )
+    shutil.copy(tesseract_source, TESSERACT_PATH)
+
+
+def macos_system_deps():
+    run(cmd="brew install tesseract")
+    run(cmd="brew install dylibbundler")
+
+
 if __name__ == "__main__":
     download_tessdata()
     platform_str = sys.platform.lower()
@@ -291,10 +350,11 @@ if __name__ == "__main__":
         windows_build_installer()
 
     elif platform_str.lower().startswith("darwin"):
-        raise NotImplementedError
+        macos_system_deps()
+        macos_bundle_tesseract()
+        macos_nuitka()
 
     elif platform_str.lower().startswith("linux"):
-        # TODO: bring build/metadata into appimage
         linux_system_deps()
         linux_bundle_tesseract()
         linux_nuitka()
