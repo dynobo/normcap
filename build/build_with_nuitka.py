@@ -139,8 +139,8 @@ def linux_bundle_tesseract():
     except shutil.SameFileError:
         print("'tesseract' already copied.")
     run(
-        r"ldd /usr/bin/tesseract | grep '=> /' | awk '{print $3}' | xargs -I '{}' cp -v '{}' "
-        + str((target_path / "tesseract").resolve())
+        r"ldd /usr/bin/tesseract | grep '=> /' | awk '{print $3}' | "
+        "xargs -I '{}' cp -v '{}' " + str((target_path / "tesseract").resolve())
     )
 
 
