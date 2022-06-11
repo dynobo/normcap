@@ -134,13 +134,15 @@ def bundle_pytesseract_dylibs():
 def linux_bundle_tesseract():
     target_path = RESOURCE_PATH / "tesseract"
     target_path.mkdir(exist_ok=True)
+    lib_cache_path = BUILD_PATH / ".cache"
+    lib_cache_path.mkdir(exist_ok=True)
     try:
         shutil.copy("/usr/bin/tesseract", target_path)
     except shutil.SameFileError:
         print("'tesseract' already copied.")
     run(
         r"ldd /usr/bin/tesseract | grep '=> /' | awk '{print $3}' | "
-        "xargs -I '{}' cp -v '{}' " + str((target_path / "tesseract").resolve())
+        "xargs -I '{}' cp -v '{}' " + f"{(lib_cache_path).resolve()}/"
     )
 
 
@@ -244,6 +246,7 @@ def linux_nuitka():
                 --include-package-data=normcap.resources \
                 --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
                 --include-data-files={(BUILD_PATH / "metainfo").resolve()}=usr/share/ \
+                --include-data-files={(BUILD_PATH / ".cache").resolve()}/*.*=./ \
                 -o NormCap-{get_version()}-x86_64.AppImage \
                 {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
         """,
