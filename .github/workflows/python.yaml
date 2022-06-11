@@ -125,10 +125,14 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       # Build test package
-      - name: Build test package
+      - name: Build test package nuitka
         shell: bash -l {0}
         run: |
           poetry run python package/build.py --framework=nuitka
+      - name: Build test package briefcase
+        shell: bash -l {0}
+        run: |
+          poetry run python package/build.py --framework=briefcase
 
       - name: Set current date as env variable
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
@@ -188,11 +192,18 @@ jobs:
       - name: Extract version from tag
         id: extract_version
         uses: damienaicheh/extract-version-from-tag-action@v1.0.0
-      - name: Install nuitka and run build
+      - name: Install dependencies
         shell: bash -l {0}
         run: |
           poetry install
-          poetry run python build/build_with_nuitka.py
+      - name: Build package nuitka
+        shell: bash -l {0}
+        run: |
+          poetry run python package/build.py --framework=nuitka
+      - name: Build package briefcase
+        shell: bash -l {0}
+        run: |
+          poetry run python package/build.py --framework=briefcase
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:
