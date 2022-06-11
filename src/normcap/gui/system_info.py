@@ -16,6 +16,13 @@ from normcap.screengrab import gnome_shell_version
 logger = logging.getLogger(__name__)
 
 
+def get_resources_path() -> Path:
+    if sys.platform == "darwin" and is_prebuild_package():
+        return Path(__file__).parent.parent.parent / "resources"
+
+    return Path(__file__).parent.parent / "resources"
+
+
 def is_prebuild_package():
     package = sys.modules["__main__"].__package__
     if package and "Briefcase-Version" in metadata.metadata(package):

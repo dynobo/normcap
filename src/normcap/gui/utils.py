@@ -10,7 +10,6 @@ import shutil
 import sys
 import tempfile
 import traceback
-from importlib import resources
 from pathlib import Path
 from typing import Optional
 
@@ -26,7 +25,7 @@ except ImportError:
 
 from normcap.gui import system_info
 from normcap.gui.constants import URLS
-from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment
+from normcap.gui.models import Capture, DesktopEnvironment
 from normcap.ocr.models import OcrResult
 
 logger = logging.getLogger(__name__)
@@ -235,10 +234,9 @@ def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     if system_icon and QtGui.QIcon.hasThemeIcon(system_icon):
         return QtGui.QIcon.fromTheme(system_icon)
 
+    icon_path = system_info.get_resources_path() / icon_file
     icon = QtGui.QIcon()
-    with resources.path("normcap.resources", icon_file) as icon_path:
-        icon.addFile(str(icon_path.resolve()))
-
+    icon.addFile(str(icon_path.resolve()))
     return icon
 
 
@@ -257,9 +255,10 @@ def copy_tessdata_files_to_config_dir():
     if list(tessdata_path.glob("*.traineddata")):
         return
 
-    resource_path = Path(resources.files("normcap.resources"))
-    traineddata_files = list((resource_path / "tessdata").glob("*.traineddata"))
-    doc_files = list((resource_path / "tessdata").glob("*.txt"))
+    traineddata_files = list(
+        (system_info.get_resources_path() / "tessdata").glob("*.traineddata")
+    )
+    doc_files = list((system_info.get_resources_path() / "tessdata").glob("*.txt"))
 
     logger.info("Copy %s traineddata files to config directory", len(traineddata_files))
     tessdata_path.mkdir(parents=True, exist_ok=True)

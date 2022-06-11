@@ -1,8 +1,6 @@
 import argparse
 import os
 import sys
-from importlib import resources
-from pathlib import Path
 
 from normcap.gui import system_info
 from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION
@@ -48,19 +46,16 @@ def set_environ_for_prebuild_package():
         # resources are currently not resolved on linux by nuitka:
         # https://github.com/Nuitka/Nuitka/issues/1451
         # Workround with using __file__
-        resource_path = Path(__file__).parent / "resources"
-        tesseract_libs = resource_path / "tesseract"
-        tesseract_bin = tesseract_libs / "tesseract"
-        os.environ["LD_LIBRARY_PATH"] = str(tesseract_libs.resolve())
+        tesseract_path = system_info.get_resources_path() / "tesseract"
+        tesseract_bin = tesseract_path / "tesseract"
+        os.environ["LD_LIBRARY_PATH"] = str(tesseract_path.resolve())
         os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
 
     if sys.platform == "darwin":
-        with resources.as_file(resources.files("normcap")) as normcap_path:
-            tesseract_bin = normcap_path.parent.parent / "app_packages" / "tesseract"
-            os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
+        tesseract_bin = system_info.get_resources_path() / "tesseract" / "tesseract"
+        os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
 
     elif sys.platform == "win32":
-        with resources.as_file(resources.files("normcap.resources")) as resource_path:
-            tesseract_bin = resource_path / "tesseract" / "tesseract.exe"
-            os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
-            os.environ["TESSERACT_VERSION"] = "5.0.0"
+        tesseract_bin = system_info.get_resources_path() / "tesseract" / "tesseract.exe"
+        os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
+        os.environ["TESSERACT_VERSION"] = "5.0.0"

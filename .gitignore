@@ -20,12 +20,13 @@ normcap/src/normcap.dist-info
 app.build/
 app.dist/
 app.onefile-build/
+*.app
 tesseract.zip
 wix/
 *.wixpdb
 *.msi
 *.AppImage
-*.dmg
+*.zip
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

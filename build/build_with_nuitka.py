@@ -242,8 +242,7 @@ def linux_nuitka():
                 --assume-yes-for-downloads \
                 --linux-onefile-icon={(IMG_PATH / "normcap.svg").resolve()} \
                 --enable-plugin=pyside6 \
-                --include-package=normcap.resources \
-                --include-package-data=normcap.resources \
+                --include-data-files={(RESOURCE_PATH).resolve()}=normcap/resources \
                 --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
                 --include-data-files={(BUILD_PATH / "metainfo").resolve()}=usr/share/ \
                 --include-data-files={(BUILD_PATH / ".cache").resolve()}/*.*=./ \
@@ -270,9 +269,7 @@ def windows_nuitka():
                 --windows-force-stdout-spec=%PROGRAM%.log \
                 --windows-force-stderr-spec=%PROGRAM%.log \
                 --enable-plugin=pyside6 \
-                --include-package=normcap.resources \
-                --include-package-data=normcap.resources \
-                --include-data-files={(TESSERACT_PATH).resolve()}/*.dll=normcap/resources/tesseract/ \
+                --include-data-files={(RESOURCE_PATH).resolve()}=normcap/resources \
                 --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
                 {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
             """,
@@ -284,17 +281,6 @@ def windows_nuitka():
 
 
 def macos_nuitka():
-    TLS_PATH = (
-        VENV_PATH
-        / "lib"
-        / "python3.10"
-        / "site-packages"
-        / "PySide6"
-        / "Qt"
-        / "plugins"
-        / "tls"
-    )
-
     run(
         cmd=f"""python -m nuitka \
                 --standalone \
@@ -306,19 +292,27 @@ def macos_nuitka():
                 --macos-signed-app-name=eu.dynobo.normcap \
                 --macos-app-name=NormCap \
                 --macos-app-version={get_version()} \
-                --macos-app-protected-resource= \
                 --enable-plugin=pyside6 \
-                --include-package=normcap.resources \
-                --include-package-data=normcap.resources \
-                --include-data-files={(TESSERACT_PATH).resolve()}/*.*=normcap/resources/tesseract/ \
-                --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
+                --include-data-dir={(RESOURCE_PATH).resolve()}=resources\
+                --include-data-files={(BUILD_PATH / ".cache").resolve()}/*.*=PySide6/qt-plugins/tls/ \
                 {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
             """,
         cwd=BUILD_PATH,
     )
-    normcap_dmg = BUILD_PATH / "app.dist" / "NormCap.dmg"
-    normcap_dmg.unlink(missing_ok=True)
-    (BUILD_PATH / "app.dist" / "app.dmg").rename(normcap_dmg)
+    old_app_path = BUILD_PATH / "app.app"
+    new_app_path = BUILD_PATH / "NormCap.app"
+    shutil.rmtree(new_app_path)
+    os.rename(old_app_path, new_app_path)
+    os.rename(
+        new_app_path / "Contents" / "MacOS" / "app",
+        new_app_path / "Contents" / "MacOS" / "NormCap",
+    )
+    shutil.make_archive(
+        base_name=BUILD_PATH / f"NormCap-{get_version()}-MacOS",
+        format="zip",
+        root_dir=BUILD_PATH,
+        base_dir="NormCap.app",
+    )
 
 
 def macos_bundle_tesseract():
@@ -335,6 +329,41 @@ def macos_bundle_tesseract():
         cwd=BUILD_PATH,
     )
     shutil.copy(tesseract_source, TESSERACT_PATH)
+
+
+def macos_bundle_tls():
+    print("Bundling tesseract libs...")
+    cache_path = BUILD_PATH / ".cache"
+    shutil.rmtree(cache_path)
+    TLS_PATH = (
+        VENV_PATH
+        / "lib"
+        / "python3.10"
+        / "site-packages"
+        / "PySide6"
+        / "Qt"
+        / "plugins"
+        / "tls"
+    )
+    shutil.copytree(TLS_PATH, cache_path)
+    dylibs = [
+        "libqcertonlybackend.dylib",
+        "libqopensslbackend.dylib",
+        "libqsecuretransportbackend.dylib",
+    ]
+    for dylib in dylibs:
+        run(
+            cmd="install_name_tool -change "
+            + "'@rpath/QtNetwork.framework/Versions/A/QtNetwork' '@executable_path/QtNetwork' "
+            + f"{(cache_path / dylib).resolve()}",
+            cwd=cache_path,
+        )
+        run(
+            cmd="install_name_tool -change "
+            + "'@rpath/QtCore.framework/Versions/A/QtCore' '@executable_path/QtCore' "
+            + f"{(cache_path / dylib).resolve()}",
+            cwd=cache_path,
+        )
 
 
 def macos_system_deps():
@@ -355,6 +384,7 @@ if __name__ == "__main__":
     elif platform_str.lower().startswith("darwin"):
         macos_system_deps()
         macos_bundle_tesseract()
+        macos_bundle_tls()
         macos_nuitka()
 
     elif platform_str.lower().startswith("linux"):
