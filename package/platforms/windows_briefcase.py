@@ -80,7 +80,7 @@ class WindowsBriefcase(BuilderBase):
         left = "normcap_install_bg.bmp"
         top = "normcap_install_top.bmp"
         for image in [left, top]:
-            original = self.RESOURCE_PATH / image
+            original = self.IMG_PATH / image
             target = self.PROJECT_PATH / "windows" / "msi" / "NormCap" / image
             shutil.copy(original, target)
 
