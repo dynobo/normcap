@@ -243,6 +243,7 @@ def linux_nuitka():
                 --include-package=normcap.resources \
                 --include-package-data=normcap.resources \
                 --include-data-files={(TLS_PATH).resolve()}/*.*=PySide6/qt-plugins/tls/ \
+                --include-data-files={(BUILD_PATH / "metainfo").resolve()}=usr/share/ \
                 -o NormCap-{get_version()}-x86_64.AppImage \
                 {(PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
         """,
