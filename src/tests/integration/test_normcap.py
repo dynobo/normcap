@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 # pylint: disable=redefined-outer-name,protected-access,unused-argument
 
 
+@pytest.mark.skip_on_gh
 @pytest.mark.parametrize(
     "data",
     TESTCASES,

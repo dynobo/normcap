@@ -1287,7 +1287,7 @@ analysis = []
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.11"
-content-hash = "283215928ee09d658eaeb6bba848b36cffda83696d2c8e3a0e2d90374df0d9d4"
+content-hash = "489ee6a4bef56c599aa6ca0ebc58fa7647365853021d03fa3495145e21640591"
 
 [metadata.files]
 arrow = [

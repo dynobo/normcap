@@ -54,7 +54,7 @@ def resize_image(image: Image.Image, factor: float = 3.2) -> Image.Image:
     logger.debug("Resize screenshot by factor %s", factor)
     return image.resize(
         size=(int(image.width * factor), int(image.height * factor)),
-        resample=Image.LANCZOS,
+        resample=Image.Resampling.LANCZOS,  # type: ignore # depr., not yet in types
     )
 
 
