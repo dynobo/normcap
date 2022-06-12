@@ -32,7 +32,8 @@ class WindowsBriefcase(BuilderBase):
                 if ".test." not in m and ".training." not in m
             ]
             subdir = members[0].split("/")[0]
-            artifact_zip.extractall(path=self.RESOURCE_PATH, members=members)
+            artifact_zip.extractall(path=self.RESOURCE_PATH, members=members)  #
+        (self.BUILD_PATH / "tesseract.zip").unlink()
         print("Tesseract binaries downloaded.")
 
         for each_file in Path(self.RESOURCE_PATH / subdir).glob("*.*"):
@@ -53,6 +54,8 @@ class WindowsBriefcase(BuilderBase):
         )
         with zipfile.ZipFile(zip_path, "r") as zip_ref:
             zip_ref.extractall(target_path)
+
+        zip_path.unlink()
         print("Openssl extracted")
 
     def patch_windows_installer(self):

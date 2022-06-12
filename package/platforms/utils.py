@@ -124,7 +124,7 @@ class BuilderBase(ABC):
     @staticmethod
     def get_version() -> str:
         """Get versions string from pyproject.toml."""
-        if "dev" in sys.argv:
+        if "--dev" in sys.argv:
             return "0.0.1"
 
         with open("pyproject.toml", encoding="utf8") as toml_file:

@@ -30,6 +30,8 @@ class WindowsNuitka(BuilderBase):
             ]
             subdir = members[0].split("/")[0]
             artifact_zip.extractall(path=self.RESOURCE_PATH, members=members)
+
+        (self.BUILD_PATH / "tesseract.zip").unlink()
         print("Tesseract binaries downloaded.")
 
         for each_file in Path(self.RESOURCE_PATH / subdir).glob("*.*"):
@@ -44,9 +46,6 @@ class WindowsNuitka(BuilderBase):
         wix_path = self.BUILD_PATH / "wix"
         wix_path.mkdir(exist_ok=True)
         wix_zip = wix_path / "wix-binaries.zip"
-        if wix_zip.exists():
-            print("Skip downloading wix toolkit. Already there.")
-            return
 
         print("Downloading wix toolkit...")
         url = "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip"
@@ -55,6 +54,8 @@ class WindowsNuitka(BuilderBase):
         print(f"Downloaded {url} to {wix_zip.absolute()}")
         with zipfile.ZipFile(wix_zip, "r") as zip_ref:
             zip_ref.extractall(wix_path)
+
+        wix_zip.unlink()
 
     def build_installer(self):  # noqa: D102
         print("Copying wxs configuration file to app.dist folder...")

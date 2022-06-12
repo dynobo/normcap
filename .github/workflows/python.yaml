@@ -131,12 +131,12 @@ jobs:
         shell: bash -l {0}
         continue-on-error: true
         run: |
-          poetry run python package/build.py --framework=nuitka
+          poetry run python package/build.py --framework=nuitka --dev
       - name: Build test package briefcase
         shell: bash -l {0}
         continue-on-error: true
         run: |
-          poetry run python package/build.py --framework=briefcase
+          poetry run python package/build.py --framework=briefcase --dev
 
       - name: Set current date as env variable
         shell: bash -l {0}
@@ -150,7 +150,7 @@ jobs:
           name: Internal
           body:
             "Only for internal tests. Should not be published. [${{ env.NOW }}]"
-          artifacts: "*/*.+(dmg|AppImage|msi)"
+          artifacts: "*/*.+(dmg|AppImage|msi|zip)"
           artifactErrorsFailBuild: false
           allowUpdates: true
           draft: true
@@ -216,7 +216,7 @@ jobs:
             See
             [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md)
             for details.
-          artifacts: "*/*.+(dmg|AppImage|msi)"
+          artifacts: "*/*.+(dmg|AppImage|msi|zip)"
           artifactErrorsFailBuild: false
           allowUpdates: true
           draft: true
