@@ -13,16 +13,12 @@ from .testcases.data import TESTCASES
 
 logger = logging.getLogger(__name__)
 
-# Specific settings for pytest
-# pylint: disable=redefined-outer-name,protected-access,unused-argument
 
-
-@pytest.mark.skip_on_gh
 @pytest.mark.parametrize(
     "data",
     TESTCASES,
 )
-def test_app(monkeypatch, qtbot, qapp, xvfb, data):
+def test_app(monkeypatch, qtbot, qapp, data):
     """Tests complete OCR workflow."""
     screen_rect = qapp.primaryScreen().size()
     if screen_rect.width() != 1920 or screen_rect.height() != 1080:
@@ -37,6 +33,7 @@ def test_app(monkeypatch, qtbot, qapp, xvfb, data):
     tray.show()
 
     window = tray.windows[0]
+    qtbot.addWidget(window)
     qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["tl"]))
     qtbot.mouseMove(window, pos=QtCore.QPoint(*data["br"]))
     qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["br"]))
