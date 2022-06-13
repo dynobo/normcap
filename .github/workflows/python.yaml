@@ -127,16 +127,14 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       # Build test package
-      - name: Build test package nuitka
-        shell: bash -l {0}
-        continue-on-error: true
-        run: |
-          poetry run python package/build.py --framework=nuitka --dev
       - name: Build test package briefcase
         shell: bash -l {0}
-        continue-on-error: true
         run: |
           poetry run python package/build.py --framework=briefcase --dev
+      - name: Build test package nuitka
+        shell: bash -l {0}
+        run: |
+          poetry run python package/build.py --framework=nuitka --dev
 
       - name: Set current date as env variable
         shell: bash -l {0}

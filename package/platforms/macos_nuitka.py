@@ -10,6 +10,7 @@ class MacNuitka(BuilderBase):
     """Create prebuild package for MacOS using Nuitka."""
 
     def run_framework(self):  # noqa: D102
+        print(f"{'='*40}\nRun framework\n{'='*40}")
         self.run(
             cmd=f"""python -m nuitka \
                     --standalone \
@@ -44,7 +45,7 @@ class MacNuitka(BuilderBase):
         )
 
     def bundle_tesseract(self):  # noqa: D102
-        print("Bundling tesseract libs...")
+        print(f"{'='*40}\nBundle tesseract\n{'='*40}")
         tesseract_source = "/usr/local/bin/tesseract"
         install_path = "@executable_path/"
         self.run(
@@ -59,7 +60,7 @@ class MacNuitka(BuilderBase):
         shutil.copy(tesseract_source, self.TESSERACT_PATH)
 
     def bundle_tls(self):  # noqa: D102
-        print("Bundling tesseract tls...")
+        print(f"{'='*40}\nBundle TLS\n{'='*40}")
         cache_path = self.BUILD_PATH / ".cache"
         cache_path.mkdir(exist_ok=True)
         shutil.rmtree(cache_path)
@@ -94,6 +95,7 @@ class MacNuitka(BuilderBase):
             )
 
     def install_system_deps(self):  # noqa: D102
+        print(f"{'='*40}\nInstall system deps\n{'='*40}")
         self.run(cmd="brew install tesseract")
         self.run(cmd="brew install dylibbundler")
 

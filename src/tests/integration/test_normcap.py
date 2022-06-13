@@ -33,7 +33,6 @@ def test_app(monkeypatch, qtbot, qapp, data):
     tray.show()
 
     window = tray.windows[0]
-    qtbot.addWidget(window)
     qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["tl"]))
     qtbot.mouseMove(window, pos=QtCore.QPoint(*data["br"]))
     qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["br"]))

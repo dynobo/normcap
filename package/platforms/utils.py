@@ -137,7 +137,7 @@ class BuilderBase(ABC):
         if not isinstance(cmd, str):
             cmd = " ".join(cmd)
 
-        print(cmd)
+        print(f">>> {cmd}")
 
         completed_proc = subprocess.run(  # pylint: disable=subprocess-run-check
             cmd, shell=True, cwd=cwd
@@ -152,6 +152,7 @@ class BuilderBase(ABC):
 
     def download_tessdata(self):
         """Download trained data for tesseract to include in packages."""
+        print(f"{'='*40}\nDownload tessdata\n{'='*40}")
         tessdata_path = self.RESOURCE_PATH / "tessdata"
         url_prefix = (
             "https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/4.1.0"

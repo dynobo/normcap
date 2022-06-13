@@ -1,6 +1,5 @@
 """Adjustments executed while packaging with briefcase during CI/CD."""
 
-import os
 import shutil
 from pathlib import Path
 
@@ -27,25 +26,12 @@ class MacBriefcase(BuilderBase):
         rm_recursive(
             directory=app_dir / "PySide6", exclude=BRIEFCASE_EXCLUDES["pyside6"]
         )
+        self.bundle_tesseract()
+
         self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
         # TODO: Re-enable if we have a solution for unfocusing on MacOS
         # patch_info_plist_for_proper_fullscreen()
         self.run(cmd="briefcase package macos app --no-sign", cwd=self.PROJECT_PATH)
-
-        old_app_path = self.BUILD_PATH / "app.app"
-        new_app_path = self.BUILD_PATH / "NormCap.app"
-        shutil.rmtree(new_app_path)
-        os.rename(old_app_path, new_app_path)
-        os.rename(
-            new_app_path / "Contents" / "MacOS" / "app",
-            new_app_path / "Contents" / "MacOS" / "NormCap",
-        )
-        shutil.make_archive(
-            base_name=self.BUILD_PATH / f"NormCap-{self.get_version()}-MacOS",
-            format="zip",
-            root_dir=self.BUILD_PATH,
-            base_dir="NormCap.app",
-        )
 
     def bundle_tesseract(self):  # noqa: D102
         print("Bundling tesseract libs...")
@@ -86,41 +72,6 @@ class MacBriefcase(BuilderBase):
             mark_patched=False,
         )
 
-    def bundle_tls(self):  # noqa: D102
-        print("Bundling tesseract tls...")
-        cache_path = self.BUILD_PATH / ".cache"
-        cache_path.mkdir(exist_ok=True)
-        shutil.rmtree(cache_path)
-        TLS_PATH = (
-            self.VENV_PATH
-            / "lib"
-            / "python3.10"
-            / "site-packages"
-            / "PySide6"
-            / "Qt"
-            / "plugins"
-            / "tls"
-        )
-        shutil.copytree(TLS_PATH, cache_path)
-        dylibs = [
-            "libqcertonlybackend.dylib",
-            "libqopensslbackend.dylib",
-            "libqsecuretransportbackend.dylib",
-        ]
-        for dylib in dylibs:
-            self.run(
-                cmd="install_name_tool -change "
-                + "'@rpath/QtNetwork.framework/Versions/A/QtNetwork' '@executable_path/QtNetwork' "
-                + f"{(cache_path / dylib).resolve()}",
-                cwd=cache_path,
-            )
-            self.run(
-                cmd="install_name_tool -change "
-                + "'@rpath/QtCore.framework/Versions/A/QtCore' '@executable_path/QtCore' "
-                + f"{(cache_path / dylib).resolve()}",
-                cwd=cache_path,
-            )
-
     def install_system_deps(self):  # noqa: D102
         self.run(cmd="brew install tesseract")
         self.run(cmd="brew install dylibbundler")
@@ -137,7 +88,5 @@ class MacBriefcase(BuilderBase):
     def create(self):  # noqa: D102
         self.download_tessdata()
         self.install_system_deps()
-        self.bundle_tesseract()
-        self.bundle_tls()
         self.run_framework()
         self.rename_package_file()
