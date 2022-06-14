@@ -96,9 +96,8 @@ class MacNuitka(BuilderBase):
 
     def install_system_deps(self):  # noqa: D102
         print(f"{'='*40}\nInstall system deps\n{'='*40}")
-        self.run(cmd="brew install tesseract")
-        self.run(cmd="brew install dylibbundler")
-        self.run(cmd="brew install xz")
+        # self.run(cmd="brew install tesseract")
+        # self.run(cmd="brew install dylibbundler")
 
     def create(self):  # noqa: D102
         self.download_tessdata()
