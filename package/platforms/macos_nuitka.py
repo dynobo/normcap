@@ -31,7 +31,7 @@ class MacNuitka(BuilderBase):
         )
         old_app_path = self.BUILD_PATH / "app.app"
         new_app_path = self.BUILD_PATH / "NormCap.app"
-        shutil.rmtree(new_app_path)
+        shutil.rmtree(new_app_path, ignore_errors=True)
         os.rename(old_app_path, new_app_path)
         os.rename(
             new_app_path / "Contents" / "MacOS" / "app",
@@ -98,6 +98,7 @@ class MacNuitka(BuilderBase):
         print(f"{'='*40}\nInstall system deps\n{'='*40}")
         self.run(cmd="brew install tesseract")
         self.run(cmd="brew install dylibbundler")
+        self.run(cmd="brew install xz")
 
     def create(self):  # noqa: D102
         self.download_tessdata()
