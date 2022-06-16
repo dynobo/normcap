@@ -78,9 +78,8 @@ jobs:
           tesseract --list-langs
 
       - name: Poetry install
-        run: poetry install
-        env:
-          POETRY_INSTALLER_NO_BINARY: pillow
+        run: |
+          poetry install
 
       # PERFORM TESTS
       - name: Pylint

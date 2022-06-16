@@ -140,7 +140,7 @@ class BuilderBase(ABC):
         print(f">>> {cmd}")
 
         completed_proc = subprocess.run(  # pylint: disable=subprocess-run-check
-            cmd, shell=True, cwd=cwd
+            cmd, shell=True, cwd=cwd, capture_output=True
         )
         if completed_proc.returncode != 0:
             raise subprocess.CalledProcessError(
@@ -149,6 +149,8 @@ class BuilderBase(ABC):
                 output=completed_proc.stdout,
                 stderr=completed_proc.stderr,
             )
+
+        return completed_proc.stdout
 
     def download_tessdata(self):
         """Download trained data for tesseract to include in packages."""

@@ -99,9 +99,19 @@ class MacNuitka(BuilderBase):
         # self.run(cmd="brew install tesseract")
         # self.run(cmd="brew install dylibbundler")
 
+    def reinstall_pillow_without_binary(self):  # noqa: D102
+        output = self.run(cmd="poetry run pip show pillow | grep Version")
+        version = output.decode("utf-8").split(":")[1].strip()
+        self.run(cmd="pip uninstall pillow -y", cwd=self.PROJECT_PATH)
+        self.run(
+            cmd=f"pip install --no-binary=pillow pillow=={version}",
+            cwd=self.PROJECT_PATH,
+        )
+
     def create(self):  # noqa: D102
         self.download_tessdata()
         self.install_system_deps()
         self.bundle_tesseract()
         self.bundle_tls()
+        self.reinstall_pillow_without_binary()
         self.run_framework()
