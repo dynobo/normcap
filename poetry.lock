@@ -11,7 +11,7 @@ python-dateutil = ">=2.7.0"
 
 [[package]]
 name = "astroid"
-version = "2.11.5"
+version = "2.11.6"
 description = "An abstract syntax tree for Python with inference support."
 category = "dev"
 optional = false
@@ -113,7 +113,7 @@ tomli = {version = ">=2.0.0", markers = "python_version <= \"3.10\""}
 
 [[package]]
 name = "certifi"
-version = "2022.5.18.1"
+version = "2022.6.15"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "dev"
 optional = false
@@ -172,7 +172,7 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "colorama"
-version = "0.4.4"
+version = "0.4.5"
 description = "Cross-platform colored terminal text."
 category = "dev"
 optional = false
@@ -780,14 +780,14 @@ toml = ["toml"]
 
 [[package]]
 name = "pylint"
-version = "2.14.1"
+version = "2.14.2"
 description = "python code static checker"
 category = "dev"
 optional = false
 python-versions = ">=3.7.2"
 
 [package.dependencies]
-astroid = ">=2.11.5,<=2.12.0-dev0"
+astroid = ">=2.11.6,<=2.12.0-dev0"
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
 dill = ">=0.2"
 isort = ">=4.2.5,<6"
@@ -826,14 +826,14 @@ diagrams = ["railroad-diagrams", "jinja2"]
 
 [[package]]
 name = "pyside6-essentials"
-version = "6.3.0"
+version = "6.3.1"
 description = "Python bindings for the Qt cross-platform application and UI framework (Essentials)"
 category = "main"
 optional = false
 python-versions = "<3.11,>=3.6"
 
 [package.dependencies]
-shiboken6 = "6.3.0"
+shiboken6 = "6.3.1"
 
 [[package]]
 name = "pytesseract"
@@ -1034,7 +1034,7 @@ contextlib2 = ">=0.5.5"
 
 [[package]]
 name = "shiboken6"
-version = "6.3.0"
+version = "6.3.1"
 description = "Python/C++ bindings helper module"
 category = "main"
 optional = false
@@ -1145,7 +1145,7 @@ python-versions = ">=3.6,<4.0"
 
 [[package]]
 name = "types-pillow"
-version = "9.0.19"
+version = "9.0.20"
 description = "Typing stubs for Pillow"
 category = "dev"
 optional = false
@@ -1295,8 +1295,8 @@ arrow = [
     {file = "arrow-1.2.2.tar.gz", hash = "sha256:05caf1fd3d9a11a1135b2b6f09887421153b94558e5ef4d090b567b47173ac2b"},
 ]
 astroid = [
-    {file = "astroid-2.11.5-py3-none-any.whl", hash = "sha256:14ffbb4f6aa2cf474a0834014005487f7ecd8924996083ab411e7fa0b508ce0b"},
-    {file = "astroid-2.11.5.tar.gz", hash = "sha256:f4e4ec5294c4b07ac38bab9ca5ddd3914d4bf46f9006eb5c0ae755755061044e"},
+    {file = "astroid-2.11.6-py3-none-any.whl", hash = "sha256:ba33a82a9a9c06a5ceed98180c5aab16e29c285b828d94696bf32d6015ea82a9"},
+    {file = "astroid-2.11.6.tar.gz", hash = "sha256:4f933d0bf5e408b03a6feb5d23793740c27e07340605f236496cd6ce552043d6"},
 ]
 atomicwrites = [
     {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
@@ -1344,8 +1344,8 @@ briefcase = [
     {file = "briefcase-0.3.7.tar.gz", hash = "sha256:6302adfa71f1bdef45e15a2436995b251feca1638c371bbb8171727e357056d0"},
 ]
 certifi = [
-    {file = "certifi-2022.5.18.1-py3-none-any.whl", hash = "sha256:f1d53542ee8cbedbe2118b5686372fb33c297fcd6379b050cca0ef13a597382a"},
-    {file = "certifi-2022.5.18.1.tar.gz", hash = "sha256:9c5705e395cd70084351dd8ad5c41e65655e08ce46f2ec9cf6c2c08390f71eb7"},
+    {file = "certifi-2022.6.15-py3-none-any.whl", hash = "sha256:fe86415d55e84719d75f8b69414f6438ac3547d2078ab91b67e779ef69378412"},
+    {file = "certifi-2022.6.15.tar.gz", hash = "sha256:84c85a9078b11105f04f3036a9482ae10e4621616db313fe045dd24743a0820d"},
 ]
 cfgv = [
     {file = "cfgv-3.3.1-py2.py3-none-any.whl", hash = "sha256:c6a0883f3917a037485059700b9e75da2464e6c27051014ad85ba6aaa5884426"},
@@ -1368,8 +1368,8 @@ click = [
     {file = "click-8.1.3.tar.gz", hash = "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"},
 ]
 colorama = [
-    {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
-    {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+    {file = "colorama-0.4.5-py2.py3-none-any.whl", hash = "sha256:854bf444933e37f5824ae7bfc1e98d5bce2ebe4160d46b5edf346a89358e99da"},
+    {file = "colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
 ]
 contextlib2 = [
     {file = "contextlib2-21.6.0-py2.py3-none-any.whl", hash = "sha256:3fbdb64466afd23abaf6c977627b75b6139a5a3e8ce38405c5b413aed7a0471f"},
@@ -1872,8 +1872,8 @@ pydocstyle = [
     {file = "pydocstyle-6.1.1.tar.gz", hash = "sha256:1d41b7c459ba0ee6c345f2eb9ae827cab14a7533a88c5c6f7e94923f72df92dc"},
 ]
 pylint = [
-    {file = "pylint-2.14.1-py3-none-any.whl", hash = "sha256:bb71e6d169506de585edea997e48d9ff20c0dc0e2fbc1d166bad6b640120326b"},
-    {file = "pylint-2.14.1.tar.gz", hash = "sha256:549261e0762c3466cc001024c4419c08252cb8c8d40f5c2c6966fea690e7fe2a"},
+    {file = "pylint-2.14.2-py3-none-any.whl", hash = "sha256:592d0a4d2ffa8e33020209d255827c5a310499cdc023d156187bc677d86bd495"},
+    {file = "pylint-2.14.2.tar.gz", hash = "sha256:482f1329d4b6b9e52599754a2e502c0ed91ebdfd0992a2299b7fa136a6c12349"},
 ]
 pylint-pytest = [
     {file = "pylint_pytest-1.1.2-py2.py3-none-any.whl", hash = "sha256:fb20ef318081cee3d5febc631a7b9c40fa356b05e4f769d6e60a337e58c8879b"},
@@ -1883,9 +1883,9 @@ pyparsing = [
     {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
 ]
 pyside6-essentials = [
-    {file = "PySide6_Essentials-6.3.0-cp36-abi3-macosx_10_9_universal2.whl", hash = "sha256:1c2a2a2b26fc923b3527907462ae5828b7e50a2c0fcf9923b086781af3911060"},
-    {file = "PySide6_Essentials-6.3.0-cp36-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:a486abe04be6270da798eae9c78b40f605008f19d5d9c880b1683783c715882d"},
-    {file = "PySide6_Essentials-6.3.0-cp36-abi3-win_amd64.whl", hash = "sha256:7304353ab13cc9b5b0a86b3487f24b133a68c5b8c1312516510c0d49469f80d8"},
+    {file = "PySide6_Essentials-6.3.1-cp36-abi3-macosx_10_9_universal2.whl", hash = "sha256:55696693325a2de7bf5b56274b534f191032d218d61a948baa95933f6e642e59"},
+    {file = "PySide6_Essentials-6.3.1-cp36-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:e27962beb2cc45fe13a1a1c24a454c3c3c3c3082c4a84bc5dcf6b306979ba013"},
+    {file = "PySide6_Essentials-6.3.1-cp36-abi3-win_amd64.whl", hash = "sha256:fa825c5396a5dfedf59635e904239187e2f2225c7f65917d4e973062c9a6b916"},
 ]
 pytesseract = [
     {file = "pytesseract-0.3.9-py2.py3-none-any.whl", hash = "sha256:fecda37d1e4eaf744c657cd03a5daab4eb97c61506ac5550274322c8ae32eca2"},
@@ -2023,9 +2023,9 @@ schema = [
     {file = "schema-0.7.5.tar.gz", hash = "sha256:f06717112c61895cabc4707752b88716e8420a8819d71404501e114f91043197"},
 ]
 shiboken6 = [
-    {file = "shiboken6-6.3.0-cp36-abi3-macosx_10_9_universal2.whl", hash = "sha256:ead1cee2fea2566321e725a50070c40a9e67aaa015a20a84a39a9e72ff9b426e"},
-    {file = "shiboken6-6.3.0-cp36-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:e68e3cbb595c3047c4d893b84ef88eb5b23dea4e94241e80f5509dcb6613ad3d"},
-    {file = "shiboken6-6.3.0-cp36-abi3-win_amd64.whl", hash = "sha256:096e6b2254e59729ae61acbb80d09c31ad7ea35b6624ec120c15a35b95c70b69"},
+    {file = "shiboken6-6.3.1-cp36-abi3-macosx_10_9_universal2.whl", hash = "sha256:6393aa330101b098631a88dfb99b6b46794046c7f63b5c1ac93ae2fcef4773ff"},
+    {file = "shiboken6-6.3.1-cp36-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:aad9aa8e7ecd3c889cc789e41abf3990101126b5b02edfcf87f1ef331c9dc45a"},
+    {file = "shiboken6-6.3.1-cp36-abi3-win_amd64.whl", hash = "sha256:cb9cf4ad858e59237642bf6b8be1fe6f19cb090799ff00e4c2643768d73e8ebe"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
@@ -2072,8 +2072,8 @@ tomlkit = [
     {file = "tomlkit-0.11.0.tar.gz", hash = "sha256:71ceb10c0eefd8b8f11fe34e8a51ad07812cb1dc3de23247425fbc9ddc47b9dd"},
 ]
 types-pillow = [
-    {file = "types-Pillow-9.0.19.tar.gz", hash = "sha256:bad0de01fd2b6cfdcfcab580fc4025db2b5068e6237707d8f2f4493cd4c4fe16"},
-    {file = "types_Pillow-9.0.19-py3-none-any.whl", hash = "sha256:34f8380d9e5367baa075e3ef2961c65908f6b69b9161c2b08feb8937200aa25c"},
+    {file = "types-Pillow-9.0.20.tar.gz", hash = "sha256:82dea83c21c665a334b0f88b78a7d6a62503c96d0777c8a2327701d4ca7bf421"},
+    {file = "types_Pillow-9.0.20-py3-none-any.whl", hash = "sha256:fa10b09284a8e0058484d747b8b3e75301250057390089f4c5a695c359fd3966"},
 ]
 types-requests = [
     {file = "types-requests-2.27.30.tar.gz", hash = "sha256:ca8d7cc549c3d10dbcb3c69c1b53e3ffd1270089c1001a65c1e9e1017eb5e704"},
