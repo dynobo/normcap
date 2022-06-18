@@ -12,40 +12,38 @@ class MacNuitka(BuilderBase):
     def run_framework(self):  # noqa: D102
         print(f"{'='*40}\nRun framework\n{'='*40}")
 
-        for target in ["x86_64", "arm64"]:
-            self.run(
-                cmd=f"""python -m nuitka \
-                        --standalone \
-                        --assume-yes-for-downloads \
-                        --macos-target-arch={target} \
-                        --macos-create-app-bundle \
-                        --macos-disable-console \
-                        --macos-app-icon={(self.IMG_PATH / "normcap.icns").resolve()} \
-                        --macos-signed-app-name=eu.dynobo.normcap \
-                        --macos-app-name=NormCap \
-                        --macos-app-version={self.get_version()} \
-                        --enable-plugin=pyside6 \
-                        --include-data-dir={(self.RESOURCE_PATH).resolve()}=resources\
-                        --include-data-dir={(self.BUILD_PATH / ".cache").resolve()}=PySide6/qt-plugins/tls \
-                        {(self.PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
-                    """,
-                cwd=self.BUILD_PATH,
-            )
-            old_app_path = self.BUILD_PATH / "app.app"
-            new_app_path = self.BUILD_PATH / "NormCap.app"
-            shutil.rmtree(new_app_path, ignore_errors=True)
-            os.rename(old_app_path, new_app_path)
-            os.rename(
-                new_app_path / "Contents" / "MacOS" / "app",
-                new_app_path / "Contents" / "MacOS" / "NormCap",
-            )
-            shutil.make_archive(
-                base_name=self.BUILD_PATH
-                / f"NormCap-{self.get_version()}-MacOS-{target}",
-                format="zip",
-                root_dir=self.BUILD_PATH,
-                base_dir="NormCap.app",
-            )
+        self.run(
+            cmd=f"""python -m nuitka \
+                    --standalone \
+                    --assume-yes-for-downloads \
+                    --macos-target-arch=x86_64 \
+                    --macos-create-app-bundle \
+                    --macos-disable-console \
+                    --macos-app-icon={(self.IMG_PATH / "normcap.icns").resolve()} \
+                    --macos-signed-app-name=eu.dynobo.normcap \
+                    --macos-app-name=NormCap \
+                    --macos-app-version={self.get_version()} \
+                    --enable-plugin=pyside6 \
+                    --include-data-dir={(self.RESOURCE_PATH).resolve()}=resources\
+                    --include-data-dir={(self.BUILD_PATH / ".cache").resolve()}=PySide6/qt-plugins/tls \
+                    {(self.PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
+                """,
+            cwd=self.BUILD_PATH,
+        )
+        old_app_path = self.BUILD_PATH / "app.app"
+        new_app_path = self.BUILD_PATH / "NormCap.app"
+        shutil.rmtree(new_app_path, ignore_errors=True)
+        os.rename(old_app_path, new_app_path)
+        os.rename(
+            new_app_path / "Contents" / "MacOS" / "app",
+            new_app_path / "Contents" / "MacOS" / "NormCap",
+        )
+        shutil.make_archive(
+            base_name=self.BUILD_PATH / f"NormCap-{self.get_version()}-MacOS",
+            format="zip",
+            root_dir=self.BUILD_PATH,
+            base_dir="NormCap.app",
+        )
 
     def bundle_tesseract(self):  # noqa: D102
         print(f"{'='*40}\nBundle tesseract\n{'='*40}")
