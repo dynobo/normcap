@@ -80,7 +80,7 @@ class MacBriefcase(BuilderBase):
         source = list(Path(self.PROJECT_PATH / "macOS").glob("*.dmg"))[0]
         target = (
             self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-MacOS{self.binary_prefix}.dmg"
+            / f"NormCap-{self.get_version()}-MacOS{self.binary_suffix}.dmg"
         )
         target.unlink(missing_ok=True)
         shutil.move(source, target)

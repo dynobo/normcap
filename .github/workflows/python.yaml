@@ -131,7 +131,6 @@ jobs:
       - name: Build test package briefcase
         shell: bash -l {0}
         run: |
-          poetry run python -m nuitka --version
           poetry run python package/build.py --framework=briefcase --dev
       - name: Build test package nuitka
         shell: bash -l {0}

@@ -94,7 +94,7 @@ class BuilderBase(ABC):
     RESOURCE_PATH = PROJECT_PATH / "src" / "normcap" / "resources"
     TESSERACT_PATH = RESOURCE_PATH / "tesseract"
     VENV_PATH = Path(os.environ["VIRTUAL_ENV"])
-    binary_prefix = "_legacy"
+    binary_suffix = "_legacy"
 
     @abstractmethod
     def run_framework(self):

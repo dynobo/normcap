@@ -13,7 +13,7 @@ from .utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
 class LinuxBriefcase(BuilderBase):
     """Create prebuild package for Linux using Briefcase."""
 
-    binary_prefix = "_legacy"
+    binary_suffix = "_legacy"
 
     def patch_briefcase_appimage_to_prune_deps(self):
         """Insert code into briefcase appimage code to remove unnecessary libs."""
@@ -95,7 +95,7 @@ if "linux" in str(bundle_path):
         source = list(Path(self.PROJECT_PATH / "linux").glob("*.AppImage"))[0]
         target = (
             self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-x86_64{self.binary_prefix}.AppImage"
+            / f"NormCap-{self.get_version()}-x86_64{self.binary_suffix}.AppImage"
         )
         target.unlink(missing_ok=True)
         shutil.move(source, target)

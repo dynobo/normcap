@@ -9,6 +9,8 @@ from .utils import BuilderBase
 class LinuxNuitka(BuilderBase):
     """Create prebuild package for Linux using Nuitka."""
 
+    binary_suffix = ""
+
     def bundle_tesseract(self):  # noqa: D102
         target_path = self.RESOURCE_PATH / "tesseract"
         target_path.mkdir(exist_ok=True)
@@ -51,7 +53,7 @@ class LinuxNuitka(BuilderBase):
                     --include-data-dir={(TLS_PATH).resolve()}=PySide6/qt-plugins/tls \
                     --include-data-files={(self.BUILD_PATH / "metainfo").resolve()}=usr/share/ \
                     --include-data-files={(self.BUILD_PATH / ".cache").resolve()}/*.*=./ \
-                    -o NormCap-{self.get_version()}-x86_64{self.binary_prefix}.AppImage \
+                    -o NormCap-{self.get_version()}-x86_64{self.binary_suffix}.AppImage \
                     {(self.PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
             """,
             cwd=self.BUILD_PATH,

@@ -12,7 +12,7 @@ from .utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
 class WindowsBriefcase(BuilderBase):
     """Create prebuild package for Windows using Nuitka."""
 
-    binary_prefix = "_legacy"
+    binary_suffix = "_legacy"
 
     def bundle_tesseract(self):  # noqa: D102
         # Link to download artifact might change
@@ -118,7 +118,7 @@ class WindowsBriefcase(BuilderBase):
         source = list(Path(self.PROJECT_PATH / "windows").glob("*.msi"))[0]
         target = (
             self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-Windows{self.binary_prefix}.dmg"
+            / f"NormCap-{self.get_version()}-Windows{self.binary_suffix}.dmg"
         )
         target.unlink(missing_ok=True)
         shutil.move(source, target)

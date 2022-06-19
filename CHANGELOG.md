@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3.5 (2022-06-19)
+
+- All: New prebuild images using [Nuitka](ttps://pypi.org/project/Nuitka/)
+  allowing (hopefully) smaller file size, faster application start up and more
+  robust builds. (The legacy builds with
+  [briefcase](https://pypi.org/project/briefcase/) are still available and
+  marked with a `_legacy`-suffix in the file name.)
+
 ## v0.3.4 (2022-03-31)
 
 - All: Various speed improvements.
@@ -26,15 +34,16 @@
 
 ## v0.3.0 (2022-03-20)
 
-- All: Removed cli options `-v, --verbose` and `-V, --very-verbose` in favor of the new
-  `-v, --verbosity` which accepts on of the options: `{error, warning, info, debug}`.
+- All: Removed cli options `-v, --verbose` and `-V, --very-verbose` in favor of
+  the new `-v, --verbosity` which accepts on of the options:
+  `{error, warning, info, debug}`.
 - All: Update to PySide6 (Qt6) and Python 3.9
 - All: Add support for Tesseract 5 with better OCR
   [#170](https://github.com/dynobo/normcap/issues/170)
-- All: Improve image processing for better detection accuracy, especially for bright
-  text on dark backgrounds.
-- Pre-build packages: Switched to shipping "fast" language models to reduce package
-  size.
+- All: Improve image processing for better detection accuracy, especially for
+  bright text on dark backgrounds.
+- Pre-build packages: Switched to shipping "fast" language models to reduce
+  package size.
 - Linux: Add support for Gnome Shell 41+ (using Screenshot Portal)
   [#153](https://github.com/dynobo/normcap/issues/153)
   [#157](https://github.com/dynobo/normcap/issues/157)
@@ -62,8 +71,8 @@
 
 - Linux: Fix language option in settings.conf not human readable
   [#143](https://github.com/dynobo/normcap/issues/143)
-- Pre-build packages: On Windows the msi-installer will now upgrade existing versions
-  [#148](https://github.com/dynobo/normcap/issues/148)
+- Pre-build packages: On Windows the msi-installer will now upgrade existing
+  versions [#148](https://github.com/dynobo/normcap/issues/148)
 
 ## v0.2.7 (2021-09-25)
 
@@ -76,8 +85,9 @@
 
 - All: NormCap settings will be reset on upgrade (due to changes in the settings
   system)!
-- Pre-build packages: A different set of languages is shipped! `jpn`, `jpn_vert` & `fra`
-  got removed, but you can now add them yourself (Settings -> "open data folder")
+- Pre-build packages: A different set of languages is shipped! `jpn`, `jpn_vert`
+  & `fra` got removed, but you can now add them yourself (Settings -> "open data
+  folder")
 
 **Further changes:**
 
@@ -90,8 +100,8 @@
   [#104](https://github.com/dynobo/normcap/issues/104)
 - MacOS: Fix missing libpng in package
   [#128](https://github.com/dynobo/normcap/issues/128)
-- Linux: Fix AttributeError: 'MainWindow' object has no attribute 'macos_border_window'
-  [#139](https://github.com/dynobo/normcap/issues/139)
+- Linux: Fix AttributeError: 'MainWindow' object has no attribute
+  'macos_border_window' [#139](https://github.com/dynobo/normcap/issues/139)
   [#138](https://github.com/dynobo/normcap/pull/138)
 - Windows: Fix update check
 
@@ -101,8 +111,8 @@
   [#121](https://github.com/dynobo/normcap/issues/121)
 - MacOS: Fix update checking
 - MacOS: Draw border above menubar & dock
-  [#119](https://github.com/dynobo/normcap/issues/119) (just cosmetic, both are still
-  not selectable)
+  [#119](https://github.com/dynobo/normcap/issues/119) (just cosmetic, both are
+  still not selectable)
 - All: Slightly better performance
 - All: More useful error message for issues with QT
 - All: Application can now be cancelled via `<ctrl>+c` in terminal
@@ -154,26 +164,28 @@
 
 ## v0.1.8 (2020-11-17)
 
-- Removed experimental tray icon support introduced in v0.1.7 (has caused unexpected
-  issues).
+- Removed experimental tray icon support introduced in v0.1.7 (has caused
+  unexpected issues).
 
 ## v0.1.7 (2020-11-14)
 
 - Switch method to show fullscreen Windows to fix
   [Issue #88](https://github.com/dynobo/normcap/issues/88)
-- Introduce preview of [Tray Icon support](https://github.com/dynobo/normcap/issues/82).
-  It is not stable yet, but you can test it using the new `--tray` command line switch.
+- Introduce preview of
+  [Tray Icon support](https://github.com/dynobo/normcap/issues/82). It is not
+  stable yet, but you can test it using the new `--tray` command line switch.
 
 ## v0.1.6 (2020-11-01)
 
-- Implements [Issue #27](https://github.com/dynobo/normcap/issues/27): Show system
-  notification after OCR completed.
+- Implements [Issue #27](https://github.com/dynobo/normcap/issues/27): Show
+  system notification after OCR completed.
 
 ## v0.1.5 (2020-10-31)
 
-- Fixes [Issue #81](https://github.com/dynobo/normcap/issues/81): Unhandled exception
-  when user selected no region
-- Related to the one above: Skip OCR if selected area is tiny (below 25 square pixels)
+- Fixes [Issue #81](https://github.com/dynobo/normcap/issues/81): Unhandled
+  exception when user selected no region
+- Related to the one above: Skip OCR if selected area is tiny (below 25 square
+  pixels)
 - Updates dependencies which also now get pinned
 - Move away from pipenv, using plain setuptools and requirements.txt's instead.
 
@@ -184,7 +196,8 @@
 
 ## v0.1.3 (2020-04-04)
 
-- Use the development version of PyInstaller for building Windows binaries to get
+- Use the development version of PyInstaller for building Windows binaries to
+  get
   [the not yet released bugfix](https://github.com/pyinstaller/pyinstaller/commit/91481570517707fc70aa70dca9eb986c61eac35d)
 
 ## v0.1.2 (2020-03-31)
@@ -218,7 +231,8 @@
 
 **Please help testing and provide feedback!**
 
-Any feedback is useful, whether you find bugs or everything works for you. Thank you!
+Any feedback is useful, whether you find bugs or everything works for you. Thank
+you!
 
 - Initial working release
 - Multi-monitor support
