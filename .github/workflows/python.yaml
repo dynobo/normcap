@@ -139,6 +139,7 @@ jobs:
           --macos-app-icon=/Users/runner/work/normcap/normcap/package/imgs/normcap.icns
           --macos-signed-app-name=eu.dynobo.normcap --macos-app-name=NormCap
           --macos-app-version=0.0.1 --enable-plugin=pyside6
+          --nofollow-import-to=pickle
           --include-data-dir=/Users/runner/work/normcap/normcap/src/normcap/resources=resources
           --include-data-dir=/Users/runner/work/normcap/normcap/package/.cache=PySide6/qt-plugins/tls
           /Users/runner/work/normcap/normcap/src/normcap/app.py
