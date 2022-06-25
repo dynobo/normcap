@@ -89,7 +89,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _add_update_checker(self):
         if self.settings.value("update", type=bool):
-            checker = UpdateChecker(self, packaged=system_info.is_briefcase_package())
+            checker = UpdateChecker(self, packaged=system_info.is_prebuild_package())
             checker.com.on_version_retrieved.connect(checker.show_update_message)
             checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
             QtCore.QTimer.singleShot(500, checker.check)

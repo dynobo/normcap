@@ -13,8 +13,6 @@ from normcap.gui import utils
 from normcap.gui.models import Capture
 from normcap.ocr.models import OcrResult
 
-# pylint: disable=unused-argument
-
 
 def test_init_tessdata_copies_files(tmp_path, monkeypatch):
     # Create placeholder for traineddata files, if they don't exist
@@ -73,20 +71,20 @@ def test_save_image_in_tempfolder():
     assert "unittest" in str(list(png_files)[0])
 
 
-def test_get_icon_custom(qtbot):
+def test_get_icon_custom():
     icon = utils.get_icon("normcap.png")
     assert icon.name() == ""
     assert len(icon.availableSizes()) == 1
 
 
 @pytest.mark.skip_on_gh
-def test_get_icon_sytem(qtbot):
+def test_get_icon_sytem():
     icon = utils.get_icon("normcap.png", "edit-undo")
     assert icon.name() == "edit-undo"
     assert len(icon.availableSizes()) >= 1
 
 
-def test_get_icon_sytem_use_fallback(qtbot):
+def test_get_icon_sytem_use_fallback():
     icon = utils.get_icon("normcap.png", "not-existing-icon")
     assert icon.name() == ""
     assert len(icon.availableSizes()) == 1
@@ -139,7 +137,7 @@ def test_hook_exception_fails(monkeypatch, caplog):
     assert "debug output limited" in caplog.text
 
 
-def test_set_cursor(qtbot):
+def test_set_cursor():
     # I do not know how to read cursor shape. Therefor I just test that
     # no exceptions are thrown.
     utils.set_cursor()

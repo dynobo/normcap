@@ -21,21 +21,21 @@ repos:
         name: isort
         stages: [commit]
         language: system
-        entry: poetry run isort --jobs=0 src/normcap src/tests/
+        entry: poetry run isort --jobs=0 src/normcap src/tests/ package/
         types: [python]
 
       - id: black
         name: black
         stages: [commit]
         language: system
-        entry: poetry run black src/normcap src/tests/
+        entry: poetry run black src/normcap src/tests/ package/
         types: [python]
 
       - id: pydocstyle
         name: pydocstyle
         stages: [commit]
         language: system
-        entry: poetry run pydocstyle src/normcap src/tests/
+        entry: poetry run pydocstyle src/normcap src/tests/ package/
         types: [python]
         pass_filenames: false
 
@@ -59,7 +59,7 @@ repos:
         name: pylint
         stages: [commit]
         language: system
-        entry: poetry run pylint src/normcap src/tests
+        entry: poetry run pylint src/normcap src/tests package/
         types: [python]
         pass_filenames: false
 

@@ -1,5 +1,6 @@
 TESTCASES = [
     {
+        "id": 0,
         "image": "ocr_test_1.png",
         "tl": (46, 745),
         "br": (500, 950),
@@ -15,6 +16,7 @@ TESTCASES = [
         "ocr_applied_magic": "UrlMagic",
     },
     {
+        "id": 1,
         "image": "ocr_test_1.png",
         "tl": (312, 550),
         "br": (470, 572),
@@ -22,6 +24,7 @@ TESTCASES = [
         "ocr_applied_magic": "UrlMagic",
     },
     {
+        "id": 2,
         "image": "ocr_test_1.png",
         "tl": (1115, 530),
         "br": (1305, 570),
@@ -30,6 +33,7 @@ TESTCASES = [
     },
     {
         # First two rows of email addresses
+        "id": 3,
         "image": "ocr_test_1.png",
         "tl": (50, 300),
         "br": (700, 342),
@@ -38,6 +42,7 @@ TESTCASES = [
     },
     {
         # All three rows of email addresses, 3rd row contains invalids
+        "id": 4,
         "image": "ocr_test_1.png",
         "tl": (50, 300),
         "br": (700, 363),

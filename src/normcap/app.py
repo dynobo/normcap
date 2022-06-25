@@ -1,5 +1,4 @@
 """Main application entry point."""
-
 import locale
 import logging
 import os
@@ -14,9 +13,9 @@ from PySide6 import QtCore, QtWidgets
 from normcap import __version__
 from normcap.gui import system_info, utils
 from normcap.gui.tray import SystemTray
-from normcap.utils import create_argparser, set_environ_for_briefcase
+from normcap.utils import create_argparser, set_environ_for_prebuild_package
 
-set_environ_for_briefcase()
+set_environ_for_prebuild_package()
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s",
@@ -51,7 +50,7 @@ def main():
     # Wrap QT logging output
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
-    if system_info.is_briefcase_package():
+    if system_info.is_prebuild_package():
         utils.copy_tessdata_files_to_config_dir()
 
     app = QtWidgets.QApplication(sys.argv)
@@ -62,4 +61,8 @@ def main():
     tray = SystemTray(app, vars(args))
     tray.setVisible(True)
 
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    main()

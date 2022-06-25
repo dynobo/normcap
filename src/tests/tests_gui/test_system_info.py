@@ -83,15 +83,15 @@ def test_desktop_environment_other(monkeypatch):
     assert system_info.desktop_environment() == models.DesktopEnvironment.OTHER
 
 
-def test_is_briefcase_package(monkeypatch):
-    assert not system_info.is_briefcase_package()
+def test_is_prebuild_package(monkeypatch):
+    assert not system_info.is_prebuild_package()
 
     monkeypatch.setattr(metadata, "metadata", lambda _: {"Briefcase-Version": "9.9.9"})
     monkeypatch.setattr(sys.modules["__main__"], "__package__", "normcap")
-    assert system_info.is_briefcase_package()
+    assert system_info.is_prebuild_package()
 
     monkeypatch.setattr(sys.modules["__main__"], "__package__", "")
-    assert not system_info.is_briefcase_package()
+    assert not system_info.is_prebuild_package()
 
 
 def test_screens():
@@ -110,14 +110,14 @@ def test_get_tessdata_path(monkeypatch, tmp_path):
     data_file.touch(exist_ok=True)
 
     try:
-        monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
+        monkeypatch.setattr(system_info, "is_prebuild_package", lambda: True)
         path_briefcase = system_info.get_tessdata_path()
 
-        monkeypatch.setattr(system_info, "is_briefcase_package", lambda: False)
+        monkeypatch.setattr(system_info, "is_prebuild_package", lambda: False)
         monkeypatch.setenv("TESSDATA_PREFIX", str(data_file.parent.parent.resolve()))
         path_env_var = system_info.get_tessdata_path()
 
-        monkeypatch.setattr(system_info, "is_briefcase_package", lambda: False)
+        monkeypatch.setattr(system_info, "is_prebuild_package", lambda: False)
         monkeypatch.setenv("TESSDATA_PREFIX", "")
         path_non = system_info.get_tessdata_path()
     finally:
@@ -128,7 +128,7 @@ def test_get_tessdata_path(monkeypatch, tmp_path):
     assert path_non == ""
 
     # mock config dir not existing:
-    monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
+    monkeypatch.setattr(system_info, "is_prebuild_package", lambda: True)
     monkeypatch.setattr(system_info, "config_directory", lambda: tmp_path / "nan")
     with pytest.raises(RuntimeError) as e:
         _ = system_info.get_tessdata_path()
@@ -143,7 +143,7 @@ def test_get_tessdata_path(monkeypatch, tmp_path):
 
     # mock directory but _no_ language data:
     monkeypatch.setattr(system_info, "config_directory", lambda: Path("/tmp"))
-    monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
+    monkeypatch.setattr(system_info, "is_prebuild_package", lambda: True)
     with pytest.raises(RuntimeError):
         _ = system_info.get_tessdata_path()
 
@@ -174,7 +174,7 @@ def test_to_string():
     string = system_info.to_dict()
     expected = [
         "cli_args",
-        "is_briefcase_package",
+        "is_prebuild_package",
         "platform",
         "pyside6_version",
         "qt_version",

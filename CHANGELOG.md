@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.5 (2022-06-19)
+
+- All: New prebuild images using [Nuitka](ttps://pypi.org/project/Nuitka/) allowing
+  (hopefully) smaller file size, faster application start up and more robust builds.
+  (The legacy builds with [briefcase](https://pypi.org/project/briefcase/) are still
+  available and marked with a `_legacy`-suffix in the file name.)
+
 ## v0.3.4 (2022-03-31)
 
 - All: Various speed improvements.
