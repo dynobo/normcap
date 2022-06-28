@@ -125,35 +125,36 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      # Build test package
+      # Build test packages
       - name: Build test package nuitka
         shell: bash -l {0}
         continue-on-error: true
-        run: |
-          poetry run python package/build.py --framework=nuitka --dev
-      - name: Build 2
-        run:
-          poetry run python -m nuitka --standalone --assume-yes-for-downloads
-          --macos-target-arch=x86_64 --macos-create-app-bundle
-          --macos-disable-console
-          --macos-app-icon=/Users/runner/work/normcap/normcap/package/imgs/normcap.icns
-          --macos-signed-app-name=eu.dynobo.normcap --macos-app-name=NormCap
-          --macos-app-version=0.0.1 --enable-plugin=pyside6
-          --nofollow-import-to=pickle
-          --include-data-dir=/Users/runner/work/normcap/normcap/src/normcap/resources=resources
-          --include-data-dir=/Users/runner/work/normcap/normcap/package/.cache=PySide6/qt-plugins/tls
-          /Users/runner/work/normcap/normcap/src/normcap/app.py
-
+        run: poetry run python package/build.py --framework=nuitka --dev
+      # - name: Debug macos build
+      #   if: ${{ matrix.os  == 'macos-12' }}
+      #   run: |
+      #     poetry run python -m nuitka \
+      #       --standalone \
+      #       --assume-yes-for-downloads \
+      #       --macos-target-arch=x86_64 \
+      #       --macos-create-app-bundle \
+      #       --macos-disable-console \
+      #       --macos-app-icon=/Users/runner/work/normcap/normcap/package/imgs/normcap.icns \
+      #       --macos-signed-app-name=eu.dynobo.normcap \
+      #       --macos-app-name=NormCap \
+      #       --macos-app-version=0.0.1 \
+      #       --enable-plugin=pyside6 \
+      #       --include-data-dir=/Users/runner/work/normcap/normcap/src/normcap/resources=resources \
+      #       --include-data-dir=/Users/runner/work/normcap/normcap/package/.cache=PySide6/qt-plugins/tls \
+      #       /Users/runner/work/normcap/normcap/src/normcap/app.py
       - name: Build test package briefcase
         shell: bash -l {0}
-        run: |
-          poetry run python package/build.py --framework=briefcase --dev
+        run: poetry run python package/build.py --framework=briefcase --dev
 
+      # Release test package
       - name: Set current date as env variable
         shell: bash -l {0}
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
-
-      # Release test package
       - name: Draft internal release
         uses: ncipollo/release-action@v1
         if: ${{ github.repository == 'dynobo/normcap' }}
