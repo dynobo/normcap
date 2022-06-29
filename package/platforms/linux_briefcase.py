@@ -32,7 +32,7 @@ rm_recursive(directory=app_dir / "PySide6", exclude={BRIEFCASE_EXCLUDES["pyside6
 lib_dir = self.appdir_path(app) / "usr" / "lib"
 rm_recursive(directory=lib_dir / "PySide6", exclude={BRIEFCASE_EXCLUDES["pyside6"]})
 """
-        insert_after = 'self.logger.info(f"[{app.app_name}] Building AppImage...")'
+        insert_after = 'self.logger.info("Building AppImage...", prefix=app.app_name)'
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
     def patch_briefcase_appimage_to_include_tesseract(self):
@@ -40,7 +40,7 @@ rm_recursive(directory=lib_dir / "PySide6", exclude={BRIEFCASE_EXCLUDES["pyside6
         file_path = (
             Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
         )
-        insert_after = '"-o", "appimage",'
+        insert_after = '"appimage",'
         patch = """
 "--executable",
 "/usr/bin/tesseract",

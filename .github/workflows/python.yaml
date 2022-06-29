@@ -130,23 +130,6 @@ jobs:
         shell: bash -l {0}
         continue-on-error: true
         run: poetry run python package/build.py --framework=nuitka --dev
-      # - name: Debug macos build
-      #   if: ${{ matrix.os  == 'macos-12' }}
-      #   run: |
-      #     poetry run python -m nuitka \
-      #       --standalone \
-      #       --assume-yes-for-downloads \
-      #       --macos-target-arch=x86_64 \
-      #       --macos-create-app-bundle \
-      #       --macos-disable-console \
-      #       --macos-app-icon=/Users/runner/work/normcap/normcap/package/imgs/normcap.icns \
-      #       --macos-signed-app-name=eu.dynobo.normcap \
-      #       --macos-app-name=NormCap \
-      #       --macos-app-version=0.0.1 \
-      #       --enable-plugin=pyside6 \
-      #       --include-data-dir=/Users/runner/work/normcap/normcap/src/normcap/resources=resources \
-      #       --include-data-dir=/Users/runner/work/normcap/normcap/package/.cache=PySide6/qt-plugins/tls \
-      #       /Users/runner/work/normcap/normcap/src/normcap/app.py
       - name: Build test package briefcase
         shell: bash -l {0}
         run: poetry run python package/build.py --framework=briefcase --dev
