@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-12, windows-2019, ubuntu-22.04]
+        os: [macos-10.15, windows-2019, ubuntu-20.04]
     steps:
       # SETUP ENVIRONMENT
       - uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
           poetry-version: 1.2.0b2
 
       - name: Prepare Linux
-        if: ${{ matrix.os  == 'ubuntu-22.04' }}
+        if: ${{ matrix.os  == 'ubuntu-20.04' }}
         run: |
           sudo apt-get update
           sudo apt-get install \
@@ -51,7 +51,7 @@ jobs:
           echo "XDG_SESSION_TYPE=gnome" >> $GITHUB_ENV
 
       - name: Prepare MacOS
-        if: ${{ matrix.os  == 'macos-12' }}
+        if: ${{ matrix.os  == 'macos-10.15' }}
         run: |
           brew install pkg-config tesseract dylibbundler
           brew info tesseract
@@ -110,7 +110,7 @@ jobs:
 
       - name: Coveralls
         if:
-          ${{ matrix.os  == 'ubuntu-22.04' && github.repository ==
+          ${{ matrix.os  == 'ubuntu-20.04' && github.repository ==
           'dynobo/normcap' }}
         run: poetry run coveralls
         env:
@@ -118,7 +118,7 @@ jobs:
 
       - name: SonarCloud
         if:
-          ${{ matrix.os  == 'ubuntu-22.04' && github.repository
+          ${{ matrix.os  == 'ubuntu-20.04' && github.repository
           =='dynobo/normcap' }}
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -157,7 +157,7 @@ jobs:
     name: Build and release new Python package
     needs: test
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -178,7 +178,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-12, windows-2019]
+        os: [ubuntu-20.04, macos-10.15, windows-2019]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -222,7 +222,7 @@ jobs:
     name: Deploy github pages
     needs: build-packages
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: Deploy pages

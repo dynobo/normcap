@@ -15,6 +15,7 @@ class MacNuitka(BuilderBase):
         self.run(
             cmd=f"""python -m nuitka \
                     --standalone \
+                    --onefile \
                     --assume-yes-for-downloads \
                     --macos-target-arch=x86_64 \
                     --macos-create-app-bundle \

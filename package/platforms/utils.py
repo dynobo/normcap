@@ -144,6 +144,8 @@ class BuilderBase(ABC):
             cmd, shell=True, cwd=cwd, capture_output=True
         )
         if completed_proc.returncode != 0:
+            print(completed_proc.stdout.decode("utf-8"))
+            print(completed_proc.stderr.decode("utf-8"))
             raise subprocess.CalledProcessError(
                 returncode=completed_proc.returncode,
                 cmd=cmd,

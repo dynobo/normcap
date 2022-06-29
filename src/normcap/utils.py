@@ -64,7 +64,15 @@ def set_environ_for_prebuild_package():
             )
             os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
     if sys.platform == "darwin":
-        tesseract_bin = system_info.get_resources_path() / "tesseract" / "tesseract"
+        if package == "nuitka":
+            tesseract_bin = system_info.get_resources_path() / "tesseract" / "tesseract"
+        elif package == "briefcase":
+            tesseract_bin = (
+                system_info.get_resources_path().parent
+                / "normcap"
+                / "tesseract"
+                / "tesseract"
+            )
         os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
 
     elif sys.platform == "win32":
