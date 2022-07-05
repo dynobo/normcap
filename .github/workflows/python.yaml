@@ -126,13 +126,16 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       # Build test packages
+      - name: Build test package briefcase
+        shell: bash -l {0}
+        run: poetry run python package/build.py --framework=briefcase --dev
       - name: Build test package nuitka
         shell: bash -l {0}
         continue-on-error: true
         run: poetry run python package/build.py --framework=nuitka --dev
-      - name: Build test package briefcase
+      - name: List files
         shell: bash -l {0}
-        run: poetry run python package/build.py --framework=briefcase --dev
+        run: ls -la ./package
 
       # Release test package
       - name: Set current date as env variable
@@ -200,10 +203,12 @@ jobs:
         shell: bash -l {0}
         run: |
           poetry run python package/build.py --framework=nuitka
+          ls -la ./package
       - name: Build package briefcase
         shell: bash -l {0}
         run: |
           poetry run python package/build.py --framework=briefcase
+          ls -la ./package
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:

@@ -143,9 +143,15 @@ class BuilderBase(ABC):
         completed_proc = subprocess.run(  # pylint: disable=subprocess-run-check
             cmd, shell=True, cwd=cwd, capture_output=True
         )
+        try:
+            print(completed_proc.stdout.decode(sys.__stdout__.encoding))
+            print(completed_proc.stderr.decode(sys.__stdout__.encoding))
+        except UnicodeDecodeError as e:
+            print(e)
+            print(completed_proc.stdout)
+            print(completed_proc.stderr)
+
         if completed_proc.returncode != 0:
-            print(completed_proc.stdout.decode("utf-8"))
-            print(completed_proc.stderr.decode("utf-8"))
             raise subprocess.CalledProcessError(
                 returncode=completed_proc.returncode,
                 cmd=cmd,

@@ -53,7 +53,7 @@ types-requests = ">=2.27.30"
 types-Pillow = ">=9.0.19"
 pydeps = ">=1.10.18"
 bandit = ">=1.7.4"
-briefcase = "^0.3.7"
+briefcase = "^0.3.8"
 safety = ">=1.10.3"
 radon = { version = ">=5.1.0", optional = true }
 viztracer = { version = ">=0.15.3", optional = true }
@@ -151,7 +151,7 @@ requires = ["pyside6", "jeepney", "pytesseract", "packaging"]
 requires = ["std-nslog==1.0.0"]
 
 [tool.briefcase.app.normcap.linux]
-requires = ["Pillow==7.2.0"]
+requires = ["Pillow==9.2.0"]
 system_requires = ["tesseract-ocr", "pkg-config", "libtiff-dev", "libfuse2"]
 
 [tool.briefcase.app.normcap.windows]

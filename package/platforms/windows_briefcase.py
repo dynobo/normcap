@@ -50,7 +50,7 @@ class WindowsBriefcase(BuilderBase):
         target_path.mkdir(exist_ok=True)
         zip_path = self.BUILD_PATH / "openssl.zip"
         urllib.request.urlretrieve(
-            "http://wiki.overbyte.eu/arch/openssl-1.1.1m-win64.zip", zip_path
+            "http://wiki.overbyte.eu/arch/openssl-1.1.1q-win64.zip", zip_path
         )
         with zipfile.ZipFile(zip_path, "r") as zip_ref:
             zip_ref.extractall(target_path)

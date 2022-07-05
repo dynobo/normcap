@@ -31,7 +31,6 @@ class LinuxNuitka(BuilderBase):
             "libtesseract*",
             "libtiff*",
             "libjbig*",
-            "libdeflate*",
         )
         for pattern in deps:
             dependency = list(lib_cache_path.glob(pattern))[0]

@@ -9,7 +9,7 @@ from PIL import Image, ImageOps, ImageStat
 logger = logging.getLogger(__name__)
 
 
-def _identify_most_frequent_edge_color(img: Image.Image) -> tuple:
+def _identify_most_frequent_edge_color(img: Image.Image) -> tuple[int, int, int]:
     """Heuristically find color for padding."""
     # Top and bottom edge
     edge_colors = [img.getpixel((x, 0)) for x in range(img.width)]
