@@ -26,12 +26,8 @@ class LinuxNuitka(BuilderBase):
         )
 
         print(f"Copying tesseract dependencies to {target_path.resolve()}...")
-        deps = (
-            "liblept*",
-            "libtesseract*",
-            "libtiff*",
-            "libjbig*",
-        )
+        # deps = ("liblept*", "libtesseract*", "libtiff*", "libjbig*", "*")
+        deps = ("*",)
         for pattern in deps:
             dependency = list(lib_cache_path.glob(pattern))[0]
             print(f"{dependency.resolve()}")
