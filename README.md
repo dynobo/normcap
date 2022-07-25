@@ -45,7 +45,7 @@ If you experience issues please look at the
 ## Python package
 
 As an _alternative_ to a pre-build package you can install the
-[NormCap Python package](https://pypi.org/project/normcap/):
+[NormCap Python package](https://pypi.org/project/normcap/) for **Python >=3.9**:
 
 #### On Linux
 
