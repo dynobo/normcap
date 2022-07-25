@@ -5,11 +5,13 @@ import urllib
 import zipfile
 from pathlib import Path
 
-from .utils import BuilderBase
+from platforms.utils import BuilderBase
 
 
 class WindowsNuitka(BuilderBase):
     """Create prebuild package for Windows using Nuitka."""
+
+    binary_suffix = "_EXPERIMENTAL"
 
     def bundle_tesseract(self):  # noqa: D102
         # Link to download artifact might change
@@ -108,7 +110,7 @@ class WindowsNuitka(BuilderBase):
                 -nologo \
                 -ext WixUtilExtension \
                 -ext WixUIExtension \
-                -o {(self.BUILD_PATH / f"NormCap-{self.get_version()}-Windows.msi").resolve()} \
+                -o {(self.BUILD_PATH / f"NormCap-{self.get_version()}-Windows{self.binary_suffix}.msi").resolve()} \
                 normcap.wixobj \
                 normcap-manifest.wixobj
             """,

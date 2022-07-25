@@ -3,11 +3,13 @@
 import shutil
 from pathlib import Path
 
-from .utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
+from platforms.utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
 
 
 class MacBriefcase(BuilderBase):
     """Create prebuild package for MacOS using Briefcase."""
+
+    binary_suffix = ""
 
     def run_framework(self):  # noqa: D102
         app_dir = (

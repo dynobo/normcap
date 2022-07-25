@@ -6,14 +6,13 @@ import shutil
 from pathlib import Path
 
 import briefcase  # type: ignore
-
-from .utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
+from platforms.utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
 
 
 class LinuxBriefcase(BuilderBase):
     """Create prebuild package for Linux using Briefcase."""
 
-    binary_suffix = "_legacy"
+    binary_suffix = ""
 
     def patch_briefcase_appimage_to_prune_deps(self):
         """Insert code into briefcase appimage code to remove unnecessary libs."""

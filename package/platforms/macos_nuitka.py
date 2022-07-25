@@ -3,11 +3,13 @@
 import os
 import shutil
 
-from .utils import BuilderBase
+from platforms.utils import BuilderBase
 
 
 class MacNuitka(BuilderBase):
     """Create prebuild package for MacOS using Nuitka."""
+
+    binary_suffix = "_EXPERIMENTAL"
 
     def run_framework(self):  # noqa: D102
         print(f"{'='*40}\nRun framework\n{'='*40}")
@@ -40,7 +42,8 @@ class MacNuitka(BuilderBase):
             new_app_path / "Contents" / "MacOS" / "NormCap",
         )
         shutil.make_archive(
-            base_name=self.BUILD_PATH / f"NormCap-{self.get_version()}-MacOS",
+            base_name=self.BUILD_PATH
+            / f"NormCap-{self.get_version()}-MacOS{self.binary_suffix}",
             format="zip",
             root_dir=self.BUILD_PATH,
             base_dir="NormCap.app",

@@ -3,13 +3,13 @@
 import os
 import shutil
 
-from .utils import BuilderBase
+from platforms.utils import BuilderBase
 
 
 class LinuxNuitka(BuilderBase):
     """Create prebuild package for Linux using Nuitka."""
 
-    binary_suffix = ""
+    binary_suffix = "_EXPERIMENTAL"
 
     def bundle_tesseract(self):  # noqa: D102
         target_path = self.RESOURCE_PATH / "tesseract"

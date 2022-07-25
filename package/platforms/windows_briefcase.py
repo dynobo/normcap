@@ -6,13 +6,13 @@ import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
-from .utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
+from platforms.utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
 
 
 class WindowsBriefcase(BuilderBase):
     """Create prebuild package for Windows using Nuitka."""
 
-    binary_suffix = "_legacy"
+    binary_suffix = ""
 
     def bundle_tesseract(self):  # noqa: D102
         # Link to download artifact might change
