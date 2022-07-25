@@ -25,12 +25,12 @@ normcap = "normcap.app:main"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"
-PySide6-Essentials = "^6.3.0"
-jeepney = ">=0.7"
+PySide6-Essentials = "^6.3.1"
+jeepney = ">=0.8"
 pytesseract = ">=0.3.9"
-packaging = ">=21.0"
+packaging = ">=21.3"
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dev-dependencies]
 black = ">=22.3.0"
 isort = ">=5.10.1"
 mypy = ">=0.961"
@@ -58,7 +58,7 @@ safety = ">=1.10.3"
 radon = { version = ">=5.1.0", optional = true }
 viztracer = { version = ">=0.15.3", optional = true }
 vulture = { version = "^2.4", optional = true }
-Nuitka = "^0.9.4"
+Nuitka = "^0.9.6"
 ordered-set = "^4.1.0"
 
 [tool.poetry.extras]

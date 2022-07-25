@@ -24,8 +24,6 @@ jobs:
         with:
           python-version: "3.10"
       - uses: abatilo/actions-poetry@v2.1.4
-        with:
-          poetry-version: 1.2.0b2
 
       - name: Prepare Linux
         if: ${{ matrix.os  == 'ubuntu-20.04' }}
@@ -167,8 +165,6 @@ jobs:
         with:
           python-version: "3.10"
       - uses: abatilo/actions-poetry@v2.1.4
-        with:
-          poetry-version: 1.1.12
       - name: Poetry publish
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
@@ -190,8 +186,6 @@ jobs:
         with:
           python-version: "3.10"
       - uses: abatilo/actions-poetry@v2.1.4
-        with:
-          poetry-version: 1.1.12
       - name: Extract version from tag
         id: extract_version
         uses: damienaicheh/extract-version-from-tag-action@v1.0.0
