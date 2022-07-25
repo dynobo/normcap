@@ -17,28 +17,32 @@ class WindowsNuitka(BuilderBase):
         # Link to download artifact might change
 
         # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
+        zip_path = self.BUILD_PATH / "tesseract.zip"
 
-        if (self.TESSERACT_PATH / "tesseract.exe").exists():
+        if zip_path.exists():
             print("Tesseract.exe already present. Skipping download.")
             return
 
         url = "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
-        urllib.request.urlretrieve(f"{url}", self.BUILD_PATH / "tesseract.zip")
-        with zipfile.ZipFile(self.BUILD_PATH / "tesseract.zip") as artifact_zip:
+        urllib.request.urlretrieve(f"{url}", zip_path)
+
+        if not zip_path.exists():
+            raise FileNotFoundError("Downloading of tesseract.zip might have failed!")
+
+        with zipfile.ZipFile(zip_path) as artifact_zip:
             members = [
                 m
                 for m in artifact_zip.namelist()
                 if ".test." not in m and ".training." not in m
             ]
             subdir = members[0].split("/")[0]
-            artifact_zip.extractall(path=self.RESOURCE_PATH, members=members)
-
-        (self.BUILD_PATH / "tesseract.zip").unlink()
+            artifact_zip.extractall(path=self.RESOURCE_PATH, members=members)  #
+        zip_path.unlink()
         print("Tesseract binaries downloaded.")
 
         for each_file in Path(self.RESOURCE_PATH / subdir).glob("*.*"):
             each_file.rename(self.TESSERACT_PATH / each_file.name)
-        (self.TESSERACT_PATH / "google.tesseract.tesseract-master.exe").rename(
+        (self.TESSERACT_PATH / "google.tesseract.tesseract-main.exe").rename(
             self.TESSERACT_PATH / "tesseract.exe"
         )
         shutil.rmtree(self.RESOURCE_PATH / subdir)
