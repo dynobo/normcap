@@ -68,9 +68,8 @@ def set_environ_for_prebuild_package():
             tesseract_bin = system_info.get_resources_path() / "tesseract" / "tesseract"
         elif package == "briefcase":
             tesseract_bin = (
-                system_info.get_resources_path().parent
-                / "normcap"
-                / "tesseract"
+                system_info.get_resources_path().parent.parent.parent
+                / "app_packages"
                 / "tesseract"
             )
         os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())

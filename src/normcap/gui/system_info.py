@@ -18,10 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_resources_path() -> Path:
-    if sys.platform == "darwin" and is_prebuild_package():
-        return Path(__file__).parent.parent.parent / "resources"
-
-    return Path(__file__).parent.parent / "resources"
+    return (Path(__file__).parent.parent / "resources").resolve()
 
 
 def is_prebuild_package() -> Optional[str]:
