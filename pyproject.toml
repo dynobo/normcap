@@ -195,7 +195,7 @@ src = "README.md"
 search = 'download/v{current_version}/'
 
 [[tool.tbump.file]]
-src = "build/normcap.wxs"
+src = "package/normcap.wxs"
 search = 'ProductVersion = "{current_version}"'
 
 [[tool.tbump.before_commit]]
