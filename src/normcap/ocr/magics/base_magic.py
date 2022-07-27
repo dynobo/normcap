@@ -1,13 +1,15 @@
 """Base class for templating magics."""
+import abc
 
 from normcap.ocr.models import OcrResult
 
 # pylint: disable=unused-argument
 
 
-class BaseMagic:
+class BaseMagic(abc.ABC):
     """Base Class to be instantiated."""
 
+    @abc.abstractmethod
     def score(self, ocr_result: OcrResult) -> float:
         """Calculate the score of a magic.
 
@@ -20,8 +22,8 @@ class BaseMagic:
         Returns:
             float -- score between 0-100 (100 = more likely)
         """
-        return 0.0
 
+    @abc.abstractmethod
     def transform(self, ocr_result: OcrResult) -> str:
         """Transform detected lineboxes into single(!) string.
 
@@ -31,4 +33,3 @@ class BaseMagic:
         Returns:
             str -- String to be copied to clipboard
         """
-        return ""

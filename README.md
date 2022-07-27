@@ -170,7 +170,7 @@ Thanks to the maintainers of those nice libraries!
 
 ## Similar open source tools
 
-If NormCap doesn't fit your needs, try those alternatives:
+If NormCap doesn't fit your needs, try those alternatives (no particular order):
 
 - [TextSnatcher](https://github.com/RajSolai/TextSnatcher)
 - [GreenShot](https://getgreenshot.org/)
@@ -178,6 +178,7 @@ If NormCap doesn't fit your needs, try those alternatives:
 - [gImageReader](https://github.com/manisandro/gImageReader)
 - [Capture2Text](https://sourceforge.net/projects/capture2text)
 - [Frog](https://github.com/TenderOwl/Frog)
+- [Textinator](https://github.com/RhetTbull/textinator)
 
 ## Certification
 

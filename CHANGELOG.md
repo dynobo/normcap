@@ -2,10 +2,7 @@
 
 ## v0.3.5 (2022-07-27)
 
-- All: New experimental prebuild images using [Nuitka](ttps://pypi.org/project/Nuitka/)
-  might lead to smaller file size, faster application start up and more robust builds.
-  (The "old" builds with [briefcase](https://pypi.org/project/briefcase/) should still
-  be prefered, as they are better tested!)
+- All: Reduce the file size of prebuild packages.
 - Windows: Fix bug causing a 5 seconds delay during recognition
   [#218](https://github.com/dynobo/normcap/issues/218).
 - Docu: Add Python version required for installing package from PyPi
