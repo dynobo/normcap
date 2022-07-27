@@ -41,6 +41,7 @@ class WindowsNuitka(BuilderBase):
         print("Tesseract binaries downloaded.")
 
         for each_file in Path(self.RESOURCE_PATH / subdir).glob("*.*"):
+            (self.TESSERACT_PATH / each_file.name).unlink(missing_ok=True)
             each_file.rename(self.TESSERACT_PATH / each_file.name)
         (self.TESSERACT_PATH / "google.tesseract.tesseract-main.exe").rename(
             self.TESSERACT_PATH / "tesseract.exe"
