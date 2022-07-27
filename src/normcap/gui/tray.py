@@ -2,8 +2,10 @@
 import io
 import logging
 import os
+import sys
 import tempfile
 import time
+from functools import partial
 
 from PIL import Image
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -89,7 +91,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _add_update_checker(self):
         if self.settings.value("update", type=bool):
-            checker = UpdateChecker(self, packaged=system_info.is_briefcase_package())
+            checker = UpdateChecker(self, packaged=system_info.is_prebuild_package())
             checker.com.on_version_retrieved.connect(checker.show_update_message)
             checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
             QtCore.QTimer.singleShot(500, checker.check)
@@ -263,6 +265,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _close_or_exit(self, reason: str):
         if self.settings.value("tray", type=bool):
             self._close_windows()
+        elif reason == "notification sent" and sys.platform == "win32":
+            # Hide but delay exit to give notification enough time to show up.
+            self._close_windows()
+            delayed_exit = partial(
+                self._exit_application, reason="notification sent delaying exit"
+            )
+            QtCore.QTimer.singleShot(5000, delayed_exit)
         else:
             self._exit_application(reason)
 

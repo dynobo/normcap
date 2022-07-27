@@ -1,9 +1,17 @@
 # Changelog
 
+## v0.3.5 (2022-07-27)
+
+- All: Reduce the file size of prebuild packages.
+- Windows: Fix bug causing a 5 seconds delay during recognition
+  [#218](https://github.com/dynobo/normcap/issues/218).
+- Docu: Add Python version required for installing package from PyPi
+  [#221](https://github.com/dynobo/normcap/issues/221).
+
 ## v0.3.4 (2022-03-31)
 
 - All: Various speed improvements.
-- All: Smaller size by updating to Pyside 6.3 without addons.
+- All: Smaller size by updating to PySide 6.3 without add-ons.
 - Linux: Avoid crash on denied screenshot on Wayland.
 - Docu: In README, complement dependencies for installing pip package. Thx,
   [@thecoder-001](https://github.com/thecoder-001) &

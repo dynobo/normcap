@@ -25,39 +25,41 @@ normcap = "normcap.app:main"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"
-PySide6-Essentials = "^6.3.0"
-jeepney = ">=0.7"
+PySide6-Essentials = "^6.3.1"
+jeepney = ">=0.8"
 pytesseract = ">=0.3.9"
-packaging = ">=21.0"
+packaging = ">=21.3"
 
 [tool.poetry.dev-dependencies]
 black = ">=22.3.0"
 isort = ">=5.10.1"
-mypy = ">=0.960"
+mypy = ">=0.961"
 pre-commit = ">=2.19"
 pydocstyle = ">=6.1.1"
-pylint = ">=2.13.9"
+pylint = ">=2.14.1"
 pytest = ">=7.1.2"
 pytest-cov = ">=3.0.0"
-pytest-qt = ">=4.0.2"
-pytest-xvfb = ">=2.0.0"
+pytest-qt = ">=4.1.0"
 pylint-pytest = "^1.1.2"
+pytest-xvfb = "^2.0.0"
 toml = ">=0.10.2"
 mdformat-gfm = ">=0.3.5"
 coveralls = ">=3.3.1"
+coverage = { extras = ["toml"], version = "^6.4.2" }
 tbump = ">=6.9.0"
 Levenshtein = ">=0.18.1"
 rope = ">=1.1.1"
 types-toml = ">=0.10.7"
-types-requests = ">=2.27.29"
+types-requests = ">=2.27.30"
 types-Pillow = ">=9.0.19"
 pydeps = ">=1.10.18"
-bandit = "^1.7.4"
-briefcase = ">=0.3.7"
-safety = "^1.10.3"
+bandit = ">=1.7.4"
+briefcase = "^0.3.8"
+safety = ">=1.10.3"
 radon = { version = ">=5.1.0", optional = true }
-viztracer = { version = ">=0.15.2", optional = true }
+viztracer = { version = ">=0.15.3", optional = true }
 vulture = { version = "^2.4", optional = true }
+Nuitka = "^0.9.6"
 
 [tool.poetry.extras]
 analysis = ["radon", "vistracer", "vulture"]
@@ -116,12 +118,13 @@ convention = "google"
 add-ignore = "D107,D104,D103,D100,D105"
 
 [tool.pytest.ini_options]
-#addopts = "--cov normcap --cov-report xml:cov.xml --cov-report html"
 testpaths = ["src/tests"]
 qt_api = "pyside6"
-markers = ["skip_on_gh: do not run during CI/CD on github"]
 xvfb_width = 1920
 xvfb_height = 1080
+
+[tool.coverage.run]
+source = ["normcap"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "briefcase"]
@@ -140,17 +143,17 @@ author_email = "dynobo@mailbox.org"
 formal_name = "NormCap"
 description = "OCR-powered screen-capture tool to capture information instead of images"
 sources = ["src/normcap"]
-icon = "src/normcap/resources/normcap"
-installer_icon = "src/normcap/resources/normcap_install"
-installer_background = "src/normcap/resources/normcap_install_bg"
+icon = "package/imgs/normcap"
+installer_icon = "package/imgs/normcap_install"
+installer_background = "package/imgs/normcap_install_bg"
 requires = ["pyside6", "jeepney", "pytesseract", "packaging"]
 
 [tool.briefcase.app.normcap.macOS]
 requires = ["std-nslog==1.0.0"]
 
 [tool.briefcase.app.normcap.linux]
-requires = ["Pillow==7.2.0"]
-system_requires = ["tesseract-ocr", "pkg-config", "libtiff-dev"]
+requires = ["Pillow==9.2.0"]
+system_requires = ["tesseract-ocr", "pkg-config", "libtiff-dev", "libfuse2"]
 
 [tool.briefcase.app.normcap.windows]
 
@@ -190,6 +193,10 @@ search = 'NormCap-{current_version}-'
 [[tool.tbump.file]]
 src = "README.md"
 search = 'download/v{current_version}/'
+
+[[tool.tbump.file]]
+src = "build/normcap.wxs"
+search = 'ProductVersion = "{current_version}"'
 
 [[tool.tbump.before_commit]]
 name = "check changelog"

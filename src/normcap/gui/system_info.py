@@ -5,6 +5,7 @@ import os
 import sys
 from importlib import metadata
 from pathlib import Path
+from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as PySide6_version
@@ -14,6 +15,23 @@ from normcap.gui.models import DesktopEnvironment, Rect, Screen
 from normcap.screengrab import gnome_shell_version
 
 logger = logging.getLogger(__name__)
+
+
+def get_resources_path() -> Path:
+    return (Path(__file__).parent.parent / "resources").resolve()
+
+
+def is_prebuild_package() -> Optional[str]:
+    package = sys.modules["__main__"].__package__
+    if package and "Briefcase-Version" in metadata.metadata(package):
+        # Briefcase package
+        return "briefcase"
+
+    if hasattr(sys.modules["__main__"], "__compiled__"):
+        # Nuitka package
+        return "nuitka"
+
+    return None
 
 
 @functools.cache
@@ -67,13 +85,6 @@ def screens() -> dict[int, Screen]:
     return screens_dict
 
 
-def is_briefcase_package() -> bool:
-    """Check if script is executed in briefcase package."""
-    if app_module := sys.modules["__main__"].__package__:
-        return "Briefcase-Version" in metadata.metadata(app_module)
-    return False
-
-
 def config_directory() -> Path:
     """Retrieve platform specific configuration directory."""
     postfix = "normcap"
@@ -96,7 +107,7 @@ def get_tessdata_path() -> str:
     """Deside which path for tesseract language files to use."""
     prefix = os.environ.get("TESSDATA_PREFIX", None)
 
-    if is_briefcase_package():
+    if is_prebuild_package():
         path = config_directory() / "tessdata"
     elif prefix:
         path = Path(prefix) / "tessdata"
@@ -115,7 +126,7 @@ def to_dict() -> dict:
     """Cast all system infos to string for logging."""
     return dict(
         cli_args=" ".join(sys.argv),
-        is_briefcase_package=is_briefcase_package(),
+        is_prebuild_package=is_prebuild_package(),
         platform=sys.platform,
         pyside6_version=PySide6_version,
         qt_version=QtCore.qVersion(),
@@ -127,6 +138,7 @@ def to_dict() -> dict:
             "TESSERACT_CMD": os.environ.get("TESSERACT_CMD", None),
             "TESSERACT_VERSION": os.environ.get("TESSERACT_VERSION", None),
             "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX", None),
+            "LD_LIBRARY_PATH": os.environ.get("LD_LIBRARY_PATH", None),
         },
         desktop_environment=desktop_environment(),
         display_manager_is_wayland=display_manager_is_wayland(),

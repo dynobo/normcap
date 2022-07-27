@@ -27,17 +27,13 @@ class Notifier(QtCore.QObject):
     def send_notification(self, capture: Capture):
         """Show tray icon then send notification."""
         logger.debug("Send notification")
-        on_windows = sys.platform == "win32"
-        icon_file = "normcap.png" if on_windows else "tray.png"
+        icon_file = "normcap.png" if sys.platform == "win32" else "tray.png"
         notification_icon = get_icon(icon_file, "tool-magic-symbolic")
 
         title, message = self.compose_notification(capture)
         self.parent().show()
         self.parent().showMessage(title, message, notification_icon)
-
-        # Delay quit or hide to get notification enough time to show up.
-        delay = 5000 if sys.platform == "win32" else 500
-        QtCore.QTimer.singleShot(delay, self.com.on_notification_sent.emit)
+        self.com.on_notification_sent.emit()
 
     @staticmethod
     def compose_notification(capture) -> tuple[str, str]:
