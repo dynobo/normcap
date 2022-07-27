@@ -6,7 +6,12 @@ import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
-from platforms.utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
+from platforms.utils import (
+    BRIEFCASE_EXCLUDES,
+    BuilderBase,
+    bundle_tesseract_windows,
+    rm_recursive,
+)
 
 
 class WindowsBriefcase(BuilderBase):
@@ -14,40 +19,9 @@ class WindowsBriefcase(BuilderBase):
 
     binary_suffix = ""
 
-    def bundle_tesseract(self):  # noqa: D102
-        # Link to download artifact might change
-
-        # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
-        zip_path = self.BUILD_PATH / "tesseract.zip"
-
-        if zip_path.exists():
-            print("Tesseract.exe already present. Skipping download.")
-            return
-
-        url = "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
-        urllib.request.urlretrieve(f"{url}", zip_path)
-
-        if not zip_path.exists():
-            raise FileNotFoundError("Downloading of tesseract.zip might have failed!")
-
-        with zipfile.ZipFile(zip_path) as artifact_zip:
-            members = [
-                m
-                for m in artifact_zip.namelist()
-                if ".test." not in m and ".training." not in m
-            ]
-            subdir = members[0].split("/")[0]
-            artifact_zip.extractall(path=self.RESOURCE_PATH, members=members)  #
-        zip_path.unlink()
-        print("Tesseract binaries downloaded.")
-
-        for each_file in Path(self.RESOURCE_PATH / subdir).glob("*.*"):
-            each_file.rename(self.TESSERACT_PATH / each_file.name)
-        (self.TESSERACT_PATH / "google.tesseract.tesseract-main.exe").rename(
-            self.TESSERACT_PATH / "tesseract.exe"
-        )
-        shutil.rmtree(self.RESOURCE_PATH / subdir)
-        print("Binaries moved. Tesseract.exe renamed.")
+    def bundle_tesseract(self):
+        """Download tesseract binaries including dependencies into resource path."""
+        bundle_tesseract_windows(self)
 
     def download_openssl(self):
         """Download openssl needed for QNetwork https connections."""

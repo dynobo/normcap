@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-10.15, windows-2019, ubuntu-22.04]
+        os: [macos-11, windows-2019, ubuntu-22.04]
     steps:
       # SETUP ENVIRONMENT
       - uses: actions/checkout@v2
@@ -54,7 +54,7 @@ jobs:
           echo "XDG_SESSION_TYPE=gnome" >> $GITHUB_ENV
 
       - name: Prepare MacOS
-        if: ${{ matrix.os  == 'macos-10.15' }}
+        if: ${{ matrix.os  == 'macos-11' }}
         run: |
           brew install pkg-config tesseract dylibbundler
           brew info tesseract
@@ -181,7 +181,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-10.15, windows-2019]
+        os: [ubuntu-22.04, macos-11, windows-2019]
     steps:
       - uses: actions/checkout@v2
         with:

@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import urllib.request
+import zipfile
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Union
@@ -225,3 +226,46 @@ class BuilderBase(ABC):
                 f"Couldn't apply patch to file {file_path}! "
                 + f"Line '{insert_after}' not found!"
             )
+
+
+def bundle_tesseract_windows(builder: BuilderBase):
+    """Download tesseract binaries including dependencies into resource path."""
+    # Link to download artifact might change
+
+    # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
+    zip_path = builder.BUILD_PATH / "tesseract.zip"
+
+    if zip_path.exists():
+        print("Tesseract.exe already present. Skipping download.")
+        return
+
+    url = (
+        "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
+    )
+    urllib.request.urlretrieve(f"{url}", zip_path)
+
+    if not zip_path.exists():
+        raise FileNotFoundError("Downloading of tesseract.zip might have failed!")
+
+    with zipfile.ZipFile(zip_path) as artifact_zip:
+        members = [
+            m
+            for m in artifact_zip.namelist()
+            if ".test." not in m and ".training." not in m
+        ]
+        subdir = members[0].split("/")[0]
+        artifact_zip.extractall(path=builder.RESOURCE_PATH, members=members)  #
+    zip_path.unlink()
+    print("Tesseract binaries downloaded.")
+
+    for each_file in Path(builder.RESOURCE_PATH / subdir).glob("*.*"):
+        (builder.TESSERACT_PATH / each_file.name).unlink(missing_ok=True)
+        each_file.rename(builder.TESSERACT_PATH / each_file.name)
+
+    (builder.TESSERACT_PATH / "tesseract.exe").unlink(missing_ok=True)
+    (builder.TESSERACT_PATH / "google.tesseract.tesseract-main.exe").rename(
+        builder.TESSERACT_PATH / "tesseract.exe"
+    )
+
+    shutil.rmtree(builder.RESOURCE_PATH / subdir)
+    print("Binaries moved. Tesseract.exe renamed.")
