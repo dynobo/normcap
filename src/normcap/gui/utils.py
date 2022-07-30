@@ -77,7 +77,7 @@ def move_active_window_to_position_on_gnome(screen_geometry):
     It only works on Gnome Shell.
     """
     if not HAVE_QTDBUS:
-        raise TypeError("QtDBus should not be called on non Linux systems!")
+        raise TypeError("QtDBus should only be called on Linux systems!")
 
     JS_CODE = f"""
     const GLib = imports.gi.GLib;
@@ -109,7 +109,7 @@ def move_active_window_to_position_on_gnome(screen_geometry):
             logger.error("Failed move Window!")
             logger.error(x.errorMessage())
     else:
-        logger.error("Invalid dbus interface")
+        logger.warning("Invalid dbus interface on Gnome")
 
 
 def move_active_window_to_position_on_kde(screen_geometry):
@@ -119,7 +119,7 @@ def move_active_window_to_position_on_kde(screen_geometry):
     It only works on KDE.
     """
     if not HAVE_QTDBUS:
-        raise TypeError("QtDBus should not be called on non Linux systems!")
+        raise TypeError("QtDBus should only be called on Linux systems!")
 
     JS_CODE = f"""
     client = workspace.activeClient;
@@ -142,6 +142,7 @@ def move_active_window_to_position_on_kde(screen_geometry):
     interface = "org.kde.kwin.Scripting"
     path = "/Scripting"
     shell_interface = QtDBus.QDBusInterface(item, path, interface, bus)
+    # FIXME: shell_interface is not valid on latest KDE in Fedora 36.
     if shell_interface.isValid():
         x = shell_interface.call("loadScript", script_file.name)
         y = shell_interface.call("start")
@@ -149,7 +150,7 @@ def move_active_window_to_position_on_kde(screen_geometry):
             logger.error("Failed move Window!")
             logger.error(x.errorMessage(), y.errorMessage())
     else:
-        logger.error("Invalid dbus interface")
+        logger.warning("Invalid dbus interface on KDE")
 
     os.unlink(script_file.name)
 
