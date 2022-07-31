@@ -2,7 +2,6 @@
 import io
 import logging
 import os
-import sys
 import tempfile
 import time
 from functools import partial
@@ -265,7 +264,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _close_or_exit(self, reason: str):
         if self.settings.value("tray", type=bool):
             self._close_windows()
-        elif reason == "notification sent" and sys.platform == "win32":
+        elif reason == "notification sent":
             # Hide but delay exit to give notification enough time to show up.
             self._close_windows()
             delayed_exit = partial(
