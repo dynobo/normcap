@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- All: Delay exit in case notification=on and tray=off to ensure notification is shown.
 - Linux: Latest NormCap is now always available on FlatHub
   ([#147](https://github.com/dynobo/normcap/issues/147),
   [#225](https://github.com/dynobo/normcap/issues/225)). Thx,
