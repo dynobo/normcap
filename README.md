@@ -37,6 +37,9 @@ Install from system repository:
 
 - **Arch / Manjaro**: Install the
   [`normcap`](https://aur.archlinux.org/packages/normcap) package from AUR.
+- **FlatPak (Linux)**: Install
+  [com.github.dynobo.normcap](https://flathub.org/apps/details/com.github.dynobo.normcap)
+  from FlatHub.
 
 If you experience issues please look at the
 [FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md) or
