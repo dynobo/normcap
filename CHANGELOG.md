@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Linux: Latest NormCap is now always available on FlatHub
+  ([#147](https://github.com/dynobo/normcap/issues/147),
+  [#225](https://github.com/dynobo/normcap/issues/225)). Thx,
+  [@Tim453](https://github.com/Tim453).
+
 ## v0.3.5 (2022-07-27)
 
 - All: Reduce the file size of prebuild packages.
