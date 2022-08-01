@@ -184,7 +184,7 @@ def test_to_string():
         "tessdata_path",
         "desktop_environment",
         "display_manager_is_wayland",
-        "gnome_shell_version",
+        "gnome_version",
         "screens",
     ]
     for item in expected:
