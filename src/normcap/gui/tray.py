@@ -76,6 +76,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_tray_menu_capture.connect(self._delayed_update_screenshots)
         self.com.on_screenshots_updated.connect(self._show_windows)
         self.com.on_quit.connect(lambda: self._exit_application("clicked exit in tray"))
+        self.com.on_region_selected.connect(self._close_windows)
         self.com.on_region_selected.connect(self._crop_image)
         self.com.on_image_cropped.connect(self._capture_to_ocr)
         self.com.on_ocr_performed.connect(self._copy_to_clipboard)

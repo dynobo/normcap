@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- All: Hide UI while processing. Useful for larger sections of text or slower machines,
+  where processing can take a while.
 - All: Delay exit in case notification=on and tray=off to ensure notification is shown.
 - Linux: Latest NormCap is now always available on FlatHub
   ([#147](https://github.com/dynobo/normcap/issues/147),

@@ -59,7 +59,7 @@ def _get_gnome_version_xml() -> str:
 
 
 @functools.lru_cache()
-def gnome_shell_version() -> Optional[version.Version]:
+def get_gnome_version() -> Optional[version.Version]:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux":
         return None
@@ -71,44 +71,40 @@ def gnome_shell_version() -> Optional[version.Version]:
     ):
         return None
 
-    shell_version = _parse_gnome_version_from_xml()
-    if not shell_version:
-        shell_version = _parse_gnome_version_from_shell_cmd()
-
-    return shell_version
+    return _parse_gnome_version_from_xml() or _parse_gnome_version_from_shell_cmd()
 
 
 def _parse_gnome_version_from_xml():
     """Try parsing gnome-version xml file."""
-    shell_version = None
+    gnome_version = None
     try:
         content = _get_gnome_version_xml()
         if result := re.search(r"(?<=<platform>)\d+(?=<\/platform>)", content):
-            platform = int(result.group(0))
+            platform = int(result[0])
         else:
             raise ValueError
         if result := re.search(r"(?<=<minor>)\d+(?=<\/minor>)", content):
-            minor = int(result.group(0))
+            minor = int(result[0])
         else:
             raise ValueError
-        shell_version = version.parse(f"{platform}.{minor}")
+        gnome_version = version.parse(f"{platform}.{minor}")
     except Exception as e:  # pylint: disable=broad-except
-        logger.error("Exception when trying to get gnome-shell version %s", e)
+        logger.warning("Exception when trying to get gnome version from xml %s", e)
 
-    return shell_version
+    return gnome_version
 
 
 def _parse_gnome_version_from_shell_cmd():
     """Try parsing gnome-shell output."""
-    shell_version = None
+    gnome_version = None
     try:
         output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
         output = output_raw.decode().strip()
         if result := re.search(r"\s+([\d.]+)", output):
-            shell_version = version.parse(result.groups()[0])
+            gnome_version = version.parse(result.groups()[0])
     except (subprocess.CalledProcessError, FileNotFoundError):
         pass
     except Exception as e:  # pylint: disable=broad-except
-        logger.error("Exception when trying to get gnome-shell version %s", e)
+        logger.warning("Exception when trying to get gnome version from cli %s", e)
 
-    return shell_version
+    return gnome_version
