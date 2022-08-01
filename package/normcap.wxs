@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<?define ProductVersion = "0.3.5" ?>
+<?define ProductVersion = "0.3.6" ?>
 <?define ProductUpgradeCode = "63ee06c1-0030-59d7-a5ae-31b45fc8261a" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
    <Product Id="*" UpgradeCode="$(var.ProductUpgradeCode)" Name="NormCap" Version="$(var.ProductVersion)" Manufacturer="dynobo" Language="1033">
