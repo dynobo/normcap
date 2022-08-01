@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.3.6 (2022-08-01)
 
 - All: Hide UI while processing. Useful for larger sections of text or slower machines,
   where processing can take a while.
