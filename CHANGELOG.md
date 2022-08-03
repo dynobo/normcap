@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.7 (2022-08-03)
+
+- Linux: Fix `TypeError` crash during detection of appropriate screenshot method
+  ([#235](https://github.com/dynobo/normcap/issues/235))
+
 ## v0.3.6 (2022-08-01)
 
 - All: Hide UI while processing. Useful for larger sections of text or slower machines,

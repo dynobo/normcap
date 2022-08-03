@@ -12,7 +12,7 @@ from PySide6 import __version__ as PySide6_version
 
 from normcap import __version__
 from normcap.gui.models import DesktopEnvironment, Rect, Screen
-from normcap.screengrab import get_gnome_version
+from normcap.screengrab.utils import get_gnome_version
 
 logger = logging.getLogger(__name__)
 

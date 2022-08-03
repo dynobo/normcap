@@ -41,7 +41,7 @@ def split_full_desktop_to_screens(full_image: QtGui.QImage) -> list[QtGui.QImage
     return images
 
 
-def display_manager_is_wayland() -> bool:
+def _display_manager_is_wayland() -> bool:
     """Identify relevant display managers (Linux)."""
     if sys.platform != "linux":
         return False
@@ -108,3 +108,21 @@ def _parse_gnome_version_from_shell_cmd():
         logger.warning("Exception when trying to get gnome version from cli %s", e)
 
     return gnome_version
+
+
+# pylint: disable=C0415 # Import outside toplevel
+def get_appropriate_grab_screens():
+    if not _display_manager_is_wayland():
+        from normcap.screengrab import qt
+
+        return qt.grab_screens
+
+    gnome_version = get_gnome_version()
+    if not gnome_version or gnome_version >= version.parse("41"):
+        from normcap.screengrab import dbus_portal
+
+        return dbus_portal.grab_screens
+
+    from normcap.screengrab import dbus_shell
+
+    return dbus_shell.grab_screens
