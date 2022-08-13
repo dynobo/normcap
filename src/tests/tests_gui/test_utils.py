@@ -97,7 +97,8 @@ def test_hook_exception(monkeypatch, caplog, capsys):
         # pylint: disable=unused-variable
         text = words = tsv_data = "secret"
         transformed = v = self = "secret"
-        other_variable = "should be printed"
+        other_variable = "should be "
+        other_variable += "printed"
         capture = Capture(ocr_text="secret")
         ocr_result = OcrResult(
             tess_args=None,

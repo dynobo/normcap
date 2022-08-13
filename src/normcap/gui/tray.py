@@ -9,7 +9,7 @@ from functools import partial
 from PIL import Image
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import __version__, clipboard, ocr
+from normcap import clipboard, ocr
 from normcap.gui import system_info, utils
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.notifier import Notifier

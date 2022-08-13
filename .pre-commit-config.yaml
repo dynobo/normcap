@@ -24,6 +24,21 @@ repos:
         entry: poetry run pyupgrade --py39-plus
         types: [python]
 
+      - id: autoflake
+        name: autoflake
+        entry: poetry run autoflake
+        language: system
+        args:
+          - --recursive
+          - --in-place
+          - --remove-all-unused-imports
+          - --remove-unused-variables
+          - --expand-star-imports
+          - --exclude
+          - __init__.py
+          - --remove-duplicate-keys
+        types: [python]
+
       - id: isort
         name: isort
         stages: [commit]
