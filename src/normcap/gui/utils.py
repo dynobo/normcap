@@ -130,9 +130,8 @@ def move_active_window_to_position_on_kde(screen_geometry):
         "height": {screen_geometry.height}
     }};
     """
-    script_file = tempfile.NamedTemporaryFile(delete=False, suffix=".js")
-    script_file.write(JS_CODE.encode())
-    script_file.close()
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".js") as script_file:
+        script_file.write(JS_CODE.encode())
 
     bus = QtDBus.QDBusConnection.sessionBus()
     if not bus.isConnected():
@@ -181,10 +180,10 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
             "v",
         ]
         redacted = "REDACTED"
-        for func_name, func_vars in local_vars.items():
+        for func_vars in local_vars.values():
             for f in filter_vars:
                 if f in func_vars:
-                    local_vars[func_name][f] = redacted
+                    func_vars[f] = redacted
             for k, v in func_vars.items():
                 if isinstance(v, Capture):
                     func_vars[k].ocr_text = redacted
@@ -219,7 +218,7 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
         )
         print(message, file=sys.stderr)
 
-    except Exception:
+    except Exception:  # pylint: disable=broad-except
         logger.critical(
             "Uncaught exception! Quitting NormCap! (debug output limited)",
             exc_info=(exc_type, exc_value, exc_traceback),
@@ -265,21 +264,3 @@ def copy_tessdata_files_to_config_dir():
     tessdata_path.mkdir(parents=True, exist_ok=True)
     for f in traineddata_files + doc_files:
         shutil.copy(f, tessdata_path / f.name)
-
-
-def copy_to_clipboard():
-    """Initialize a wrapper around qt clipboard.
-
-    Necesessary to avoid some wired results on Wayland, where text sometimes get
-    copied, and sometimes not.
-    """
-    from PySide6 import QtWidgets  # pylint: disable=all
-
-    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
-
-    def copy_qt(text):
-        logger.debug("Copy to clipboard:\n%s", text)
-        cb = app.clipboard()
-        cb.setText(text)
-
-    return copy_qt

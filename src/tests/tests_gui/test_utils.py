@@ -9,6 +9,7 @@ import pytest
 from PIL import Image
 from PySide6 import QtCore, QtGui
 
+from normcap import clipboard
 from normcap.gui import utils
 from normcap.gui.models import Capture
 from normcap.ocr.models import OcrResult
@@ -49,7 +50,7 @@ def test_copy_to_clipboard():
         return
 
     text = "To be copied to system clipboard"
-    _copy_to_clipboard = utils.copy_to_clipboard()
+    _copy_to_clipboard = clipboard.get_copy_func()
     _copy_to_clipboard(text)
 
     read_from_clipboard = QtGui.QGuiApplication.clipboard()
