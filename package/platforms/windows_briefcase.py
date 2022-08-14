@@ -97,7 +97,7 @@ class WindowsBriefcase(BuilderBase):
         source = list(Path(self.PROJECT_PATH / "windows").glob("*.msi"))[0]
         target = (
             self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-Windows{self.binary_suffix}.msi"
+            / f"NormCap-{self.get_version()}-x86_64-Windows{self.binary_suffix}.msi"
         )
         target.unlink(missing_ok=True)
         shutil.move(source, target)

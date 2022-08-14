@@ -57,15 +57,11 @@ def set_environ_for_prebuild_package():
             os.environ["LD_LIBRARY_PATH"] = ld_library_path
             os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
         elif package == "briefcase":
-            tesseract_path = (
-                system_info.get_resources_path().parent.parent.parent
-                / "bin"
-                / "tesseract"
-            )
+            bin_path = system_info.get_resources_path().parent.parent.parent / "bin"
+            tesseract_path = bin_path / "tesseract"
             os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
-            wl_copy_path = system_info.get_resources_path() / "wl-copy"
             os.environ["PATH"] = (
-                f"{wl_copy_path.absolute().resolve()}:" + os.environ["PATH"]
+                f"{bin_path.absolute().resolve()}:" + os.environ["PATH"]
             )
 
     elif sys.platform == "darwin":

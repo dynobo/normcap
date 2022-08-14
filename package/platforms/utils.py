@@ -94,6 +94,17 @@ def rm_recursive(directory, exclude):
                 os.remove(package_path)
 
 
+def build_wl_clipboard(self, app_packages_path):  # pylint: disable=unused-argument
+    print("Building wl-clipboard...", flush=True)
+    self.subprocess.run(
+        "git clone https://github.com/bugaevc/wl-clipboard.git".split(),
+        check=True,
+    )
+    self.subprocess.run("meson build wl-clipboard".split(), check=True)
+    self.subprocess.run("ninja -C build".split(), capture_output=True, text=True)
+    print("Building wl-clipboard done.")
+
+
 class BuilderBase(ABC):
     """Creates a prebuild package."""
 

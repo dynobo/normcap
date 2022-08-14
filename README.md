@@ -22,7 +22,7 @@
 Install a pre-build release:
 
 - **Windows**:
-  [NormCap-0.3.7-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-Windows.msi)
+  [NormCap-0.3.7-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64-Windows.msi)
 - **Linux**:
   [NormCap-0.3.7-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64.AppImage)
 - **macOS**:
@@ -54,16 +54,16 @@ As an _alternative_ to a pre-build package you can install the
 
 ```sh
 # Install dependencies (Ubuntu/Debian)
-sudo apt install build-essential tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev
+sudo apt install build-essential tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev wl-clipboard
 
 ## Install dependencies (Arch)
-sudo pacman -S tesseract tesseract-data-eng
+sudo pacman -S tesseract tesseract-data-eng wl-clipboard
 
 ## Install dependencies (Fedora)
-sudo dnf install tesseract
+sudo dnf install tesseract wl-clipboard
 
 ## Install dependencies (openSUSE)
-sudo zypper install python3-devel tesseract-ocr tesseract-ocr-devel
+sudo zypper install python3-devel tesseract-ocr tesseract-ocr-devel wl-clipboard
 
 # Install normcap
 pip install normcap
@@ -168,6 +168,8 @@ Packaging is done with:
 And it depends on external software
 
 - [tesseract](https://github.com/tesseract-ocr/tesseract) - _OCR engine_
+- [wl-clipboard](https://github.com/bugaevc/wl-clipboard) - _Wayland clipboard
+  utilities_
 
 Thanks to the maintainers of those nice libraries!
 

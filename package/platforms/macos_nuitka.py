@@ -43,7 +43,7 @@ class MacNuitka(BuilderBase):
         )
         shutil.make_archive(
             base_name=self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-MacOS{self.binary_suffix}",
+            / f"NormCap-{self.get_version()}-x86_64-MacOS{self.binary_suffix}",
             format="zip",
             root_dir=self.BUILD_PATH,
             base_dir="NormCap.app",

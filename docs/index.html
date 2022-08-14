@@ -83,8 +83,8 @@
           <ul>
             <li>
               <a
-                href="https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-Windows.msi"
-                >NormCap-<strong>Windows</strong>.msi</a
+                href="https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64-Windows.msi"
+                >NormCap-x86_64-<strong>Windows</strong>.msi</a
               >
               <small>~85 MB</small>
               <span data-tooltip="Run installer and start through start menu"
@@ -94,7 +94,7 @@
             <li>
               <a
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64.AppImage"
-                >NormCap-<strong>Linux</strong>.AppImage</a
+                >NormCap-x86_64-<strong>Linux</strong>.AppImage</a
               >
               <small>~85 MB</small>
               <span data-tooltip="Make the file executable and run it">🛈</span>
@@ -102,7 +102,7 @@
             <li>
               <a
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64-MacOS.dmg"
-                >NormCap-<strong>x86_64-MacOS</strong>.dmg</a
+                >NormCap-x86_64-<strong>-MacOS</strong>.dmg</a
               >
               <small>~75 MB</small>
               <span
@@ -760,25 +760,26 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
           <summary>Install on Linux</summary>
           <ol>
             <li>
-              Install dependencies:
+              Install dependencies: </br>
+              <small>Note: <code>wl-clipboard</code> can be omitted on X11 based systems</small> </br> </br>
               <ul>
                 <li>
                   Ubuntu/Debian:
                   <pre><code>sudo apt install build-essential tesseract-ocr tesseract-ocr-eng
-                    libtesseract-dev libleptonica-dev</code></pre>
+                    libtesseract-dev libleptonica-dev wl-clipboard</code></pre>
                 </li>
                 <li>
                   Arch:
-                  <pre><code>sudo pacman -S tesseract tesseract-data-eng</code></pre>
+                  <pre><code>sudo pacman -S tesseract tesseract-data-eng wl-clipboard</code></pre>
                 </li>
                 <li>
                   Fedora:
-                  <pre><code>sudo dnf install tesseract</code></pre>
+                  <pre><code>sudo dnf install tesseract wl-clipboard</code></pre>
                 </li>
                 <li>
                   openSUSE:
                   <pre><code>sudo zypper install python3-devel tesseract-ocr
-                    tesseract-ocr-devel</code></pre>
+                    tesseract-ocr-devel wl-clipboard</code></pre>
                 </li>
               </ul>
             </li>

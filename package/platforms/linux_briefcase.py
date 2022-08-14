@@ -6,13 +6,19 @@ import shutil
 from pathlib import Path
 
 import briefcase  # type: ignore
-from platforms.utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
+from platforms.utils import (
+    BRIEFCASE_EXCLUDES,
+    BuilderBase,
+    build_wl_clipboard,
+    rm_recursive,
+)
 
 
 class LinuxBriefcase(BuilderBase):
     """Create prebuild package for Linux using Briefcase."""
 
     binary_suffix = ""
+    wl_bin_path = None
 
     def patch_briefcase_appimage_to_prune_deps(self):
         """Insert code into briefcase appimage code to remove unnecessary libs."""
@@ -34,7 +40,19 @@ rm_recursive(directory=lib_dir / "PySide6", exclude={BRIEFCASE_EXCLUDES["pyside6
         insert_after = 'self.logger.info("Building AppImage...", prefix=app.app_name)'
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
-    def patch_briefcase_appimage_to_include_tesseract(self):
+    def patch_briefcase_appimage_to_build_wl_clipboard(self):
+        """Insert code into briefcase appimage code to build wl clipboard inside docker."""
+        def_build_wl_clipboard = inspect.getsource(build_wl_clipboard)
+
+        file_path = Path(briefcase.__file__).parent / "commands" / "create.py"
+        patch = f"""
+{def_build_wl_clipboard}
+build_wl_clipboard(self, app_packages_path)
+"""
+        insert_after = "        # Install dependencies"
+        self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
+
+    def patch_briefcase_appimage_to_include_tesseract_and_wlcopy(self):
         """Insert code into briefcase appimage code to remove unnecessary libs."""
         file_path = (
             Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
@@ -43,6 +61,8 @@ rm_recursive(directory=lib_dir / "PySide6", exclude={BRIEFCASE_EXCLUDES["pyside6
         patch = """
 "--executable",
 "/usr/bin/tesseract",
+"--executable",
+f"{self.appdir_path(app).parent.parent.parent / 'build' / 'src' / 'wl-copy'}",
 """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
@@ -63,47 +83,12 @@ if "linux" in str(bundle_path):
 """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
-    def bundle_tesseract(self):  # noqa: D102
-        target_path = self.RESOURCE_PATH / "tesseract"
-        target_path.mkdir(exist_ok=True)
-        lib_cache_path = self.BUILD_PATH / ".cache"
-        lib_cache_path.mkdir(exist_ok=True)
-        try:
-            shutil.copy("/usr/bin/tesseract", target_path)
-        except shutil.SameFileError:
-            print("'tesseract' already copied.")
-        self.run(
-            r"ldd /usr/bin/tesseract | grep '=> /' | awk '{print $3}' | "
-            "xargs -I '{}' cp -v '{}' " + f"{(lib_cache_path).resolve()}/"
-        )
-        print(f"Copying tesseract dependencies to {target_path.resolve()}...")
-        for pattern in ("liblept*", "libtesseract*"):
-            dependency = list(lib_cache_path.glob(pattern))[0]
-            print(f"{dependency.resolve()}")
-            shutil.copy(dependency, target_path)
-
     def install_system_deps(self):  # noqa: D102
         if system_requires := self.get_system_requires():
             github_actions_uid = 1001
             if os.getuid() == github_actions_uid:  # type: ignore
                 self.run(cmd="sudo apt update")
                 self.run(cmd=f"sudo apt install {' '.join(system_requires)}")
-
-    def build_wl_clipboard(self):  # noqa: D102
-        temp_path = Path().cwd() / ".temp"
-        shutil.rmtree(temp_path, ignore_errors=True)
-        temp_path.mkdir(exist_ok=True)
-        self.run(
-            cmd="git clone https://github.com/bugaevc/wl-clipboard.git", cwd=temp_path
-        )
-        wl_path = temp_path / "wl-clipboard"
-        self.run(cmd="meson build", cwd=wl_path)
-        self.run(cmd="ninja", cwd=wl_path / "build")
-
-        target_path = self.RESOURCE_PATH / "wl-copy"
-        target_path.mkdir(exist_ok=True)
-        shutil.copy(wl_path / "build" / "src" / "wl-copy", target_path / "wl-copy")
-        shutil.rmtree(wl_path, ignore_errors=True)
 
     def run_framework(self):  # noqa: D102
         self.run(cmd="briefcase create --no-input", cwd=self.PROJECT_PATH)
@@ -134,14 +119,16 @@ if "linux" in str(bundle_path):
         )
         shutil.copy(metainfo, target_path / "metainfo")
 
+    def bundle_tesseract(self):  # noqa: D102
+        ...
+
     def create(self):  # noqa: D102
         self.download_tessdata()
         self.install_system_deps()
-        self.build_wl_clipboard()
-        # self.bundle_tesseract()
 
+        self.patch_briefcase_appimage_to_build_wl_clipboard()
         self.patch_briefcase_appimage_to_prune_deps()
-        self.patch_briefcase_appimage_to_include_tesseract()
+        self.patch_briefcase_appimage_to_include_tesseract_and_wlcopy()
         self.patch_briefcase_create_to_adjust_dockerfile()
 
         self.run_framework()
