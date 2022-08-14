@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.8 (unreleased)
+
+- macOS: Indicate build architecture in filename
+  ([#242](https://github.com/dynobo/normcap/issues/242)).
+- Linux: Further decreased file size of AppImage
+  ([#238](https://github.com/dynobo/normcap/issues/238))
+
 ## v0.3.7 (2022-08-03)
 
 - Linux: Fix `TypeError` crash during detection of appropriate screenshot method
