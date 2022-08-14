@@ -148,22 +148,25 @@ sources = ["src/normcap"]
 icon = "package/imgs/normcap"
 installer_icon = "package/imgs/normcap_install"
 installer_background = "package/imgs/normcap_install_bg"
-requires = ["pyside6", "jeepney", "pytesseract", "packaging"]
+requires = ["PySide6-Essentials", "jeepney", "pytesseract", "packaging"]
 
 [tool.briefcase.app.normcap.macOS]
 requires = ["std-nslog==1.0.0"]
 
 [tool.briefcase.app.normcap.linux]
-requires = ["Pillow==9.2.0"]
+requires = ["Pillow==9.2.0", "--no-binary", "pillow"]
 system_requires = [
   "tesseract-ocr",
   "pkg-config",
   "libtiff-dev",
+  "libpng-dev",
+  "libjpeg-dev",
   "libfuse2",
   "libwayland-dev",
   "meson",
   "ninja-build",
   "git",
+  # "wl-clipboard", Only available on Ubuntu 20.04+
 ]
 
 [tool.briefcase.app.normcap.windows]
