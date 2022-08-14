@@ -26,7 +26,7 @@ Install a pre-build release:
 - **Linux**:
   [NormCap-0.3.7-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64.AppImage)
 - **macOS**:
-  [NormCap-0.3.7-MacOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-MacOS.dmg)
+  [NormCap-0.3.7-x86_64-MacOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64-MacOS.dmg)
   \
   <sub>(On macOS, allow the unsigned application on first start: "System Preferences"
   → "Security & Privacy" → "General" → "Open anyway". You might also need to allow
