@@ -38,7 +38,7 @@ def configure_tesseract_binary():
         pytesseract.pytesseract.get_tesseract_version = _patched_get_tesseract_version
 
 
-@functools.lru_cache()
+@functools.lru_cache
 def get_tesseract_languages(tessdata_path) -> list[str]:
     """Get info abput tesseract setup."""
     configure_tesseract_binary()
@@ -64,7 +64,7 @@ def get_tesseract_languages(tessdata_path) -> list[str]:
     return languages
 
 
-@functools.lru_cache()
+@functools.lru_cache
 def get_tesseract_version() -> version.Version:
     """Get info abput tesseract setup."""
     tesseract_version = str(pytesseract.get_tesseract_version()).splitlines()[0]

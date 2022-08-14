@@ -229,7 +229,7 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
     sys.exit(1)
 
 
-@functools.lru_cache(maxsize=None)
+@functools.cache
 def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
     if system_icon and QtGui.QIcon.hasThemeIcon(system_icon):

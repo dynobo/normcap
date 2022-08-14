@@ -58,7 +58,7 @@ def _get_gnome_version_xml() -> str:
     raise FileNotFoundError
 
 
-@functools.lru_cache()
+@functools.lru_cache
 def get_gnome_version() -> Optional[version.Version]:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux":
