@@ -89,6 +89,22 @@ if "linux" in str(bundle_path):
                 self.run(cmd="sudo apt update")
                 self.run(cmd=f"sudo apt install {' '.join(system_requires)}")
 
+    def build_wl_clipboard(self):  # noqa: D102
+        temp_path = Path().cwd() / ".temp"
+        shutil.rmtree(temp_path, ignore_errors=True)
+        temp_path.mkdir(exist_ok=True)
+        self.run(
+            cmd="git clone https://github.com/bugaevc/wl-clipboard.git", cwd=temp_path
+        )
+        wl_path = temp_path / "wl-clipboard"
+        self.run(cmd="meson build", cwd=wl_path)
+        self.run(cmd="ninja", cwd=wl_path / "build")
+
+        target_path = self.RESOURCE_PATH / "wl-copy"
+        target_path.mkdir(exist_ok=True)
+        shutil.copy(wl_path / "build" / "src" / "wl-copy", target_path / "wl-copy")
+        shutil.rmtree(wl_path, ignore_errors=True)
+
     def run_framework(self):  # noqa: D102
         self.run(cmd="briefcase create --no-input", cwd=self.PROJECT_PATH)
         self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
@@ -121,6 +137,7 @@ if "linux" in str(bundle_path):
     def create(self):  # noqa: D102
         self.download_tessdata()
         self.install_system_deps()
+        self.build_wl_clipboard()
         # self.bundle_tesseract()
 
         self.patch_briefcase_appimage_to_prune_deps()

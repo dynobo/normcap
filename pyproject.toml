@@ -155,7 +155,16 @@ requires = ["std-nslog==1.0.0"]
 
 [tool.briefcase.app.normcap.linux]
 requires = ["Pillow==9.2.0"]
-system_requires = ["tesseract-ocr", "pkg-config", "libtiff-dev", "libfuse2"]
+system_requires = [
+  "tesseract-ocr",
+  "pkg-config",
+  "libtiff-dev",
+  "libfuse2",
+  "libwayland-dev",
+  "meson",
+  "ninja-build",
+  "git",
+]
 
 [tool.briefcase.app.normcap.windows]
 

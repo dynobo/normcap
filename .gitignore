@@ -14,6 +14,8 @@ coverage
 *.spec
 src/normcap/resources/tesseract/*
 !src/normcap/resources/tesseract/.keep
+src/normcap/resources/wl-copy/*
+!src/normcap/resources/wl-copy/.keep
 normcap/src/normcap.dist-info
 .DS_Store
 *.traineddata
