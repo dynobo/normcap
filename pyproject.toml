@@ -156,6 +156,7 @@ requires = ["Pillow==9.2.0", "--no-binary", "pillow"]
 system_requires = [
   "tesseract-ocr",
   "pkg-config",
+  "build-essential",
   "libtiff-dev",
   "libpng-dev",
   "libjpeg-dev",
