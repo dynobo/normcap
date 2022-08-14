@@ -53,7 +53,7 @@ jobs:
           ls -la
           echo "XDG_SESSION_TYPE=gnome" >> $GITHUB_ENV
 
-      - name: Prepare MacOS
+      - name: Prepare macOS
         if: ${{ matrix.os  == 'macos-11' }}
         run: |
           brew install pkg-config tesseract dylibbundler

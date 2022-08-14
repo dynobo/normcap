@@ -19,14 +19,14 @@
 
 ## Quickstart
 
-Install a pre-build release:
+Install a prebuild release:
 
 - **Windows**:
   [NormCap-0.3.7-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64-Windows.msi)
 - **Linux**:
   [NormCap-0.3.7-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64.AppImage)
 - **macOS**:
-  [NormCap-0.3.7-x86_64-MacOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64-MacOS.dmg)
+  [NormCap-0.3.7-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64-macOS.dmg)
   \
   <sub>(On macOS, allow the unsigned application on first start: "System Preferences"
   → "Security & Privacy" → "General" → "Open anyway". You might also need to allow
@@ -47,7 +47,7 @@ If you experience issues please look at the
 
 ## Python package
 
-As an _alternative_ to a pre-build package you can install the
+As an _alternative_ to a prebuild package you can install the
 [NormCap Python package](https://pypi.org/project/normcap/) for **Python >=3.9**:
 
 #### On Linux
@@ -72,7 +72,7 @@ pip install normcap
 ./normcap
 ```
 
-#### On MacOS
+#### On macOS
 
 ```sh
 # Install dependencies
@@ -92,8 +92,8 @@ pip install normcap
 
 2\. Adjust environment variables:
 
-- Create a environment variable `TESSDATA_PREFIX` and set it to Tesseract's data folder,
-  e.g.:
+- Create an environment variable `TESSDATA_PREFIX` and set it to Tesseract's data
+  folder, e.g.:
 
   ```cmd
   setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"

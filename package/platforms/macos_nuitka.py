@@ -7,7 +7,7 @@ from platforms.utils import BuilderBase
 
 
 class MacNuitka(BuilderBase):
-    """Create prebuild package for MacOS using Nuitka."""
+    """Create prebuild package for macOS using Nuitka."""
 
     binary_suffix = "_EXPERIMENTAL"
 
@@ -38,12 +38,12 @@ class MacNuitka(BuilderBase):
         shutil.rmtree(new_app_path, ignore_errors=True)
         os.rename(old_app_path, new_app_path)
         os.rename(
-            new_app_path / "Contents" / "MacOS" / "app",
-            new_app_path / "Contents" / "MacOS" / "NormCap",
+            new_app_path / "Contents" / "macOS" / "app",
+            new_app_path / "Contents" / "macOS" / "NormCap",
         )
         shutil.make_archive(
             base_name=self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-x86_64-MacOS{self.binary_suffix}",
+            / f"NormCap-{self.get_version()}-x86_64-macOS{self.binary_suffix}",
             format="zip",
             root_dir=self.BUILD_PATH,
             base_dir="NormCap.app",

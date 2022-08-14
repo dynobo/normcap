@@ -8,19 +8,12 @@
       name="description"
       content="OCR-powered screenshot tool to capture text instead of images."
     />
-
     <link rel="canonical" href="https://dynobo.github.io/normcap/" />
     <link rel="stylesheet" href="pico-bootstrap-grid.min.css" />
     <link rel="stylesheet" href="style.css" />
-
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="favicon-192x192.png"
-    />
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png" />
     <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
@@ -51,7 +44,6 @@
         </li>
       </ul>
     </nav>
-
     <main class="container">
       <article id="download" class="grid">
         <a
@@ -86,25 +78,23 @@
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64-Windows.msi"
                 >NormCap-x86_64-<strong>Windows</strong>.msi</a
               >
-              <small>~85 MB</small>
-              <span data-tooltip="Run installer and start through start menu"
-                >🛈</span
-              >
+              <small>~80 MB</small>
+              <span data-tooltip="Run installer and start through start menu">🛈</span>
             </li>
             <li>
               <a
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64.AppImage"
                 >NormCap-x86_64-<strong>Linux</strong>.AppImage</a
               >
-              <small>~85 MB</small>
+              <small>~78 MB</small>
               <span data-tooltip="Make the file executable and run it">🛈</span>
             </li>
             <li>
               <a
-                href="https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64-MacOS.dmg"
-                >NormCap-x86_64-<strong>-MacOS</strong>.dmg</a
+                href="https://github.com/dynobo/normcap/releases/download/v0.3.7/NormCap-0.3.7-x86_64-macOS.dmg"
+                >NormCap-x86_64-<strong>-macOS</strong>.dmg</a
               >
-              <small>~75 MB</small>
+              <small>~63 MB</small>
               <span
                 class="wide-tooltip"
                 data-tooltip="Unsigned application! You have to grant permissions on first start:&#10;'System Preferences' → 'Security & Privacy' → 'General' → 'Open anyway'.&#10;(You might have to grant permissions to take screenshots, too.)"
@@ -115,8 +105,7 @@
           <p class="align-right">
             <small
               >... alternatively use
-              <a
-                href="https://flathub.org/apps/details/com.github.dynobo.normcap"
+              <a href="https://flathub.org/apps/details/com.github.dynobo.normcap"
                 >FlatHub</a
               >, <a href="https://aur.archlinux.org/packages/normcap">AUR</a> or
               <a href="#python-package">install the Python package</a>.</small
@@ -125,13 +114,10 @@
         </div>
         <div></div>
       </article>
-
       <article id="features">
         <div class="hgroup">
           <h2>Features</h2>
-          <h3>
-            Characteristics and functionalities that make NormCap interesting.
-          </h3>
+          <h3>Characteristics and functionalities that make NormCap interesting.</h3>
         </div>
         <div class="row features">
           <div class="col-md-6 col-lg-6 col-xl-4">
@@ -166,67 +152,58 @@
           </div>
         </div>
       </article>
-
       <article id="usage">
         <div class="hgroup">
           <h2>Usage</h2>
-          <h3>
-            A short guide for using NormCap and its most important features.
-          </h3>
+          <h3>A short guide for using NormCap and its most important features.</h3>
         </div>
         <h4>Quickstart</h4>
         <ol>
           <li>Start NormCap and wait until a pink border appears.</li>
           <li>Select a region on screen with your mouse.</li>
-          <li>
-            Paste the recognized text from the clipboard anywhere you like.
-          </li>
+          <li>Paste the recognized text from the clipboard anywhere you like.</li>
         </ol>
         <h4>User Interface</h4>
         <ul>
           <li>
-            The settings can be accessed via the
-            <span class="primary">⚙</span>-icon in the top right.
+            The settings can be accessed via the <span class="primary">⚙</span>-icon in
+            the top right.
           </li>
           <li>
-            In the settings you can adjust the language(s) you are trying to
-            recognize, which is important for a good accuracy.
+            In the settings you can adjust the language(s) you are trying to recognize,
+            which is important for a good accuracy.
           </li>
           <li>
             The icons <span class="primary">★</span> or
-            <span class="primary">☰</span> next to the selection-rectangle
-            indicate the active "capture mode" (see below).
+            <span class="primary">☰</span> next to the selection-rectangle indicate the
+            active "capture mode" (see below).
           </li>
-          <li>
-            To abort a capture or quit NormCap press <code>&lt;esc&gt;</code>
-          </li>
+          <li>To abort a capture or quit NormCap press <code>&lt;esc&gt;</code></li>
         </ul>
-
         <h4>Capture Modes</h4>
         <p>
-          The settings menu <span class="primary">⚙</span> allows switching
-          between the two capture modes: "parse" and "raw":
+          The settings menu <span class="primary">⚙</span> allows switching between the
+          two capture modes: "parse" and "raw":
         </p>
         <ul>
           <li>
             <p><strong>"Raw"-Mode </strong></p>
             <p>
-              Marked by the <span class="primary">☰</span> symbol, it outputs
-              the detected text just as detected by the OCR software. Keeps the
-              text as recognized, e.g. doesn't remove line-breaks.
+              Marked by the <span class="primary">☰</span> symbol, it outputs the
+              detected text just as detected by the OCR software. Keeps the text as
+              recognized, e.g. doesn't remove line-breaks.
             </p>
           </li>
           <li>
             <p><strong>"Parse"-Mode</strong> <small>(default)</small></p>
             <p>
-              Indicated by the <span class="primary">★</span> symbol, it
-              performs some formatting of the output based on certain
-              implemented rules, which can take additional information like text
-              position into account. In a first step, every rule calculates a
-              "score" to determine the likelihood of being responsible for this
-              type of text. In a second step, the rule which achieved the
-              highest "score" takes the necessary actions to "transform" the
-              input text according to its type. Those rules are currently
+              Indicated by the <span class="primary">★</span> symbol, it performs some
+              formatting of the output based on certain implemented rules, which can
+              take additional information like text position into account. In a first
+              step, every rule calculates a "score" to determine the likelihood of being
+              responsible for this type of text. In a second step, the rule which
+              achieved the highest "score" takes the necessary actions to "transform"
+              the input text according to its type. Those rules are currently
               implemented:
             </p>
             <table>
@@ -252,8 +229,8 @@
                   <td><strong>Multi line</strong></td>
                   <td>Multiple lines, but single paragraph</td>
                   <td>
-                    Separate using line breaks and trim unnecessary whitespace
-                    in each line
+                    Separate using line breaks and trim unnecessary whitespace in each
+                    line
                   </td>
                 </tr>
                 <tr>
@@ -267,9 +244,7 @@
                 <tr>
                   <td><strong>E-Mail</strong></td>
                   <td>Number of chars in email addresses vs. overall chars</td>
-                  <td>
-                    Transform to a comma-separated list of email addresses
-                  </td>
+                  <td>Transform to a comma-separated list of email addresses</td>
                 </tr>
                 <tr>
                   <td><strong>URL</strong></td>
@@ -281,7 +256,6 @@
           </li>
         </ul>
       </article>
-
       <article id="support">
         <div class="hgroup">
           <h2>Support</h2>
@@ -291,8 +265,7 @@
         <ul>
           <li>
             For general questions use the
-            <a
-              href="https://github.com/dynobo/normcap/discussions/categories/q-a"
+            <a href="https://github.com/dynobo/normcap/discussions/categories/q-a"
               >discussions</a
             >
             board.
@@ -302,8 +275,7 @@
             <a href="https://github.com/dynobo/normcap/issues">issue</a>.
           </li>
           <li>
-            Take a look at the
-            <a href="#faqs">frequently asked questions</a> below.
+            Take a look at the <a href="#faqs">frequently asked questions</a> below.
           </li>
         </ul>
         <h5>You want to support NormCap?</h5>
@@ -311,13 +283,11 @@
           <li>Tell your friends about NormCap.</li>
           <li>
             Provide
-            <a
-              href="https://github.com/dynobo/normcap/discussions/categories/feedback"
+            <a href="https://github.com/dynobo/normcap/discussions/categories/feedback"
               >feedback</a
             >
             and
-            <a
-              href="https://github.com/dynobo/normcap/discussions/categories/ideas"
+            <a href="https://github.com/dynobo/normcap/discussions/categories/ideas"
               >ideas</a
             >.
           </li>
@@ -331,27 +301,23 @@
         </ul>
         <h5>Not at all satisfied with NormCap?</h5>
         <p>
-          Try an <a href="#faqs-alternatives">alternative applications</a> and
-          see if they work better for you.
+          Try an <a href="#faqs-alternatives">alternative application</a> and see if
+          they work better for you.
         </p>
       </article>
-
       <article id="faqs">
         <div class="hgroup">
           <h2>Frequently Asked Questions</h2>
-          <h3>
-            A knowledge base for common issues and additional information.
-          </h3>
+          <h3>A knowledge base for common issues and additional information.</h3>
         </div>
         <h4>General</h4>
         <details id="faqs-languages">
           <summary>How can I add additional languages to NormCap?</summary>
           <p>
-            The <strong>prebuild packages</strong> are shipped with the
-            following languages English, Arabic, Chinese, German, Spanish and
-            Russian. If you miss a language, click the settings icon and "open
-            data folder..." (in the "Languages" section), then follow the
-            instructions in the file
+            The <strong>prebuild packages</strong> are shipped with the following
+            languages English, Arabic, Chinese, German, Spanish and Russian. If you miss
+            a language, click the settings icon and "open data folder..." (in the
+            "Languages" section), then follow the instructions in the file
             <a
               href="https://github.com/dynobo/normcap/blob/main/src/normcap/resources/tessdata/add_more_languages.txt"
               target="_blank"
@@ -359,55 +325,49 @@
             >.
           </p>
           <p>
-            If you installed NormCap as <strong>Python package</strong>, refer
-            to the online documentation on how to install additional language
-            for Tesseract on your system.
+            If you installed NormCap as <strong>Python package</strong>, refer to the
+            online documentation on how to install additional language for Tesseract on
+            your system.
           </p>
         </details>
         <details id="faqs-improve-detection">
           <summary>How can I improve the detection accuracy?</summary>
           <p>
-            The most import thing is to specify the correct language(s) (via
-            settings menu or the <code>--language</code> command line argument).
-            Keep in mind: selecting multiple languages at once slows down the
-            recognition a bit.
+            The most import thing is to specify the correct language(s) (via settings
+            menu or the <code>--language</code> command line argument). Keep in mind:
+            selecting multiple languages at once slows down the recognition a bit.
           </p>
           <p>
-            Sometimes Tesseract struggles with recognizing text with just very
-            few characters, like a single word. In this case try selecting a
-            larger portion of text.
+            Sometimes Tesseract struggles with recognizing text with just very few
+            characters, like a single word. In this case try selecting a larger portion
+            of text.
           </p>
           <p>
-            The pre-build NormCap packages are shipped with the
-            <a
-              href="https://github.com/tesseract-ocr/tessdata_fast"
-              target="_blank"
+            The prebuild NormCap packages are shipped with the
+            <a href="https://github.com/tesseract-ocr/tessdata_fast" target="_blank"
               >tessdata-fast</a
             >
-            models, which offer a very good accuracy to speed compromise. But
-            you can also try to add the models from
+            models, which offer a very good accuracy to speed compromise. But you can
+            also try to add the models from
             <a href="https://github.com/tesseract-ocr/tessdata" target="_blank"
               >tessdata</a
             >
             or
-            <a
-              href="https://github.com/tesseract-ocr/tessdata_best"
-              target="_blank"
+            <a href="https://github.com/tesseract-ocr/tessdata_best" target="_blank"
               >tessdata-best</a
             >
             instead as <a href="#faqs-languages">described above</a>.
           </p>
           <p>
-            If the results are still bad, please submit a screenshot of the text
-            you are trying to recognize
+            If the results are still bad, please submit a screenshot of the text you are
+            trying to recognize
             <a href="https://github.com/dynobo/normcap/issues">as an issue</a>.
           </p>
         </details>
         <details id="faqs-cloud">
           <summary>Is my image/text analyzed in "the cloud"?</summary>
           <p>
-            No. The text recognition is performed offline using the OCR
-            framework
+            No. The text recognition is performed offline using the OCR framework
             <a href="https://github.com/tesseract-ocr/tesseract" target="_blank"
               >Tesseract</a
             >.
@@ -416,30 +376,30 @@
         <details id="faqs-data-sent">
           <summary>Is any other data send to the internet?</summary>
           <p>
-            No telemetry data is collected and by default also no other data is
-            sent anywhere.
+            No telemetry data is collected and by default also no other data is sent
+            anywhere.
           </p>
           <p>
-            However, some (optional) features require accessing resources on the
-            web and therefore expose minimal information (like IP address) to
-            the accessed server:
+            However, some (optional) features require accessing resources on the web and
+            therefore expose minimal information (like IP address) to the accessed
+            server:
           </p>
           <ul>
             <li>
-              If you enable the check for updates on start, the application
-              checks NormCap's releases page on github.com.
+              If you enable the check for updates on start, the application checks
+              NormCap's releases page on GitHub.
             </li>
             <li>
-              If you download additional languages, they are being fetched from
-              github.com, too.
+              If you download additional languages, they are being fetched from GitHub,
+              too.
             </li>
           </ul>
         </details>
         <details id="faqs-shortcuts">
           <summary>Can I start NormCap via a keyboard shortcut?</summary>
           <p>
-            Yes, but you'll have to configure it on your own using your
-            operating system's tools:
+            Yes, but you'll have to configure it on your own using your operating
+            system's tools:
           </p>
           <ul>
             <li>
@@ -454,17 +414,15 @@
                 </li>
                 <li>
                   Manjaro/XFCE, Plasma:
-                  <a
-                    href="https://wiki.manjaro.org/index.php?title=Keyboard_Shortcuts"
+                  <a href="https://wiki.manjaro.org/index.php?title=Keyboard_Shortcuts"
                     >Keyboard Shortcuts</a
                   >
                 </li>
               </ul>
             </li>
             <li>
-              MacOS:
-              <a
-                href="https://www.wikihow.com/Set-a-Keyboard-Shortcut-to-Open-Mac-Apps"
+              macOS:
+              <a href="https://www.wikihow.com/Set-a-Keyboard-Shortcut-to-Open-Mac-Apps"
                 >Set a keyboard shortcut to open Mac apps</a
               >
             </li>
@@ -477,17 +435,15 @@
             </li>
           </ul>
           <p>
-            Ask your preferred search engine for support or different ways to do
-            this.
+            Ask your preferred search engine for support or different ways to do this.
           </p>
         </details>
         <details id="faqs-alternatives">
           <summary>Are there alternatives to NormCap?</summary>
           <p>
-            Some applications offer similar features like NormCap and might be a
-            good or even better alternative for you: It completely depends on
-            your use case and requirements. Some similar open-source Projects
-            are:
+            Some applications offer similar features like NormCap and might be a good or
+            even better alternative for you: It completely depends on your use case and
+            requirements. Some similar open-source Projects are:
           </p>
           <ul>
             <li>
@@ -504,23 +460,17 @@
               >
             </li>
             <li>
-              <a
-                href="https://github.com/manisandro/gImageReader"
-                target="_blank"
+              <a href="https://github.com/manisandro/gImageReader" target="_blank"
                 >gImageReader</a
               >
             </li>
             <li>
-              <a
-                href="https://sourceforge.net/projects/capture2text"
-                target="_blank"
+              <a href="https://sourceforge.net/projects/capture2text" target="_blank"
                 >Capture2Text</a
               >
             </li>
             <li>
-              <a href="https://github.com/TenderOwl/Frog" target="_blank"
-                >Frog</a
-              >
+              <a href="https://github.com/TenderOwl/Frog" target="_blank">Frog</a>
             </li>
             <li>
               <a href="https://github.com/RhetTbull/textinator" target="_blank"
@@ -534,14 +484,12 @@
             [Windows] How can I start NormCap with a command line argument?
           </summary>
           <p>
-            To run NormCap with an argument <em>once</em>, run it in the
-            "Terminal":
+            To run NormCap with an argument <em>once</em>, run it in the "Terminal":
           </p>
           <pre><code>C:\Users\&lt;USER-NAME&gt;\AppData\Local\Programs\NormCap\NormCap.exe --help</code></pre>
           <p>
-            Due to the way NormCap is packaged, you will see no output in the
-            terminal. Instead, the output is written to a file in the same
-            folder:
+            Due to the way NormCap is packaged, you will see no output in the terminal.
+            Instead, the output is written to a file in the same folder:
           </p>
           <pre><code>C:\Users\&lt;USER-NAME&gt;\AppData\Local\Programs\NormCap\NormCap.exe.log</code></pre>
         </details>
@@ -549,13 +497,10 @@
           <summary>
             [Windows] How can I write a log-file with debugging information?
           </summary>
-          <p>
-            Run NormCap with from the "Terminal" with the following argument:
-          </p>
+          <p>Run NormCap with from the "Terminal" with the following argument:</p>
           <pre><code>C:\Users\&lt;USER-NAME&gt;\AppData\Local\Programs\NormCap\NormCap.exe -v debug</code></pre>
           <p>
-            After NormCap exits, you can find the debug and error output in the
-            file:
+            After NormCap exits, you can find the debug and error output in the file:
           </p>
           <pre><code>C:\Users\&lt;USER-NAME&gt;\AppData\Local\Programs\NormCap\NormCap.exe.log</code></pre>
           <p>
@@ -568,38 +513,58 @@
         </details>
         <details id="faqs-macos-cli">
           <summary>
-            [MacOS] How can I start NormCap with a command line argument?
+            [macOS] How can I start NormCap with a command line argument?
           </summary>
           <p>
-            To run NormCap with an argument <em>once</em>, run it in the
-            "Terminal":
+            To run NormCap with an argument <em>once</em>, run it in the "Terminal":
           </p>
-          <pre><code>$ /Applications/NormCap.app/Contents/MacOS/NormCap --help</code></pre>
+          <pre><code>$ /Applications/NormCap.app/Contents/macOS/NormCap --help</code></pre>
           <p>
-            To <em>create a launcher</em> with command line arguments, launch
-            the "Script Editor" and make a new script with the desired command
-            line arguments, e.g.:
+            To <em>create a launcher</em> with command line arguments, launch the
+            "Script Editor" and make a new script with the desired command line
+            arguments, e.g.:
           </p>
-          <pre><code>do shell script "exec /Applications/NormCap.app/Contents/MacOS/NormCap --tray"s</code></pre>
+          <pre><code>do shell script "exec /Applications/NormCap.app/Contents/macOS/NormCap --tray"s</code></pre>
           <p>
-            Save the script as type "Application" in the folder
-            "/Applications"<br />
+            Save the script as type "Application" in the folder "/Applications"<br />
             <small>
-              (When this new Application is started, an additional Icon will
-              show up in the Dock. If you know a way to avoid this, please
-              <a href="https://github.com/dynobo/normcap/issues"
-                >open an issue</a
-              >)
+              (When this new Application is started, an additional Icon will show up in
+              the Dock. If you know a way to avoid this, please
+              <a href="https://github.com/dynobo/normcap/issues">open an issue</a>)
             </small>
           </p>
         </details>
-
+        <details id="faqs-macos-m1">
+          <summary>[macOS] Does NormCap work on the M1 architecture?</summary>
+          <p>
+            The prebuild package won't work, install the
+            <a href="#python-package">Python package</a> instead.
+          </p>
+          <p>Why?</p>
+          <ol>
+            <li>
+              A prebuild package can only run on the CPU architecture on which it was
+              build. NormCap uses GitHub actions for the automated build process, which
+              currently does not offer a
+              <a
+                href="https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources"
+                >runner</a
+              >
+              with an M1 architecture.
+            </li>
+            <li>
+              The developer of NormCap doesn't have a Mac, and the M1 can't be emulated
+              via a virtual machine. Therefore, testing and debugging such a build would
+              not be feasible.
+            </li>
+          </ol>
+        </details>
         <h4>Troubleshooting</h4>
         <details id="faqs-is-not-starting">
           <summary>NormCap is not starting</summary>
           <p>
-            Please try to start again with the <code>-v debug</code> option.
-            This should reveal more information useful for problem-solving.
+            Please try to start again with the <code>-v debug</code> option. This should
+            reveal more information useful for problem-solving.
           </p>
         </details>
         <details id="faqs-couldnt-load-xcb">
@@ -613,8 +578,8 @@
 12:06:34 - DEBUG   - normcap.utils          - L:200 - [QT] QtFatalMsg - This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
 Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl, xcb.</code></pre>
           <p>
-            ... the chances are, some system requirements are outdated. You can
-            check this with <code>apt list "libxcb-util*"</code>:
+            ... the chances are, some system requirements are outdated. You can check
+            this with <code>apt list "libxcb-util*"</code>:
           </p>
           <pre><code>$ apt list "libxcb-util*"
 Listing... Done
@@ -625,17 +590,15 @@ libxcb-util0-dev/hirsute 0.4.0-1 i386
 libxcb-util1/hirsute,now 0.4.0-1 amd64 [installed,automatic]
 libxcb-util1/hirsute 0.4.0-1 i386</code></pre>
           <p>
-            Is only <code>libxcb-util0</code> shown but
-            <code>libxcb-util1</code> is missing? Then you can try to create a
-            symlink for the missing version:
+            Is only <code>libxcb-util0</code> shown but <code>libxcb-util1</code> is
+            missing? Then you can try to create a symlink for the missing version:
           </p>
           <pre><code>sudo ln -s /lib/x86_64-linux-gnu/libxcb-util.so.0 /lib/x86_64-linux-gnu/libxcb-util.so.1</code></pre>
         </details>
         <details id="faqs-doesnt-show-system-tray">
           <summary>[Linux] Normcap does not show up in system tray</summary>
           <p>
-            Is your display environment Gnome Shell? Then you probably need to
-            install a
+            Is your display environment Gnome Shell? Then you probably need to install a
             <a href="https://extensions.gnome.org/" target="_blank"
               >Gnome Shell extension</a
             >
@@ -673,16 +636,13 @@ libxcb-util1/hirsute 0.4.0-1 i386</code></pre>
           </ul>
         </details>
         <details id="faqs-doesnt-show-notification">
-          <summary>
-            [Linux] Normcap doesn't show a notification after capture
-          </summary>
+          <summary>[Linux] Normcap doesn't show a notification after capture</summary>
           <p>
-            NormCap's notifications depend on the system tray functionality. Try
-            running normcap with the <code>--tray</code> flag, and if nothing is
-            shown in the system tray, proceed like in the question above.
+            NormCap's notifications depend on the system tray functionality. Try running
+            normcap with the <code>--tray</code> flag, and if nothing is shown in the
+            system tray, proceed like in the question above.
           </p>
         </details>
-
         <h4>Development</h4>
         <details id="faqs-no-such-file">
           <summary>
@@ -691,8 +651,8 @@ libxcb-util1/hirsute 0.4.0-1 i386</code></pre>
           </summary>
           <p>
             To verify, if this is the issue you are facing, run the docker image
-            interactively and try to run the
-            <code>linuxdeploy-*.AppImage</code> file there:
+            interactively and try to run the <code>linuxdeploy-*.AppImage</code> file
+            there:
           </p>
           <pre><code>$ docker run -it \
   --volume /home/&lt;USER&gt;/&lt;PROJECT PATH&gt;/normcap/linux:/app:z \
@@ -708,24 +668,21 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
               >this issue</a
             >
             and
-            <a
-              href="https://github.com/AppImage/AppImageKit/issues/828"
-              target="_blank"
+            <a href="https://github.com/AppImage/AppImageKit/issues/828" target="_blank"
               >this one</a
             >
-            a workaround is to correct the "magic" bytes of the AppImage. This
-            worked for me:
+            a workaround is to correct the "magic" bytes of the AppImage. This worked
+            for me:
           </p>
           <pre><code>sed '0,/AI\x02/{s|AI\x02|\x00\x00\x00|}' -i linuxdeploy-x86_64.AppImage</code></pre>
         </details>
       </article>
-
       <article id="python-package">
         <div class="hgroup">
           <h2>Python package</h2>
           <h3>
-            An advanced installation method as <em>alternative</em> to the
-            prebuild packages.
+            An advanced installation method as <em>alternative</em> to the prebuild
+            packages.
           </h3>
         </div>
         <details>
@@ -745,9 +702,7 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
                 <li>Slightly faster startup</li>
                 <li>Requires an installation of Python >=3.9</li>
                 <li>
-                  <span
-                    data-html="true"
-                    data-tooltip="Depends on your&#10;system setup"
+                  <span data-html="true" data-tooltip="Depends on your&#10;system setup"
                     >Might</span
                   >
                   need less disk space
@@ -760,8 +715,13 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
           <summary>Install on Linux</summary>
           <ol>
             <li>
-              Install dependencies: </br>
-              <small>Note: <code>wl-clipboard</code> can be omitted on X11 based systems</small> </br> </br>
+              Install dependencies: <br />
+              <small
+                >Note: <code>wl-clipboard</code> can be omitted on X11 based
+                systems</small
+              >
+              <br />
+              <br />
               <ul>
                 <li>
                   Ubuntu/Debian:
@@ -794,7 +754,7 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
           </ol>
         </details>
         <details id="python-package-install-on-macos">
-          <summary>Install on MacOS</summary>
+          <summary>Install on macOS</summary>
           <ol>
             <li>
               Install dependencies:
@@ -816,25 +776,22 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
             <ol>
               <li>
                 Install "Tesseract 5", e.g. by using the
-                <a
-                  href="https://github.com/UB-Mannheim/tesseract/wiki"
-                  target="_blank"
+                <a href="https://github.com/UB-Mannheim/tesseract/wiki" target="_blank"
                   >installer provided by UB Mannheim</a
                 >.
               </li>
               <li>
-                Set the environment variable TESSDATA_PREFIX to Tesseract's data
-                folder, e.g.:
+                Set the environment variable TESSDATA_PREFIX to Tesseract's data folder,
+                e.g.:
                 <pre><code>setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"</code></pre>
               </li>
               <li>
-                Append Tesseract's location to the environment variable "Path",
-                e.g.:
+                Append Tesseract's location to the environment variable "Path", e.g.:
                 <pre><code>setx Path "%Path%;C:\Program Files\Tesseract-OCR"</code></pre>
               </li>
               <li>
-                Make sure to close and reopen your current terminal window to
-                apply the new variables. Test it by running:
+                Make sure to close and reopen your current terminal window to apply the
+                new variables. Test it by running:
                 <pre><code>tesseract --list-langs</code></pre>
               </li>
               <li>
@@ -850,14 +807,12 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
         </details>
       </article>
     </main>
-
     <footer class="container-fluid">
       <small
         >Built with <span class="primary">♥</span> and
         <a href="https://picocss.com" class="secondary" target="_blank">Pico</a>
       </small>
     </footer>
-
     <script src="script.js"></script>
   </body>
 </html>

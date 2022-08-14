@@ -35,13 +35,13 @@ Chosen option: "Use screenshots as background for region-selection windows", bec
 switch to PySide6 is inevitable (due to lacking support of PySide2 for Python 3.10 and
 deprecation). With PySide6 the workarounds for creating a "normal" window that covers
 the whole screen don't work anymore, e.g. on Wayland. "Fullscreen" windows on the other
-hand *hide* the top bar on Wayland and MacOS, which is bad UX. Therefore setting
+hand *hide* the top bar on Wayland and macOS, which is bad UX. Therefore setting
 screenshots as backgrounds seemed to be the currently best solution, even if it is more
 complicated to implement, especially in mixed scaling setups.
 
 ### Positive Consequences
 
-- Better experience on MacOS (finally covering the whole screen).
+- Better experience on macOS (finally covering the whole screen).
 - Technical benefits (better supported QT version; Python 3.10+).
 - Doesn't require a window manager with transparency support.
 
@@ -56,7 +56,7 @@ complicated to implement, especially in mixed scaling setups.
 ### Use screenshots as background for region-selection windows
 
 - Good, because it's the only way to provide consistent "real" full-screen windows on
-  all platforms (On MacOS and Gnome 41+, windows can't fill the whole screen and e.g.
+  all platforms (On macOS and Gnome 41+, windows can't fill the whole screen and e.g.
   can't cover menu/application bar, unless they are in "fullscreen" mode. But in that
   mode, the menu/application bar disappears which is bad for UX)
 - Bad, because it is really hard to a) get the right dpi settings for each monitor b)
@@ -67,7 +67,7 @@ complicated to implement, especially in mixed scaling setups.
 
 - Good, because it's easier to implement
 - Good, because the UX on the supported platforms in superior to the alternative
-- Bad, because it's not possible to offer real fullscreen experiences on MacOS and Gnome
+- Bad, because it's not possible to offer real fullscreen experiences on macOS and Gnome
   41+
 - Bad, because it seems to have issues on non-transparent window managers (like Plasma
   with the wrong settings)

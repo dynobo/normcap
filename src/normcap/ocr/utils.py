@@ -58,7 +58,7 @@ def get_tesseract_languages(tessdata_path) -> list[str]:
         raise ValueError(
             "Could not load any languages for tesseract. "
             + "On Windows, make sure that TESSDATA_PREFIX environment variable is set. "
-            + "On Linux/MacOS see if 'tesseract --list-langs' work is the command line."
+            + "On Linux/macOS see if 'tesseract --list-langs' work is the command line."
         )
 
     return languages

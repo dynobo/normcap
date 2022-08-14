@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 def grab_screens() -> list[QtGui.QImage]:
     """Capture screenshot with QT method and Screen object.
 
-    Works well on X11, fails on multi monitor MacOS.
+    Works well on X11, fails on multi monitor macOS.
     """
     logger.debug("Use capture method: QT")
     images = []
