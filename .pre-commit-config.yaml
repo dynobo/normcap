@@ -17,6 +17,13 @@ repos:
         entry: poetry run mdformat --wrap 88
         types: [markdown]
 
+      - id: pyupgrade
+        name: pyupgrade
+        stages: [commit]
+        language: system
+        entry: poetry run pyupgrade --py39-plus
+        types: [python]
+
       - id: isort
         name: isort
         stages: [commit]

@@ -201,7 +201,7 @@ class BuilderBase(ABC):
         patch_applied = False
         patch_hash = hashlib.md5(patch.encode()).hexdigest()
 
-        with open(file_path, "r", encoding="utf8") as f:
+        with open(file_path, encoding="utf8") as f:
             if f.read().find(patch_hash) > -1:
                 print("Skipping patch. Already applied.")
                 return
