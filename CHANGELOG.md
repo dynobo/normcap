@@ -3,7 +3,8 @@
 ## v0.3.8 (2022-08-21)
 
 - All: Further reduced file size of prebuild packages
-  ([#238](https://github.com/dynobo/normcap/issues/238))
+  ([#238](https://github.com/dynobo/normcap/issues/238)). Thx,
+  [@thecoder-001](https://github.com/thecoder-001)
 - Linux: Fix clipboard issues on Wayland by using
   [wl-clipboard](https://github.com/bugaevc/wl-clipboard).
   ([#237](https://github.com/dynobo/normcap/issues/237))
