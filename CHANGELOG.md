@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.8 (unreleased)
+## v0.3.8 (2022-08-21)
 
 - All: Further reduced file size of prebuild packages
   ([#238](https://github.com/dynobo/normcap/issues/238))
