@@ -45,7 +45,7 @@ class WindowsBriefcase(BuilderBase):
         # pylint: disable=too-many-locals
         print("Preparing installer...")
 
-        wxs_file = self.PROJECT_PATH / "windows" / "msi" / "NormCap" / "normcap.wxs"
+        wxs_file = self.PROJECT_PATH / "windows" / "app" / "NormCap" / "normcap.wxs"
 
         # Cache header for inserting later
         with open(wxs_file, encoding="utf-8") as f:
@@ -63,7 +63,7 @@ class WindowsBriefcase(BuilderBase):
         top = "normcap_install_top.bmp"
         for image in [left, top]:
             original = self.IMG_PATH / image
-            target = self.PROJECT_PATH / "windows" / "msi" / "NormCap" / image
+            target = self.PROJECT_PATH / "windows" / "app" / "NormCap" / image
             shutil.copy(original, target)
 
         # Set installer images
@@ -104,7 +104,7 @@ class WindowsBriefcase(BuilderBase):
 
     def run_framework(self):  # noqa: D102
         app_dir = (
-            self.PROJECT_PATH / "windows" / "msi" / "NormCap" / "src" / "app_packages"
+            self.PROJECT_PATH / "windows" / "app" / "NormCap" / "src" / "app_packages"
         )
         self.run(cmd="briefcase create", cwd=self.PROJECT_PATH)
         rm_recursive(directory=app_dir, exclude=BRIEFCASE_EXCLUDES["app_packages"])
