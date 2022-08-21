@@ -27,12 +27,12 @@ Chosen option: "Use system tray as main application which spawns one (or more) w
 _Create_ and _close_ windows for GUI on demand.
 
 It's the only known way to make
-[ADR-002](./002-choose-windows-with-screenshots-as-main-gui.md) actually work on MacOS
+[ADR-002](./002-choose-windows-with-screenshots-as-main-gui.md) actually work on macOS
 in full-screen.
 
 ### Positive Consequences
 
-- Enables showing real full-screens on MacOS
+- Enables showing real full-screens on macOS
 - Better code maintenance
   - Get rid of main_window + base_window in favor of a single type of window
   - Better separation between application logic (in tray) and GUI
@@ -46,7 +46,7 @@ in full-screen.
 ### Use one main window as main application which spawns child windows if necessary
 
 - Good, because it's status quo, no effort needed.
-- Bad, because because it leads to a hard to solve issue on MacOS: Whenever windows are
+- Bad, because because it leads to a hard to solve issue on macOS: Whenever windows are
   _hidden_ from full-screen the screen is left back, because the window as the main
   process doesn't free up the display. It's also not possible to unfocused it (move
   focus to a different application or the system). The only way to correctly hide the
@@ -56,7 +56,7 @@ in full-screen.
 ### Use system tray as main application which spawns one (or more) windows
 
 - Good, because using the system tray as the main application, solves the black
-  full-screen of the status quo on MacOS: _create_ windows for selection, then _close_
+  full-screen of the status quo on macOS: _create_ windows for selection, then _close_
   (destroy) them immediately. Stay in tray either until the processing finished or until
   the user closes the system tray (in case of "show in tray" is active).
 - Bad, because the system tray is necessary, even if "stay in tray" is not active. In

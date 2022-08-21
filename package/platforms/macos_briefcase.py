@@ -7,7 +7,7 @@ from platforms.utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
 
 
 class MacBriefcase(BuilderBase):
-    """Create prebuild package for MacOS using Briefcase."""
+    """Create prebuild package for macOS using Briefcase."""
 
     binary_suffix = ""
 
@@ -31,7 +31,7 @@ class MacBriefcase(BuilderBase):
         self.bundle_tesseract()
 
         self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
-        # TODO: Re-enable if we have a solution for unfocusing on MacOS
+        # TODO: Re-enable if we have a solution for unfocusing on macOS
         # patch_info_plist_for_proper_fullscreen()
         self.run(cmd="briefcase package macos app --no-sign", cwd=self.PROJECT_PATH)
 
@@ -82,7 +82,7 @@ class MacBriefcase(BuilderBase):
         source = list(Path(self.PROJECT_PATH / "macOS").glob("*.dmg"))[0]
         target = (
             self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-MacOS{self.binary_suffix}.dmg"
+            / f"NormCap-{self.get_version()}-x86_64-macOS{self.binary_suffix}.dmg"
         )
         target.unlink(missing_ok=True)
         shutil.move(source, target)

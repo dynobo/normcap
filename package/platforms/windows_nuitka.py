@@ -82,7 +82,7 @@ class WindowsNuitka(BuilderBase):
                 -nologo \
                 -ext WixUtilExtension \
                 -ext WixUIExtension \
-                -o {(self.BUILD_PATH / f"NormCap-{self.get_version()}-Windows{self.binary_suffix}.msi").resolve()} \
+                -o {(self.BUILD_PATH / f"NormCap-{self.get_version()}-x86_64-Windows{self.binary_suffix}.msi").resolve()} \
                 normcap.wixobj \
                 normcap-manifest.wixobj
             """,

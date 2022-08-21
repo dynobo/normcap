@@ -72,7 +72,7 @@ def grab_full_desktop() -> Optional[QtGui.QImage]:
 
         image = QtGui.QImage(urlparse(response_body["uri"][1]).path)
 
-    except AssertionError as e:
+    except AssertionError:
         logger.warning("Couldn't take screenshot with DBUS. Got cancelled?")
     except DBusErrorResponse as e:
         if "invalid params" in [d.lower() for d in e.data]:

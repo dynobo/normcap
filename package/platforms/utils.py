@@ -44,11 +44,18 @@ BRIEFCASE_EXCLUDES = dict(
         "openglfunct",
         "pdf",
         "purchasing",
+        "qmllint",
+        "qmltooling",
+        "qt3dinput",
         "qt63d",
         "qt6quick",
         "qt6shadertools",
         "qtopengl",
+        "qtpositioning",
+        "qtprintsupport",
         "qtquick",
+        "qtqml",
+        "qtshadertools",
         "rcc",
         "remoteobjects",
         "scene",
@@ -85,6 +92,17 @@ def rm_recursive(directory, exclude):
                 shutil.rmtree(package_path)
             if package_path.is_file():
                 os.remove(package_path)
+
+
+def build_wl_clipboard(self, app_packages_path):  # pylint: disable=unused-argument
+    print("Building wl-clipboard...", flush=True)
+    self.subprocess.run(
+        "git clone https://github.com/bugaevc/wl-clipboard.git".split(),
+        check=True,
+    )
+    self.subprocess.run("meson build wl-clipboard".split(), check=True)
+    self.subprocess.run("ninja -C build".split(), capture_output=True, text=True)
+    print("Building wl-clipboard done.")
 
 
 class BuilderBase(ABC):

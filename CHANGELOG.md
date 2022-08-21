@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.3.8 (unreleased)
+
+- All: Further reduced file size of prebuild packages
+  ([#238](https://github.com/dynobo/normcap/issues/238))
+- Linux: Fix clipboard issues on Wayland by using
+  [wl-clipboard](https://github.com/bugaevc/wl-clipboard).
+  ([#237](https://github.com/dynobo/normcap/issues/237))
+- macOS: Indicate build architecture in filename (M1 is not supported!); Also add to
+  FAQs ([#242](https://github.com/dynobo/normcap/issues/242)).
+
 ## v0.3.7 (2022-08-03)
 
 - Linux: Fix `TypeError` crash during detection of appropriate screenshot method
@@ -40,7 +50,7 @@
 
 ## v0.3.2 (2022-03-23)
 
-- MacOS: Fixed crash in prebuild dmg package
+- macOS: Fixed crash in prebuild DMG package
   [#199](https://github.com/dynobo/normcap/issues/199).
 
 ## v0.3.1 (2022-03-20)
@@ -49,15 +59,14 @@
 
 ## v0.3.0 (2022-03-20)
 
-- All: Removed cli options `-v, --verbose` and `-V, --very-verbose` in favor of the new
+- All: Removed CLI options `-v, --verbose` and `-V, --very-verbose` in favor of the new
   `-v, --verbosity` which accepts on of the options: `{error, warning, info, debug}`.
 - All: Update to PySide6 (Qt6) and Python 3.9
 - All: Add support for Tesseract 5 with better OCR
   [#170](https://github.com/dynobo/normcap/issues/170)
 - All: Improve image processing for better detection accuracy, especially for bright
   text on dark backgrounds.
-- Pre-build packages: Switched to shipping "fast" language models to reduce package
-  size.
+- Prebuild packages: Switched to shipping "fast" language models to reduce package size.
 - Linux: Add support for Gnome Shell 41+ (using Screenshot Portal)
   [#153](https://github.com/dynobo/normcap/issues/153)
   [#157](https://github.com/dynobo/normcap/issues/157)
@@ -66,26 +75,26 @@
   [#155](https://github.com/dynobo/normcap/issues/155)
 - Linux: Fix crash on non Gnome Shell systems
   [#168](https://github.com/dynobo/normcap/issues/168)
-- MacOS: Full screen border and selection
+- macOS: Full screen border and selection
   [#119](https://github.com/dynobo/normcap/issues/119)
 
 ## v0.2.10 (2021-12-27)
 
 - All: Fix language settings not working if only a single language is selected
-- MacOS: Fix crash at start of prebuild package due to missing dependency
+- macOS: Fix crash at start of prebuild package due to missing dependency
 
 ## v0.2.9 (2021-12-26)
 
-- All: Mitigate superfluous spaces in chinese languages
+- All: Mitigate superfluous spaces in Chinese languages
   [#158](https://github.com/dynobo/normcap/issues/158)
-- Linux: Fix OCR not working on Gnome 41+ by using the offical screenshot API
+- Linux: Fix OCR not working on Gnome 41+ by using the official screenshot API
   [#159](https://github.com/dynobo/normcap/issues/159)
 
 ## v0.2.8 (2021-10-20)
 
-- Linux: Fix language option in settings.conf not human readable
+- Linux: Fix language option in `settings.conf` not human-readable
   [#143](https://github.com/dynobo/normcap/issues/143)
-- Pre-build packages: On Windows the msi-installer will now upgrade existing versions
+- Prebuild packages: On Windows the MSI-installer will now upgrade existing versions
   [#148](https://github.com/dynobo/normcap/issues/148)
 
 ## v0.2.7 (2021-09-25)
@@ -99,19 +108,19 @@
 
 - All: NormCap settings will be reset on upgrade (due to changes in the settings
   system)!
-- Pre-build packages: A different set of languages is shipped! `jpn`, `jpn_vert` & `fra`
-  got removed, but you can now add them yourself (Settings -> "open data folder")
+- Prebuild packages: A different set of languages is shipped! `jpn`, `jpn_vert` & `fra`
+  got removed, but you can now add them yourself (Settings → "open data folder")
 
-**Further changes:**
+**Other changes:**
 
 - All: Use native settings storage
 - All: Improve settings menu in case of many languages
 - All: Slightly better performance
-- Pre-build packages: Allow extending with additional languages
+- Prebuild packages: Allow extending with additional languages
   [#137](https://github.com/dynobo/normcap/issues/137)
   [#127](https://github.com/dynobo/normcap/issues/127)
   [#104](https://github.com/dynobo/normcap/issues/104)
-- MacOS: Fix missing libpng in package
+- macOS: Fix missing `libpng` in package
   [#128](https://github.com/dynobo/normcap/issues/128)
 - Linux: Fix AttributeError: 'MainWindow' object has no attribute 'macos_border_window'
   [#139](https://github.com/dynobo/normcap/issues/139)
@@ -120,10 +129,10 @@
 
 ## v0.2.5 (2021-08-07)
 
-- Linux: Fix disappering menu bar on gnome
+- Linux: Fix disappearing menu bar on gnome
   [#121](https://github.com/dynobo/normcap/issues/121)
-- MacOS: Fix update checking
-- MacOS: Draw border above menubar & dock
+- macOS: Fix update checking
+- macOS: Draw border above menubar & dock
   [#119](https://github.com/dynobo/normcap/issues/119) (just cosmetic, both are still
   not selectable)
 - All: Slightly better performance
@@ -134,9 +143,9 @@
 ## v0.2.4 (2021-07-29)
 
 - All: Improve robustness of settings
-- Pre-build packages: Add languages `jpn` and `jpn_vert`
-- MacOS: Fix bug that prevented the selection of a region
-- MacOS: Catch ImportError of urllib in case update check is enabled
+- Prebuild packages: Add languages `jpn` and `jpn_vert`
+- macOS: Fix bug that prevented the selection of a region
+- macOS: Catch `ImportError` of `urllib` in case update check is enabled
 
 ## v0.2.3 (2021-07-16)
 
@@ -144,7 +153,7 @@
 
 ## v0.2.2 (2021-07-15)
 
-- Bugfixes related to update checking
+- Bug fixes related to update checking
 - Small UI improvements
 
 ## v0.2.1 (2021-07-13)
@@ -163,7 +172,7 @@
 ## v0.1.11 (2021-04-04)
 
 - Switch to pyclip library for clipboard handling
-- Try a fix for MacOS dummy window issue
+- Try a fix for macOS dummy window issue
 
 ## v0.1.10 (2021-03-20)
 
@@ -182,7 +191,7 @@
 
 ## v0.1.7 (2020-11-14)
 
-- Switch method to show fullscreen Windows to fix
+- Switch method to show full-screen Windows to fix
   [Issue #88](https://github.com/dynobo/normcap/issues/88)
 - Introduce preview of [Tray Icon support](https://github.com/dynobo/normcap/issues/82).
   It is not stable yet, but you can test it using the new `--tray` command line switch.
@@ -222,14 +231,14 @@
 
 ## v0.1.0 (2019-12-23)
 
-- Publishing to pypi
+- Publishing to PyPi
 - Add paragraph magic
 - Adjust color
 
 ## v0.0.15 (2019-12-13)
 
 - Switched to simple semantic versioning
-- Prepared for publishing to pypi
+- Prepared for publishing to PyPi
 
 ## v0.1a1 (2019-12-09)
 
@@ -239,7 +248,7 @@
 
 ## v0.1a0 (2019-09-17)
 
-**Please help testing and provide feedback!**
+**Please help to test and provide feedback!**
 
 Any feedback is useful, whether you find bugs or everything works for you. Thank you!
 

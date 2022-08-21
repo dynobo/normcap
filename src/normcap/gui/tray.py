@@ -9,7 +9,7 @@ from functools import partial
 from PIL import Image
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import __version__, ocr
+from normcap import clipboard, ocr
 from normcap.gui import system_info, utils
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.notifier import Notifier
@@ -61,7 +61,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             if self.settings.value("mode") == "parse"
             else CaptureMode.RAW
         )
-        self.clipboard = QtWidgets.QApplication.clipboard()
+        self.copy_to_clipboard = clipboard.get_copy_func()
+
         self.screens: dict[int, Screen] = system_info.screens()
 
         self.setIcon(utils.get_icon("tray.png", "tool-magic-symbolic"))
@@ -241,12 +242,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Copy results to clipboard."""
         # Signal is only temporarily connected to avoid being triggered
         # on arbitrary clipboard changes
-        self.clipboard.dataChanged.connect(self.com.on_copied_to_clipboard.emit)
-        self.clipboard.dataChanged.connect(self.clipboard.dataChanged.disconnect)
 
-        copy = utils.copy_to_clipboard()
-        copy(self.capture.ocr_text)
-        QtWidgets.QApplication.processEvents()
+        self.copy_to_clipboard(self.capture.ocr_text)
+        self.com.on_copied_to_clipboard.emit()
 
     def _notify_or_close(self):
         if self.settings.value("notification", type=bool):

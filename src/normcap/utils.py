@@ -57,13 +57,14 @@ def set_environ_for_prebuild_package():
             os.environ["LD_LIBRARY_PATH"] = ld_library_path
             os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
         elif package == "briefcase":
-            tesseract_path = (
-                system_info.get_resources_path().parent.parent.parent
-                / "bin"
-                / "tesseract"
-            )
+            bin_path = system_info.get_resources_path().parent.parent.parent / "bin"
+            tesseract_path = bin_path / "tesseract"
             os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
-    if sys.platform == "darwin":
+            os.environ["PATH"] = (
+                f"{bin_path.absolute().resolve()}:" + os.environ["PATH"]
+            )
+
+    elif sys.platform == "darwin":
         if package == "nuitka":
             tesseract_bin = system_info.get_resources_path() / "tesseract" / "tesseract"
         elif package == "briefcase":
@@ -73,8 +74,9 @@ def set_environ_for_prebuild_package():
                 / "tesseract"
             )
         os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
-
     elif sys.platform == "win32":
         tesseract_bin = system_info.get_resources_path() / "tesseract" / "tesseract.exe"
         os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
         os.environ["TESSERACT_VERSION"] = "5.0.0"
+    else:
+        raise RuntimeError(f"Unsupported platform {sys.platform}")
