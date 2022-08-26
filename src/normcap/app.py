@@ -13,15 +13,15 @@ from PySide6 import QtCore, QtWidgets
 from normcap import __version__
 from normcap.gui import system_info, utils
 from normcap.gui.tray import SystemTray
-from normcap.utils import create_argparser, set_environ_for_prebuild_package
+from normcap.utils import (
+    create_argparser,
+    init_logger,
+    set_environ_for_prebuild_package,
+)
 
 set_environ_for_prebuild_package()
 
-logging.basicConfig(
-    format="%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s",
-    datefmt="%H:%M:%S",
-    level="WARNING",
-)
+init_logger()
 
 
 def main():

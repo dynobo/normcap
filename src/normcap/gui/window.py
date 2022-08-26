@@ -32,6 +32,7 @@ class Window(QtWidgets.QMainWindow):
         self.tray: QtWidgets.QMainWindow = parent or self
         self.ui_layer_css = f"#ui_layer {{border: 3px solid {self.color.name()};}}"
         self.is_positioned: bool = False
+        self.draw_debug_infos: bool = False
 
         # Window properties
         self.setObjectName(f"window-{self.screen_idx}")
@@ -94,7 +95,7 @@ class Window(QtWidgets.QMainWindow):
         """Draw screenshot and selection rectangle on window."""
         painter = QtGui.QPainter(self.ui_layer)
 
-        if logger.getEffectiveLevel() == logging.DEBUG:
+        if self.draw_debug_infos:
             # Draw debug information on screen
             screen = self.tray.screens[self.screen_idx]
             x = y = 25

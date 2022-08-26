@@ -30,6 +30,8 @@ wix/
 *.AppImage
 *.zip
 linux/
+windows/
+src/normcap/resources/openssl
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

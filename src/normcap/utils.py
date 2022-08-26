@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 import sys
 
@@ -80,3 +81,29 @@ def set_environ_for_prebuild_package():
         os.environ["TESSERACT_VERSION"] = "5.0.0"
     else:
         raise RuntimeError(f"Unsupported platform {sys.platform}")
+
+
+def init_logger():
+    log_format = "%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s"
+    datefmt = "%H:%M:%S"
+    level = "WARNING"
+
+    if system_info.is_prebuild_package() and sys.platform == "win32":
+        # Starting with briefcase 0.3.9, the windows build gets somehow wrapped in a
+        # small binary that captures all output. As a workaround, let's write it a file
+        # in the package directory instead.
+        # Additional, the command line args do not seem to work. There run in INFO mode
+        # all the time.
+        log_path = os.path.expandvars(
+            "%LOCALAPPDATA%\\Programs\\dynobo\\NormCap\\NormCap.log"
+        )
+        logging.basicConfig(
+            filename=log_path,
+            format=log_format,
+            datefmt=datefmt,
+            level="DEBUG",
+            filemode="w",
+        )
+        return
+
+    logging.basicConfig(format=log_format, datefmt=datefmt, level=level)
