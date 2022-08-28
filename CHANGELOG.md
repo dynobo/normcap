@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.9 (2022-08-28)
+
+- Windows: Fix copy to clipboard ([#250](https://github.com/dynobo/normcap/issues/250)).
+- Windows: Write log files for debugging
+  ([see FAQs](https://dynobo.github.io/normcap/#faqs-windows-log)).
+- macOS: Use `pbcopy` for more reliable copy to clipboard.
+
 ## v0.3.8 (2022-08-21)
 
 - All: Further reduced file size of prebuild packages
