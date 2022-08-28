@@ -9,7 +9,7 @@ from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__
 from normcap.gui.constants import URLS
-from normcap.gui.downloader_qtnetwork import Downloader
+from normcap.gui.downloader_urllib import Downloader
 from normcap.gui.utils import get_icon, set_cursor
 
 logger = logging.getLogger(__name__)

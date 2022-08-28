@@ -2,6 +2,7 @@
 
 ## v0.3.9 (2022-08-28)
 
+- All: Make update check more robust.
 - Windows: Fix copy to clipboard ([#250](https://github.com/dynobo/normcap/issues/250)).
 - Windows: Write log files for debugging
   ([see FAQs](https://dynobo.github.io/normcap/#faqs-windows-log)).
