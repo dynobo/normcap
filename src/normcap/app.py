@@ -21,12 +21,9 @@ from normcap.utils import (
 
 set_environ_for_prebuild_package()
 
-init_logger()
-
 
 def main():
     """Start main application logic."""
-    logger = logging.getLogger("normcap")
     sys.excepthook = utils.hook_exceptions
 
     # Allow closing QT app with CTRL+C in terminal
@@ -34,7 +31,8 @@ def main():
 
     args = create_argparser().parse_args()
 
-    logger.setLevel(args.verbosity.upper())
+    init_logger(level=args.verbosity.upper())
+    logger = logging.getLogger("normcap")
     logger.info("Start NormCap v%s", __version__)
 
     if system_info.display_manager_is_wayland():
