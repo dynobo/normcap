@@ -29,6 +29,7 @@ PySide6-Essentials = "^6.3.1"
 jeepney = ">=0.8"
 pytesseract = ">=0.3.10"
 packaging = ">=21.3"
+certifi = "^2022.6.15"
 
 [tool.poetry.dev-dependencies]
 black = ">=22.3.0"
@@ -148,7 +149,7 @@ sources = ["src/normcap"]
 icon = "package/imgs/normcap"
 installer_icon = "package/imgs/normcap_install"
 installer_background = "package/imgs/normcap_install_bg"
-requires = ["pyside6", "jeepney", "pytesseract", "packaging"]
+requires = ["pyside6", "jeepney", "pytesseract", "packaging", "certifi"]
 
 [tool.briefcase.app.normcap.macOS]
 requires = ["std-nslog==1.0.0"]
@@ -157,6 +158,7 @@ requires = ["std-nslog==1.0.0"]
 requires = ["Pillow==9.2.0", "--no-binary", "pillow"]
 system_requires = [
   "tesseract-ocr",
+  "libnotify-bin",
   "pkg-config",
   "build-essential",
   "libtiff-dev",

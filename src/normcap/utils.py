@@ -104,4 +104,5 @@ def init_logger(level: str = "WARNING"):
         logging.basicConfig(format=log_format, datefmt=datefmt)
 
     logger = logging.getLogger("normcap")
+    level = "DEBUG"
     logger.setLevel(level)

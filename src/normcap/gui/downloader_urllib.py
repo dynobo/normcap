@@ -1,7 +1,9 @@
 """Find new version on github or pypi."""
 import logging
+import ssl
 from urllib.request import urlopen
 
+import certifi
 from PySide6 import QtCore
 
 logger = logging.getLogger(__name__)
@@ -31,7 +33,8 @@ class Downloader(QtCore.QObject):
         if not url.lower().startswith("http"):
             raise ValueError(f"Url {url} not allowed to be opened")
         try:
-            with urlopen(url) as response:  # nosec B310 # Validated above
+            context = ssl.create_default_context(cafile=certifi.where())
+            with urlopen(url, context=context) as response:  # nosec B310
                 raw_data = response.read()
                 data = raw_data.decode("utf-8", "ignore")
                 self.com.on_download_finished.emit(data)

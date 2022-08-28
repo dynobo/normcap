@@ -129,7 +129,7 @@ tomli = {version = ">=2.0.0", markers = "python_version <= \"3.10\""}
 name = "certifi"
 version = "2022.6.15"
 description = "Python package for providing Mozilla's CA Bundle."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -1410,7 +1410,7 @@ analysis = []
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.11"
-content-hash = "68688caab43f414b88d1770f70bd1ecef35c98edd779c9a2b018f659ea4be1e6"
+content-hash = "7c2a0aaa1c55a04fb8d6c1eca3cab7f373dcc79d1057d2134ffb7936f48c3bbc"
 
 [metadata.files]
 arrow = [
