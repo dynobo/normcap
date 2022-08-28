@@ -1,10 +1,13 @@
 import logging
 import os
+import shutil
+import subprocess
 import sys
 import textwrap
 
 from PySide6 import QtCore
 
+from normcap.gui import system_info
 from normcap.gui.models import Capture, CaptureMode
 from normcap.gui.utils import get_icon
 
@@ -26,14 +29,47 @@ class Notifier(QtCore.QObject):
 
     def send_notification(self, capture: Capture):
         """Show tray icon then send notification."""
-        logger.debug("Send notification")
+        title, message = self.compose_notification(capture)
+        if sys.platform == "linux" and shutil.which("notify-send"):
+            self.send_via_libnotify(title, message)
+        else:
+            self.send_via_qt_tray(title, message)
+        self.com.on_notification_sent.emit()
+
+    def send_via_libnotify(self, title, message):
+        """Sending via notify-send.
+
+        Seems to work more reliable on Linux + Gnome, but requires libnotify.
+        """
+        logger.debug("Send notification using notify-send.")
+        icon_path = system_info.get_resources_path() / "tray.png"
+        subprocess.run(
+            [
+                "notify-send",
+                f"--icon={icon_path.resolve()}",
+                "--app-name=NormCap",
+                f"{title}",
+                f"{message}",
+            ],
+            shell=False,
+            encoding="utf-8",
+            check=True,
+            timeout=30,
+        )
+
+    def send_via_qt_tray(self, title, message):
+        """Sending via QT trayicon.
+
+        Used for:
+            - Windows
+            - MacOS
+            - Linux (Fallback in case no notify-send)
+        """
+        logger.debug("Send notification using QT showMessage.")
         icon_file = "normcap.png" if sys.platform == "win32" else "tray.png"
         notification_icon = get_icon(icon_file, "tool-magic-symbolic")
-
-        title, message = self.compose_notification(capture)
         self.parent().show()
         self.parent().showMessage(title, message, notification_icon)
-        self.com.on_notification_sent.emit()
 
     @staticmethod
     def compose_notification(capture) -> tuple[str, str]:
