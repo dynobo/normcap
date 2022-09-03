@@ -217,7 +217,7 @@ class SettingsMenu(QtWidgets.QToolButton):
             action.setChecked(language in self.settings.value("language"))
             language_menu.addAction(action)
 
-        if system_info.is_prebuild_package():
+        if system_info.is_prebuild_package() or system_info.is_flatpak_package():
             action = QtGui.QAction("... open data folder", menu)
             traineddata_path = system_info.config_directory() / "tessdata"
             action.setObjectName(f"file:///{traineddata_path.resolve()}")
