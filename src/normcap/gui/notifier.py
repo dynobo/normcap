@@ -40,22 +40,20 @@ class Notifier(QtCore.QObject):
         """Sending via notify-send.
 
         Seems to work more reliable on Linux + Gnome, but requires libnotify.
+        Running in detached mode to avoid freezing KDE bar in some distributions.
         """
         logger.debug("Send notification using notify-send.")
         icon_path = system_info.get_resources_path() / "tray.png"
-        subprocess.run(
-            [
-                "notify-send",
-                f"--icon={icon_path.resolve()}",
-                "--app-name=NormCap",
-                f"{title}",
-                f"{message}",
-            ],
-            shell=False,
-            encoding="utf-8",
-            check=True,
-            timeout=30,
-        )
+        cmds = [
+            "notify-send",
+            f"--icon={icon_path.resolve()}",
+            "--app-name=NormCap",
+            f"{title}",
+            f"{message}",
+        ]
+        # pylint: disable=consider-using-with
+        # Left detached on purpose!
+        subprocess.Popen(cmds, start_new_session=True)
 
     def send_via_qt_tray(self, title, message):
         """Sending via QT trayicon.

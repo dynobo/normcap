@@ -1,9 +1,12 @@
 # Changelog
 
-## v0.3.11 (unpublished)
+## v0.3.11 (2022-09-04)
 
 - All: Improve removal of superfluous spaces in some eastern languages
   ([#158](https://github.com/dynobo/normcap/issues/158)).
+- Linux: Fix notification issues on some KDE distros
+  ([#260](https://github.com/dynobo/normcap/issues/260)). Thx,
+  [@OLoKo64](https://github.com/OLoKo64).
 
 ## v0.3.10 (2022-09-03)
 
