@@ -1,4 +1,4 @@
-TESTCASES = [
+TESTCASES = (
     {
         "id": 0,
         "image": "ocr_test_1.png",
@@ -51,4 +51,13 @@ TESTCASES = [
         + "Invalid_two <also/not/valid/@test.com>; Invalid_three <@test.com>",
         "ocr_applied_magic": "MultiLineMagic",
     },
-]
+    # {
+    #     # Low contrast with white background
+    #     "id": 5,
+    #     "image": "ocr_test_1.png",
+    #     "tl": (1055, 680),
+    #     "br": (1610, 830),
+    #     "transformed": "Orange, the new black!",
+    #     "ocr_applied_magic": "SingleLineMagic",
+    # },
+)
