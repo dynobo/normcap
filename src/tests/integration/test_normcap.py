@@ -29,34 +29,34 @@ def _load_test_image(image_path):
     return __load_test_image
 
 
-def test_app(monkeypatch, qapp, qtbot):
+@pytest.mark.parametrize("data", TESTCASES)
+def test_app(monkeypatch, qapp, qtbot, data):
     """Tests complete OCR workflow."""
     screen_rect = qapp.primaryScreen().size()
     if screen_rect.width() != 1920 or screen_rect.height() != 1080:
         pytest.xfail("Skipped due to wrong screen resolution.")
-    for data in TESTCASES:
-        image = Path(__file__).parent / "testcases" / data["image"]
-        monkeypatch.setattr(normcap.gui.tray, "grab_screens", _load_test_image(image))
-        args = create_argparser().parse_args(
-            ["--language=eng", "--mode=parse", "--tray=True"]
-        )
-        tray = SystemTray(None, vars(args))
 
-        tray.show()
+    image = Path(__file__).parent / "testcases" / data["image"]
+    monkeypatch.setattr(normcap.gui.tray, "grab_screens", _load_test_image(image))
+    args = create_argparser().parse_args(
+        ["--language=eng", "--mode=parse", "--tray=True"]
+    )
+    tray = SystemTray(None, vars(args))
+    tray.show()
 
-        window = tray.windows[0]
-        qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["tl"]))
-        qtbot.mouseMove(window, pos=QtCore.QPoint(*data["br"]))
-        qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["br"]))
+    window = tray.windows[0]
+    qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["tl"]))
+    qtbot.mouseMove(window, pos=QtCore.QPoint(*data["br"]))
+    qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["br"]))
 
-        qtbot.waitUntil(_check_ocr_result(tray))
-        capture = tray.capture
+    qtbot.waitUntil(_check_ocr_result(tray))
+    capture = tray.capture
 
-        # Text output is not 100% predictable across different machines:
-        similarity = Levenshtein.ratio(capture.ocr_text, data["transformed"])
+    # Text output is not 100% predictable across different machines:
+    similarity = Levenshtein.ratio(capture.ocr_text, data["transformed"])
 
-        assert capture.ocr_applied_magic == data["ocr_applied_magic"], capture.ocr_text
-        assert similarity >= 0.98, f"{capture.ocr_text=}"
+    assert capture.ocr_applied_magic == data["ocr_applied_magic"], capture.ocr_text
+    assert similarity >= 0.98, f"{capture.ocr_text=}"
 
-        tray.com.on_quit.emit()
-        time.sleep(0.5)
+    tray.com.on_quit.emit()
+    time.sleep(0.5)
