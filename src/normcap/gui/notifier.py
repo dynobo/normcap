@@ -36,7 +36,7 @@ class Notifier(QtCore.QObject):
             self.send_via_qt_tray(title, message)
         self.com.on_notification_sent.emit()
 
-    def send_via_libnotify(self, title, message, detached=True):
+    def send_via_libnotify(self, title, message):
         """Sending via notify-send.
 
         Seems to work more reliable on Linux + Gnome, but requires libnotify.
@@ -45,12 +45,14 @@ class Notifier(QtCore.QObject):
         logger.debug("Send notification using notify-send.")
         icon_path = system_info.get_resources_path() / "tray.png"
         cmds = [
-                "notify-send",
-                f"--icon={icon_path.resolve()}",
-                "--app-name=NormCap",
-                f"{title}",
-                f"{message}",
-            ]
+            "notify-send",
+            f"--icon={icon_path.resolve()}",
+            "--app-name=NormCap",
+            f"{title}",
+            f"{message}",
+        ]
+        # pylint: disable=consider-using-with
+        # Left detached on purpose!
         subprocess.Popen(cmds, start_new_session=True)
 
     def send_via_qt_tray(self, title, message):
