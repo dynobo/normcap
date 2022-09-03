@@ -38,10 +38,10 @@ class ParagraphMagic(BaseMagic):
             breaks = 0
             if word["par_num"] != current_par_num:
                 current_par_num = word["par_num"]
-                breaks = 2
+                breaks = 1
             if word["block_num"] != current_block_num:
                 current_block_num = word["block_num"]
-                breaks = 2
+                breaks = 1
 
             if breaks > 0:
                 # New line
