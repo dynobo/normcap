@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.11 (unpublished)
+
+- All: Improve removal of superfluous spaces in some eastern languages
+  ([#158](https://github.com/dynobo/normcap/issues/158)).
+
 ## v0.3.10 (2022-09-03)
 
 - All: Ensure backwards compatibility for Pillow \< 9.2.0

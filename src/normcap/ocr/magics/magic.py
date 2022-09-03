@@ -55,16 +55,9 @@ class ApplyMagic:
     def _post_process(ocr_result: OcrResult) -> str:
         """Apply postprocessing to transformed output."""
         transformed = ocr_result.transformed
-        selected_languages = set(ocr_result.tess_args.lang)
         # TODO: Check if still necessary:
         # https://github.com/tesseract-ocr/tesseract/issues/2702
-        languages_with_superfluous_spaces = {
-            "chi_sim",
-            "chi_sim_vert",
-            "chi_tra",
-            "chi_tra_vert",
-        }
-        if selected_languages.issubset(languages_with_superfluous_spaces):
+        if ocr_result.tess_args.is_language_without_spaces():
             transformed = transformed.replace(" ", "")
         return transformed
 

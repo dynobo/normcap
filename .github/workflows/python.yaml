@@ -36,7 +36,9 @@ jobs:
           sudo apt-get install \
             python3-pil \
             tesseract-ocr \
-            tesseract-ocr-eng
+            tesseract-ocr-eng \
+            tesseract-ocr-jpn \
+            tesseract-ocr-chi-sim
           sudo apt-get install \
             xvfb \
             libxkbcommon-x11-0 \
@@ -56,7 +58,7 @@ jobs:
       - name: Prepare macOS
         if: ${{ matrix.os  == 'macos-11' }}
         run: |
-          brew install pkg-config tesseract dylibbundler
+          brew install pkg-config tesseract tesseract-lang dylibbundler
           brew info tesseract
           "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
           ls -R /usr/local/Cellar/tesseract/
