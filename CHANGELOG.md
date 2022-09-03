@@ -1,7 +1,9 @@
 # Changelog
 
-## v0.3.10 (unreleased)
+## v0.3.10 (2022-09-03)
 
+- All: Ensure backwards compatibility for Pillow \< 9.2.0
+  ([#255](https://github.com/dynobo/normcap/issues/255)).
 - Linux: Option to add additional languages to FlatPak
   ([#239](https://github.com/dynobo/normcap/issues/239)). Experimental, might not yet
   work!

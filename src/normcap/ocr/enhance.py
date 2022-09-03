@@ -52,9 +52,16 @@ def resize_image(image: Image.Image, factor: float = 3.2) -> Image.Image:
     Useful because most displays are around ~100dpi, while Tesseract works best ~300dpi.
     """
     logger.debug("Resize screenshot by factor %s", factor)
+
+    # Ensure backwords compatibility with Pillow < 9.2
+    if hasattr(Image, "Resampling"):
+        resample_method = Image.Resampling.LANCZOS  # type: ignore
+    else:
+        resample_method = Image.LANCZOS  # type: ignore
+
     return image.resize(
         size=(int(image.width * factor), int(image.height * factor)),
-        resample=Image.Resampling.LANCZOS,  # type: ignore
+        resample=resample_method,
     )
 
 
