@@ -255,9 +255,12 @@ def copy_tessdata_files_to_config_dir():
     if list(tessdata_path.glob("*.traineddata")):
         return
 
-    traineddata_files = list(
-        (system_info.get_resources_path() / "tessdata").glob("*.traineddata")
-    )
+    if system_info.is_flatpak_package():
+        traineddata_src = Path("/app/share") / "tessdata"
+    else:
+        traineddata_src = system_info.get_resources_path() / "tessdata"
+
+    traineddata_files = list(traineddata_src.glob("*.traineddata"))
     doc_files = list((system_info.get_resources_path() / "tessdata").glob("*.txt"))
 
     logger.info("Copy %s traineddata files to config directory", len(traineddata_files))

@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.10 (unreleased)
+
+- Linux: Option to add additional languages to FlatPak
+  ([#239](https://github.com/dynobo/normcap/issues/239)). Experimental, might not yet
+  work!
+
 ## v0.3.9 (2022-08-28)
 
 - All: Make update check more robust.

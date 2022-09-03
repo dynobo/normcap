@@ -21,6 +21,10 @@ def get_resources_path() -> Path:
     return (Path(__file__).parent.parent / "resources").resolve()
 
 
+def is_flatpak_package() -> bool:
+    return os.getenv("FLATPAK_ID") is not None
+
+
 def is_prebuild_package() -> Optional[str]:
     package = sys.modules["__main__"].__package__
     if package and "Briefcase-Version" in metadata.metadata(package):
@@ -100,6 +104,7 @@ def config_directory() -> Path:
     # Linux and Mac
     if xdg_config_home := os.getenv("XDG_CONFIG_HOME"):
         return Path(xdg_config_home) / postfix
+
     return Path.home() / ".config" / postfix
 
 
@@ -107,7 +112,7 @@ def get_tessdata_path() -> str:
     """Deside which path for tesseract language files to use."""
     prefix = os.environ.get("TESSDATA_PREFIX", None)
 
-    if is_prebuild_package():
+    if is_prebuild_package() or is_flatpak_package():
         path = config_directory() / "tessdata"
     elif prefix:
         path = Path(prefix) / "tessdata"
@@ -127,6 +132,7 @@ def to_dict() -> dict:
     return dict(
         cli_args=" ".join(sys.argv),
         is_prebuild_package=is_prebuild_package(),
+        is_flatpak_package=is_flatpak_package(),
         platform=sys.platform,
         pyside6_version=PySide6_version,
         qt_version=QtCore.qVersion(),
