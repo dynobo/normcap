@@ -65,12 +65,27 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.screens: dict[int, Screen] = system_info.screens()
 
-        self.setIcon(utils.get_icon("tray.png", "tool-magic-symbolic"))
+        self._set_tray_icon()
         self._add_tray_menu()
         self._add_update_checker()
         self._add_notifier()
         self._set_signals()
         self._update_screenshots()
+
+    def _set_tray_icon(self):
+        self.setIcon(utils.get_icon("tray.png", "tool-magic-symbolic"))
+
+    def _color_tray_icon(self):
+        if sizes := self.icon().availableSizes():
+            pixmap = self.icon().pixmap(sizes[-1])
+            mask = pixmap.createMaskFromColor(
+                QtGui.QColor("transparent"), QtCore.Qt.MaskInColor
+            )
+            pixmap.fill(QtGui.QColor(str(self.settings.value("color"))))
+            pixmap.setMask(mask)
+            self.setIcon(QtGui.QIcon(pixmap))
+
+            QtCore.QTimer.singleShot(5000, self._set_tray_icon)
 
     def _set_signals(self):
         """Set up signals to trigger program logic."""
@@ -82,6 +97,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_image_cropped.connect(self._capture_to_ocr)
         self.com.on_ocr_performed.connect(self._copy_to_clipboard)
         self.com.on_copied_to_clipboard.connect(self._notify_or_close)
+        self.com.on_copied_to_clipboard.connect(self._color_tray_icon)
 
         self.com.on_minimize_windows.connect(self._close_windows)
         self.com.on_set_cursor_wait.connect(
