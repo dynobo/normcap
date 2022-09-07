@@ -11,7 +11,7 @@ concurrency:
 jobs:
   # Run tests on all pull requests or when triggered via [test] tag
   test:
-    name: Linting & Tests
+    name: Run tests, build test packages & draft test release
     runs-on: ${{ matrix.os }}
     if: |
       github.event_name == 'pull_request'
@@ -52,7 +52,6 @@ jobs:
             libxcb-shape0 \
             libegl1 \
             libegl1-mesa
-          ls -la
           echo "XDG_SESSION_TYPE=gnome" >> $GITHUB_ENV
 
       - name: Prepare macOS
@@ -61,9 +60,6 @@ jobs:
           brew install pkg-config tesseract tesseract-lang dylibbundler
           brew info tesseract
           "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
-          ls -R /usr/local/Cellar/tesseract/
-          ls -R /usr/local/Cellar/leptonica/
-          ls -la
 
       - name: Prepare Windows
         if: ${{ matrix.os  == 'windows-2019' }}
@@ -75,7 +71,6 @@ jobs:
           echo "$tesseract" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           echo "TESSDATA_PREFIX=$tesseract" >> $env:GITHUB_ENV
           Set-DisplayResolution -Width 1920 -Height 1080 -Force
-          dir
 
       - name: Test tesseract
         run: |
@@ -83,8 +78,7 @@ jobs:
           tesseract --list-langs
 
       - name: Poetry install
-        run: |
-          poetry install
+        run: poetry install
 
       # PERFORM TESTS
       - name: Pylint
@@ -161,7 +155,7 @@ jobs:
           tag: "internal"
 
   build-python:
-    name: Build and release new Python package
+    name: Build Python package & publish release
     needs: test
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ubuntu-22.04
@@ -176,7 +170,7 @@ jobs:
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
 
   build-packages:
-    name: Build and release packages
+    name: Build prebuild packages & draft release
     needs: test
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ${{ matrix.os }}
@@ -197,13 +191,10 @@ jobs:
         uses: damienaicheh/extract-version-from-tag-action@v1.0.0
       - name: Install dependencies
         shell: bash -l {0}
-        run: |
-          poetry install
+        run: poetry install
       - name: Build package briefcase
         shell: bash -l {0}
-        run: |
-          poetry run python package/build.py --framework=briefcase
-          ls -la ./package
+        run: poetry run python package/build.py --framework=briefcase
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:
