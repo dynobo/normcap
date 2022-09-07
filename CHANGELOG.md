@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.12 (unreleased)
+
+- All: Change color of tray icon on successful copy to clipboard to improve usability in
+  case the notifications are turned off or not working.
+
 ## v0.3.11 (2022-09-04)
 
 - All: Improve removal of superfluous spaces in some eastern languages

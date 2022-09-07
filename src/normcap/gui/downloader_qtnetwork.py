@@ -24,9 +24,7 @@ class Downloader(QtCore.QObject):
         super().__init__()
         self.com = Communicate()
         self.manager = QtNetwork.QNetworkAccessManager()
-        self.manager.finished.connect(  # pylint: disable=no-member
-            self._on_get_finished
-        )
+        self.manager.finished.connect(self._on_get_finished)
 
     def get(self, url: str):
         """Start downloading url. Emits signal, when done."""
