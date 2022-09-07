@@ -26,7 +26,7 @@ def is_flatpak_package() -> bool:
 
 
 def is_prebuild_package() -> Optional[str]:
-    package = sys.modules["__main__"].__package__
+    package = getattr(sys.modules["__main__"], "__package__", None)
     if package and "Briefcase-Version" in metadata.metadata(package):
         # Briefcase package
         return "briefcase"

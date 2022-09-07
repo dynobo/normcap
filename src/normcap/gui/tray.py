@@ -20,8 +20,6 @@ from normcap.screengrab import grab_screens
 
 logger = logging.getLogger(__name__)
 
-# TODO: Remove pylint disable no-member when https://github.com/PyCQA/pylint/issues/5378
-
 
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
@@ -147,13 +145,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         menu = QtWidgets.QMenu()
 
         action = QtGui.QAction("Capture", menu)
-        action.triggered.connect(  # pylint: disable=no-member
-            self.com.on_tray_menu_capture.emit
-        )
+        action.triggered.connect(self.com.on_tray_menu_capture.emit)
         menu.addAction(action)
 
         action = QtGui.QAction("Exit", menu)
-        action.triggered.connect(self.com.on_quit.emit)  # pylint: disable=no-member
+        action.triggered.connect(self.com.on_quit.emit)
         menu.addAction(action)
 
         self.setContextMenu(menu)

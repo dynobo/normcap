@@ -114,7 +114,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         menu.addSeparator()
         self._add_title(menu, "Application")
         self._add_application_section(menu)
-        menu.triggered.connect(self._on_item_click)  # pylint: disable=no-member
+        menu.triggered.connect(self._on_item_click)
 
         self.setMenu(menu)
 
