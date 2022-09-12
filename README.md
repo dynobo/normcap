@@ -15,7 +15,7 @@
 [Changelog](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) |
 [FAQs](https://dynobo.github.io/normcap/#faqs)
 
-[![Screencast](https://user-images.githubusercontent.com/11071876/123133596-3107d080-d450-11eb-8451-6dcebb7876ad.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
+[![Screencast](https://user-images.githubusercontent.com/11071876/189767585-8bc45c18-8392-411d-84dc-cef1cb5dbc47.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
 ## Quickstart
 
@@ -33,7 +33,7 @@ Install a prebuild release:
   NormCap to take screenshots. Background:
   [#135](https://github.com/dynobo/normcap/issues/135))</sub>
 
-Install from system repository:
+Install from repositories:
 
 - **Arch / Manjaro**: Install the
   [`normcap`](https://aur.archlinux.org/packages/normcap) package from AUR.
