@@ -4,6 +4,7 @@
 
 - All: Change color of tray icon on successful copy to clipboard to improve usability in
   case the notifications are turned off or not working.
+- Linux: Fix multi monitor support on Wayland.
 
 ## v0.3.11 (2022-09-04)
 
