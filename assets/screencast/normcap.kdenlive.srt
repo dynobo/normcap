@@ -1,0 +1,42 @@
+1
+00:00:00,000 --> 00:00:04,166
+Start NormCap ... 
+‎ 
+‎
+
+2
+00:00:04,166 --> 00:00:08,148
+... pink border appears around screen ... 
+‎ 
+‎
+
+3
+00:00:08,150 --> 00:00:12,150
+... select region ... 
+‎ 
+‎
+
+4
+00:00:12,150 --> 00:00:17,166
+... wait for notification or pink icon ... 
+‎ 
+‎
+
+5
+00:00:17,166 --> 00:00:21,200
+... paste from clipboard (ctrl+v) ... 
+‎ 
+‎
+
+6
+00:00:21,200 --> 00:00:25,233
+... re-open through tray ... 
+‎ 
+‎
+
+7
+00:00:25,233 --> 00:00:29,266
+... adjust settings in menu. 
+‎ 
+‎
+

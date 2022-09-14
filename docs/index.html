@@ -76,7 +76,7 @@
             <li>
               <a
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.11/NormCap-0.3.11-x86_64-Windows.msi"
-                >NormCap-x86_64-<strong>Windows</strong>.msi</a
+                >NormCap-<strong>Windows</strong>-x86_64.msi</a
               >
               <small>~80 MB</small>
               <span data-tooltip="Run installer and start through start menu">🛈</span>
@@ -84,7 +84,7 @@
             <li>
               <a
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.11/NormCap-0.3.11-x86_64.AppImage"
-                >NormCap-x86_64-<strong>Linux</strong>.AppImage</a
+                >NormCap-<strong>Linux</strong>-x86_64.AppImage</a
               >
               <small>~78 MB</small>
               <span data-tooltip="Make the file executable and run it">🛈</span>
@@ -92,7 +92,7 @@
             <li>
               <a
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.11/NormCap-0.3.11-x86_64-macOS.dmg"
-                >NormCap-x86_64-<strong>-macOS</strong>.dmg</a
+                >NormCap-<strong>macOS</strong>-x86_64.dmg</a
               >
               <small>~63 MB</small>
               <span
@@ -121,13 +121,18 @@
         </div>
         <div class="row features">
           <div class="col-md-6 col-lg-6 col-xl-4">
-            <div class="feature feature-1">
-              <strong>Free & Open Source</strong>
+            <div class="feature feature-4">
+              <strong>Many languages</strong>
             </div>
           </div>
           <div class="col-md-6 col-lg-6 col-xl-4">
-            <div class="feature feature-3">
-              <strong>Cross-platform</strong>
+            <div class="feature feature-6">
+              <strong>Works offline</strong>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-6 col-xl-4">
+            <div class="feature feature-5">
+              <strong>Heuristic parsing</strong>
             </div>
           </div>
           <div class="col-md-6 col-lg-6 col-xl-4">
@@ -136,22 +141,18 @@
             </div>
           </div>
           <div class="col-md-6 col-lg-6 col-xl-4">
-            <div class="feature feature-4">
-              <strong>Many languages</strong>
+            <div class="feature feature-3">
+              <strong>Cross-platform</strong>
             </div>
           </div>
           <div class="col-md-6 col-lg-6 col-xl-4">
-            <div class="feature feature-6">
-              <strong>System tray</strong>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-6 col-xl-4">
-            <div class="feature feature-5">
-              <strong>Heuristic parsing</strong>
+            <div class="feature feature-1">
+              <strong>Free & Open Source</strong>
             </div>
           </div>
         </div>
       </article>
+
       <article id="usage">
         <div class="hgroup">
           <h2>Usage</h2>
@@ -161,8 +162,16 @@
         <ol>
           <li>Start NormCap and wait until a pink border appears.</li>
           <li>Select a region on screen with your mouse.</li>
+          <li>Wait for notification or pink tray icon.</li>
           <li>Paste the recognized text from the clipboard anywhere you like.</li>
         </ol>
+        <h4>Example use-cases</h4>
+        <ul>
+          <li>Extract text from screenshots you received via mail.</li>
+          <li>Copy error messages from non-selectable UI elements.</li>
+          <li>Retrieve information from photos.</li>
+          <li>Capture mail addresses from "crawler safe" images on the web.</li>
+        </ul>
         <h4>User Interface</h4>
         <ul>
           <li>
@@ -479,20 +488,6 @@
             </li>
           </ul>
         </details>
-        <details id="faqs-windows-cli">
-          <summary>
-            [Windows] How can I start NormCap with a command line argument?
-          </summary>
-          <p>
-            To run NormCap with an argument <em>once</em>, run it in the "Terminal":
-          </p>
-          <pre><code>C:\Users\&lt;USER-NAME&gt;\AppData\Local\Programs\NormCap\NormCap.exe --help</code></pre>
-          <p>
-            Due to the way NormCap is packaged, you will see no output in the terminal.
-            Instead, the output is written to a file in the same folder:
-          </p>
-          <pre><code>C:\Users\&lt;USER-NAME&gt;\AppData\Local\Programs\NormCap\NormCap.exe.log</code></pre>
-        </details>
         <details id="faqs-windows-log">
           <summary>
             [Windows] How can I write a log-file with debugging information?
@@ -511,29 +506,6 @@
               >create a new issue on GitHub</a
             >
             and include the information in the log file.
-          </p>
-        </details>
-        <details id="faqs-macos-cli">
-          <summary>
-            [macOS] How can I start NormCap with a command line argument?
-          </summary>
-          <p>
-            To run NormCap with an argument <em>once</em>, run it in the "Terminal":
-          </p>
-          <pre><code>$ /Applications/NormCap.app/Contents/macOS/NormCap --help</code></pre>
-          <p>
-            To <em>create a launcher</em> with command line arguments, launch the
-            "Script Editor" and make a new script with the desired command line
-            arguments, e.g.:
-          </p>
-          <pre><code>do shell script "exec /Applications/NormCap.app/Contents/macOS/NormCap --tray"s</code></pre>
-          <p>
-            Save the script as type "Application" in the folder "/Applications"<br />
-            <small>
-              (When this new Application is started, an additional Icon will show up in
-              the Dock. If you know a way to avoid this, please
-              <a href="https://github.com/dynobo/normcap/issues">open an issue</a>)
-            </small>
           </p>
         </details>
         <details id="faqs-macos-m1">
@@ -562,11 +534,54 @@
           </ol>
         </details>
         <h4>Troubleshooting</h4>
+        <details id="faqs-debug">
+          <summary>How to get debug information?</summary>
+          <ul>
+            <li>
+              <strong>With Python package:</strong><br>
+              <p>
+                Run: <code>normcap -v debug</code>
+              </p>
+              </li>
+            <li>
+              <strong>On Windows (msi):</strong><br>
+              <p>
+                The debug log is always written to a file in the executable's folder: <code>C:\Users\&lt;USER-NAME&gt;\AppData\Local\Programs\NormCap\NormCap.exe.log</code>
+              </p>
+            </li>
+            <li>
+              <strong>On MacOS (dmg):</strong>
+              <p>
+                Run: <code>$ flatpak run --arch=x86_64 --command=normcap com.github.dynobo.normcap -v debug</code>
+              </p>
+            </li>
+            <li>
+              <strong>On Linux (AppImage):</strong>
+              <p>
+                Run: <code>$ NormCap-{version}-x86_64.AppImage -v debug</code>
+              </p>
+            </li>
+            <li>
+              <strong>On Linux (FlatPak):</strong>
+              <p>
+                Run: <code>$ flatpak run --command=normcap com.github.dynobo.normcap -v debug</code>
+              </p>
+            </li>
+            <li>
+              <strong>On Linux (AUR):</strong>
+              <p>
+                Run: <code>$ normcap -v debug</code>
+              </p>
+            </li>
+          </ul>
+          </p>
+        </details>
         <details id="faqs-is-not-starting">
           <summary>NormCap is not starting</summary>
           <p>
-            Please try to start again with the <code>-v debug</code> option. This should
-            reveal more information useful for problem-solving.
+            Please try to take a look at the <a href="#faqs-debug">debug information</a>. It might provide
+            enough information for you to solve the issue for yourself. If it doesn't help you, don't
+            hesitate to <a href="https://github.com/dynobo/normcap/issues">report</a> your problem description together with debug information.
           </p>
         </details>
         <details id="faqs-couldnt-load-xcb">

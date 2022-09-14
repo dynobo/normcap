@@ -6,7 +6,9 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: end-of-file-fixer
+        exclude: ".srt$"
       - id: trailing-whitespace
+        exclude: ".srt$"
       - id: mixed-line-ending
   - repo: local
     hooks:
