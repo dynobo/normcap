@@ -550,7 +550,7 @@
               </p>
             </li>
             <li>
-              <strong>On MacOS (dmg):</strong>
+              <strong>On macOS (dmg):</strong>
               <p>
                 Run: <code>$ flatpak run --arch=x86_64 --command=normcap com.github.dynobo.normcap -v debug</code>
               </p>
@@ -659,6 +659,33 @@ libxcb-util1/hirsute 0.4.0-1 i386</code></pre>
             normcap with the <code>--tray</code> flag, and if nothing is shown in the
             system tray, proceed like in the question above.
           </p>
+        </details>
+        <details id="faqs-macos-empty-desktop">
+          <summary>[macOS] When NormCap is started, an empty desktop shows up</summary>
+          <p>This issue ususally occures on the after installing NormCap, either
+            for the first time or after an update.
+          </p>
+          <p>
+            This is a known issue related to macOS's permissions settings: If NormCap doesn't
+            have the system's permission to take a screenshot, an empty desktop will be shown.<br>
+           <small>(To be precise: NormCap doesn't <em>know</em> that it lacks permissions,
+            tries to take a screenshot nevertheless, which results in a screenshot of the
+            empty desktop.)</small>
+          </p>
+          <p>Steps to solve this:</p>
+          <ol>
+            <li>Close NormCap, if it is running.</li>
+            <li>Navigate to "System Preferences" → "Security & Privacy" → "Privacy" →
+              "Screen Recording" → "Click unlock".</li>
+            <li>Do you already see "NormCap" on the right side? If yes, "remove" [ – ]
+               it. <strong>Un-ticking the checkbox is not enough!</strong></li>
+            <li>Click "add" [＋] → "Applications" → "NormCap".</li>
+            <li>Confirm that you see NormCap on the right side with a checkmark in front of it.</li>
+            <li>Start NormCap, it should work now.</li>
+            <li>You might need to repeat those steps after installing a new version
+            of NormCap.</li>
+          </ol>
+          <p>Hopefully, this cumbersome user experience can be improved in a future release.</p>
         </details>
         <h4>Development</h4>
         <details id="faqs-no-such-file">
