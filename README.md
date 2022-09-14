@@ -42,7 +42,7 @@ Install from repositories:
   from FlatHub.
 
 If you experience issues please look at the
-[FAQs](https://github.com/dynobo/normcap/blob/main/FAQ.md) or
+[FAQs](https://dynobo.github.io/normcap/#faqs) or
 [open an issue](https://github.com/dynobo/normcap/issues).
 
 ## Python package
