@@ -60,7 +60,7 @@ class Notifier(QtCore.QObject):
 
         Used for:
             - Windows
-            - MacOS
+            - macOS
             - Linux (Fallback in case no notify-send)
         """
         logger.debug("Send notification using QT showMessage.")
