@@ -488,26 +488,6 @@
             </li>
           </ul>
         </details>
-        <details id="faqs-windows-log">
-          <summary>
-            [Windows] How can I write a log-file with debugging information?
-          </summary>
-          <p>
-            On every start of NormCap, a fresh log file is automatically written to the
-            following location:
-          </p>
-          <pre><code>C:\Users\&lt;USER-NAME&gt;\AppData\Local\dynobo\NormCap\logs\normcap.log</code></pre>
-          (for error traceback) and
-          <pre><code>normcap-debug.log</code></pre>
-          (for additional details).
-          <p>
-            In case of problems,
-            <a href="https://github.com/dynobo/normcap/issues"
-              >create a new issue on GitHub</a
-            >
-            and include the information in the log file.
-          </p>
-        </details>
         <details id="faqs-macos-m1">
           <summary>[macOS] Does NormCap work on the M1 architecture?</summary>
           <p>
@@ -552,7 +532,7 @@
             <li>
               <strong>On macOS (dmg):</strong>
               <p>
-                Run: <code>$ flatpak run --arch=x86_64 --command=normcap com.github.dynobo.normcap -v debug</code>
+                Run: <code>$ /Applications/NormCap.app/Contents/MacOS/NormCap -v debug</code>
               </p>
             </li>
             <li>

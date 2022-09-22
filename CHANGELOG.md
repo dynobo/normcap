@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.12 (2022-10-15)
+## v0.3.12 (2022-09-15)
 
 - All: Change color of tray icon on successful copy to clipboard to improve usability in
   case the notifications are turned off or not working.
