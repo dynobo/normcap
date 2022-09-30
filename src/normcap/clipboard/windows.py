@@ -1,7 +1,6 @@
 """Mainly taken from PyperClip, https://github.com/asweigart/pyperclip.
 
-Heavily stripped down version of the windows related functionality, very slightly
-modified.
+Heavily stripped down version of the windows related functionality, slightly modified.
 
 A cross-platform clipboard module for Python, with copy & paste functions for plain text.
 By Al Sweigart al@inventwithpython.com
@@ -181,6 +180,6 @@ def init_windows_clipboard():
     return copy_windows
 
 
-def get_copy():
+def get_copy_func():
     logger.debug("Use windll to copy to clipboard.")
     return init_windows_clipboard()

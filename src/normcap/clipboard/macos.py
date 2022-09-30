@@ -18,7 +18,7 @@ def pbcopy(text):
     )
 
 
-def get_copy():
+def get_copy_func():
     if shutil.which("pbcopy") is not None:
         logger.debug("Use pbcopy to copy to clipboard.")
         return pbcopy

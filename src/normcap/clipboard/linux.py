@@ -8,7 +8,7 @@ from normcap.clipboard import qt
 logger = logging.getLogger(__name__)
 
 
-def wl_copy(text):
+def _wl_copy(text):
     """Use wl-clipboard package to copy text to system clipboard."""
     subprocess.run(
         ["wl-copy"],
@@ -20,18 +20,18 @@ def wl_copy(text):
     )
 
 
-def on_wayland():
+def _is_wayland_display_manager():
     WAYLAND_DISPLAY = os.environ.get("WAYLAND_DISPLAY", "")
     XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "")
     return "wayland" in WAYLAND_DISPLAY.lower() or "wayland" in XDG_SESSION_TYPE.lower()
 
 
-def get_copy():
+def get_copy_func():
 
-    if on_wayland():
+    if _is_wayland_display_manager():
         if shutil.which("wl-copy") is not None:
             logger.debug("Use wl-clipboard to copy to clipboard.")
-            return wl_copy
+            return _wl_copy
 
         logger.warning(
             "Your display manager uses Wayland. Please install the system "
