@@ -47,7 +47,7 @@ def fullscreen_to_file(filename):
         logger.error("Invalid dbus interface")
 
 
-def grab_screens() -> list[QtGui.QImage]:
+def capture() -> list[QtGui.QImage]:
     """Capture screenshots for all screens using org.gnome.Shell.Screenshot.
 
     This methods works gnome-shell < v41 and wayland.
