@@ -6,12 +6,16 @@ import sys
 from normcap.gui import system_info
 from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION
 
+logger = logging.getLogger("normcap")
+
 
 def create_argparser() -> argparse.ArgumentParser:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(prog="normcap", description=DESCRIPTION)
 
     for setting in DEFAULT_SETTINGS:
+        if not setting.cli_arg:
+            continue
         parser.add_argument(
             f"-{setting.flag}",
             f"--{setting.key}",
@@ -105,5 +109,4 @@ def init_logger(level: str = "WARNING"):
     else:
         logging.basicConfig(format=log_format, datefmt=datefmt)
 
-    logger = logging.getLogger("normcap")
     logger.setLevel(level)

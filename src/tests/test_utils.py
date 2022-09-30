@@ -30,7 +30,7 @@ def test_argparser_help_is_complete():
         assert len(action.help) > 10
 
 
-def test_all_argparser_attributes_in_settings(argparser_defaults):
+def test_argparser_attributes_in_settings(argparser_defaults):
     settings = Settings("normcap", "settings", init_settings={})
 
     for arg in argparser_defaults:
@@ -38,7 +38,12 @@ def test_all_argparser_attributes_in_settings(argparser_defaults):
             continue
         assert arg in settings.allKeys()
 
+
+def test_settings_in_argparser_attributes(argparser_defaults):
+    settings = Settings("normcap", "settings", init_settings={})
     for key in settings.allKeys():
+        if key in ["version"]:
+            continue
         assert key in argparser_defaults
 
 
