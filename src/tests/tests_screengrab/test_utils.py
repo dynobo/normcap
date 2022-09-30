@@ -111,30 +111,32 @@ def test_gnome_version_on_linux_unknown_exception(monkeypatch, caplog):
     assert "exception when trying to get gnome version" in caplog.text.lower()
 
 
-def test_get_appropriate_grab_screens_on_wayland(monkeypatch):
-    monkeypatch.setattr(utils, "_display_manager_is_wayland", lambda: True)
+def test_get_appropriate_capture_on_wayland(monkeypatch):
+    monkeypatch.setattr(utils.sys, "platform", "linux")
+
+    monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
     monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("40.3"))
-    grab_screens = _get_appropriate_capture()
-    assert grab_screens == dbus_shell.capture
+    capture = _get_appropriate_capture()
+    assert capture == dbus_shell.capture
 
-    monkeypatch.setattr(utils, "_display_manager_is_wayland", lambda: True)
+    monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
     monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("41.0"))
-    grab_screens = _get_appropriate_capture()
-    assert grab_screens == dbus_portal.capture
+    capture = _get_appropriate_capture()
+    assert capture == dbus_portal.capture
 
-    monkeypatch.setattr(utils, "_display_manager_is_wayland", lambda: True)
+    monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
     monkeypatch.setattr(utils, "get_gnome_version", lambda: None)
-    grab_screens = _get_appropriate_capture()
-    assert grab_screens == dbus_portal.capture
+    capture = _get_appropriate_capture()
+    assert capture == dbus_portal.capture
 
 
-def test_get_appropriate_grab_screens_on_non_wayland(monkeypatch):
-    monkeypatch.setattr(utils, "_display_manager_is_wayland", lambda: False)
+def test_get_appropriate_capture_on_non_wayland(monkeypatch):
+    monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: False)
     monkeypatch.setattr(utils, "get_gnome_version", lambda: None)
-    grab_screens = _get_appropriate_capture()
-    assert grab_screens == qt.capture
+    capture = _get_appropriate_capture()
+    assert capture == qt.capture
 
-    monkeypatch.setattr(utils, "_display_manager_is_wayland", lambda: False)
+    monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: False)
     monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("41.0"))
     grab_screens = _get_appropriate_capture()
     assert grab_screens == qt.capture

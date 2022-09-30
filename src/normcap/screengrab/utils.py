@@ -141,7 +141,7 @@ def has_screenshot_permission() -> bool:
         return _macos_has_screenshot_permission()
     elif sys.platform == "linux":
         return True
-    elif sys.platform == "windows":
+    elif sys.platform == "win32":
         return True
     else:
         raise RuntimeError("Unknonw platform")
