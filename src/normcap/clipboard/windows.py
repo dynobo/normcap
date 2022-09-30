@@ -10,9 +10,10 @@ BSD License
 import contextlib
 import ctypes
 import logging
+import sys
 import time
 from ctypes import c_size_t, c_wchar, c_wchar_p, get_errno, sizeof
-from typing import Any
+from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,10 @@ class CheckedCall:  # noqa: D101
         setattr(self.f, key, value)
 
 
-def init_windows_clipboard():
+def _init_windows_clipboard() -> Callable:
+    if sys.platform != "win32":
+        raise RuntimeError("Windows clipboard only available on Windows OS.")
+
     from ctypes.wintypes import (
         BOOL,
         DWORD,
@@ -180,6 +184,6 @@ def init_windows_clipboard():
     return copy_windows
 
 
-def get_copy_func():
+def get_copy_func() -> Callable:
     logger.debug("Use windll to copy to clipboard.")
-    return init_windows_clipboard()
+    return _init_windows_clipboard()

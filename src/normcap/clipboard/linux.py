@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 import subprocess
+from typing import Callable
 
 from normcap.clipboard import qt
 
@@ -20,13 +21,13 @@ def _wl_copy(text):
     )
 
 
-def _is_wayland_display_manager():
+def _is_wayland_display_manager() -> bool:
     WAYLAND_DISPLAY = os.environ.get("WAYLAND_DISPLAY", "")
     XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "")
     return "wayland" in WAYLAND_DISPLAY.lower() or "wayland" in XDG_SESSION_TYPE.lower()
 
 
-def get_copy_func():
+def get_copy_func() -> Callable:
 
     if _is_wayland_display_manager():
         if shutil.which("wl-copy") is not None:

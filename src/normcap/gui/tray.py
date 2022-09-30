@@ -73,7 +73,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _ensure_screenshot_permission(self):
         if screengrab.has_screenshot_permission():
-            return True
+            return
 
         if sys.platform == "darwin":
             # Reset privacy permission in case of new NormCap version. This is necessary

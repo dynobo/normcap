@@ -139,12 +139,11 @@ def macos_reset_screenshot_permission():
 def has_screenshot_permission() -> bool:
     if sys.platform == "darwin":
         return _macos_has_screenshot_permission()
-    elif sys.platform == "linux":
+    if sys.platform == "linux":
         return True
-    elif sys.platform == "win32":
+    if sys.platform == "win32":
         return True
-    else:
-        raise RuntimeError("Unknonw platform")
+    raise RuntimeError("Unknonw platform")
 
 
 def _macos_has_screenshot_permission() -> bool:
