@@ -10,6 +10,7 @@ DEFAULT_SETTINGS = (
         value="#FF2E88",
         help="set primary color for UI, e.g. '#FF2E88'",
         choices=None,
+        cli_arg=True,
     ),
     Setting(
         key="language",
@@ -18,6 +19,7 @@ DEFAULT_SETTINGS = (
         value=("eng",),
         help="set language(s) for text recognition, e.g. 'eng' or 'eng+deu'",
         choices=None,
+        cli_arg=True,
     ),
     Setting(
         key="mode",
@@ -26,6 +28,7 @@ DEFAULT_SETTINGS = (
         value="parse",
         help="set capture mode",
         choices=("raw", "parse"),
+        cli_arg=True,
     ),
     Setting(
         key="notification",
@@ -34,6 +37,7 @@ DEFAULT_SETTINGS = (
         value=True,
         help="disable or enable notification after ocr detection",
         choices=(True, False),
+        cli_arg=True,
     ),
     Setting(
         key="tray",
@@ -42,6 +46,7 @@ DEFAULT_SETTINGS = (
         value=False,
         help="disable or enable system tray",
         choices=(True, False),
+        cli_arg=True,
     ),
     Setting(
         key="update",
@@ -50,6 +55,16 @@ DEFAULT_SETTINGS = (
         value=False,
         help="disable or enable check for updates",
         choices=(True, False),
+        cli_arg=True,
+    ),
+    Setting(
+        key="version",
+        flag="c",
+        type_=str,
+        value="0.0.0",
+        help="NormCap version number",
+        choices=None,
+        cli_arg=False,
     ),
 )
 

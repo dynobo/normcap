@@ -38,7 +38,6 @@ class CheckedCall:  # noqa: D101
 
 
 def init_windows_clipboard():
-    global HGLOBAL, LPVOID, DWORD, LPCSTR, INT, HWND, HINSTANCE, HMENU, BOOL, UINT, HANDLE
     from ctypes.wintypes import (
         BOOL,
         DWORD,

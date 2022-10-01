@@ -83,7 +83,7 @@ def grab_full_desktop() -> Optional[QtGui.QImage]:
     return image
 
 
-def grab_screens() -> list[QtGui.QImage]:
+def capture() -> list[QtGui.QImage]:
     """Capture screenshots for all screens using org.freedesktop.portal.Desktop.
 
     This methods works gnome-shell >=v41 and wayland.

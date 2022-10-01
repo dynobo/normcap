@@ -2,6 +2,7 @@
 import io
 import logging
 import os
+import sys
 import tempfile
 import time
 from functools import partial
@@ -9,14 +10,13 @@ from functools import partial
 from PIL import Image
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import clipboard, ocr
+from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import system_info, utils
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.notifier import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
-from normcap.screengrab import grab_screens
 
 logger = logging.getLogger(__name__)
 
@@ -65,10 +65,42 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self._set_tray_icon()
         self._add_tray_menu()
+        self._ensure_screenshot_permission()
         self._add_update_checker()
         self._add_notifier()
         self._set_signals()
         self._update_screenshots()
+
+    def _ensure_screenshot_permission(self):
+        if screengrab.has_screenshot_permission():
+            return True
+
+        if sys.platform == "darwin":
+            # Reset privacy permission in case of new NormCap version. This is necessary
+            # because somehow the setting is associated with the binary and won't work
+            # after it got updated.
+            if self.settings.value("version") != __version__:
+                self.settings.setValue("version", __version__)
+                screengrab.macos_reset_screenshot_permission()
+
+            # Trigger permission request to make the NormCap entry available in settings
+            screengrab.macos_request_screenshot_permission()
+
+            # Message box to explain what's happening and open the preferences
+            app = "NormCap" if system_info.is_prebuild_package() else "Terminal"
+            button = QtWidgets.QMessageBox.critical(
+                None,
+                "Error!",
+                f"{app} is missing permissions for 'Screen Recording'.\n\n"
+                + "Grant the permissions via 'Privacy & Security' settings "
+                + "and restart NormCap.\n\nClick OK to exit.",
+                buttons=QtWidgets.QMessageBox.Open | QtWidgets.QMessageBox.Cancel,
+            )
+            if button == QtWidgets.QMessageBox.Open:
+                logger.debug("Open macOS privacy settings")
+                screengrab.macos_open_privacy_settings()
+
+            self._exit_application("Screen Recording permissions missing on macOS")
 
     def _set_tray_icon(self):
         self.setIcon(utils.get_icon("tray.png", "tool-magic-symbolic"))
@@ -120,7 +152,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _update_screenshots(self):
         """Get new screenshots and cache them."""
-        screens = grab_screens()
+        screens = screengrab.capture()
 
         if not screens:
             logger.error("Could not grab screenshots.")
