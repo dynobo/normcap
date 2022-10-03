@@ -1,19 +1,12 @@
-import sys
-
 import pytest
 
 from normcap import clipboard
 
 
 def test_get_copy_func_on_win32(monkeypatch):
-    platform = sys.platform
-    if platform == "win32":
-        get_copy = clipboard.get_copy_func()
-        assert get_copy == clipboard.windows.get_copy_func()
-    else:
-        monkeypatch.setattr(clipboard.sys, "platform", "win32")
-        with pytest.raises(AttributeError):
-            __file__ = clipboard.get_copy_func()
+    monkeypatch.setattr(clipboard.sys, "platform", "win32")
+    get_copy = clipboard.get_copy_func()
+    assert get_copy == clipboard.windows.get_copy_func()
 
 
 def test_get_copy_func_on_darwin(monkeypatch):

@@ -48,7 +48,7 @@ class UpdateChecker(QtCore.QObject):
 
         try:
             if self.packaged:
-                match = re.search(r"download/v(\d+\.\d+\.\d+)/|$", text)
+                match = re.search(r"/releases/tag/v(\d+\.\d+\.\d+)\"", text)
                 if match and match[1]:
                     newest_version = match[1]
             else:
@@ -64,7 +64,7 @@ class UpdateChecker(QtCore.QObject):
 
     def check(self):
         """Start the update check."""
-        url = URLS.releases if self.packaged else f"{URLS.pypi}/json"
+        url = URLS.releases_atom if self.packaged else f"{URLS.pypi}/json"
         logger.debug("Search for new version on %s", url)
         self.downloader.get(url)
 

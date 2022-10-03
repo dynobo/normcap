@@ -37,7 +37,7 @@ class CheckedCall:  # noqa: D101
         setattr(self.f, key, value)
 
 
-def _init_windows_clipboard() -> Callable:
+def _windll_copy(text):
     if sys.platform != "win32":
         raise RuntimeError("Windows clipboard only available on Windows OS.")
 
@@ -181,9 +181,9 @@ def _init_windows_clipboard() -> Callable:
                     safeGlobalUnlock(handle)
                     safeSetClipboardData(CF_UNICODETEXT, handle)
 
-    return copy_windows
+    copy_windows(text)
 
 
 def get_copy_func() -> Callable:
     logger.debug("Use windll to copy to clipboard.")
-    return _init_windows_clipboard()
+    return _windll_copy

@@ -1,4 +1,5 @@
 import logging
+import os
 
 import pytest
 
@@ -19,11 +20,12 @@ from normcap import clipboard
 def test_is_wayland_display_manager(
     wayland_display, xdg_session_type, result, monkeypatch
 ):
-    def mocked_environ_get(var, _):
+    def mocked_environ_get(var, default):
         if var == "WAYLAND_DISPLAY":
             return wayland_display
-        elif var == "XDG_SESSION_TYPE":
+        if var == "XDG_SESSION_TYPE":
             return xdg_session_type
+        return os.environ(var, default)
 
     monkeypatch.setattr(clipboard.linux.os.environ, "get", mocked_environ_get)
     assert clipboard.linux._is_wayland_display_manager() == result
