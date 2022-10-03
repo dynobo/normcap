@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11, windows-2019, ubuntu-22.04]
+        os: [macos-11] #, windows-2019, ubuntu-22.04]
     steps:
       # SETUP ENVIRONMENT
       - uses: actions/checkout@v2
@@ -123,6 +123,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      # DEBUG
+      #- name: Setup tmate session
+      #  uses: mxschmitt/action-tmate@v3
       # Build test packages
       - name: Build test package briefcase
         shell: bash -l {0}

@@ -3,6 +3,7 @@
 import shutil
 from pathlib import Path
 
+import briefcase
 from platforms.utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
 
 
@@ -36,6 +37,15 @@ class MacBriefcase(BuilderBase):
         # TODO:  Unable to code sign /Users/runner/work/normcap/normcap/macOS/app/NormCap/NormCap.app.
         # https://github.com/dynobo/normcap/actions/runs/3176285160/jobs/5175406602
         self.run(cmd="briefcase package macos app --no-sign", cwd=self.PROJECT_PATH)
+
+    def patch_briefcase_macos_verbosity(self):
+        """Insert code into briefcase macos code to increase verbosity."""
+        file_path = (
+            Path(briefcase.__file__).parent / "platforms" / "macOS" / "__init__.py"
+        )
+        insert_after = '"--force",'
+        patch = '"--verbose",'
+        self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
     def bundle_tesseract(self):  # noqa: D102
         print("Bundling tesseract libs...")
@@ -92,5 +102,6 @@ class MacBriefcase(BuilderBase):
     def create(self):  # noqa: D102
         self.download_tessdata()
         self.install_system_deps()
+        # self.patch_briefcase_macos_verbosity()
         self.run_framework()
         self.rename_package_file()
