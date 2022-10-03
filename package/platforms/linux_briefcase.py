@@ -47,7 +47,7 @@ rm_recursive(directory=lib_dir / "PySide6", exclude={BRIEFCASE_EXCLUDES["pyside6
         file_path = Path(briefcase.__file__).parent / "commands" / "create.py"
         patch = f"""
 {def_build_wl_clipboard}
-build_wl_clipboard(self, app_packages_path)
+build_wl_clipboard(self, app)
 """
         insert_after = "        # Install dependencies"
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)

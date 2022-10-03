@@ -30,9 +30,11 @@ class MacBriefcase(BuilderBase):
         )
         self.bundle_tesseract()
 
-        self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
+        self.run(cmd="briefcase build --verbosity", cwd=self.PROJECT_PATH)
         # TODO: Re-enable if we have a solution for unfocusing on macOS
-        self.patch_info_plist_for_proper_fullscreen()
+        # self.patch_info_plist_for_proper_fullscreen()
+        # TODO:  Unable to code sign /Users/runner/work/normcap/normcap/macOS/app/NormCap/NormCap.app.
+        # https://github.com/dynobo/normcap/actions/runs/3176285160/jobs/5175406602
         self.run(cmd="briefcase package macos app --no-sign", cwd=self.PROJECT_PATH)
 
     def bundle_tesseract(self):  # noqa: D102
