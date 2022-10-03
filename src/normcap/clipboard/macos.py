@@ -1,6 +1,7 @@
 import logging
 import shutil
 import subprocess
+from typing import Callable
 
 from normcap.clipboard import qt
 
@@ -18,7 +19,7 @@ def pbcopy(text):
     )
 
 
-def get_copy():
+def get_copy_func() -> Callable:
     if shutil.which("pbcopy") is not None:
         logger.debug("Use pbcopy to copy to clipboard.")
         return pbcopy

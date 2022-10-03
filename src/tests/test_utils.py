@@ -69,7 +69,6 @@ def test_set_environ_for_briefcase_not_packaged(monkeypatch, os_str):
 
 @pytest.mark.parametrize("os_str", ("darwin", "linux", "win32"))
 def test_set_environ_for_briefcase_is_packaged(monkeypatch, os_str):
-
     monkeypatch.setattr(metadata, "metadata", lambda _: ["Briefcase-Version"])
     monkeypatch.setattr(utils.sys, "platform", os_str)
     monkeypatch.setattr(utils.sys.modules["__main__"], "__package__", "normcap")
@@ -84,3 +83,12 @@ def test_set_environ_for_briefcase_is_packaged(monkeypatch, os_str):
         assert os.environ.get("TESSERACT_VERSION")
     else:
         assert os.environ.get("TESSERACT_CMD").endswith("tesseract")
+
+
+def test_set_environ_for_briefcase_unsupported_platform(monkeypatch):
+    monkeypatch.setattr(metadata, "metadata", lambda _: ["Briefcase-Version"])
+    monkeypatch.setattr(utils.sys, "platform", "cygwin")
+    monkeypatch.setattr(utils.sys.modules["__main__"], "__package__", "normcap")
+
+    with pytest.raises(RuntimeError, match="Unsupported platform"):
+        utils.set_environ_for_prebuild_package()

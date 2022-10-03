@@ -121,30 +121,32 @@ def macos_reset_screenshot_permission():
     """Use tccutil to reset permissions for current application."""
     logger.info("Reset screen recording permissions for eu.dynobo.normcap")
     cmd = ["tccutil", "reset", "ScreenCapture", "eu.dynobo.normcap"]
-    completed_proc = subprocess.run(
-        cmd,
-        shell=False,
-        encoding="utf-8",
-        check=False,
-        timeout=10,
-    )
-    if completed_proc.returncode != 0:
-        logger.error(
-            "Failed resetting screen recording permissions: %s %s",
-            completed_proc.stdout,
-            completed_proc.stderr,
+    try:
+        completed_proc = subprocess.run(
+            cmd,
+            shell=False,
+            encoding="utf-8",
+            check=False,
+            timeout=10,
         )
+        if completed_proc.returncode != 0:
+            logger.error(
+                "Failed resetting screen recording permissions: %s %s",
+                completed_proc.stdout,
+                completed_proc.stderr,
+            )
+    except Exception as e:  # pylint: disable=broad-except
+        logger.error("Couldn't reset screen recording permissions: %s", e)
 
 
 def has_screenshot_permission() -> bool:
     if sys.platform == "darwin":
         return _macos_has_screenshot_permission()
-    elif sys.platform == "linux":
+    if sys.platform == "linux":
         return True
-    elif sys.platform == "win32":
+    if sys.platform == "win32":
         return True
-    else:
-        raise RuntimeError("Unknonw platform")
+    raise RuntimeError("Unknown platform")
 
 
 def _macos_has_screenshot_permission() -> bool:
@@ -174,7 +176,7 @@ def macos_request_screenshot_permission():
         logger.debug("Request screen recording access")
         CG.CGRequestScreenCaptureAccess()
     except Exception as e:  # pylint: disable=broad-except
-        logger.warning("Couldn't detect screen recording permission: %s", e)
+        logger.warning("Couldn't request screen recording permission: %s", e)
 
 
 def macos_open_privacy_settings():
@@ -182,9 +184,14 @@ def macos_open_privacy_settings():
         "x-apple.systempreferences:com.apple.preference.security"
         + "?Privacy_ScreenCapture"
     )
-    subprocess.run(
-        ["open", link_to_preferences],
-        shell=False,
-        check=True,
-        timeout=30,
-    )
+    try:
+        if sys.platform != "darwin":
+            raise RuntimeError(f"Tried opening macOS settings on {sys.platform}")
+        subprocess.run(
+            ["open", link_to_preferences],
+            shell=False,
+            check=True,
+            timeout=30,
+        )
+    except Exception as e:  # pylint: disable=broad-except
+        logger.error("Couldn't open privacy settings: %s", e)

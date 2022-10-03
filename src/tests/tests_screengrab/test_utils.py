@@ -1,3 +1,5 @@
+import logging
+import sys
 from decimal import DivisionByZero
 
 from packaging.version import Version
@@ -140,3 +142,49 @@ def test_get_appropriate_capture_on_non_wayland(monkeypatch):
     monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("41.0"))
     grab_screens = _get_appropriate_capture()
     assert grab_screens == qt.capture
+
+
+def test_macos_has_screenshot_permission(caplog):
+    with caplog.at_level(logging.WARNING):
+        # pylint: disable=protected-access
+        result = utils._macos_has_screenshot_permission()
+
+    if sys.platform == "darwin":
+        assert isinstance(result, bool)
+    else:
+        assert "couldn't detect" in caplog.text.lower()
+        assert result is True
+
+
+def test_macos_request_screenshot_permission(caplog):
+    with caplog.at_level(logging.DEBUG):
+        # pylint: disable=protected-access
+        utils.macos_request_screenshot_permission()
+
+    if sys.platform == "darwin":
+        assert "request screen recording" in caplog.text.lower()
+    else:
+        assert "couldn't request" in caplog.text.lower()
+
+
+def test_macos_reset_screenshot_permission(caplog):
+    with caplog.at_level(logging.ERROR):
+        # pylint: disable=protected-access
+        utils.macos_reset_screenshot_permission()
+
+    if sys.platform == "darwin":
+        assert "couldn't reset" not in caplog.text.lower()
+    else:
+        assert "couldn't reset" in caplog.text.lower()
+
+
+def test_has_screenshot_permission():
+    result = utils.has_screenshot_permission()
+    assert isinstance(result, bool)
+
+
+def test_macos_open_privacy_settings(caplog):
+    with caplog.at_level(logging.ERROR):
+        utils.macos_open_privacy_settings()
+        if sys.platform != "darwin":
+            assert "couldn't open" in caplog.text.lower()

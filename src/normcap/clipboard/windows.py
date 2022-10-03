@@ -1,7 +1,6 @@
 """Mainly taken from PyperClip, https://github.com/asweigart/pyperclip.
 
-Heavily stripped down version of the windows related functionality, very slightly
-modified.
+Heavily stripped down version of the windows related functionality, slightly modified.
 
 A cross-platform clipboard module for Python, with copy & paste functions for plain text.
 By Al Sweigart al@inventwithpython.com
@@ -11,9 +10,10 @@ BSD License
 import contextlib
 import ctypes
 import logging
+import sys
 import time
 from ctypes import c_size_t, c_wchar, c_wchar_p, get_errno, sizeof
-from typing import Any
+from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,10 @@ class CheckedCall:  # noqa: D101
         setattr(self.f, key, value)
 
 
-def init_windows_clipboard():
+def _windll_copy(text):
+    if sys.platform != "win32":
+        raise RuntimeError("Windows clipboard only available on Windows OS.")
+
     from ctypes.wintypes import (
         BOOL,
         DWORD,
@@ -178,9 +181,9 @@ def init_windows_clipboard():
                     safeGlobalUnlock(handle)
                     safeSetClipboardData(CF_UNICODETEXT, handle)
 
-    return copy_windows
+    copy_windows(text)
 
 
-def get_copy():
+def get_copy_func() -> Callable:
     logger.debug("Use windll to copy to clipboard.")
-    return init_windows_clipboard()
+    return _windll_copy

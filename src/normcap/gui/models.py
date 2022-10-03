@@ -25,6 +25,11 @@ class Urls:
     faqs: str
     xcb_error: str
 
+    @property
+    def releases_atom(self):
+        """URL to github releases rss feed."""
+        return f"{self.releases}.atom"
+
 
 @enum.unique
 class DesktopEnvironment(enum.IntEnum):
