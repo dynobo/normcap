@@ -3,8 +3,8 @@
 ## v0.3.13 (unreleased)
 
 - macOS: Check for required screen recording permissions and warn if missing.
-- macOS: Work around screen recording permissions not recognized after installation of
-  new NormCap version by resetting the permissions with every new NormCap version.
+- macOS: Work around failing screen recording permissions after installation of new
+  NormCap version by resetting the permissions with every new NormCap version.
 
 ## v0.3.12 (2022-09-15)
 
