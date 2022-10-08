@@ -24,18 +24,16 @@ logger = logging.getLogger(__name__)
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
-    on_tray_menu_capture = QtCore.Signal()
+    on_tray_menu_capture_clicked = QtCore.Signal()
     on_quit = QtCore.Signal()
     on_ocr_performed = QtCore.Signal()
     on_copied_to_clipboard = QtCore.Signal()
     on_send_notification = QtCore.Signal(Capture)
     on_window_positioned = QtCore.Signal()
     on_open_url_and_hide = QtCore.Signal(str)
-    on_set_cursor_wait = QtCore.Signal()
     on_close_or_exit = QtCore.Signal(str)
     on_region_selected = QtCore.Signal(Rect)
     on_image_cropped = QtCore.Signal()
-    on_minimize_windows = QtCore.Signal()
     on_screenshots_updated = QtCore.Signal()
 
 
@@ -119,7 +117,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _set_signals(self):
         """Set up signals to trigger program logic."""
-        self.com.on_tray_menu_capture.connect(self._delayed_update_screenshots)
+        self.com.on_tray_menu_capture_clicked.connect(self._delayed_update_screenshots)
         self.com.on_screenshots_updated.connect(self._show_windows)
         self.com.on_quit.connect(lambda: self._exit_application("clicked exit in tray"))
         self.com.on_region_selected.connect(self._close_windows)
@@ -129,10 +127,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_copied_to_clipboard.connect(self._notify_or_close)
         self.com.on_copied_to_clipboard.connect(self._color_tray_icon)
 
-        self.com.on_minimize_windows.connect(self._close_windows)
-        self.com.on_set_cursor_wait.connect(
-            lambda: utils.set_cursor(QtCore.Qt.WaitCursor)
-        )
         self.com.on_close_or_exit.connect(self._close_or_exit)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
 
@@ -177,7 +171,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         menu = QtWidgets.QMenu()
 
         action = QtGui.QAction("Capture", menu)
-        action.triggered.connect(self.com.on_tray_menu_capture.emit)
+        action.triggered.connect(self.com.on_tray_menu_capture_clicked.emit)
         menu.addAction(action)
 
         action = QtGui.QAction("Exit", menu)

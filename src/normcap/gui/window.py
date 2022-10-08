@@ -155,7 +155,6 @@ class Window(QtWidgets.QMainWindow):
         if (event.button() == QtCore.Qt.LeftButton) and self.is_selecting:
             self.selection.end_y = event.position().y()
             self.selection.end_x = event.position().x()
-            self.tray.com.on_set_cursor_wait.emit()
             self.tray.com.on_region_selected.emit(
                 (self.selection.scaled_rect, self.screen_idx)
             )
