@@ -61,7 +61,7 @@ def test_set_environ_for_briefcase_not_packaged(monkeypatch, os_str):
     tesseract_cmd = os.environ.get("TESSERACT_CMD", None)
     tesseract_version = os.environ.get("TESSERACT_VERSION", None)
 
-    utils.set_environ_for_prebuild_package()  # pylint: disable=protected-access
+    utils.set_environ_for_prebuild_package()
 
     assert tesseract_cmd == os.environ.get("TESSERACT_CMD", None)
     assert tesseract_version == os.environ.get("TESSERACT_VERSION", None)

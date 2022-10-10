@@ -1,7 +1,6 @@
 """Main application entry point."""
 import locale
 import logging
-import os
 import signal
 import sys
 
@@ -17,9 +16,8 @@ from normcap.utils import (
     create_argparser,
     init_logger,
     set_environ_for_prebuild_package,
+    set_environ_for_wayland,
 )
-
-set_environ_for_prebuild_package()
 
 
 def main():
@@ -35,19 +33,14 @@ def main():
     logger = logging.getLogger("normcap")
     logger.info("Start NormCap v%s", __version__)
 
-    if system_info.display_manager_is_wayland():
-        # QT has 32 as default cursor size on wayland, while it should be 24
-        if "XCURSOR_SIZE" not in os.environ:
-            logger.debug("Set XCURSOR_SIZE=24")
-            os.environ["XCURSOR_SIZE"] = "24"
-        # Select wayland extension for better rendering
-        if "QT_QPA_PLATFORM" not in os.environ:
-            logger.debug("Set QT_QPA_PLATFORM=wayland")
-            os.environ["QT_QPA_PLATFORM"] = "wayland"
-
     # Wrap QT logging output
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
+    # Prepare environment
+    if system_info.is_prebuild_package():
+        set_environ_for_prebuild_package()
+    if system_info.display_manager_is_wayland():
+        set_environ_for_wayland()
     if system_info.is_prebuild_package() or system_info.is_flatpak_package():
         utils.copy_tessdata_files_to_config_dir()
 

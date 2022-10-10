@@ -41,19 +41,31 @@ def create_argparser() -> argparse.ArgumentParser:
     return parser
 
 
+def set_environ_for_wayland():
+    # QT has 32 as default cursor size on wayland, while it should be 24
+    if "XCURSOR_SIZE" not in os.environ:
+        logger.debug("Set XCURSOR_SIZE=24")
+        os.environ["XCURSOR_SIZE"] = "24"
+
+    # Select wayland extension for better rendering
+    if "QT_QPA_PLATFORM" not in os.environ:
+        logger.debug("Set QT_QPA_PLATFORM=wayland")
+        os.environ["QT_QPA_PLATFORM"] = "wayland"
+
+
 # Some overrides when running in prebuild package
 def set_environ_for_prebuild_package():
 
     package = system_info.is_prebuild_package()
 
-    if package is None:
+    if package not in ["nuitka", "briefcase"]:
         return
 
     if sys.platform == "linux":
-        # resources are currently not resolved on linux by nuitka:
-        # https://github.com/Nuitka/Nuitka/issues/1451
-        # Workround with using __file__
         if package == "nuitka":
+            # resources are currently not resolved on linux by nuitka:
+            # https://github.com/Nuitka/Nuitka/issues/1451
+            # Workround with using __file__
             tesseract_path = system_info.get_resources_path() / "tesseract"
             tesseract_bin = tesseract_path / "tesseract"
             ld_library_path = (
@@ -97,8 +109,8 @@ def init_logger(level: str = "WARNING"):
         # Starting with briefcase 0.3.9, the windows build gets somehow wrapped in a
         # small binary that captures all output. As a workaround, let's write it a file
         # in the package directory instead.
-        # Additional, the command line args do not seem to work. There run in INFO mode
-        # all the time.
+        # Additional, the command line args do not seem to work, therefor set logging
+        # to verbose all the time.
         log_path = os.path.expandvars(
             "%LOCALAPPDATA%\\dynobo\\NormCap\\logs\\normacap-debug.log"
         )
