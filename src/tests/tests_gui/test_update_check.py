@@ -8,7 +8,9 @@ from normcap.gui import update_check
 def test_update_checker_new_version(monkeypatch, qtbot, packaged):
     monkeypatch.setattr(update_check, "__version__", "0.0.0")
     checker = update_check.UpdateChecker(None, packaged=packaged)
-    with qtbot.waitSignal(checker.com.on_version_retrieved, timeout=4000) as result:
+    monkeypatch.setattr(checker, "show_update_message", lambda args: ...)
+
+    with qtbot.waitSignal(checker.com.on_new_version_found, timeout=4000) as result:
         checker.check()
     version = result.args[0]
 
@@ -23,8 +25,10 @@ def test_update_checker_new_version(monkeypatch, qtbot, packaged):
 def test_update_checker_no_new_version(monkeypatch, qtbot, packaged):
     monkeypatch.setattr(update_check, "__version__", "9.9.9")
     checker = update_check.UpdateChecker(None, packaged=packaged)
+    monkeypatch.setattr(checker, "show_update_message", lambda args: ...)
+
     with qtbot.waitSignal(
-        checker.com.on_version_retrieved, raising=False, timeout=4000
+        checker.com.on_new_version_found, raising=False, timeout=4000
     ) as result:
         checker.check()
     assert not result.signal_triggered
@@ -35,11 +39,12 @@ def test_update_checker_no_new_version(monkeypatch, qtbot, packaged):
     "packaged,text",
     [(True, "abc"), (False, '{"no relevant":"info"}'), (False, '{"invalid":"json"')],
 )
-def test_update_checker_cant_parse(caplog, packaged, text):
+def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
     checker = update_check.UpdateChecker(None, packaged=packaged)
+    with qtbot.waitSignal(
+        checker.com.on_version_parsed, raising=False, timeout=4000
+    ) as result:
+        checker.parse_response_to_version(text)
 
-    # pylint: disable=protected-access
-    version = checker._parse_response_to_version(text)
-
-    assert version is None
+    assert not result.signal_triggered
     assert "ERROR" in caplog.text

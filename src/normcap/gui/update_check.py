@@ -2,7 +2,6 @@
 import json
 import logging
 import re
-from typing import Optional
 
 from packaging import version
 from PySide6 import QtCore, QtWidgets
@@ -18,7 +17,8 @@ logger = logging.getLogger(__name__)
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
-    on_version_retrieved = QtCore.Signal(str)
+    on_version_parsed = QtCore.Signal(str)
+    on_new_version_found = QtCore.Signal(str)
     on_click_get_new_version = QtCore.Signal(str)
 
 
@@ -30,19 +30,12 @@ class UpdateChecker(QtCore.QObject):
         self.packaged = packaged
         self.com = Communicate()
         self.downloader = Downloader()
-        self.downloader.com.on_download_finished.connect(self._check_if_new)
+        self.downloader.com.on_download_finished.connect(self.parse_response_to_version)
+        self.com.on_version_parsed.connect(self.check_if_version_is_new)
+        self.com.on_new_version_found.connect(self.show_update_message)
         self.message_box = self._create_message_box()
 
-    def _check_if_new(self, text: str):
-        """Check if retrieved version is new."""
-        if newest_version := self._parse_response_to_version(text):
-            logger.debug(
-                "Newest version: %s (installed: %s)", newest_version, __version__
-            )
-            if version.parse(newest_version) > version.parse(__version__):
-                self.com.on_version_retrieved.emit(newest_version)
-
-    def _parse_response_to_version(self, text: str) -> Optional[str]:
+    def parse_response_to_version(self, text: str):
         """Parse the tag version from the response and emit version retrieved signal."""
         newest_version = None
 
@@ -54,13 +47,13 @@ class UpdateChecker(QtCore.QObject):
             else:
                 data = json.loads(text)
                 newest_version = data["info"]["version"].strip()
-        except Exception:  # pylint: disable=broad-except
-            logger.exception("Couldn't parse update check response")
+        except Exception as e:  # pylint: disable=broad-except
+            logger.exception("Parsing response of update check failed: %s", e)
 
-        if not newest_version:
-            logger.error("Couldn't parse newest version! Update check won't work!")
-
-        return newest_version
+        if newest_version:
+            self.com.on_version_parsed.emit(newest_version)
+        else:
+            logger.error("Couldn't detect remote version. Update check won't work!")
 
     def check(self):
         """Start the update check."""
@@ -81,6 +74,15 @@ class UpdateChecker(QtCore.QObject):
         )
         message_box.setDefaultButton(QtWidgets.QMessageBox.Ok)
         return message_box
+
+    def check_if_version_is_new(self, newest_version):
+        """Show dialog informing about available update."""
+        if newest_version:
+            logger.debug(
+                "Newest version: %s (installed: %s)", newest_version, __version__
+            )
+            if version.parse(newest_version) > version.parse(__version__):
+                self.com.on_new_version_found.emit(newest_version)
 
     def show_update_message(self, new_version):
         """Show dialog informing about available update."""

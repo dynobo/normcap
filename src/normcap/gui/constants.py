@@ -66,6 +66,15 @@ DEFAULT_SETTINGS = (
         choices=None,
         cli_arg=False,
     ),
+    Setting(
+        key="last-update-check",
+        flag="d",
+        type_=str,
+        value="0",
+        help="Date of last successful update check in format yyyy-mm-dd",
+        choices=None,
+        cli_arg=False,
+    ),
 )
 
 URLS = Urls(
@@ -89,3 +98,5 @@ MESSAGE_LANGUAGES = (
     "Please refer to the documentation of Tesseract for your "
     "operating system on how to install additional languages."
 )
+
+UPDATE_CHECK_INTERVAL_DAYS = 7
