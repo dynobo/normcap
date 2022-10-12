@@ -1,4 +1,5 @@
 """Create system tray and its menu."""
+import datetime
 import io
 import logging
 import os
@@ -12,6 +13,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import system_info, utils
+from normcap.gui.constants import UPDATE_CHECK_INTERVAL_DAYS
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.notifier import Notifier
 from normcap.gui.settings import Settings
@@ -131,11 +133,23 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
 
     def _add_update_checker(self):
-        if self.settings.value("update", type=bool):
-            checker = UpdateChecker(self, packaged=system_info.is_prebuild_package())
-            checker.com.on_version_retrieved.connect(checker.show_update_message)
-            checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
-            QtCore.QTimer.singleShot(500, checker.check)
+        if self.settings.value("update", type=bool) is False:
+            return
+
+        interval = datetime.timedelta(days=UPDATE_CHECK_INTERVAL_DAYS)
+        today_minus_interval = f"{datetime.datetime.now() - interval:%Y-%m-%d}"
+        if self.settings.value("last-update-check", type=str) > today_minus_interval:
+            return
+
+        checker = UpdateChecker(self, packaged=system_info.is_prebuild_package())
+        checker.com.on_version_parsed.connect(self._update_time_of_last_update_check)
+        checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
+        QtCore.QTimer.singleShot(500, checker.check)
+
+    def _update_time_of_last_update_check(self, newest_version):
+        if newest_version is not None:
+            today = f"{datetime.datetime.now():%Y-%m-%d}"
+            self.settings.setValue("last-update-check", today)
 
     def _add_notifier(self):
         self.notifier = Notifier(self)

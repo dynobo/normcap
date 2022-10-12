@@ -42,7 +42,7 @@ def test_argparser_attributes_in_settings(argparser_defaults):
 def test_settings_in_argparser_attributes(argparser_defaults):
     settings = Settings("normcap", "settings", init_settings={})
     for key in settings.allKeys():
-        if key in ["version"]:
+        if key in ["version", "last-update-check"]:
             continue
         assert key in argparser_defaults
 
