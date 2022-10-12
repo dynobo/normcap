@@ -5,6 +5,7 @@
 - All: Reduce interval for (optional) update check to 7 days instead on every run to
   saves startup-time.
 - macOS: Check for required screen recording permissions and warn if missing.
+- macOS: Fix issue where NormCap process keeps running in background after exit.
 - macOS: Work around failing screen recording permissions after installation of new
   NormCap version by resetting the permissions with every new NormCap version.
 

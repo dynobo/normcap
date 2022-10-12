@@ -333,5 +333,5 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         logger.debug("Path to debug images: %s%snormcap", tempfile.gettempdir(), os.sep)
         logger.info("Exit normcap (reason: %s)", reason)
         # The preferable QApplication.quit() doesn't work reliably on macOS. E.g. when
-        # right clicking on "close" in tray menu, NormCap process keeps running. 
+        # right clicking on "close" in tray menu, NormCap process keeps running.
         sys.exit(0)
