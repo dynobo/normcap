@@ -29,8 +29,10 @@ wix/
 *.msi
 *.AppImage
 *.zip
+*.dmg
 linux/
 windows/
+macOS/
 src/normcap/resources/openssl
 
 ### Python ###
