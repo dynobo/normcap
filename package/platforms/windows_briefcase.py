@@ -25,6 +25,8 @@ class WindowsBriefcase(BuilderBase):
 
     def download_openssl(self):
         """Download openssl needed for QNetwork https connections."""
+        # For mirrors see: https://wiki.openssl.org/index.php/Binaries
+        # OPENSSL_URL = "http://mirror.firedaemon.com/OpenSSL/openssl-1.1.1q.zip"
         OPENSSL_URL = "http://wiki.overbyte.eu/arch/openssl-1.1.1q-win64.zip"
         print(f"Downloading Openssl from {OPENSSL_URL}...")
         target_path = self.PROJECT_PATH / "src" / "normcap" / "resources" / "openssl"
