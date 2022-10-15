@@ -107,13 +107,13 @@ jobs:
       - name: Pytest
         run: |
           poetry run pytest -vv -m "not skip_on_gh" --cov --cov-report=xml
-      - name: Coveralls
-        if:
-          ${{ matrix.os  == 'ubuntu-22.04' && github.repository ==
-          'dynobo/normcap' }}
-        run: poetry run coveralls
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: run-${{ matrix.os }}
+          parallel: true
 
       - name: SonarCloud
         if:
@@ -154,6 +154,16 @@ jobs:
           prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: "internal"
+
+  post-test:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
 
   build-python:
     name: Build Python package & publish release
