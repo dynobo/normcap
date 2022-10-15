@@ -25,11 +25,11 @@ normcap = "normcap.app:main"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"
-PySide6-Essentials = "^6.3.1"
+PySide6-Essentials = "^6.4.0"
 jeepney = ">=0.8"
 pytesseract = ">=0.3.10"
 packaging = ">=21.3"
-certifi = "^2022.6.15"
+certifi = "^2022.9.24"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=22.3.0"

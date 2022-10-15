@@ -50,7 +50,7 @@ def qt_log_wrapper(mode, _, message):
     Used to hide away unnecessary warnings by showing them only on higher
     log level (--verbosity debug).
     """
-    level = mode.name.decode("utf8").lower()
+    level = mode.name.lower()
     msg = message.lower()
     if (level == "qtfatalmsg") or ("could not load the qt platform" in msg):
         logger.error("[QT] %s - %s", level, msg)

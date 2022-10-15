@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.13 (2022-10-13)
+## v0.3.13 (2022-10-15)
 
 - All: Reduce interval for (optional) update check to 7 days instead on every run to
   saves startup-time.

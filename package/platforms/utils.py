@@ -250,6 +250,7 @@ def bundle_tesseract_windows(builder: BuilderBase):
         print("Tesseract.exe already present. Skipping download.")
         return
 
+    print("Downloading tesseract.zip...")
     url = (
         "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
     )

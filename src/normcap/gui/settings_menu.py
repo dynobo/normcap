@@ -78,19 +78,19 @@ class SettingsMenu(QtWidgets.QToolButton):
         self.setObjectName("settings_icon")
         self.settings = settings
 
-        self.setCursor(QtCore.Qt.ArrowCursor)
+        self.setCursor(QtCore.Qt.CursorShape.ArrowCursor)
         self.setFixedSize(38, 38)
-        self.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
 
         self.setIcon(get_icon("settings.svg"))
         self.setIconSize(QtCore.QSize(26, 26))
-        self.setPopupMode(QtWidgets.QToolButton.InstantPopup)
+        self.setPopupMode(QtWidgets.QToolButton.ToolButtonPopupMode.InstantPopup)
         self.setAutoRaise(True)
 
         self.message_box = QtWidgets.QMessageBox()
         self.message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
         # Necessary on wayland for main window to regain focus:
-        self.message_box.setWindowFlags(QtCore.Qt.Popup)
+        self.message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
         self._add_menu()
 
