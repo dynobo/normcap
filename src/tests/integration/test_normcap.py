@@ -1,5 +1,4 @@
 import logging
-import time
 from pathlib import Path
 
 import Levenshtein
@@ -57,6 +56,3 @@ def test_app(monkeypatch, qapp, qtbot, data):
 
     assert capture.ocr_applied_magic == data["ocr_applied_magic"], capture.ocr_text
     assert similarity >= 0.98, f"{capture.ocr_text=}"
-
-    tray.com.on_quit.emit()
-    time.sleep(0.5)
