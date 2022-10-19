@@ -180,7 +180,8 @@ jobs:
           poetry-version: "1.2.2"
       - name: Poetry publish
         run: |
-          poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+          echo "skip"
+      # poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
 
   build-packages:
     name: Build prebuild packages & draft release
@@ -198,7 +199,7 @@ jobs:
           python-version: "3.10"
       - uses: abatilo/actions-poetry@v2.1.6
         with:
-          poetry-version: "1.2.1"
+          poetry-version: "1.2.2"
       - name: Install dependencies
         shell: bash -l {0}
         run: poetry install
