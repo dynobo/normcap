@@ -180,8 +180,7 @@ jobs:
           poetry-version: "1.2.2"
       - name: Poetry publish
         run: |
-          echo "skip"
-      # poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+          poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
 
   build-packages:
     name: Build prebuild packages & draft release
