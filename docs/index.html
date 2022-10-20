@@ -640,6 +640,16 @@ libxcb-util1/hirsute 0.4.0-1 i386</code></pre>
             system tray, proceed like in the question above.
           </p>
         </details>
+        <details id="faqs-appimage-needs-fuse">
+          <summary>[Linux] AppImages require FUSE to run</summary>
+          <p>
+            This is not a NormCap issue but a requirement for AppImages. You need to
+            make sure, that the <code>FUSE</code> library is installed on your system.
+            E.g. on Ubuntu 22.04 you need to run <code>sudo apt install libfuse2</code>.
+            See <a href="https://techpiezo.com/linux/error-appimages-require-fuse-to-run-in-ubuntu-22-04/">
+            this blog post for details</a>.
+          </p>
+        </details>
         <details id="faqs-macos-empty-desktop">
           <summary>[macOS] When NormCap is started, an empty desktop shows up</summary>
           <p>This issue ususally occures on the after installing NormCap, either
