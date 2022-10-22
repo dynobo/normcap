@@ -7,7 +7,7 @@
 [![Build passing](https://github.com/dynobo/normcap/workflows/Build/badge.svg)](https://github.com/dynobo/normcap/releases)
 [![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Code style: black](https://img.shields.io/badge/Code%20style-black-%23000000)](https://github.com/psf/black)
-[![Coverage Status](https://coveralls.io/repos/github/dynobo/normcap/badge.svg)](https://coveralls.io/github/dynobo/normcap)
+[![Coverage Status](https://coveralls.io/repos/github/dynobo/normcap/badge.svg?branch=main)](https://coveralls.io/github/dynobo/normcap)
 
 **Links:** [Repo](https://github.com/dynobo/normcap) |
 [PyPi](https://pypi.org/project/normcap) |
