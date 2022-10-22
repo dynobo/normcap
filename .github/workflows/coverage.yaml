@@ -1,0 +1,102 @@
+name: "coverage.io"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: cicd-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    name: Run pytests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-11, windows-2019, ubuntu-22.04]
+    steps:
+      # SETUP ENVIRONMENT
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - uses: abatilo/actions-poetry@v2.1.6
+        with:
+          poetry-version: "1.2.2"
+      - name: Prepare Linux
+        if: ${{ matrix.os  == 'ubuntu-22.04' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            python3-pil \
+            tesseract-ocr \
+            tesseract-ocr-eng \
+            tesseract-ocr-jpn \
+            tesseract-ocr-chi-sim
+          sudo apt-get install \
+            xvfb \
+            libxkbcommon-x11-0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-xinerama0 \
+            libxcb-xfixes0 \
+            libxcb-shape0 \
+            libegl1 \
+            libegl1-mesa
+          echo "XDG_SESSION_TYPE=gnome" >> $GITHUB_ENV
+
+      - name: Prepare macOS
+        if: ${{ matrix.os  == 'macos-11' }}
+        run: |
+          brew install pkg-config tesseract tesseract-lang dylibbundler
+          brew info tesseract
+          "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
+
+      - name: Prepare Windows
+        if: ${{ matrix.os  == 'windows-2019' }}
+        run: |
+          $url = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.1.20220118.exe"
+          Invoke-WebRequest -Uri $url -OutFile "tesseract_installer.exe"
+          7z x tesseract_installer.exe -O"C:\Program Files\Tesseract-OCR"
+          $tesseract = "C:\Program Files\Tesseract-OCR\"
+          echo "$tesseract" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "TESSDATA_PREFIX=$tesseract" >> $env:GITHUB_ENV
+          Set-DisplayResolution -Width 1920 -Height 1080 -Force
+
+      - name: Test tesseract
+        run: |
+          tesseract --version
+          tesseract --list-langs
+
+      - name: Poetry install
+        run: poetry install
+
+      # PERFORM TESTS
+      - name: Pytest
+        run: |
+          poetry run pytest -vv -m "not skip_on_gh" --cov --cov-report=xml
+          poetry run coverage lcov
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: ${{ matrix.os }}
+          path-to-lcov: coverage.lcov
+          parallel: true
+
+  coveralls-upload:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
