@@ -92,7 +92,7 @@ jobs:
           parallel: true
 
   coveralls-upload:
-    needs: test
+    needs: pytest
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
