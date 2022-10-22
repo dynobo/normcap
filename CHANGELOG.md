@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.14 (unreleased)
+
+- All: Add `--version` command line flag to easily print NormCap version.
+
 ## v0.3.13 (2022-10-19)
 
 - All: Reduce interval for (optional) update check to 7 days instead on every run to

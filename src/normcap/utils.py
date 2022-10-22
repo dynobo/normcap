@@ -27,7 +27,7 @@ def create_argparser() -> argparse.ArgumentParser:
         "-r",
         "--reset",
         action="store_true",
-        help="reset all settings to default values",
+        help="Reset all settings to default values",
         default=False,
     )
     parser.add_argument(
@@ -36,7 +36,12 @@ def create_argparser() -> argparse.ArgumentParser:
         default="warning",
         action="store",
         choices=["error", "warning", "info", "debug"],
-        help="set level of detail for console output (default: %(default)s)",
+        help="Set level of detail for console output (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        help="Print NormCap version and exit",
     )
     return parser
 

@@ -28,6 +28,9 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     args = create_argparser().parse_args()
+    if args.version:
+        print(f"NormCap {__version__}")
+        sys.exit(0)
 
     init_logger(level=args.verbosity.upper())
     logger = logging.getLogger("normcap")

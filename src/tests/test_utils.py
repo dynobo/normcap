@@ -18,6 +18,7 @@ def test_argparser_defaults_are_complete(argparser_defaults):
         "tray",
         "update",
         "verbosity",
+        "version",
     }
 
     assert args_keys == expected_options
@@ -49,6 +50,7 @@ def test_settings_in_argparser_attributes(argparser_defaults):
 
 def test_argparser_defaults_are_correct(argparser_defaults):
     assert argparser_defaults.pop("reset") is False
+    assert argparser_defaults.pop("version") is False
     assert argparser_defaults.pop("verbosity") == "warning"
     for value in argparser_defaults.values():
         assert value is None
