@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [main]
 
-concurrency:
-  group: cicd-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   pytest:
     name: Run pytests
