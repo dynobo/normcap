@@ -36,7 +36,9 @@ def test_app(monkeypatch, qapp, qtbot, data):
         pytest.xfail("Skipped due to wrong screen resolution.")
 
     image = Path(__file__).parent / "testcases" / data["image"]
-    monkeypatch.setattr(normcap.gui.tray.screengrab, "capture", _load_test_image(image))
+    monkeypatch.setattr(
+        normcap.gui.tray.screengrab, "get_capture_func", lambda: _load_test_image(image)
+    )
     args = create_argparser().parse_args(
         ["--language=eng", "--mode=parse", "--tray=True"]
     )

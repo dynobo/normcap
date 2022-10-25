@@ -24,12 +24,12 @@ class Window(QtWidgets.QMainWindow):
     settings_menu: Optional[QtWidgets.QToolButton] = None
     ui_layer_css: str = ""
 
-    def __init__(self, screen_idx: int, color: str, parent=None):
+    def __init__(self, screen_idx: int, color: str, parent: QtWidgets.QSystemTrayIcon):
         """Initialize window."""
         super().__init__()
         self.screen_idx: int = screen_idx
         self.color: QtGui.QColor = QtGui.QColor(color)
-        self.tray: QtWidgets.QMainWindow = parent or self
+        self.tray: QtWidgets.QSystemTrayIcon = parent
         self.ui_layer_css = f"#ui_layer {{border: 3px solid {self.color.name()};}}"
         self.is_positioned: bool = False
         self.draw_debug_infos: bool = False

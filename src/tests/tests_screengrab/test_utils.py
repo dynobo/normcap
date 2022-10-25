@@ -4,13 +4,7 @@ from decimal import DivisionByZero
 
 from packaging.version import Version
 
-from normcap.screengrab import (
-    _get_appropriate_capture,
-    dbus_portal,
-    dbus_shell,
-    qt,
-    utils,
-)
+from normcap.screengrab import dbus_portal, dbus_shell, get_capture_func, qt, utils
 
 
 def test_display_manager_is_wayland_on_windows(monkeypatch):
@@ -118,29 +112,29 @@ def test_get_appropriate_capture_on_wayland(monkeypatch):
 
     monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
     monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("40.3"))
-    capture = _get_appropriate_capture()
+    capture = get_capture_func()
     assert capture == dbus_shell.capture
 
     monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
     monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("41.0"))
-    capture = _get_appropriate_capture()
+    capture = get_capture_func()
     assert capture == dbus_portal.capture
 
     monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
     monkeypatch.setattr(utils, "get_gnome_version", lambda: None)
-    capture = _get_appropriate_capture()
+    capture = get_capture_func()
     assert capture == dbus_portal.capture
 
 
 def test_get_appropriate_capture_on_non_wayland(monkeypatch):
     monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: False)
     monkeypatch.setattr(utils, "get_gnome_version", lambda: None)
-    capture = _get_appropriate_capture()
+    capture = get_capture_func()
     assert capture == qt.capture
 
     monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: False)
     monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("41.0"))
-    grab_screens = _get_appropriate_capture()
+    grab_screens = get_capture_func()
     assert grab_screens == qt.capture
 
 

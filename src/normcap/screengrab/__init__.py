@@ -1,4 +1,5 @@
 import sys
+from typing import Callable
 
 from normcap.screengrab import utils
 from normcap.screengrab.utils import (
@@ -9,22 +10,18 @@ from normcap.screengrab.utils import (
 )
 
 
-def _get_appropriate_capture():
-    platform_module = None
-
+def get_capture_func() -> Callable:
     # pylint: disable=import-outside-toplevel
+    # fmt: off
     if sys.platform != "linux" or not utils.has_wayland_display_manager():
-        import normcap.screengrab.qt as platform_module
-    elif utils.has_dbus_portal_support():
-        import normcap.screengrab.dbus_portal as platform_module
-    else:
-        import normcap.screengrab.dbus_shell as platform_module
+        from normcap.screengrab import qt
+        return qt.capture
+
+    if utils.has_dbus_portal_support():
+        from normcap.screengrab import dbus_portal
+        return dbus_portal.capture
+
+    from normcap.screengrab import dbus_shell
+    return dbus_shell.capture
+    # fmt: on
     # pylint: enable=import-outside-toplevel
-
-    if not platform_module:
-        raise RuntimeError("Couldn't load appropiate screen capture method.")
-
-    return platform_module.capture
-
-
-capture = _get_appropriate_capture()
