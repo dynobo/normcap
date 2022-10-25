@@ -39,6 +39,7 @@ class DesktopEnvironment(enum.IntEnum):
     GNOME = 1
     KDE = 2
     SWAY = 3
+    UNITY = 4
 
 
 @enum.unique

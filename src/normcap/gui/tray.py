@@ -160,7 +160,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _update_screenshots(self):
         """Get new screenshots and cache them."""
-        screens = screengrab.capture()
+        capture = screengrab.get_capture_func()
+        screens = capture()
 
         if not screens:
             logger.error("Could not grab screenshots.")

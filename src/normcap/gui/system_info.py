@@ -53,6 +53,8 @@ def desktop_environment() -> DesktopEnvironment:
     XDG_CURRENT_DESKTOP = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
     DESKTOP_SESSION = os.environ.get("DESKTOP_SESSION", "").lower()
     GNOME_DESKTOP_SESSION_ID = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
+    if GNOME_DESKTOP_SESSION_ID == "this-is-deprecated":
+        GNOME_DESKTOP_SESSION_ID = ""
 
     if GNOME_DESKTOP_SESSION_ID != "" or "gnome" in XDG_CURRENT_DESKTOP:
         return DesktopEnvironment.GNOME
@@ -60,6 +62,8 @@ def desktop_environment() -> DesktopEnvironment:
         return DesktopEnvironment.KDE
     if "sway" in XDG_CURRENT_DESKTOP:
         return DesktopEnvironment.SWAY
+    if "unity" in XDG_CURRENT_DESKTOP:
+        return DesktopEnvironment.UNITY
 
     return DesktopEnvironment.OTHER
 

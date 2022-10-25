@@ -11,7 +11,7 @@ from typing import Optional
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.gui import system_info
-from normcap.gui.models import CaptureMode, Selection
+from normcap.gui.models import CaptureMode, DesktopEnvironment, Selection
 from normcap.gui.settings_menu import SettingsMenu
 from normcap.gui.utils import get_icon, move_active_window_to_position
 
@@ -24,12 +24,12 @@ class Window(QtWidgets.QMainWindow):
     settings_menu: Optional[QtWidgets.QToolButton] = None
     ui_layer_css: str = ""
 
-    def __init__(self, screen_idx: int, color: str, parent=None):
+    def __init__(self, screen_idx: int, color: str, parent: QtWidgets.QSystemTrayIcon):
         """Initialize window."""
         super().__init__()
         self.screen_idx: int = screen_idx
         self.color: QtGui.QColor = QtGui.QColor(color)
-        self.tray: QtWidgets.QMainWindow = parent or self
+        self.tray: QtWidgets.QSystemTrayIcon = parent
         self.ui_layer_css = f"#ui_layer {{border: 3px solid {self.color.name()};}}"
         self.is_positioned: bool = False
         self.draw_debug_infos: bool = False
@@ -217,9 +217,19 @@ class Window(QtWidgets.QMainWindow):
 
         screen_geometry = self.tray.screens[self.screen_idx].geometry
         self.move(screen_geometry.left, screen_geometry.top)
-        self.setMinimumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
-        self.setMaximumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
-        self.showFullScreen()
+
+        if system_info.desktop_environment() == DesktopEnvironment.UNITY:
+            # On unity, setting min/max window size breaks fullscreen.
+            # Skip that and show immediately:
+            self.showFullScreen()
+        else:
+            self.setMinimumSize(
+                QtCore.QSize(screen_geometry.width, screen_geometry.height)
+            )
+            self.setMaximumSize(
+                QtCore.QSize(screen_geometry.width, screen_geometry.height)
+            )
+            self.showFullScreen()
 
     def _set_fullscreen_macos(self):
         self.setWindowFlags(

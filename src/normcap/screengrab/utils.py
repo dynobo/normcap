@@ -84,14 +84,18 @@ def _parse_gnome_version_from_xml():
         if result := re.search(r"(?<=<platform>)\d+(?=<\/platform>)", content):
             platform = int(result[0])
         else:
-            raise ValueError
+            raise ValueError("<platform> not found.")
         if result := re.search(r"(?<=<minor>)\d+(?=<\/minor>)", content):
             minor = int(result[0])
         else:
-            raise ValueError
+            raise ValueError("<minor> not found.")
         gnome_version = version.parse(f"{platform}.{minor}")
+    except FileNotFoundError:
+        logger.debug("Couldn't find from gnome-version.xml")
     except Exception as e:  # pylint: disable=broad-except
-        logger.warning("Exception when trying to get gnome version from xml %s", e)
+        logger.warning(
+            "Couldn't parse gnome version from gnome-version.xml", exc_info=e
+        )
 
     return gnome_version
 
