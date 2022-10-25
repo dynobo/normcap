@@ -15,6 +15,7 @@ from normcap.gui.tray import SystemTray
 from normcap.utils import (
     create_argparser,
     init_logger,
+    set_environ_for_flatpak,
     set_environ_for_prebuild_package,
     set_environ_for_wayland,
 )
@@ -44,6 +45,8 @@ def main():
         set_environ_for_prebuild_package()
     if system_info.display_manager_is_wayland():
         set_environ_for_wayland()
+    if system_info.is_flatpak_package():
+        set_environ_for_flatpak()
     if system_info.is_prebuild_package() or system_info.is_flatpak_package():
         utils.copy_tessdata_files_to_config_dir()
 
