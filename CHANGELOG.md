@@ -3,6 +3,10 @@
 ## v0.3.14 (unreleased)
 
 - All: Add `--version` command line flag to easily print NormCap version.
+- Linux: Fix FlatPak crashing when gtk3-nocsd is enabled, e.g. in Unity DE
+  ([#190](https://github.com/dynobo/normcap/issues/190)).
+- Linux: Fix full screen view in Unity DE
+  ([#190](https://github.com/dynobo/normcap/issues/190)).
 
 ## v0.3.13 (2022-10-19)
 

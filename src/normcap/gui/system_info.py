@@ -54,7 +54,7 @@ def desktop_environment() -> DesktopEnvironment:
     DESKTOP_SESSION = os.environ.get("DESKTOP_SESSION", "").lower()
     GNOME_DESKTOP_SESSION_ID = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
     if GNOME_DESKTOP_SESSION_ID == "this-is-deprecated":
-        GNOME_DESKTOP_SESSION_ID=""
+        GNOME_DESKTOP_SESSION_ID = ""
 
     if GNOME_DESKTOP_SESSION_ID != "" or "gnome" in XDG_CURRENT_DESKTOP:
         return DesktopEnvironment.GNOME

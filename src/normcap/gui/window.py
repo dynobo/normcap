@@ -223,10 +223,13 @@ class Window(QtWidgets.QMainWindow):
             # Skip that and show immediately:
             self.showFullScreen()
         else:
-            self.setMinimumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
-            self.setMaximumSize(QtCore.QSize(screen_geometry.width, screen_geometry.height))
+            self.setMinimumSize(
+                QtCore.QSize(screen_geometry.width, screen_geometry.height)
+            )
+            self.setMaximumSize(
+                QtCore.QSize(screen_geometry.width, screen_geometry.height)
+            )
             self.showFullScreen()
-        
 
     def _set_fullscreen_macos(self):
         self.setWindowFlags(
