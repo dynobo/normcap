@@ -3,12 +3,14 @@ from pathlib import Path
 
 import pytest
 from packaging import version
+from PIL import Image
 from PySide6 import QtGui
 
 from normcap.gui.downloader_urllib import Downloader as QtNetworkDownloader
 from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.models import OcrResult, TessArgs
 from normcap.utils import create_argparser
+from normcap.version import Version
 
 
 def pytest_configure(config):
@@ -42,7 +44,7 @@ def ocr_result() -> OcrResult:
         tess_args=TessArgs(
             path=Path(), lang="eng", oem=2, psm=2, version=version.parse("5.0.0")
         ),
-        image=QtGui.QImage(),
+        image=Image.Image(),
         magic_scores={},
         transformed="",
         words=[

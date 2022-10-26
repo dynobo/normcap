@@ -1,5 +1,4 @@
 import os
-import statistics
 from dataclasses import dataclass, field
 from enum import IntEnum
 from os import PathLike
@@ -72,7 +71,7 @@ class OcrResult:
     def mean_conf(self) -> float:
         """Mean of ocr confidence."""
         if conf_values := [float(w.get("conf", 0)) for w in self.words]:
-            return statistics.mean(conf_values)
+            return sum(conf_values) / len(conf_values)
         return 0
 
     @property

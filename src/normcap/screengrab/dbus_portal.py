@@ -1,7 +1,7 @@
 """Capture screenshots for all screens using org.freedesktop.portal.Desktop."""
 
 import logging
-import secrets
+import random
 from typing import Optional
 from urllib.parse import urlparse
 
@@ -50,8 +50,8 @@ def grab_full_desktop() -> Optional[QtGui.QImage]:
 
     try:
         connection = open_dbus_connection(bus="SESSION")
-
-        token = f"normcap_{secrets.token_hex(8)}"
+        pseudo_unique_str = "".join(random.choice("abcdefghijklmnop") for _ in range(8))
+        token = f"normcap_{pseudo_unique_str}"
         sender_name = connection.unique_name[1:].replace(".", "_")
         handle = f"/org/freedesktop/portal/desktop/request/{sender_name}/{token}"
 

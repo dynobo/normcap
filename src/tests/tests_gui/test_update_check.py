@@ -1,6 +1,9 @@
+import urllib
+
 import pytest
 
 from normcap.gui import update_check
+from normcap.gui.constants import URLS
 
 
 @pytest.mark.skip_on_gh
@@ -18,6 +21,13 @@ def test_update_checker_new_version(monkeypatch, qtbot, packaged):
     assert len(version) >= 5
     assert version[0].isdigit()
     assert version.count(".") == 2
+
+
+@pytest.mark.skip_on_gh
+@pytest.mark.parametrize("url", [URLS.releases_atom, URLS.pypi_json])
+def test_urls_reachable(url):
+    with urllib.request.urlopen(url) as response:
+        assert response.code == 200
 
 
 @pytest.mark.skip_on_gh

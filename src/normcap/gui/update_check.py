@@ -1,5 +1,4 @@
 """Find new version on github or pypi."""
-import json
 import logging
 import re
 
@@ -41,12 +40,13 @@ class UpdateChecker(QtCore.QObject):
 
         try:
             if self.packaged:
-                match = re.search(r"/releases/tag/v(\d+\.\d+\.\d+)\"", text)
-                if match and match[1]:
-                    newest_version = match[1]
+                regex = r"/releases/tag/v(\d+\.\d+\.\d+)\""  # atom
             else:
-                data = json.loads(text)
-                newest_version = data["info"]["version"].strip()
+                regex = r"\"version\":\s*\"(\d+\.\d+\.\d+)\""  # json
+
+            match = re.search(regex, text)
+            if match and match[1]:
+                newest_version = match[1]
         except Exception as e:  # pylint: disable=broad-except
             logger.exception("Parsing response of update check failed: %s", e)
 
@@ -57,7 +57,7 @@ class UpdateChecker(QtCore.QObject):
 
     def check(self):
         """Start the update check."""
-        url = URLS.releases_atom if self.packaged else f"{URLS.pypi}/json"
+        url = URLS.releases_atom if self.packaged else f"{URLS.pypi_json}"
         logger.debug("Search for new version on %s", url)
         self.downloader.get(url)
 
