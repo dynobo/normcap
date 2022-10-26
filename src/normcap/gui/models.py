@@ -30,6 +30,11 @@ class Urls:
         """URL to github releases rss feed."""
         return f"{self.releases}.atom"
 
+    @property
+    def pypi_json(self):
+        """URL to github releases rss feed."""
+        return f"{self.pypi}/json"
+
 
 @enum.unique
 class DesktopEnvironment(enum.IntEnum):

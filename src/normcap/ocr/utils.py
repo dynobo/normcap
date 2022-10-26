@@ -4,7 +4,8 @@ import os
 import traceback
 
 import pytesseract
-from packaging import version
+
+from normcap.version import Version
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,7 @@ def configure_tesseract_binary():
     if tesseract_version := os.environ.get("TESSERACT_VERSION", ""):
 
         def _patched_get_tesseract_version():
-            return version.Version(tesseract_version)
+            return Version(tesseract_version)
 
         pytesseract.get_tesseract_version = _patched_get_tesseract_version
         pytesseract.pytesseract.get_tesseract_version = _patched_get_tesseract_version
@@ -65,7 +66,7 @@ def get_tesseract_languages(tessdata_path) -> list[str]:
 
 
 @functools.lru_cache
-def get_tesseract_version() -> version.Version:
+def get_tesseract_version() -> Version:
     """Get info abput tesseract setup."""
     tesseract_version = str(pytesseract.get_tesseract_version()).splitlines()[0]
-    return version.parse(tesseract_version)
+    return Version(tesseract_version)

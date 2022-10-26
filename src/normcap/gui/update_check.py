@@ -1,15 +1,14 @@
 """Find new version on github or pypi."""
-import json
 import logging
 import re
 
-from packaging import version
 from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__
 from normcap.gui.constants import URLS
 from normcap.gui.downloader_urllib import Downloader
 from normcap.gui.utils import get_icon, set_cursor
+from normcap.version import Version
 
 logger = logging.getLogger(__name__)
 
@@ -41,12 +40,13 @@ class UpdateChecker(QtCore.QObject):
 
         try:
             if self.packaged:
-                match = re.search(r"/releases/tag/v(\d+\.\d+\.\d+)\"", text)
-                if match and match[1]:
-                    newest_version = match[1]
+                regex = r"/releases/tag/v(\d+\.\d+\.\d+)\""  # atom
             else:
-                data = json.loads(text)
-                newest_version = data["info"]["version"].strip()
+                regex = r"\"version\":\s*\"(\d+\.\d+\.\d+)\""  # json
+
+            match = re.search(regex, text)
+            if match and match[1]:
+                newest_version = match[1]
         except Exception as e:  # pylint: disable=broad-except
             logger.exception("Parsing response of update check failed: %s", e)
 
@@ -57,7 +57,7 @@ class UpdateChecker(QtCore.QObject):
 
     def check(self):
         """Start the update check."""
-        url = URLS.releases_atom if self.packaged else f"{URLS.pypi}/json"
+        url = URLS.releases_atom if self.packaged else f"{URLS.pypi_json}"
         logger.debug("Search for new version on %s", url)
         self.downloader.get(url)
 
@@ -81,7 +81,7 @@ class UpdateChecker(QtCore.QObject):
             logger.debug(
                 "Newest version: %s (installed: %s)", newest_version, __version__
             )
-            if version.parse(newest_version) > version.parse(__version__):
+            if Version(newest_version) > Version(__version__):
                 self.com.on_new_version_found.emit(newest_version)
 
     def show_update_message(self, new_version):

@@ -1,9 +1,9 @@
 import logging
 
 import toml
-from packaging.version import Version
 
 import normcap
+from normcap.version import Version
 
 logger = logging.getLogger(__name__)
 
