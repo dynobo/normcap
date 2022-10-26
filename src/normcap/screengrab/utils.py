@@ -9,8 +9,9 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from packaging import version
 from PySide6 import QtCore, QtGui, QtWidgets
+
+from normcap.version import Version
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +62,7 @@ def _get_gnome_version_xml() -> str:
 
 
 @functools.lru_cache
-def get_gnome_version() -> Optional[version.Version]:
+def get_gnome_version() -> Optional[Version]:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux":
         return None
@@ -89,7 +90,7 @@ def _parse_gnome_version_from_xml():
             minor = int(result[0])
         else:
             raise ValueError("<minor> not found.")
-        gnome_version = version.parse(f"{platform}.{minor}")
+        gnome_version = Version(f"{platform}.{minor}")
     except FileNotFoundError:
         logger.debug("Couldn't find from gnome-version.xml")
     except Exception as e:  # pylint: disable=broad-except
@@ -107,7 +108,7 @@ def _parse_gnome_version_from_shell_cmd():
         output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
         output = output_raw.decode().strip()
         if result := re.search(r"\s+([\d.]+)", output):
-            gnome_version = version.parse(result.groups()[0])
+            gnome_version = Version(result.groups()[0])
     except (subprocess.CalledProcessError, FileNotFoundError):
         pass
     except Exception as e:  # pylint: disable=broad-except
@@ -118,7 +119,7 @@ def _parse_gnome_version_from_shell_cmd():
 
 def has_dbus_portal_support():
     gnome_version = get_gnome_version()
-    return not gnome_version or gnome_version >= version.parse("41")
+    return not gnome_version or gnome_version >= Version("41")
 
 
 def macos_reset_screenshot_permission():

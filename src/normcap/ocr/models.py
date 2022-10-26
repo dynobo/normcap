@@ -4,8 +4,9 @@ from enum import IntEnum
 from os import PathLike
 from typing import Optional
 
-from packaging import version
 from PIL import Image
+
+from normcap.version import Version
 
 
 @dataclass
@@ -16,7 +17,7 @@ class TessArgs:
     lang: str
     oem: int
     psm: int
-    version: version.Version
+    version: Version
 
     def to_config_str(self):
         """Generate command line args for pytesseract/tesseract.

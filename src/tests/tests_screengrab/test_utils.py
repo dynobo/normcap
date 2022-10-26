@@ -2,9 +2,8 @@ import logging
 import sys
 from decimal import DivisionByZero
 
-from packaging.version import Version
-
 from normcap.screengrab import dbus_portal, dbus_shell, get_capture_func, qt, utils
+from normcap.version import Version
 
 
 def test_display_manager_is_wayland_on_windows(monkeypatch):

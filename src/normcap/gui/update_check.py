@@ -2,13 +2,13 @@
 import logging
 import re
 
-from packaging import version
 from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__
 from normcap.gui.constants import URLS
 from normcap.gui.downloader_urllib import Downloader
 from normcap.gui.utils import get_icon, set_cursor
+from normcap.version import Version
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +81,7 @@ class UpdateChecker(QtCore.QObject):
             logger.debug(
                 "Newest version: %s (installed: %s)", newest_version, __version__
             )
-            if version.parse(newest_version) > version.parse(__version__):
+            if Version(newest_version) > Version(__version__):
                 self.com.on_new_version_found.emit(newest_version)
 
     def show_update_message(self, new_version):
