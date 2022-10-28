@@ -20,7 +20,10 @@ python-versions = ">=3.7.2"
 [package.dependencies]
 lazy-object-proxy = ">=1.4.0"
 typing-extensions = {version = ">=3.10", markers = "python_version < \"3.10\""}
-wrapt = {version = ">=1.11,<2", markers = "python_version < \"3.11\""}
+wrapt = [
+    {version = ">=1.11,<2", markers = "python_version < \"3.11\""},
+    {version = ">=1.14,<2", markers = "python_version >= \"3.11\""},
+]
 
 [[package]]
 name = "attrs"
@@ -1444,8 +1447,8 @@ analysis = []
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.9,<3.11"
-content-hash = "bd23055569091fcf133aef75e507b77d9412fc2e90acee753d2f3b2d15e2ab4b"
+python-versions = ">=3.9,<3.12"
+content-hash = "e417d3a089578a56e1eb0bde027b43b6fe91c78f6abf8c80cafb452cf7a4123a"
 
 [metadata.files]
 arrow = [
