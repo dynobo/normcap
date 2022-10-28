@@ -13,6 +13,7 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
   "Topic :: Utilities",
   "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
   "Intended Audience :: End Users/Desktop",
@@ -25,7 +26,7 @@ classifiers = [
 normcap = "normcap.app:main"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.11"
+python = ">=3.9,<3.12"
 PySide6-Essentials = "^6.4.0.1"
 jeepney = ">=0.8"
 pytesseract = ">=0.3.10"
