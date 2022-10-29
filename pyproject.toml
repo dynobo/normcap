@@ -39,7 +39,7 @@ mypy = ">=0.961"
 pre-commit = ">=2.19"
 pydocstyle = ">=6.1.1"
 pylint = ">=2.14.1"
-pytest = ">=7.1.2"
+pytest = ">=7.2.0"
 pytest-cov = ">=3.0.0"
 pytest-qt = ">=4.1.0"
 pylint-pytest = "^1.1.2"
@@ -64,10 +64,6 @@ vulture = { version = "^2.4", optional = true }
 Nuitka = "^1.0.3"
 autoflake = "^1.4"
 pyupgrade = "^2.37.3"
-# py is a dependency for pytest, which there is pinned to a vulernable version.
-# check from time to time, if it got updated and can be removed here:
-# https://github.com/pytest-dev/pytest/blob/main/setup.cfg
-py = ">=1.11.0"
 
 [tool.poetry.extras]
 analysis = ["radon", "vistracer", "vulture"]
