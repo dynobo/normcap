@@ -4,6 +4,7 @@
 # Own
 dependency_graph.png
 result.json
+result.html
 .temp
 .venv/
 .vscode/

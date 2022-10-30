@@ -10,6 +10,7 @@
   ([#190](https://github.com/dynobo/normcap/issues/190)).
 - Linux: Fix full screen view in Unity DE
   ([#190](https://github.com/dynobo/normcap/issues/190)).
+- Linux: Fix failing notifications if detected text starts with certain characters.
 
 ## v0.3.13 (2022-10-19)
 
