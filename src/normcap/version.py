@@ -10,7 +10,7 @@ class Version:
 
     def __init__(self, version_string: str):
         self.string = version_string.strip()
-        self.components = self.string.split(".")
+        self.components = self.string.lower().split(".")
         self.major, self.minor, self.patch, self.rest = self._parse(self.components)
 
     def _parse(self, components: list):
@@ -33,6 +33,7 @@ class Version:
                         break
                 patch = int(patch_number)
                 rest = patch_part[len(patch_number) :]
+                rest = rest.replace("alpha", "a").replace("beta", "b")
             else:
                 patch = 0
                 rest = ""
@@ -43,6 +44,8 @@ class Version:
         return major, minor, patch, rest
 
     def __gt__(self, other) -> bool:
+        if not isinstance(other, Version):
+            other = Version(str(other))
         if self.major > other.major:
             return True
         if self.major == other.major:
@@ -52,11 +55,18 @@ class Version:
                 if self.patch > other.patch:
                     return True
                 if self.patch == other.patch:
-                    if self.rest > other.rest or (self.rest == "" and other.rest != ""):
+                    if self.rest == "" and other.rest != "":
+                        return True
+                    if self.rest > other.rest and other.rest != "":
                         return True
         return False
 
+    def __lt__(self, other) -> bool:
+        return not (self > other or self == other)
+
     def __eq__(self, other) -> bool:
+        if not isinstance(other, Version):
+            other = Version(str(other))
         return (
             (self.major == other.major)
             and (self.minor == other.minor)
@@ -66,6 +76,9 @@ class Version:
 
     def __ge__(self, other) -> bool:
         return self.__gt__(other) or self.__eq__(other)
+
+    def __le__(self, other) -> bool:
+        return self.__lt__(other) or self.__eq__(other)
 
     def __str__(self) -> str:
         return str(".".join(self.components))
