@@ -123,21 +123,5 @@ def set_environ_for_prebuild_package():
 def init_logger(level: str = "WARNING"):
     log_format = "%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s"
     datefmt = "%H:%M:%S"
-
-    if system_info.is_prebuild_package() and sys.platform == "win32":
-        # Starting with briefcase 0.3.9, the windows build gets somehow wrapped in a
-        # small binary that captures all output. As a workaround, let's write it a file
-        # in the package directory instead.
-        # Additional, the command line args do not seem to work, therefor set logging
-        # to verbose all the time.
-        log_path = os.path.expandvars(
-            "%LOCALAPPDATA%\\dynobo\\NormCap\\logs\\normacap-debug.log"
-        )
-        logging.basicConfig(
-            filename=log_path, format=log_format, datefmt=datefmt, filemode="w"
-        )
-        level = "DEBUG"
-    else:
-        logging.basicConfig(format=log_format, datefmt=datefmt)
-
+    logging.basicConfig(format=log_format, datefmt=datefmt)
     logger.setLevel(level)

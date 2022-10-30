@@ -4,6 +4,8 @@
 
 - All: Add `--version` command line flag to easily print NormCap version.
 - All: Slightly improved startup time.
+- Windows: [Debug information](https://dynobo.github.io/normcap/#faqs-debug) can be
+  printed on screen again. (No need for checking the log file anymore.)
 - Linux: Fix FlatPak crashing when gtk3-nocsd is enabled, e.g. in Unity DE
   ([#190](https://github.com/dynobo/normcap/issues/190)).
 - Linux: Fix full screen view in Unity DE
