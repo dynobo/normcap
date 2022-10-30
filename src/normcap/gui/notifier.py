@@ -44,6 +44,11 @@ class Notifier(QtCore.QObject):
         """
         logger.debug("Send notification using notify-send.")
         icon_path = system_info.get_resources_path() / "tray.png"
+
+        # Escape chars interpreted by notifiy-send
+        message = message.replace("\\", "\\\\")
+        message = message.replace("-", "\\-")
+
         cmds = [
             "notify-send",
             f"--icon={icon_path.resolve()}",
