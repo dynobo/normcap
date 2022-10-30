@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.14 (unreleased)
+## v0.3.14 (2022-10-30)
 
 - All: Add `--version` command line flag to easily print NormCap version.
 - All: Slightly improved startup time.
