@@ -87,7 +87,8 @@ class WindowsBriefcase(BuilderBase):
             dict(
                 Id="Cleanup_tessdata",
                 Directory="TARGETDIR",
-                ExeCommand='cmd /C "rmdir /s /q %localappdata%\\normcap & rmdir /s /q %localappdata%\\dynobo";',
+                ExeCommand='cmd /C "rmdir /s /q %localappdata%\\normcap '
+                + '& rmdir /s /q %localappdata%\\dynobo";',
                 Execute="deferred",
                 Return="ignore",
                 HideTarget="no",
@@ -145,6 +146,6 @@ class WindowsBriefcase(BuilderBase):
     def create(self):  # noqa: D102
         self.download_tessdata()
         self.download_openssl()
-        # self.bundle_tesseract()
+        self.bundle_tesseract()
         self.run_framework()
         self.rename_package_file()

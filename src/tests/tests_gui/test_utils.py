@@ -81,7 +81,8 @@ def test_get_icon_custom():
 @pytest.mark.skip_on_gh
 def test_get_icon_sytem():
     icon = utils.get_icon("normcap.png", "edit-undo")
-    assert icon.name() == "edit-undo"
+    icon_gnome43 = utils.get_icon("normcap.png", "edit-undo-symbolic")
+    assert icon.name() == "edit-undo" or icon_gnome43.name() == "edit-undo-symbolic"
     assert len(icon.availableSizes()) >= 1
 
 

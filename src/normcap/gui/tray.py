@@ -119,6 +119,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _set_signals(self):
         """Set up signals to trigger program logic."""
+        self.activated.connect(self._tray_activated)
         self.com.on_tray_menu_capture_clicked.connect(self._delayed_update_screenshots)
         self.com.on_screenshots_updated.connect(self._show_windows)
         self.com.on_quit.connect(lambda: self._exit_application("clicked exit in tray"))
@@ -131,6 +132,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.com.on_close_or_exit.connect(self._close_or_exit)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
+
+    def _tray_activated(self, reason):
+        logger.debug("Tray event: %s", reason)
+        if reason == QtWidgets.QSystemTrayIcon.ActivationReason.Trigger:
+            self._delayed_update_screenshots()
 
     def _add_update_checker(self):
         if self.settings.value("update", type=bool) is False:
