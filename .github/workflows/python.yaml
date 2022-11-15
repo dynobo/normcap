@@ -82,27 +82,15 @@ jobs:
         run: poetry install
 
       # PERFORM TESTS
-      - name: Pylint
+      - name: Ruff
         if: always()
-        run: poetry run pylint src/normcap src/tests/
-      - name: Mypy
-        if: always()
-        run: poetry run mypy .
+        run: poetry run ruff .
       - name: Black
         if: always()
         run: poetry run black --check --diff .
-      - name: Isort
-        if: always()
-        run: poetry run isort --check .
-      - name: Pydocstyle
-        if: always()
-        run: poetry run pydocstyle
       - name: Safety
         if: always()
         run: poetry run safety check
-      - name: Bandit
-        if: always()
-        run: poetry run bandit --quiet --severity-level medium -r src/normcap
       - name: Pytest
         run: |
           poetry run pytest -vv -m "not skip_on_gh" --cov --cov-report=xml

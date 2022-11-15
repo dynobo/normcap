@@ -19,57 +19,12 @@ repos:
         entry: poetry run mdformat --wrap 88
         types: [markdown]
 
-      - id: pyupgrade
-        name: pyupgrade
-        stages: [commit]
-        language: system
-        entry: poetry run pyupgrade --py39-plus
-        types: [python]
-
-      - id: autoflake
-        name: autoflake
-        entry: poetry run autoflake
-        language: system
-        args:
-          - --recursive
-          - --in-place
-          - --remove-all-unused-imports
-          - --remove-unused-variables
-          - --expand-star-imports
-          - --exclude
-          - __init__.py
-          - --remove-duplicate-keys
-        types: [python]
-
-      - id: isort
-        name: isort
-        stages: [commit]
-        language: system
-        entry: poetry run isort --jobs=0 src/normcap src/tests/ package/
-        types: [python]
-
       - id: black
         name: black
         stages: [commit]
         language: system
         entry: poetry run black src/normcap src/tests/ package/
         types: [python]
-
-      - id: pydocstyle
-        name: pydocstyle
-        stages: [commit]
-        language: system
-        entry: poetry run pydocstyle src/normcap src/tests/ package/
-        types: [python]
-        pass_filenames: false
-
-      - id: bandit
-        name: bandit
-        stages: [commit]
-        language: system
-        entry: poetry run bandit --quiet --severity-level medium -r src/normcap
-        types: [python]
-        pass_filenames: false
 
       - id: safety
         name: safety
@@ -79,19 +34,11 @@ repos:
         types: [python]
         pass_filenames: false
 
-      - id: pylint
-        name: pylint
+      - id: ruff
+        name: ruff
         stages: [commit]
         language: system
-        entry: poetry run pylint src/normcap src/tests package/
-        types: [python]
-        pass_filenames: false
-
-      - id: mypy
-        name: mypy
-        stages: [commit]
-        language: system
-        entry: poetry run mypy
+        entry: poetry run ruff --fix .
         types: [python]
         pass_filenames: false
 
