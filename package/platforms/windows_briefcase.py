@@ -80,8 +80,30 @@ class WindowsBriefcase(BuilderBase):
         major_upgrade = ET.SubElement(product, "MajorUpgrade")
         major_upgrade.set("DowngradeErrorMessage", "Can't downgrade. Uninstall first.")
 
+        # Cleanup tessdata folder on uninstall
+        ET.SubElement(
+            product,
+            "CustomAction",
+            dict(
+                Id="Cleanup_tessdata",
+                Directory="TARGETDIR",
+                ExeCommand='cmd /C "rmdir /s /q %localappdata%\\normcap & rmdir /s /q %localappdata%\\dynobo";',
+                Execute="deferred",
+                Return="ignore",
+                HideTarget="no",
+                Impersonate="no",
+            ),
+        )
         sequence = product.find(f"{ns}InstallExecuteSequence")
-        product.remove(sequence)
+        ET.SubElement(
+            sequence,
+            "Custom",
+            dict(Action="Cleanup_tessdata", Before="RemoveFiles"),
+        ).text = 'REMOVE="ALL"'
+
+        # Remove node which throws error during compilation
+        remove_existing_product = sequence.find(f"{ns}RemoveExistingProducts")
+        sequence.remove(remove_existing_product)
 
         upgrade = product.find(f"{ns}Upgrade")
         product.remove(upgrade)
@@ -123,6 +145,6 @@ class WindowsBriefcase(BuilderBase):
     def create(self):  # noqa: D102
         self.download_tessdata()
         self.download_openssl()
-        self.bundle_tesseract()
+        # self.bundle_tesseract()
         self.run_framework()
         self.rename_package_file()
