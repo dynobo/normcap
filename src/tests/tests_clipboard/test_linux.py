@@ -2,7 +2,6 @@ import logging
 import os
 
 import pytest
-
 from normcap import clipboard
 
 

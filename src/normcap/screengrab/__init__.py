@@ -25,3 +25,12 @@ def get_capture_func() -> Callable:
     return dbus_shell.capture
     # fmt: on
     # pylint: enable=import-outside-toplevel
+
+
+__all__ = [
+    "has_screenshot_permission",
+    "macos_open_privacy_settings",
+    "macos_request_screenshot_permission",
+    "macos_reset_screenshot_permission",
+    "get_capture_func",
+]

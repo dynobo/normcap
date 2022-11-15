@@ -1,64 +1,63 @@
 """Create the settings button and its menu."""
 
-from typing import Any, Optional
-
-from PySide6 import QtCore, QtGui, QtWidgets
+from typing import Any
 
 from normcap import __version__, ocr
 from normcap.gui import system_info
 from normcap.gui.constants import MESSAGE_LANGUAGES, URLS
 from normcap.gui.utils import get_icon
+from PySide6 import QtCore, QtGui, QtWidgets
 
 _MENU_STYLE = """
-        QMenu {
-            background-color: rgba(0,0,0,0.8);
-            color: white;
-        }
-        QMenu::separator {
-            background-color: rgba(255,255,255,0.2);
-            height: 1px;
-            margin-top: 5px;
-        }
-        QMenu::scroller {
-            background: qlineargradient(
-                x1:1, y1:0, x2:1, y2:1,
-                stop:0 rgba(0,0,0,0),
-                stop:0.5 rgba(150,150,150,0.1),
-                stop:1 rgba(0,0,0,0)
-            )
-        }
-        QMenu::item {
-            padding: 3px 16px 3px 16px;
-            background-color: transparent;
-            right: 10px;
-        }
-        QMenu::item:disabled {
-            color: $COLOR;
-        }
-        QMenu::item:selected {
-            background-color: rgba(150,150,150,0.5);
-        }
-        QMenu::indicator {
-            right: -5px;
-        }
-        QMenu::left-arrow,
-        QMenu::right-arrow  {
-            right: 15px;
-        }
-    """
+QMenu {
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+}
+QMenu::separator {
+    background-color: rgba(255,255,255,0.2);
+    height: 1px;
+    margin-top: 5px;
+}
+QMenu::scroller {
+    background: qlineargradient(
+        x1:1, y1:0, x2:1, y2:1,
+        stop:0 rgba(0,0,0,0),
+        stop:0.5 rgba(150,150,150,0.1),
+        stop:1 rgba(0,0,0,0)
+    )
+}
+QMenu::item {
+    padding: 3px 16px 3px 16px;
+    background-color: transparent;
+    right: 10px;
+}
+QMenu::item:disabled {
+    color: $COLOR;
+}
+QMenu::item:selected {
+    background-color: rgba(150,150,150,0.5);
+}
+QMenu::indicator {
+    right: -5px;
+}
+QMenu::left-arrow,
+QMenu::right-arrow  {
+    right: 15px;
+}
+"""
 
 _BUTTON_STYLE = """
-        QToolButton { border:0px; }
-        QToolButton::hover {
-            background: qradialgradient(
-                cx: 0.5, cy: 0.5,
-                fx: 0.5, fy: 0.5,
-                radius: 0.5,
-                stop: 0 rgba(0,0,0,0) stop: 0.25 rgba(255,255,255,80) stop: 0.95 rgba(0,0,0,0)
-            );
-        }
-        QToolButton::menu-indicator { image: none; }
-    """
+QToolButton { border:0px; }
+QToolButton::hover {
+    background: qradialgradient(
+        cx: 0.5, cy: 0.5,
+        fx: 0.5, fy: 0.5,
+        radius: 0.5,
+        stop: 0 rgba(0,0,0,0) stop: 0.25 rgba(255,255,255,80) stop: 0.95 rgba(0,0,0,0)
+    );
+}
+QToolButton::menu-indicator { image: none; }
+"""
 
 
 class Communicate(QtCore.QObject):
@@ -128,7 +127,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None
-        value: Optional[Any] = None
+        value: Any | None = None
         setting = None
 
         if action_name == "close":

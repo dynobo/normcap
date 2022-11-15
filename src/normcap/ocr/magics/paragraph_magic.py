@@ -16,7 +16,8 @@ class ParagraphMagic(BaseMagic):
             BaseMagic {class} -- Base class for magics
             capture {Capture} -- NormCap's session data
 
-        Returns:
+        Returns
+        -------
             float -- score between 0-100 (100 = more likely)
         """
         breaks = ocr_result.num_blocks + ocr_result.num_pars - 1
@@ -28,7 +29,8 @@ class ParagraphMagic(BaseMagic):
         Arguments:
             capture {Capture} -- NormCap's session data
 
-        Returns:
+        Returns
+        -------
             str -- Transformed text
         """
         result = ""

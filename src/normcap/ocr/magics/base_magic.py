@@ -19,7 +19,8 @@ class BaseMagic(abc.ABC):
         Arguments:
             capture {Capture} -- Image and meta data on captured section
 
-        Returns:
+        Returns
+        -------
             float -- score between 0-100 (100 = more likely)
         """
 
@@ -30,6 +31,7 @@ class BaseMagic(abc.ABC):
         Arguments:
             capture {Capture} -- Image and meta data on captured section
 
-        Returns:
+        Returns
+        -------
             str -- String to be copied to clipboard
         """

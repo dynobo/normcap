@@ -3,11 +3,10 @@ import locale
 import logging
 import signal
 import sys
+from typing import NoReturn
 
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
-
-from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__
 from normcap.gui import system_info, utils
@@ -19,9 +18,10 @@ from normcap.utils import (
     set_environ_for_prebuild_package,
     set_environ_for_wayland,
 )
+from PySide6 import QtCore, QtWidgets
 
 
-def main():
+def main() -> NoReturn:
     """Start main application logic."""
     sys.excepthook = utils.hook_exceptions
 
@@ -30,7 +30,6 @@ def main():
 
     args = create_argparser().parse_args()
     if args.version:
-        print(f"NormCap {__version__}")
         sys.exit(0)
 
     init_logger(level=args.verbosity.upper())

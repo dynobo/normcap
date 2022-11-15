@@ -2,23 +2,18 @@
 
 import logging
 import random
-from typing import Optional
 from urllib.parse import urlparse
 
-from jeepney.bus_messages import MatchRule, message_bus  # type: ignore
-from jeepney.io.blocking import Proxy, open_dbus_connection  # type: ignore
-from jeepney.wrappers import (  # type: ignore
-    DBusErrorResponse,
-    MessageGenerator,
-    new_method_call,
-)
+from jeepney.bus_messages import MatchRule, message_bus
+from jeepney.io.blocking import Proxy, open_dbus_connection
+from jeepney.wrappers import DBusErrorResponse, MessageGenerator, new_method_call
+from normcap.screengrab.utils import split_full_desktop_to_screens
 from PySide6 import QtGui
 
 # TODO: Get rid of jeepney
 
 
 logger = logging.getLogger(__name__)
-from normcap.screengrab.utils import split_full_desktop_to_screens
 
 
 class FreedesktopPortalScreenshot(MessageGenerator):
@@ -42,7 +37,7 @@ class FreedesktopPortalScreenshot(MessageGenerator):
         return new_method_call(self, "Screenshot", "sa{sv}", (parent_window, options))
 
 
-def grab_full_desktop() -> Optional[QtGui.QImage]:
+def grab_full_desktop() -> QtGui.QImage | None:
     """Capture rect of screen on gnome systems using wayland."""
     logger.debug("Use capture method: DBUS portal")
 

@@ -1,5 +1,4 @@
 import pytest
-
 from normcap.ocr.magics.url_magic import UrlMagic
 
 

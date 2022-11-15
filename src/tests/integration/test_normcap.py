@@ -2,12 +2,11 @@ import logging
 from pathlib import Path
 
 import Levenshtein
-import pytest
-from PySide6 import QtCore, QtGui
-
 import normcap
+import pytest
 from normcap.gui.tray import SystemTray
 from normcap.utils import create_argparser
+from PySide6 import QtCore, QtGui
 
 from .testcases.data import TESTCASES
 

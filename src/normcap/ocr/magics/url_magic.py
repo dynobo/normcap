@@ -30,7 +30,8 @@ class UrlMagic(BaseMagic):
             BaseMagic {class} -- Base class for magics
             capture {Capture} -- NormCap's session data
 
-        Returns:
+        Returns
+        -------
             float -- score between 0-100 (100 = more likely)
         """
         # Get concatenated lines
@@ -47,7 +48,7 @@ class UrlMagic(BaseMagic):
         # (Based on http://www.regexguru.com/2008/11/detecting-urls-in-a-block-of-text/)
         reg_url = (
             r"(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)"  # Prefix
-            r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*"  # Handle parenthesis
+            r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*"
             r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])"
         )
         self._urls = re.findall(reg_url, text, flags=re.IGNORECASE)
@@ -70,7 +71,8 @@ class UrlMagic(BaseMagic):
         Arguments:
             capture {Capture} -- NormCap's session data
 
-        Returns:
+        Returns
+        -------
             str -- URL(s), separated bye newline
         """
         logger.info("Transform with URL magic")

@@ -8,9 +8,6 @@ import tempfile
 import time
 from functools import partial
 
-from PIL import Image
-from PySide6 import QtCore, QtGui, QtWidgets
-
 from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import system_info, utils
 from normcap.gui.constants import UPDATE_CHECK_INTERVAL_DAYS
@@ -19,6 +16,8 @@ from normcap.gui.notifier import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
+from PIL import Image
+from PySide6 import QtCore, QtGui, QtWidgets
 
 logger = logging.getLogger(__name__)
 

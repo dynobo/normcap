@@ -1,6 +1,5 @@
-from PySide6 import QtGui
-
 from normcap.gui.models import Capture, Rect, Screen, Selection
+from PySide6 import QtGui
 
 
 def test_rect_properties():

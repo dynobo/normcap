@@ -1,7 +1,6 @@
 import urllib
 
 import pytest
-
 from normcap.gui import update_check
 from normcap.gui.constants import URLS
 

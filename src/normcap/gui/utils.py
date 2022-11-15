@@ -11,7 +11,6 @@ import sys
 import tempfile
 import traceback
 from pathlib import Path
-from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -160,7 +159,7 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
         logger.critical("Uncaught exception! Quitting NormCap!")
 
         formatted_exc = "".join(
-            f"  {l}" for l in traceback.format_exception_only(exc_type, exc_value)
+            f"  {e}" for e in traceback.format_exception_only(exc_type, exc_value)
         )
 
         formatted_tb = "".join(traceback.format_tb(exc_traceback))
@@ -216,7 +215,6 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
             message,
             flags=re.IGNORECASE,
         )
-        print(message, file=sys.stderr)
 
     except Exception:  # pylint: disable=broad-except
         logger.critical(
@@ -229,7 +227,7 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
 
 
 @functools.cache
-def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
+def get_icon(icon_file: str, system_icon: str | None = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
     if system_icon and QtGui.QIcon.hasThemeIcon(system_icon):
         return QtGui.QIcon.fromTheme(system_icon)
@@ -240,7 +238,7 @@ def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     return icon
 
 
-def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None):
+def set_cursor(cursor: QtCore.Qt.CursorShape | None = None):
     """Show in-progress cursor for application."""
     if cursor is not None:
         QtWidgets.QApplication.setOverrideCursor(cursor)

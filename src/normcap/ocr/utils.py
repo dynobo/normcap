@@ -4,7 +4,6 @@ import os
 import traceback
 
 import pytesseract
-
 from normcap.version import Version
 
 logger = logging.getLogger(__name__)

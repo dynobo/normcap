@@ -2,25 +2,23 @@
 
 import logging
 from os import PathLike
-from typing import Optional, Union
 
-import pytesseract  # type: ignore
-from PIL import Image
-
+import pytesseract
 from normcap.ocr import enhance, utils
 from normcap.ocr.magics import magic
 from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
+from PIL import Image
 
 logger = logging.getLogger(__name__)
 
 
 def recognize(
-    languages: Union[str, list[str]],
+    languages: str | list[str],
     image: Image.Image,
-    tessdata_path: Optional[PathLike] = None,
+    tessdata_path: PathLike | None = None,
     parse: bool = True,
-    resize_factor: Optional[float] = None,
-    padding_size: Optional[int] = None,
+    resize_factor: float | None = None,
+    padding_size: int | None = None,
 ) -> OcrResult:
     """Apply OCR on selected image section."""
     utils.configure_tesseract_binary()

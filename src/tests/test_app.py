@@ -1,8 +1,7 @@
 import logging
 
-import toml
-
 import normcap
+import toml
 from normcap.version import Version
 
 logger = logging.getLogger(__name__)

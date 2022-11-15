@@ -7,11 +7,9 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional
-
-from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.version import Version
+from PySide6 import QtCore, QtGui, QtWidgets
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +60,7 @@ def _get_gnome_version_xml() -> str:
 
 
 @functools.lru_cache
-def get_gnome_version() -> Optional[Version]:
+def get_gnome_version() -> Version | None:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux":
         return None
@@ -157,7 +155,8 @@ def has_screenshot_permission() -> bool:
 def _macos_has_screenshot_permission() -> bool:
     """Use CoreGraphics to check if application has screen recording permissions.
 
-    Returns:
+    Returns
+    -------
         True if permissions are available or can't be detected.
     """
     try:

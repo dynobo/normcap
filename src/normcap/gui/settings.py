@@ -1,9 +1,7 @@
 import logging
-from typing import Optional
-
-from PySide6 import QtCore
 
 from normcap.gui.constants import DEFAULT_SETTINGS
+from PySide6 import QtCore
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +10,7 @@ class Settings(QtCore.QSettings):
     """Customized settings."""
 
     default_settings = DEFAULT_SETTINGS
-    init_settings = Optional[dict]
+    init_settings = dict | None
 
     def __init__(self, *args, init_settings: dict):
         super().__init__(*args)

@@ -2,7 +2,7 @@
 
 import logging
 from collections import Counter
-from typing import Optional, cast
+from typing import cast
 
 from PIL import Image, ImageOps, ImageStat
 
@@ -82,7 +82,7 @@ def is_dark(image: Image.Image) -> Image.Image:
 
 
 def preprocess(
-    image: Image.Image, resize_factor: Optional[float], padding: Optional[int]
+    image: Image.Image, resize_factor: float | None, padding: int | None
 ) -> Image.Image:
     image = image.convert("RGB")
     if resize_factor:

@@ -1,5 +1,6 @@
 """Find new version on github or pypi."""
 import logging
+from typing import NoReturn
 
 from PySide6 import QtCore, QtNetwork
 
@@ -20,20 +21,20 @@ class Downloader(QtCore.QObject):
     of urllib.request fails with 'no module named _scproxy' in the packaged version.
     """
 
-    def __init__(self):
+    def __init__(self) -> NoReturn:
         super().__init__()
         self.com = Communicate()
         self.manager = QtNetwork.QNetworkAccessManager()
         self.manager.finished.connect(self._on_get_finished)
 
-    def get(self, url: str):
+    def get(self, url: str) -> NoReturn:
         """Start downloading url. Emits signal, when done."""
         logger.debug("Download %s", url)
         request = QtNetwork.QNetworkRequest(QtCore.QUrl(url))
         request.setTransferTimeout(3000)
         self.manager.get(request)
 
-    def _on_get_finished(self, reply):
+    def _on_get_finished(self, reply: QtNetwork.QNetworkReply) -> NoReturn:
         """Decode response and emit download finished signal."""
         er = reply.error()
         if er != QtNetwork.QNetworkReply.NoError:

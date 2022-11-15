@@ -3,7 +3,6 @@ import enum
 import logging
 from collections import namedtuple
 from dataclasses import dataclass
-from typing import Optional
 
 from PySide6 import QtGui
 
@@ -131,7 +130,7 @@ class Screen:
     geometry: Rect
     index: int
 
-    screenshot: Optional[QtGui.QImage] = None
+    screenshot: QtGui.QImage | None = None
 
     @property
     def width(self):
@@ -152,12 +151,12 @@ class Capture:
 
     # Image of selected region
     image: QtGui.QImage = QtGui.QImage()
-    screen: Optional[Screen] = None
+    screen: Screen | None = None
     scale_factor: float = 1
     rect: Rect = Rect()
 
-    ocr_text: Optional[str] = None
-    ocr_applied_magic: Optional[str] = None
+    ocr_text: str | None = None
+    ocr_applied_magic: str | None = None
 
     @property
     def image_area(self) -> int:

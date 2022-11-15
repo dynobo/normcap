@@ -2,18 +2,16 @@ import os
 from dataclasses import dataclass, field
 from enum import IntEnum
 from os import PathLike
-from typing import Optional
-
-from PIL import Image
 
 from normcap.version import Version
+from PIL import Image
 
 
 @dataclass
 class TessArgs:
     """Arguments used when envoking tesseract."""
 
-    path: Optional[PathLike]
+    path: PathLike | None
     lang: str
     oem: int
     psm: int
@@ -62,7 +60,7 @@ class OcrResult:
         return len(unique_sections)
 
     @property
-    def best_scored_magic(self) -> Optional[str]:
+    def best_scored_magic(self) -> str | None:
         """Magic with highest score."""
         if self.magic_scores:
             return max(self.magic_scores, key=lambda k: self.magic_scores[k])

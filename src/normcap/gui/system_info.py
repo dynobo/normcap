@@ -5,14 +5,12 @@ import os
 import sys
 from importlib import metadata
 from pathlib import Path
-from typing import Optional
-
-from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6 import __version__ as PySide6_version
 
 from normcap import __version__
 from normcap.gui.models import DesktopEnvironment, Rect, Screen
 from normcap.screengrab.utils import get_gnome_version
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import __version__ as PySide6_version
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +23,7 @@ def is_flatpak_package() -> bool:
     return os.getenv("FLATPAK_ID") is not None
 
 
-def is_prebuild_package() -> Optional[str]:
+def is_prebuild_package() -> str | None:
     package = getattr(sys.modules["__main__"], "__package__", None)
     if package and "Briefcase-Version" in metadata.metadata(package):
         # Briefcase package
@@ -133,25 +131,25 @@ def get_tessdata_path() -> str:
 
 def to_dict() -> dict:
     """Cast all system infos to string for logging."""
-    return dict(
-        cli_args=" ".join(sys.argv),
-        is_prebuild_package=is_prebuild_package(),
-        is_flatpak_package=is_flatpak_package(),
-        platform=sys.platform,
-        pyside6_version=PySide6_version,
-        qt_version=QtCore.qVersion(),
-        qt_library_path=", ".join(QtCore.QCoreApplication.libraryPaths()),
-        config_directory=config_directory(),
-        normcap_version=__version__,
-        tessdata_path=get_tessdata_path(),
-        envs={
+    return {
+        "cli_args": " ".join(sys.argv),
+        "is_prebuild_package": is_prebuild_package(),
+        "is_flatpak_package": is_flatpak_package(),
+        "platform": sys.platform,
+        "pyside6_version": PySide6_version,
+        "qt_version": QtCore.qVersion(),
+        "qt_library_path": ", ".join(QtCore.QCoreApplication.libraryPaths()),
+        "config_directory": config_directory(),
+        "normcap_version": __version__,
+        "tessdata_path": get_tessdata_path(),
+        "envs": {
             "TESSERACT_CMD": os.environ.get("TESSERACT_CMD", None),
             "TESSERACT_VERSION": os.environ.get("TESSERACT_VERSION", None),
             "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX", None),
             "LD_LIBRARY_PATH": os.environ.get("LD_LIBRARY_PATH", None),
         },
-        desktop_environment=desktop_environment(),
-        display_manager_is_wayland=display_manager_is_wayland(),
-        gnome_version=get_gnome_version(),
-        screens=screens(),
-    )
+        "desktop_environment": desktop_environment(),
+        "display_manager_is_wayland": display_manager_is_wayland(),
+        "gnome_version": get_gnome_version(),
+        "screens": screens(),
+    }

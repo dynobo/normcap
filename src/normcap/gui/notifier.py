@@ -5,11 +5,10 @@ import subprocess
 import sys
 import textwrap
 
-from PySide6 import QtCore
-
 from normcap.gui import system_info
 from normcap.gui.models import Capture, CaptureMode
 from normcap.gui.utils import get_icon
+from PySide6 import QtCore
 
 logger = logging.getLogger(__name__)
 

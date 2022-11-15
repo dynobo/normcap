@@ -2,7 +2,6 @@ import os
 from importlib import metadata
 
 import pytest
-
 from normcap import utils
 from normcap.gui.settings import Settings
 

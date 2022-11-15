@@ -2,7 +2,8 @@
 
 Heavily stripped down version of the windows related functionality, slightly modified.
 
-A cross-platform clipboard module for Python, with copy & paste functions for plain text.
+A cross-platform clipboard module for Python, with copy & paste functions for plain
+text.
 By Al Sweigart al@inventwithpython.com
 BSD License
 """
@@ -21,13 +22,13 @@ logger = logging.getLogger(__name__)
 # pylint: disable=too-many-locals,import-outside-toplevel,too-many-statements
 
 
-class CheckedCall:  # noqa: D101
+class CheckedCall:
     def __init__(self, f):
         self.argtypes: list
         self.restype: Any
         super().__setattr__("f", f)
 
-    def __call__(self, *args):  # noqa: D102
+    def __call__(self, *args):
         ret = self.f(*args)
         if not ret and get_errno():
             raise RuntimeError(f"Error calling {self.f.__name__}")

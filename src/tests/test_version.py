@@ -1,6 +1,5 @@
-from packaging.version import Version as PackagingVersion
-
 from normcap.version import Version
+from packaging.version import Version as PackagingVersion
 
 
 def test_version():

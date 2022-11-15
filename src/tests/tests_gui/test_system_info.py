@@ -3,7 +3,6 @@ from importlib import metadata
 from pathlib import Path
 
 import pytest
-
 from normcap.gui import models, system_info
 
 

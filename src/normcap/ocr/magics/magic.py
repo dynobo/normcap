@@ -1,4 +1,4 @@
-"""Handler to load available magics, get scores for every magic and takes appropriate action."""
+"""Handler to load available magics, get scores for every magic & apply top scored."""
 
 import logging
 
@@ -18,7 +18,8 @@ class ApplyMagic:
     Arguments:
         AbstractHandler {[type]} -- [description]
 
-    Returns:
+    Returns
+    -------
         [type] -- [description]
     """
 
@@ -37,7 +38,8 @@ class ApplyMagic:
             AbstractHandler {class} -- self
             capture {Capture} -- NormCap's session data
 
-        Returns:
+        Returns
+        -------
             Capture -- Enriched NormCap's session data
         """
         # Get score per magic
@@ -67,7 +69,8 @@ class ApplyMagic:
         Arguments:
             capture {Capture} -- NormCap's session data
 
-        Returns:
+        Returns
+        -------
             dict -- Scores in format {<magic Name>: <score>}
         """
         scores = {name: magic.score(ocr_result) for name, magic in self._magics.items()}
