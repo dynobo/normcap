@@ -17,6 +17,7 @@ if __name__ == "__main__":
         required=True,
         action="store",
         choices=["nuitka", "briefcase"],
+        default="briefcase",
         help="Select python bundling framework.",
     )
     parser.add_argument(
