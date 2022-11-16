@@ -42,7 +42,6 @@ class WindowsBriefcase(BuilderBase):
 
         Currently only branding is added.
         """
-        # pylint: disable=too-many-locals
 
         wxs_file = self.PROJECT_PATH / "windows" / "app" / "NormCap" / "normcap.wxs"
 

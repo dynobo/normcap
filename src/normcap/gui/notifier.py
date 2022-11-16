@@ -55,7 +55,7 @@ class Notifier(QtCore.QObject):
             f"{title}",
             f"{message}",
         ]
-        # pylint: disable=consider-using-with
+
         # Left detached on purpose!
         subprocess.Popen(cmds, start_new_session=True)
 

@@ -46,7 +46,7 @@ class UpdateChecker(QtCore.QObject):
             match = re.search(regex, text)
             if match and match[1]:
                 newest_version = match[1]
-        except Exception as e:  # pylint: disable=broad-except
+        except Exception as e:
             logger.exception("Parsing response of update check failed: %s", e)
 
         if newest_version:

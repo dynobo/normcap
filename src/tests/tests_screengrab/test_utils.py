@@ -139,7 +139,7 @@ def test_get_appropriate_capture_on_non_wayland(monkeypatch):
 
 def test_macos_has_screenshot_permission(caplog):
     with caplog.at_level(logging.WARNING):
-        # pylint: disable=protected-access
+
         result = utils._macos_has_screenshot_permission()
 
     if sys.platform == "darwin":
@@ -151,7 +151,7 @@ def test_macos_has_screenshot_permission(caplog):
 
 def test_macos_request_screenshot_permission(caplog):
     with caplog.at_level(logging.DEBUG):
-        # pylint: disable=protected-access
+
         utils.macos_request_screenshot_permission()
 
     if sys.platform == "darwin":
@@ -162,7 +162,7 @@ def test_macos_request_screenshot_permission(caplog):
 
 def test_macos_reset_screenshot_permission(caplog):
     with caplog.at_level(logging.ERROR):
-        # pylint: disable=protected-access
+
         utils.macos_reset_screenshot_permission()
 
     if sys.platform == "darwin":

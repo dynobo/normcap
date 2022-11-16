@@ -216,7 +216,7 @@ def hook_exceptions(exc_type, exc_value, exc_traceback):
             flags=re.IGNORECASE,
         )
 
-    except Exception:  # pylint: disable=broad-except
+    except Exception:
         logger.critical(
             "Uncaught exception! Quitting NormCap! (debug output limited)",
             exc_info=(exc_type, exc_value, exc_traceback),

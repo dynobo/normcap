@@ -91,7 +91,7 @@ def _parse_gnome_version_from_xml():
         gnome_version = Version(f"{platform}.{minor}")
     except FileNotFoundError:
         logger.debug("Couldn't find from gnome-version.xml")
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         logger.warning(
             "Couldn't parse gnome version from gnome-version.xml", exc_info=e
         )
@@ -109,7 +109,7 @@ def _parse_gnome_version_from_shell_cmd():
             gnome_version = Version(result.groups()[0])
     except (subprocess.CalledProcessError, FileNotFoundError):
         pass
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         logger.warning("Exception when trying to get gnome version from cli %s", e)
 
     return gnome_version
@@ -138,7 +138,7 @@ def macos_reset_screenshot_permission():
                 completed_proc.stdout,
                 completed_proc.stderr,
             )
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         logger.error("Couldn't reset screen recording permissions: %s", e)
 
 
@@ -165,7 +165,7 @@ def _macos_has_screenshot_permission() -> bool:
             raise RuntimeError("Couldn't load CoreGraphics")
         CG = ctypes.cdll.LoadLibrary(core_graphics)
         has_permission = bool(CG.CGPreflightScreenCaptureAccess())
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         has_permission = True
         logger.warning("Couldn't detect screen recording permission: %s", e)
         logger.warning("Assuming screen recording permission is %s", has_permission)
@@ -179,7 +179,7 @@ def macos_request_screenshot_permission():
         CG = ctypes.cdll.LoadLibrary(core_graphics)
         logger.debug("Request screen recording access")
         CG.CGRequestScreenCaptureAccess()
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         logger.warning("Couldn't request screen recording permission: %s", e)
 
 
@@ -197,5 +197,5 @@ def macos_open_privacy_settings():
             check=True,
             timeout=30,
         )
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         logger.error("Couldn't open privacy settings: %s", e)

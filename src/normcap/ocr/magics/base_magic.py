@@ -3,8 +3,6 @@ import abc
 
 from normcap.ocr.models import OcrResult
 
-# pylint: disable=unused-argument
-
 
 class BaseMagic(abc.ABC):
     """Base Class to be instantiated."""

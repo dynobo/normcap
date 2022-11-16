@@ -94,7 +94,7 @@ def test_get_icon_sytem_use_fallback():
 def test_hook_exception(monkeypatch, caplog, capsys):
     monkeypatch.setattr(sys, "exit", lambda _: True)
     with pytest.raises(RuntimeError) as excinfo:
-        # pylint: disable=unused-variable
+
         text = words = tsv_data = "secret"  # noqa: F841 (unused variable)
         transformed = v = self = "secret"  # noqa: F841
         other_variable = "should be "

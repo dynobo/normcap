@@ -38,6 +38,6 @@ class Downloader(QtCore.QObject):
                 raw_data = response.read()
                 data = raw_data.decode("utf-8", "ignore")
                 self.com.on_download_finished.emit(data)
-        except Exception as e:  # pylint: disable=broad-except
+        except Exception as e:
             logger.error("Download failed due to %s", e)
             self.com.on_download_failed.emit()

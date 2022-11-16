@@ -11,7 +11,7 @@ from normcap.screengrab.utils import (
 
 
 def get_capture_func() -> Callable:
-    # pylint: disable=import-outside-toplevel
+
     # fmt: off
     if sys.platform != "linux" or not utils.has_wayland_display_manager():
         from normcap.screengrab import qt
@@ -24,7 +24,6 @@ def get_capture_func() -> Callable:
     from normcap.screengrab import dbus_shell
     return dbus_shell.capture
     # fmt: on
-    # pylint: enable=import-outside-toplevel
 
 
 __all__ = [

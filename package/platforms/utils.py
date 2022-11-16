@@ -92,7 +92,7 @@ def rm_recursive(directory, exclude):
                 os.remove(package_path)
 
 
-def build_wl_clipboard(self, app_packages_path):  # pylint: disable=unused-argument
+def build_wl_clipboard(self, app_packages_path):
     self.subprocess.run(
         "git clone https://github.com/bugaevc/wl-clipboard.git".split(),
         check=True,
@@ -154,8 +154,8 @@ class BuilderBase(ABC):
 
         cmd_str = re.sub(r"\s+", " ", cmd)
 
-        completed_proc = subprocess.run(  # pylint: disable=subprocess-run-check
-            cmd, shell=True, cwd=cwd, capture_output=False
+        completed_proc = subprocess.run(
+            cmd_str, shell=True, cwd=cwd, capture_output=False
         )
 
         if completed_proc.returncode != 0:
