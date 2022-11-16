@@ -22,7 +22,9 @@ class Window(QtWidgets.QMainWindow):
     settings_menu: QtWidgets.QToolButton | None = None
     ui_layer_css: str = ""
 
-    def __init__(self, screen_idx: int, color: str, parent: QtWidgets.QSystemTrayIcon):
+    def __init__(
+        self, screen_idx: int, color: str, parent: QtWidgets.QSystemTrayIcon
+    ) -> None:
         """Initialize window."""
         super().__init__()
         self.screen_idx: int = screen_idx
@@ -50,14 +52,14 @@ class Window(QtWidgets.QMainWindow):
         self._add_image_layer()
         self._add_ui_layer()
 
-    def _add_image_layer(self):
+    def _add_image_layer(self) -> None:
         """Add widget showing screenshot."""
         self.image_layer = QtWidgets.QLabel()
         self.image_layer.setObjectName("central_widget")
         self.image_layer.setScaledContents(True)
         self.setCentralWidget(self.image_layer)
 
-    def _add_ui_layer(self):
+    def _add_ui_layer(self) -> None:
         """Add widget for showing selection rectangle and settings button."""
         self.ui_layer = QtWidgets.QLabel(self)
         self.ui_layer.setObjectName("ui_layer")
@@ -65,17 +67,17 @@ class Window(QtWidgets.QMainWindow):
         self.ui_layer.setCursor(QtCore.Qt.CrossCursor)
         self.ui_layer.setScaledContents(True)
         self.ui_layer.setGeometry(self.image_layer.geometry())
-        self.ui_layer.paintEvent = self._ui_layer_paintEvent
+        self.ui_layer.paintEvent = self._ui_layer_paint_event
         self.ui_layer.raise_()
 
-    def draw_background_image(self):
+    def draw_background_image(self) -> None:
         """Draw screenshot as background image."""
         screen = self.tray.screens[self.screen_idx]
         pixmap = QtGui.QPixmap()
         pixmap.convertFromImage(screen.screenshot)
         self.image_layer.setPixmap(pixmap)
 
-    def add_settings_menu(self, tray):
+    def add_settings_menu(self, tray: QtWidgets.QSystemTrayIcon) -> None:
         """Add settings menu to current window."""
         self.settings_menu = SettingsMenu(self, tray.settings)
         self.settings_menu.com.on_open_url.connect(tray.com.on_open_url_and_hide)
@@ -89,7 +91,7 @@ class Window(QtWidgets.QMainWindow):
     # Events
     ##################
 
-    def _ui_layer_paintEvent(self, _):
+    def _ui_layer_paint_event(self, _: QtCore.QEvent) -> None:
         """Draw screenshot and selection rectangle on window."""
         painter = QtGui.QPainter(self.ui_layer)
 
@@ -122,7 +124,7 @@ class Window(QtWidgets.QMainWindow):
 
         painter.end()
 
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802 (lowercase)
         """Handle ESC key pressed."""
         if event.key() == QtCore.Qt.Key_Escape:
             if self.is_selecting:
@@ -132,7 +134,7 @@ class Window(QtWidgets.QMainWindow):
             else:
                 self.tray.com.on_close_or_exit.emit("esc button pressed")
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802 (lowercase)
         """Handle left mouse button clicked."""
         if event.button() == QtCore.Qt.LeftButton:
             screen = self.tray.screens[self.screen_idx]
@@ -142,13 +144,13 @@ class Window(QtWidgets.QMainWindow):
             self.is_selecting = True
             self.update()
 
-    def mouseMoveEvent(self, event):
+    def mouseMoveEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802 (lowercase)
         """Update selection on mouse move."""
         self.selection.end_y = event.position().y()
         self.selection.end_x = event.position().x()
         self.update()
 
-    def mouseReleaseEvent(self, event):
+    def mouseReleaseEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802 (lowercase)
         """Start OCR workflow on left mouse button release."""
         if (event.button() == QtCore.Qt.LeftButton) and self.is_selecting:
             self.selection.end_y = event.position().y()
@@ -160,7 +162,7 @@ class Window(QtWidgets.QMainWindow):
             self.is_selecting = False
             self.update()
 
-    def changeEvent(self, event) -> None:
+    def changeEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802 (lowercase)
         """Update position on Wayland."""
         if (
             event.type() == QtCore.QEvent.Type.ActivationChange
@@ -173,7 +175,7 @@ class Window(QtWidgets.QMainWindow):
 
         return super().changeEvent(event)
 
-    def resizeEvent(self, event: QtGui.QResizeEvent) -> None:
+    def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802 (lowercase)
         """Adjust child widget on resize."""
         self.ui_layer.resize(self.size())
         if self.settings_menu:
@@ -182,7 +184,7 @@ class Window(QtWidgets.QMainWindow):
 
         return super().resizeEvent(event)
 
-    def showEvent(self, event: QtGui.QShowEvent) -> None:
+    def showEvent(self, event: QtGui.QShowEvent) -> None:  # noqa: N802 (lowercase)
         """Update background image on show/reshow."""
         self.draw_background_image()
         return super().showEvent(event)
@@ -191,7 +193,7 @@ class Window(QtWidgets.QMainWindow):
     # Adjust UI
     ##################
 
-    def set_fullscreen(self):
+    def set_fullscreen(self) -> None:
         """Set window to full screen using platform specific methods."""
         logger.debug("Set window for screen %s to fullscreen", self.screen_idx)
 
@@ -204,7 +206,7 @@ class Window(QtWidgets.QMainWindow):
         else:
             raise NotImplementedError(f"Platform {sys.platform} not supported")
 
-    def _set_fullscreen_linux(self):
+    def _set_fullscreen_linux(self) -> None:
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.CustomizeWindowHint
@@ -229,7 +231,7 @@ class Window(QtWidgets.QMainWindow):
             )
             self.showFullScreen()
 
-    def _set_fullscreen_macos(self):
+    def _set_fullscreen_macos(self) -> None:
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.CustomizeWindowHint
@@ -247,7 +249,7 @@ class Window(QtWidgets.QMainWindow):
         )
         self.showFullScreen()
 
-    def _set_fullscreen_windows(self):
+    def _set_fullscreen_windows(self) -> None:
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint
             | QtCore.Qt.CustomizeWindowHint
@@ -257,7 +259,7 @@ class Window(QtWidgets.QMainWindow):
         self.move(screen_geometry.left, screen_geometry.top)
         self.showFullScreen()
 
-    def _position_windows_on_wayland(self):
+    def _position_windows_on_wayland(self) -> None:
         self.setFocus()
         screen_geometry = self.tray.screens[self.screen_idx].geometry
         logger.debug("Move window %s to position  %s", self.screen_idx, screen_geometry)

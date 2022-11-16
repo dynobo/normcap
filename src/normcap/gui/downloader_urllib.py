@@ -23,11 +23,11 @@ class Downloader(QtCore.QObject):
     of urllib.request fails with 'no module named _scproxy' in the packaged version.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.com = Communicate()
 
-    def get(self, url: str):
+    def get(self, url: str) -> None:
         """Start downloading url. Emits signal, when done."""
         logger.debug("Download %s", url)
         if not url.lower().startswith("http"):

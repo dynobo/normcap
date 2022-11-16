@@ -46,7 +46,7 @@ def create_argparser() -> argparse.ArgumentParser:
     return parser
 
 
-def set_environ_for_wayland():
+def set_environ_for_wayland() -> None:
     # QT has 32 as default cursor size on wayland, while it should be 24
     if "XCURSOR_SIZE" not in os.environ:
         logger.debug("Set XCURSOR_SIZE=24")
@@ -58,7 +58,7 @@ def set_environ_for_wayland():
         os.environ["QT_QPA_PLATFORM"] = "wayland"
 
 
-def set_environ_for_flatpak():
+def set_environ_for_flatpak() -> None:
     # Unity DE (and maybe others) use gtk-nocsd to remove client side decorations.
     # It doesn't work within FlatPak, and the error message make pytesseract crash.
     # Therefore we deactivate it within the Flatpak.
@@ -73,8 +73,7 @@ def set_environ_for_flatpak():
 
 
 # Some overrides when running in prebuild package
-def set_environ_for_prebuild_package():
-
+def set_environ_for_prebuild_package() -> None:
     package = system_info.is_prebuild_package()
 
     if package not in ["nuitka", "briefcase"]:
@@ -120,7 +119,7 @@ def set_environ_for_prebuild_package():
         raise RuntimeError(f"Unsupported platform {sys.platform}")
 
 
-def init_logger(level: str = "WARNING"):
+def init_logger(level: str = "WARNING") -> None:
     log_format = "%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s"
     datefmt = "%H:%M:%S"
     logging.basicConfig(format=log_format, datefmt=datefmt)

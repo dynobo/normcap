@@ -7,6 +7,7 @@ import sys
 import tempfile
 import time
 from functools import partial
+from typing import Any, NoReturn
 
 from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import system_info, utils
@@ -16,6 +17,7 @@ from normcap.gui.notifier import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
+from normcap.version import Version
 from PIL import Image
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -44,7 +46,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     capture = Capture()
     windows: dict[int, Window] = {}
 
-    def __init__(self, parent, args):
+    def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("Set up tray icon")
         super().__init__(parent)
 
@@ -70,7 +72,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self._set_signals()
         self._update_screenshots()
 
-    def _ensure_screenshot_permission(self):
+    def _ensure_screenshot_permission(self) -> None:
         if screengrab.has_screenshot_permission():
             return
 
@@ -101,10 +103,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
             self._exit_application("Screen Recording permissions missing on macOS")
 
-    def _set_tray_icon(self):
+    def _set_tray_icon(self) -> None:
         self.setIcon(utils.get_icon("tray.png", "tool-magic-symbolic"))
 
-    def _color_tray_icon(self):
+    def _color_tray_icon(self) -> None:
         if sizes := self.icon().availableSizes():
             pixmap = self.icon().pixmap(sizes[-1])
             mask = pixmap.createMaskFromColor(
@@ -116,7 +118,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
             QtCore.QTimer.singleShot(5000, self._set_tray_icon)
 
-    def _set_signals(self):
+    def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
         self.activated.connect(self._tray_activated)
         self.com.on_tray_menu_capture_clicked.connect(self._delayed_update_screenshots)
@@ -132,12 +134,14 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_close_or_exit.connect(self._close_or_exit)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
 
-    def _tray_activated(self, reason):
+    def _tray_activated(
+        self, reason: QtWidgets.QSystemTrayIcon.ActivationReason
+    ) -> None:
         logger.debug("Tray event: %s", reason)
         if reason == QtWidgets.QSystemTrayIcon.ActivationReason.Trigger:
             self._delayed_update_screenshots()
 
-    def _add_update_checker(self):
+    def _add_update_checker(self) -> None:
         if self.settings.value("update", type=bool) is False:
             return
 
@@ -151,19 +155,19 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
         QtCore.QTimer.singleShot(500, checker.check)
 
-    def _update_time_of_last_update_check(self, newest_version):
+    def _update_time_of_last_update_check(self, newest_version: Version) -> None:
         if newest_version is not None:
             today = f"{datetime.datetime.now():%Y-%m-%d}"
             self.settings.setValue("last-update-check", today)
 
-    def _add_notifier(self):
+    def _add_notifier(self) -> None:
         self.notifier = Notifier(self)
         self.com.on_send_notification.connect(self.notifier.send_notification)
         self.notifier.com.on_notification_sent.connect(
             lambda: self.com.on_close_or_exit.emit("notification sent")
         )
 
-    def _update_screenshots(self):
+    def _update_screenshots(self) -> None:
         """Get new screenshots and cache them."""
         capture = screengrab.get_capture_func()
         screens = capture()
@@ -178,15 +182,16 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.com.on_screenshots_updated.emit()
 
-    def _delayed_update_screenshots(self):
+    def _delayed_update_screenshots(self) -> None:
         """Wait before updating screenshot to allow tray menu to hide.
 
         Avoids having the tray menu itself on the screenshot.
         """
+        # TODO: Use Optional parameter for _update_screenshot() instead?
         time.sleep(0.15)
         self._update_screenshots()
 
-    def _add_tray_menu(self):
+    def _add_tray_menu(self) -> None:
         """Create menu for system tray."""
         menu = QtWidgets.QMenu()
 
@@ -200,7 +205,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.setContextMenu(menu)
 
-    def _show_windows(self):
+    def _show_windows(self) -> None:
         """Initialize child windows with method depending on system."""
         if not system_info.display_manager_is_wayland():
             for index in system_info.screens():
@@ -213,13 +218,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.com.on_window_positioned.connect(self._create_next_window)
             self._create_next_window()
 
-    def _create_next_window(self):
+    def _create_next_window(self) -> None:
         """Open child window only for next display."""
         if len(system_info.screens()) > len(self.windows):
             index = len(self.windows.keys())
             self._create_window(index)
 
-    def _create_window(self, index: int):
+    def _create_window(self, index: int) -> None:
         """Open a child window for the specified screen."""
         new_window = Window(
             screen_idx=index,
@@ -236,7 +241,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     # OCR Functionality #
     #####################
 
-    def _crop_image(self, grab_info: tuple[Rect, int]):
+    def _crop_image(self, grab_info: tuple[Rect, int]) -> None:
         """Crop image to selected region."""
         logger.info("Crop image to selected region %s", grab_info[0].points)
         rect, screen_idx = grab_info
@@ -255,7 +260,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_image_cropped.emit()
 
     @staticmethod
-    def _qimage_to_pil_image(image: QtGui.QImage):
+    def _qimage_to_pil_image(image: QtGui.QImage) -> Image:
         """Cast QImage to pillow Image type."""
         ba = QtCore.QByteArray()
         buffer = QtCore.QBuffer(ba)
@@ -263,7 +268,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         image.save(buffer, "PNG")  # type:ignore
         return Image.open(io.BytesIO(buffer.data()))
 
-    def _capture_to_ocr(self):
+    def _capture_to_ocr(self) -> None:
         """Perform content recognition on grabed image."""
         if self.capture.image_area < 25:
             logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
@@ -291,13 +296,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     # Helper                #
     #########################
 
-    def _open_url_and_hide(self, url):
+    def _open_url_and_hide(self, url: str) -> None:
         """Open url in default browser, then hide to tray or exit."""
         logger.debug("Open %s", url)
         QtGui.QDesktopServices.openUrl(url)
         self.com.on_close_or_exit.emit("opened web browser")
 
-    def _copy_to_clipboard(self):
+    def _copy_to_clipboard(self) -> None:
         """Copy results to clipboard."""
         # Signal is only temporarily connected to avoid being triggered
         # on arbitrary clipboard changes
@@ -305,13 +310,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.copy_to_clipboard(self.capture.ocr_text)
         self.com.on_copied_to_clipboard.emit()
 
-    def _notify_or_close(self):
+    def _notify_or_close(self) -> None:
         if self.settings.value("notification", type=bool):
             self.com.on_send_notification.emit(self.capture)
         else:
             self.com.on_close_or_exit.emit("detection completed")
 
-    def _close_windows(self):
+    def _close_windows(self) -> None:
         """Hide all windows of normcap."""
         logger.debug("Hide %s window(s)", len(self.windows))
         utils.set_cursor(None)
@@ -319,7 +324,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             window.close()
         self.windows = {}
 
-    def _close_or_exit(self, reason: str):
+    def _close_or_exit(self, reason: str) -> None:
         if self.settings.value("tray", type=bool):
             self._close_windows()
         elif reason == "notification sent":
@@ -332,7 +337,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         else:
             self._exit_application(reason)
 
-    def _exit_application(self, reason: str):
+    def _exit_application(self, reason: str) -> NoReturn:
         self.hide()
         QtWidgets.QApplication.processEvents()
         time.sleep(0.05)

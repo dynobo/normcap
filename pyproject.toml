@@ -31,6 +31,7 @@ PySide6-Essentials = "^6.4.0.1"
 jeepney = ">=0.8"
 pytesseract = ">=0.3.10"
 certifi = "^2022.9.24"
+pyright = "^1.1.280"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=22.3.0"
@@ -56,6 +57,7 @@ safety = ">=1.10.3"
 
 Nuitka = "^1.0.3"
 ruff = "^0.0.120"
+mypy = "^0.991"
 
 [tool.poetry.group.analysis]
 optional = true
@@ -116,6 +118,17 @@ per-file-ignores = { "src/tests*" = [
 ], "package/*" = [
   "ANN",
 ] }
+
+
+[tool.mypy]
+files = ["src/normcap/**/*.py", "src/tests/**/*.py"]
+follow_imports = "skip"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "normcap.window_base_ui"
+follow_imports = "skip"
+ignore_errors = true
 
 [tool.pytest.ini_options]
 testpaths = ["src/tests"]

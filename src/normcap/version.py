@@ -5,15 +5,20 @@ versions are unexepected in the scope of this project.
 """
 
 
+from typing import Any, Self, Union
+
+VersionLike = Union[Self, Any]  # noqa: U007
+
+
 class Version:
     """Very, very simplified drop in replacement for packaging.version.Version."""
 
-    def __init__(self, version_string: str):
+    def __init__(self, version_string: str) -> None:
         self.string = version_string.strip()
         self.components = self.string.lower().split(".")
         self.major, self.minor, self.patch, self.rest = self._parse(self.components)
 
-    def _parse(self, components: list):
+    def _parse(self, components: list) -> tuple[int, int, int, str]:
         major = minor = patch = rest = None
         try:
             major = int(components[0])
@@ -43,7 +48,7 @@ class Version:
 
         return major, minor, patch, rest
 
-    def __gt__(self, other) -> bool:
+    def __gt__(self, other: VersionLike) -> bool:
         if not isinstance(other, Version):
             other = Version(str(other))
         if self.major > other.major:
@@ -61,10 +66,10 @@ class Version:
                         return True
         return False
 
-    def __lt__(self, other) -> bool:
+    def __lt__(self, other: Self) -> bool:
         return not (self > other or self == other)
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: VersionLike) -> bool:
         if not isinstance(other, Version):
             other = Version(str(other))
         return (
@@ -74,10 +79,10 @@ class Version:
             and (self.rest == other.rest)
         )
 
-    def __ge__(self, other) -> bool:
+    def __ge__(self, other: VersionLike) -> bool:
         return self.__gt__(other) or self.__eq__(other)
 
-    def __le__(self, other) -> bool:
+    def __le__(self, other: VersionLike) -> bool:
         return self.__lt__(other) or self.__eq__(other)
 
     def __str__(self) -> str:

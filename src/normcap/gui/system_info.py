@@ -10,7 +10,7 @@ from normcap import __version__
 from normcap.gui.models import DesktopEnvironment, Rect, Screen
 from normcap.screengrab.utils import get_gnome_version
 from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6 import __version__ as PySide6_version
+from PySide6 import __version__ as pyside_version
 
 logger = logging.getLogger(__name__)
 
@@ -39,28 +39,28 @@ def is_prebuild_package() -> str | None:
 @functools.cache
 def display_manager_is_wayland() -> bool:
     """Identify relevant display managers (Linux)."""
-    XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "").lower()
-    WAYLAND_DISPLAY = os.environ.get("WAYLAND_DISPLAY", "").lower()
-    return "wayland" in WAYLAND_DISPLAY or "wayland" in XDG_SESSION_TYPE
+    xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
+    wayland_display = os.environ.get("WAYLAND_DISPLAY", "").lower()
+    return "wayland" in wayland_display or "wayland" in xdg_session_type
 
 
 @functools.cache
 def desktop_environment() -> DesktopEnvironment:
     """Detect used desktop environment (Linux)."""
-    KDE_FULL_SESSION = os.environ.get("KDE_FULL_SESSION", "").lower()
-    XDG_CURRENT_DESKTOP = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
-    DESKTOP_SESSION = os.environ.get("DESKTOP_SESSION", "").lower()
-    GNOME_DESKTOP_SESSION_ID = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
-    if GNOME_DESKTOP_SESSION_ID == "this-is-deprecated":
-        GNOME_DESKTOP_SESSION_ID = ""
+    kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()
+    xdg_current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+    desktop_session = os.environ.get("DESKTOP_SESSION", "").lower()
+    gnome_desktop_session_id = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
+    if gnome_desktop_session_id == "this-is-deprecated":
+        gnome_desktop_session_id = ""
 
-    if GNOME_DESKTOP_SESSION_ID != "" or "gnome" in XDG_CURRENT_DESKTOP:
+    if gnome_desktop_session_id != "" or "gnome" in xdg_current_desktop:
         return DesktopEnvironment.GNOME
-    if KDE_FULL_SESSION != "" or "kde-plasma" in DESKTOP_SESSION:
+    if kde_full_session != "" or "kde-plasma" in desktop_session:
         return DesktopEnvironment.KDE
-    if "sway" in XDG_CURRENT_DESKTOP:
+    if "sway" in xdg_current_desktop:
         return DesktopEnvironment.SWAY
-    if "unity" in XDG_CURRENT_DESKTOP:
+    if "unity" in xdg_current_desktop:
         return DesktopEnvironment.UNITY
 
     return DesktopEnvironment.OTHER
@@ -136,7 +136,7 @@ def to_dict() -> dict:
         "is_prebuild_package": is_prebuild_package(),
         "is_flatpak_package": is_flatpak_package(),
         "platform": sys.platform,
-        "pyside6_version": PySide6_version,
+        "pyside6_version": pyside_version,
         "qt_version": QtCore.qVersion(),
         "qt_library_path": ", ".join(QtCore.QCoreApplication.libraryPaths()),
         "config_directory": config_directory(),

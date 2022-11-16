@@ -46,9 +46,9 @@ def has_wayland_display_manager() -> bool:
     """Identify relevant display managers (Linux)."""
     if sys.platform != "linux":
         return False
-    XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "").lower()
-    WAYLAND_DISPLAY = os.environ.get("WAYLAND_DISPLAY", "").lower()
-    return "wayland" in WAYLAND_DISPLAY or "wayland" in XDG_SESSION_TYPE
+    xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
+    wayland_display = os.environ.get("WAYLAND_DISPLAY", "").lower()
+    return "wayland" in wayland_display or "wayland" in xdg_session_type
 
 
 def _get_gnome_version_xml() -> str:
@@ -75,7 +75,7 @@ def get_gnome_version() -> Version | None:
     return _parse_gnome_version_from_xml() or _parse_gnome_version_from_shell_cmd()
 
 
-def _parse_gnome_version_from_xml():
+def _parse_gnome_version_from_xml() -> Version:
     """Try parsing gnome-version xml file."""
     gnome_version = None
     try:
@@ -99,7 +99,7 @@ def _parse_gnome_version_from_xml():
     return gnome_version
 
 
-def _parse_gnome_version_from_shell_cmd():
+def _parse_gnome_version_from_shell_cmd() -> Version:
     """Try parsing gnome-shell output."""
     gnome_version = None
     try:
@@ -115,12 +115,12 @@ def _parse_gnome_version_from_shell_cmd():
     return gnome_version
 
 
-def has_dbus_portal_support():
+def has_dbus_portal_support() -> bool:
     gnome_version = get_gnome_version()
     return not gnome_version or gnome_version >= Version("41")
 
 
-def macos_reset_screenshot_permission():
+def macos_reset_screenshot_permission() -> None:
     """Use tccutil to reset permissions for current application."""
     logger.info("Reset screen recording permissions for eu.dynobo.normcap")
     cmd = ["tccutil", "reset", "ScreenCapture", "eu.dynobo.normcap"]
@@ -163,8 +163,8 @@ def _macos_has_screenshot_permission() -> bool:
         core_graphics = ctypes.util.find_library("CoreGraphics")
         if not core_graphics:
             raise RuntimeError("Couldn't load CoreGraphics")
-        CG = ctypes.cdll.LoadLibrary(core_graphics)
-        has_permission = bool(CG.CGPreflightScreenCaptureAccess())
+        cg = ctypes.cdll.LoadLibrary(core_graphics)
+        has_permission = bool(cg.CGPreflightScreenCaptureAccess())
     except Exception as e:
         has_permission = True
         logger.warning("Couldn't detect screen recording permission: %s", e)
@@ -172,18 +172,18 @@ def _macos_has_screenshot_permission() -> bool:
     return has_permission
 
 
-def macos_request_screenshot_permission():
+def macos_request_screenshot_permission() -> None:
     """Use CoreGraphics to request screen recording permissions."""
     try:
         core_graphics = ctypes.util.find_library("CoreGraphics")
-        CG = ctypes.cdll.LoadLibrary(core_graphics)
+        cg = ctypes.cdll.LoadLibrary(core_graphics)
         logger.debug("Request screen recording access")
-        CG.CGRequestScreenCaptureAccess()
+        cg.CGRequestScreenCaptureAccess()
     except Exception as e:
         logger.warning("Couldn't request screen recording permission: %s", e)
 
 
-def macos_open_privacy_settings():
+def macos_open_privacy_settings() -> None:
     link_to_preferences = (
         "x-apple.systempreferences:com.apple.preference.security"
         + "?Privacy_ScreenCapture"

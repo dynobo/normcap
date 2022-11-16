@@ -9,7 +9,7 @@ from normcap.clipboard import qt
 logger = logging.getLogger(__name__)
 
 
-def _wl_copy(text):
+def _wl_copy(text: str) -> None:
     """Use wl-clipboard package to copy text to system clipboard."""
     subprocess.run(
         ["wl-copy"],
@@ -22,9 +22,9 @@ def _wl_copy(text):
 
 
 def _is_wayland_display_manager() -> bool:
-    WAYLAND_DISPLAY = os.environ.get("WAYLAND_DISPLAY", "")
-    XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "")
-    return "wayland" in WAYLAND_DISPLAY.lower() or "wayland" in XDG_SESSION_TYPE.lower()
+    wayland_display = os.environ.get("WAYLAND_DISPLAY", "")
+    xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "")
+    return "wayland" in wayland_display.lower() or "wayland" in xdg_session_type.lower()
 
 
 def get_copy_func() -> Callable:

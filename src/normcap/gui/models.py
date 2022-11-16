@@ -25,12 +25,12 @@ class Urls:
     xcb_error: str
 
     @property
-    def releases_atom(self):
+    def releases_atom(self) -> str:
         """URL to github releases rss feed."""
         return f"{self.releases}.atom"
 
     @property
-    def pypi_json(self):
+    def pypi_json(self) -> str:
         """URL to github releases rss feed."""
         return f"{self.pypi}/json"
 
@@ -133,12 +133,12 @@ class Screen:
     screenshot: QtGui.QImage | None = None
 
     @property
-    def width(self):
+    def width(self) -> int:
         """Get screen width."""
         return self.geometry.width
 
     @property
-    def height(self):
+    def height(self) -> int:
         """Get screen height."""
         return self.geometry.height
 

@@ -11,6 +11,7 @@ import sys
 import tempfile
 import traceback
 from pathlib import Path
+from types import TracebackType
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -31,8 +32,8 @@ logger = logging.getLogger(__name__)
 
 
 def save_image_in_tempfolder(
-    image: QtGui.QImage, postfix: str = "", log_level=logging.DEBUG
-):
+    image: QtGui.QImage, postfix: str = "", log_level: logging._Level = logging.DEBUG
+) -> None:
     """For debugging it can be useful to store the cropped image."""
     if logger.getEffectiveLevel() == log_level:
         file_dir = Path(tempfile.gettempdir()) / "normcap"
@@ -43,7 +44,9 @@ def save_image_in_tempfolder(
         logger.debug("Store debug image in: %s", file_dir / file_name)
 
 
-def qt_log_wrapper(mode, _, message):
+def qt_log_wrapper(
+    mode: QtCore.QtMsgType, _: QtCore.QMessageLogContext, message: str
+) -> None:
     """Intercept QT message.
 
     Used to hide away unnecessary warnings by showing them only on higher
@@ -61,7 +64,7 @@ def qt_log_wrapper(mode, _, message):
         logger.error("If that doesn't help, please open an issue: %s", URLS.issues)
 
 
-def move_active_window_to_position(screen_geometry):
+def move_active_window_to_position(screen_geometry: QtCore.QRect) -> None:
     """Move currently active window to a certain position with appropriate method."""
     if system_info.desktop_environment() == DesktopEnvironment.GNOME:
         move_active_window_to_position_on_gnome(screen_geometry)
@@ -69,7 +72,7 @@ def move_active_window_to_position(screen_geometry):
         move_active_window_to_position_on_kde(screen_geometry)
 
 
-def move_active_window_to_position_on_gnome(screen_geometry):
+def move_active_window_to_position_on_gnome(screen_geometry: QtCore.QRect) -> None:
     """Move currently active window to a certain position.
 
     This is a workaround for not being able to reposition windows on wayland.
@@ -78,7 +81,7 @@ def move_active_window_to_position_on_gnome(screen_geometry):
     if not HAVE_QTDBUS:
         raise TypeError("QtDBus should only be called on Linux systems!")
 
-    JS_CODE = f"""
+    js_code = f"""
     const GLib = imports.gi.GLib;
     global.get_window_actors().forEach(function (w) {{
         var mw = w.meta_window;
@@ -103,7 +106,7 @@ def move_active_window_to_position_on_gnome(screen_geometry):
 
     shell_interface = QtDBus.QDBusInterface(item, path, interface, bus)
     if shell_interface.isValid():
-        x = shell_interface.call("Eval", JS_CODE)
+        x = shell_interface.call("Eval", js_code)
         if x.errorName():
             logger.error("Failed move Window!")
             logger.error(x.errorMessage())
@@ -111,7 +114,7 @@ def move_active_window_to_position_on_gnome(screen_geometry):
         logger.warning("Invalid dbus interface on Gnome")
 
 
-def move_active_window_to_position_on_kde(screen_geometry):
+def move_active_window_to_position_on_kde(screen_geometry: QtCore.QRect) -> None:
     """Move currently active window to a certain position.
 
     This is a workaround for not being able to reposition windows on wayland.
@@ -120,7 +123,7 @@ def move_active_window_to_position_on_kde(screen_geometry):
     if not HAVE_QTDBUS:
         raise TypeError("QtDBus should only be called on Linux systems!")
 
-    JS_CODE = f"""
+    js_code = f"""
     client = workspace.activeClient;
     client.geometry = {{
         "x": {screen_geometry.left},
@@ -130,7 +133,7 @@ def move_active_window_to_position_on_kde(screen_geometry):
     }};
     """
     with tempfile.NamedTemporaryFile(delete=False, suffix=".js") as script_file:
-        script_file.write(JS_CODE.encode())
+        script_file.write(js_code.encode())
 
     bus = QtDBus.QDBusConnection.sessionBus()
     if not bus.isConnected():
@@ -153,7 +156,11 @@ def move_active_window_to_position_on_kde(screen_geometry):
     os.unlink(script_file.name)
 
 
-def hook_exceptions(exc_type, exc_value, exc_traceback):
+def hook_exceptions(
+    exc_type: type[BaseException],
+    exc_value: BaseException,
+    exc_traceback: TracebackType,
+) -> None:
     """Print traceback and quit application."""
     try:
         logger.critical("Uncaught exception! Quitting NormCap!")
@@ -238,7 +245,7 @@ def get_icon(icon_file: str, system_icon: str | None = None) -> QtGui.QIcon:
     return icon
 
 
-def set_cursor(cursor: QtCore.Qt.CursorShape | None = None):
+def set_cursor(cursor: QtCore.Qt.CursorShape | None = None) -> None:
     """Show in-progress cursor for application."""
     if cursor is not None:
         QtWidgets.QApplication.setOverrideCursor(cursor)
@@ -247,7 +254,7 @@ def set_cursor(cursor: QtCore.Qt.CursorShape | None = None):
     QtWidgets.QApplication.processEvents()
 
 
-def copy_tessdata_files_to_config_dir():
+def copy_tessdata_files_to_config_dir() -> None:
     """If packaged, copy language data files to config directory."""
     tessdata_path = system_info.config_directory() / "tessdata"
     if list(tessdata_path.glob("*.traineddata")):

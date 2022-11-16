@@ -2,9 +2,9 @@
 
 import shutil
 import urllib
-import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
+from xml.etree import ElementTree
 
 from platforms.utils import (
     BRIEFCASE_EXCLUDES,
@@ -38,11 +38,7 @@ class WindowsBriefcase(BuilderBase):
         zip_path.unlink()
 
     def patch_windows_installer(self):
-        """Customize wix-installer.
-
-        Currently only branding is added.
-        """
-
+        """Customize wix-installer."""
         wxs_file = self.PROJECT_PATH / "windows" / "app" / "NormCap" / "normcap.wxs"
 
         # Cache header for inserting later
@@ -50,9 +46,9 @@ class WindowsBriefcase(BuilderBase):
             header_lines = f.readlines()[:3]
 
         ns = "{http://schemas.microsoft.com/wix/2006/wi}"
-        ET.register_namespace("", ns[1:-1])
+        ElementTree.register_namespace("", ns[1:-1])
 
-        tree = ET.parse(wxs_file)
+        tree = ElementTree.parse(wxs_file)
         root = tree.getroot()
         product = root.find(f"{ns}Product")
 
@@ -65,19 +61,19 @@ class WindowsBriefcase(BuilderBase):
             shutil.copy(original, target)
 
         # Set installer images
-        ET.SubElement(
+        ElementTree.SubElement(
             product, "WixVariable", {"Id": "WixUIDialogBmp", "Value": f"{left}"}
         )
-        ET.SubElement(
+        ElementTree.SubElement(
             product, "WixVariable", {"Id": "WixUIBannerBmp", "Value": f"{top}"}
         )
 
         # Allow upgrades
-        major_upgrade = ET.SubElement(product, "MajorUpgrade")
+        major_upgrade = ElementTree.SubElement(product, "MajorUpgrade")
         major_upgrade.set("DowngradeErrorMessage", "Can't downgrade. Uninstall first.")
 
         # Cleanup tessdata folder on uninstall
-        ET.SubElement(
+        ElementTree.SubElement(
             product,
             "CustomAction",
             {
@@ -92,7 +88,7 @@ class WindowsBriefcase(BuilderBase):
             },
         )
         sequence = product.find(f"{ns}InstallExecuteSequence")
-        ET.SubElement(
+        ElementTree.SubElement(
             sequence,
             "Custom",
             {"Action": "Cleanup_tessdata", "Before": "RemoveFiles"},

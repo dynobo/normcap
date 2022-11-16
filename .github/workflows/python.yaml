@@ -85,6 +85,9 @@ jobs:
       - name: Ruff
         if: always()
         run: poetry run ruff .
+      - name: Mypy
+        if: always()
+        run: poetry run mypy .
       - name: Black
         if: always()
         run: poetry run black --check --diff .

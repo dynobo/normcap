@@ -72,7 +72,9 @@ class SettingsMenu(QtWidgets.QToolButton):
 
     title_font = QtGui.QFont(QtGui.QFont().family(), pointSize=10, weight=600)
 
-    def __init__(self, parent: QtWidgets.QMainWindow, settings: QtCore.QSettings):
+    def __init__(
+        self, parent: QtWidgets.QMainWindow, settings: QtCore.QSettings
+    ) -> None:
         super().__init__(parent)
         self.setObjectName("settings_icon")
         self.settings = settings
@@ -96,7 +98,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         self.setStyleSheet(_BUTTON_STYLE)
         self.com = Communicate()
 
-    def _add_menu(self):
+    def _add_menu(self) -> None:
         menu = QtWidgets.QMenu(self)
         menu.setObjectName("settings_menu")
         menu.setStyleSheet(_MENU_STYLE.replace("$COLOR", self.settings.value("color")))
@@ -117,13 +119,15 @@ class SettingsMenu(QtWidgets.QToolButton):
 
         self.setMenu(menu)
 
-    def _add_title(self, menu, text: str, action_parent=None):
+    def _add_title(
+        self, menu: QtWidgets.QMenu, text: str, action_parent: QtGui.QAction = None
+    ) -> None:
         action = QtGui.QAction(text, action_parent or menu)
         action.setEnabled(False)
         action.setFont(self.title_font)
         menu.addAction(action)
 
-    def _on_item_click(self, action: QtGui.QAction):
+    def _on_item_click(self, action: QtGui.QAction) -> None:
         action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None
@@ -155,7 +159,9 @@ class SettingsMenu(QtWidgets.QToolButton):
         if None not in [setting, value]:
             self.settings.setValue(str(setting), value)
 
-    def _add_settings_section(self, menu):  # sourcery skip: class-extract-method
+    def _add_settings_section(
+        self, menu: QtWidgets.QMenu
+    ) -> None:  # sourcery skip: class-extract-method
         settings_group = QtGui.QActionGroup(menu)
         settings_group.setObjectName("settings_group")
         settings_group.setExclusive(False)
@@ -178,7 +184,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         action.setChecked(bool(self.settings.value("update", type=bool)))
         menu.addAction(action)
 
-    def _add_mode_section(self, menu):
+    def _add_mode_section(self, menu: QtWidgets.QMenu) -> None:
         mode_group = QtGui.QActionGroup(menu)
         mode_group.setObjectName("mode_group")
         mode_group.setExclusive(True)
@@ -195,7 +201,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         action.setChecked(self.settings.value("mode") == "raw")
         menu.addAction(action)
 
-    def _add_languages_section(self, menu):
+    def _add_languages_section(self, menu: QtWidgets.QMenu) -> None:
         tesseract_languages = ocr.utils.get_tesseract_languages(
             tessdata_path=system_info.get_tessdata_path()
         )
@@ -225,7 +231,7 @@ class SettingsMenu(QtWidgets.QToolButton):
             action.setObjectName("message_languages")
         menu.addAction(action)
 
-    def _add_application_section(self, menu):
+    def _add_application_section(self, menu: QtWidgets.QMenu) -> None:
         submenu = QtWidgets.QMenu(menu)
         submenu.setObjectName("settings_menu_website")
         submenu.setTitle("About")

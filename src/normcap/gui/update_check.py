@@ -23,7 +23,7 @@ class Communicate(QtCore.QObject):
 class UpdateChecker(QtCore.QObject):
     """Helper to check for a new version."""
 
-    def __init__(self, parent, packaged: bool = False):
+    def __init__(self, parent: QtCore.QObject, packaged: bool = False) -> None:
         super().__init__(parent)
         self.packaged = packaged
         self.com = Communicate()
@@ -33,7 +33,7 @@ class UpdateChecker(QtCore.QObject):
         self.com.on_new_version_found.connect(self.show_update_message)
         self.message_box = self._create_message_box()
 
-    def parse_response_to_version(self, text: str):
+    def parse_response_to_version(self, text: str) -> None:
         """Parse the tag version from the response and emit version retrieved signal."""
         newest_version = None
 
@@ -54,14 +54,14 @@ class UpdateChecker(QtCore.QObject):
         else:
             logger.error("Couldn't detect remote version. Update check won't work!")
 
-    def check(self):
+    def check(self) -> None:
         """Start the update check."""
         url = URLS.releases_atom if self.packaged else f"{URLS.pypi_json}"
         logger.debug("Search for new version on %s", url)
         self.downloader.get(url)
 
     @staticmethod
-    def _create_message_box():
+    def _create_message_box() -> QtWidgets.QMessageBox:
         message_box = QtWidgets.QMessageBox()
 
         # Necessary on wayland for main window to regain focus:
@@ -74,7 +74,7 @@ class UpdateChecker(QtCore.QObject):
         message_box.setDefaultButton(QtWidgets.QMessageBox.Ok)
         return message_box
 
-    def check_if_version_is_new(self, newest_version):
+    def check_if_version_is_new(self, newest_version: Version) -> None:
         """Show dialog informing about available update."""
         if newest_version:
             logger.debug(
@@ -83,7 +83,7 @@ class UpdateChecker(QtCore.QObject):
             if Version(newest_version) > Version(__version__):
                 self.com.on_new_version_found.emit(newest_version)
 
-    def show_update_message(self, new_version):
+    def show_update_message(self, new_version: Version) -> None:
         """Show dialog informing about available update."""
         text = f"<b>NormCap v{new_version} is available.</b> (You have v{__version__})"
         if self.packaged:

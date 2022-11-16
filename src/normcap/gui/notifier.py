@@ -22,11 +22,11 @@ class Communicate(QtCore.QObject):
 class Notifier(QtCore.QObject):
     """Sends notifications."""
 
-    def __init__(self, parent):
+    def __init__(self, parent: QtCore.QObject) -> None:
         super().__init__(parent)
         self.com = Communicate()
 
-    def send_notification(self, capture: Capture):
+    def send_notification(self, capture: Capture) -> None:
         """Show tray icon then send notification."""
         title, message = self.compose_notification(capture)
         if sys.platform == "linux" and shutil.which("notify-send"):
@@ -35,7 +35,7 @@ class Notifier(QtCore.QObject):
             self.send_via_qt_tray(title, message)
         self.com.on_notification_sent.emit()
 
-    def send_via_libnotify(self, title, message):
+    def send_via_libnotify(self, title: str, message: str) -> None:
         """Sending via notify-send.
 
         Seems to work more reliable on Linux + Gnome, but requires libnotify.
@@ -59,7 +59,7 @@ class Notifier(QtCore.QObject):
         # Left detached on purpose!
         subprocess.Popen(cmds, start_new_session=True)
 
-    def send_via_qt_tray(self, title, message):
+    def send_via_qt_tray(self, title: str, message: str) -> None:
         """Sending via QT trayicon.
 
         Used for:
@@ -74,7 +74,7 @@ class Notifier(QtCore.QObject):
         self.parent().showMessage(title, message, notification_icon)
 
     @staticmethod
-    def compose_notification(capture) -> tuple[str, str]:
+    def compose_notification(capture: Capture) -> tuple[str, str]:
         """Extract message text out of captures object and include icon."""
         # Compose message text
         text = capture.ocr_text.replace(os.linesep, " ")
