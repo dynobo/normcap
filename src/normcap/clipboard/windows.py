@@ -13,7 +13,7 @@ import ctypes
 import logging
 import sys
 import time
-from ctypes import _NamedFuncPointer, c_size_t, c_wchar, c_wchar_p, get_errno, sizeof
+from ctypes import c_size_t, c_wchar, c_wchar_p, get_errno, sizeof
 from typing import Any, Callable, Iterable
 
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class CheckedCall:
     def __init__(self, f: Any) -> None:  # noqa: ANN401
         self.argtypes: list
         self.restype: Any
-        super().__setattr__("f", f)
+        self.f = f
 
     def __call__(self, *args: Iterable[Any]) -> Any:  # noqa: ANN401
         ret = self.f(*args)
@@ -117,7 +117,7 @@ def _windll_copy(text: str) -> None:
     CF_UNICODETEXT = 13  # noqa: N806 (lowercase)
 
     @contextlib.contextmanager
-    def window() -> _NamedFuncPointer:
+    def window() -> HWND:
         """Context that provides a valid Windows hwnd."""
         # we really just need the hwnd, so setting "STATIC"
         # as predefined lpClass is just fine.
@@ -130,7 +130,7 @@ def _windll_copy(text: str) -> None:
             safeDestroyWindow(hwnd)
 
     @contextlib.contextmanager
-    def clipboard(hwnd: _NamedFuncPointer) -> None:
+    def clipboard(hwnd: HWND) -> None:
         """Opens the clipboard and prevents other apps from modifying its content."""
         # We may not get the clipboard handle immediately because
         # some other application is accessing it (?)

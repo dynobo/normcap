@@ -5,6 +5,7 @@ import os
 import sys
 from importlib import metadata
 from pathlib import Path
+from typing import Optional
 
 from normcap import __version__
 from normcap.gui.models import DesktopEnvironment, Rect, Screen
@@ -23,7 +24,7 @@ def is_flatpak_package() -> bool:
     return os.getenv("FLATPAK_ID") is not None
 
 
-def is_prebuild_package() -> str | None:
+def get_prebuild_package_type() -> str | None:
     package = getattr(sys.modules["__main__"], "__package__", None)
     if package and "Briefcase-Version" in metadata.metadata(package):
         # Briefcase package
@@ -110,30 +111,30 @@ def config_directory() -> Path:
     return Path.home() / ".config" / postfix
 
 
-def get_tessdata_path() -> str:
+def get_tessdata_path() -> Optional[os.PathLike]:
     """Deside which path for tesseract language files to use."""
     prefix = os.environ.get("TESSDATA_PREFIX", None)
 
-    if is_prebuild_package() or is_flatpak_package():
+    if get_prebuild_package_type() or is_flatpak_package():
         path = config_directory() / "tessdata"
     elif prefix:
         path = Path(prefix) / "tessdata"
     else:
-        return ""
+        return None
 
     if not path.is_dir():
         raise RuntimeError(f"tessdata directory does not exist: {path}")
     if not list(path.glob("*.traineddata")):
         raise RuntimeError(f"Could not find language data files in {path}")
 
-    return str(path.resolve())
+    return path.resolve()
 
 
 def to_dict() -> dict:
     """Cast all system infos to string for logging."""
     return {
         "cli_args": " ".join(sys.argv),
-        "is_prebuild_package": is_prebuild_package(),
+        "is_prebuild_package": get_prebuild_package_type(),
         "is_flatpak_package": is_flatpak_package(),
         "platform": sys.platform,
         "pyside6_version": pyside_version,

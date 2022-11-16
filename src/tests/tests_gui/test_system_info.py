@@ -83,14 +83,14 @@ def test_desktop_environment_other(monkeypatch):
 
 
 def test_is_prebuild_package(monkeypatch):
-    assert not system_info.is_prebuild_package()
+    assert not system_info.get_prebuild_package_type()
 
     monkeypatch.setattr(metadata, "metadata", lambda _: {"Briefcase-Version": "9.9.9"})
     monkeypatch.setattr(sys.modules["__main__"], "__package__", "normcap")
-    assert system_info.is_prebuild_package()
+    assert system_info.get_prebuild_package_type()
 
     monkeypatch.setattr(sys.modules["__main__"], "__package__", "")
-    assert not system_info.is_prebuild_package()
+    assert not system_info.get_prebuild_package_type()
 
 
 def test_screens():

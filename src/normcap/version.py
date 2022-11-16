@@ -4,10 +4,9 @@ Mainly implemented to avoid packaging as extra dependency and because complicate
 versions are unexepected in the scope of this project.
 """
 
+from __future__ import annotations
 
-from typing import Any, Self, Union
-
-VersionLike = Union[Self, Any]  # noqa: U007
+from typing import Any, Union
 
 
 class Version:
@@ -48,7 +47,7 @@ class Version:
 
         return major, minor, patch, rest
 
-    def __gt__(self, other: VersionLike) -> bool:
+    def __gt__(self, other: Union[Version, Any]) -> bool:
         if not isinstance(other, Version):
             other = Version(str(other))
         if self.major > other.major:
@@ -66,10 +65,10 @@ class Version:
                         return True
         return False
 
-    def __lt__(self, other: Self) -> bool:
+    def __lt__(self, other: Version) -> bool:
         return not (self > other or self == other)
 
-    def __eq__(self, other: VersionLike) -> bool:
+    def __eq__(self, other: Union[Version, Any]) -> bool:
         if not isinstance(other, Version):
             other = Version(str(other))
         return (
@@ -79,10 +78,10 @@ class Version:
             and (self.rest == other.rest)
         )
 
-    def __ge__(self, other: VersionLike) -> bool:
+    def __ge__(self, other: Union[Version, Any]) -> bool:
         return self.__gt__(other) or self.__eq__(other)
 
-    def __le__(self, other: VersionLike) -> bool:
+    def __le__(self, other: Union[Version, Any]) -> bool:
         return self.__lt__(other) or self.__eq__(other)
 
     def __str__(self) -> str:

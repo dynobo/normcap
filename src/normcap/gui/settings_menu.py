@@ -1,6 +1,6 @@
 """Create the settings button and its menu."""
 
-from typing import Any
+from typing import Any, Optional
 
 from normcap import __version__, ocr
 from normcap.gui import system_info
@@ -101,8 +101,10 @@ class SettingsMenu(QtWidgets.QToolButton):
     def _add_menu(self) -> None:
         menu = QtWidgets.QMenu(self)
         menu.setObjectName("settings_menu")
-        menu.setStyleSheet(_MENU_STYLE.replace("$COLOR", self.settings.value("color")))
-        menu.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        menu.setStyleSheet(
+            _MENU_STYLE.replace("$COLOR", str(self.settings.value("color")))
+        )
+        menu.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
 
         self._add_title(menu, "Settings")
         self._add_settings_section(menu)
@@ -120,7 +122,10 @@ class SettingsMenu(QtWidgets.QToolButton):
         self.setMenu(menu)
 
     def _add_title(
-        self, menu: QtWidgets.QMenu, text: str, action_parent: QtGui.QAction = None
+        self,
+        menu: QtWidgets.QMenu,
+        text: str,
+        action_parent: Optional[QtGui.QAction] = None,
     ) -> None:
         action = QtGui.QAction(text, action_parent or menu)
         action.setEnabled(False)
@@ -219,10 +224,10 @@ class SettingsMenu(QtWidgets.QToolButton):
             action = QtGui.QAction(language, language_group)
             action.setObjectName(language)
             action.setCheckable(True)
-            action.setChecked(language in self.settings.value("language"))
+            action.setChecked(language in str(self.settings.value("language")))
             language_menu.addAction(action)
 
-        if system_info.is_prebuild_package() or system_info.is_flatpak_package():
+        if system_info.get_prebuild_package_type() or system_info.is_flatpak_package():
             action = QtGui.QAction("... open data folder", menu)
             traineddata_path = system_info.config_directory() / "tessdata"
             action.setObjectName(f"file:///{traineddata_path.resolve()}")

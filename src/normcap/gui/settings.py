@@ -11,7 +11,6 @@ class Settings(QtCore.QSettings):
     """Customized settings."""
 
     default_settings = DEFAULT_SETTINGS
-    init_settings = dict | None
 
     def __init__(self, *args: Iterable[Any], init_settings: dict) -> None:
         super().__init__(*args)

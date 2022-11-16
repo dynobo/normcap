@@ -7,7 +7,7 @@ import sys
 import tempfile
 import time
 from functools import partial
-from typing import Any, NoReturn
+from typing import Any, Iterable, NoReturn
 
 from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import system_info, utils
@@ -88,7 +88,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             screengrab.macos_request_screenshot_permission()
 
             # Message box to explain what's happening and open the preferences
-            app = "NormCap" if system_info.is_prebuild_package() else "Terminal"
+            app = "NormCap" if system_info.get_prebuild_package_type() else "Terminal"
             button = QtWidgets.QMessageBox.critical(
                 None,
                 "Error!",
@@ -110,7 +110,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if sizes := self.icon().availableSizes():
             pixmap = self.icon().pixmap(sizes[-1])
             mask = pixmap.createMaskFromColor(
-                QtGui.QColor("transparent"), QtCore.Qt.MaskInColor
+                QtGui.QColor("transparent"), QtCore.Qt.MaskMode.MaskInColor
             )
             pixmap.fill(QtGui.QColor(str(self.settings.value("color"))))
             pixmap.setMask(mask)
@@ -147,10 +147,15 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         interval = datetime.timedelta(days=UPDATE_CHECK_INTERVAL_DAYS)
         today_minus_interval = f"{datetime.datetime.now() - interval:%Y-%m-%d}"
-        if self.settings.value("last-update-check", type=str) > today_minus_interval:
+        if (
+            str(self.settings.value("last-update-check", type=str))
+            > today_minus_interval
+        ):
             return
 
-        checker = UpdateChecker(self, packaged=system_info.is_prebuild_package())
+        checker = UpdateChecker(
+            self, packaged=system_info.get_prebuild_package_type() is not None
+        )
         checker.com.on_version_parsed.connect(self._update_time_of_last_update_check)
         checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
         QtCore.QTimer.singleShot(500, checker.check)
@@ -250,7 +255,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if not screenshot:
             raise TypeError("Screenshot is None!")
 
-        self.capture.mode = CaptureMode[self.settings.value("mode").upper()]
+        self.capture.mode = CaptureMode[str(self.settings.value("mode")).upper()]
         self.capture.rect = rect
         self.capture.screen = self.screens[screen_idx]
         self.capture.image = screenshot.copy(QtCore.QRect(*rect.geometry))
@@ -260,7 +265,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_image_cropped.emit()
 
     @staticmethod
-    def _qimage_to_pil_image(image: QtGui.QImage) -> Image:
+    def _qimage_to_pil_image(image: QtGui.QImage) -> Image.Image:
         """Cast QImage to pillow Image type."""
         ba = QtCore.QByteArray()
         buffer = QtCore.QBuffer(ba)
@@ -276,8 +281,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             return
 
         logger.debug("Start OCR")
+        language = self.settings.value("language")
+        if not isinstance(language, str) and not isinstance(language, Iterable):
+            raise TypeError()
         ocr_result = ocr.recognize(
-            languages=self.settings.value("language"),
+            languages=language,
             image=self._qimage_to_pil_image(self.capture.image),
             tessdata_path=system_info.get_tessdata_path(),
             parse=self.capture.mode is CaptureMode.PARSE,

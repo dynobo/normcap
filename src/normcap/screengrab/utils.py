@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import Optional
 
 from normcap.version import Version
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -75,7 +76,7 @@ def get_gnome_version() -> Version | None:
     return _parse_gnome_version_from_xml() or _parse_gnome_version_from_shell_cmd()
 
 
-def _parse_gnome_version_from_xml() -> Version:
+def _parse_gnome_version_from_xml() -> Optional[Version]:
     """Try parsing gnome-version xml file."""
     gnome_version = None
     try:
@@ -99,7 +100,7 @@ def _parse_gnome_version_from_xml() -> Version:
     return gnome_version
 
 
-def _parse_gnome_version_from_shell_cmd() -> Version:
+def _parse_gnome_version_from_shell_cmd() -> Optional[Version]:
     """Try parsing gnome-shell output."""
     gnome_version = None
     try:
@@ -176,6 +177,8 @@ def macos_request_screenshot_permission() -> None:
     """Use CoreGraphics to request screen recording permissions."""
     try:
         core_graphics = ctypes.util.find_library("CoreGraphics")
+        if not core_graphics:
+            raise ValueError("Couldn' find CoreGraphics")
         cg = ctypes.cdll.LoadLibrary(core_graphics)
         logger.debug("Request screen recording access")
         cg.CGRequestScreenCaptureAccess()

@@ -65,16 +65,17 @@ class UpdateChecker(QtCore.QObject):
         message_box = QtWidgets.QMessageBox()
 
         # Necessary on wayland for main window to regain focus:
-        message_box.setWindowFlags(QtCore.Qt.Popup)
+        message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
         message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
         message_box.setStandardButtons(
-            QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel
+            QtWidgets.QMessageBox.StandardButton.Ok
+            | QtWidgets.QMessageBox.StandardButton.Cancel
         )
-        message_box.setDefaultButton(QtWidgets.QMessageBox.Ok)
+        message_box.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Ok)
         return message_box
 
-    def check_if_version_is_new(self, newest_version: Version) -> None:
+    def check_if_version_is_new(self, newest_version: str) -> None:
         """Show dialog informing about available update."""
         if newest_version:
             logger.debug(
@@ -104,9 +105,9 @@ class UpdateChecker(QtCore.QObject):
         self.message_box.setText(text)
         self.message_box.setInformativeText(info_text)
 
-        set_cursor(QtCore.Qt.ArrowCursor)
+        set_cursor(QtCore.Qt.CursorShape.ArrowCursor)
         choice = self.message_box.exec_()
-        set_cursor(QtCore.Qt.CrossCursor)
+        set_cursor(QtCore.Qt.CursorShape.CrossCursor)
 
         if choice == 1024:
             self.com.on_click_get_new_version.emit(update_url)

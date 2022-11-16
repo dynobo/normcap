@@ -4,6 +4,7 @@ import logging
 import os
 import tempfile
 from pathlib import Path
+from typing import Union
 
 from PySide6 import QtGui
 
@@ -33,7 +34,7 @@ def get_screenshot_interface() -> QtDBus.QDBusInterface:
     return QtDBus.QDBusInterface(item, path, interface, bus)
 
 
-def fullscreen_to_file(filename: os.Pathlike) -> None:
+def fullscreen_to_file(filename: Union[os.PathLike, str]) -> None:
     """Capture full screen and store it in file."""
     if not HAVE_QTDBUS:
         raise ModuleNotFoundError("QtDBUS not available.")

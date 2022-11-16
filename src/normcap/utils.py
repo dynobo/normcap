@@ -74,7 +74,7 @@ def set_environ_for_flatpak() -> None:
 
 # Some overrides when running in prebuild package
 def set_environ_for_prebuild_package() -> None:
-    package = system_info.is_prebuild_package()
+    package = system_info.get_prebuild_package_type()
 
     if package not in ["nuitka", "briefcase"]:
         return

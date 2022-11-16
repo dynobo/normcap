@@ -12,7 +12,9 @@ import tempfile
 import traceback
 from pathlib import Path
 from types import TracebackType
+from typing import Optional
 
+from PIL import Image
 from PySide6 import QtCore, QtGui, QtWidgets
 
 try:
@@ -32,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 
 def save_image_in_tempfolder(
-    image: QtGui.QImage, postfix: str = "", log_level: logging._Level = logging.DEBUG
+    image: Image.Image, postfix: str = "", log_level: int = logging.DEBUG
 ) -> None:
     """For debugging it can be useful to store the cropped image."""
     if logger.getEffectiveLevel() == log_level:
@@ -159,7 +161,7 @@ def move_active_window_to_position_on_kde(screen_geometry: QtCore.QRect) -> None
 def hook_exceptions(
     exc_type: type[BaseException],
     exc_value: BaseException,
-    exc_traceback: TracebackType,
+    exc_traceback: Optional[TracebackType],
 ) -> None:
     """Print traceback and quit application."""
     try:

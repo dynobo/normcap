@@ -18,7 +18,6 @@ class LinuxBriefcase(BuilderBase):
     """Create prebuild package for Linux using Briefcase."""
 
     binary_suffix = ""
-    wl_bin_path = None
 
     def patch_briefcase_appimage_to_prune_deps(self):
         """Insert code into briefcase appimage code to remove unnecessary libs."""

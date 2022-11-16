@@ -39,13 +39,13 @@ def main() -> None:
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
     # Prepare environment
-    if system_info.is_prebuild_package():
+    if system_info.get_prebuild_package_type():
         set_environ_for_prebuild_package()
     if system_info.display_manager_is_wayland():
         set_environ_for_wayland()
     if system_info.is_flatpak_package():
         set_environ_for_flatpak()
-    if system_info.is_prebuild_package() or system_info.is_flatpak_package():
+    if system_info.get_prebuild_package_type() or system_info.is_flatpak_package():
         utils.copy_tessdata_files_to_config_dir()
 
     app = QtWidgets.QApplication(sys.argv)

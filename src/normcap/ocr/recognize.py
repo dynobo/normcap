@@ -2,6 +2,7 @@
 
 import logging
 from os import PathLike
+from typing import Iterable
 
 import pytesseract
 from normcap.ocr import enhance, utils
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def recognize(
-    languages: str | list[str],
+    languages: str | Iterable[str],
     image: Image.Image,
     tessdata_path: PathLike | None = None,
     parse: bool = True,
