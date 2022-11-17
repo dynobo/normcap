@@ -237,7 +237,7 @@ def hook_exceptions(
 
 
 @functools.cache
-def get_icon(icon_file: str, system_icon: str | None = None) -> QtGui.QIcon:
+def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
     if system_icon and QtGui.QIcon.hasThemeIcon(system_icon):
         return QtGui.QIcon.fromTheme(system_icon)
@@ -248,7 +248,7 @@ def get_icon(icon_file: str, system_icon: str | None = None) -> QtGui.QIcon:
     return icon
 
 
-def set_cursor(cursor: QtCore.Qt.CursorShape | None = None) -> None:
+def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None) -> None:
     """Show in-progress cursor for application."""
     if cursor is not None:
         QtWidgets.QApplication.setOverrideCursor(cursor)

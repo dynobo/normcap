@@ -2,7 +2,7 @@
 
 import logging
 from os import PathLike
-from typing import Iterable
+from typing import Iterable, Optional, Union
 
 import pytesseract
 from normcap.ocr import enhance, utils
@@ -14,12 +14,12 @@ logger = logging.getLogger(__name__)
 
 
 def recognize(
-    languages: str | Iterable[str],
+    languages: Union[str, Iterable[str]],
     image: Image.Image,
-    tessdata_path: PathLike | None = None,
+    tessdata_path: Optional[PathLike] = None,
     parse: bool = True,
-    resize_factor: float | None = None,
-    padding_size: int | None = None,
+    resize_factor: Optional[float] = None,
+    padding_size: Optional[int] = None,
 ) -> OcrResult:
     """Apply OCR on selected image section."""
     utils.configure_tesseract_binary()

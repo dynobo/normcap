@@ -24,7 +24,7 @@ def is_flatpak_package() -> bool:
     return os.getenv("FLATPAK_ID") is not None
 
 
-def get_prebuild_package_type() -> str | None:
+def get_prebuild_package_type() -> Optional[str]:
     package = getattr(sys.modules["__main__"], "__package__", None)
     if package and "Briefcase-Version" in metadata.metadata(package):
         # Briefcase package

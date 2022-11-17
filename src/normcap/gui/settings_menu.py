@@ -136,7 +136,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None
-        value: Any | None = None
+        value: Optional[Any] = None
         setting = None
 
         if action_name == "close":

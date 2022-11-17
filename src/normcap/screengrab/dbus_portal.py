@@ -2,6 +2,7 @@
 
 import logging
 import random
+from typing import Optional
 from urllib.parse import urlparse
 
 from jeepney.bus_messages import MatchRule, Message, message_bus
@@ -37,7 +38,7 @@ class FreedesktopPortalScreenshot(MessageGenerator):
         return new_method_call(self, "Screenshot", "sa{sv}", (parent_window, options))
 
 
-def grab_full_desktop() -> QtGui.QImage | None:
+def grab_full_desktop() -> Optional[QtGui.QImage]:
     """Capture rect of screen on gnome systems using wayland."""
     logger.debug("Use capture method: DBUS portal")
 

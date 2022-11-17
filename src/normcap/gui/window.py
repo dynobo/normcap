@@ -6,6 +6,7 @@ in multi display setups).
 
 import logging
 import sys
+from typing import Optional
 
 from normcap.gui import system_info
 from normcap.gui.models import CaptureMode, DesktopEnvironment, Selection
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 class Window(QtWidgets.QMainWindow):
     """Used for child windows and as base class for MainWindow."""
 
-    settings_menu: QtWidgets.QToolButton | None = None
+    settings_menu: Optional[QtWidgets.QToolButton] = None
 
     def __init__(
         self, screen_idx: int, color: str, parent: QtWidgets.QSystemTrayIcon

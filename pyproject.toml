@@ -31,7 +31,6 @@ PySide6-Essentials = "^6.4.0.1"
 jeepney = ">=0.8"
 pytesseract = ">=0.3.10"
 certifi = "^2022.9.24"
-pyright = "^1.1.280"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=22.3.0"
@@ -54,10 +53,9 @@ types-Pillow = ">=9.0.19"
 pydeps = ">=1.10.18"
 briefcase = "0.3.9"
 safety = ">=1.10.3"
-
+ruff = ">=0.0.124"
+mypy = ">=0.991"
 Nuitka = "^1.0.3"
-ruff = "^0.0.120"
-mypy = "^0.991"
 
 [tool.poetry.group.analysis]
 optional = true
@@ -82,12 +80,14 @@ exclude = '''
 '''
 
 [tool.ruff]
+target-version = "py39"
+line-length = 88
 select = [
   "F",   # Pyflakes
   "E",   # pycodestyle
   "I",   # Isort
   "D",   # pydocstyle
-  "U",   # pyupgrade
+  "U",   # pyupgrad
   "N",   # pep8-naming
   "S",   # flake8-bandits
   "C",   # flake8-comprehensions
@@ -98,7 +98,6 @@ select = [
   "ANN", # flake8-annotations
   "M",   # meta rules (unused noqa)
 ]
-line-length = 88
 ignore = [
   "D100",   # Missing docstring in public module
   "D101",   # Missing docstring in public class

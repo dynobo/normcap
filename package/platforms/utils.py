@@ -11,6 +11,7 @@ import urllib.request
 import zipfile
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Optional, Union
 
 import toml
 
@@ -147,7 +148,7 @@ class BuilderBase(ABC):
         return pyproject_toml["tool"]["poetry"]["version"]
 
     @staticmethod
-    def run(cmd: str | list, cwd=None):
+    def run(cmd: Union[str, list], cwd=None) -> Optional[str]:
         """Executes a shell command and raises in case of error."""
         if not isinstance(cmd, str):
             cmd = " ".join(cmd)
@@ -166,7 +167,11 @@ class BuilderBase(ABC):
                 stderr=completed_proc.stderr,
             )
 
-        return completed_proc.stdout
+        return (
+            completed_proc.stdout.decode(encoding="utf8")
+            if completed_proc.stdout
+            else None
+        )
 
     def download_tessdata(self):
         """Download trained data for tesseract to include in packages."""

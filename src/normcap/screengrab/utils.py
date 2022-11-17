@@ -61,7 +61,7 @@ def _get_gnome_version_xml() -> str:
 
 
 @functools.lru_cache
-def get_gnome_version() -> Version | None:
+def get_gnome_version() -> Optional[Version]:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux":
         return None

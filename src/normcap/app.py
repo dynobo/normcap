@@ -7,7 +7,7 @@ import sys
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
-from normcap import __version__  # noqa: E402, I001
+from normcap import __version__  # noqa: E402
 from normcap.gui import system_info, utils  # noqa: E402
 from normcap.gui.tray import SystemTray  # noqa: E402
 from normcap.utils import (  # noqa: E402
