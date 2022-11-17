@@ -224,6 +224,7 @@ def hook_exceptions(
             message,
             flags=re.IGNORECASE,
         )
+        print(message, file=sys.stderr, flush=True)  # noqa
 
     except Exception:
         logger.critical(

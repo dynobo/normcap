@@ -109,25 +109,25 @@ def test_get_tessdata_path(monkeypatch, tmp_path):
     data_file.touch(exist_ok=True)
 
     try:
-        monkeypatch.setattr(system_info, "is_prebuild_package", lambda: True)
+        monkeypatch.setattr(system_info, "get_prebuild_package_type", lambda: True)
         path_briefcase = system_info.get_tessdata_path()
 
-        monkeypatch.setattr(system_info, "is_prebuild_package", lambda: False)
+        monkeypatch.setattr(system_info, "get_prebuild_package_type", lambda: False)
         monkeypatch.setenv("TESSDATA_PREFIX", str(data_file.parent.parent.resolve()))
         path_env_var = system_info.get_tessdata_path()
 
-        monkeypatch.setattr(system_info, "is_prebuild_package", lambda: False)
+        monkeypatch.setattr(system_info, "get_prebuild_package_type", lambda: False)
         monkeypatch.setenv("TESSDATA_PREFIX", "")
         path_non = system_info.get_tessdata_path()
     finally:
         data_file.unlink()
 
-    assert path_briefcase.endswith("tessdata")
-    assert path_env_var.endswith("tessdata")
-    assert path_non == ""
+    assert str(path_briefcase).endswith("tessdata")
+    assert str(path_env_var).endswith("tessdata")
+    assert path_non is None
 
     # mock config dir not existing:
-    monkeypatch.setattr(system_info, "is_prebuild_package", lambda: True)
+    monkeypatch.setattr(system_info, "get_prebuild_package_type", lambda: True)
     monkeypatch.setattr(system_info, "config_directory", lambda: tmp_path / "nan")
     with pytest.raises(RuntimeError) as e:
         _ = system_info.get_tessdata_path()
@@ -142,7 +142,7 @@ def test_get_tessdata_path(monkeypatch, tmp_path):
 
     # mock directory but _no_ language data:
     monkeypatch.setattr(system_info, "config_directory", lambda: Path("/tmp"))
-    monkeypatch.setattr(system_info, "is_prebuild_package", lambda: True)
+    monkeypatch.setattr(system_info, "get_prebuild_package_type", lambda: True)
     with pytest.raises(RuntimeError):
         _ = system_info.get_tessdata_path()
 
