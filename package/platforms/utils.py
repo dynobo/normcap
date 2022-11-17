@@ -206,7 +206,7 @@ class BuilderBase(ABC):
         patch_applied = False
         patch_hash = hashlib.md5(patch.encode()).hexdigest()
 
-        with open(file_path, encoding="utf8") as f:
+        with open(file_path, mode="r", encoding="utf8") as f:
             if f.read().find(patch_hash) > -1:
                 return
 
@@ -222,7 +222,7 @@ class BuilderBase(ABC):
                 patch = patch.replace("\n", f"\n{pad * ' '}")
                 line = line.replace(line, line + pad * " " + patch + "\n")
                 patch_applied = True
-
+            print(line, end="")  # noqa
         if not patch_applied:
             raise RuntimeError(
                 f"Couldn't apply patch to file {file_path}! "

@@ -119,7 +119,6 @@ per-file-ignores = { "src/tests*" = [
   "ANN",
 ] }
 
-
 [tool.mypy]
 files = ["src/normcap/**/*.py", "src/tests/**/*.py"]
 follow_imports = "skip"
