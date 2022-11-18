@@ -2,7 +2,7 @@
 import enum
 import logging
 from collections import namedtuple
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from PySide6 import QtGui
@@ -151,7 +151,7 @@ class Capture:
     mode: CaptureMode = CaptureMode.PARSE
 
     # Image of selected region
-    image: QtGui.QImage = QtGui.QImage()
+    image: QtGui.QImage = field(default_factory=QtGui.QImage)
     screen: Optional[Screen] = None
     scale_factor: float = 1
     rect: Rect = Rect()
