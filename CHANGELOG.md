@@ -5,6 +5,8 @@
 - All: Add possibility to capture by left-clicking (or double-clicking) the tray icon.
   This also improves a bit the situation regarding
   [#306](https://github.com/dynobo/normcap/issues/306).
+- All: Fix bug when running with Python 3.11
+  [#311](https://github.com/dynobo/normcap/issues/311).
 - Windows: Improve the msi-installer by doing a clean uninstallation that removes also
   log-folder and tessdata folder.
 

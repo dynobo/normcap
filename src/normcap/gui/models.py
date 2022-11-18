@@ -2,7 +2,7 @@
 import enum
 import logging
 from collections import namedtuple
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from PySide6 import QtGui
@@ -10,6 +10,25 @@ from PySide6 import QtGui
 logger = logging.getLogger(__name__)
 
 Setting = namedtuple("Setting", "key flag type_ value choices help cli_arg")
+
+
+@enum.unique
+class DesktopEnvironment(enum.IntEnum):
+    """Desktop environments that need to be handled."""
+
+    OTHER = 0
+    GNOME = 1
+    KDE = 2
+    SWAY = 3
+    UNITY = 4
+
+
+@enum.unique
+class CaptureMode(enum.IntEnum):
+    """Available modes of magic."""
+
+    RAW = 0
+    PARSE = 1
 
 
 @dataclass
@@ -34,25 +53,6 @@ class Urls:
     def pypi_json(self) -> str:
         """URL to github releases rss feed."""
         return f"{self.pypi}/json"
-
-
-@enum.unique
-class DesktopEnvironment(enum.IntEnum):
-    """Desktop environments that need to be handled."""
-
-    OTHER = 0
-    GNOME = 1
-    KDE = 2
-    SWAY = 3
-    UNITY = 4
-
-
-@enum.unique
-class CaptureMode(enum.IntEnum):
-    """Available modes of magic."""
-
-    RAW = 0
-    PARSE = 1
 
 
 @dataclass()
@@ -151,7 +151,7 @@ class Capture:
     mode: CaptureMode = CaptureMode.PARSE
 
     # Image of selected region
-    image: QtGui.QImage = QtGui.QImage()
+    image: QtGui.QImage = field(default_factory=QtGui.QImage)
     screen: Optional[Screen] = None
     scale_factor: float = 1
     rect: Rect = Rect()
