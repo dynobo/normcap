@@ -9,9 +9,8 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from PySide6 import QtCore, QtGui, QtWidgets
-
 from normcap.version import Version
+from PySide6 import QtCore, QtGui, QtWidgets
 
 logger = logging.getLogger(__name__)
 
@@ -48,9 +47,9 @@ def has_wayland_display_manager() -> bool:
     """Identify relevant display managers (Linux)."""
     if sys.platform != "linux":
         return False
-    XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "").lower()
-    WAYLAND_DISPLAY = os.environ.get("WAYLAND_DISPLAY", "").lower()
-    return "wayland" in WAYLAND_DISPLAY or "wayland" in XDG_SESSION_TYPE
+    xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
+    wayland_display = os.environ.get("WAYLAND_DISPLAY", "").lower()
+    return "wayland" in wayland_display or "wayland" in xdg_session_type
 
 
 def _get_gnome_version_xml() -> str:
@@ -77,7 +76,7 @@ def get_gnome_version() -> Optional[Version]:
     return _parse_gnome_version_from_xml() or _parse_gnome_version_from_shell_cmd()
 
 
-def _parse_gnome_version_from_xml():
+def _parse_gnome_version_from_xml() -> Optional[Version]:
     """Try parsing gnome-version xml file."""
     gnome_version = None
     try:
@@ -93,7 +92,7 @@ def _parse_gnome_version_from_xml():
         gnome_version = Version(f"{platform}.{minor}")
     except FileNotFoundError:
         logger.debug("Couldn't find from gnome-version.xml")
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         logger.warning(
             "Couldn't parse gnome version from gnome-version.xml", exc_info=e
         )
@@ -101,7 +100,7 @@ def _parse_gnome_version_from_xml():
     return gnome_version
 
 
-def _parse_gnome_version_from_shell_cmd():
+def _parse_gnome_version_from_shell_cmd() -> Optional[Version]:
     """Try parsing gnome-shell output."""
     gnome_version = None
     try:
@@ -111,18 +110,18 @@ def _parse_gnome_version_from_shell_cmd():
             gnome_version = Version(result.groups()[0])
     except (subprocess.CalledProcessError, FileNotFoundError):
         pass
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         logger.warning("Exception when trying to get gnome version from cli %s", e)
 
     return gnome_version
 
 
-def has_dbus_portal_support():
+def has_dbus_portal_support() -> bool:
     gnome_version = get_gnome_version()
     return not gnome_version or gnome_version >= Version("41")
 
 
-def macos_reset_screenshot_permission():
+def macos_reset_screenshot_permission() -> None:
     """Use tccutil to reset permissions for current application."""
     logger.info("Reset screen recording permissions for eu.dynobo.normcap")
     cmd = ["tccutil", "reset", "ScreenCapture", "eu.dynobo.normcap"]
@@ -140,7 +139,7 @@ def macos_reset_screenshot_permission():
                 completed_proc.stdout,
                 completed_proc.stderr,
             )
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         logger.error("Couldn't reset screen recording permissions: %s", e)
 
 
@@ -157,34 +156,37 @@ def has_screenshot_permission() -> bool:
 def _macos_has_screenshot_permission() -> bool:
     """Use CoreGraphics to check if application has screen recording permissions.
 
-    Returns:
+    Returns
+    -------
         True if permissions are available or can't be detected.
     """
     try:
         core_graphics = ctypes.util.find_library("CoreGraphics")
         if not core_graphics:
             raise RuntimeError("Couldn't load CoreGraphics")
-        CG = ctypes.cdll.LoadLibrary(core_graphics)
-        has_permission = bool(CG.CGPreflightScreenCaptureAccess())
-    except Exception as e:  # pylint: disable=broad-except
+        cg = ctypes.cdll.LoadLibrary(core_graphics)
+        has_permission = bool(cg.CGPreflightScreenCaptureAccess())
+    except Exception as e:
         has_permission = True
         logger.warning("Couldn't detect screen recording permission: %s", e)
         logger.warning("Assuming screen recording permission is %s", has_permission)
     return has_permission
 
 
-def macos_request_screenshot_permission():
+def macos_request_screenshot_permission() -> None:
     """Use CoreGraphics to request screen recording permissions."""
     try:
         core_graphics = ctypes.util.find_library("CoreGraphics")
-        CG = ctypes.cdll.LoadLibrary(core_graphics)
+        if not core_graphics:
+            raise ValueError("Couldn' find CoreGraphics")
+        cg = ctypes.cdll.LoadLibrary(core_graphics)
         logger.debug("Request screen recording access")
-        CG.CGRequestScreenCaptureAccess()
-    except Exception as e:  # pylint: disable=broad-except
+        cg.CGRequestScreenCaptureAccess()
+    except Exception as e:
         logger.warning("Couldn't request screen recording permission: %s", e)
 
 
-def macos_open_privacy_settings():
+def macos_open_privacy_settings() -> None:
     link_to_preferences = (
         "x-apple.systempreferences:com.apple.preference.security"
         + "?Privacy_ScreenCapture"
@@ -198,5 +200,5 @@ def macos_open_privacy_settings():
             check=True,
             timeout=30,
         )
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         logger.error("Couldn't open privacy settings: %s", e)

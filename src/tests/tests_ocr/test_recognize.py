@@ -3,9 +3,8 @@ from pathlib import Path
 
 import Levenshtein
 import pytest
-from PIL import Image
-
 from normcap import ocr
+from PIL import Image
 
 from .testcases.data import TESTCASES
 

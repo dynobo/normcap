@@ -1,8 +1,10 @@
 """Capture screenshot of all screens using DBUS org.gnome.Shell.Screenshot."""
 
 import logging
+import os
 import tempfile
 from pathlib import Path
+from typing import Union
 
 from PySide6 import QtGui
 
@@ -18,7 +20,7 @@ from normcap.screengrab.utils import split_full_desktop_to_screens
 logger = logging.getLogger(__name__)
 
 
-def get_screenshot_interface():
+def get_screenshot_interface() -> QtDBus.QDBusInterface:
     if not HAVE_QTDBUS:
         raise ModuleNotFoundError("QtDBUS not available.")
 
@@ -32,7 +34,7 @@ def get_screenshot_interface():
     return QtDBus.QDBusInterface(item, path, interface, bus)
 
 
-def fullscreen_to_file(filename):
+def fullscreen_to_file(filename: Union[os.PathLike, str]) -> None:
     """Capture full screen and store it in file."""
     if not HAVE_QTDBUS:
         raise ModuleNotFoundError("QtDBUS not available.")

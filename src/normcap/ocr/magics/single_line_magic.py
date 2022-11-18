@@ -14,7 +14,8 @@ class SingleLineMagic(BaseMagic):
             BaseMagic {class} -- Base class for magics
             capture {Capture} -- NormCap's session data
 
-        Returns:
+        Returns
+        -------
             float -- score between 0-100 (100 = more likely)
         """
         if len(ocr_result.text) == 0:
@@ -31,7 +32,8 @@ class SingleLineMagic(BaseMagic):
         Arguments:
             capture {Capture} -- NormCap's session data
 
-        Returns:
+        Returns
+        -------
             str -- Single line of text
         """
         # Just return concatenated text

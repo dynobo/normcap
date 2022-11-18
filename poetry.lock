@@ -40,37 +40,6 @@ tests = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy (>=0.900
 tests-no-zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy (>=0.900,!=0.940)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins"]
 
 [[package]]
-name = "autoflake"
-version = "1.7.7"
-description = "Removes unused imports and unused variables"
-category = "dev"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-pyflakes = ">=1.1.0"
-tomli = {version = ">=2.0.1", markers = "python_version < \"3.11\""}
-
-[[package]]
-name = "bandit"
-version = "1.7.4"
-description = "Security oriented static analyser for python code."
-category = "dev"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-colorama = {version = ">=0.3.9", markers = "platform_system == \"Windows\""}
-GitPython = ">=1.0.1"
-PyYAML = ">=5.3.1"
-stevedore = ">=1.20.0"
-
-[package.extras]
-test = ["beautifulsoup4 (>=4.8.0)", "coverage (>=4.5.4)", "fixtures (>=3.0.0)", "flake8 (>=4.0.0)", "pylint (==1.9.4)", "stestr (>=2.5.0)", "testscenarios (>=0.5.0)", "testtools (>=2.3.0)", "toml"]
-toml = ["toml"]
-yaml = ["PyYAML"]
-
-[[package]]
 name = "binaryornot"
 version = "0.4.4"
 description = "Ultra-lightweight pure Python package to check if a file is binary or text."
@@ -672,7 +641,7 @@ setuptools = "*"
 
 [[package]]
 name = "nuitka"
-version = "1.2"
+version = "1.2.1"
 description = "Python compiler with full language support and CPython compatibility"
 category = "dev"
 optional = false
@@ -704,14 +673,6 @@ description = "Utility library for gitignore style pattern matching of file path
 category = "dev"
 optional = false
 python-versions = ">=3.7"
-
-[[package]]
-name = "pbr"
-version = "5.11.0"
-description = "Python Build Reasonableness"
-category = "dev"
-optional = false
-python-versions = ">=2.6"
 
 [[package]]
 name = "pillow"
@@ -794,28 +755,6 @@ python-versions = "*"
 
 [package.dependencies]
 stdlib-list = "*"
-
-[[package]]
-name = "pydocstyle"
-version = "6.1.1"
-description = "Python docstring style checker"
-category = "dev"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-snowballstemmer = "*"
-
-[package.extras]
-toml = ["toml"]
-
-[[package]]
-name = "pyflakes"
-version = "2.5.0"
-description = "passive checker of Python programs"
-category = "dev"
-optional = false
-python-versions = ">=3.6"
 
 [[package]]
 name = "pygments"
@@ -1003,17 +942,6 @@ global = ["appdirs (>=1.4.4)"]
 validation = ["pydantic (>=1.7.4)"]
 
 [[package]]
-name = "pyupgrade"
-version = "2.38.4"
-description = "A tool to automatically upgrade syntax for newer versions."
-category = "dev"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-tokenize-rt = "<5"
-
-[[package]]
 name = "pyvirtualdisplay"
 version = "3.0"
 description = "python wrapper for Xvfb, Xephyr and Xvnc"
@@ -1125,6 +1053,14 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "ruff"
+version = "0.0.124"
+description = "An extremely fast Python linter, written in Rust."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "safety"
 version = "2.3.1"
 description = "Checks installed dependencies for known vulnerabilities and licenses."
@@ -1193,14 +1129,6 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
-name = "snowballstemmer"
-version = "2.2.0"
-description = "This package provides 29 stemmers for 28 languages generated from Snowball algorithms."
-category = "dev"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "stdlib-list"
 version = "0.8.0"
 description = "A list of Python Standard Libraries (2.6-7, 3.2-9)."
@@ -1210,17 +1138,6 @@ python-versions = "*"
 
 [package.extras]
 develop = ["sphinx"]
-
-[[package]]
-name = "stevedore"
-version = "4.1.1"
-description = "Manage dynamic plugins for Python applications"
-category = "dev"
-optional = false
-python-versions = ">=3.8"
-
-[package.dependencies]
-pbr = ">=2.0.0,<2.1.0 || >2.1.0"
 
 [[package]]
 name = "tabulate"
@@ -1256,14 +1173,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "tokenize-rt"
-version = "4.2.1"
-description = "A wrapper around the stdlib `tokenize` which roundtrips."
-category = "dev"
-optional = false
-python-versions = ">=3.6.1"
-
-[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -1297,7 +1206,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-requests"
-version = "2.28.11.4"
+version = "2.28.11.5"
 description = "Typing stubs for requests"
 category = "dev"
 optional = false
@@ -1316,7 +1225,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-urllib3"
-version = "1.26.25.3"
+version = "1.26.25.4"
 description = "Typing stubs for urllib3"
 category = "dev"
 optional = false
@@ -1438,7 +1347,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.12"
-content-hash = "172fffde9a8fcd567afcb516eea73912ef91f31229ee87e28ae5046b6e6e06eb"
+content-hash = "69e2ebb9d3f8344532efcbfddaf09809e5a341c947a08be32c3091a7bc881213"
 
 [metadata.files]
 arrow = [
@@ -1452,14 +1361,6 @@ astroid = [
 attrs = [
     {file = "attrs-22.1.0-py2.py3-none-any.whl", hash = "sha256:86efa402f67bf2df34f51a335487cf46b1ec130d02b8d39fd248abfd30da551c"},
     {file = "attrs-22.1.0.tar.gz", hash = "sha256:29adc2665447e5191d0e7c568fde78b21f9672d344281d0c6e1ab085429b22b6"},
-]
-autoflake = [
-    {file = "autoflake-1.7.7-py3-none-any.whl", hash = "sha256:a9b43d08f8e455824e4f7b3f078399f59ba538ba53872f466c09e55c827773ef"},
-    {file = "autoflake-1.7.7.tar.gz", hash = "sha256:c8e4fc41aa3eae0f5c94b939e3a3d50923d7a9306786a6cbf4866a077b8f6832"},
-]
-bandit = [
-    {file = "bandit-1.7.4-py3-none-any.whl", hash = "sha256:412d3f259dab4077d0e7f0c11f50f650cc7d10db905d98f6520a95a18049658a"},
-    {file = "bandit-1.7.4.tar.gz", hash = "sha256:2d63a8c573417bae338962d4b9b06fbc6080f74ecd955a092849e1e65c717bd2"},
 ]
 binaryornot = [
     {file = "binaryornot-0.4.4-py2.py3-none-any.whl", hash = "sha256:b8b71173c917bddcd2c16070412e369c3ed7f0528926f70cac18a6c97fd563e4"},
@@ -1907,7 +1808,7 @@ nodeenv = [
     {file = "nodeenv-1.7.0.tar.gz", hash = "sha256:e0e7f7dfb85fc5394c6fe1e8fa98131a2473e04311a45afb6508f7cf1836fa2b"},
 ]
 nuitka = [
-    {file = "Nuitka-1.2.tar.gz", hash = "sha256:6584494865d38f906bcc8e56f0bfa7a70d077402115a889d80529716f177d806"},
+    {file = "Nuitka-1.2.1.tar.gz", hash = "sha256:b587232670e564ce5c8d3f31abbc04f6c5ee132c45a19f5923e2a879e93cfafd"},
 ]
 objprint = [
     {file = "objprint-0.2.2-py3-none-any.whl", hash = "sha256:9f50bb3b7cbe95b6d22c79e4f08a5273e3f7e5ff5ce35e146f6e7854abd276a0"},
@@ -1920,10 +1821,6 @@ packaging = [
 pathspec = [
     {file = "pathspec-0.10.2-py3-none-any.whl", hash = "sha256:88c2606f2c1e818b978540f73ecc908e13999c6c3a383daf3705652ae79807a5"},
     {file = "pathspec-0.10.2.tar.gz", hash = "sha256:8f6bf73e5758fd365ef5d58ce09ac7c27d2833a8d7da51712eac6e27e35141b0"},
-]
-pbr = [
-    {file = "pbr-5.11.0-py2.py3-none-any.whl", hash = "sha256:db2317ff07c84c4c63648c9064a79fe9d9f5c7ce85a9099d4b6258b3db83225a"},
-    {file = "pbr-5.11.0.tar.gz", hash = "sha256:b97bc6695b2aff02144133c2e7399d5885223d42b7912ffaec2ca3898e673bfe"},
 ]
 pillow = [
     {file = "Pillow-9.3.0-1-cp37-cp37m-win32.whl", hash = "sha256:e6ea6b856a74d560d9326c0f5895ef8050126acfdc7ca08ad703eb0081e82b74"},
@@ -2024,14 +1921,6 @@ pydeps = [
     {file = "pydeps-1.10.24-py3-none-any.whl", hash = "sha256:cd6287b5e8150f9196c3d9e2c18e7c00b293a00b92450f7795b2ee9ff80ecaa7"},
     {file = "pydeps-1.10.24.tar.gz", hash = "sha256:efbcd33057f4ec4058f569b5ea5415924085bfc8026ce37d02dad3cc01c31a1d"},
 ]
-pydocstyle = [
-    {file = "pydocstyle-6.1.1-py3-none-any.whl", hash = "sha256:6987826d6775056839940041beef5c08cc7e3d71d63149b48e36727f70144dc4"},
-    {file = "pydocstyle-6.1.1.tar.gz", hash = "sha256:1d41b7c459ba0ee6c345f2eb9ae827cab14a7533a88c5c6f7e94923f72df92dc"},
-]
-pyflakes = [
-    {file = "pyflakes-2.5.0-py2.py3-none-any.whl", hash = "sha256:4579f67d887f804e67edb544428f264b7b24f435b263c4614f384135cea553d2"},
-    {file = "pyflakes-2.5.0.tar.gz", hash = "sha256:491feb020dca48ccc562a8c0cbe8df07ee13078df59813b83959cbdada312ea3"},
-]
 pygments = [
     {file = "Pygments-2.13.0-py3-none-any.whl", hash = "sha256:f643f331ab57ba3c9d89212ee4a2dabc6e94f117cf4eefde99a0574720d14c42"},
     {file = "Pygments-2.13.0.tar.gz", hash = "sha256:56a8508ae95f98e2b9bdf93a6be5ae3f7d8af858b43e02c5a2ff083726be40c1"},
@@ -2086,10 +1975,6 @@ python-slugify = [
 pytoolconfig = [
     {file = "pytoolconfig-1.2.2-py3-none-any.whl", hash = "sha256:825d97b052e58b609c2684b04efeb543075588d33a4916a6dc2ae39676458c7d"},
     {file = "pytoolconfig-1.2.2.tar.gz", hash = "sha256:2512a1f261a40e73cef2e58e786184261b60c802ae7ed01249342b1949ec3aa2"},
-]
-pyupgrade = [
-    {file = "pyupgrade-2.38.4-py2.py3-none-any.whl", hash = "sha256:944ff993c396ddc2b9012eb3de4cda138eb4c149b22c6c560d4c8bfd0e180982"},
-    {file = "pyupgrade-2.38.4.tar.gz", hash = "sha256:1eb43a49f416752929741ba4d706bf3f33593d3cac9bdc217fc1ef55c047c1f4"},
 ]
 pyvirtualdisplay = [
     {file = "PyVirtualDisplay-3.0-py3-none-any.whl", hash = "sha256:40d4b8dfe4b8de8552e28eb367647f311f88a130bf837fe910e7f180d5477f0e"},
@@ -2283,6 +2168,24 @@ ruamel-yaml-clib = [
     {file = "ruamel.yaml.clib-0.2.7-cp39-cp39-win_amd64.whl", hash = "sha256:184faeaec61dbaa3cace407cffc5819f7b977e75360e8d5ca19461cd851a5fc5"},
     {file = "ruamel.yaml.clib-0.2.7.tar.gz", hash = "sha256:1f08fd5a2bea9c4180db71678e850b995d2a5f4537be0e94557668cf0f5f9497"},
 ]
+ruff = [
+    {file = "ruff-0.0.124-py3-none-macosx_10_7_x86_64.whl", hash = "sha256:93a363ac42d0b8f474a6d2adaee8574fd2b9df7488a875674a027fe3d5fb8d48"},
+    {file = "ruff-0.0.124-py3-none-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:4a1c5d4035c1e728797e8e6fd92dacc0df5bbfc64fe2b1df7fac5270bf36ab3f"},
+    {file = "ruff-0.0.124-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3e8e9da7433737ae8ac6999a1136728413159ba4694f148871828105456fcb31"},
+    {file = "ruff-0.0.124-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:72368b766ff1b3c3f2af624ff744281914bdc8ae81e041cb6b28240b846d6886"},
+    {file = "ruff-0.0.124-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:67b47b4cc4d4e09affd41b270cbfcb86cc0ae6bba471a33241b1e5fba66fea92"},
+    {file = "ruff-0.0.124-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:19255a4374ca46ae2d8dac31181495344f6a046a2332cb340e3287f9f65f9176"},
+    {file = "ruff-0.0.124-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:12df045f97ebe6eba1ecdfa32480928eae0df969f810f77df780a444c33f3717"},
+    {file = "ruff-0.0.124-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:5da29dcb881baf8484995e033099325c417561c75ab8b2afc98afd8e66d0d057"},
+    {file = "ruff-0.0.124-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:29f026646bb67093b91b3aac3370dbc8c195057a4aeb33abf87c350c87939244"},
+    {file = "ruff-0.0.124-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:49e8f98c3bdbd3e0cea72dd6c9c104e4ba918d77af47accbdda1aa93e3b3ea3a"},
+    {file = "ruff-0.0.124-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:9d07e2db3be6409672f07e1bbc1d186e049092bb7c3d30199f8d3c490e26c6dc"},
+    {file = "ruff-0.0.124-py3-none-musllinux_1_2_i686.whl", hash = "sha256:85ef5ca7f7a0bf1b5a8e10be19e3463e16565b8def84b67aab602ad2415fabe4"},
+    {file = "ruff-0.0.124-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:0b830b9c3d733a7330782522309bda3a08abe5e90d8d847e5641258e651ef20f"},
+    {file = "ruff-0.0.124-py3-none-win32.whl", hash = "sha256:fcfe14a7ec91296a3e7b2b5f3fa59b68a2fbd0271ac008caf643db9ea6b93d91"},
+    {file = "ruff-0.0.124-py3-none-win_amd64.whl", hash = "sha256:7b0182302284294c41ef80dee2cef52284739af3cc29889bb99f95daa0153776"},
+    {file = "ruff-0.0.124.tar.gz", hash = "sha256:7c795703e738aeb5b562c97ee2e56e94b806436dfcbbdc3a9314d68388cddc3b"},
+]
 safety = [
     {file = "safety-2.3.1-py3-none-any.whl", hash = "sha256:8f098d12b607db2756886280e85c28ece8db1bba4f45fc5f981f4663217bd619"},
     {file = "safety-2.3.1.tar.gz", hash = "sha256:6e6fcb7d4e8321098cf289f59b65051cafd3467f089c6e57c9f894ae32c23b71"},
@@ -2311,17 +2214,9 @@ smmap = [
     {file = "smmap-5.0.0-py3-none-any.whl", hash = "sha256:2aba19d6a040e78d8b09de5c57e96207b09ed71d8e55ce0959eeee6c8e190d94"},
     {file = "smmap-5.0.0.tar.gz", hash = "sha256:c840e62059cd3be204b0c9c9f74be2c09d5648eddd4580d9314c3ecde0b30936"},
 ]
-snowballstemmer = [
-    {file = "snowballstemmer-2.2.0-py2.py3-none-any.whl", hash = "sha256:c8e1716e83cc398ae16824e5572ae04e0d9fc2c6b985fb0f900f5f0c96ecba1a"},
-    {file = "snowballstemmer-2.2.0.tar.gz", hash = "sha256:09b16deb8547d3412ad7b590689584cd0fe25ec8db3be37788be3810cbf19cb1"},
-]
 stdlib-list = [
     {file = "stdlib-list-0.8.0.tar.gz", hash = "sha256:a1e503719720d71e2ed70ed809b385c60cd3fb555ba7ec046b96360d30b16d9f"},
     {file = "stdlib_list-0.8.0-py3-none-any.whl", hash = "sha256:2ae0712a55b68f3fbbc9e58d6fa1b646a062188f49745b495f94d3310a9fdd3e"},
-]
-stevedore = [
-    {file = "stevedore-4.1.1-py3-none-any.whl", hash = "sha256:aa6436565c069b2946fe4ebff07f5041e0c8bf18c7376dd29edf80cf7d524e4e"},
-    {file = "stevedore-4.1.1.tar.gz", hash = "sha256:7f8aeb6e3f90f96832c301bff21a7eb5eefbe894c88c506483d355565d88cc1a"},
 ]
 tabulate = [
     {file = "tabulate-0.8.10-py3-none-any.whl", hash = "sha256:0ba055423dbaa164b9e456abe7920c5e8ed33fcc16f6d1b2f2d152c8e1e8b4fc"},
@@ -2334,10 +2229,6 @@ tbump = [
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
     {file = "text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8"},
-]
-tokenize-rt = [
-    {file = "tokenize_rt-4.2.1-py2.py3-none-any.whl", hash = "sha256:08a27fa032a81cf45e8858d0ac706004fcd523e8463415ddf1442be38e204ea8"},
-    {file = "tokenize_rt-4.2.1.tar.gz", hash = "sha256:0d4f69026fed520f8a1e0103aa36c406ef4661417f20ca643f913e33531b3b94"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
@@ -2356,16 +2247,16 @@ types-pillow = [
     {file = "types_Pillow-9.3.0.1-py3-none-any.whl", hash = "sha256:79837755fe9659f29efd1016e9903ac4a500e0c73260483f07296bd6ca47668b"},
 ]
 types-requests = [
-    {file = "types-requests-2.28.11.4.tar.gz", hash = "sha256:d4f342b0df432262e9e326d17638eeae96a5881e78e7a6aae46d33870d73952e"},
-    {file = "types_requests-2.28.11.4-py3-none-any.whl", hash = "sha256:bdb1f9811e53d0642c8347b09137363eb25e1a516819e190da187c29595a1df3"},
+    {file = "types-requests-2.28.11.5.tar.gz", hash = "sha256:a7df37cc6fb6187a84097da951f8e21d335448aa2501a6b0a39cbd1d7ca9ee2a"},
+    {file = "types_requests-2.28.11.5-py3-none-any.whl", hash = "sha256:091d4a5a33c1b4f20d8b1b952aa8fa27a6e767c44c3cf65e56580df0b05fd8a9"},
 ]
 types-toml = [
     {file = "types-toml-0.10.8.1.tar.gz", hash = "sha256:171bdb3163d79a520560f24ba916a9fc9bff81659c5448a9fea89240923722be"},
     {file = "types_toml-0.10.8.1-py3-none-any.whl", hash = "sha256:b7b5c4977f96ab7b5ac06d8a6590d17c0bf252a96efc03b109c2711fb3e0eafd"},
 ]
 types-urllib3 = [
-    {file = "types-urllib3-1.26.25.3.tar.gz", hash = "sha256:1807b87b8ee1ae0226813ba2c52330eff20fb2bf6359b1de24df08eb3090e442"},
-    {file = "types_urllib3-1.26.25.3-py3-none-any.whl", hash = "sha256:a188c24fc61a99658c8c324c8dd7419f5b91a0d89df004e5f576869122c1db55"},
+    {file = "types-urllib3-1.26.25.4.tar.gz", hash = "sha256:eec5556428eec862b1ac578fb69aab3877995a99ffec9e5a12cf7fbd0cc9daee"},
+    {file = "types_urllib3-1.26.25.4-py3-none-any.whl", hash = "sha256:ed6b9e8a8be488796f72306889a06a3fc3cb1aa99af02ab8afb50144d7317e49"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},

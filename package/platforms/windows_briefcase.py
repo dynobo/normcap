@@ -2,9 +2,9 @@
 
 import shutil
 import urllib
-import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
+from xml.etree import ElementTree
 
 from platforms.utils import (
     BRIEFCASE_EXCLUDES,
@@ -27,26 +27,18 @@ class WindowsBriefcase(BuilderBase):
         """Download openssl needed for QNetwork https connections."""
         # For mirrors see: https://wiki.openssl.org/index.php/Binaries
         # OPENSSL_URL = "http://mirror.firedaemon.com/OpenSSL/openssl-1.1.1q.zip"
-        OPENSSL_URL = "http://wiki.overbyte.eu/arch/openssl-1.1.1q-win64.zip"
-        print(f"Downloading Openssl from {OPENSSL_URL}...")
+        openssl_url = "http://wiki.overbyte.eu/arch/openssl-1.1.1q-win64.zip"
         target_path = self.PROJECT_PATH / "src" / "normcap" / "resources" / "openssl"
         target_path.mkdir(exist_ok=True)
         zip_path = self.BUILD_PATH / "openssl.zip"
-        urllib.request.urlretrieve(OPENSSL_URL, zip_path)
+        urllib.request.urlretrieve(openssl_url, zip_path)
         with zipfile.ZipFile(zip_path, "r") as zip_ref:
             zip_ref.extractall(target_path)
 
         zip_path.unlink()
-        print("Openssl extracted")
 
     def patch_windows_installer(self):
-        """Customize wix-installer.
-
-        Currently only branding is added.
-        """
-        # pylint: disable=too-many-locals
-        print("Preparing installer...")
-
+        """Customize wix-installer."""
         wxs_file = self.PROJECT_PATH / "windows" / "app" / "NormCap" / "normcap.wxs"
 
         # Cache header for inserting later
@@ -54,9 +46,9 @@ class WindowsBriefcase(BuilderBase):
             header_lines = f.readlines()[:3]
 
         ns = "{http://schemas.microsoft.com/wix/2006/wi}"
-        ET.register_namespace("", ns[1:-1])
+        ElementTree.register_namespace("", ns[1:-1])
 
-        tree = ET.parse(wxs_file)
+        tree = ElementTree.parse(wxs_file)
         root = tree.getroot()
         product = root.find(f"{ns}Product")
 
@@ -69,37 +61,37 @@ class WindowsBriefcase(BuilderBase):
             shutil.copy(original, target)
 
         # Set installer images
-        ET.SubElement(
+        ElementTree.SubElement(
             product, "WixVariable", {"Id": "WixUIDialogBmp", "Value": f"{left}"}
         )
-        ET.SubElement(
+        ElementTree.SubElement(
             product, "WixVariable", {"Id": "WixUIBannerBmp", "Value": f"{top}"}
         )
 
         # Allow upgrades
-        major_upgrade = ET.SubElement(product, "MajorUpgrade")
+        major_upgrade = ElementTree.SubElement(product, "MajorUpgrade")
         major_upgrade.set("DowngradeErrorMessage", "Can't downgrade. Uninstall first.")
 
         # Cleanup tessdata folder on uninstall
-        ET.SubElement(
+        ElementTree.SubElement(
             product,
             "CustomAction",
-            dict(
-                Id="Cleanup_tessdata",
-                Directory="TARGETDIR",
-                ExeCommand='cmd /C "rmdir /s /q %localappdata%\\normcap '
+            {
+                "Id": "Cleanup_tessdata",
+                "Directory": "TARGETDIR",
+                "ExeCommand": 'cmd /C "rmdir /s /q %localappdata%\\normcap '
                 + '& rmdir /s /q %localappdata%\\dynobo";',
-                Execute="deferred",
-                Return="ignore",
-                HideTarget="no",
-                Impersonate="no",
-            ),
+                "Execute": "deferred",
+                "Return": "ignore",
+                "HideTarget": "no",
+                "Impersonate": "no",
+            },
         )
         sequence = product.find(f"{ns}InstallExecuteSequence")
-        ET.SubElement(
+        ElementTree.SubElement(
             sequence,
             "Custom",
-            dict(Action="Cleanup_tessdata", Before="RemoveFiles"),
+            {"Action": "Cleanup_tessdata", "Before": "RemoveFiles"},
         ).text = 'REMOVE="ALL"'
 
         # Remove node which throws error during compilation
@@ -116,9 +108,7 @@ class WindowsBriefcase(BuilderBase):
             f.seek(0)
             f.writelines(header_lines + lines)
 
-        print("Installer prepared.")
-
-    def rename_package_file(self):  # noqa: D102
+    def rename_package_file(self):
         source = list(Path(self.PROJECT_PATH / "windows").glob("*.msi"))[0]
         target = (
             self.BUILD_PATH
@@ -127,7 +117,7 @@ class WindowsBriefcase(BuilderBase):
         target.unlink(missing_ok=True)
         shutil.move(source, target)
 
-    def run_framework(self):  # noqa: D102
+    def run_framework(self):
         app_dir = (
             self.PROJECT_PATH / "windows" / "app" / "NormCap" / "src" / "app_packages"
         )
@@ -140,10 +130,10 @@ class WindowsBriefcase(BuilderBase):
         self.patch_windows_installer()
         self.run(cmd="briefcase package", cwd=self.PROJECT_PATH)
 
-    def install_system_deps(self):  # noqa: D102
+    def install_system_deps(self):
         pass
 
-    def create(self):  # noqa: D102
+    def create(self):
         self.download_tessdata()
         self.download_openssl()
         self.bundle_tesseract()

@@ -2,63 +2,62 @@
 
 from typing import Any, Optional
 
-from PySide6 import QtCore, QtGui, QtWidgets
-
 from normcap import __version__, ocr
 from normcap.gui import system_info
 from normcap.gui.constants import MESSAGE_LANGUAGES, URLS
 from normcap.gui.utils import get_icon
+from PySide6 import QtCore, QtGui, QtWidgets
 
 _MENU_STYLE = """
-        QMenu {
-            background-color: rgba(0,0,0,0.8);
-            color: white;
-        }
-        QMenu::separator {
-            background-color: rgba(255,255,255,0.2);
-            height: 1px;
-            margin-top: 5px;
-        }
-        QMenu::scroller {
-            background: qlineargradient(
-                x1:1, y1:0, x2:1, y2:1,
-                stop:0 rgba(0,0,0,0),
-                stop:0.5 rgba(150,150,150,0.1),
-                stop:1 rgba(0,0,0,0)
-            )
-        }
-        QMenu::item {
-            padding: 3px 16px 3px 16px;
-            background-color: transparent;
-            right: 10px;
-        }
-        QMenu::item:disabled {
-            color: $COLOR;
-        }
-        QMenu::item:selected {
-            background-color: rgba(150,150,150,0.5);
-        }
-        QMenu::indicator {
-            right: -5px;
-        }
-        QMenu::left-arrow,
-        QMenu::right-arrow  {
-            right: 15px;
-        }
-    """
+QMenu {
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+}
+QMenu::separator {
+    background-color: rgba(255,255,255,0.2);
+    height: 1px;
+    margin-top: 5px;
+}
+QMenu::scroller {
+    background: qlineargradient(
+        x1:1, y1:0, x2:1, y2:1,
+        stop:0 rgba(0,0,0,0),
+        stop:0.5 rgba(150,150,150,0.1),
+        stop:1 rgba(0,0,0,0)
+    )
+}
+QMenu::item {
+    padding: 3px 16px 3px 16px;
+    background-color: transparent;
+    right: 10px;
+}
+QMenu::item:disabled {
+    color: $COLOR;
+}
+QMenu::item:selected {
+    background-color: rgba(150,150,150,0.5);
+}
+QMenu::indicator {
+    right: -5px;
+}
+QMenu::left-arrow,
+QMenu::right-arrow  {
+    right: 15px;
+}
+"""
 
 _BUTTON_STYLE = """
-        QToolButton { border:0px; }
-        QToolButton::hover {
-            background: qradialgradient(
-                cx: 0.5, cy: 0.5,
-                fx: 0.5, fy: 0.5,
-                radius: 0.5,
-                stop: 0 rgba(0,0,0,0) stop: 0.25 rgba(255,255,255,80) stop: 0.95 rgba(0,0,0,0)
-            );
-        }
-        QToolButton::menu-indicator { image: none; }
-    """
+QToolButton { border:0px; }
+QToolButton::hover {
+    background: qradialgradient(
+        cx: 0.5, cy: 0.5,
+        fx: 0.5, fy: 0.5,
+        radius: 0.5,
+        stop: 0 rgba(0,0,0,0) stop: 0.25 rgba(255,255,255,80) stop: 0.95 rgba(0,0,0,0)
+    );
+}
+QToolButton::menu-indicator { image: none; }
+"""
 
 
 class Communicate(QtCore.QObject):
@@ -73,7 +72,9 @@ class SettingsMenu(QtWidgets.QToolButton):
 
     title_font = QtGui.QFont(QtGui.QFont().family(), pointSize=10, weight=600)
 
-    def __init__(self, parent: QtWidgets.QMainWindow, settings: QtCore.QSettings):
+    def __init__(
+        self, parent: QtWidgets.QMainWindow, settings: QtCore.QSettings
+    ) -> None:
         super().__init__(parent)
         self.setObjectName("settings_icon")
         self.settings = settings
@@ -97,11 +98,13 @@ class SettingsMenu(QtWidgets.QToolButton):
         self.setStyleSheet(_BUTTON_STYLE)
         self.com = Communicate()
 
-    def _add_menu(self):
+    def _add_menu(self) -> None:
         menu = QtWidgets.QMenu(self)
         menu.setObjectName("settings_menu")
-        menu.setStyleSheet(_MENU_STYLE.replace("$COLOR", self.settings.value("color")))
-        menu.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        menu.setStyleSheet(
+            _MENU_STYLE.replace("$COLOR", str(self.settings.value("color")))
+        )
+        menu.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
 
         self._add_title(menu, "Settings")
         self._add_settings_section(menu)
@@ -118,13 +121,18 @@ class SettingsMenu(QtWidgets.QToolButton):
 
         self.setMenu(menu)
 
-    def _add_title(self, menu, text: str, action_parent=None):
+    def _add_title(
+        self,
+        menu: QtWidgets.QMenu,
+        text: str,
+        action_parent: Optional[QtGui.QAction] = None,
+    ) -> None:
         action = QtGui.QAction(text, action_parent or menu)
         action.setEnabled(False)
         action.setFont(self.title_font)
         menu.addAction(action)
 
-    def _on_item_click(self, action: QtGui.QAction):
+    def _on_item_click(self, action: QtGui.QAction) -> None:
         action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None
@@ -156,7 +164,9 @@ class SettingsMenu(QtWidgets.QToolButton):
         if None not in [setting, value]:
             self.settings.setValue(str(setting), value)
 
-    def _add_settings_section(self, menu):  # sourcery skip: class-extract-method
+    def _add_settings_section(
+        self, menu: QtWidgets.QMenu
+    ) -> None:  # sourcery skip: class-extract-method
         settings_group = QtGui.QActionGroup(menu)
         settings_group.setObjectName("settings_group")
         settings_group.setExclusive(False)
@@ -179,7 +189,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         action.setChecked(bool(self.settings.value("update", type=bool)))
         menu.addAction(action)
 
-    def _add_mode_section(self, menu):
+    def _add_mode_section(self, menu: QtWidgets.QMenu) -> None:
         mode_group = QtGui.QActionGroup(menu)
         mode_group.setObjectName("mode_group")
         mode_group.setExclusive(True)
@@ -196,7 +206,7 @@ class SettingsMenu(QtWidgets.QToolButton):
         action.setChecked(self.settings.value("mode") == "raw")
         menu.addAction(action)
 
-    def _add_languages_section(self, menu):
+    def _add_languages_section(self, menu: QtWidgets.QMenu) -> None:
         tesseract_languages = ocr.utils.get_tesseract_languages(
             tessdata_path=system_info.get_tessdata_path()
         )
@@ -214,10 +224,10 @@ class SettingsMenu(QtWidgets.QToolButton):
             action = QtGui.QAction(language, language_group)
             action.setObjectName(language)
             action.setCheckable(True)
-            action.setChecked(language in self.settings.value("language"))
+            action.setChecked(language in str(self.settings.value("language")))
             language_menu.addAction(action)
 
-        if system_info.is_prebuild_package() or system_info.is_flatpak_package():
+        if system_info.get_prebuild_package_type() or system_info.is_flatpak_package():
             action = QtGui.QAction("... open data folder", menu)
             traineddata_path = system_info.config_directory() / "tessdata"
             action.setObjectName(f"file:///{traineddata_path.resolve()}")
@@ -226,7 +236,7 @@ class SettingsMenu(QtWidgets.QToolButton):
             action.setObjectName("message_languages")
         menu.addAction(action)
 
-    def _add_application_section(self, menu):
+    def _add_application_section(self, menu: QtWidgets.QMenu) -> None:
         submenu = QtWidgets.QMenu(menu)
         submenu.setObjectName("settings_menu_website")
         submenu.setTitle("About")

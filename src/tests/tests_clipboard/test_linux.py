@@ -2,11 +2,9 @@ import logging
 import os
 
 import pytest
-
 from normcap import clipboard
 
 
-# pylint: disable=protected-access
 @pytest.mark.parametrize(
     "wayland_display,xdg_session_type,result",
     [

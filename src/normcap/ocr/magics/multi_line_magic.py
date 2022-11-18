@@ -15,7 +15,8 @@ class MultiLineMagic(BaseMagic):
             BaseMagic {class} -- Base class for magics
             capture {Capture} -- NormCap's session data
 
-        Returns:
+        Returns
+        -------
             float -- score between 0-100 (100 = more likely)
         """
         if (
@@ -33,7 +34,8 @@ class MultiLineMagic(BaseMagic):
         Arguments:
             capture {Capture} -- NormCap's session data
 
-        Returns:
+        Returns
+        -------
             str -- Lines of text
         """
         # Just return concatenated text

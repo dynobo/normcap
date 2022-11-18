@@ -34,11 +34,7 @@ certifi = "^2022.9.24"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=22.3.0"
-isort = ">=5.10.1"
-mypy = ">=0.961"
 pre-commit = ">=2.19"
-pydocstyle = ">=6.1.1"
-pylint = ">=2.14.1"
 pytest = ">=7.2.0"
 pytest-cov = ">=3.0.0"
 pytest-qt = ">=4.1.0"
@@ -55,13 +51,11 @@ types-toml = ">=0.10.7"
 types-requests = ">=2.27.30"
 types-Pillow = ">=9.0.19"
 pydeps = ">=1.10.18"
-bandit = ">=1.7.4"
 briefcase = "0.3.9"
 safety = ">=1.10.3"
-
+ruff = ">=0.0.124"
+mypy = ">=0.991"
 Nuitka = "^1.0.3"
-autoflake = "^1.4"
-pyupgrade = "^2.37.3"
 
 [tool.poetry.group.analysis]
 optional = true
@@ -85,10 +79,45 @@ exclude = '''
 )
 '''
 
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-src_paths = ["src/normcap", "src/tests"]
+[tool.ruff]
+target-version = "py39"
+line-length = 88
+select = [
+  "F",   # Pyflakes
+  "E",   # pycodestyle
+  "I",   # Isort
+  "D",   # pydocstyle
+  "U",   # pyupgrad
+  "N",   # pep8-naming
+  "S",   # flake8-bandits
+  "C",   # flake8-comprehensions
+  "B",   # flake8-bugbear
+  "A",   # flake8-builtins
+  "T",   # flake8-print
+  "Q",   # flake8-quotes
+  "ANN", # flake8-annotations
+  "M",   # meta rules (unused noqa)
+]
+ignore = [
+  "D100",   # Missing docstring in public module
+  "D101",   # Missing docstring in public class
+  "D102",   # Missing docstring in public method
+  "D103",   # Missing docstring in public function
+  "D105",   # Missing docstring in magic method
+  "D107",   # Missing docstring in __init__
+  "D203",   # 1 blank line required before class docstring
+  "D213",   # Multi-line docstring summary should start at the second line
+  "ANN101", # Missing type annotation for `self` in method
+  "U007",   # Use X | Y for type annotations
+]
+exclude = [".vscode", ".venv"]
+per-file-ignores = { "src/tests*" = [
+  "S101",
+  "ANN",
+  "D",
+], "package/*" = [
+  "ANN",
+] }
 
 [tool.mypy]
 files = ["src/normcap/**/*.py", "src/tests/**/*.py"]
@@ -99,30 +128,6 @@ ignore_missing_imports = true
 module = "normcap.window_base_ui"
 follow_imports = "skip"
 ignore_errors = true
-
-[tool.pylint.master]
-extension-pkg-allow-list = ["PySide6", "pytesseract"]
-load-plugins = ["pylint_pytest"]
-jobs = 3
-
-[tool.pylint.'MESSAGES CONTROL']
-load-plugins = "pylint.extensions.mccabe"
-ignore = "window_base_ui.py"
-disable = [
-  "duplicate-code",
-  "fixme",
-  "invalid-name",
-  "missing-module-docstring",
-  "too-few-public-methods",
-  "too-many-arguments",
-  "too-many-instance-attributes",
-  "wrong-import-position",
-  "missing-function-docstring",
-]
-
-[tool.pydocstyle]
-convention = "google"
-add-ignore = "D107,D104,D103,D100,D105"
 
 [tool.pytest.ini_options]
 testpaths = ["src/tests"]

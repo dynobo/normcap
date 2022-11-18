@@ -11,12 +11,12 @@ import urllib.request
 import zipfile
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 import toml
 
-BRIEFCASE_EXCLUDES = dict(
-    pyside6=[
+BRIEFCASE_EXCLUDES = {
+    "pyside6": [
         "3danimation",
         "3dcore",
         "3dextras",
@@ -72,12 +72,12 @@ BRIEFCASE_EXCLUDES = dict(
         "websockets",
         "webview",
     ],
-    app_packages=[
+    "app_packages": [
         "/tests/",
         "docs",
     ],
-    lib=["qt6"],
-)
+    "lib": ["qt6"],
+}
 
 
 def rm_recursive(directory, exclude):
@@ -87,22 +87,19 @@ def rm_recursive(directory, exclude):
         if any(e in path_str for e in exclude):
             if not package_path.exists():
                 continue
-            print(f"Removing: {package_path.absolute()}")
             if package_path.is_dir():
                 shutil.rmtree(package_path)
             if package_path.is_file():
                 os.remove(package_path)
 
 
-def build_wl_clipboard(self, app_packages_path):  # pylint: disable=unused-argument
-    print("Building wl-clipboard...", flush=True)
+def build_wl_clipboard(self, app_packages_path):
     self.subprocess.run(
         "git clone https://github.com/bugaevc/wl-clipboard.git".split(),
         check=True,
     )
     self.subprocess.run("meson build wl-clipboard".split(), check=True)
     self.subprocess.run("ninja -C build".split(), capture_output=True, text=True)
-    print("Building wl-clipboard done.")
 
 
 class BuilderBase(ABC):
@@ -151,16 +148,15 @@ class BuilderBase(ABC):
         return pyproject_toml["tool"]["poetry"]["version"]
 
     @staticmethod
-    def run(cmd: Union[str, list], cwd=None):
+    def run(cmd: Union[str, list], cwd=None) -> Optional[str]:
         """Executes a shell command and raises in case of error."""
         if not isinstance(cmd, str):
             cmd = " ".join(cmd)
 
         cmd_str = re.sub(r"\s+", " ", cmd)
-        print(f">>> {cmd_str}")
 
-        completed_proc = subprocess.run(  # pylint: disable=subprocess-run-check
-            cmd, shell=True, cwd=cwd, capture_output=False
+        completed_proc = subprocess.run(
+            cmd_str, shell=True, cwd=cwd, capture_output=False
         )
 
         if completed_proc.returncode != 0:
@@ -171,11 +167,14 @@ class BuilderBase(ABC):
                 stderr=completed_proc.stderr,
             )
 
-        return completed_proc.stdout
+        return (
+            completed_proc.stdout.decode(encoding="utf8")
+            if completed_proc.stdout
+            else None
+        )
 
     def download_tessdata(self):
         """Download trained data for tesseract to include in packages."""
-        print("Downloading tessdata...")
         tessdata_path = self.RESOURCE_PATH / "tessdata"
         url_prefix = (
             "https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/4.1.0"
@@ -190,16 +189,11 @@ class BuilderBase(ABC):
         ]
 
         if len(list(tessdata_path.glob("*.traineddata"))) >= len(files):
-            print("Language data already present. Skipping download.")
             return
 
-        print("Downloading language data...")
         for file_name in files:
             url = f"{url_prefix}/{file_name}"
             urllib.request.urlretrieve(f"{url}", tessdata_path / file_name)
-            print(f"Downloaded {url} to {(tessdata_path / file_name).absolute()}")
-
-        print("Download done.")
 
     @staticmethod
     def patch_file(
@@ -212,12 +206,10 @@ class BuilderBase(ABC):
         patch_applied = False
         patch_hash = hashlib.md5(patch.encode()).hexdigest()
 
-        with open(file_path, encoding="utf8") as f:
+        with open(file_path, mode="r", encoding="utf8") as f:
             if f.read().find(patch_hash) > -1:
-                print("Skipping patch. Already applied.")
                 return
 
-        print(f"Patching file {file_path.resolve()}")
         if mark_patched:
             patch = (
                 f"# dynobo: {patch_hash} >>>>>>>>>>>>>>"
@@ -230,8 +222,7 @@ class BuilderBase(ABC):
                 patch = patch.replace("\n", f"\n{pad * ' '}")
                 line = line.replace(line, line + pad * " " + patch + "\n")
                 patch_applied = True
-            print(line, end="")
-
+            print(line, end="")  # noqa
         if not patch_applied:
             raise RuntimeError(
                 f"Couldn't apply patch to file {file_path}! "
@@ -247,10 +238,8 @@ def bundle_tesseract_windows(builder: BuilderBase):
     zip_path = builder.BUILD_PATH / "tesseract.zip"
 
     if zip_path.exists():
-        print("Tesseract.exe already present. Skipping download.")
         return
 
-    print("Downloading tesseract.zip...")
     url = (
         "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
     )
@@ -268,7 +257,6 @@ def bundle_tesseract_windows(builder: BuilderBase):
         subdir = members[0].split("/")[0]
         artifact_zip.extractall(path=builder.RESOURCE_PATH, members=members)  #
     zip_path.unlink()
-    print("Tesseract binaries downloaded.")
 
     for each_file in Path(builder.RESOURCE_PATH / subdir).glob("*.*"):
         (builder.TESSERACT_PATH / each_file.name).unlink(missing_ok=True)
@@ -280,4 +268,3 @@ def bundle_tesseract_windows(builder: BuilderBase):
     )
 
     shutil.rmtree(builder.RESOURCE_PATH / subdir)
-    print("Binaries moved. Tesseract.exe renamed.")

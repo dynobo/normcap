@@ -1,5 +1,4 @@
 import pytest
-
 from normcap import clipboard
 
 

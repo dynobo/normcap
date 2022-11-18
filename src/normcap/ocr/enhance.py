@@ -23,7 +23,7 @@ def _identify_most_frequent_edge_color(img: Image.Image) -> tuple[int, int, int]
     return color_count.most_common()[0][0]
 
 
-def add_padding(img: Image.Image, padding=80) -> Image.Image:
+def add_padding(img: Image.Image, padding: int = 80) -> Image.Image:
     """Pad the selected part of the image.
 
     Tesseract is optimized for e.g. scans or documents and therefore

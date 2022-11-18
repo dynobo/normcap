@@ -2,7 +2,6 @@ import os
 from importlib import metadata
 
 import pytest
-
 from normcap import utils
 from normcap.gui.settings import Settings
 
@@ -27,7 +26,7 @@ def test_argparser_defaults_are_complete(argparser_defaults):
 def test_argparser_help_is_complete():
     argparser = utils.create_argparser()
     assert len(argparser.description) > 10
-    for action in argparser._actions:  # pylint: disable=protected-access
+    for action in argparser._actions:
         assert len(action.help) > 10
 
 

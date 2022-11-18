@@ -2,9 +2,9 @@ import functools
 import logging
 import os
 import traceback
+from typing import Optional
 
 import pytesseract
-
 from normcap.version import Version
 
 logger = logging.getLogger(__name__)
@@ -21,26 +21,25 @@ def tsv_to_list_of_dicts(tsv_data: dict) -> list[dict]:
     return [w for w in words if w["text"].strip()]
 
 
-def get_tesseract_config(tessdata_path) -> str:
+def get_tesseract_config(tessdata_path: Optional[os.PathLike]) -> str:
     """Get string with cli args to be passed into tesseract api."""
     return f'--tessdata-dir "{tessdata_path}"' if tessdata_path else ""
 
 
-def configure_tesseract_binary():
+def configure_tesseract_binary() -> None:
     """Override tesseract command and version, if applicable."""
     if tesseract_cmd := os.environ.get("TESSERACT_CMD", ""):
         pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
     if tesseract_version := os.environ.get("TESSERACT_VERSION", ""):
 
-        def _patched_get_tesseract_version():
+        def _patched_get_tesseract_version() -> Version:
             return Version(tesseract_version)
 
         pytesseract.get_tesseract_version = _patched_get_tesseract_version
         pytesseract.pytesseract.get_tesseract_version = _patched_get_tesseract_version
 
 
-@functools.lru_cache
-def get_tesseract_languages(tessdata_path) -> list[str]:
+def get_tesseract_languages(tessdata_path: Optional[os.PathLike]) -> list[str]:
     """Get info abput tesseract setup."""
     configure_tesseract_binary()
 

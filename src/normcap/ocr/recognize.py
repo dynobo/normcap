@@ -2,20 +2,19 @@
 
 import logging
 from os import PathLike
-from typing import Optional, Union
+from typing import Iterable, Optional, Union
 
-import pytesseract  # type: ignore
-from PIL import Image
-
+import pytesseract
 from normcap.ocr import enhance, utils
 from normcap.ocr.magics import magic
 from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
+from PIL import Image
 
 logger = logging.getLogger(__name__)
 
 
 def recognize(
-    languages: Union[str, list[str]],
+    languages: Union[str, Iterable[str]],
     image: Image.Image,
     tessdata_path: Optional[PathLike] = None,
     parse: bool = True,

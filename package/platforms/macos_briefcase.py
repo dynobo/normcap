@@ -11,7 +11,7 @@ class MacBriefcase(BuilderBase):
 
     binary_suffix = ""
 
-    def run_framework(self):  # noqa: D102
+    def run_framework(self):
         app_dir = (
             self.PROJECT_PATH
             / "macOS"
@@ -35,8 +35,7 @@ class MacBriefcase(BuilderBase):
         # patch_info_plist_for_proper_fullscreen()
         self.run(cmd="briefcase package macos app --no-sign", cwd=self.PROJECT_PATH)
 
-    def bundle_tesseract(self):  # noqa: D102
-        print("Bundling tesseract libs...")
+    def bundle_tesseract(self):
         app_pkg_path = (
             self.PROJECT_PATH
             / "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
@@ -74,11 +73,11 @@ class MacBriefcase(BuilderBase):
             mark_patched=False,
         )
 
-    def install_system_deps(self):  # noqa: D102
+    def install_system_deps(self):
         self.run(cmd="brew install tesseract")
         self.run(cmd="brew install dylibbundler")
 
-    def rename_package_file(self):  # noqa: D102
+    def rename_package_file(self):
         source = list(Path(self.PROJECT_PATH / "macOS").glob("*.dmg"))[0]
         target = (
             self.BUILD_PATH
@@ -87,7 +86,7 @@ class MacBriefcase(BuilderBase):
         target.unlink(missing_ok=True)
         shutil.move(source, target)
 
-    def create(self):  # noqa: D102
+    def create(self):
         self.download_tessdata()
         self.install_system_deps()
         self.run_framework()

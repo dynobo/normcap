@@ -2,7 +2,8 @@
 
 Heavily stripped down version of the windows related functionality, slightly modified.
 
-A cross-platform clipboard module for Python, with copy & paste functions for plain text.
+A cross-platform clipboard module for Python, with copy & paste functions for plain
+text.
 By Al Sweigart al@inventwithpython.com
 BSD License
 """
@@ -13,31 +14,28 @@ import logging
 import sys
 import time
 from ctypes import c_size_t, c_wchar, c_wchar_p, get_errno, sizeof
-from typing import Any, Callable
+from typing import Any, Callable, Generator, Iterator
 
 logger = logging.getLogger(__name__)
 
-# pylint: disable=no-member,global-variable-not-assigned,missing-class-docstring
-# pylint: disable=too-many-locals,import-outside-toplevel,too-many-statements
 
-
-class CheckedCall:  # noqa: D101
-    def __init__(self, f):
+class CheckedCall:
+    def __init__(self, f: Any) -> None:  # noqa: ANN401
         self.argtypes: list
         self.restype: Any
-        super().__setattr__("f", f)
+        self.f = f
 
-    def __call__(self, *args):  # noqa: D102
+    def __call__(self, *args: Any) -> Any:  # noqa: ANN401
         ret = self.f(*args)
         if not ret and get_errno():
             raise RuntimeError(f"Error calling {self.f.__name__}")
         return ret
 
-    def __setattr__(self, key, value):
+    def __setattr__(self, key: str, value: Any) -> None:  # noqa: ANN401
         setattr(self.f, key, value)
 
 
-def _windll_copy(text):
+def _windll_copy(text: str) -> None:
     if sys.platform != "win32":
         raise RuntimeError("Windows clipboard only available on Windows OS.")
 
@@ -58,7 +56,7 @@ def _windll_copy(text):
     windll = ctypes.windll
     msvcrt = ctypes.CDLL("msvcrt")
 
-    safeCreateWindowExA = CheckedCall(windll.user32.CreateWindowExA)
+    safeCreateWindowExA = CheckedCall(windll.user32.CreateWindowExA)  # noqa: N806
     safeCreateWindowExA.argtypes = [
         DWORD,
         LPCSTR,
@@ -75,39 +73,39 @@ def _windll_copy(text):
     ]
     safeCreateWindowExA.restype = HWND
 
-    safeDestroyWindow = CheckedCall(windll.user32.DestroyWindow)
+    safeDestroyWindow = CheckedCall(windll.user32.DestroyWindow)  # noqa: N806
     safeDestroyWindow.argtypes = [HWND]
     safeDestroyWindow.restype = BOOL
 
-    OpenClipboard = windll.user32.OpenClipboard
+    OpenClipboard = windll.user32.OpenClipboard  # noqa: N806
     OpenClipboard.argtypes = [HWND]
     OpenClipboard.restype = BOOL
 
-    safeCloseClipboard = CheckedCall(windll.user32.CloseClipboard)
+    safeCloseClipboard = CheckedCall(windll.user32.CloseClipboard)  # noqa: N806
     safeCloseClipboard.argtypes = []
     safeCloseClipboard.restype = BOOL
 
-    safeEmptyClipboard = CheckedCall(windll.user32.EmptyClipboard)
+    safeEmptyClipboard = CheckedCall(windll.user32.EmptyClipboard)  # noqa: N806
     safeEmptyClipboard.argtypes = []
     safeEmptyClipboard.restype = BOOL
 
-    safeGetClipboardData = CheckedCall(windll.user32.GetClipboardData)
+    safeGetClipboardData = CheckedCall(windll.user32.GetClipboardData)  # noqa: N806
     safeGetClipboardData.argtypes = [UINT]
     safeGetClipboardData.restype = HANDLE
 
-    safeSetClipboardData = CheckedCall(windll.user32.SetClipboardData)
+    safeSetClipboardData = CheckedCall(windll.user32.SetClipboardData)  # noqa: N806
     safeSetClipboardData.argtypes = [UINT, HANDLE]
     safeSetClipboardData.restype = HANDLE
 
-    safeGlobalAlloc = CheckedCall(windll.kernel32.GlobalAlloc)
+    safeGlobalAlloc = CheckedCall(windll.kernel32.GlobalAlloc)  # noqa: N806
     safeGlobalAlloc.argtypes = [UINT, c_size_t]
     safeGlobalAlloc.restype = HGLOBAL
 
-    safeGlobalLock = CheckedCall(windll.kernel32.GlobalLock)
+    safeGlobalLock = CheckedCall(windll.kernel32.GlobalLock)  # noqa: N806
     safeGlobalLock.argtypes = [HGLOBAL]
     safeGlobalLock.restype = LPVOID
 
-    safeGlobalUnlock = CheckedCall(windll.kernel32.GlobalUnlock)
+    safeGlobalUnlock = CheckedCall(windll.kernel32.GlobalUnlock)  # noqa: N806
     safeGlobalUnlock.argtypes = [HGLOBAL]
     safeGlobalUnlock.restype = BOOL
 
@@ -115,11 +113,11 @@ def _windll_copy(text):
     wcslen.argtypes = [c_wchar_p]
     wcslen.restype = UINT
 
-    GMEM_MOVEABLE = 0x0002
-    CF_UNICODETEXT = 13
+    GMEM_MOVEABLE = 0x0002  # noqa: N806 (lowercase)
+    CF_UNICODETEXT = 13  # noqa: N806 (lowercase)
 
     @contextlib.contextmanager
-    def window():
+    def window() -> Iterator[HWND]:
         """Context that provides a valid Windows hwnd."""
         # we really just need the hwnd, so setting "STATIC"
         # as predefined lpClass is just fine.
@@ -132,7 +130,7 @@ def _windll_copy(text):
             safeDestroyWindow(hwnd)
 
     @contextlib.contextmanager
-    def clipboard(hwnd):
+    def clipboard(hwnd: HWND) -> Generator:
         """Opens the clipboard and prevents other apps from modifying its content."""
         # We may not get the clipboard handle immediately because
         # some other application is accessing it (?)
@@ -152,8 +150,7 @@ def _windll_copy(text):
         finally:
             safeCloseClipboard()
 
-    def copy_windows(text):
-
+    def copy_windows(text: str) -> None:
         with window() as hwnd:
             # http://msdn.com/ms649048
             # If an application calls OpenClipboard with hwnd set to NULL,

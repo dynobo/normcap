@@ -7,21 +7,20 @@ import sys
 # Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
 locale.setlocale(locale.LC_ALL, "C")
 
-from PySide6 import QtCore, QtWidgets
-
-from normcap import __version__
-from normcap.gui import system_info, utils
-from normcap.gui.tray import SystemTray
-from normcap.utils import (
+from normcap import __version__  # noqa: E402
+from normcap.gui import system_info, utils  # noqa: E402
+from normcap.gui.tray import SystemTray  # noqa: E402
+from normcap.utils import (  # noqa: E402
     create_argparser,
     init_logger,
     set_environ_for_flatpak,
     set_environ_for_prebuild_package,
     set_environ_for_wayland,
 )
+from PySide6 import QtCore, QtWidgets  # noqa: E402
 
 
-def main():
+def main() -> None:
     """Start main application logic."""
     sys.excepthook = utils.hook_exceptions
 
@@ -30,7 +29,6 @@ def main():
 
     args = create_argparser().parse_args()
     if args.version:
-        print(f"NormCap {__version__}")
         sys.exit(0)
 
     init_logger(level=args.verbosity.upper())
@@ -41,13 +39,13 @@ def main():
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
     # Prepare environment
-    if system_info.is_prebuild_package():
+    if system_info.get_prebuild_package_type():
         set_environ_for_prebuild_package()
     if system_info.display_manager_is_wayland():
         set_environ_for_wayland()
     if system_info.is_flatpak_package():
         set_environ_for_flatpak()
-    if system_info.is_prebuild_package() or system_info.is_flatpak_package():
+    if system_info.get_prebuild_package_type() or system_info.is_flatpak_package():
         utils.copy_tessdata_files_to_config_dir()
 
     app = QtWidgets.QApplication(sys.argv)

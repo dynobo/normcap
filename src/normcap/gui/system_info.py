@@ -7,12 +7,11 @@ from importlib import metadata
 from pathlib import Path
 from typing import Optional
 
-from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6 import __version__ as PySide6_version
-
 from normcap import __version__
 from normcap.gui.models import DesktopEnvironment, Rect, Screen
 from normcap.screengrab.utils import get_gnome_version
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import __version__ as pyside_version
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +24,7 @@ def is_flatpak_package() -> bool:
     return os.getenv("FLATPAK_ID") is not None
 
 
-def is_prebuild_package() -> Optional[str]:
+def get_prebuild_package_type() -> Optional[str]:
     package = getattr(sys.modules["__main__"], "__package__", None)
     if package and "Briefcase-Version" in metadata.metadata(package):
         # Briefcase package
@@ -41,28 +40,28 @@ def is_prebuild_package() -> Optional[str]:
 @functools.cache
 def display_manager_is_wayland() -> bool:
     """Identify relevant display managers (Linux)."""
-    XDG_SESSION_TYPE = os.environ.get("XDG_SESSION_TYPE", "").lower()
-    WAYLAND_DISPLAY = os.environ.get("WAYLAND_DISPLAY", "").lower()
-    return "wayland" in WAYLAND_DISPLAY or "wayland" in XDG_SESSION_TYPE
+    xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
+    wayland_display = os.environ.get("WAYLAND_DISPLAY", "").lower()
+    return "wayland" in wayland_display or "wayland" in xdg_session_type
 
 
 @functools.cache
 def desktop_environment() -> DesktopEnvironment:
     """Detect used desktop environment (Linux)."""
-    KDE_FULL_SESSION = os.environ.get("KDE_FULL_SESSION", "").lower()
-    XDG_CURRENT_DESKTOP = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
-    DESKTOP_SESSION = os.environ.get("DESKTOP_SESSION", "").lower()
-    GNOME_DESKTOP_SESSION_ID = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
-    if GNOME_DESKTOP_SESSION_ID == "this-is-deprecated":
-        GNOME_DESKTOP_SESSION_ID = ""
+    kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()
+    xdg_current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+    desktop_session = os.environ.get("DESKTOP_SESSION", "").lower()
+    gnome_desktop_session_id = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
+    if gnome_desktop_session_id == "this-is-deprecated":
+        gnome_desktop_session_id = ""
 
-    if GNOME_DESKTOP_SESSION_ID != "" or "gnome" in XDG_CURRENT_DESKTOP:
+    if gnome_desktop_session_id != "" or "gnome" in xdg_current_desktop:
         return DesktopEnvironment.GNOME
-    if KDE_FULL_SESSION != "" or "kde-plasma" in DESKTOP_SESSION:
+    if kde_full_session != "" or "kde-plasma" in desktop_session:
         return DesktopEnvironment.KDE
-    if "sway" in XDG_CURRENT_DESKTOP:
+    if "sway" in xdg_current_desktop:
         return DesktopEnvironment.SWAY
-    if "unity" in XDG_CURRENT_DESKTOP:
+    if "unity" in xdg_current_desktop:
         return DesktopEnvironment.UNITY
 
     return DesktopEnvironment.OTHER
@@ -112,46 +111,46 @@ def config_directory() -> Path:
     return Path.home() / ".config" / postfix
 
 
-def get_tessdata_path() -> str:
+def get_tessdata_path() -> Optional[os.PathLike]:
     """Deside which path for tesseract language files to use."""
     prefix = os.environ.get("TESSDATA_PREFIX", None)
 
-    if is_prebuild_package() or is_flatpak_package():
+    if get_prebuild_package_type() or is_flatpak_package():
         path = config_directory() / "tessdata"
     elif prefix:
         path = Path(prefix) / "tessdata"
     else:
-        return ""
+        return None
 
     if not path.is_dir():
         raise RuntimeError(f"tessdata directory does not exist: {path}")
     if not list(path.glob("*.traineddata")):
         raise RuntimeError(f"Could not find language data files in {path}")
 
-    return str(path.resolve())
+    return path.resolve()
 
 
 def to_dict() -> dict:
     """Cast all system infos to string for logging."""
-    return dict(
-        cli_args=" ".join(sys.argv),
-        is_prebuild_package=is_prebuild_package(),
-        is_flatpak_package=is_flatpak_package(),
-        platform=sys.platform,
-        pyside6_version=PySide6_version,
-        qt_version=QtCore.qVersion(),
-        qt_library_path=", ".join(QtCore.QCoreApplication.libraryPaths()),
-        config_directory=config_directory(),
-        normcap_version=__version__,
-        tessdata_path=get_tessdata_path(),
-        envs={
+    return {
+        "cli_args": " ".join(sys.argv),
+        "is_prebuild_package": get_prebuild_package_type(),
+        "is_flatpak_package": is_flatpak_package(),
+        "platform": sys.platform,
+        "pyside6_version": pyside_version,
+        "qt_version": QtCore.qVersion(),
+        "qt_library_path": ", ".join(QtCore.QCoreApplication.libraryPaths()),
+        "config_directory": config_directory(),
+        "normcap_version": __version__,
+        "tessdata_path": get_tessdata_path(),
+        "envs": {
             "TESSERACT_CMD": os.environ.get("TESSERACT_CMD", None),
             "TESSERACT_VERSION": os.environ.get("TESSERACT_VERSION", None),
             "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX", None),
             "LD_LIBRARY_PATH": os.environ.get("LD_LIBRARY_PATH", None),
         },
-        desktop_environment=desktop_environment(),
-        display_manager_is_wayland=display_manager_is_wayland(),
-        gnome_version=get_gnome_version(),
-        screens=screens(),
-    )
+        "desktop_environment": desktop_environment(),
+        "display_manager_is_wayland": display_manager_is_wayland(),
+        "gnome_version": get_gnome_version(),
+        "screens": screens(),
+    }

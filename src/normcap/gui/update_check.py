@@ -2,13 +2,12 @@
 import logging
 import re
 
-from PySide6 import QtCore, QtWidgets
-
 from normcap import __version__
 from normcap.gui.constants import URLS
 from normcap.gui.downloader_urllib import Downloader
 from normcap.gui.utils import get_icon, set_cursor
 from normcap.version import Version
+from PySide6 import QtCore, QtWidgets
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +23,7 @@ class Communicate(QtCore.QObject):
 class UpdateChecker(QtCore.QObject):
     """Helper to check for a new version."""
 
-    def __init__(self, parent, packaged: bool = False):
+    def __init__(self, parent: QtCore.QObject, packaged: bool = False) -> None:
         super().__init__(parent)
         self.packaged = packaged
         self.com = Communicate()
@@ -34,7 +33,7 @@ class UpdateChecker(QtCore.QObject):
         self.com.on_new_version_found.connect(self.show_update_message)
         self.message_box = self._create_message_box()
 
-    def parse_response_to_version(self, text: str):
+    def parse_response_to_version(self, text: str) -> None:
         """Parse the tag version from the response and emit version retrieved signal."""
         newest_version = None
 
@@ -47,7 +46,7 @@ class UpdateChecker(QtCore.QObject):
             match = re.search(regex, text)
             if match and match[1]:
                 newest_version = match[1]
-        except Exception as e:  # pylint: disable=broad-except
+        except Exception as e:
             logger.exception("Parsing response of update check failed: %s", e)
 
         if newest_version:
@@ -55,27 +54,28 @@ class UpdateChecker(QtCore.QObject):
         else:
             logger.error("Couldn't detect remote version. Update check won't work!")
 
-    def check(self):
+    def check(self) -> None:
         """Start the update check."""
         url = URLS.releases_atom if self.packaged else f"{URLS.pypi_json}"
         logger.debug("Search for new version on %s", url)
         self.downloader.get(url)
 
     @staticmethod
-    def _create_message_box():
+    def _create_message_box() -> QtWidgets.QMessageBox:
         message_box = QtWidgets.QMessageBox()
 
         # Necessary on wayland for main window to regain focus:
-        message_box.setWindowFlags(QtCore.Qt.Popup)
+        message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
         message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
         message_box.setStandardButtons(
-            QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel
+            QtWidgets.QMessageBox.StandardButton.Ok
+            | QtWidgets.QMessageBox.StandardButton.Cancel
         )
-        message_box.setDefaultButton(QtWidgets.QMessageBox.Ok)
+        message_box.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Ok)
         return message_box
 
-    def check_if_version_is_new(self, newest_version):
+    def check_if_version_is_new(self, newest_version: str) -> None:
         """Show dialog informing about available update."""
         if newest_version:
             logger.debug(
@@ -84,7 +84,7 @@ class UpdateChecker(QtCore.QObject):
             if Version(newest_version) > Version(__version__):
                 self.com.on_new_version_found.emit(newest_version)
 
-    def show_update_message(self, new_version):
+    def show_update_message(self, new_version: Version) -> None:
         """Show dialog informing about available update."""
         text = f"<b>NormCap v{new_version} is available.</b> (You have v{__version__})"
         if self.packaged:
@@ -105,9 +105,9 @@ class UpdateChecker(QtCore.QObject):
         self.message_box.setText(text)
         self.message_box.setInformativeText(info_text)
 
-        set_cursor(QtCore.Qt.ArrowCursor)
+        set_cursor(QtCore.Qt.CursorShape.ArrowCursor)
         choice = self.message_box.exec_()
-        set_cursor(QtCore.Qt.CrossCursor)
+        set_cursor(QtCore.Qt.CursorShape.CrossCursor)
 
         if choice == 1024:
             self.com.on_click_get_new_version.emit(update_url)

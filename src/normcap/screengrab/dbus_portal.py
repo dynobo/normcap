@@ -5,20 +5,16 @@ import random
 from typing import Optional
 from urllib.parse import urlparse
 
-from jeepney.bus_messages import MatchRule, message_bus  # type: ignore
-from jeepney.io.blocking import Proxy, open_dbus_connection  # type: ignore
-from jeepney.wrappers import (  # type: ignore
-    DBusErrorResponse,
-    MessageGenerator,
-    new_method_call,
-)
+from jeepney.bus_messages import MatchRule, Message, message_bus
+from jeepney.io.blocking import Proxy, open_dbus_connection
+from jeepney.wrappers import DBusErrorResponse, MessageGenerator, new_method_call
+from normcap.screengrab.utils import split_full_desktop_to_screens
 from PySide6 import QtGui
 
 # TODO: Get rid of jeepney
 
 
 logger = logging.getLogger(__name__)
-from normcap.screengrab.utils import split_full_desktop_to_screens
 
 
 class FreedesktopPortalScreenshot(MessageGenerator):
@@ -29,14 +25,14 @@ class FreedesktopPortalScreenshot(MessageGenerator):
 
     interface = "org.freedesktop.portal.Screenshot"
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init jeepney message generator."""
         super().__init__(
             object_path="/org/freedesktop/portal/desktop",
             bus_name="org.freedesktop.portal.Desktop",
         )
 
-    def grab(self, parent_window, options):
+    def grab(self, parent_window: str, options: dict) -> Message:
         """Ask for screenshot."""
         # method_name = "org.freedesktop.portal.Screenshot"
         return new_method_call(self, "Screenshot", "sa{sv}", (parent_window, options))
@@ -68,7 +64,8 @@ def grab_full_desktop() -> Optional[QtGui.QImage]:
             response = connection.recv_until_filtered(responses, timeout=15)
 
         response_code, response_body = response.body
-        assert response_code == 0 and "uri" in response_body
+        if response_code != 0 or "uri" not in response_body:
+            raise AssertionError()
 
         image = QtGui.QImage(urlparse(response_body["uri"][1]).path)
 

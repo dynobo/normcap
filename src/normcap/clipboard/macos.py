@@ -8,7 +8,7 @@ from normcap.clipboard import qt
 logger = logging.getLogger(__name__)
 
 
-def pbcopy(text):
+def pbcopy(text: str) -> None:
     subprocess.run(
         ["pbcopy", "w"],
         shell=False,

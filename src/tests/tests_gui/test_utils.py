@@ -6,13 +6,12 @@ from importlib import resources
 from pathlib import Path
 
 import pytest
-from PIL import Image
-from PySide6 import QtCore, QtGui
-
 from normcap import clipboard
 from normcap.gui import utils
 from normcap.gui.models import Capture
 from normcap.ocr.models import OcrResult
+from PIL import Image
+from PySide6 import QtCore, QtGui
 
 
 def test_init_tessdata_copies_files(tmp_path, monkeypatch):
@@ -95,13 +94,13 @@ def test_get_icon_sytem_use_fallback():
 def test_hook_exception(monkeypatch, caplog, capsys):
     monkeypatch.setattr(sys, "exit", lambda _: True)
     with pytest.raises(RuntimeError) as excinfo:
-        # pylint: disable=unused-variable
-        text = words = tsv_data = "secret"
-        transformed = v = self = "secret"
+
+        text = words = tsv_data = "secret"  # noqa: F841 (unused variable)
+        transformed = v = self = "secret"  # noqa: F841
         other_variable = "should be "
         other_variable += "printed"
-        capture = Capture(ocr_text="secret")
-        ocr_result = OcrResult(
+        capture = Capture(ocr_text="secret")  # noqa: F841
+        ocr_result = OcrResult(  # noqa: F841
             tess_args=None,
             image=Image.Image(),
             words="secret",

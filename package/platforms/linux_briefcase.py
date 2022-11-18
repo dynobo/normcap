@@ -5,7 +5,7 @@ import os
 import shutil
 from pathlib import Path
 
-import briefcase  # type: ignore
+import briefcase
 from platforms.utils import (
     BRIEFCASE_EXCLUDES,
     BuilderBase,
@@ -18,7 +18,6 @@ class LinuxBriefcase(BuilderBase):
     """Create prebuild package for Linux using Briefcase."""
 
     binary_suffix = ""
-    wl_bin_path = None
 
     def patch_briefcase_appimage_to_prune_deps(self):
         """Insert code into briefcase appimage code to remove unnecessary libs."""
@@ -41,7 +40,7 @@ rm_recursive(directory=lib_dir / "PySide6", exclude={BRIEFCASE_EXCLUDES["pyside6
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
     def patch_briefcase_appimage_to_build_wl_clipboard(self):
-        """Insert code into briefcase appimage code to build wl clipboard inside docker."""
+        """Patch briefcase appimage code to build wl clipboard inside docker."""
         def_build_wl_clipboard = inspect.getsource(build_wl_clipboard)
 
         file_path = Path(briefcase.__file__).parent / "commands" / "create.py"
@@ -83,20 +82,20 @@ if "linux" in str(bundle_path):
 """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
-    def install_system_deps(self):  # noqa: D102
+    def install_system_deps(self):
         if system_requires := self.get_system_requires():
             github_actions_uid = 1001
             if os.getuid() == github_actions_uid:  # type: ignore
                 self.run(cmd="sudo apt update")
                 self.run(cmd=f"sudo apt install {' '.join(system_requires)}")
 
-    def run_framework(self):  # noqa: D102
+    def run_framework(self):
         self.run(cmd="briefcase create --no-input", cwd=self.PROJECT_PATH)
         self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
         self.add_metainfo_to_appimage()
         self.run(cmd="briefcase package", cwd=self.PROJECT_PATH)
 
-    def rename_package_file(self):  # noqa: D102
+    def rename_package_file(self):
         source = list(Path(self.PROJECT_PATH / "linux").glob("*.AppImage"))[0]
         target = (
             self.BUILD_PATH
@@ -119,10 +118,10 @@ if "linux" in str(bundle_path):
         )
         shutil.copy(metainfo, target_path / "metainfo")
 
-    def bundle_tesseract(self):  # noqa: D102
+    def bundle_tesseract(self):
         ...
 
-    def create(self):  # noqa: D102
+    def create(self):
         self.download_tessdata()
         self.install_system_deps()
 
