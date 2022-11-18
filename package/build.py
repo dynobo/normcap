@@ -14,7 +14,6 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--framework",
-        required=True,
         action="store",
         choices=["nuitka", "briefcase"],
         default="briefcase",
