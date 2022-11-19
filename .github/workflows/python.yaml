@@ -208,6 +208,22 @@ jobs:
           allowUpdates: true
           draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: FTP upload windows package
+        if: ${{ matrix.os  == 'windows-2019' }}
+        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          server: ${{ secrets.WEBGO_FTP_HOST }}
+          username: ${{ secrets.WEBGO_FTP_USER }}
+          password: ${{ secrets.WEBGO_FTP_PASS }}
+          protocol: ftps
+          local-dir: ./package/
+          exclude: |
+            **/platforms/**
+            **/imgs/**
+            **/*.py
+            **/*.wxs
+            **/*.wxs
+            **/metainfo
 
   deploy-pages:
     name: Deploy github pages
