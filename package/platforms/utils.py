@@ -234,15 +234,20 @@ def bundle_tesseract_windows(builder: BuilderBase):
     """Download tesseract binaries including dependencies into resource path."""
     # Link to download artifact might change
 
-    # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
     zip_path = builder.BUILD_PATH / "tesseract.zip"
 
     if zip_path.exists():
         return
 
-    url = (
-        "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
-    )
+    # TODO: Check if the official build is up again, then remove this mirror:
+    url = "https://normcap.needleinthehay.de/tesseract.zip"
+
+    # The official tesseract artefact for windows is build and available here:
+    # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
+    # url = (
+    #     "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
+    # )
+
     urllib.request.urlretrieve(f"{url}", zip_path)
 
     if not zip_path.exists():
