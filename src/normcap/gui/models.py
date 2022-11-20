@@ -154,7 +154,7 @@ class Capture:
     image: QtGui.QImage = field(default_factory=QtGui.QImage)
     screen: Optional[Screen] = None
     scale_factor: float = 1
-    rect: Rect = Rect()
+    rect: Rect = field(default_factory=Rect)
 
     ocr_text: Optional[str] = None
     ocr_applied_magic: Optional[str] = None
