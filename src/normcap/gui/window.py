@@ -247,11 +247,11 @@ class UiLayerLabel(QtWidgets.QLabel):
     def paintEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
         """Draw screenshot and selection rectangle on window."""
         painter = QtGui.QPainter(self)
+        selection = self.parent().selection
 
         if self.parent().draw_debug_infos:
             # Draw debug information on screen
             screen = self.parent().tray.screens[self.parent().screen_idx]
-            selection = self.parent().selection
             x = y = 25
             painter.setPen(QtGui.QPen(self.color))
             painter.drawText(x, y * 1, f"QScreen: {screen.geometry}")
@@ -265,11 +265,10 @@ class UiLayerLabel(QtWidgets.QLabel):
             return
 
         # Draw selection rectangle
-        rect = selection.rect
         painter.setPen(
             QtGui.QPen(self.color, self.parent().pen_width, QtGui.Qt.DashLine)
         )
-        painter.drawRect(*rect.geometry)
+        painter.drawRect(*selection.rect.geometry)
 
         # Draw Mode indicator
         if (
@@ -279,6 +278,8 @@ class UiLayerLabel(QtWidgets.QLabel):
             mode_indicator = get_icon("parse.svg")
         else:
             mode_indicator = get_icon("raw.svg")
-        mode_indicator.paint(painter, rect.right - 24, rect.top - 30, 24, 24)
+        mode_indicator.paint(
+            painter, selection.rect.right - 24, selection.rect.top - 30, 24, 24
+        )
 
         painter.end()
