@@ -23,8 +23,8 @@ class CheckedCall:
     def __init__(self, f: Any) -> None:  # noqa: ANN401
         self.argtypes: list
         self.restype: Any
-        self.f = f
-
+        super().__setattr__("f", f)
+        
     def __call__(self, *args: Any) -> Any:  # noqa: ANN401
         ret = self.f(*args)
         if not ret and get_errno():
