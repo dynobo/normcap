@@ -93,6 +93,12 @@ small {
   height: calc(100vw * 0.6);
 }
 
+#download .gif-link {
+  display: block;
+  height: 67%;
+  margin-top: 13%;
+}
+
 @media (min-width: 992px) {
   #download > div:nth-of-type(2) {
     display: block;
