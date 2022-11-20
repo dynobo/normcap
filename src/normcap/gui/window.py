@@ -31,7 +31,7 @@ class Window(QtWidgets.QMainWindow):
         self.color: QtGui.QColor = QtGui.QColor(color)
         self.tray: QtWidgets.QSystemTrayIcon = parent
         self.is_positioned: bool = False
-        self.draw_debug_infos: bool = not False
+        self.draw_debug_infos: bool = False
 
         # Window properties
         self.setObjectName(f"window-{self.screen_idx}")
