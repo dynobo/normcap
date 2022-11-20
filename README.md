@@ -162,8 +162,6 @@ Packaging is done with:
 
 - [briefcase](https://pypi.org/project/briefcase/) _- converting Python projects into_
   _standalone apps_
-- [nuitka](https://pypi.org/project/Nuitka/) _- compiling Python projects into_
-  _standalone apps_
 
 And it depends on external software
 
