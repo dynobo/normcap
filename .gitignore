@@ -35,6 +35,7 @@ linux/
 windows/
 macOS/
 src/normcap/resources/openssl
+.ruff_cache
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
