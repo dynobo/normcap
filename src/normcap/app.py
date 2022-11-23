@@ -1,23 +1,19 @@
 """Main application entry point."""
-import locale
 import logging
 import signal
 import sys
 
-# Workaround for older tesseract version 4.0.0 on e.g. Debian Buster
-locale.setlocale(locale.LC_ALL, "C")
-
-from normcap import __version__  # noqa: E402
-from normcap.gui import system_info, utils  # noqa: E402
-from normcap.gui.tray import SystemTray  # noqa: E402
-from normcap.utils import (  # noqa: E402
+from normcap import __version__
+from normcap.gui import system_info, utils
+from normcap.gui.tray import SystemTray
+from normcap.utils import (
     create_argparser,
     init_logger,
     set_environ_for_flatpak,
     set_environ_for_prebuild_package,
     set_environ_for_wayland,
 )
-from PySide6 import QtCore, QtWidgets  # noqa: E402
+from PySide6 import QtCore, QtWidgets
 
 
 def main() -> None:

@@ -13,6 +13,7 @@ from normcap.screengrab.utils import get_gnome_version
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as pyside_version
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -69,27 +70,15 @@ def desktop_environment() -> DesktopEnvironment:
 
 def screens() -> dict[int, Screen]:
     """Get informations about available monitors."""
-    primary_screen = QtWidgets.QApplication.primaryScreen()
-    screens_dict = {}
-    for idx, screen in enumerate(QtWidgets.QApplication.screens()):
-        is_primary = primary_screen == screen
-        device_pixel_ratio = QtGui.QScreen.devicePixelRatio(screen)
-
-        geometry = screen.geometry()
-        geometry_rect = Rect(
-            top=geometry.top(),
-            left=geometry.left(),
-            bottom=geometry.top() + geometry.height(),
-            right=geometry.left() + geometry.width(),
-        )
-
-        screens_dict[idx] = Screen(
-            is_primary=is_primary,
-            device_pixel_ratio=device_pixel_ratio,
-            geometry=geometry_rect,
+    return {
+        idx: Screen(
+            is_primary=screen == QtWidgets.QApplication.primaryScreen(),
+            device_pixel_ratio=QtGui.QScreen.devicePixelRatio(screen),
+            geometry=Rect(*screen.geometry().getRect()),
             index=idx,
         )
-    return screens_dict
+        for idx, screen in enumerate(QtWidgets.QApplication.screens())
+    }
 
 
 def config_directory() -> Path:

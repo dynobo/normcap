@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.0 (unreleased)
+
+- Removed: Support for Tesseract \< 5.0
+
 ## v0.3.15 (unreleased)
 
 - All: Add possibility to capture by left-clicking (or double-clicking) the tray icon.
