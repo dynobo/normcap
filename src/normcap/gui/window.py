@@ -250,16 +250,7 @@ class UiLayerLabel(QtWidgets.QLabel):
         selection = self.parent().selection
 
         if self.parent().draw_debug_infos:
-            # Draw debug information on screen
-            screen = self.parent().tray.screens[self.parent().screen_idx]
-            x = y = 25
-            painter.setPen(QtGui.QPen(self.color))
-            painter.drawText(x, y * 1, f"QScreen: {screen.geometry}")
-            painter.drawText(x, y * 2, f"Image: {screen.screenshot.size().toTuple()}")
-            painter.drawText(x, y * 3, f"Pos QScreen: {selection.rect}")
-            painter.drawText(x, y * 4, f"Pos Image: {selection.scaled_rect}")
-            painter.drawText(x, y * 5, f"Scale factor: {selection.scale_factor}")
-            painter.drawText(x, y * 6, f"DPR: {screen.device_pixel_ratio}")
+            self._draw_debug_infos(painter, selection)
 
         if not self.parent().is_selecting:
             return
@@ -283,3 +274,15 @@ class UiLayerLabel(QtWidgets.QLabel):
         )
 
         painter.end()
+
+    def _draw_debug_infos(self, painter: QtGui.QPainter, selection: Selection) -> None:
+        # Draw debug information on screen
+        screen = self.parent().tray.screens[self.parent().screen_idx]
+        x = y = 25
+        painter.setPen(QtGui.QPen(self.color))
+        painter.drawText(x, y * 1, f"QScreen: {screen.geometry}")
+        painter.drawText(x, y * 2, f"Image: {screen.screenshot.size().toTuple()}")
+        painter.drawText(x, y * 3, f"Pos QScreen: {selection.rect}")
+        painter.drawText(x, y * 4, f"Pos Image: {selection.scaled_rect}")
+        painter.drawText(x, y * 5, f"Scale factor: {selection.scale_factor}")
+        painter.drawText(x, y * 6, f"DPR: {screen.device_pixel_ratio}")
