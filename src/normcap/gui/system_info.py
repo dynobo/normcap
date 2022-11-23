@@ -26,6 +26,7 @@ def is_flatpak_package() -> bool:
 
 
 def get_prebuild_package_type() -> Optional[str]:
+    # sourcery skip: assign-if-exp, reintroduce-else
     package = getattr(sys.modules["__main__"], "__package__", None)
     if package and "Briefcase-Version" in metadata.metadata(package):
         # Briefcase package
