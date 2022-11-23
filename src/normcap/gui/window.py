@@ -5,7 +5,6 @@ in multi display setups).
 """
 
 import logging
-import sys
 from typing import Optional
 
 from normcap.gui import system_info
@@ -34,7 +33,6 @@ class Window(QtWidgets.QMainWindow):
         self.draw_debug_infos: bool = False
 
         # Window properties
-        self.setObjectName(f"window-{self.screen_idx}")
         self.setWindowTitle("NormCap")
         self.setWindowIcon(get_icon("normcap.png"))
         self.setAnimated(False)
@@ -43,8 +41,6 @@ class Window(QtWidgets.QMainWindow):
         # Prepare selection rectangle
         self.selection: Selection = Selection()
         self.is_selecting: bool = False
-        self.mode_indicator: QtGui.QIcon = QtGui.QIcon()
-        self.pen_width: int = 2
 
         # Setup widgets and show
         logger.debug("Create window for screen %s", self.screen_idx)
@@ -54,7 +50,6 @@ class Window(QtWidgets.QMainWindow):
     def _add_image_layer(self) -> None:
         """Add widget showing screenshot."""
         self.image_layer = QtWidgets.QLabel()
-        self.image_layer.setObjectName("central_widget")
         self.image_layer.setScaledContents(True)
         self.setCentralWidget(self.image_layer)
 
@@ -164,16 +159,6 @@ class Window(QtWidgets.QMainWindow):
         """Set window to full screen using platform specific methods."""
         logger.debug("Set window for screen %s to fullscreen", self.screen_idx)
 
-        if sys.platform == "linux":
-            self._set_fullscreen_linux()
-        elif sys.platform == "darwin":
-            self._set_fullscreen_macos()
-        elif sys.platform == "win32":
-            self._set_fullscreen_windows()
-        else:
-            raise NotImplementedError(f"Platform {sys.platform} not supported")
-
-    def _set_fullscreen_linux(self) -> None:
         self.setWindowFlags(
             QtGui.Qt.FramelessWindowHint
             | QtGui.Qt.CustomizeWindowHint
@@ -182,31 +167,7 @@ class Window(QtWidgets.QMainWindow):
 
         self.setFocusPolicy(QtGui.Qt.StrongFocus)
 
-        screen_geometry = self.tray.screens[self.screen_idx].geometry
-        self.move(screen_geometry.left, screen_geometry.top)
-
-        if system_info.desktop_environment() == DesktopEnvironment.UNITY:
-            # On unity, setting min/max window size breaks fullscreen.
-            # Skip that and show immediately:
-            self.showFullScreen()
-        else:
-            self.setMinimumSize(
-                QtCore.QSize(screen_geometry.width, screen_geometry.height)
-            )
-            self.setMaximumSize(
-                QtCore.QSize(screen_geometry.width, screen_geometry.height)
-            )
-            self.showFullScreen()
-
-    def _set_fullscreen_macos(self) -> None:
-        self.setWindowFlags(
-            QtGui.Qt.FramelessWindowHint
-            | QtGui.Qt.CustomizeWindowHint
-            | QtGui.Qt.WindowStaysOnTopHint
-            | QtGui.Qt.NoDropShadowWindowHint
-        )
-        self.setFocusPolicy(QtGui.Qt.StrongFocus)
-
+        # Moving window to corresponding monitor
         screen_geometry = self.tray.screens[self.screen_idx].geometry
         self.setGeometry(
             screen_geometry.left,
@@ -214,16 +175,16 @@ class Window(QtWidgets.QMainWindow):
             screen_geometry.width,
             screen_geometry.height,
         )
-        self.showFullScreen()
 
-    def _set_fullscreen_windows(self) -> None:
-        self.setWindowFlags(
-            QtGui.Qt.FramelessWindowHint
-            | QtGui.Qt.CustomizeWindowHint
-            | QtGui.Qt.WindowStaysOnTopHint
-        )
-        screen_geometry = self.tray.screens[self.screen_idx].geometry
-        self.move(screen_geometry.left, screen_geometry.top)
+        if system_info.desktop_environment() != DesktopEnvironment.UNITY:
+            # On unity, setting min/max window size breaks fullscreen.
+            self.setMinimumSize(
+                QtCore.QSize(screen_geometry.width, screen_geometry.height)
+            )
+            self.setMaximumSize(
+                QtCore.QSize(screen_geometry.width, screen_geometry.height)
+            )
+
         self.showFullScreen()
 
     def _position_windows_on_wayland(self) -> None:
@@ -256,9 +217,7 @@ class UiLayerLabel(QtWidgets.QLabel):
             return
 
         # Draw selection rectangle
-        painter.setPen(
-            QtGui.QPen(self.color, self.parent().pen_width, QtGui.Qt.DashLine)
-        )
+        painter.setPen(QtGui.QPen(self.color, 2, QtGui.Qt.DashLine))
         painter.drawRect(*selection.rect.geometry)
 
         # Draw Mode indicator
@@ -276,7 +235,7 @@ class UiLayerLabel(QtWidgets.QLabel):
         painter.end()
 
     def _draw_debug_infos(self, painter: QtGui.QPainter, selection: Selection) -> None:
-        # Draw debug information on screen
+        """Draw debug information on screen."""
         screen = self.parent().tray.screens[self.parent().screen_idx]
         x = y = 25
         painter.setPen(QtGui.QPen(self.color))

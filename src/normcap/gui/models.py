@@ -95,6 +95,8 @@ class Rect:
 class Selection:
     """Represents selection on screen."""
 
+    # TODO: Simplify by using Tuples: start_pos=(x, y)
+    # TODO: Is this useful at all? Or do I only need a function to scale the rect?
     start_x: int = 0
     start_y: int = 0
     end_x: int = 0
