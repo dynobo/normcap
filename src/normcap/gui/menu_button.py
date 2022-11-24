@@ -67,7 +67,7 @@ class Communicate(QtCore.QObject):
     on_close_in_settings = QtCore.Signal(str)
 
 
-class SettingsMenu(QtWidgets.QToolButton):
+class MenuButton(QtWidgets.QToolButton):
     """Button to adjust setting on main window top right."""
 
     title_font = QtGui.QFont(QtGui.QFont().family(), pointSize=10, weight=600)

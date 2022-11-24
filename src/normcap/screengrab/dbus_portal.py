@@ -13,6 +13,7 @@ from PySide6 import QtGui
 
 # TODO: Get rid of jeepney
 
+# TODO: Fix for Gnome 43 in FlatPak
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +87,4 @@ def capture() -> list[QtGui.QImage]:
     This methods works gnome-shell >=v41 and wayland.
     """
     full_image = grab_full_desktop()
-    if not full_image:
-        return []
-
-    return split_full_desktop_to_screens(full_image)
+    return split_full_desktop_to_screens(full_image) if full_image else []

@@ -1,8 +1,10 @@
 import pytest
+from normcap.gui.downloader import Downloader
 
 
 @pytest.mark.skip_on_gh
-def test_downloader_retrieves_website(qtbot, downloader):
+def test_downloader_retrieves_website(qtbot):
+    downloader = Downloader()
     with qtbot.waitSignal(downloader.com.on_download_finished) as result:
         downloader.get("https://www.google.com")
 
@@ -11,7 +13,8 @@ def test_downloader_retrieves_website(qtbot, downloader):
     assert "</html>" in raw.lower()
 
 
-def test_downloader_handles_not_existing_url(caplog, qtbot, downloader):
+def test_downloader_handles_not_existing_url(caplog, qtbot):
+    downloader = Downloader()
     # Do not trigger download finished signal on error
     with qtbot.waitSignal(
         downloader.com.on_download_finished, raising=False, timeout=4000

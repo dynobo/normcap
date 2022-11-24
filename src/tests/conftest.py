@@ -2,7 +2,6 @@ from collections.abc import Generator
 from pathlib import Path
 
 import pytest
-from normcap.gui.downloader_urllib import Downloader as QtNetworkDownloader
 from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.models import OcrResult, TessArgs
 from normcap.utils import create_argparser
@@ -28,11 +27,6 @@ def capture() -> Generator[Capture, None, None]:
         ocr_applied_magic="",
         image=image,
     )
-
-
-@pytest.fixture(scope="session")
-def downloader() -> Generator[QtNetworkDownloader, None, None]:
-    yield QtNetworkDownloader()
 
 
 @pytest.fixture(scope="session")

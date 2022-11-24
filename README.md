@@ -158,18 +158,18 @@ This project uses the following non-standard libraries:
 - [pytesseract](https://pypi.org/project/pytesseract/) _- wrapper for tesseract's API_
 - [jeepney](https://pypi.org/project/jeepney/) _- DBUS client_
 
-Packaging is done with:
-
-- [briefcase](https://pypi.org/project/briefcase/) _- converting Python projects into_
-  _standalone apps_
-
-And it depends on external software
+And it depends on external software:
 
 - [tesseract](https://github.com/tesseract-ocr/tesseract) - _OCR engine_
 - [wl-clipboard](https://github.com/bugaevc/wl-clipboard) - _Wayland clipboard
   utilities_
 
-Thanks to the maintainers of those nice libraries!
+Packaging is done with:
+
+- [briefcase](https://pypi.org/project/briefcase/) _- converting Python projects into_
+  _standalone apps_
+
+Thanks to the maintainers of those nice tools!
 
 ## Similar open source tools
 
