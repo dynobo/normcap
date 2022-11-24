@@ -135,7 +135,44 @@ def init_logger(level: str = "WARNING") -> None:
     logger.setLevel(level)
 
 
-# TODO: Split into multiple
+def _redact_by_key(local_vars: dict) -> dict:
+    """Replace potentially pi values."""
+    filter_vars = [
+        "tsv_data",
+        "words",
+        "self",
+        "text",
+        "transformed",
+        "v",
+    ]
+    redacted = "REDACTED"
+    for func_vars in local_vars.values():
+        for f in filter_vars:
+            if f in func_vars:
+                func_vars[f] = redacted
+        for k, v in func_vars.items():
+            if isinstance(v, Capture):
+                func_vars[k].ocr_text = redacted
+            if isinstance(v, OcrResult):
+                func_vars[k].words = redacted
+                func_vars[k].transformed = redacted
+
+    return local_vars
+
+
+def _get_local_vars(exc_traceback: Optional[TracebackType]) -> dict:
+    local_vars = {}
+    while exc_traceback:
+        name = exc_traceback.tb_frame.f_code.co_name
+        local_vars[name] = exc_traceback.tb_frame.f_locals
+        exc_traceback = exc_traceback.tb_next
+    return _redact_by_key(local_vars)
+
+
+def _format_dict(d: dict) -> str:
+    return pprint.pformat(d, compact=True, width=80, depth=2, indent=3, sort_dicts=True)
+
+
 def hook_exceptions(
     exc_type: type[BaseException],
     exc_value: BaseException,
@@ -148,51 +185,15 @@ def hook_exceptions(
         formatted_exc = "".join(
             f"  {e}" for e in traceback.format_exception_only(exc_type, exc_value)
         )
-
         formatted_tb = "".join(traceback.format_tb(exc_traceback))
-
-        local_vars = {}
-        while exc_traceback:
-            name = exc_traceback.tb_frame.f_code.co_name
-            local_vars[name] = exc_traceback.tb_frame.f_locals
-            exc_traceback = exc_traceback.tb_next
-
-        filter_vars = [
-            "tsv_data",
-            "words",
-            "self",
-            "text",
-            "transformed",
-            "v",
-        ]
-        redacted = "REDACTED"
-        for func_vars in local_vars.values():
-            for f in filter_vars:
-                if f in func_vars:
-                    func_vars[f] = redacted
-            for k, v in func_vars.items():
-                if isinstance(v, Capture):
-                    func_vars[k].ocr_text = redacted
-                if isinstance(v, OcrResult):
-                    func_vars[k].words = redacted
-                    func_vars[k].transformed = redacted
+        local_vars = _get_local_vars(exc_traceback)
 
         message = "\n### System:\n```\n"
-        message += pprint.pformat(
-            system_info.to_dict(),
-            compact=True,
-            width=80,
-            depth=2,
-            indent=3,
-            sort_dicts=True,
-        )
+        message += _format_dict(system_info.to_dict())
         message += "\n```\n\n### Variables:\n```"
-        message += pprint.pformat(
-            local_vars, compact=True, width=80, depth=2, indent=3, sort_dicts=True
-        )
+        message += _format_dict(local_vars)
         message += "\n```\n\n### Exception:\n"
         message += f"```\n{formatted_exc}```\n"
-
         message += "\n### Traceback:\n"
         message += f"```\n{formatted_tb}```\n"
 
