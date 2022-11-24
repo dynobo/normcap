@@ -70,7 +70,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self._add_update_checker()
         self._add_notifier()
         self._set_signals()
-        self._update_screenshots()
+        self._update_screenshots(delayed=False)
 
     def _ensure_screenshot_permission(self) -> None:
         if screengrab.has_screenshot_permission():
@@ -121,7 +121,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
         self.activated.connect(self._tray_activated)
-        self.com.on_tray_menu_capture_clicked.connect(self._delayed_update_screenshots)
+        self.com.on_tray_menu_capture_clicked.connect(self._update_screenshots)
         self.com.on_screenshots_updated.connect(self._show_windows)
         self.com.on_quit.connect(lambda: self._exit_application("clicked exit in tray"))
         self.com.on_region_selected.connect(self._close_windows)
@@ -139,7 +139,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     ) -> None:
         logger.debug("Tray event: %s", reason)
         if reason == QtWidgets.QSystemTrayIcon.ActivationReason.Trigger:
-            self._delayed_update_screenshots()
+            self._update_screenshots()
 
     def _add_update_checker(self) -> None:
         if self.settings.value("update", type=bool) is False:
@@ -172,8 +172,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             lambda: self.com.on_close_or_exit.emit("notification sent")
         )
 
-    def _update_screenshots(self) -> None:
+    def _update_screenshots(self, delayed: bool = True) -> None:
         """Get new screenshots and cache them."""
+        if delayed:
+            time.sleep(0.15)
+
         capture = screengrab.get_capture_func()
         screens = capture()
 
@@ -186,15 +189,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.screens[idx].screenshot = screenshot
 
         self.com.on_screenshots_updated.emit()
-
-    def _delayed_update_screenshots(self) -> None:
-        """Wait before updating screenshot to allow tray menu to hide.
-
-        Avoids having the tray menu itself on the screenshot.
-        """
-        # TODO: Use Optional parameter for _update_screenshot() instead?
-        time.sleep(0.15)
-        self._update_screenshots()
 
     def _add_tray_menu(self) -> None:
         """Create menu for system tray."""
