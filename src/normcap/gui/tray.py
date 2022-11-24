@@ -62,7 +62,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         self.copy_to_clipboard = clipboard.get_copy_func()
 
-        self.screens: dict[int, Screen] = system_info.screens()
+        self.screens: list[Screen] = system_info.screens()
 
         self._set_tray_icon()
         self._add_tray_menu()
@@ -213,7 +213,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _show_windows(self) -> None:
         """Initialize child windows with method depending on system."""
         if not system_info.display_manager_is_wayland():
-            for index in system_info.screens():
+            for index in range(len(system_info.screens())):
                 self._create_window(index)
 
         elif system_info.desktop_environment() in [

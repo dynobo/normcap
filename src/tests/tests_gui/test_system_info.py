@@ -96,8 +96,7 @@ def test_is_prebuild_package(monkeypatch):
 def test_screens():
     screens = system_info.screens()
     assert len(screens) >= 1
-    assert all(isinstance(i, int) for i in screens)
-    assert set(screens.keys()) == set(range(len(screens)))
+    assert all(isinstance(s, models.Screen) for s in screens)
     assert isinstance(screens[0], models.Screen)
     assert isinstance(screens[0].width, int)
     assert isinstance(screens[0].height, int)
