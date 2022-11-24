@@ -4,14 +4,8 @@ import datetime
 import functools
 import logging
 import os
-import pprint
-import re
-import shutil
-import sys
 import tempfile
-import traceback
 from pathlib import Path
-from types import TracebackType
 from typing import Optional
 
 from PIL import Image
@@ -26,9 +20,7 @@ except ImportError:
 
 
 from normcap.gui import system_info
-from normcap.gui.constants import URLS
-from normcap.gui.models import Capture, DesktopEnvironment
-from normcap.ocr.models import OcrResult
+from normcap.gui.models import DesktopEnvironment
 
 logger = logging.getLogger(__name__)
 
@@ -44,26 +36,6 @@ def save_image_in_tempfolder(
         file_name = f"{now:%Y-%m-%d_%H-%M-%S_%f}{postfix}.png"
         image.save(str(file_dir / file_name))
         logger.debug("Store debug image in: %s", file_dir / file_name)
-
-
-def qt_log_wrapper(
-    mode: QtCore.QtMsgType, _: QtCore.QMessageLogContext, message: str
-) -> None:
-    """Intercept QT message.
-
-    Used to hide away unnecessary warnings by showing them only on higher
-    log level (--verbosity debug).
-    """
-    level = mode.name.lower()
-    msg = message.lower()
-    if (level == "qtfatalmsg") or ("could not load the qt platform" in msg):
-        logger.error("[QT] %s - %s", level, msg)
-    else:
-        logger.debug("[QT] %s - %s", level, msg)
-
-    if ("xcb" in msg) and ("it was found" in msg):
-        logger.error("Try solving the problem as described here: %s", URLS.xcb_error)
-        logger.error("If that doesn't help, please open an issue: %s", URLS.issues)
 
 
 def move_active_window_to_position(screen_geometry: QtCore.QRect) -> None:
@@ -159,84 +131,6 @@ def move_active_window_to_position_on_kde(screen_geometry: QtCore.QRect) -> None
     os.unlink(script_file.name)
 
 
-def hook_exceptions(
-    exc_type: type[BaseException],
-    exc_value: BaseException,
-    exc_traceback: Optional[TracebackType],
-) -> None:
-    """Print traceback and quit application."""
-    try:
-        logger.critical("Uncaught exception! Quitting NormCap!")
-
-        formatted_exc = "".join(
-            f"  {e}" for e in traceback.format_exception_only(exc_type, exc_value)
-        )
-
-        formatted_tb = "".join(traceback.format_tb(exc_traceback))
-
-        local_vars = {}
-        while exc_traceback:
-            name = exc_traceback.tb_frame.f_code.co_name
-            local_vars[name] = exc_traceback.tb_frame.f_locals
-            exc_traceback = exc_traceback.tb_next
-
-        filter_vars = [
-            "tsv_data",
-            "words",
-            "self",
-            "text",
-            "transformed",
-            "v",
-        ]
-        redacted = "REDACTED"
-        for func_vars in local_vars.values():
-            for f in filter_vars:
-                if f in func_vars:
-                    func_vars[f] = redacted
-            for k, v in func_vars.items():
-                if isinstance(v, Capture):
-                    func_vars[k].ocr_text = redacted
-                if isinstance(v, OcrResult):
-                    func_vars[k].words = redacted
-                    func_vars[k].transformed = redacted
-
-        message = "\n### System:\n```\n"
-        message += pprint.pformat(
-            system_info.to_dict(),
-            compact=True,
-            width=80,
-            depth=2,
-            indent=3,
-            sort_dicts=True,
-        )
-        message += "\n```\n\n### Variables:\n```"
-        message += pprint.pformat(
-            local_vars, compact=True, width=80, depth=2, indent=3, sort_dicts=True
-        )
-        message += "\n```\n\n### Exception:\n"
-        message += f"```\n{formatted_exc}```\n"
-
-        message += "\n### Traceback:\n"
-        message += f"```\n{formatted_tb}```\n"
-
-        message = re.sub(
-            r"((?:home|users)[/\\])(\w+)([/\\])",
-            r"\1REDACTED\3",
-            message,
-            flags=re.IGNORECASE,
-        )
-        print(message, file=sys.stderr, flush=True)  # noqa
-
-    except Exception:
-        logger.critical(
-            "Uncaught exception! Quitting NormCap! (debug output limited)",
-            exc_info=(exc_type, exc_value, exc_traceback),
-        )
-
-    logger.critical("Please open an issue with the output above on %s", URLS.issues)
-    sys.exit(1)
-
-
 @functools.cache
 def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
@@ -256,23 +150,3 @@ def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None) -> None:
     else:
         QtWidgets.QApplication.restoreOverrideCursor()
     QtWidgets.QApplication.processEvents()
-
-
-def copy_tessdata_files_to_config_dir() -> None:
-    """If packaged, copy language data files to config directory."""
-    tessdata_path = system_info.config_directory() / "tessdata"
-    if list(tessdata_path.glob("*.traineddata")):
-        return
-
-    if system_info.is_flatpak_package():
-        traineddata_src = Path("/app/share") / "tessdata"
-    else:
-        traineddata_src = system_info.get_resources_path() / "tessdata"
-
-    traineddata_files = list(traineddata_src.glob("*.traineddata"))
-    doc_files = list((system_info.get_resources_path() / "tessdata").glob("*.txt"))
-
-    logger.info("Copy %s traineddata files to config directory", len(traineddata_files))
-    tessdata_path.mkdir(parents=True, exist_ok=True)
-    for f in traineddata_files + doc_files:
-        shutil.copy(f, tessdata_path / f.name)
