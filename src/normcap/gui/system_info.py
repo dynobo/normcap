@@ -69,18 +69,17 @@ def desktop_environment() -> DesktopEnvironment:
     return DesktopEnvironment.OTHER
 
 
-def screens() -> dict[int, Screen]:
+def screens() -> list[Screen]:
     """Get informations about available monitors."""
-    # TODO: Refactor into simple list, idx is not necessary
-    return {
-        idx: Screen(
+    return [
+        Screen(
             is_primary=screen == QtWidgets.QApplication.primaryScreen(),
             device_pixel_ratio=QtGui.QScreen.devicePixelRatio(screen),
             geometry=Rect(*screen.geometry().getRect()),
             index=idx,
         )
         for idx, screen in enumerate(QtWidgets.QApplication.screens())
-    }
+    ]
 
 
 def config_directory() -> Path:
