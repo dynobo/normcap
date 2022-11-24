@@ -1,4 +1,6 @@
 """Various Data Models."""
+from __future__ import annotations
+
 import enum
 import logging
 from collections import namedtuple
@@ -90,38 +92,14 @@ class Rect:
         """Height of rect."""
         return self.bottom - self.top
 
-
-@dataclass
-class Selection:
-    """Represents selection on screen."""
-
-    # TODO: Simplify by using Tuples: start_pos=(x, y)
-    # TODO: Is this useful at all? Or do I only need a function to scale the rect?
-    start_x: int = 0
-    start_y: int = 0
-    end_x: int = 0
-    end_y: int = 0
-
-    scale_factor: float = 1.0
-
-    @property
-    def rect(self) -> Rect:
-        """Normalize position and return as Rect."""
-        top = min(self.start_y, self.end_y)
-        bottom = max(self.start_y, self.end_y)
-        left = min(self.start_x, self.end_x)
-        right = max(self.start_x, self.end_x)
-        return Rect(top=top, left=left, bottom=bottom, right=right)
-
-    @property
-    def scaled_rect(self) -> Rect:
-        """Resize rect by scale_factor."""
-        rect = self.rect
-        rect.top = int(rect.top * self.scale_factor)
-        rect.bottom = int(rect.bottom * self.scale_factor)
-        rect.left = int(rect.left * self.scale_factor)
-        rect.right = int(rect.right * self.scale_factor)
-        return rect
+    def scaled(self, scale_factor: float) -> Rect:
+        """Create an integer-scaled copy of the Rect."""
+        return Rect(
+            top=int(self.top * scale_factor),
+            bottom=int(self.bottom * scale_factor),
+            left=int(self.left * scale_factor),
+            right=int(self.right * scale_factor),
+        )
 
 
 @dataclass()

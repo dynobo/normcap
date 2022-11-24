@@ -9,7 +9,7 @@ from typing import Optional
 
 from normcap.gui import system_info
 from normcap.gui.menu_button import MenuButton
-from normcap.gui.models import CaptureMode, DesktopEnvironment, Selection
+from normcap.gui.models import CaptureMode, DesktopEnvironment, Rect
 from normcap.gui.utils import get_icon, move_active_window_to_position
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -30,7 +30,6 @@ class Window(QtWidgets.QMainWindow):
         self.color: QtGui.QColor = QtGui.QColor(color)
         self.tray: QtWidgets.QSystemTrayIcon = parent
         self.is_positioned: bool = False
-        self.draw_debug_infos: bool = False
 
         # Window properties
         self.setWindowTitle("NormCap")
@@ -38,9 +37,12 @@ class Window(QtWidgets.QMainWindow):
         self.setAnimated(False)
         self.setEnabled(True)
 
-        # Prepare selection rectangle
-        self.selection: Selection = Selection()
+        # Prepare selection
+        self.selection_start: QtCore.QPoint = QtCore.QPoint()
+        self.selection_end: QtCore.QPoint = QtCore.QPoint()
         self.is_selecting: bool = False
+        screen = self.tray.screens[self.screen_idx]
+        self.scale_factor = screen.screenshot.width() / screen.width
 
         # Setup widgets and show
         logger.debug("Create window for screen %s", self.screen_idx)
@@ -80,7 +82,7 @@ class Window(QtWidgets.QMainWindow):
     # Events
     ##################
 
-    def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:  # noqa: N802 (lowercase)
+    def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:  # noqa: N802
         """Handle ESC key pressed."""
         if event.key() == QtCore.Qt.Key.Key_Escape:
             if self.is_selecting:
@@ -90,41 +92,33 @@ class Window(QtWidgets.QMainWindow):
             else:
                 self.tray.com.on_close_or_exit.emit("esc button pressed")
 
-    def mousePressEvent(  # noqa: N802 (lowercase)
-        self, event: QtGui.QMouseEvent
-    ) -> None:
+    def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
         """Handle left mouse button clicked."""
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
-            screen = self.tray.screens[self.screen_idx]
-            self.selection.scale_factor = screen.screenshot.width() / screen.width
-            self.selection.start_y = self.selection.end_y = event.position().y()
-            self.selection.start_x = self.selection.end_x = event.position().x()
+            self.selection_start = self.selection_end = event.position().toPoint()
             self.is_selecting = True
             self.update()
 
-    def mouseMoveEvent(  # noqa: N802 (lowercase)
-        self, event: QtGui.QMouseEvent
-    ) -> None:
+    def mouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
         """Update selection on mouse move."""
-        self.selection.end_y = event.position().y()
-        self.selection.end_x = event.position().x()
+        self.selection_end = event.position().toPoint()
         self.update()
 
-    def mouseReleaseEvent(  # noqa: N802 (lowercase)
-        self, event: QtGui.QMouseEvent
-    ) -> None:
+    def mouseReleaseEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
         """Start OCR workflow on left mouse button release."""
         if (event.button() == QtCore.Qt.MouseButton.LeftButton) and self.is_selecting:
-            self.selection.end_y = event.position().y()
-            self.selection.end_x = event.position().x()
+            self.selection_end = event.position().toPoint()
+
+            rect = QtCore.QRect(self.selection_start, self.selection_end).normalized()
             self.tray.com.on_region_selected.emit(
-                (self.selection.scaled_rect, self.screen_idx)
+                (Rect(*rect.getCoords()).scaled(self.scale_factor), self.screen_idx)
             )
-            self.selection = Selection()
+
+            self.selection_start = self.selection_end = QtCore.QPoint()
             self.is_selecting = False
             self.update()
 
-    def changeEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802 (lowercase)
+    def changeEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802
         """Update position on Wayland."""
         if (
             event.type() == QtCore.QEvent.Type.ActivationChange
@@ -137,7 +131,7 @@ class Window(QtWidgets.QMainWindow):
 
         return super().changeEvent(event)
 
-    def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802 (lowercase)
+    def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802
         """Adjust child widget on resize."""
         self.ui_layer.resize(self.size())
         if self.settings_menu:
@@ -146,7 +140,7 @@ class Window(QtWidgets.QMainWindow):
 
         return super().resizeEvent(event)
 
-    def showEvent(self, event: QtGui.QShowEvent) -> None:  # noqa: N802 (lowercase)
+    def showEvent(self, event: QtGui.QShowEvent) -> None:  # noqa: N802
         """Update background image on show/reshow."""
         self.draw_background_image()
         return super().showEvent(event)
@@ -198,50 +192,55 @@ class Window(QtWidgets.QMainWindow):
 class UiLayerLabel(QtWidgets.QLabel):
     def __init__(self, parent: Window) -> None:
         super().__init__(parent)
-        self.color = self.parent().color
-        ui_layer_css = f"#ui_layer {{border: 3px solid {self.color.name()};}}"
+        self.color: QtGui.QColor = self.parent().color
+        self.draw_debug_infos: bool = True
+
         self.setObjectName("ui_layer")
-        self.setStyleSheet(ui_layer_css)
+        self.setStyleSheet(f"#ui_layer {{border: 3px solid {self.color.name()};}}")
         self.setCursor(QtCore.Qt.CursorShape.CrossCursor)
         self.setScaledContents(True)
+
+    def parent(self) -> Window:
+        return super().parent()
 
     def paintEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
         """Draw screenshot and selection rectangle on window."""
         painter = QtGui.QPainter(self)
-        selection = self.parent().selection
+        rect = QtCore.QRect(self.parent().selection_start, self.parent().selection_end)
+        rect = rect.normalized()
 
-        if self.parent().draw_debug_infos:
-            self._draw_debug_infos(painter, selection)
+        if self.draw_debug_infos:
+            self._draw_debug_infos(painter, rect)
 
         if not self.parent().is_selecting:
             return
 
         # Draw selection rectangle
         painter.setPen(QtGui.QPen(self.color, 2, QtGui.Qt.DashLine))
-        painter.drawRect(*selection.rect.geometry)
+        painter.drawRect(rect)
 
         # Draw Mode indicator
-        if (
-            CaptureMode[self.parent().tray.settings.value("mode").upper()]
-            is CaptureMode.PARSE
-        ):
+        mode = self.parent().tray.settings.value("mode")
+        if CaptureMode[mode.upper()] is CaptureMode.PARSE:
             mode_indicator = get_icon("parse.svg")
         else:
             mode_indicator = get_icon("raw.svg")
-        mode_indicator.paint(
-            painter, selection.rect.right - 24, selection.rect.top - 30, 24, 24
-        )
+        mode_indicator.paint(painter, rect.right() - 24, rect.top() - 30, 24, 24)
 
         painter.end()
 
-    def _draw_debug_infos(self, painter: QtGui.QPainter, selection: Selection) -> None:
+    def _draw_debug_infos(self, painter: QtGui.QPainter, rect: QtCore.QRect) -> None:
         """Draw debug information on screen."""
+        selection = Rect(*rect.normalized().getCoords())
+        scale_factor = self.parent().scale_factor
+        selection_scaled = selection.scaled(scale_factor)
+
         screen = self.parent().tray.screens[self.parent().screen_idx]
         x = y = 25
         painter.setPen(QtGui.QPen(self.color))
         painter.drawText(x, y * 1, f"QScreen: {screen.geometry}")
         painter.drawText(x, y * 2, f"Image: {screen.screenshot.size().toTuple()}")
-        painter.drawText(x, y * 3, f"Pos QScreen: {selection.rect}")
-        painter.drawText(x, y * 4, f"Pos Image: {selection.scaled_rect}")
-        painter.drawText(x, y * 5, f"Scale factor: {selection.scale_factor}")
+        painter.drawText(x, y * 3, f"Pos QScreen: {selection.geometry}")
+        painter.drawText(x, y * 4, f"Pos Image: {selection_scaled.geometry}")
+        painter.drawText(x, y * 5, f"Scale factor: {scale_factor}")
         painter.drawText(x, y * 6, f"DPR: {screen.device_pixel_ratio}")
