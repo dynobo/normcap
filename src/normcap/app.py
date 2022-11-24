@@ -3,22 +3,15 @@ import logging
 import signal
 import sys
 
-from normcap import __version__
-from normcap.gui import system_info, utils
+from normcap import __version__, utils
+from normcap.gui import system_info
 from normcap.gui.tray import SystemTray
-from normcap.utils import (
-    create_argparser,
-    init_logger,
-    set_environ_for_flatpak,
-    set_environ_for_prebuild_package,
-    set_environ_for_wayland,
-)
 from PySide6 import QtCore, QtWidgets
 
 
 def main() -> None:
     """Start main application logic."""
-    args = create_argparser().parse_args()
+    args = utils.create_argparser().parse_args()
     if args.version:
         sys.exit(0)
 
@@ -28,7 +21,7 @@ def main() -> None:
     if args.verbosity.upper() != "DEBUG":
         sys.excepthook = utils.hook_exceptions
 
-    init_logger(level=args.verbosity.upper())
+    utils.init_logger(level=args.verbosity.upper())
     logger = logging.getLogger("normcap")
     logger.info("Start NormCap v%s", __version__)
 
@@ -37,11 +30,11 @@ def main() -> None:
 
     # Prepare environment
     if system_info.get_prebuild_package_type():
-        set_environ_for_prebuild_package()
+        utils.set_environ_for_prebuild_package()
     if system_info.display_manager_is_wayland():
-        set_environ_for_wayland()
+        utils.set_environ_for_wayland()
     if system_info.is_flatpak_package():
-        set_environ_for_flatpak()
+        utils.set_environ_for_flatpak()
     if system_info.get_prebuild_package_type() or system_info.is_flatpak_package():
         utils.copy_tessdata_files_to_config_dir()
 
