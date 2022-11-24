@@ -1,4 +1,4 @@
-from normcap.gui.models import Capture, Rect, Screen, Selection
+from normcap.gui.models import Capture, Rect, Screen
 from PySide6 import QtGui
 
 
@@ -14,24 +14,14 @@ def test_rect_properties():
     assert "=220" in str(rect)
 
 
-def test_selection_init():
-    selection = Selection()
-    assert selection.start_x == selection.end_x == 0
-    assert selection.start_y == selection.end_y == 0
-    assert selection.rect.geometry == (0, 0, 0, 0)
-    assert selection.scaled_rect.geometry == (0, 0, 0, 0)
+def test_rect_scaled():
+    rect = Rect(left=0, top=0, right=100, bottom=60)
+    rect_scaled = rect.scaled(1.5)
+    assert rect_scaled.points == (0, 0, 150, 90)
 
-
-def test_selection_normalize():
-    selection = Selection(start_x=100, end_x=0, start_y=50, end_y=0)
-    assert selection.rect.points == (0, 0, 100, 50)
-
-
-def test_selection_scale():
-    selection = Selection(start_x=100, end_x=0, start_y=60, end_y=0)
-    selection.scale_factor = 1.5
-    assert selection.rect.points == (0, 0, 100, 60)
-    assert selection.scaled_rect.points == (0, 0, 150, 90)
+    rect = Rect(left=1, top=1, right=2, bottom=2)
+    rect_scaled = rect.scaled(1.5)
+    assert rect_scaled.points == (1, 1, 3, 3)
 
 
 def test_capture_image_area(capture: Capture):

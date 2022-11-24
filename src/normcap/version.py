@@ -21,11 +21,7 @@ class Version:
         major = minor = patch = rest = None
         try:
             major = int(components[0])
-
-            if len(components) > 1:
-                minor = int(components[1])
-            else:
-                minor = 0
+            minor = int(components[1]) if len(components) > 1 else 0
 
             if len(components) > 2:
                 patch_part = components[2]
