@@ -18,6 +18,7 @@ from PySide6 import QtCore, QtWidgets
 
 def main() -> None:
     """Start main application logic."""
+    # TODO: Shall I remove the excepthook, or at least disable it via ENVVAR?
     sys.excepthook = utils.hook_exceptions
 
     # Allow closing QT app with CTRL+C in terminal

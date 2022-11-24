@@ -71,6 +71,7 @@ def desktop_environment() -> DesktopEnvironment:
 
 def screens() -> dict[int, Screen]:
     """Get informations about available monitors."""
+    # TODO: Refactor into simple list, idx is not necessary
     return {
         idx: Screen(
             is_primary=screen == QtWidgets.QApplication.primaryScreen(),

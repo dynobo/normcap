@@ -35,6 +35,9 @@ def configure_tesseract_binary() -> None:
         def _patched_get_tesseract_version() -> Version:
             return Version(tesseract_version)
 
+        # TODO: Provide Upstream patch to make at least one of those overrides
+        # unnecessary. Maybe this also can be avoided by
+        # `from pytesseract import pytesseract` everywhere?
         pytesseract.get_tesseract_version = _patched_get_tesseract_version
         pytesseract.pytesseract.get_tesseract_version = _patched_get_tesseract_version
 

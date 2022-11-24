@@ -20,9 +20,9 @@ from PySide6 import QtCore, QtGui, QtWidgets
 try:
     from PySide6 import QtDBus
 
-    HAVE_QTDBUS = True
+    HAS_QTDBUS = True
 except ImportError:
-    HAVE_QTDBUS = False
+    HAS_QTDBUS = False
 
 
 from normcap.gui import system_info
@@ -80,7 +80,7 @@ def move_active_window_to_position_on_gnome(screen_geometry: QtCore.QRect) -> No
     This is a workaround for not being able to reposition windows on wayland.
     It only works on Gnome Shell.
     """
-    if not HAVE_QTDBUS:
+    if not HAS_QTDBUS:
         raise TypeError("QtDBus should only be called on Linux systems!")
 
     js_code = f"""
@@ -122,7 +122,7 @@ def move_active_window_to_position_on_kde(screen_geometry: QtCore.QRect) -> None
     This is a workaround for not being able to reposition windows on wayland.
     It only works on KDE.
     """
-    if not HAVE_QTDBUS:
+    if not HAS_QTDBUS:
         raise TypeError("QtDBus should only be called on Linux systems!")
 
     js_code = f"""
@@ -145,6 +145,7 @@ def move_active_window_to_position_on_kde(screen_geometry: QtCore.QRect) -> None
     interface = "org.kde.kwin.Scripting"
     path = "/Scripting"
     shell_interface = QtDBus.QDBusInterface(item, path, interface, bus)
+
     # FIXME: shell_interface is not valid on latest KDE in Fedora 36.
     if shell_interface.isValid():
         x = shell_interface.call("loadScript", script_file.name)

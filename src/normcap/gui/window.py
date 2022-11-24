@@ -8,8 +8,8 @@ import logging
 from typing import Optional
 
 from normcap.gui import system_info
+from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import CaptureMode, DesktopEnvironment, Selection
-from normcap.gui.settings_menu import SettingsMenu
 from normcap.gui.utils import get_icon, move_active_window_to_position
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -68,7 +68,7 @@ class Window(QtWidgets.QMainWindow):
 
     def add_settings_menu(self, tray: QtWidgets.QSystemTrayIcon) -> None:
         """Add settings menu to current window."""
-        self.settings_menu = SettingsMenu(self, tray.settings)
+        self.settings_menu = MenuButton(self, tray.settings)
         self.settings_menu.com.on_open_url.connect(tray.com.on_open_url_and_hide)
         self.settings_menu.com.on_close_in_settings.connect(
             lambda: self.tray.com.on_close_or_exit.emit("clicked close in menu")
