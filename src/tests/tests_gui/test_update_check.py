@@ -10,7 +10,7 @@ from normcap.gui.constants import URLS
 def test_update_checker_new_version(monkeypatch, qtbot, packaged):
     monkeypatch.setattr(update_check, "__version__", "0.0.0")
     checker = update_check.UpdateChecker(None, packaged=packaged)
-    monkeypatch.setattr(checker, "show_update_message", lambda args: ...)
+    monkeypatch.setattr(checker, "_show_update_message", lambda args: ...)
 
     with qtbot.waitSignal(checker.com.on_new_version_found, timeout=4000) as result:
         checker.check()
@@ -34,7 +34,7 @@ def test_urls_reachable(url):
 def test_update_checker_no_new_version(monkeypatch, qtbot, packaged):
     monkeypatch.setattr(update_check, "__version__", "9.9.9")
     checker = update_check.UpdateChecker(None, packaged=packaged)
-    monkeypatch.setattr(checker, "show_update_message", lambda args: ...)
+    monkeypatch.setattr(checker, "_show_update_message", lambda args: ...)
 
     with qtbot.waitSignal(
         checker.com.on_new_version_found, raising=False, timeout=4000
@@ -53,7 +53,7 @@ def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
     with qtbot.waitSignal(
         checker.com.on_version_parsed, raising=False, timeout=4000
     ) as result:
-        checker.parse_response_to_version(text)
+        checker._parse_version(text)
 
     assert not result.signal_triggered
     assert "ERROR" in caplog.text

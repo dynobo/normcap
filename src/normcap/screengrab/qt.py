@@ -18,5 +18,4 @@ def capture() -> list[QtGui.QImage]:
         screenshot = QtGui.QScreen.grabWindow(screen, 0)
         image = screenshot.toImage()
         images.append(image)
-
     return images

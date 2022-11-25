@@ -26,9 +26,48 @@ class Notifier(QtCore.QObject):
         super().__init__(parent)
         self.com = Communicate()
 
+    @staticmethod
+    def _compose_notification(capture: Capture) -> tuple[str, str]:
+        """Extract message text out of captures object and include icon."""
+        # Compose message text
+        if not capture.ocr_text or len(capture.ocr_text.strip()) < 1:
+            title = "Nothing captured!"
+            text = "Please try again."
+            return title, text
+
+        text = capture.ocr_text.strip().replace(os.linesep, " ")
+        text = textwrap.shorten(text, width=45)
+
+        # Compose message title
+        if capture.ocr_applied_magic == "ParagraphMagic":
+            count = capture.ocr_text.count(os.linesep * 2) + 1
+            title = f"{count} paragraph"
+        elif capture.ocr_applied_magic == "EmailMagic":
+            count = capture.ocr_text.count("@")
+            title = f"{count} email"
+        elif capture.ocr_applied_magic == "SingleLineMagic":
+            count = capture.ocr_text.count(" ") + 1
+            title = f"{count} word"
+        elif capture.ocr_applied_magic == "MultiLineMagic":
+            count = capture.ocr_text.count("\n") + 1
+            title = f"{count} line"
+        elif capture.ocr_applied_magic == "UrlMagic":
+            count = capture.ocr_text.count("\n") + 1
+            title = f"{count} URL"
+        elif capture.mode == CaptureMode.RAW:
+            count = len(capture.ocr_text)
+            title = f"{count} char"
+        else:
+            count = 0
+            title = ""
+
+        title += f"{'s' if count > 1 else ''} captured"
+
+        return title, text
+
     def send_notification(self, capture: Capture) -> None:
         """Show tray icon then send notification."""
-        title, message = self.compose_notification(capture)
+        title, message = self._compose_notification(capture)
         if sys.platform == "linux" and shutil.which("notify-send"):
             self.send_via_libnotify(title, message)
         else:
@@ -72,42 +111,3 @@ class Notifier(QtCore.QObject):
         notification_icon = get_icon(icon_file, "tool-magic-symbolic")
         self.parent().show()
         self.parent().showMessage(title, message, notification_icon)
-
-    @staticmethod
-    def compose_notification(capture: Capture) -> tuple[str, str]:
-        """Extract message text out of captures object and include icon."""
-        # Compose message text
-        if not capture.ocr_text or len(capture.ocr_text.strip()) < 1:
-            title = "Nothing captured!"
-            text = "Please try again."
-            return title, text
-
-        text = capture.ocr_text.strip().replace(os.linesep, " ")
-        text = textwrap.shorten(text, width=45)
-
-        # Compose message title
-        if capture.ocr_applied_magic == "ParagraphMagic":
-            count = capture.ocr_text.count(os.linesep * 2) + 1
-            title = f"{count} paragraph"
-        elif capture.ocr_applied_magic == "EmailMagic":
-            count = capture.ocr_text.count("@")
-            title = f"{count} email"
-        elif capture.ocr_applied_magic == "SingleLineMagic":
-            count = capture.ocr_text.count(" ") + 1
-            title = f"{count} word"
-        elif capture.ocr_applied_magic == "MultiLineMagic":
-            count = capture.ocr_text.count("\n") + 1
-            title = f"{count} line"
-        elif capture.ocr_applied_magic == "UrlMagic":
-            count = capture.ocr_text.count("\n") + 1
-            title = f"{count} URL"
-        elif capture.mode == CaptureMode.RAW:
-            count = len(capture.ocr_text)
-            title = f"{count} char"
-        else:
-            count = 0
-            title = ""
-
-        title += f"{'s' if count > 1 else ''} captured"
-
-        return title, text

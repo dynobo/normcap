@@ -20,7 +20,7 @@ from normcap.screengrab.utils import split_full_desktop_to_screens
 logger = logging.getLogger(__name__)
 
 
-def get_screenshot_interface():  # noqa: ANN201
+def _get_screenshot_interface() -> QtDBus.QDBusInterface:
     if not HAS_QTDBUS:
         raise ModuleNotFoundError("QtDBUS not available.")
 
@@ -34,12 +34,12 @@ def get_screenshot_interface():  # noqa: ANN201
     return QtDBus.QDBusInterface(item, path, interface, bus)
 
 
-def fullscreen_to_file(filename: Union[os.PathLike, str]) -> None:
+def _fullscreen_to_file(filename: Union[os.PathLike, str]) -> None:
     """Capture full screen and store it in file."""
     if not HAS_QTDBUS:
         raise ModuleNotFoundError("QtDBUS not available.")
 
-    screenshot_interface = get_screenshot_interface()
+    screenshot_interface = _get_screenshot_interface()
     if screenshot_interface.isValid():
         x = screenshot_interface.call("Screenshot", True, False, filename)
         if x.errorName():
@@ -58,7 +58,7 @@ def capture() -> list[QtGui.QImage]:
 
     _, temp_file = tempfile.mkstemp(prefix="normcap")
     try:
-        fullscreen_to_file(temp_file)
+        _fullscreen_to_file(temp_file)
         image = QtGui.QImage(temp_file)
     finally:
         Path(temp_file).unlink()

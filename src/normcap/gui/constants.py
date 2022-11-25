@@ -2,6 +2,30 @@
 
 from normcap.gui.models import Setting, Urls
 
+UPDATE_CHECK_INTERVAL_DAYS = 7
+
+DESCRIPTION = (
+    "OCR-powered screen-capture tool to capture information instead of images."
+)
+
+MESSAGE_LANGUAGES = (
+    "You are not using the prebuild package version of NormCap. "
+    "Please refer to the documentation of Tesseract for your "
+    "operating system on how to install additional languages."
+)
+
+URLS = Urls(
+    releases="https://github.com/dynobo/normcap/releases",
+    changelog="https://github.com/dynobo/normcap/blob/main/CHANGELOG.md",
+    pypi="https://pypi.org/pypi/normcap",
+    github="https://github.com/dynobo/normcap",
+    issues="https://github.com/dynobo/normcap/issues",
+    faqs="https://dynobo.github.io/normcap/#faqs",
+    website="https://dynobo.github.io/normcap",
+    xcb_error="https://github.com/dynobo/normcap/blob/main/FAQ.md"
+    + "#linux-could-not-load-the-qt-platform-plugin-xcb",
+)
+
 DEFAULT_SETTINGS = (
     Setting(
         key="color",
@@ -76,27 +100,3 @@ DEFAULT_SETTINGS = (
         cli_arg=False,
     ),
 )
-
-URLS = Urls(
-    releases="https://github.com/dynobo/normcap/releases",
-    changelog="https://github.com/dynobo/normcap/blob/main/CHANGELOG.md",
-    pypi="https://pypi.org/pypi/normcap",
-    github="https://github.com/dynobo/normcap",
-    issues="https://github.com/dynobo/normcap/issues",
-    faqs="https://dynobo.github.io/normcap/#faqs",
-    website="https://dynobo.github.io/normcap",
-    xcb_error="https://github.com/dynobo/normcap/blob/main/FAQ.md"
-    + "#linux-could-not-load-the-qt-platform-plugin-xcb",
-)
-
-DESCRIPTION = (
-    "OCR-powered screen-capture tool to capture information instead of images."
-)
-
-MESSAGE_LANGUAGES = (
-    "You are not using the prebuild package version of NormCap. "
-    "Please refer to the documentation of Tesseract for your "
-    "operating system on how to install additional languages."
-)
-
-UPDATE_CHECK_INTERVAL_DAYS = 7
