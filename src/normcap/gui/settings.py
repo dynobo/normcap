@@ -18,13 +18,6 @@ class Settings(QtCore.QSettings):
         self.init_settings = init_settings
         self._prepare_and_sync()
 
-    def reset(self) -> None:
-        """Remove all existing settings and values."""
-        logger.info("Reset settings to defaults")
-        for key in self.allKeys():
-            self.remove(key)
-        self._prepare_and_sync()
-
     def _prepare_and_sync(self) -> None:
         self._set_missing_to_default()
         self._update_from_init_settings()
@@ -46,3 +39,10 @@ class Settings(QtCore.QSettings):
                 continue
             else:
                 logger.debug("Skip update of non existing setting (%s: %s)", key, value)
+
+    def reset(self) -> None:
+        """Remove all existing settings and values."""
+        logger.info("Reset settings to defaults")
+        for key in self.allKeys():
+            self.remove(key)
+        self._prepare_and_sync()
