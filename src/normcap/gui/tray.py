@@ -120,7 +120,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
-        self.activated.connect(self._tray_activated)
+        self.activated.connect(self._handle_tray_click)
         self.com.on_tray_menu_capture_clicked.connect(self._update_screenshots)
         self.com.on_screenshots_updated.connect(self._show_windows)
         self.com.on_quit.connect(lambda: self._exit_application("clicked exit in tray"))
@@ -130,11 +130,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_ocr_performed.connect(self._copy_to_clipboard)
         self.com.on_copied_to_clipboard.connect(self._notify_or_close)
         self.com.on_copied_to_clipboard.connect(self._color_tray_icon)
-
         self.com.on_close_or_exit.connect(self._close_or_exit)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
 
-    def _tray_activated(
+    def _handle_tray_click(
         self, reason: QtWidgets.QSystemTrayIcon.ActivationReason
     ) -> None:
         logger.debug("Tray event: %s", reason)
@@ -181,7 +180,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         screens = capture()
 
         if not screens:
-            logger.error("Could not grab screenshots.")
+            logger.error("Could not grab screenshot.")
             return
 
         for idx, screenshot in enumerate(screens):

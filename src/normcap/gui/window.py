@@ -129,6 +129,7 @@ class Window(QtWidgets.QMainWindow):
                 self.update()
             else:
                 self.tray.com.on_close_or_exit.emit("esc button pressed")
+        super().keyPressEvent(event)
 
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
         """Handle left mouse button clicked."""
@@ -136,11 +137,13 @@ class Window(QtWidgets.QMainWindow):
             self.selection_start = self.selection_end = event.position().toPoint()
             self.is_selecting = True
             self.update()
+        super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
         """Update selection on mouse move."""
         self.selection_end = event.position().toPoint()
         self.update()
+        super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
         """Start OCR workflow on left mouse button release."""
@@ -155,6 +158,7 @@ class Window(QtWidgets.QMainWindow):
             self.selection_start = self.selection_end = QtCore.QPoint()
             self.is_selecting = False
             self.update()
+        super().mouseReleaseEvent(event)
 
     def changeEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802
         """Update position on Wayland."""
@@ -172,8 +176,8 @@ class Window(QtWidgets.QMainWindow):
         """Adjust child widget on resize."""
         self.ui_layer.resize(self.size())
         if self.settings_menu:
-            # Reposition settings menu
             self.settings_menu.move(self.width() - self.settings_menu.width() - 26, 26)
+        super().resizeEvent(event)
 
     def showEvent(self, event: QtGui.QShowEvent) -> None:  # noqa: N802
         """Update background image on show/reshow."""
@@ -187,7 +191,7 @@ class UiLayerLabel(QtWidgets.QLabel):
     def __init__(self, parent: Window) -> None:
         super().__init__(parent)
         self.color: QtGui.QColor = self.parent().color
-        self.draw_debug_infos: bool = True
+        self.draw_debug_infos: bool = False
 
         self.setObjectName("ui_layer")
         self.setStyleSheet(f"#ui_layer {{border: 3px solid {self.color.name()};}}")
@@ -210,11 +214,7 @@ class UiLayerLabel(QtWidgets.QLabel):
         painter.drawText(x, y * 5, f"Scale factor: {scale_factor}")
         painter.drawText(x, y * 6, f"DPR: {screen.device_pixel_ratio}")
 
-    # TODO: Seems wired
-    def parent(self) -> Window:
-        return super().parent()
-
-    def paintEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
+    def paintEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802
         """Draw screenshot and selection rectangle on window."""
         painter = QtGui.QPainter(self)
         rect = QtCore.QRect(self.parent().selection_start, self.parent().selection_end)
@@ -226,11 +226,9 @@ class UiLayerLabel(QtWidgets.QLabel):
         if not self.parent().is_selecting:
             return
 
-        # Draw selection rectangle
         painter.setPen(QtGui.QPen(self.color, 2, QtGui.Qt.DashLine))
         painter.drawRect(rect)
 
-        # Draw Mode indicator
         mode = self.parent().tray.settings.value("mode")
         if CaptureMode[mode.upper()] is CaptureMode.PARSE:
             mode_indicator = utils.get_icon("parse.svg")
@@ -239,3 +237,4 @@ class UiLayerLabel(QtWidgets.QLabel):
         mode_indicator.paint(painter, rect.right() - 24, rect.top() - 30, 24, 24)
 
         painter.end()
+        super().paintEvent(event)
