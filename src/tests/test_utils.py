@@ -77,29 +77,30 @@ def test_set_environ_for_briefcase_not_packaged(monkeypatch, os_str):
 
 @pytest.mark.parametrize("os_str", ("darwin", "linux", "win32"))
 def test_set_environ_for_briefcase_is_packaged(monkeypatch, os_str):
-    monkeypatch.setattr(metadata, "metadata", lambda _: ["Briefcase-Version"])
-    monkeypatch.setattr(utils.sys, "platform", os_str)
-    monkeypatch.setattr(utils.sys.modules["__main__"], "__package__", "normcap")
+    with monkeypatch.context() as m:
+        m.setattr(metadata, "metadata", lambda _: ["Briefcase-Version"])
+        m.setattr(utils.sys, "platform", os_str)
+        m.setattr(utils.sys.modules["__main__"], "__package__", "normcap")
+        m.setenv("TESSERACT_CMD", "")
+        m.setenv("TESSERACT_VERSION", "")
 
-    monkeypatch.setenv("TESSERACT_CMD", "")
-    monkeypatch.setenv("TESSERACT_VERSION", "")
+        utils.set_environ_for_prebuild_package()
 
-    utils.set_environ_for_prebuild_package()
-
-    if os_str == "win32":
-        assert os.environ.get("TESSERACT_CMD").endswith("tesseract.exe")
-        assert os.environ.get("TESSERACT_VERSION")
-    else:
-        assert os.environ.get("TESSERACT_CMD").endswith("tesseract")
+        if os_str == "win32":
+            assert os.environ.get("TESSERACT_CMD").endswith("tesseract.exe")
+            assert os.environ.get("TESSERACT_VERSION")
+        else:
+            assert os.environ.get("TESSERACT_CMD").endswith("tesseract")
 
 
 def test_set_environ_for_briefcase_unsupported_platform(monkeypatch):
-    monkeypatch.setattr(metadata, "metadata", lambda _: ["Briefcase-Version"])
-    monkeypatch.setattr(utils.sys, "platform", "cygwin")
-    monkeypatch.setattr(utils.sys.modules["__main__"], "__package__", "normcap")
+    with monkeypatch.context() as m:
+        m.setattr(metadata, "metadata", lambda _: ["Briefcase-Version"])
+        m.setattr(utils.sys, "platform", "cygwin")
+        m.setattr(utils.sys.modules["__main__"], "__package__", "normcap")
 
-    with pytest.raises(RuntimeError, match="Unsupported platform"):
-        utils.set_environ_for_prebuild_package()
+        with pytest.raises(RuntimeError, match="Unsupported platform"):
+            utils.set_environ_for_prebuild_package()
 
 
 def test_init_tessdata_copies_files(tmp_path, monkeypatch):
@@ -176,21 +177,23 @@ def test_qt_log_wrapper_xcb_as_error(caplog):
 
 
 def test_hook_exception(monkeypatch, caplog, capsys):
-    monkeypatch.setattr(sys, "exit", lambda _: True)
-    with pytest.raises(RuntimeError) as excinfo:
-        text = words = tsv_data = "secret"  # noqa: F841 (unused variable)
-        transformed = v = self = "secret"  # noqa: F841
-        other_variable = "should be printed"  # noqa: F841
-        capture = Capture(ocr_text="secret")  # noqa: F841
-        ocr_result = OcrResult(  # noqa: F841
-            tess_args=None,
-            image=Image.Image(),
-            words="secret",
-            transformed="secret",
-        )
-        raise RuntimeError
+    with monkeypatch.context() as m:
+        m.setattr(sys, "exit", lambda _: True)
+        with pytest.raises(RuntimeError) as excinfo:
+            text = words = tsv_data = "secret"  # noqa: F841 (unused variable)
+            transformed = v = self = "secret"  # noqa: F841
+            other_variable = "should be printed"  # noqa: F841
+            capture = Capture(ocr_text="secret")  # noqa: F841
+            ocr_result = OcrResult(  # noqa: F841
+                tess_args=None,
+                image=Image.Image(),
+                words="secret",
+                transformed="secret",
+            )
+            raise RuntimeError
 
-    utils.hook_exceptions(excinfo.type, excinfo.value, excinfo.tb)
+        utils.hook_exceptions(excinfo.type, excinfo.value, excinfo.tb)
+
     captured = capsys.readouterr()
 
     assert "Uncaught exception! Quitting NormCap!" in caplog.text
@@ -209,13 +212,14 @@ def test_hook_exception(monkeypatch, caplog, capsys):
 
 
 def test_hook_exception_fails(monkeypatch, caplog):
-    monkeypatch.setattr(sys, "exit", lambda _: True)
-    with pytest.raises(RuntimeError) as excinfo:
-        raise RuntimeError
+    with monkeypatch.context() as m:
+        m.setattr(sys, "exit", lambda _: True)
+        with pytest.raises(RuntimeError) as excinfo:
+            raise RuntimeError
 
-    # Cause exception _inside_ the exception hook
-    monkeypatch.setattr(utils.pprint, "pformat", lambda _: 1 / 0)
-    utils.hook_exceptions(excinfo.type, excinfo.value, excinfo.tb)
+        # Cause exception _inside_ the exception hook
+        m.setattr(utils.pprint, "pformat", lambda _: 1 / 0)
+        utils.hook_exceptions(excinfo.type, excinfo.value, excinfo.tb)
 
     assert "Uncaught exception! Quitting NormCap!" in caplog.text
     assert "debug output limited" in caplog.text

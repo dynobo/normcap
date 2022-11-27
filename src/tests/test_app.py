@@ -21,21 +21,24 @@ def test_version():
 
 
 def test_get_args(monkeypatch):
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        [sys.argv[0], "--language", "eng", "deu", "--mode=raw", "--tray=True"],
-    )
-    args = app._get_args()
+    with monkeypatch.context() as m:
+        m.setattr(
+            sys,
+            "argv",
+            [sys.argv[0], "--language", "eng", "deu", "--mode=raw", "--tray=True"],
+        )
+        args = app._get_args()
+
     assert args.mode == "raw"
     assert args.language == ["eng", "deu"]
     assert args.tray is True
 
 
 def test_get_args_version(monkeypatch, capsys):
-    monkeypatch.setattr(sys, "argv", [sys.argv[0], "--version"])
-    with pytest.raises(SystemExit) as exc:
-        _ = app._get_args()
+    with monkeypatch.context() as m:
+        m.setattr(sys, "argv", [sys.argv[0], "--version"])
+        with pytest.raises(SystemExit) as exc:
+            _ = app._get_args()
 
     output = capsys.readouterr()
     assert normcap.__version__ in output.out
@@ -46,20 +49,21 @@ def test_get_args_version(monkeypatch, capsys):
 @pytest.mark.parametrize(
     "level,result",
     (
-        ("debug", {"level": logging.DEBUG, "has_hook": False}),
         ("info", {"level": logging.INFO, "has_hook": True}),
+        ("debug", {"level": logging.DEBUG, "has_hook": False}),
     ),
 )
 def test_prepare_logging(monkeypatch, level, result, caplog):
-    monkeypatch.setattr(sys, "argv", [sys.argv[0], "--verbosity", level])
-    args = app._get_args()
+    with monkeypatch.context() as m:
+        m.setattr(sys, "argv", [sys.argv[0], "--verbosity", level])
+        args = app._get_args()
+
     app._prepare_logging(args)
-
     logger = logging.getLogger("normcap")
-    assert logger.level == result["level"]
 
+    assert logger.level == result["level"]
     assert (sys.excepthook == normcap.utils.hook_exceptions) is result["has_hook"]
 
 
 def test_prepare_env():
-    app._prepare_environment()
+    app._prepare_envs()

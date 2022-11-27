@@ -19,7 +19,7 @@ def _get_args() -> Namespace:
     return args
 
 
-def _prepare_logging(args: Namespace) -> logging.Logger:
+def _prepare_logging(args: Namespace) -> None:
     if args.verbosity.upper() != "DEBUG":
         sys.excepthook = utils.hook_exceptions
 
@@ -30,10 +30,8 @@ def _prepare_logging(args: Namespace) -> logging.Logger:
     # Wrap QT logging output
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
-    return logger
 
-
-def _prepare_environment() -> None:
+def _prepare_envs() -> None:
     """Prepare environment variables depending on setup and system."""
     # Allow closing QT app with CTRL+C in terminal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -50,13 +48,11 @@ def _prepare_environment() -> None:
 
 def main() -> None:
     args = _get_args()
-    logger = _prepare_logging(args)
-    _prepare_environment()
+    _prepare_logging(args)
+    _prepare_envs()
 
     app = QtWidgets.QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
-
-    logger.debug("System info:\n%s", system_info.to_dict())
 
     tray = SystemTray(app, vars(args))
     tray.setVisible(True)

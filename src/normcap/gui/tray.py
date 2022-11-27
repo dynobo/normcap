@@ -47,6 +47,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     windows: dict[int, Window] = {}
 
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
+        logger.debug("System info:\n%s", system_info.to_dict())
         logger.debug("Set up tray icon")
         super().__init__(parent)
 

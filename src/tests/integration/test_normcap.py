@@ -1,11 +1,11 @@
 import logging
+import sys
 from pathlib import Path
 
 import Levenshtein
-import normcap
 import pytest
-from normcap.gui.tray import SystemTray
-from normcap.utils import create_argparser
+from normcap import app
+from normcap.gui.tray import SystemTray, screengrab
 from PySide6 import QtCore, QtGui
 
 from .testcases.data import TESTCASES
@@ -35,46 +35,38 @@ def test_app(monkeypatch, qapp, qtbot, data):
         pytest.xfail("Skipped due to wrong screen resolution.")
 
     image = Path(__file__).parent / "testcases" / data["image"]
-    monkeypatch.setattr(
-        normcap.gui.tray.screengrab, "get_capture_func", lambda: _load_test_image(image)
-    )
-    args = create_argparser().parse_args(
-        [
-            "--language=eng",
-            "--mode=parse",
-            "--tray=True",
-        ]
-    )
-    tray = SystemTray(None, vars(args))
-    tray.show()
+    with monkeypatch.context() as m:
 
-    window = tray.windows[0]
-    qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["tl"]))
-    qtbot.mouseMove(window, pos=QtCore.QPoint(*data["br"]))
-    qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["br"]))
+        m.setattr(screengrab, "get_capture_func", lambda: _load_test_image(image))
+        m.setattr(
+            sys,
+            "argv",
+            [
+                sys.argv[0],
+                "--language=eng",
+                "--mode=parse",
+                "--tray=True",
+                "--verbosity=debug",
+                "--update=False",
+            ],
+        )
+        args = app._get_args()
+        app._prepare_logging(args)
+        app._prepare_envs()
 
-    qtbot.waitUntil(_check_ocr_result(tray))
-    capture = tray.capture
+        tray = SystemTray(None, vars(args))
+        tray.setVisible(True)
 
-    # Text output is not 100% predictable across different machines:
-    similarity = Levenshtein.ratio(capture.ocr_text, data["transformed"])
+        window = tray.windows[0]
+        qtbot.mousePress(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["tl"]))
+        qtbot.mouseMove(window, pos=QtCore.QPoint(*data["br"]))
+        qtbot.mouseRelease(window, QtCore.Qt.LeftButton, pos=QtCore.QPoint(*data["br"]))
+
+        qtbot.waitUntil(_check_ocr_result(tray))
+        capture = tray.capture
+
+        # Text output is not 100% predictable across different machines:
+        similarity = Levenshtein.ratio(capture.ocr_text, data["transformed"])
 
     assert capture.ocr_applied_magic == data["ocr_applied_magic"], capture.ocr_text
     assert similarity >= 0.98, f"{capture.ocr_text=}"
-
-
-# def test_app(monkeypatch, qapp, qtbot):
-#     # screen_rect = qapp.primaryScreen().size()
-#     # if screen_rect.width() != 1920 or screen_rect.height() != 1080:
-#     #    pytest.xfail("Skipped due to wrong screen resolution.")
-#     # image = Path(__file__).parent / "testcases" / data["image"]
-#     # monkeypatch.setattr(
-#     #    normcap.gui.tray.screengrab, "get_capture_func",
-# [QtGui.QImage(image.resolve())]
-#     # )
-#     args = app._get_args()
-#     logger = app._prepare_logging(args)
-#     app._prepare_envs()
-#     tray = SystemTray(None, vars(args))
-#     tray.show()
-#     qtbot.wait(1000)

@@ -1,7 +1,7 @@
 import logging
-import os
 import sys
 import tempfile
+from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -30,11 +30,11 @@ def test_save_image_in_tempfolder():
 
     image = QtGui.QImage(20, 20, QtGui.QImage.Format.Format_RGB32)
 
-    utils.save_image_in_tempfolder(image, postfix="unittest")
+    test_id = f"_unittest_{datetime.now():%H-%M-%S.%f}"
+    utils.save_image_in_tempfolder(image, postfix=test_id)
 
-    png_files = (Path(tempfile.gettempdir()) / "normcap").glob("*.png")
-    png_files = sorted(png_files, key=os.path.getmtime, reverse=True)
-    assert "unittest" in str(list(png_files)[0])
+    png_files = (Path(tempfile.gettempdir()) / "normcap").glob(f"*{test_id}.png")
+    assert len(list(png_files)) == 1
 
 
 def test_get_icon_custom():
