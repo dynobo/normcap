@@ -230,7 +230,53 @@ class BuilderBase(ABC):
             )
 
 
-def bundle_tesseract_windows(builder: BuilderBase):
+def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase):
+    """Download tesseract binaries including dependencies into resource path."""
+    # Link to download artifact might change
+
+    tesseract_path = builder.BUILD_PATH / "tesseract"
+    tesseract_path.unlink(missing_ok=True)
+    tesseract_path.mkdir(exist_ok=True)
+
+    installer_path = tesseract_path / "tesseract-setup.exe"
+
+    url = (
+        "https://digi.bib.uni-mannheim.de/tesseract/"
+        + "tesseract-ocr-w64-setup-v5.2.0.20220712.exe"
+    )
+    urllib.request.urlretrieve(url, installer_path)
+
+    if not installer_path.exists():
+        raise FileNotFoundError("Downloading of tesseract binaries might have failed!")
+
+    subprocess.run(
+        "7z e tesseract-setup.exe", shell=True, cwd=tesseract_path, check=True
+    )
+
+    excluded = [
+        "LangDLL.dll",
+        "nsDialogs.dll",
+        "StartMenu.dll",
+        "UserInfo.dll",
+        "System.dll",
+        "INetC.dll",
+    ]
+
+    for each_file in Path(tesseract_path).glob("*.*"):
+        if (
+            (each_file.suffix not in [".exe", ".dll"])
+            or (each_file.name in excluded)
+            or (each_file.suffix == ".exe" and each_file.name != "tesseract.exe")
+        ):
+            continue
+
+        (builder.TESSERACT_PATH / each_file.name).unlink(missing_ok=True)
+        each_file.rename(builder.TESSERACT_PATH / each_file.name)
+
+    shutil.rmtree(tesseract_path)
+
+
+def bundle_tesseract_windows_appveyor(builder: BuilderBase):
     """Download tesseract binaries including dependencies into resource path."""
     # Link to download artifact might change
 
@@ -248,7 +294,7 @@ def bundle_tesseract_windows(builder: BuilderBase):
     #     "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
     # )
 
-    urllib.request.urlretrieve(f"{url}", zip_path)
+    urllib.request.urlretrieve(url, zip_path)
 
     if not zip_path.exists():
         raise FileNotFoundError("Downloading of tesseract.zip might have failed!")
