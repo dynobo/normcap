@@ -55,7 +55,7 @@ class WindowsBriefcase(BuilderBase):
         # Copy installer images
         left = "normcap_install_bg.bmp"
         top = "normcap_install_top.bmp"
-        for image in [left, top]:
+        for image in (left, top):
             original = self.IMG_PATH / image
             target = self.PROJECT_PATH / "windows" / "app" / "NormCap" / image
             shutil.copy(original, target)
