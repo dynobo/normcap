@@ -5,7 +5,7 @@ from os import PathLike
 from typing import Iterable, Optional, Union
 
 from normcap.ocr import enhance, utils
-from normcap.ocr.magics import magic
+from normcap.ocr.magics import Magic
 from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
 from PIL import Image
 from pytesseract import pytesseract
@@ -50,7 +50,7 @@ def recognize(
     logger.debug("OCR result: %s", result)
 
     if parse:
-        result = magic.apply_magic(result)
+        result = Magic().apply(result)
         logger.debug("Transformed text: %s", result.transformed)
 
     return result

@@ -12,7 +12,7 @@ from normcap.ocr.models import OcrResult
 logger = logging.getLogger(__name__)
 
 
-class ApplyMagic:
+class Magic:
     """Loads available magics, scores, and trigger magic with highest score.
 
     Arguments:
@@ -31,7 +31,7 @@ class ApplyMagic:
         "UrlMagic": UrlMagic(),
     }
 
-    def __call__(self, ocr_result: OcrResult) -> OcrResult:
+    def apply(self, ocr_result: OcrResult) -> OcrResult:
         """Load magics, calculate score, execture magic with highest score.
 
         Arguments:
@@ -76,6 +76,3 @@ class ApplyMagic:
         scores = {name: magic.score(ocr_result) for name, magic in self._magics.items()}
         logger.debug("All scores: %s", scores)
         return scores
-
-
-apply_magic = ApplyMagic()
