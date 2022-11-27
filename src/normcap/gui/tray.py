@@ -210,10 +210,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             for index in range(len(system_info.screens())):
                 self._create_window(index)
 
-        elif system_info.desktop_environment() in [
+        elif system_info.desktop_environment() in (
             DesktopEnvironment.GNOME,
             DesktopEnvironment.KDE,
-        ]:
+        ):
             self.com.on_window_positioned.connect(self._create_next_window)
             self._create_next_window()
 

@@ -161,7 +161,7 @@ class MenuButton(QtWidgets.QToolButton):
                 action.setChecked(True)
             value = languages
 
-        if None not in [setting, value]:
+        if None not in (setting, value):
             self.settings.setValue(str(setting), value)
 
     def _add_settings_section(

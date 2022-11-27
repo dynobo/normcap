@@ -103,11 +103,9 @@ def config_directory() -> Path:
 
 def get_tessdata_path() -> Optional[os.PathLike]:
     """Deside which path for tesseract language files to use."""
-    prefix = os.environ.get("TESSDATA_PREFIX", None)
-
     if get_prebuild_package_type() or is_flatpak_package():
         path = config_directory() / "tessdata"
-    elif prefix:
+    elif prefix := os.environ.get("TESSDATA_PREFIX", None):
         path = Path(prefix) / "tessdata"
     else:
         return None

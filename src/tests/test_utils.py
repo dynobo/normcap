@@ -41,7 +41,7 @@ def test_argparser_attributes_in_settings(argparser_defaults):
     settings = Settings("normcap", "settings", init_settings={})
 
     for arg in argparser_defaults:
-        if arg in ["verbosity", "reset"]:
+        if arg in ("verbosity", "reset"):
             continue
         assert arg in settings.allKeys()
 
@@ -49,7 +49,7 @@ def test_argparser_attributes_in_settings(argparser_defaults):
 def test_settings_in_argparser_attributes(argparser_defaults):
     settings = Settings("normcap", "settings", init_settings={})
     for key in settings.allKeys():
-        if key in ["version", "last-update-check"]:
+        if key in ("version", "last-update-check"):
             continue
         assert key in argparser_defaults
 

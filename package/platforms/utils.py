@@ -205,7 +205,7 @@ class BuilderBase(ABC):
         """
         patch_hash = hashlib.md5(patch.encode()).hexdigest()
 
-        with open(file_path, mode="r", encoding="utf8") as f:
+        with open(file_path, encoding="utf8") as f:
             if f.read().find(patch_hash) > -1:
                 return
 
@@ -270,7 +270,7 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase):
 
     for each_file in Path(tesseract_path).glob("*.*"):
         if (
-            (each_file.suffix not in [".exe", ".dll"])
+            (each_file.suffix not in (".exe", ".dll"))
             or (each_file.name in excluded)
             or (each_file.suffix == ".exe" and each_file.name != "tesseract.exe")
         ):

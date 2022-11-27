@@ -86,7 +86,7 @@ def set_environ_for_flatpak() -> None:
 def set_environ_for_prebuild_package() -> None:
     package = system_info.get_prebuild_package_type()
 
-    if package not in ["nuitka", "briefcase"]:
+    if package not in ("nuitka", "briefcase"):
         return
 
     if sys.platform == "linux":
