@@ -3,41 +3,31 @@ from normcap.ocr.magics.url_magic import UrlMagic
 
 
 @pytest.mark.parametrize(
-    "words,transformed_expected,score_expected",
+    "words,transformed_expected",
     [
         (
-            [
-                {"text": "@"},
-                {"text": "©"},
-                {"text": "https://www.si.org/search?query=pink,blue&page=2"},
-            ],
+            ("@", "©", "https://www.si.org/search?query=pink,blue&page=2"),
             "https://www.si.org/search?query=pink,blue&page=2",
-            77,
         ),
         (
-            [{"text": "wWw.qithub,com"}],
+            ("wWw.qithub,com",),
             "https://www.github.com",
-            85,
         ),
         (
-            [{"text": "https"}, {"text": "://"}, {"text": "dynobo,org"}],
+            ("https", "://", "dynobo,org"),
             "https://dynobo.org",
-            85,
         ),
         (
-            [{"text": "https://"}, {"text": "gooqle.com"}],
+            ("https://", "gooqle.com"),
             "https://google.com",
-            85,
         ),
     ],
 )
-def test_url_magic_transforms(ocr_result, words, transformed_expected, score_expected):
+def test_url_magic_transforms(ocr_result, words, transformed_expected):
     """Check some transformations from raw to url."""
-    ocr_result.words = words
-    url_magic = UrlMagic()
-    score = url_magic.score(ocr_result)
-    transformed = url_magic.transform(ocr_result)
+    ocr_result.words = [{"text": w} for w in words]
+    magic = UrlMagic()
+    magic.score(ocr_result)
+    transformed = magic.transform(ocr_result)
 
-    assert score > score_expected - 3
-    assert score < score_expected + 3
     assert transformed == transformed_expected

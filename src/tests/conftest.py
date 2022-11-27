@@ -14,7 +14,7 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "skip_on_gh: do not run during CI/CD on github")
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def capture() -> Generator[Capture, None, None]:
     """Create argparser and provide its default values."""
     image = QtGui.QImage(200, 300, QtGui.QImage.Format.Format_RGB32)
@@ -29,7 +29,7 @@ def capture() -> Generator[Capture, None, None]:
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def ocr_result() -> OcrResult:
     """Create argparser and provide its default values."""
     return OcrResult(
@@ -86,7 +86,7 @@ def ocr_result() -> OcrResult:
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def argparser_defaults():
     argparser = create_argparser()
     return vars(argparser.parse_args([]))
