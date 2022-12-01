@@ -103,6 +103,7 @@ def test_set_environ_for_briefcase_unsupported_platform(monkeypatch):
 
 
 def test_init_tessdata_copies_files(tmp_path, monkeypatch):
+    # sourcery skip: extract-method
     # Create placeholder for traineddata files, if they don't exist
     resource_path = Path(resources.files("normcap.resources"))
     traineddata_files = list((resource_path / "tessdata").glob("*.traineddata"))

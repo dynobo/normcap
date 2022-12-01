@@ -13,7 +13,7 @@ from PySide6 import QtGui
 
 # TODO: Get rid of jeepney
 
-# TODO: Fix for Gnome 43 in FlatPak
+# FIXME: Not working with Gnome 43 in FlatPak
 
 logger = logging.getLogger(__name__)
 

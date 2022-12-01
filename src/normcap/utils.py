@@ -177,7 +177,7 @@ def hook_exceptions(
     exc_type: type[BaseException],
     exc_value: BaseException,
     exc_traceback: Optional[TracebackType],
-) -> None:
+) -> None:  # sourcery skip: extract-method
     """Print traceback and quit application."""
     try:
         logger.critical("Uncaught exception! Quitting NormCap!")
