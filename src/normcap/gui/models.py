@@ -92,6 +92,11 @@ class Rect:
         """Height of rect."""
         return self.bottom - self.top
 
+    @property
+    def size(self) -> tuple[int, int]:
+        """Width and height of rect."""
+        return (self.width, self.height)
+
     def scaled(self, scale_factor: float) -> Rect:
         """Create an integer-scaled copy of the Rect."""
         return Rect(
