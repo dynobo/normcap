@@ -20,7 +20,7 @@ from normcap.screengrab.utils import split_full_desktop_to_screens
 logger = logging.getLogger(__name__)
 
 
-def _get_screenshot_interface() -> QtDBus.QDBusInterface:
+def _get_screenshot_interface():  # noqa: ANN202
     if not HAS_QTDBUS:
         raise ModuleNotFoundError("QtDBUS not available.")
 
