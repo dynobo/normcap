@@ -203,7 +203,6 @@ class BuilderBase(ABC):
 
         Indents the patch like the line after which it is inserted.
         """
-        patch_applied = False
         patch_hash = hashlib.md5(patch.encode()).hexdigest()
 
         with open(file_path, mode="r", encoding="utf8") as f:
@@ -216,6 +215,8 @@ class BuilderBase(ABC):
                 + patch
                 + f"# dynobo: {patch_hash} <<<<<<<<<<<<<<\n"
             )
+
+        patch_applied = False
         for line in fileinput.FileInput(file_path, inplace=True):
             if insert_after in line:
                 pad = len(line) - len(line.lstrip(" "))
@@ -223,11 +224,16 @@ class BuilderBase(ABC):
                 line = line.replace(line, line + pad * " " + patch + "\n")
                 patch_applied = True
             print(line, end="")  # noqa
+
         if not patch_applied:
             raise RuntimeError(
                 f"Couldn't apply patch to file {file_path}! "
                 + f"Line '{insert_after}' not found!"
             )
+
+
+def bundle_tesseract_windows(builder: BuilderBase):
+    bundle_tesseract_windows_ub_mannheim(builder)
 
 
 def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase):
@@ -286,6 +292,8 @@ def bundle_tesseract_windows_appveyor(builder: BuilderBase):
         return
 
     # TODO: Check if the official build is up again, then remove this mirror:
+    # TODO: Extract UB Mannheims installer instead:
+    # https://github.com/UB-Mannheim/tesseract/wiki
     url = "https://normcap.needleinthehay.de/tesseract.zip"
 
     # The official tesseract artefact for windows is build and available here:

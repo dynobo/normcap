@@ -9,7 +9,7 @@ from xml.etree import ElementTree
 from platforms.utils import (
     BRIEFCASE_EXCLUDES,
     BuilderBase,
-    bundle_tesseract_windows_ub_mannheim,
+    bundle_tesseract_windows,
     rm_recursive,
 )
 
@@ -21,7 +21,7 @@ class WindowsBriefcase(BuilderBase):
 
     def bundle_tesseract(self):
         """Download tesseract binaries including dependencies into resource path."""
-        bundle_tesseract_windows_ub_mannheim(self)
+        bundle_tesseract_windows(self)
 
     def download_openssl(self):
         """Download openssl needed for QNetwork https connections."""
