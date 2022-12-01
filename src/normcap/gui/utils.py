@@ -20,7 +20,6 @@ except ImportError:
 
 
 from normcap.gui import system_info
-from normcap.gui.models import DesktopEnvironment
 
 logger = logging.getLogger(__name__)
 
@@ -36,14 +35,6 @@ def save_image_in_tempfolder(
         file_name = f"{now:%Y-%m-%d_%H-%M-%S_%f}{postfix}.png"
         image.save(str(file_dir / file_name))
         logger.debug("Store debug image in: %s", file_dir / file_name)
-
-
-def move_active_window_to_position(screen_geometry: QtCore.QRect) -> None:
-    """Move currently active window to a certain position with appropriate method."""
-    if system_info.desktop_environment() == DesktopEnvironment.GNOME:
-        move_active_window_to_position_on_gnome(screen_geometry)
-    elif system_info.desktop_environment() == DesktopEnvironment.KDE:
-        move_active_window_to_position_on_kde(screen_geometry)
 
 
 def move_active_window_to_position_on_gnome(screen_geometry: QtCore.QRect) -> None:
