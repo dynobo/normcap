@@ -19,7 +19,7 @@
 
 ## Quickstart
 
-Install a prebuild release:
+Install a prebuilt release:
 
 - **Windows**:
   [NormCap-0.3.15-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.3.15/NormCap-0.3.15-x86_64-Windows.msi)
@@ -47,7 +47,7 @@ If you experience issues please look at the
 
 ## Python package
 
-As an _alternative_ to a prebuild package you can install the
+As an _alternative_ to a prebuilt package you can install the
 [NormCap Python package](https://pypi.org/project/normcap/) for **Python >=3.9**:
 
 #### On Linux
@@ -175,13 +175,13 @@ Thanks to the maintainers of those nice tools!
 
 If NormCap doesn't fit your needs, try those alternatives (no particular order):
 
-- [TextSnatcher](https://github.com/RajSolai/TextSnatcher)
-- [GreenShot](https://getgreenshot.org/)
-- [TextShot](https://github.com/ianzhao05/textshot)
-- [gImageReader](https://github.com/manisandro/gImageReader)
-- [Capture2Text](https://sourceforge.net/projects/capture2text)
-- [Frog](https://github.com/TenderOwl/Frog)
-- [Textinator](https://github.com/RhetTbull/textinator)
+- [TextSnatcher](https://github.com/RajSolai/TextSnatcher) (Linux)
+- [GreenShot](https://getgreenshot.org/) (Linux, macOS)
+- [TextShot](https://github.com/ianzhao05/textshot) (Windows)
+- [gImageReader](https://github.com/manisandro/gImageReader) (Linux, Windows)
+- [Capture2Text](https://sourceforge.net/projects/capture2text) (Windows)
+- [Frog](https://github.com/TenderOwl/Frog) (Linux)
+- [Textinator](https://github.com/RhetTbull/textinator) (macOS)
 
 ## Certification
 
