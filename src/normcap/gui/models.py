@@ -11,7 +11,7 @@ from PySide6 import QtGui
 
 logger = logging.getLogger(__name__)
 
-Setting = namedtuple("Setting", "key flag type_ value choices help cli_arg")
+Setting = namedtuple("Setting", "key flag type_ value choices help cli_arg nargs")
 
 
 @enum.unique

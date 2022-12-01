@@ -32,6 +32,7 @@ def create_argparser() -> argparse.ArgumentParser:
             type=setting.type_,
             help=setting.help,
             choices=setting.choices,
+            nargs=setting.nargs,
         )
     parser.add_argument(
         "-r",
