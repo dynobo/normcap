@@ -39,7 +39,11 @@ def test_app(monkeypatch, qapp, qtbot, data):
         normcap.gui.tray.screengrab, "get_capture_func", lambda: _load_test_image(image)
     )
     args = create_argparser().parse_args(
-        ["--language=eng", "--mode=parse", "--tray=True"]
+        [
+            "--language=eng",
+            "--mode=parse",
+            "--tray=True",
+        ]
     )
     tray = SystemTray(None, vars(args))
     tray.show()
@@ -57,3 +61,20 @@ def test_app(monkeypatch, qapp, qtbot, data):
 
     assert capture.ocr_applied_magic == data["ocr_applied_magic"], capture.ocr_text
     assert similarity >= 0.98, f"{capture.ocr_text=}"
+
+
+# def test_app(monkeypatch, qapp, qtbot):
+#     # screen_rect = qapp.primaryScreen().size()
+#     # if screen_rect.width() != 1920 or screen_rect.height() != 1080:
+#     #    pytest.xfail("Skipped due to wrong screen resolution.")
+#     # image = Path(__file__).parent / "testcases" / data["image"]
+#     # monkeypatch.setattr(
+#     #    normcap.gui.tray.screengrab, "get_capture_func",
+# [QtGui.QImage(image.resolve())]
+#     # )
+#     args = app._get_args()
+#     logger = app._prepare_logging(args)
+#     app._prepare_envs()
+#     tray = SystemTray(None, vars(args))
+#     tray.show()
+#     qtbot.wait(1000)
