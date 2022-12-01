@@ -11,7 +11,7 @@ concurrency:
 jobs:
   # Run tests on all pull requests or when triggered via [test] tag
   test:
-    name: Run tests, build test packages & draft test release
+    name: Test & build
     runs-on: ${{ matrix.os }}
     if: |
       github.event_name == 'pull_request'
@@ -95,9 +95,9 @@ jobs:
         if: always()
         run: poetry run safety check
       - name: Pytest
-        run: |
-          poetry run pytest -vv -m "not skip_on_gh" --cov --cov-report=xml
-          poetry run coverage lcov
+        run: poetry run pytest -vv -m "not skip_on_gh" --cov --cov-report=xml
+      - name: Coverage
+        run: poetry run coverage lcov
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:
