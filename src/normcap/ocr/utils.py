@@ -4,8 +4,8 @@ import os
 import traceback
 from typing import Optional
 
-import pytesseract
 from normcap.version import Version
+from pytesseract import pytesseract
 
 logger = logging.getLogger(__name__)
 
@@ -29,17 +29,16 @@ def get_tesseract_config(tessdata_path: Optional[os.PathLike]) -> str:
 def configure_tesseract_binary() -> None:
     """Override tesseract command and version, if applicable."""
     if tesseract_cmd := os.environ.get("TESSERACT_CMD", ""):
-        pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
-    if tesseract_version := os.environ.get("TESSERACT_VERSION", ""):
+        pytesseract.tesseract_cmd = tesseract_cmd
 
+    if tesseract_version := os.environ.get("TESSERACT_VERSION", ""):
+        # The windows build of tesseract doesn't print the version in a way that it can
+        # be parsed by pytesseract. Therefore, we need to patch it.
+        # TODO: Provide upstream patch for a more solid version parsing in pytesseract
         def _patched_get_tesseract_version() -> Version:
             return Version(tesseract_version)
 
-        # TODO: Provide Upstream patch to make at least one of those overrides
-        # unnecessary. Maybe this also can be avoided by
-        # `from pytesseract import pytesseract` everywhere?
         pytesseract.get_tesseract_version = _patched_get_tesseract_version
-        pytesseract.pytesseract.get_tesseract_version = _patched_get_tesseract_version
 
 
 def get_tesseract_languages(tessdata_path: Optional[os.PathLike]) -> list[str]:

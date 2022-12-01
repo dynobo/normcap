@@ -4,11 +4,11 @@ import logging
 from os import PathLike
 from typing import Iterable, Optional, Union
 
-import pytesseract
 from normcap.ocr import enhance, utils
 from normcap.ocr.magics import magic
 from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
 from PIL import Image
+from pytesseract import pytesseract
 
 logger = logging.getLogger(__name__)
 
