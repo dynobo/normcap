@@ -28,7 +28,6 @@ normcap = "normcap.app:main"
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
 PySide6-Essentials = "^6.4.1"
-jeepney = ">=0.8"
 pytesseract = ">=0.3.10"
 certifi = "^2022.12.7"
 
