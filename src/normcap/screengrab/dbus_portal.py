@@ -2,84 +2,89 @@
 
 import logging
 import random
-from typing import Optional
 from urllib.parse import urlparse
 
-from jeepney.bus_messages import MatchRule, Message, message_bus
-from jeepney.io.blocking import Proxy, open_dbus_connection
-from jeepney.wrappers import DBusErrorResponse, MessageGenerator, new_method_call
-from PySide6 import QtGui
+from PySide6 import QtCore, QtDBus, QtGui
 
 from normcap.screengrab.utils import split_full_desktop_to_screens
 
-# TODO: Get rid of jeepney
-
-# FIXME: Not working with Gnome 43 in FlatPak
+# FIXME: Not working with Gnome 43 in FlatPak?
 
 logger = logging.getLogger(__name__)
 
 
-class FreedesktopPortalScreenshot(MessageGenerator):
-    """Using Portal API to get screenshot.
+class OrgFreedesktopPortalRequestInterface(QtDBus.QDBusAbstractInterface):
 
-    This has to be used for gnome-shell 41.+ on Wayland.
-    """
+    Response = QtCore.Signal(QtDBus.QDBusMessage)
 
-    interface = "org.freedesktop.portal.Screenshot"
-
-    def __init__(self) -> None:
-        """Init jeepney message generator."""
+    def __init__(
+        self, path: str, connection: QtDBus.QDBusConnection, parent: QtCore.QObject
+    ) -> None:
         super().__init__(
-            object_path="/org/freedesktop/portal/desktop",
-            bus_name="org.freedesktop.portal.Desktop",
+            "org.freedesktop.portal.Desktop",
+            path,
+            "org.freedesktop.portal.Request",  # type: ignore
+            connection,
+            parent,
         )
 
-    def grab(self, parent_window: str, options: dict) -> Message:
-        """Ask for screenshot."""
-        # method_name = "org.freedesktop.portal.Screenshot"
-        return new_method_call(self, "Screenshot", "sa{sv}", (parent_window, options))
 
+class OrgFreedesktopPortalScreenshot(QtCore.QObject):
+    on_response = QtCore.Signal(str)
 
-def grab_full_desktop() -> Optional[QtGui.QImage]:
-    """Capture rect of screen on gnome systems using wayland."""
-    logger.debug("Use capture method: DBUS portal")
+    def grab_full_desktop(self) -> None:
+        bus = QtDBus.QDBusConnection.sessionBus()
 
-    image = None
+        base = bus.baseService()[1:].replace(".", "_")
 
-    try:
-        connection = open_dbus_connection(bus="SESSION")
         pseudo_unique_str = "".join(random.choice("abcdefghijklmnop") for _ in range(8))
         token = f"normcap_{pseudo_unique_str}"
-        sender_name = connection.unique_name[1:].replace(".", "_")
-        handle = f"/org/freedesktop/portal/desktop/request/{sender_name}/{token}"
+        object_path = f"/org/freedesktop/portal/desktop/request/{base}/{token}"
 
-        response_rule = MatchRule(
-            type="signal", interface="org.freedesktop.portal.Request", path=handle
+        request = OrgFreedesktopPortalRequestInterface(object_path, bus, self)
+        request.Response.connect(self.got_signal)
+
+        interface = QtDBus.QDBusInterface(
+            "org.freedesktop.portal.Desktop",
+            "/org/freedesktop/portal/desktop",
+            "org.freedesktop.portal.Screenshot",
+            bus,
+            self,
         )
-        Proxy(message_bus, connection).AddMatch(response_rule)
 
-        with connection.filter(response_rule) as responses:
-            msg = FreedesktopPortalScreenshot().grab(
-                "", {"handle_token": ("s", token), "interactive": ("b", False)}
+        result = interface.call(
+            "Screenshot", "", {"interactive": False, "handle_token": token}
+        )
+        if args := result.arguments():
+            if isinstance(args[0], QtDBus.QDBusObjectPath):
+                logger.debug("Requested screenshot. Object path: %s", args[0].path())
+
+    def got_signal(self, message: QtDBus.QDBusMessage) -> None:
+        code, arg = message.arguments()
+        if code == 1:
+            logger.warning(
+                "Couldn't get screenshort via freedesktop.portal. Did the "
+                + "dialog got cancelled or are permissions missing?"
             )
-            connection.send_and_get_reply(msg)
-            response = connection.recv_until_filtered(responses, timeout=15)
+            self.on_response.emit("")
 
-        response_code, response_body = response.body
-        if response_code != 0 or "uri" not in response_body:
-            raise AssertionError()
+        logger.debug("Received response from freedesktop.portal.request: %s", message)
 
-        image = QtGui.QImage(urlparse(response_body["uri"][1]).path)
-
-    except AssertionError:
-        logger.warning("Couldn't take screenshot with DBUS. Got cancelled?")
-    except DBusErrorResponse as e:
-        if "invalid params" in [d.lower() for d in e.data]:
-            logger.info("ScreenShot with DBUS failed with 'invalid params'")
-        else:
-            logger.exception("ScreenShot with DBUS through exception")
-
-    return image
+        uri = str(message).split('[Variant(QString): "')[1]
+        uri = uri.split('"]}')[0]
+        # TODO: Parse from arguments instead?
+        # arg.beginArray()
+        # while not arg.atEnd():
+        #     arg.beginMap()
+        #     while not arg.atEnd():
+        #         arg.beginMapEntry()
+        #         key = arg.asVariant()
+        #         value = arg.asVariant()
+        #         # v = value.variant()
+        #         arg.endMapEntry()
+        #     arg.endMap()
+        # arg.endArray()
+        self.on_response.emit(uri)
 
 
 def capture() -> list[QtGui.QImage]:
@@ -87,5 +92,33 @@ def capture() -> list[QtGui.QImage]:
 
     This methods works gnome-shell >=v41 and wayland.
     """
-    full_image = grab_full_desktop()
+    logger.debug("Use capture method: DBUS portal")
+    portal = OrgFreedesktopPortalScreenshot()
+
+    loop = QtCore.QEventLoop()
+    result = []
+
+    def signal_triggered(uri: str) -> None:
+        result.append(uri)
+        loop.exit()
+
+    portal.on_response.connect(signal_triggered)
+    QtCore.QTimer.singleShot(0, portal.grab_full_desktop)
+
+    # Timeout after 15sec
+    timer = QtCore.QTimer()
+    timer.setSingleShot(True)
+    timer.timeout.connect(loop.quit)
+    timer.start(15_000)
+
+    loop.exec_()
+
+    timer.stop()
+    portal.on_response.disconnect(signal_triggered)
+    timer.timeout.disconnect(loop.quit)
+
+    full_image = None
+    if uri := result[0]:
+        full_image = QtGui.QImage(urlparse(uri).path)
+
     return split_full_desktop_to_screens(full_image) if full_image else []
