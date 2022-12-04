@@ -175,7 +175,8 @@ class BuilderBase(ABC):
 
     def download_tessdata(self):
         """Download trained data for tesseract to include in packages."""
-        tessdata_path = self.RESOURCE_PATH / "tessdata"
+        target_path = self.PROJECT_PATH / "tessdata"
+        target_path.mkdir(exist_ok=True, parents=True)
         url_prefix = (
             "https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/4.1.0"
         )
@@ -187,13 +188,12 @@ class BuilderBase(ABC):
             "spa.traineddata",
             "eng.traineddata",
         ]
-
-        if len(list(tessdata_path.glob("*.traineddata"))) >= len(files):
+        if len(list(target_path.glob("*.traineddata"))) >= len(files):
             return
 
         for file_name in files:
             url = f"{url_prefix}/{file_name}"
-            urllib.request.urlretrieve(f"{url}", tessdata_path / file_name)
+            urllib.request.urlretrieve(f"{url}", target_path / file_name)
 
     @staticmethod
     def patch_file(
@@ -236,12 +236,12 @@ def bundle_tesseract_windows(builder: BuilderBase):
     bundle_tesseract_windows_ub_mannheim(builder)
 
 
+# TODO: Make sure it's copied to the correct path!
 def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase):
     """Download tesseract binaries including dependencies into resource path."""
     # Link to download artifact might change
 
     tesseract_path = builder.BUILD_PATH / "tesseract"
-    tesseract_path.unlink(missing_ok=True)
     tesseract_path.mkdir(exist_ok=True)
 
     installer_path = tesseract_path / "tesseract-setup.exe"

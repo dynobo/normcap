@@ -27,24 +27,11 @@ def get_tesseract_config(tessdata_path: Optional[os.PathLike]) -> str:
     return f'--tessdata-dir "{tessdata_path}"' if tessdata_path else ""
 
 
-def configure_tesseract_binary() -> None:
-    """Override tesseract command and version, if applicable."""
-    if tesseract_cmd := os.environ.get("TESSERACT_CMD", ""):
-        pytesseract.tesseract_cmd = tesseract_cmd
-
-    if tesseract_version := os.environ.get("TESSERACT_VERSION", ""):
-        # The windows build of tesseract doesn't print the version in a way that it can
-        # be parsed by pytesseract. Therefore, we need to patch it.
-        # TODO: Provide upstream patch for a more solid version parsing in pytesseract
-        def _patched_get_tesseract_version() -> Version:
-            return Version(tesseract_version)
-
-        pytesseract.get_tesseract_version = _patched_get_tesseract_version
-
-
-def get_tesseract_languages(tessdata_path: Optional[os.PathLike]) -> list[str]:
+def get_tesseract_languages(
+    tesseract_cmd: os.PathLike, tessdata_path: Optional[os.PathLike]
+) -> list[str]:
     """Get info abput tesseract setup."""
-    configure_tesseract_binary()
+    pytesseract.tesseract_cmd = str(tesseract_cmd)
 
     try:
         languages = sorted(
@@ -68,7 +55,8 @@ def get_tesseract_languages(tessdata_path: Optional[os.PathLike]) -> list[str]:
 
 
 @functools.lru_cache
-def get_tesseract_version() -> Version:
+def get_tesseract_version(tesseract_cmd: os.PathLike) -> Version:
     """Get info abput tesseract setup."""
+    pytesseract.tesseract_cmd = str(tesseract_cmd)
     tesseract_version = str(pytesseract.get_tesseract_version()).splitlines()[0]
     return Version(tesseract_version)

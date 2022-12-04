@@ -280,6 +280,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if not isinstance(language, str) and not isinstance(language, Iterable):
             raise TypeError()
         ocr_result = ocr.recognize(
+            tesseract_cmd=system_info.get_tesseract_path(),
             languages=language,
             image=self._qimage_to_pil_image(self.capture.image),
             tessdata_path=system_info.get_tessdata_path(),

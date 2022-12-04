@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def recognize(
+    tesseract_cmd: PathLike,
     languages: Union[str, Iterable[str]],
     image: Image.Image,
     tessdata_path: Optional[PathLike] = None,
@@ -23,8 +24,6 @@ def recognize(
     padding_size: Optional[int] = None,
 ) -> OcrResult:
     """Apply OCR on selected image section."""
-    utils.configure_tesseract_binary()
-
     image = enhance.preprocess(image, resize_factor=resize_factor, padding=padding_size)
 
     tess_args = TessArgs(
@@ -32,11 +31,12 @@ def recognize(
         lang=languages if isinstance(languages, str) else "+".join(languages),
         oem=OEM.DEFAULT,
         psm=PSM.AUTO_OSD,
-        version=utils.get_tesseract_version(),
+        version=utils.get_tesseract_version(tesseract_cmd),
     )
     logger.debug("Init tesseract with args: %s", tess_args)
     logger.debug("Image size: %s", image.size)
 
+    pytesseract.tesseract_cmd = str(tesseract_cmd)
     tsv_data = pytesseract.image_to_data(
         image,
         lang=tess_args.lang,

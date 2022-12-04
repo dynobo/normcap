@@ -37,14 +37,10 @@ def _prepare_envs() -> None:
     # Allow closing QT app with CTRL+C in terminal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    if system_info.get_prebuild_package_type():
-        utils.set_environ_for_prebuild_package()
     if system_info.display_manager_is_wayland():
         utils.set_environ_for_wayland()
     if system_info.is_flatpak_package():
         utils.set_environ_for_flatpak()
-    if system_info.get_prebuild_package_type() or system_info.is_flatpak_package():
-        utils.copy_tessdata_files_to_config_dir()
 
 
 def main() -> None:
