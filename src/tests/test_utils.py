@@ -69,7 +69,7 @@ def test_set_environ_for_briefcase_not_packaged(monkeypatch, os_str):
     tesseract_cmd = os.environ.get("TESSERACT_CMD", None)
     tesseract_version = os.environ.get("TESSERACT_VERSION", None)
 
-    utils.set_environ_for_prebuild_package()
+    utils.set_env_for_tesseract_cmd()
 
     assert tesseract_cmd == os.environ.get("TESSERACT_CMD", None)
     assert tesseract_version == os.environ.get("TESSERACT_VERSION", None)
@@ -84,7 +84,7 @@ def test_set_environ_for_briefcase_is_packaged(monkeypatch, os_str):
         m.setenv("TESSERACT_CMD", "")
         m.setenv("TESSERACT_VERSION", "")
 
-        utils.set_environ_for_prebuild_package()
+        utils.set_env_for_tesseract_cmd()
 
         if os_str == "win32":
             assert os.environ.get("TESSERACT_CMD").endswith("tesseract.exe")
@@ -100,7 +100,7 @@ def test_set_environ_for_briefcase_unsupported_platform(monkeypatch):
         m.setattr(utils.sys.modules["__main__"], "__package__", "normcap")
 
         with pytest.raises(RuntimeError, match="Unsupported platform"):
-            utils.set_environ_for_prebuild_package()
+            utils.set_env_for_tesseract_cmd()
 
 
 def test_init_tessdata_copies_files(tmp_path, monkeypatch):

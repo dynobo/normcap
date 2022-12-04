@@ -3,10 +3,8 @@ import logging
 import os
 import pprint
 import re
-import shutil
 import sys
 import traceback
-from pathlib import Path
 from types import TracebackType
 from typing import Optional
 
@@ -84,50 +82,14 @@ def set_environ_for_flatpak() -> None:
         os.environ["LD_PRELOAD"] = ""
 
 
-def set_environ_for_prebuild_package() -> None:
-    package = system_info.get_prebuild_package_type()
-
-    if package not in ("nuitka", "briefcase"):
-        return
-
+def set_env_for_tesseract_cmd() -> None:
+    # TODO: PATH still necessary?
     if sys.platform == "linux":
-        if package == "nuitka":
-            # resources are currently not resolved on linux by nuitka:
-            # https://github.com/Nuitka/Nuitka/issues/1451
-            # Workround with using __file__
-            tesseract_path = system_info.get_resources_path() / "tesseract"
-            tesseract_bin = tesseract_path / "tesseract"
-            ld_library_path = (
-                f"{os.environ.get('LD_LIBRARY_PATH', '')}:{tesseract_path.resolve()}"
-            )
-            os.environ["LD_LIBRARY_PATH"] = ld_library_path
-            os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
-        elif package == "briefcase":
-            bin_path = system_info.get_resources_path().parent.parent.parent / "bin"
-            tesseract_path = bin_path / "tesseract"
-            os.environ["TESSERACT_CMD"] = str(tesseract_path.resolve())
+        bin_path = system_info._get_app_path() / "bin"
+        if bin_path.is_dir():
             os.environ["PATH"] = (
                 f"{bin_path.absolute().resolve()}:" + os.environ["PATH"]
             )
-
-    elif sys.platform == "darwin":
-        if package == "nuitka":
-            tesseract_bin = system_info.get_resources_path() / "tesseract" / "tesseract"
-        elif package == "briefcase":
-            tesseract_bin = (
-                system_info.get_resources_path().parent.parent.parent
-                / "app_packages"
-                / "tesseract"
-            )
-        os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
-
-    elif sys.platform == "win32":
-        tesseract_bin = system_info.get_resources_path() / "tesseract" / "tesseract.exe"
-        os.environ["TESSERACT_CMD"] = str(tesseract_bin.resolve())
-        os.environ["TESSERACT_VERSION"] = "5.0.0"
-
-    else:
-        raise RuntimeError(f"Unsupported platform {sys.platform}")
 
 
 def init_logger(level: str = "WARNING") -> None:
@@ -235,23 +197,3 @@ def qt_log_wrapper(
     if ("xcb" in msg) and ("it was found" in msg):
         logger.error("Try solving the problem as described here: %s", URLS.xcb_error)
         logger.error("If that doesn't help, please open an issue: %s", URLS.issues)
-
-
-def copy_tessdata_files_to_config_dir() -> None:
-    """If packaged, copy language data files to config directory."""
-    tessdata_path = system_info.config_directory() / "tessdata"
-    if list(tessdata_path.glob("*.traineddata")):
-        return
-
-    if system_info.is_flatpak_package():
-        traineddata_src = Path("/app/share") / "tessdata"
-    else:
-        traineddata_src = system_info.get_resources_path() / "tessdata"
-
-    traineddata_files = list(traineddata_src.glob("*.traineddata"))
-    doc_files = list((system_info.get_resources_path() / "tessdata").glob("*.txt"))
-
-    logger.info("Copy %s traineddata files to config directory", len(traineddata_files))
-    tessdata_path.mkdir(parents=True, exist_ok=True)
-    for f in traineddata_files + doc_files:
-        shutil.copy(f, tessdata_path / f.name)

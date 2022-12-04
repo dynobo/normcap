@@ -2,40 +2,33 @@
 # Edit at https://www.gitignore.io/?templates=python
 
 # Own
-dependency_graph.png
-result.json
-result.html
-.temp
 .venv/
 .vscode/
-cov.xml
-coverage
-.coverage
-.coveralls.yml
-*.spec
-src/normcap/resources/tesseract/*
-!src/normcap/resources/tesseract/.keep
+.ruff_cache/
 src/normcap/resources/wl-copy/*
 !src/normcap/resources/wl-copy/.keep
-normcap/src/normcap.dist-info
-.DS_Store
-*.traineddata
-app.build/
-app.dist/
-app.onefile-build/
-*.app
-tesseract.zip
 wix/
+linux/
+windows/
+macOS/
+tessdata/
+tesseract/
+src/normcap/resources/openssl/
+*.spec
 *.wixpdb
 *.msi
 *.AppImage
 *.zip
 *.dmg
-linux/
-windows/
-macOS/
-src/normcap/resources/openssl
-.ruff_cache
+.DS_Store
+tesseract.zip
+dependency_graph.png
+result.json
+result.html
+cov.xml
+coverage
+.coverage
+.coveralls.yml
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
