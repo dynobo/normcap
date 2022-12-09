@@ -92,7 +92,7 @@ select = [
   "E",   # pycodestyle
   "I",   # Isort
   "D",   # pydocstyle
-  "U",   # pyupgrad
+  "UP",  # pyupgrad
   "N",   # pep8-naming
   "S",   # flake8-bandits
   "C",   # flake8-comprehensions
@@ -101,7 +101,7 @@ select = [
   "T",   # flake8-print
   "Q",   # flake8-quotes
   "ANN", # flake8-annotations
-  "M",   # meta rules (unused noqa)
+  "RUF", # meta rules (unused noqa)
 ]
 ignore = [
   "D100",   # Missing docstring in public module
@@ -113,7 +113,7 @@ ignore = [
   "D203",   # 1 blank line required before class docstring
   "D213",   # Multi-line docstring summary should start at the second line
   "ANN101", # Missing type annotation for `self` in method
-  "U007",   # Use X | Y for type annotations
+  "UP007",  # Use X | Y for type annotations
 ]
 per-file-ignores = { "src/tests*" = [
   "S101",

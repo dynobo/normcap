@@ -13,7 +13,6 @@ from normcap.screengrab.utils import get_gnome_version
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as pyside_version
 
-
 logger = logging.getLogger(__name__)
 
 
