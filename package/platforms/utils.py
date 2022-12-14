@@ -113,6 +113,7 @@ class BuilderBase(ABC):
     PYPROJECT_PATH = PROJECT_PATH / "pyproject.toml"
     VENV_PATH = Path(os.environ["VIRTUAL_ENV"])
     binary_suffix = "_legacy"
+    TESSDATA_PATH = RESOURCE_PATH / "tessdata"
 
     @abstractmethod
     def run_framework(self):
@@ -175,7 +176,7 @@ class BuilderBase(ABC):
 
     def download_tessdata(self):
         """Download trained data for tesseract to include in packages."""
-        target_path = self.PROJECT_PATH / "tessdata"
+        target_path = self.TESSDATA_PATH
         target_path.mkdir(exist_ok=True, parents=True)
         url_prefix = (
             "https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/4.1.0"

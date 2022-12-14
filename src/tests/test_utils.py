@@ -1,11 +1,12 @@
 import logging
 import os
 import sys
-from importlib import metadata, resources
+from importlib import resources
 from pathlib import Path
 
 import pytest
 from normcap import utils
+from normcap.gui import system_info
 from normcap.gui.models import Capture
 from normcap.gui.settings import Settings
 from normcap.ocr.models import OcrResult
@@ -62,48 +63,43 @@ def test_argparser_defaults_are_correct(argparser_defaults):
         assert value is None
 
 
-@pytest.mark.parametrize("os_str", ("linux", "win32", "darwin"))
-def test_set_environ_for_briefcase_not_packaged(monkeypatch, os_str):
-    monkeypatch.setattr(utils.sys, "platform", os_str)
+def test_set_environ_for_wayland(monkeypatch):
 
-    tesseract_cmd = os.environ.get("TESSERACT_CMD", None)
-    tesseract_version = os.environ.get("TESSERACT_VERSION", None)
+    xcursor_size = os.environ.get("XCURSOR_SIZE", "")
+    qt_qpa_platform = os.environ.get("QT_QPA_PLATFORM", "")
 
-    utils.set_env_for_tesseract_cmd()
+    try:
+        with monkeypatch.context() as m:
+            m.delenv("XCURSOR_SIZE", raising=False)
+            m.delenv("QT_QPA_PLATFORM", raising=False)
 
-    assert tesseract_cmd == os.environ.get("TESSERACT_CMD", None)
-    assert tesseract_version == os.environ.get("TESSERACT_VERSION", None)
+            utils.set_environ_for_wayland()
+
+            assert os.environ.get("XCURSOR_SIZE") == "24"
+            assert os.environ.get("QT_QPA_PLATFORM") == "wayland"
+    finally:
+        os.environ["XCURSOR_SIZE"] = xcursor_size
+        os.environ["QT_QPA_PLATFORM"] = qt_qpa_platform
 
 
-@pytest.mark.parametrize("os_str", ("darwin", "linux", "win32"))
-def test_set_environ_for_briefcase_is_packaged(monkeypatch, os_str):
+def test_set_environ_for_flatpak(monkeypatch):
     with monkeypatch.context() as m:
-        m.setattr(metadata, "metadata", lambda _: ["Briefcase-Version"])
-        m.setattr(utils.sys, "platform", os_str)
-        m.setattr(utils.sys.modules["__main__"], "__package__", "normcap")
-        m.setenv("TESSERACT_CMD", "")
-        m.setenv("TESSERACT_VERSION", "")
 
-        utils.set_env_for_tesseract_cmd()
+        test_value = "something"
+        m.setenv("LD_PRELOAD", test_value)
+        utils.set_environ_for_flatpak()
+        assert os.environ.get("LD_PRELOAD") == test_value
 
-        if os_str == "win32":
-            assert os.environ.get("TESSERACT_CMD").endswith("tesseract.exe")
-            assert os.environ.get("TESSERACT_VERSION")
-        else:
-            assert os.environ.get("TESSERACT_CMD").endswith("tesseract")
+        m.setenv("LD_PRELOAD", "nocsd")
+        utils.set_environ_for_flatpak()
+        assert os.environ.get("LD_PRELOAD") == ""
 
-
-def test_set_environ_for_briefcase_unsupported_platform(monkeypatch):
-    with monkeypatch.context() as m:
-        m.setattr(metadata, "metadata", lambda _: ["Briefcase-Version"])
-        m.setattr(utils.sys, "platform", "cygwin")
-        m.setattr(utils.sys.modules["__main__"], "__package__", "normcap")
-
-        with pytest.raises(RuntimeError, match="Unsupported platform"):
-            utils.set_env_for_tesseract_cmd()
+        m.delenv("LD_PRELOAD", raising=False)
+        utils.set_environ_for_flatpak()
+        assert os.environ.get("LD_PRELOAD", None) is None
 
 
-def test_init_tessdata_copies_files(tmp_path, monkeypatch):
+def test_copy_traineddata_files(tmp_path, monkeypatch):
     # sourcery skip: extract-method
     # Create placeholder for traineddata files, if they don't exist
     resource_path = Path(resources.files("normcap.resources"))
@@ -112,17 +108,16 @@ def test_init_tessdata_copies_files(tmp_path, monkeypatch):
         (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
         (resource_path / "tessdata" / "placeholder_2.traineddata").touch()
 
+    monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
     try:
-        monkeypatch.setattr(utils.system_info, "config_directory", lambda: tmp_path)
         tessdata_path = tmp_path / "tessdata"
-
         traineddatas = list(tessdata_path.glob("*.traineddata"))
         txts = list(tessdata_path.glob("*.txt"))
         assert not traineddatas
         assert not txts
 
         for _ in range(3):
-            utils.copy_tessdata_files_to_config_dir()
+            utils.copy_traineddata_files(tessdata_path)
 
             traineddatas = list(tessdata_path.glob("*.traineddata"))
             txts = list(tessdata_path.glob("*.txt"))

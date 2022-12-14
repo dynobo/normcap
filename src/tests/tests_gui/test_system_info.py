@@ -1,5 +1,4 @@
 import sys
-from importlib import metadata
 from pathlib import Path
 
 import pytest
@@ -82,15 +81,26 @@ def test_desktop_environment_other(monkeypatch):
     assert system_info.desktop_environment() == models.DesktopEnvironment.OTHER
 
 
-def test_is_prebuild_package(monkeypatch):
-    assert not system_info.get_prebuild_package_type()
+def test_is_briefcase_package():
+    assert not system_info.is_briefcase_package()
 
-    monkeypatch.setattr(metadata, "metadata", lambda _: {"Briefcase-Version": "9.9.9"})
-    monkeypatch.setattr(sys.modules["__main__"], "__package__", "normcap")
-    assert system_info.get_prebuild_package_type()
+    temp_app_packages = Path(__file__).parent.parent.parent.parent / "app_packages"
+    is_briefcase = False
+    try:
+        temp_app_packages.mkdir()
+        is_briefcase = system_info.is_briefcase_package()
+    finally:
+        temp_app_packages.rmdir()
 
-    monkeypatch.setattr(sys.modules["__main__"], "__package__", "")
-    assert not system_info.get_prebuild_package_type()
+    assert is_briefcase
+
+
+def test_is_flatpak_package(monkeypatch):
+    assert not system_info.is_flatpak_package()
+
+    with monkeypatch.context() as m:
+        m.setenv("FLATPAK_ID", "123")
+        assert system_info.is_flatpak_package()
 
 
 def test_screens():
@@ -108,55 +118,44 @@ def test_get_tessdata_path(monkeypatch, tmp_path):
     data_file.touch(exist_ok=True)
 
     try:
-        monkeypatch.setattr(system_info, "get_prebuild_package_type", lambda: True)
-        path_briefcase = system_info.get_tessdata_path()
+        with monkeypatch.context() as m:
+            m.setattr(system_info, "is_briefcase_package", lambda: True)
+            m.setattr(system_info, "is_flatpak_package", lambda: False)
+            path_briefcase = system_info.get_tessdata_path()
 
-        monkeypatch.setattr(system_info, "get_prebuild_package_type", lambda: False)
-        monkeypatch.setenv("TESSDATA_PREFIX", str(data_file.parent.parent.resolve()))
-        path_env_var = system_info.get_tessdata_path()
+            m.setattr(system_info, "is_briefcase_package", lambda: False)
+            m.setattr(system_info, "is_flatpak_package", lambda: True)
+            path_flatpak = system_info.get_tessdata_path()
 
-        monkeypatch.setattr(system_info, "get_prebuild_package_type", lambda: False)
-        monkeypatch.setenv("TESSDATA_PREFIX", "")
-        path_non = system_info.get_tessdata_path()
+            m.setattr(system_info, "is_briefcase_package", lambda: False)
+            m.setattr(system_info, "is_flatpak_package", lambda: False)
+            m.setenv("TESSDATA_PREFIX", f"{data_file.parent.parent.resolve()}")
+            path_env_var = system_info.get_tessdata_path()
+            m.setenv("TESSDATA_PREFIX", "")
+            path_non = system_info.get_tessdata_path()
     finally:
         data_file.unlink()
 
     assert str(path_briefcase).endswith("tessdata")
+    assert str(path_flatpak).endswith("tessdata")
     assert str(path_env_var).endswith("tessdata")
     assert path_non is None
-
-    # mock config dir not existing:
-    monkeypatch.setattr(system_info, "get_prebuild_package_type", lambda: True)
-    monkeypatch.setattr(system_info, "config_directory", lambda: tmp_path / "nan")
-    with pytest.raises(RuntimeError) as e:
-        _ = system_info.get_tessdata_path()
-    assert "tessdata directory does not exist" in str(e.value).lower()
-
-    # mock language dir not containing traineddata:
-    (tmp_path / "tessdata").mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(system_info, "config_directory", lambda: tmp_path)
-    with pytest.raises(RuntimeError) as e:
-        _ = system_info.get_tessdata_path()
-    assert "could not find language data files" in str(e.value).lower()
-
-    # mock directory but _no_ language data:
-    monkeypatch.setattr(system_info, "config_directory", lambda: Path("/tmp"))
-    monkeypatch.setattr(system_info, "get_prebuild_package_type", lambda: True)
-    with pytest.raises(RuntimeError):
-        _ = system_info.get_tessdata_path()
 
 
 def test_config_directory_retrieved_on_windows(monkeypatch, tmp_path):
     monkeypatch.setattr(sys, "platform", "win32")
     monkeypatch.setenv("LOCALAPPDATA", str(tmp_path.absolute()))
+    system_info.config_directory.cache_clear()
     assert system_info.config_directory() == tmp_path / "normcap"
 
     monkeypatch.setenv("LOCALAPPDATA", "")
     monkeypatch.setenv("APPDATA", str(tmp_path.absolute()))
+    system_info.config_directory.cache_clear()
     assert system_info.config_directory() == tmp_path / "normcap"
 
     monkeypatch.setenv("LOCALAPPDATA", "")
     monkeypatch.setenv("APPDATA", "")
+    system_info.config_directory.cache_clear()
     with pytest.raises(ValueError) as e:
         _ = system_info.config_directory()
     assert "could not determine the appdata" in str(e.value).lower()
@@ -168,18 +167,21 @@ def test_config_directory_retrieved_on_linux_macos(monkeypatch, tmp_path):
     assert system_info.config_directory() == tmp_path / "normcap"
 
 
-def test_to_string():
+def test_to_dict():
     string = system_info.to_dict()
     expected = [
         "cli_args",
-        "is_prebuild_package",
+        "is_briefcase_package",
+        "is_flatpak_package",
         "platform",
         "pyside6_version",
         "qt_version",
         "qt_library_path",
         "config_directory",
         "normcap_version",
+        "tesseract_path",
         "tessdata_path",
+        "envs",
         "desktop_environment",
         "display_manager_is_wayland",
         "gnome_version",

@@ -209,7 +209,8 @@ class MenuButton(QtWidgets.QToolButton):
 
     def _add_languages_section(self, menu: QtWidgets.QMenu) -> None:
         tesseract_languages = ocr.utils.get_tesseract_languages(
-            tessdata_path=system_info.get_tessdata_path()
+            tesseract_cmd=system_info.get_tesseract_path(),
+            tessdata_path=system_info.get_tessdata_path(),
         )
         if len(tesseract_languages) <= 7:
             language_menu = menu
@@ -228,7 +229,7 @@ class MenuButton(QtWidgets.QToolButton):
             action.setChecked(language in str(self.settings.value("language")))
             language_menu.addAction(action)
 
-        if system_info.get_prebuild_package_type() or system_info.is_flatpak_package():
+        if system_info.is_prebuild_package():
             action = QtGui.QAction("... open data folder", menu)
             traineddata_path = system_info.config_directory() / "tessdata"
             action.setObjectName(f"file:///{traineddata_path.resolve()}")

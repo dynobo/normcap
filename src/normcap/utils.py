@@ -3,8 +3,10 @@ import logging
 import os
 import pprint
 import re
+import shutil
 import sys
 import traceback
+from pathlib import Path
 from types import TracebackType
 from typing import Optional
 
@@ -63,6 +65,7 @@ def set_environ_for_wayland() -> None:
         os.environ["XCURSOR_SIZE"] = "24"
 
     # Select wayland extension for better rendering
+
     if "QT_QPA_PLATFORM" not in os.environ:
         logger.debug("Set QT_QPA_PLATFORM=wayland")
         os.environ["QT_QPA_PLATFORM"] = "wayland"
@@ -82,14 +85,14 @@ def set_environ_for_flatpak() -> None:
         os.environ["LD_PRELOAD"] = ""
 
 
-def set_env_for_tesseract_cmd() -> None:
-    # TODO: PATH still necessary?
-    if sys.platform == "linux":
-        bin_path = system_info._get_app_path() / "bin"
-        if bin_path.is_dir():
-            os.environ["PATH"] = (
-                f"{bin_path.absolute().resolve()}:" + os.environ["PATH"]
-            )
+# def set_env_for_tesseract_cmd() -> None:
+#     # TODO: PATH still necessary?
+#     if sys.platform == "linux":
+#         bin_path = system_info.get_app_path() / "bin"
+#         if bin_path.is_dir():
+#             os.environ["PATH"] = (
+#                 f"{bin_path.absolute().resolve()}:" + os.environ["PATH"]
+#             )
 
 
 def init_logger(level: str = "WARNING") -> None:
@@ -197,3 +200,21 @@ def qt_log_wrapper(
     if ("xcb" in msg) and ("it was found" in msg):
         logger.error("Try solving the problem as described here: %s", URLS.xcb_error)
         logger.error("If that doesn't help, please open an issue: %s", URLS.issues)
+
+
+def copy_traineddata_files(target_path: Optional[os.PathLike]) -> None:
+    if not target_path:
+        return
+
+    target_path = Path(target_path)
+    if target_path.is_dir() and list(target_path.glob("*.traineddata")):
+        return
+
+    if system_info.is_flatpak_package():
+        src_path = Path("/app/share/tessdata")
+    elif system_info.is_briefcase_package():
+        src_path = system_info.get_resources_path() / "tessdata"
+
+    target_path.mkdir(parents=True, exist_ok=True)
+    for f in src_path.glob("*.*"):
+        shutil.copy(f, target_path / f.name)

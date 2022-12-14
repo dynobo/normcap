@@ -17,24 +17,6 @@ from normcap.screengrab.utils import get_gnome_version
 logger = logging.getLogger(__name__)
 
 
-def _get_app_path() -> Path:
-    """Base path of briefcase package.
-
-    This is the directory ./app inside the appimage.
-    """
-    return (Path(__file__).parent.parent.parent).resolve()
-
-
-def get_resources_path() -> Path:
-    return _get_app_path() / "app" / "normcap" / "resources"
-
-
-def is_briefcase_package() -> bool:
-    return (
-        _get_app_path().is_dir() and (_get_app_path().parent / "app_packages").is_dir()
-    )
-
-
 @functools.cache
 def config_directory() -> Path:
     """Retrieve platform specific configuration directory."""
@@ -55,10 +37,27 @@ def config_directory() -> Path:
     return Path.home() / ".config" / postfix
 
 
+def get_resources_path() -> Path:
+    return (Path(__file__).parent.parent / "resources").resolve()
+
+
+def is_briefcase_package() -> bool:
+    app_path = Path(__file__).parent.parent.parent.resolve()
+    return app_path.is_dir() and (app_path.parent / "app_packages").is_dir()
+
+
+def is_flatpak_package() -> bool:
+    return os.getenv("FLATPAK_ID") is not None
+
+
+def is_prebuild_package() -> bool:
+    return is_briefcase_package() or is_flatpak_package()
+
+
 @functools.cache
 def get_tesseract_path() -> Path:
     if is_briefcase_package():
-        bin_path = _get_app_path().parent / "bin"
+        bin_path = Path(__file__).parent.parent.parent.parent / "bin"
         extension = ".exe" if sys.platform == "win32" else ""
         tesseract_path = bin_path / f"tesseract{extension}"
         if not tesseract_path.exists():
@@ -66,8 +65,10 @@ def get_tesseract_path() -> Path:
         return tesseract_path
 
     # Then try to find tesseract on system
-    if tesseract_path := shutil.which("tesseract"):
-        return tesseract_path
+    if tesseract_bin := shutil.which("tesseract"):
+        tesseract_path = Path(tesseract_bin)
+        if tesseract_path.exists():
+            return tesseract_path
 
     raise RuntimeError(
         "No Tesseract binary found! Tesseract has to be installed and added "
@@ -75,28 +76,10 @@ def get_tesseract_path() -> Path:
     )
 
 
-def _copy_traineddata_files(tessdata_path: Path) -> None:
-    logger.info("Copy traineddata files to config directory")
-    if is_flatpak_package():
-        src_path = Path("/app/share/tessdata")
-    else:
-        src_path = _get_app_path() / "tessdata"
-
-    # TODO: Remove logging
-    logger.debug("Sourcepath: %s", src_path)
-    logger.debug("Targetpath: %s", tessdata_path)
-    tessdata_path.mkdir(parents=True, exist_ok=True)
-    for f in src_path.glob("*.*"):
-        logger.debug("Copying: %s", f)
-        shutil.copy(f, tessdata_path / f.name)
-
-
 def get_tessdata_path() -> Optional[os.PathLike]:
     """Deside which path for tesseract language files to use."""
     if is_briefcase_package() or is_flatpak_package():
         tessdata_path = config_directory() / "tessdata"
-        if not tessdata_path.is_dir() or not list(tessdata_path.glob("*.traineddata")):
-            _copy_traineddata_files(tessdata_path)
         return tessdata_path.resolve()
 
     if prefix := os.environ.get("TESSDATA_PREFIX", None):
@@ -106,10 +89,6 @@ def get_tessdata_path() -> Optional[os.PathLike]:
 
     logger.warning("No tessdata directory found.")
     return None
-
-
-def is_flatpak_package() -> bool:
-    return os.getenv("FLATPAK_ID") is not None
 
 
 @functools.cache
@@ -167,6 +146,7 @@ def to_dict() -> dict:
         "qt_library_path": ", ".join(QtCore.QCoreApplication.libraryPaths()),
         "config_directory": config_directory(),
         "normcap_version": __version__,
+        "ressources_path": get_resources_path(),
         "tesseract_path": get_tesseract_path(),
         "tessdata_path": get_tessdata_path(),
         "envs": {

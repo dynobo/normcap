@@ -31,7 +31,8 @@ def recognize(
         lang=languages if isinstance(languages, str) else "+".join(languages),
         oem=OEM.DEFAULT,
         psm=PSM.AUTO_OSD,
-        version=utils.get_tesseract_version(tesseract_cmd),
+        version=utils.get_tesseract_version(tesseract_cmd),  # type: ignore
+        # For the type ignore, see: https://github.com/python/mypy/issues/5107
     )
     logger.debug("Init tesseract with args: %s", tess_args)
     logger.debug("Image size: %s", image.size)
