@@ -90,7 +90,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             screengrab.macos_request_screenshot_permission()
 
             # Message box to explain what's happening and open the preferences
-            app = "NormCap" if system_info.get_prebuild_package_type() else "Terminal"
+            app = "NormCap" if system_info.is_prebuild_package() else "Terminal"
             button = QtWidgets.QMessageBox.critical(
                 None,
                 "Error!",
@@ -154,9 +154,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         ):
             return
 
-        checker = UpdateChecker(
-            self, packaged=system_info.get_prebuild_package_type() is not None
-        )
+        checker = UpdateChecker(self, packaged=system_info.is_prebuild_package())
         checker.com.on_version_parsed.connect(self._update_time_of_last_update_check)
         checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
         QtCore.QTimer.singleShot(500, checker.check)

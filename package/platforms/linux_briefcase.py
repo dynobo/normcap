@@ -20,17 +20,6 @@ class LinuxBriefcase(BuilderBase):
 
     binary_suffix = ""
 
-    def __init__(self):
-        self.TESSDATA_PATH = (
-            self.PROJECT_PATH
-            / "linux"
-            / "appimage"
-            / "NormCap"
-            / "NormCap.AppDir"
-            / "usr"
-            / "tessdata"
-        )
-
     def patch_briefcase_appimage_to_prune_deps(self):
         """Insert code into briefcase appimage code to remove unnecessary libs."""
         def_rm_recursive = inspect.getsource(rm_recursive)
