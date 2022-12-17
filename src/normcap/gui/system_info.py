@@ -7,11 +7,12 @@ from importlib import metadata
 from pathlib import Path
 from typing import Optional
 
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import __version__ as pyside_version
+
 from normcap import __version__
 from normcap.gui.models import DesktopEnvironment, Rect, Screen
 from normcap.screengrab.utils import get_gnome_version
-from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6 import __version__ as pyside_version
 
 logger = logging.getLogger(__name__)
 

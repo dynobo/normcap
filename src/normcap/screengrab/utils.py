@@ -9,8 +9,9 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from normcap.version import Version
 from PySide6 import QtCore, QtGui, QtWidgets
+
+from normcap.version import Version
 
 logger = logging.getLogger(__name__)
 

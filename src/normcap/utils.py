@@ -10,11 +10,12 @@ from pathlib import Path
 from types import TracebackType
 from typing import Optional
 
+from PySide6 import QtCore
+
 from normcap.gui import system_info
 from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION, URLS
 from normcap.gui.models import Capture
 from normcap.ocr.models import OcrResult
-from PySide6 import QtCore
 
 logger = logging.getLogger("normcap")
 

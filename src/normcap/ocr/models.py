@@ -4,8 +4,9 @@ from enum import IntEnum
 from os import PathLike
 from typing import Optional
 
-from normcap.version import Version
 from PIL import Image
+
+from normcap.version import Version
 
 
 @dataclass
