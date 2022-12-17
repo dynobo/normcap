@@ -30,6 +30,7 @@ def _load_test_image(image_path):
 @pytest.mark.parametrize("data", TESTCASES)
 def test_app(monkeypatch, qapp, qtbot, data):
     """Tests complete OCR workflow."""
+
     screen_rect = qapp.primaryScreen().size()
     if screen_rect.width() != 1920 or screen_rect.height() != 1080:
         pytest.xfail("Skipped due to wrong screen resolution.")
