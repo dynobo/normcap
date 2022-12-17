@@ -6,6 +6,7 @@ import shutil
 from pathlib import Path
 
 import briefcase
+
 from platforms.utils import (
     BRIEFCASE_EXCLUDES,
     BuilderBase,

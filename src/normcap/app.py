@@ -4,10 +4,11 @@ import signal
 import sys
 from argparse import Namespace
 
+from PySide6 import QtCore, QtWidgets
+
 from normcap import __version__, utils
 from normcap.gui import system_info
 from normcap.gui.tray import SystemTray
-from PySide6 import QtCore, QtWidgets
 
 
 def _get_args() -> Namespace:

@@ -8,8 +8,9 @@ from urllib.parse import urlparse
 from jeepney.bus_messages import MatchRule, Message, message_bus
 from jeepney.io.blocking import Proxy, open_dbus_connection
 from jeepney.wrappers import DBusErrorResponse, MessageGenerator, new_method_call
-from normcap.screengrab.utils import split_full_desktop_to_screens
 from PySide6 import QtGui
+
+from normcap.screengrab.utils import split_full_desktop_to_screens
 
 # TODO: Get rid of jeepney
 

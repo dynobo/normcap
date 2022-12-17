@@ -2,11 +2,12 @@
 
 from typing import Any, Optional
 
+from PySide6 import QtCore, QtGui, QtWidgets
+
 from normcap import __version__, ocr
 from normcap.gui import system_info
 from normcap.gui.constants import MESSAGE_LANGUAGES, URLS
 from normcap.gui.utils import get_icon
-from PySide6 import QtCore, QtGui, QtWidgets
 
 _MENU_STYLE = """
 QMenu {

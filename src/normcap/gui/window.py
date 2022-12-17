@@ -7,10 +7,11 @@ in multi display setups).
 import logging
 from typing import Optional
 
+from PySide6 import QtCore, QtGui, QtWidgets
+
 from normcap.gui import system_info, utils
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import CaptureMode, DesktopEnvironment, Rect
-from PySide6 import QtCore, QtGui, QtWidgets
 
 logger = logging.getLogger(__name__)
 

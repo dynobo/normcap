@@ -1,8 +1,9 @@
 import logging
 from typing import Any, Iterable
 
-from normcap.gui.constants import DEFAULT_SETTINGS
 from PySide6 import QtCore
+
+from normcap.gui.constants import DEFAULT_SETTINGS
 
 logger = logging.getLogger(__name__)
 

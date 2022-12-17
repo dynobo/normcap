@@ -30,7 +30,7 @@ python = ">=3.9,<3.12"
 PySide6-Essentials = "^6.4.1"
 jeepney = ">=0.8"
 pytesseract = ">=0.3.10"
-certifi = "^2022.9.24"
+certifi = "^2022.12.7"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=22.3.0"
