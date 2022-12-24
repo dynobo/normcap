@@ -57,9 +57,16 @@ def is_prebuild_package() -> bool:
 @functools.cache
 def get_tesseract_path() -> Path:
     if is_briefcase_package():
-        bin_path = Path(__file__).parent.parent.parent.parent / "bin"
+        if sys.platform == "linux":
+            binary_path = Path(__file__).parent.parent.parent.parent / "bin"
+        elif sys.platform == "win32":
+            binary_path = Path(__file__).parent.parent / "resources" / "tesseract"
+        elif sys.platform == "darwin":
+            binary_path = Path(__file__).parent.parent.parent.parent / "bin"
+        else:
+            raise ValueError(f"Platform {sys.platform} is currently not supported")
         extension = ".exe" if sys.platform == "win32" else ""
-        tesseract_path = bin_path / f"tesseract{extension}"
+        tesseract_path = binary_path / f"tesseract{extension}"
         if not tesseract_path.exists():
             raise RuntimeError(f"Couldn't locate tesseract binary in {tesseract_path}!")
         return tesseract_path

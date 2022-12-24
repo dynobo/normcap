@@ -233,10 +233,6 @@ class BuilderBase(ABC):
             )
 
 
-def bundle_tesseract_windows(builder: BuilderBase):
-    bundle_tesseract_windows_ub_mannheim(builder)
-
-
 # TODO: Make sure it's copied to the correct path!
 def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase):
     """Download tesseract binaries including dependencies into resource path."""

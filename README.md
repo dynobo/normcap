@@ -2,18 +2,22 @@
 
 # NormCap
 
-**_OCR powered screen-capture tool to capture information instead of images._**
+**_OCR powered screen-capture tool to capture information instead of images. For Linux, macOS and Windows._**
 
-[![Build passing](https://github.com/dynobo/normcap/workflows/Build/badge.svg)](https://github.com/dynobo/normcap/releases)
-[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Code style: black](https://img.shields.io/badge/Code%20style-black-%23000000)](https://github.com/psf/black)
-[![Coverage Status](https://coveralls.io/repos/github/dynobo/normcap/badge.svg?branch=main)](https://coveralls.io/github/dynobo/normcap)
+[![Build](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/python.yaml?branch=main)](https://github.com/dynobo/normcap/releases)
+[![Coverage Status](https://img.shields.io/coverallsCoverage/github/dynobo/normcap?label=Test%20coverage&branch=main)](https://coveralls.io/github/dynobo/normcap)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/codeql-analysis.yml?branch=main&label=CodeQL)](https://github.com/dynobo/normcap/actions/workflows/codeql-analysis.yml)
+[![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/dynobo_normcap?label=Sonar%20Quality%20Gate&server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/project/overview?id=dynobo_normcap)
 
-**Links:** [Repo](https://github.com/dynobo/normcap) |
-[PyPi](https://pypi.org/project/normcap) |
+[![GitHub](https://img.shields.io/github/downloads/dynobo/normcap/total?label=Github%20downloads&color=blue)](https://github.com/dynobo/normcap/releases)
+[![PyPi](https://img.shields.io/pypi/dm/normcap?label=PyPi%20downloads&color=blue)](https://pypi.org/project/normcap)
+[![Flathub](https://img.shields.io/flathub/downloads/com.github.dynobo.normcap?label=Flathub%20downloads&color=blue)](https://flathub.org/apps/details/com.github.dynobo.normcap)
+
+**Links:** [Source Code](https://github.com/dynobo/normcap) |
+[Documentation](https://dynobo.github.io/normcap/) |
+[FAQs](https://dynobo.github.io/normcap/#faqs) |
 [Releases](https://github.com/dynobo/normcap/releases) |
-[Changelog](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md) |
-[FAQs](https://dynobo.github.io/normcap/#faqs)
+[Changelog](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md)
 
 [![Screencast](https://user-images.githubusercontent.com/11071876/189767585-8bc45c18-8392-411d-84dc-cef1cb5dbc47.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 

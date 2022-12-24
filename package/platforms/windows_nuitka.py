@@ -4,7 +4,7 @@ import shutil
 import urllib
 import zipfile
 
-from platforms.utils import BuilderBase, bundle_tesseract_windows
+from platforms.utils import BuilderBase, bundle_tesseract_windows_ub_mannheim
 
 
 class WindowsNuitka(BuilderBase):
@@ -14,7 +14,7 @@ class WindowsNuitka(BuilderBase):
 
     def bundle_tesseract(self):
         """Download tesseract binaries including dependencies into resource path."""
-        bundle_tesseract_windows(self)
+        bundle_tesseract_windows_ub_mannheim(self)
 
     def download_wix(self):
         wix_path = self.BUILD_PATH / "wix"
