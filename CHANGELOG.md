@@ -3,6 +3,7 @@
 ## v0.4.0 (unreleased)
 
 - Removed: Support for Tesseract \< 5.0
+- All: Use Python 3.11 in pre-build packages.
 
 ## v0.3.15 (unreleased)
 
