@@ -3,7 +3,9 @@ import sys
 from decimal import DivisionByZero
 from pathlib import Path
 
-from normcap.screengrab import dbus_portal, dbus_shell, get_capture_func, qt, utils
+import PySide6
+import pytest
+from normcap.screengrab import dbus_shell, get_capture_func, qt, utils
 from normcap.version import Version
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -109,6 +111,11 @@ def test_gnome_version_on_linux_unknown_exception(monkeypatch, caplog):
 
 
 def test_get_appropriate_capture_on_wayland(monkeypatch):
+    if sys.platform in ["win32"]:
+        pytest.xfail("Can't load and test DBUS on windows")
+
+    from normcap.screengrab import dbus_portal, dbus_portal_legacy
+
     monkeypatch.setattr(utils.sys, "platform", "linux")
 
     monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
@@ -125,6 +132,12 @@ def test_get_appropriate_capture_on_wayland(monkeypatch):
     monkeypatch.setattr(utils, "get_gnome_version", lambda: None)
     capture = get_capture_func()
     assert capture == dbus_portal.capture
+
+    monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
+    monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("41.0"))
+    monkeypatch.setattr(PySide6, "__version__", "6.2.1")
+    capture = get_capture_func()
+    assert capture == dbus_portal_legacy.capture
 
 
 def test_get_appropriate_capture_on_non_wayland(monkeypatch):
