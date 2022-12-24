@@ -36,17 +36,17 @@ class MacBriefcase(BuilderBase):
         self.run(cmd="briefcase package macos app --no-sign", cwd=self.PROJECT_PATH)
 
     def bundle_tesseract(self):
-        app_pkg_path = (
-            self.PROJECT_PATH
-            / "macOS/app/NormCap/NormCap.app/Contents/Resources/app_packages"
+        bin_path = (
+            self.PROJECT_PATH / "macOS/app/NormCap/NormCap.app/Contents/Resources/bin"
         )
+        bin_path.mkdir(exist_ok=True)
         tesseract_source = Path("/usr/local/bin/tesseract")
-        tesseract_target = app_pkg_path / "tesseract"
+        tesseract_target = bin_path / "tesseract"
         install_path = "@executable_path/"
         self.run(
             cmd="dylibbundler "
             + f"--fix-file {tesseract_source.resolve()} "
-            + f"--dest-dir {app_pkg_path.resolve()} "
+            + f"--dest-dir {bin_path.resolve()} "
             + f"--install-path {install_path} "
             + "--bundle-deps "
             + "--overwrite-files",
