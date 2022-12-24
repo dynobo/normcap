@@ -2,7 +2,8 @@
 
 # NormCap
 
-**_OCR powered screen-capture tool to capture information instead of images. For Linux, macOS and Windows._**
+**_OCR powered screen-capture tool to capture information instead of images. For Linux,
+macOS and Windows._**
 
 [![Build](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/python.yaml?branch=main)](https://github.com/dynobo/normcap/releases)
 [![Coverage Status](https://img.shields.io/coverallsCoverage/github/dynobo/normcap?label=Test%20coverage&branch=main)](https://coveralls.io/github/dynobo/normcap)
