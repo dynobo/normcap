@@ -96,32 +96,26 @@ def capture() -> list[QtGui.QImage]:
     This methods works gnome-shell >=v41 and wayland.
     """
     logger.debug("Use capture method: DBUS portal")
-    portal = OrgFreedesktopPortalScreenshot()
 
     loop = QtCore.QEventLoop()
     result = []
 
-    def signal_triggered(uri: str) -> None:
+    def _signal_triggered(uri: str) -> None:
         result.append(uri)
         loop.exit()
 
-    portal.on_response.connect(signal_triggered)
+    def _timeout_triggered() -> None:
+        loop.exit()
+        raise TimeoutError()
 
-    timeout_seconds = 15
+    portal = OrgFreedesktopPortalScreenshot()
+    portal.on_response.connect(_signal_triggered)
+
+    timeout_seconds = 10
     try:
         QtCore.QTimer.singleShot(0, portal.grab_full_desktop)
-
-        # Configure Timeout
-        timer = QtCore.QTimer()
-        timer.setSingleShot(True)
-        timer.timeout.connect(loop.quit)
-        timer.start(timeout_seconds * 1000)
-
+        QtCore.QTimer.singleShot(timeout_seconds * 1000, _timeout_triggered)
         loop.exec_()
-
-        timer.stop()
-        portal.on_response.disconnect(signal_triggered)
-        timer.timeout.disconnect(loop.quit)
     except TimeoutError as e:
         logger.error("Screenshot not received within %s seconds", timeout_seconds)
         raise e
@@ -133,6 +127,8 @@ def capture() -> list[QtGui.QImage]:
             "Couldn't get screenshort via xdg-portal. Did the screenshot dialog got "
             + "cancelled or are permissions missing?"
         )
+    finally:
+        portal.on_response.disconnect(_signal_triggered)
 
     if not result:
         logger.warning("No screenshot taken.")
