@@ -10,6 +10,18 @@ from normcap.screengrab.utils import (
 )
 
 
+class ScreenshotError(Exception):
+    ...
+
+
+class ScreenshotResponseError(ScreenshotError):
+    ...
+
+
+class ScreenshotRequestError(ScreenshotError):
+    ...
+
+
 def _is_pyside6_64plus() -> bool:
     import PySide6
 
