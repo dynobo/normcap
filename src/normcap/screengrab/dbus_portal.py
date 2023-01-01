@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 
 from PySide6 import QtCore, QtDBus, QtGui
 
+from normcap.screengrab import ScreenshotRequestError, ScreenshotResponseError
 from normcap.screengrab.utils import split_full_desktop_to_screens
 
 # FIXME: Not working with Gnome 43 in FlatPak?
@@ -55,18 +56,20 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         result = interface.call(
             "Screenshot", "", {"interactive": False, "handle_token": token}
         )
-        if args := result.arguments():
-            if isinstance(args[0], QtDBus.QDBusObjectPath):
-                logger.debug("Requested screenshot. Object path: %s", args[0].path())
+        if not (
+            isinstance(result, QtDBus.QDBusMessage)
+            and isinstance(result.arguments()[0], QtDBus.QDBusObjectPath)
+        ):
+            raise ScreenshotRequestError("No object path received from xdg-portal.")
+
+        logger.debug(
+            "Requested screenshot. Object path: %s", result.arguments()[0].path()
+        )
 
     def got_signal(self, message: QtDBus.QDBusMessage) -> None:
         code, arg = message.arguments()
         if code == 1:
-            logger.warning(
-                "Couldn't get screenshort via freedesktop.portal. Did the "
-                + "dialog got cancelled or are permissions missing?"
-            )
-            self.on_response.emit("")
+            raise ScreenshotResponseError("Error code received from xdg-portal.")
 
         logger.debug("Received response from freedesktop.portal.request: %s", message)
 
@@ -103,22 +106,38 @@ def capture() -> list[QtGui.QImage]:
         loop.exit()
 
     portal.on_response.connect(signal_triggered)
-    QtCore.QTimer.singleShot(0, portal.grab_full_desktop)
 
-    # Timeout after 15sec
-    timer = QtCore.QTimer()
-    timer.setSingleShot(True)
-    timer.timeout.connect(loop.quit)
-    timer.start(15_000)
+    timeout_seconds = 15
+    try:
+        QtCore.QTimer.singleShot(0, portal.grab_full_desktop)
 
-    loop.exec_()
+        # Configure Timeout
+        timer = QtCore.QTimer()
+        timer.setSingleShot(True)
+        timer.timeout.connect(loop.quit)
+        timer.start(timeout_seconds * 1000)
 
-    timer.stop()
-    portal.on_response.disconnect(signal_triggered)
-    timer.timeout.disconnect(loop.quit)
+        loop.exec_()
 
-    full_image = None
-    if uri := result[0]:
-        full_image = QtGui.QImage(urlparse(uri).path)
+        timer.stop()
+        portal.on_response.disconnect(signal_triggered)
+        timer.timeout.disconnect(loop.quit)
+    except TimeoutError as e:
+        logger.error("Screenshot not received within %s seconds", timeout_seconds)
+        raise e
+    except ScreenshotRequestError as e:
+        logger.error("Request to xdg-portal failed.")
+        raise e
+    except ScreenshotResponseError:
+        logger.warning(
+            "Couldn't get screenshort via xdg-portal. Did the screenshot dialog got "
+            + "cancelled or are permissions missing?"
+        )
 
-    return split_full_desktop_to_screens(full_image) if full_image else []
+    if not result:
+        logger.warning("No screenshot taken.")
+        return []
+
+    uri = result[0]
+    full_image = QtGui.QImage(urlparse(uri).path)
+    return split_full_desktop_to_screens(full_image)
