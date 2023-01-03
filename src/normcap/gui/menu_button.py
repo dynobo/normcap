@@ -66,6 +66,7 @@ class Communicate(QtCore.QObject):
 
     on_open_url = QtCore.Signal(str)
     on_close_in_settings = QtCore.Signal(str)
+    on_manage_languages = QtCore.Signal()
 
 
 class MenuButton(QtWidgets.QToolButton):
@@ -145,6 +146,8 @@ class MenuButton(QtWidgets.QToolButton):
         elif action_name == "message_languages":
             self.message_box.setText(MESSAGE_LANGUAGES)
             self.message_box.exec_()
+        elif action_name == "manage_languages":
+            self.com.on_manage_languages.emit()
         elif group_name == "website_group" or action_name.startswith("file:/"):
             url = action_name
             self.com.on_open_url.emit(url)
@@ -236,6 +239,10 @@ class MenuButton(QtWidgets.QToolButton):
         else:
             action = QtGui.QAction("... need more?", menu)
             action.setObjectName("message_languages")
+        menu.addAction(action)
+
+        action = QtGui.QAction("manage (experimental) ...", menu)
+        action.setObjectName("manage_languages")
         menu.addAction(action)
 
     def _add_application_section(self, menu: QtWidgets.QMenu) -> None:

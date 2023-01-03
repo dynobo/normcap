@@ -88,7 +88,9 @@ class Window(QtWidgets.QMainWindow):
     def add_settings_menu(self, tray: QtWidgets.QSystemTrayIcon) -> None:
         """Add settings menu to current window."""
         self.settings_menu = MenuButton(self, tray.settings)
+        # TODO: Is this relay necessary?
         self.settings_menu.com.on_open_url.connect(tray.com.on_open_url_and_hide)
+        self.settings_menu.com.on_manage_languages.connect(tray.com.on_manage_languages)
         self.settings_menu.com.on_close_in_settings.connect(
             lambda: self.tray.com.on_close_or_exit.emit("clicked close in menu")
         )
