@@ -15,6 +15,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import system_info, utils
 from normcap.gui.constants import UPDATE_CHECK_INTERVAL_DAYS
+from normcap.gui.languages import LanguagesWindow
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.notifier import Notifier
 from normcap.gui.settings import Settings
@@ -39,6 +40,7 @@ class Communicate(QtCore.QObject):
     on_region_selected = QtCore.Signal(Rect)
     on_image_cropped = QtCore.Signal()
     on_screenshots_updated = QtCore.Signal()
+    on_manage_languages = QtCore.Signal()
 
 
 class SystemTray(QtWidgets.QSystemTrayIcon):
@@ -134,6 +136,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_copied_to_clipboard.connect(self._color_tray_icon)
         self.com.on_close_or_exit.connect(self._close_or_exit)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
+        self.com.on_manage_languages.connect(self._open_language_manager_and_hide)
 
     def _handle_tray_click(
         self, reason: QtWidgets.QSystemTrayIcon.ActivationReason
@@ -303,6 +306,15 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         logger.debug("Open %s", url)
         QtGui.QDesktopServices.openUrl(url)
         self.com.on_close_or_exit.emit("opened web browser")
+
+    def _open_language_manager_and_hide(self) -> None:
+        """Open url in default browser, then hide to tray or exit."""
+        logger.debug("Loading language manager")
+        # TODO: Don't exit if system tray is disabled
+        self.com.on_close_or_exit.emit("opened language manager")
+
+        self.language_window = LanguagesWindow()
+        self.language_window.show()
 
     def _copy_to_clipboard(self) -> None:
         """Copy results to clipboard."""
