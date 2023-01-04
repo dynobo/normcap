@@ -82,7 +82,7 @@ class Notifier(QtCore.QObject):
         Running in detached mode to avoid freezing KDE bar in some distributions.
         """
         logger.debug("Send notification using notify-send.")
-        icon_path = system_info.get_resources_path() / "tray.png"
+        icon_path = system_info.get_resources_path() / "normcap.png"
 
         # Escape chars interpreted by notifiy-send
         message = message.replace("\\", "\\\\")
@@ -108,7 +108,6 @@ class Notifier(QtCore.QObject):
             - Linux (Fallback in case no notify-send)
         """
         logger.debug("Send notification using QT showMessage.")
-        icon_file = "normcap.png" if sys.platform == "win32" else "tray.png"
-        notification_icon = get_icon(icon_file, "tool-magic-symbolic")
+        notification_icon = get_icon("normcap")
         self.parent().show()
         self.parent().showMessage(title, message, notification_icon)

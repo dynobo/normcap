@@ -106,7 +106,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self._exit_application("Screen Recording permissions missing on macOS")
 
     def _set_tray_icon(self) -> None:
-        self.setIcon(utils.get_icon("tray.png", "tool-magic-symbolic"))
+        self.setIcon(utils.get_icon("tool-magic-symbolic"))
 
     def _color_tray_icon(self) -> None:
         if sizes := self.icon().availableSizes():

@@ -84,13 +84,13 @@ class MenuButton(QtWidgets.QToolButton):
         self.setFixedSize(38, 38)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
 
-        self.setIcon(get_icon("settings.svg"))
+        self.setIcon(get_icon("normcap-settings"))
         self.setIconSize(QtCore.QSize(26, 26))
         self.setPopupMode(QtWidgets.QToolButton.ToolButtonPopupMode.InstantPopup)
         self.setAutoRaise(True)
 
         self.message_box = QtWidgets.QMessageBox()
-        self.message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
+        self.message_box.setIconPixmap(get_icon("normcap").pixmap(48, 48))
         # Necessary on wayland for main window to regain focus:
         self.message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
