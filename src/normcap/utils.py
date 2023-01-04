@@ -192,6 +192,10 @@ def qt_log_wrapper(
     """
     level = mode.name.lower()
     msg = message.lower()
+
+    if "opentype support missing for" in msg:
+        return
+
     if (level == "qtfatalmsg") or ("could not load the qt platform" in msg):
         logger.error("[QT] %s - %s", level, msg)
     else:

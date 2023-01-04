@@ -109,137 +109,137 @@ DEFAULT_SETTINGS = (
     ),
 )
 
-LANGUAGES_BASE_URL = "https://github.com/tesseract-ocr/tessdata/raw/4.1.0/"
-# fmt: off
-LANGUAGES = [
-    {"abbrev": "afr", "name": "Afrikaans", "native": "Afrikaans"},
-    {"abbrev": "amh", "name": "Amharic", "native": "አማርኛ"},
-    {"abbrev": "ara", "name": "Arabic", "native": "العربية"}, # noqa: RUF001
-    {"abbrev": "asm", "name": "Assamese", "native": "অসমীয়া"},
-    {"abbrev": "aze", "name": "Azerbaijani", "native": "آذربایجان دیلی"}, # noqa: RUF001
-    {"abbrev": "aze_cyrl", "name": "Azerbaijani (cyrillic)", "native": "Азәрбајҹан дили"}, # noqa: RUF001,E501
-    {"abbrev": "bel", "name": "Belarusian", "native": "беларуская мова"}, # noqa: RUF001
-    {"abbrev": "ben", "name": "Bengali", "native": "বাংলা"},
-    {"abbrev": "bod", "name": "Tibetan", "native": "བོད་ཡིག"},
-    {"abbrev": "bos", "name": "Bosnian", "native": "bosanski jezik"},
-    {"abbrev": "bre", "name": "Breton", "native": "brezhoneg"},
-    {"abbrev": "bul", "name": "Bulgarian", "native": "български език"}, # noqa: RUF001
-    {"abbrev": "cat", "name": "Catalan; Valencian", "native": "català"},
-    {"abbrev": "ceb", "name": "Cebuano", "native": "Sinugbuanong Binisayâ"},
-    {"abbrev": "ces", "name": "Czech", "native": "čeština; český jazyk"},
-    {"abbrev": "chi_sim", "name": "Chinese, simplified", "native": "中文; 汉语; 漢語"},
-    {"abbrev": "chi_sim_vert", "name": "Chinese, simplified (vertical)", "native": "中文; 汉语; 漢語"}, # noqa: E501
-    {"abbrev": "chi_tra", "name": "Chinese, traditional", "native": "中文; 汉语; 漢語"},
-    {"abbrev": "chi_tra_vert", "name": "Chinese, traditional (vertical)", "native": "中文; 汉语; 漢語"}, # noqa: E501
-    {"abbrev": "chr", "name": "Cherokee", "native": "ᏣᎳᎩ ᎦᏬᏂᎯᏍᏗ"}, # noqa: RUF001
-    {"abbrev": "cos", "name": "Corsican", "native": "corsu"},
-    {"abbrev": "cym", "name": "Welsh", "native": "Cymraeg"},
-    {"abbrev": "dan", "name": "Danish", "native": "dansk"},
-    {"abbrev": "dan_frak", "name": "Danish (Fraktur)", "native": "dansk"},
-    {"abbrev": "deu", "name": "German", "native": "Deutsch"},
-    {"abbrev": "deu_frak", "name": "German (Fraktur)", "native": "Deutsch"},
-    {"abbrev": "div", "name": "Divehi; Dhivehi; Maldivian", "native": "ދިވެހި"},
-    {"abbrev": "dzo", "name": "Dzongkha", "native": "རྫོང་ཁ"},
-    {"abbrev": "ell", "name": "Greek", "native": "ελληνικά"}, # noqa: RUF001
-    {"abbrev": "eng", "name": "English", "native": "English"},
-    {"abbrev": "enm", "name": "Middle English (1100-1500)", "native": ""},
-    {"abbrev": "epo", "name": "Esperanto", "native": "Esperanto"},
-    {"abbrev": "equ", "name": "Equations; Math", "native": "f(x) = x² - 5"},
-    {"abbrev": "est", "name": "Estonian", "native": "eesti keel"},
-    {"abbrev": "eus", "name": "Basque", "native": "euskara; euskera"},
-    {"abbrev": "fao", "name": "Faroese", "native": "føroyskt"},
-    {"abbrev": "fas", "name": "Persian; Farsi", "native": "فارسی"}, # noqa: RUF001
-    {"abbrev": "fil", "name": "Filipino", "native": "wikang filipino"},
-    {"abbrev": "fin", "name": "Finnish", "native": "suomen kieli"},
-    {"abbrev": "fra", "name": "French", "native": "français"},
-    {"abbrev": "frk", "name": "Frankish", "native": ""},
-    {"abbrev": "frm", "name": "Middle French (ca.1400-1600)", "native": ""},
-    {"abbrev": "fry", "name": "Western Frisian", "native": "Frysk"},
-    {"abbrev": "gla", "name": "Gaelic", "native": "Gàidhlig"},
-    {"abbrev": "gle", "name": "Irish", "native": "Gaeilge"},
-    {"abbrev": "glg", "name": "Galician", "native": "galego"},
-    {"abbrev": "grc", "name": "Ancient Greek (to 1453)", "native": ""},
-    {"abbrev": "guj", "name": "Gujarati", "native": "ગુજરાતી"},
-    {"abbrev": "hat", "name": "Haitian", "native": "Kreyòl ayisyen"},
-    {"abbrev": "heb", "name": "Hebrew", "native": "עברית"}, # noqa: RUF001
-    {"abbrev": "hin", "name": "Hindi", "native": "हिन्दी; हिंदी"},
-    {"abbrev": "hrv", "name": "Croatian", "native": "hrvatski jezik"},
-    {"abbrev": "hun", "name": "Hungarian", "native": "magyar"},
-    {"abbrev": "hye", "name": "Armenian", "native": "Հայերեն"}, # noqa: RUF001
-    {"abbrev": "iku", "name": "Inuktitut", "native": "ᐃᓄᒃᑎᑐᑦ"},
-    {"abbrev": "ind", "name": "Indonesian", "native": "Bahasa Indonesia"},
-    {"abbrev": "isl", "name": "Icelandic", "native": "Íslenska"},
-    {"abbrev": "ita", "name": "Italian", "native": "italiano"},
-    {"abbrev": "ita_old", "name": "Italian (old)", "native": ""},
-    {"abbrev": "jav", "name": "Javanese", "native": "ꦧꦱꦗꦮ"},
-    {"abbrev": "jpn", "name": "Japanese", "native": "日本語; にほんご"},
-    {"abbrev": "jpn_vert", "name": "Japanese (vertical)", "native": "日本語; にほんご"},
-    {"abbrev": "kan", "name": "Kannada", "native": "ಕನ್ನಡ"},
-    {"abbrev": "kat", "name": "Georgian", "native": "ქართული"},
-    {"abbrev": "kat_old", "name": "Georgian (old)", "native": "ქართული"},
-    {"abbrev": "kaz", "name": "Kazakh", "native": "қазақ тілі"}, # noqa: RUF001
-    {"abbrev": "khm", "name": "Khmer", "native": "ខ្មែរ; ខេមរភាសា; ភាសាខ្មែរ"}, # noqa: E501
-    {"abbrev": "kir", "name": "Kirghiz", "native": "Кыргыз тили"}, # noqa: RUF001
-    {"abbrev": "kmr", "name": "Northern Kurdish", "native": ""},
-    {"abbrev": "kor", "name": "Korean", "native": "한국어"},
-    {"abbrev": "kor_vert", "name": "Korean (vertical)", "native": "한국어"},
-    {"abbrev": "lao", "name": "Lao", "native": "ພາສາລາວ"},
-    {"abbrev": "lat", "name": "Latin", "native": "lingua latina"},
-    {"abbrev": "lav", "name": "Latvian", "native": "latviešu valoda"},
-    {"abbrev": "lit", "name": "Lithuanian", "native": "lietuvių kalba"},
-    {"abbrev": "ltz", "name": "Luxembourgish", "native": "Lëtzebuergesch"},
-    {"abbrev": "mal", "name": "Malayalam", "native": "മലയാളം"}, # noqa: RUF001
-    {"abbrev": "mar", "name": "Marathi", "native": "मराठी"},
-    {"abbrev": "mkd", "name": "Macedonian", "native": "македонски јазик"}, # noqa: RUF001,E501
-    {"abbrev": "mlt", "name": "Maltese", "native": "Malti"},
-    {"abbrev": "mon", "name": "Mongolian", "native": "Монгол хэл"}, # noqa: RUF001
-    {"abbrev": "mri", "name": "Maori", "native": "te reo Māori"},
-    {"abbrev": "msa", "name": "Malay", "native": "bahasa Melayu; بهاس ملايو\u200e"}, # noqa: RUF001,E501
-    {"abbrev": "mya", "name": "Burmese", "native": "ဗမာစာ"},
-    {"abbrev": "nep", "name": "Nepali", "native": "नेपाली"},
-    {"abbrev": "nld", "name": "Dutch; Flemish", "native": "Nederlands; Vlaams"},
-    {"abbrev": "nor", "name": "Norwegian", "native": "Norsk"},
-    {"abbrev": "oci", "name": "Occitan (post 1500)", "native": "occitan; lenga d'òc"},
-    {"abbrev": "ori", "name": "Oriya", "native": "ଓଡ଼ିଆ"},
-    {"abbrev": "osd", "name": "Orientation & Script Detection", "native": ""},
-    {"abbrev": "pan", "name": "Panjabi; Punjabi", "native": "ਪੰਜਾਬੀ; پنجابی\u200e"}, # noqa: RUF001,E501
-    {"abbrev": "pol", "name": "Polish", "native": "język polski"},
-    {"abbrev": "por", "name": "Portuguese", "native": "português"},
-    {"abbrev": "pus", "name": "Pushto; Pashto", "native": "پښتو"},
-    {"abbrev": "que", "name": "Quechua", "native": "Runa Simi; Kichwa"},
-    {"abbrev": "ron", "name": "Romanian; Moldavian", "native": "limba română"},
-    {"abbrev": "rus", "name": "Russian", "native": "Русский"}, # noqa: RUF001
-    {"abbrev": "san", "name": "Sanskrit; Saṁskṛta", "native": "संस्कृतम्"},
-    {"abbrev": "sin", "name": "Sinhala; Sinhalese", "native": "සිංහල"}, # noqa: RUF001
-    {"abbrev": "slk", "name": "Slovak", "native": "slovenský jazyk"},
-    {"abbrev": "slk_frak", "name": "Slovak (Fraktur)", "native": "slovenský jazyk"},
-    {"abbrev": "slv", "name": "Slovenian", "native": "slovenski jezik"},
-    {"abbrev": "snd", "name": "Sindhi", "native": "सिन्धी; سنڌي، سندھی\u200e"}, # noqa: RUF001,E501
-    {"abbrev": "spa", "name": "Spanish; Castilian", "native": "español"},
-    {"abbrev": "spa_old", "name": "Spanish; Castilian (old)", "native": ""},
-    {"abbrev": "sqi", "name": "Albanian", "native": "Shqip"},
-    {"abbrev": "srp", "name": "Serbian", "native": "српски језик"}, # noqa: RUF001
-    {"abbrev": "srp_latn", "name": "Serbian (latin)", "native": "српски језик"}, # noqa: RUF001,E501
-    {"abbrev": "sun", "name": "Sundanese", "native": "Basa Sunda"},
-    {"abbrev": "swa", "name": "Swahili", "native": "Kiswahili"},
-    {"abbrev": "swe", "name": "Swedish", "native": "svenska"},
-    {"abbrev": "syr", "name": "Syriac", "native": "ܠܫܢܐ ܣܘܪܝܝܐ"},
-    {"abbrev": "tam", "name": "Tamil", "native": "தமிழ்"},
-    {"abbrev": "tat", "name": "Tatar", "native": "татар теле; tatar tele"}, # noqa: RUF001,E501
-    {"abbrev": "tel", "name": "Telugu", "native": "తెలుగు"},
-    {"abbrev": "tgk", "name": "Tajik", "native": "тоҷикӣ; toçikī; تاجیکی\u200e"}, # noqa: RUF001,E501
-    {"abbrev": "tgl", "name": "Tagalog", "native": "Wikang Tagalog"},
-    {"abbrev": "tha", "name": "Thai", "native": "ไทย"},
-    {"abbrev": "tir", "name": "Tigrinya", "native": "ትግርኛ"},
-    {"abbrev": "ton", "name": "Tonga (Tonga Islands)", "native": "faka Tonga"},
-    {"abbrev": "tur", "name": "Turkish", "native": "Türkçe"},
-    {"abbrev": "uig", "name": "Uighur", "native": "ئۇيغۇرچە\u200e; Uyghurche"}, # noqa: RUF001,E501
-    {"abbrev": "ukr", "name": "Ukrainian", "native": "Українська"}, # noqa: RUF001
-    {"abbrev": "urd", "name": "Urdu", "native": "اردو"}, # noqa: RUF001
-    {"abbrev": "uzb", "name": "Uzbek", "native": "أۇزبېك\u200e"},
-    {"abbrev": "uzb_cyrl", "name": "Uzbek (cyrillic)", "native": "Ўзбек"}, # noqa: RUF001,E501
-    {"abbrev": "vie", "name": "Vietnamese", "native": "Tiếng Việt"},
-    {"abbrev": "yid", "name": "Yiddish", "native": "ייִדיש"}, # noqa: RUF001
-    {"abbrev": "yor", "name": "Yoruba", "native": "Yorùbá"},
-]
-# fmt: on
+TESSDATA_REPO = "https://github.com/tesseract-ocr/tessdata_fast"
+TESSDATA_BASE_URL = f"{TESSDATA_REPO}/raw/4.1.0/"
+
+LANGUAGES = (
+    ("afr", "2.5 MB", "Afrikaans", "Afrikaans"),
+    ("amh", "5.2 MB", "Amharic", "አማርኛ"),
+    ("ara", "1.3 MB", "Arabic", "العربية"),  # noqa: RUF001
+    ("asm", "1.9 MB", "Assamese", "অসমীয়া"),
+    ("aze", "3.3 MB", "Azerbaijani", "آذربایجان دیلی"),  # noqa: RUF001
+    ("aze_cyrl", "1.8 MB", "Azerbaijani (cyrillic)", "Азәрбајҹан дили"),  # noqa: RUF001
+    ("bel", "3.5 MB", "Belarusian", "беларуская мова"),  # noqa: RUF001
+    ("ben", "0.8 MB", "Bengali", "বাংলা"),
+    ("bod", "1.8 MB", "Tibetan", "བོད་ཡིག"),
+    ("bos", "2.3 MB", "Bosnian", "bosanski jezik"),
+    ("bre", "6.0 MB", "Breton", "brezhoneg"),
+    ("bul", "1.6 MB", "Bulgarian", "български език"),  # noqa: RUF001
+    ("cat", "1.0 MB", "Catalan; Valencian", "català"),
+    ("ceb", "0.6 MB", "Cebuano", "Sinugbuanong Binisayâ"),
+    ("ces", "3.6 MB", "Czech", "čeština; český jazyk"),
+    ("chi_sim", "2.3 MB", "Chinese, simplified", "中文; 汉语; 漢語"),
+    ("chi_sim_vert", "1.8 MB", "Chinese, simplified (vertical)", "中文; 汉语; 漢語"),
+    ("chi_tra", "2.2 MB", "Chinese, traditional", "中文; 汉语; 漢語"),
+    ("chi_tra_vert", "1.7 MB", "Chinese, traditional (vertical)", "中文; 汉语; 漢語"),
+    ("chr", "0.3 MB", "Cherokee", "ᏣᎳᎩ ᎦᏬᏂᎯᏍᏗ"),  # noqa: RUF001
+    ("cos", "2.1 MB", "Corsican", "corsu"),
+    ("cym", "2.1 MB", "Welsh", "Cymraeg"),
+    ("dan", "2.4 MB", "Danish", "dansk"),
+    ("dan_frak", "1.6 MB", "Danish (fraktur)", "dansk"),
+    ("deu", "1.4 MB", "German", "Deutsch"),
+    ("deu_frak", "2.0 MB", "German (fraktur)", "Deutsch"),
+    ("div", "1.6 MB", "Divehi; Dhivehi; Maldivian", "ދިވެހި"),
+    ("dzo", "0.4 MB", "Dzongkha", "རྫོང་ཁ"),
+    ("ell", "1.3 MB", "Greek", "ελληνικά"),  # noqa: RUF001
+    ("eng", "3.9 MB", "English", "English"),
+    ("enm", "2.9 MB", "Middle English (1100-1500)", ""),
+    ("epo", "4.5 MB", "Esperanto", "Esperanto"),
+    ("equ", "2.1 MB", "Equations; Math", ""),
+    ("est", "4.2 MB", "Estonian", "eesti keel"),
+    ("eus", "4.9 MB", "Basque", "euskara; euskera"),
+    ("fao", "3.2 MB", "Faroese", "føroyskt"),
+    ("fas", "0.4 MB", "Persian; Farsi", "فارسی"),  # noqa: RUF001
+    ("fil", "1.7 MB", "Filipino", "wikang filipino"),
+    ("fin", "7.5 MB", "Finnish", "suomen kieli"),
+    ("fra", "1.0 MB", "French", "français"),
+    ("frk", "6.1 MB", "Frankish", ""),
+    ("frm", "1.9 MB", "Middle French (1400-1600)", ""),
+    ("fry", "1.8 MB", "Western Frisian", "Frysk"),
+    ("gla", "2.9 MB", "Gaelic", "Gàidhlig"),
+    ("gle", "1.1 MB", "Irish", "Gaeilge"),
+    ("glg", "2.4 MB", "Galician", "galego"),
+    ("grc", "2.1 MB", "Ancient Greek (to 1453)", ""),
+    ("guj", "1.3 MB", "Gujarati", "ગુજરાતી"),
+    ("hat", "1.8 MB", "Haitian", "Kreyòl ayisyen"),
+    ("heb", "0.9 MB", "Hebrew", "עברית"),  # noqa: RUF001
+    ("hin", "1.0 MB", "Hindi", "हिन्दी; हिंदी"),
+    ("hrv", "3.9 MB", "Croatian", "hrvatski jezik"),
+    ("hun", "5.0 MB", "Hungarian", "magyar"),
+    ("hye", "3.3 MB", "Armenian", "Հայերեն"),  # noqa: RUF001
+    ("iku", "2.6 MB", "Inuktitut", "ᐃᓄᒃᑎᑐᑦ"),
+    ("ind", "1.0 MB", "Indonesian", "Bahasa Indonesia"),
+    ("isl", "2.1 MB", "Icelandic", "Íslenska"),
+    ("ita", "2.5 MB", "Italian", "italiano"),
+    ("ita_old", "3.1 MB", "Italian (old)", ""),
+    ("jav", "2.8 MB", "Javanese", "ꦧꦱꦗꦮ"),
+    ("jpn", "2.3 MB", "Japanese", "日本語; にほんご"),
+    ("jpn_vert", "2.9 MB", "Japanese (vertical)", "日本語; にほんご"),
+    ("kan", "3.4 MB", "Kannada", "ಕನ್ನಡ"),
+    ("kat", "2.4 MB", "Georgian", "ქართული"),
+    ("kat_old", "0.4 MB", "Georgian (old)", "ქართული"),
+    ("kaz", "4.5 MB", "Kazakh", "қазақ тілі"),  # noqa: RUF001
+    ("khm", "1.3 MB", "Khmer", "ខ្មែរ; ខេមរភាសា; ភាសាខ្មែរ"),
+    ("kir", "9.4 MB", "Kirghiz", "Кыргыз тили"),  # noqa: RUF001
+    ("kmr", "3.4 MB", "Northern Kurdish", ""),
+    ("kor", "1.6 MB", "Korean", "한국어"),
+    ("kor_vert", "1.0 MB", "Korean (vertical)", "한국어"),
+    ("lao", "6.0 MB", "Lao", "ພາສາລາວ"),
+    ("lat", "3.0 MB", "Latin", "lingua latina"),
+    ("lav", "2.5 MB", "Latvian", "latviešu valoda"),
+    ("lit", "3.0 MB", "Lithuanian", "lietuvių kalba"),
+    ("ltz", "2.4 MB", "Luxembourgish", "Lëtzebuergesch"),
+    ("mal", "5.0 MB", "Malayalam", "മലയാളം"),  # noqa: RUF001
+    ("mar", "2.0 MB", "Marathi", "मराठी"),
+    ("mkd", "1.5 MB", "Macedonian", "македонски јазик"),  # noqa: RUF001
+    ("mlt", "2.2 MB", "Maltese", "Malti"),
+    ("mon", "2.0 MB", "Mongolian", "Монгол хэл"),  # noqa: RUF001
+    ("mri", "0.8 MB", "Maori", "te reo Māori"),
+    ("msa", "1.6 MB", "Malay", "bahasa Melayu; بهاس ملايو\u200e"),  # noqa: RUF001
+    ("mya", "4.4 MB", "Burmese", "ဗမာစာ"),
+    ("nep", "0.9 MB", "Nepali", "नेपाली"),
+    ("nld", "5.7 MB", "Dutch; Flemish", "Nederlands; Vlaams"),
+    ("nor", "3.4 MB", "Norwegian", "Norsk"),
+    ("oci", "6.0 MB", "Occitan (post 1500)", "lenga d'òc"),
+    ("ori", "1.4 MB", "Oriya", "ଓଡ଼ିଆ"),
+    ("osd", "10 MB", "Orientation & Script", ""),
+    ("pan", "0.4 MB", "Panjabi; Punjabi", "ਪੰਜਾਬੀ; پنجابی\u200e"),  # noqa: RUF001
+    ("pol", "4.5 MB", "Polish", "język polski"),
+    ("por", "1.8 MB", "Portuguese", "português"),
+    ("pus", "1.6 MB", "Pushto; Pashto", "پښتو"),
+    ("que", "4.7 MB", "Quechua", "Runa Simi; Kichwa"),
+    ("ron", "2.2 MB", "Romanian; Moldavian", "limba română"),
+    ("rus", "3.6 MB", "Russian", "Русский"),  # noqa: RUF001
+    ("san", "11 MB", "Sanskrit; Saṁskṛta", "संस्कृतम्"),
+    ("sin", "1.6 MB", "Sinhala; Sinhalese", "සිංහල"),  # noqa: RUF001
+    ("slk", "4.2 MB", "Slovak", "slovenský jazyk"),
+    ("slk_frak", "0.8 MB", "Slovak (fraktur)", "slovenský jazyk"),
+    ("slv", "2.8 MB", "Slovenian", "slovenski jezik"),
+    ("snd", "1.6 MB", "Sindhi", "सिन्धी; سنڌي، سندھی\u200e"),  # noqa: RUF001
+    ("spa", "2.1 MB", "Spanish; Castilian", "español"),
+    ("spa_old", "2.7 MB", "Spanish; Castilian (old)", ""),
+    ("sqi", "1.7 MB", "Albanian", "Shqip"),
+    ("srp", "2.0 MB", "Serbian", "српски језик"),  # noqa: RUF001
+    ("srp_latn", "3.1 MB", "Serbian (latin)", "српски језик"),  # noqa: RUF001
+    ("sun", "1.3 MB", "Sundanese", "Basa Sunda"),
+    ("swa", "2.0 MB", "Swahili", "Kiswahili"),
+    ("swe", "3.9 MB", "Swedish", "svenska"),
+    ("syr", "2.1 MB", "Syriac", "ܠܫܢܐ ܣܘܪܝܝܐ"),
+    ("tam", "3.0 MB", "Tamil", "தமிழ்"),
+    ("tat", "1.0 MB", "Tatar", "татар теле"),  # noqa: RUF001
+    ("tel", "2.6 MB", "Telugu", "తెలుగు"),
+    ("tgk", "2.4 MB", "Tajik", "тоҷикӣ; toçikī; تاجیکی\u200e"),  # noqa: RUF001
+    ("tgl", "7.3 MB", "Tagalog", "Wikang Tagalog"),
+    ("tha", "1.0 MB", "Thai", "ไทย"),
+    ("tir", "0.3 MB", "Tigrinya", "ትግርኛ"),
+    ("ton", "0.9 MB", "Tonga", "faka Tonga"),
+    ("tur", "4.3 MB", "Turkish", "Türkçe"),
+    ("uig", "2.6 MB", "Uighur", "ئۇيغۇرچە\u200e"),  # noqa: RUF001
+    ("ukr", "3.6 MB", "Ukrainian", "Українська"),  # noqa: RUF001
+    ("urd", "1.3 MB", "Urdu", "اردو"),  # noqa: RUF001
+    ("uzb", "6.1 MB", "Uzbek", "أۇزبېك\u200e"),
+    ("uzb_cyrl", "1.4 MB", "Uzbek (cyrillic)", "Ўзбек"),  # noqa: RUF001
+    ("vie", "0.5 MB", "Vietnamese", "Tiếng Việt"),
+    ("yid", "0.5 MB", "Yiddish", "ייִדיש"),  # noqa: RUF001
+    ("yor", "0.9 MB", "Yoruba", "Yorùbá"),
+)

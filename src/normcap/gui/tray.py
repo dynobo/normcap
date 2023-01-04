@@ -309,11 +309,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _open_language_manager_and_hide(self) -> None:
         """Open url in default browser, then hide to tray or exit."""
-        logger.debug("Loading language manager")
-        # TODO: Don't exit if system tray is disabled
-        self.com.on_close_or_exit.emit("opened language manager")
-
-        self.language_window = LanguagesWindow()
+        logger.debug("Loading language manager...")
+        self.language_window = LanguagesWindow(self.windows[0])
+        self.language_window.com.on_open_url.connect(self._open_url_and_hide)
         self.language_window.show()
 
     def _copy_to_clipboard(self) -> None:
