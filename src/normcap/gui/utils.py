@@ -122,16 +122,31 @@ def move_active_window_to_position_on_kde(screen_geometry: QtCore.QRect) -> None
     os.unlink(script_file.name)
 
 
-@functools.cache
-def get_icon(icon_file: str, system_icon: Optional[str] = None) -> QtGui.QIcon:
-    """Load icon from system or if not available from resources."""
-    if system_icon and QtGui.QIcon.hasThemeIcon(system_icon):
-        return QtGui.QIcon.fromTheme(system_icon)
+def _get_local_icon_path(icon_name: str) -> Optional[Path]:
+    """Probe local resource folder for icon file and return it."""
+    potential_suffixes = ["", ".svg", ".png"]
+    for suffix in potential_suffixes:
+        icon_path = system_info.get_resources_path() / (icon_name + suffix)
+        if icon_path.exists():
+            return icon_path.resolve()
+    return None
 
-    icon_path = system_info.get_resources_path() / icon_file
-    icon = QtGui.QIcon()
-    icon.addFile(str(icon_path.resolve()))
-    return icon
+
+@functools.cache
+def get_icon(icon_name: str) -> QtGui.QIcon:
+    """Load icon from system or if not available from resources."""
+    if QtGui.QIcon.hasThemeIcon(icon_name):
+        return QtGui.QIcon.fromTheme(icon_name)
+
+    if pixmapi := getattr(QtWidgets.QStyle.StandardPixmap, icon_name, None):
+        return QtWidgets.QApplication.style().standardIcon(pixmapi)
+
+    if icon_path := _get_local_icon_path(icon_name):
+        icon = QtGui.QIcon()
+        icon.addFile(str(icon_path))
+        return icon
+
+    raise ValueError(f"Could not find icon '{icon_name}'.")
 
 
 def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None) -> None:

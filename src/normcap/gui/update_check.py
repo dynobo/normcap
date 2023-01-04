@@ -62,7 +62,7 @@ class UpdateChecker(QtCore.QObject):
         # Necessary on wayland for main window to regain focus:
         message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
-        message_box.setIconPixmap(get_icon("normcap.png").pixmap(48, 48))
+        message_box.setIconPixmap(get_icon("normcap").pixmap(48, 48))
         message_box.setStandardButtons(
             QtWidgets.QMessageBox.StandardButton.Ok
             | QtWidgets.QMessageBox.StandardButton.Cancel

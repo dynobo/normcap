@@ -37,24 +37,37 @@ def test_save_image_in_tempfolder():
     assert len(list(png_files)) == 1
 
 
-def test_get_icon_custom():
-    icon = utils.get_icon("normcap.png")
+@pytest.mark.parametrize(
+    "icon_name",
+    (
+        "normcap.png",  # use extension to override system icon
+        "tool-magic-symbolic.png",  # use extension to override system icon
+        "normcap-raw",
+        "normcap-parse",
+        "normcap-settings",
+    ),
+)
+def test_get_icon_custom(qtbot, icon_name):
+    icon = utils.get_icon(icon_name)
     assert icon.name() == ""
-    assert len(icon.availableSizes()) == 1
+    assert not icon.isNull()
+
+
+def test_get_icon_default(qtbot):
+    icon = utils.get_icon("SP_DialogApplyButton")
+    assert not icon.isNull()
 
 
 @pytest.mark.skip_on_gh
-def test_get_icon_sytem():
-    icon = utils.get_icon("normcap.png", "edit-undo")
-    icon_gnome43 = utils.get_icon("normcap.png", "edit-undo-symbolic")
-    assert icon.name() == "edit-undo" or icon_gnome43.name() == "edit-undo-symbolic"
-    assert len(icon.availableSizes()) >= 1
+def test_get_icon_system(qtbot):
+    icon = utils.get_icon("edit")
+    assert not icon.isNull()
 
 
-def test_get_icon_sytem_use_fallback():
-    icon = utils.get_icon("normcap.png", "not-existing-icon")
-    assert icon.name() == ""
-    assert len(icon.availableSizes()) == 1
+def test_get_icon_raise_on_not_existing(qtbot):
+    icon_name = "not-existing-icon"
+    with pytest.raises(ValueError, match=icon_name):
+        _ = utils.get_icon("not-existing-icon")
 
 
 def test_set_cursor():

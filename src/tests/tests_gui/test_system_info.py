@@ -103,7 +103,7 @@ def test_is_flatpak_package(monkeypatch):
         assert system_info.is_flatpak_package()
 
 
-def test_screens():
+def test_screens(qtbot):
     screens = system_info.screens()
     assert len(screens) >= 1
     assert all(isinstance(s, models.Screen) for s in screens)
