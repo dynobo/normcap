@@ -108,13 +108,17 @@ def capture() -> list[QtGui.QImage]:
         loop.exit()
         raise TimeoutError()
 
+    timeout_seconds = 10
+    timeout_timer = QtCore.QTimer()
+    timeout_timer.setSingleShot(True)
+    timeout_timer.setInterval(timeout_seconds * 1000)
+    timeout_timer.timeout.connect(_timeout_triggered)
+
     portal = OrgFreedesktopPortalScreenshot()
     portal.on_response.connect(_signal_triggered)
 
-    timeout_seconds = 10
     try:
         QtCore.QTimer.singleShot(0, portal.grab_full_desktop)
-        QtCore.QTimer.singleShot(timeout_seconds * 1000, _timeout_triggered)
         loop.exec_()
     except TimeoutError as e:
         logger.error("Screenshot not received within %s seconds", timeout_seconds)
@@ -129,6 +133,7 @@ def capture() -> list[QtGui.QImage]:
         )
     finally:
         portal.on_response.disconnect(_signal_triggered)
+        timeout_timer.timeout.disconnect(_timeout_triggered)
 
     if not result:
         logger.warning("No screenshot taken.")

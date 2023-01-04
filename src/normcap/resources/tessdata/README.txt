@@ -12,7 +12,12 @@ If you need more information about the properties of the different data files, p
 consult their documentation first:
 https://github.com/tesseract-ocr/tessdata_fast/blob/4.1.0/README.md
 
-Links:
+It is not recommended for the average user, but if you really need better character
+recognition, you can try the larger & slower models by downloading them manually from:
+- https://github.com/tesseract-ocr/tessdata
+- https://github.com/tesseract-ocr/tessdata_best
+
+Additional Links:
 - Source: https://github.com/tesseract-ocr/tessdata_fast/tree/4.1.0
 - License: https://github.com/tesseract-ocr/tessdata_fast/blob/4.1.0/LICENSE
 - Tesseract Documentation: https://tesseract-ocr.github.io/

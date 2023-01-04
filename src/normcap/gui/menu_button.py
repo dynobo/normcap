@@ -233,16 +233,11 @@ class MenuButton(QtWidgets.QToolButton):
             language_menu.addAction(action)
 
         if system_info.is_prebuild_package():
-            action = QtGui.QAction("... open data folder", menu)
-            traineddata_path = system_info.config_directory() / "tessdata"
-            action.setObjectName(f"file:///{traineddata_path.resolve()}")
+            action = QtGui.QAction("add/remove (experimental) ...", menu)
+            action.setObjectName("manage_languages")
         else:
             action = QtGui.QAction("... need more?", menu)
             action.setObjectName("message_languages")
-        menu.addAction(action)
-
-        action = QtGui.QAction("manage (experimental) ...", menu)
-        action.setObjectName("manage_languages")
         menu.addAction(action)
 
     def _add_application_section(self, menu: QtWidgets.QMenu) -> None:
