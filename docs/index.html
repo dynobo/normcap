@@ -78,7 +78,7 @@
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.15/NormCap-0.3.15-x86_64-Windows.msi"
                 >NormCap-<strong>Windows</strong>-x86_64.msi</a
               >
-              <small>~80 MB</small>
+              <small>~120 MB</small>
               <span data-tooltip="Run installer and start through start menu">🛈</span>
             </li>
             <li>
@@ -86,15 +86,27 @@
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.15/NormCap-0.3.15-x86_64.AppImage"
                 >NormCap-<strong>Linux</strong>-x86_64.AppImage</a
               >
-              <small>~78 MB</small>
+              <small>~80 MB</small>
               <span data-tooltip="Make the file executable and run it">🛈</span>
             </li>
             <li>
               <a
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.15/NormCap-0.3.15-x86_64-macOS.dmg"
-                >NormCap-<strong>macOS</strong>-x86_64.dmg</a
+                >NormCap-<strong>macOS</strong>-<strong>x86_64</strong>.dmg</a
               >
-              <small>~63 MB</small>
+              <small>~65 MB</small>
+              <span
+                class="wide-tooltip"
+                data-tooltip="Unsigned application! You have to grant permissions on first start:&#10;'System Preferences' → 'Security & Privacy' → 'General' → 'Open anyway'.&#10;(You might have to grant permissions to take screenshots, too.)"
+                >🛈</span
+              >
+            </li>
+            <li>
+              <a
+                href="https://github.com/dynobo/normcap/releases/download/v0.3.15/NormCap-0.3.15-arm64-macOS.dmg"
+                >NormCap-<strong>macOS</strong>-<strong>arm64</strong>.dmg</a
+              >
+              <small>~65 MB</small>
               <span
                 class="wide-tooltip"
                 data-tooltip="Unsigned application! You have to grant permissions on first start:&#10;'System Preferences' → 'Security & Privacy' → 'General' → 'Open anyway'.&#10;(You might have to grant permissions to take screenshots, too.)"
@@ -489,31 +501,6 @@
               >
             </li>
           </ul>
-        </details>
-        <details id="faqs-macos-m1">
-          <summary>[macOS] Does NormCap work on the M1 architecture?</summary>
-          <p>
-            The prebuild package won't work, install the
-            <a href="#python-package">Python package</a> instead.
-          </p>
-          <p>Why?</p>
-          <ol>
-            <li>
-              A prebuild package can only run on the CPU architecture on which it was
-              build. NormCap uses GitHub actions for the automated build process, which
-              currently does not offer a
-              <a
-                href="https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources"
-                >runner</a
-              >
-              with an M1 architecture.
-            </li>
-            <li>
-              The developer of NormCap doesn't have a Mac, and the M1 can't be emulated
-              via a virtual machine. Therefore, testing and debugging such a build would
-              not be feasible.
-            </li>
-          </ol>
         </details>
         <h4>Troubleshooting</h4>
         <details id="faqs-debug">
