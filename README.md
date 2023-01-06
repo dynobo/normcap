@@ -31,13 +31,17 @@ Install a prebuilt release:
   [NormCap-0.3.15-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.3.15/NormCap-0.3.15-x86_64-Windows.msi)
 - **Linux**:
   [NormCap-0.3.15-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.3.15/NormCap-0.3.15-x86_64.AppImage)
-- **macOS**:
+- **macOS** (x86) ¹:
   [NormCap-0.3.15-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.3.15/NormCap-0.3.15-x86_64-macOS.dmg)
+- **macOS** (M1) ¹·²:
+  [NormCap-0.3.15-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.3.15/NormCap-0.3.15-arm64-macOS.dmg)
   \
-  <sub>(On macOS, allow the unsigned application on first start: "System Preferences"
-  → "Security & Privacy" → "General" → "Open anyway". You might also need to allow
-  NormCap to take screenshots. Background:
-  [#135](https://github.com/dynobo/normcap/issues/135))</sub>
+  <sub>1: On macOS, allow the unsigned application on first start: "System
+  Preferences" → "Security & Privacy" → "General" → "Open anyway". You might also need
+  to allow NormCap to take screenshots.
+  [#135](https://github.com/dynobo/normcap/issues/135)<br> 2: Might be available a bit
+  delayed, as it is currently build manually. (Thx,
+  [@Takrin](https://github.com/Takrin)!)</sub>
 
 Install from repositories:
 
