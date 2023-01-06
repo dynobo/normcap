@@ -106,6 +106,7 @@ class Communicate(QtCore.QObject):
     """LanguagesWindow' communication bus."""
 
     on_open_url = QtCore.Signal(str)
+    on_change_languages = QtCore.Signal()
 
 
 class LanguagesWindow(QtWidgets.QDialog):
@@ -180,6 +181,7 @@ class LanguagesWindow(QtWidgets.QDialog):
         self.available_layout.model.layoutChanged.emit()
         self.installed_layout.view.clearSelection()
         self.available_layout.view.clearSelection()
+        self.com.on_change_languages.emit()
 
     def _get_installed_languages(self) -> list[str]:
         languages = []
@@ -204,7 +206,7 @@ class LanguagesWindow(QtWidgets.QDialog):
             url = constants.TESSDATA_BASE_URL + language + ".traineddata"
             self.downloader.com.on_download_finished.connect(save_language_partial)
             self.downloader.get(url)
-            # Handle download failed!
+            # TODO: Handle also failed downloads!
 
     def _delete(self) -> None:
         indexes = self.installed_layout.view.selectedIndexes()
