@@ -125,7 +125,7 @@ per-file-ignores = { "src/tests*" = [
 ] }
 
 [tool.mypy]
-files = ["src/normcap/**/*.py", "src/tests/**/*.py"]
+files = ["src/normcap/**/*.py", "src/tests/**/*.py", "package/**/*.py"]
 follow_imports = "skip"
 ignore_missing_imports = true
 

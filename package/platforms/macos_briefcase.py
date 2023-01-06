@@ -36,12 +36,19 @@ class MacBriefcase(BuilderBase):
         # patch_info_plist_for_proper_fullscreen()
         self.run(cmd="briefcase package macos app --no-sign", cwd=self.PROJECT_PATH)
 
+    @staticmethod
+    def _get_path_to_tesseract() -> Path:
+        if which := shutil.which("tesseract"):
+            return Path(which).resolve()
+        return Path("/usr/local/bin/tesseract")
+
     def bundle_tesseract(self):
         bin_path = (
             self.PROJECT_PATH / "macOS/app/NormCap/NormCap.app/Contents/Resources/bin"
         )
         bin_path.mkdir(exist_ok=True)
-        tesseract_source = Path("/usr/local/bin/tesseract")
+
+        tesseract_source = self._get_path_to_tesseract()
         tesseract_target = bin_path / "tesseract"
         install_path = "@executable_path/"
         self.run(
