@@ -46,7 +46,7 @@ def test_update_checker_no_new_version(monkeypatch, qtbot, packaged):
 @pytest.mark.skip_on_gh
 @pytest.mark.parametrize(
     "packaged,text",
-    [(True, "abc"), (False, '{"no relevant":"info"}'), (False, '{"invalid":"json"')],
+    [(True, b"abc"), (False, b'{"no relevant":"info"}'), (False, b'{"invalid":"json"')],
 )
 def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
     checker = update_check.UpdateChecker(None, packaged=packaged)

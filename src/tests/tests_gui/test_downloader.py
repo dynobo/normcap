@@ -9,8 +9,10 @@ def test_downloader_retrieves_website(qtbot):
         downloader.get("https://www.google.com")
 
     raw = result.args[0]
-    assert isinstance(raw, str)
-    assert "</html>" in raw.lower()
+    assert isinstance(raw, bytes)
+
+    text = raw.decode(encoding="utf-8", errors="ignore")
+    assert "</html>" in text.lower()
 
 
 def test_downloader_handles_not_existing_url(caplog, qtbot):
