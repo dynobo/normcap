@@ -34,8 +34,12 @@ def get_tesseract_languages(
     pytesseract.tesseract_cmd = str(tesseract_cmd)
 
     try:
+        # Using __wrapped__() is necessary because we want to update languages
+        # during runtime but get_languages() will cache them.
         languages = sorted(
-            pytesseract.get_languages(config=get_tesseract_config(tessdata_path))
+            pytesseract.get_languages.__wrapped__(
+                config=get_tesseract_config(tessdata_path)
+            )
         )
     except RuntimeError as e:
         traceback.print_tb(e.__traceback__)

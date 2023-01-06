@@ -233,10 +233,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             color=str(self.settings.value("color")),
         )
         if index == 0:
-            new_window.add_settings_menu(self)
+            new_window.create_settings_menu(self)
 
         new_window.set_fullscreen()
         self.windows[index] = new_window
+
+    def _update_settings_menu(self) -> None:
+        self.windows[0].create_settings_menu(self)
 
     #####################
     # OCR Functionality #
@@ -312,6 +315,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         logger.debug("Loading language manager...")
         self.language_window = LanguagesWindow(self.windows[0])
         self.language_window.com.on_open_url.connect(self._open_url_and_hide)
+        self.language_window.com.on_change_languages.connect(self._update_settings_menu)
         self.language_window.show()
 
     def _copy_to_clipboard(self) -> None:

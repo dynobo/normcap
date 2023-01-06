@@ -233,7 +233,7 @@ class MenuButton(QtWidgets.QToolButton):
             language_menu.addAction(action)
 
         if system_info.is_prebuild_package():
-            action = QtGui.QAction("add/remove (experimental) ...", menu)
+            action = QtGui.QAction("add/remove...", menu)
             action.setObjectName("manage_languages")
         else:
             action = QtGui.QAction("... need more?", menu)

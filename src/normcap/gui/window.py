@@ -85,7 +85,7 @@ class Window(QtWidgets.QMainWindow):
             utils.move_active_window_to_position_on_kde(screen_geometry)
         self.is_positioned = True
 
-    def add_settings_menu(self, tray: QtWidgets.QSystemTrayIcon) -> None:
+    def create_settings_menu(self, tray: QtWidgets.QSystemTrayIcon) -> None:
         """Add settings menu to current window."""
         self.settings_menu = MenuButton(self, tray.settings)
         # TODO: Is this relay necessary?
