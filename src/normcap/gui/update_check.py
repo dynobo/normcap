@@ -34,11 +34,11 @@ class UpdateChecker(QtCore.QObject):
         self.com.on_new_version_found.connect(self._show_update_message)
         self.message_box = self._create_message_box()
 
-    def _parse_version(self, text: str) -> None:
+    def _parse_version(self, data: bytes) -> None:
         """Parse the tag version from the response and emit version retrieved signal."""
         newest_version = None
-
         try:
+            text = data.decode("utf-8", "ignore")
             if self.packaged:
                 regex = r"/releases/tag/v(\d+\.\d+\.\d+)\""  # atom
             else:

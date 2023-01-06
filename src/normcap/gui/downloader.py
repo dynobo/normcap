@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
-    on_download_finished = QtCore.Signal(str)
+    on_download_finished = QtCore.Signal(bytes)
     on_download_failed = QtCore.Signal()
 
 
@@ -36,8 +36,7 @@ class Downloader(QtCore.QObject):
             context = ssl.create_default_context(cafile=certifi.where())
             with urlopen(url, context=context) as response:  # nosec B310
                 raw_data = response.read()
-                data = raw_data.decode("utf-8", "ignore")
-                self.com.on_download_finished.emit(data)
+                self.com.on_download_finished.emit(raw_data)
         except Exception as e:
             logger.error("Download failed due to %s", e)
             self.com.on_download_failed.emit()
