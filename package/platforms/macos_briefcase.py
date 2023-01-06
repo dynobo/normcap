@@ -1,5 +1,6 @@
 """Adjustments executed while packaging with briefcase during CI/CD."""
 
+import platform
 import shutil
 from pathlib import Path
 
@@ -79,9 +80,10 @@ class MacBriefcase(BuilderBase):
 
     def rename_package_file(self):
         source = list(Path(self.PROJECT_PATH / "macOS").glob("*.dmg"))[0]
+        arch = "M1" if platform.machine().startswith("arm64") else "x86_64"
         target = (
             self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-x86_64-macOS{self.binary_suffix}.dmg"
+            / f"NormCap-{self.get_version()}-{arch}-macOS{self.binary_suffix}.dmg"
         )
         target.unlink(missing_ok=True)
         shutil.move(source, target)
