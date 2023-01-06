@@ -92,9 +92,12 @@ jobs:
       - name: Black
         if: always()
         run: poetry run black --check --diff .
-      - name: Safety
-        if: always()
-        run: poetry run safety check
+      - name: Pip-Audit
+        if: ${{ matrix.os  == 'ubuntu-22.04' }}
+        run:
+          bash -c "poetry run pip-audit --progress-spinner=off --strict -r
+          <(poetry export -f requirements.txt --with dev | sed 's/\[.*\]//g' |
+          sed -z 's/\n\W//g' | uniq )"
       - name: Pytest
         run: poetry run pytest -vv -m "not skip_on_gh" --cov --cov-report=xml
       - name: Coverage
