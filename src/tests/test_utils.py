@@ -122,7 +122,7 @@ def test_copy_traineddata_files(tmp_path, monkeypatch):
             traineddatas = list(tessdata_path.glob("*.traineddata"))
             txts = list(tessdata_path.glob("*.txt"))
             assert traineddatas
-            assert len(txts) == 1
+            assert len(txts) == 2
     finally:
         # Make sure to delete possible placeholder files
         for f in (resource_path / "tessdata").glob("placeholder_?.traineddata"):

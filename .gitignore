@@ -5,13 +5,13 @@
 .venv/
 .vscode/
 .ruff_cache/
+src/normcap/resources/tessdata/*.traineddata
 src/normcap/resources/wl-copy/*
 !src/normcap/resources/wl-copy/.keep
 wix/
 linux/
 windows/
 macOS/
-tessdata/
 tesseract/
 src/normcap/resources/openssl/
 *.spec
