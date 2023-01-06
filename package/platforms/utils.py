@@ -204,7 +204,7 @@ class BuilderBase(ABC):
 
         Indents the patch like the line after which it is inserted.
         """
-        patch_hash = hashlib.md5(patch.encode()).hexdigest()
+        patch_hash = hashlib.md5(patch.encode()).hexdigest()  # noqa: S324
 
         with open(file_path, encoding="utf8") as f:
             if f.read().find(patch_hash) > -1:

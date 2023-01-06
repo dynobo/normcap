@@ -48,12 +48,12 @@ pytest-qt = ">=4.1.0"
 pytest-xvfb = "^2.0.0"
 rope = ">=1.1.1"
 ruff = ">=0.0.124"
-safety = ">=1.10.3"
 tbump = ">=6.9.0"
 toml = ">=0.10.2"
 types-Pillow = ">=9.0.19"
 types-toml = ">=0.10.7"
 typing-extensions = "^4.4.0"
+pip-audit = "^2.4.12"
 
 [tool.poetry.group.analysis]
 optional = true
@@ -108,6 +108,7 @@ ignore = [
   "D101",   # Missing docstring in public class
   "D102",   # Missing docstring in public method
   "D103",   # Missing docstring in public function
+  "D104",   # Missing docstring in public package
   "D105",   # Missing docstring in magic method
   "D107",   # Missing docstring in __init__
   "D203",   # 1 blank line required before class docstring

@@ -31,12 +31,17 @@ repos:
         entry: poetry run black src/normcap src/tests/ package/
         types: [python]
 
-      - id: safety
-        name: safety
+      - id: pip-audit
+        name: pip-audit
         stages: [commit]
         language: system
-        entry: poetry run safety check
-        types: [python]
+        entry:
+          bash -c "poetry run pip-audit --strict -r <(poetry export -f
+          requirements.txt --with dev | sed 's/\[.*\]//g' | sed -z 's/\n\W//g' |
+          uniq )"
+        # First `sed` removes potential "[<extra>]" after package names
+        # Second `sed` removes "\n" in front of "--hash" to get one line per package
+        # Final `uniq` is the used to de-duplicated those lines
         pass_filenames: false
 
       - id: ruff
