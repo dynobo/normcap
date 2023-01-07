@@ -106,7 +106,7 @@ class Communicate(QtCore.QObject):
     """LanguagesWindow' communication bus."""
 
     on_open_url = QtCore.Signal(str)
-    on_change_languages = QtCore.Signal()
+    on_change_installed_languages = QtCore.Signal(list)
 
 
 class LanguagesWindow(QtWidgets.QDialog):
@@ -181,7 +181,7 @@ class LanguagesWindow(QtWidgets.QDialog):
         self.available_layout.model.layoutChanged.emit()
         self.installed_layout.view.clearSelection()
         self.available_layout.view.clearSelection()
-        self.com.on_change_languages.emit()
+        self.com.on_change_installed_languages.emit(installed)
 
     def _get_installed_languages(self) -> list[str]:
         languages = []

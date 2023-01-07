@@ -238,8 +238,26 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         new_window.set_fullscreen()
         self.windows[index] = new_window
 
-    def _update_settings_menu(self) -> None:
+    def _update_settings_menu(self, installed_languages: list[str]) -> None:
+        """After Language settings changed, recreate menu button the update menus."""
+        self._sanatize_language_settings(installed_languages)
         self.windows[0].create_settings_menu(self)
+
+    def _sanatize_language_settings(self, installed_languages: list[str]) -> None:
+        """Verify that languages selected in the settings exist.
+
+        If one doesn't, remove it. If none does, autoselect the first in list.
+        """
+        activated_languages = self.settings.value("language")
+        if not isinstance(activated_languages, list):
+            activated_languages = [activated_languages]
+
+        activated_languages = [
+            lang for lang in activated_languages if lang in installed_languages
+        ]
+        if not activated_languages:
+            activated_languages = installed_languages[0]
+        self.settings.setValue("language", activated_languages)
 
     #####################
     # OCR Functionality #
@@ -315,7 +333,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         logger.debug("Loading language manager...")
         self.language_window = LanguagesWindow(self.windows[0])
         self.language_window.com.on_open_url.connect(self._open_url_and_hide)
-        self.language_window.com.on_change_languages.connect(self._update_settings_menu)
+        self.language_window.com.on_change_installed_languages.connect(
+            self._update_settings_menu
+        )
         self.language_window.show()
 
     def _copy_to_clipboard(self) -> None:
