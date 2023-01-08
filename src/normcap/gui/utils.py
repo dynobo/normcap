@@ -135,6 +135,7 @@ def _get_local_icon_path(icon_name: str) -> Optional[Path]:
 @functools.cache
 def get_icon(icon_name: str) -> QtGui.QIcon:
     """Load icon from system or if not available from resources."""
+    # TODO: Simplify, see https://openapplibrary.org/dev-tutorials/qt-icon-themes
     if QtGui.QIcon.hasThemeIcon(icon_name):
         return QtGui.QIcon.fromTheme(icon_name)
 
