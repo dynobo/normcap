@@ -210,13 +210,24 @@ class LanguagesWindow(QtWidgets.QDialog):
 
     def _delete(self) -> None:
         indexes = self.installed_layout.view.selectedIndexes()
-        if indexes:
-            self._set_in_progress(False)
-            index = indexes[0]
-            language = self.installed_layout.model.languages[index.row()][0]
-            Path(self.tessdata_path / f"{language}.traineddata").unlink()
-            self._update_models()
-            self._set_in_progress(True)
+        if not indexes:
+            return
+
+        if len(self.installed_layout.model.languages) <= 1:
+            QtWidgets.QMessageBox.information(
+                self,
+                "Information",
+                "It is not possible to delete all languages. "
+                + "NormCap needs at least one to function correctly.",
+            )
+            return
+
+        self._set_in_progress(False)
+        index = indexes[0]
+        language = self.installed_layout.model.languages[index.row()][0]
+        Path(self.tessdata_path / f"{language}.traineddata").unlink()
+        self._update_models()
+        self._set_in_progress(True)
 
     def _set_in_progress(self, value: bool) -> None:
         self.available_layout.view.setEnabled(value)
