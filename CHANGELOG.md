@@ -3,6 +3,7 @@
 ## v0.4.0 (unreleased)
 
 - All: Removed support for Tesseract \< 5.0
+- All: Faster startup if "Check for updates" is selected.
 - All: Added UI for downloading additional languages (experimental)
 
 ## v0.3.15 (unreleased)
