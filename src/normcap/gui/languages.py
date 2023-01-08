@@ -285,9 +285,15 @@ class LanguagesWindow(QtWidgets.QDialog):
             save_language_partial = partial(self._save_language, language=language)
             url = constants.TESSDATA_BASE_URL + language + ".traineddata"
             self.downloader.com.on_download_finished.connect(save_language_partial)
+            self.downloader.com.on_download_failed.connect(self._on_download_error)
             self.downloader.get(url)
             QtWidgets.QApplication.processEvents()
-            # TODO: Handle also failed downloads!
+
+    def _on_download_error(self, reason: str) -> None:
+        self._set_in_progress(False)
+        QtWidgets.QMessageBox.critical(
+            self, "Error", f"<b>Language download failed!</b><br><br>{reason}"
+        )
 
     def _delete(self) -> None:
         indexes = self.installed_layout.view.selectedIndexes()
