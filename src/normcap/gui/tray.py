@@ -15,7 +15,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import system_info, utils
 from normcap.gui.constants import UPDATE_CHECK_INTERVAL_DAYS
-from normcap.gui.languages import LanguagesWindow
+from normcap.gui.language_manager import LanguageManager
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.notifier import Notifier
 from normcap.gui.settings import Settings
@@ -331,7 +331,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _open_language_manager_and_hide(self) -> None:
         """Open url in default browser, then hide to tray or exit."""
         logger.debug("Loading language manager...")
-        self.language_window = LanguagesWindow(self.windows[0])
+        self.language_window = LanguageManager(self.windows[0])
         self.language_window.com.on_open_url.connect(self._open_url_and_hide)
         self.language_window.com.on_change_installed_languages.connect(
             self._update_settings_menu

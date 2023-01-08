@@ -185,7 +185,7 @@ class Communicate(QtCore.QObject):
     on_change_installed_languages = QtCore.Signal(list)
 
 
-class LanguagesWindow(QtWidgets.QDialog):
+class LanguageManager(QtWidgets.QDialog):
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
         if not (
