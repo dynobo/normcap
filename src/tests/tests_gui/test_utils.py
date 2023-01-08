@@ -58,7 +58,7 @@ def test_get_icon_default(qtbot):
     assert not icon.isNull()
 
 
-@pytest.mark.skip_on_gh
+@pytest.mark.skip_on_gh  # No icon themes on github runners available
 def test_get_icon_system(qtbot):
     icon = utils.get_icon("edit")
     assert not icon.isNull()
