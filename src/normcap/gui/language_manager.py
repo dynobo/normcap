@@ -186,14 +186,8 @@ class Communicate(QtCore.QObject):
 
 
 class LanguageManager(QtWidgets.QDialog):
-    def __init__(self, parent: QtWidgets.QWidget) -> None:
+    def __init__(self, parent: Optional[QtWidgets.QWidget] = None) -> None:
         super().__init__(parent)
-        if not (
-            system_info.is_briefcase_package()
-            or system_info.is_flatpak_package()
-            or True
-        ):
-            raise RuntimeWarning("Language Manager is available in prebuild NormCap!")
 
         self.setModal(True)
         self.setWindowTitle("Manage Languages")
@@ -264,10 +258,8 @@ class LanguageManager(QtWidgets.QDialog):
         self.com.on_change_installed_languages.emit(installed)
 
     def _get_installed_languages(self) -> list[str]:
-        languages = []
-        for f in self.tessdata_path.glob("*.traineddata"):
-            languages.append(f.stem)
-        return languages
+        languages = [f.stem for f in self.tessdata_path.glob("*.traineddata")]
+        return sorted(languages)
 
     def _save_language(self, data: bytes, language: str) -> None:
         with open(self.tessdata_path / f"{language}.traineddata", "wb") as fh:
