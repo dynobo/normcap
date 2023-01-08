@@ -13,7 +13,7 @@ class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
     on_download_finished = QtCore.Signal(bytes)
-    on_download_failed = QtCore.Signal()
+    on_download_failed = QtCore.Signal(str)
 
 
 class Worker(QtCore.QRunnable):
@@ -29,8 +29,9 @@ class Worker(QtCore.QRunnable):
             with urlopen(self.url, context=context) as response:  # nosec B310
                 raw_data = response.read()
         except Exception as e:
-            logger.error("Download failed due to %s", e)
-            self.com.on_download_failed.emit()
+            msg = f"Exception '{e}' during download of '{self.url}'"
+            logger.error(msg)
+            self.com.on_download_failed.emit(msg)
         else:
             self.com.on_download_finished.emit(raw_data)
 
