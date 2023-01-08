@@ -1,11 +1,12 @@
 """Window for managing downloaded language files."""
 
 import logging
+import math
 from functools import partial
 from pathlib import Path
 from typing import Optional, Union
 
-from PySide6 import QtCore, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.gui import constants, system_info, utils
 from normcap.gui.downloader import Downloader
@@ -102,6 +103,81 @@ class LanguageModel(QtCore.QAbstractTableModel):
         return len(self.languages[0]) if self.languages else 0
 
 
+class LoadingIndicator(QtWidgets.QWidget):
+    def __init__(
+        self,
+        parent: Optional[QtWidgets.QWidget] = None,
+        size: int = 128,
+        center_on_parent: bool = True,
+    ) -> None:
+        super().__init__(parent)
+        self.setVisible(False)
+
+        self.indicator_size = size
+
+        self.dots = 9
+        self.dot_size_factor = 1.6
+        self.max_opacity = 200
+        self.framerate = 80
+        self.counter = 0
+        self.timer = None
+
+        self.radius = int(self.indicator_size / self.dots * self.dot_size_factor)
+        self.opacities = [
+            int((self.max_opacity / self.dots) * i) for i in range(self.dots)
+        ][::-1]
+
+        self.setMinimumSize(QtCore.QSize(self.indicator_size, self.indicator_size))
+
+        if parent and center_on_parent:
+            self.move(
+                QtCore.QPoint(
+                    int((parent.width() - self.indicator_size) / 2),
+                    int((parent.height() - self.indicator_size) / 2),
+                )
+            )
+
+    def paintEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
+        painter = QtGui.QPainter()
+        painter.begin(self)
+        painter.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
+        painter.setPen(QtGui.QPen(QtCore.Qt.PenStyle.NoPen))
+        for i in range(self.dots):
+            opacity = self.opacities[(self.counter + i) % self.dots]
+            painter.setBrush(QtGui.QBrush(QtGui.QColor(255, 46, 136, opacity)))
+            painter.drawEllipse(
+                int(
+                    self.width() / 2
+                    + (self.width() / 2 - self.radius)
+                    * math.cos(2 * math.pi * i / self.dots)
+                    - self.radius / 2
+                ),
+                int(
+                    self.height() / 2
+                    + (self.width() / 2 - self.radius)
+                    * math.sin(2 * math.pi * i / self.dots)
+                    - self.radius / 2
+                ),
+                self.radius,
+                self.radius,
+            )
+        painter.end()
+
+    def is_active(self, value: bool) -> None:
+        if value:
+            self.setVisible(True)
+            self.timer = self.startTimer(self.framerate)
+        else:
+            if self.timer:
+                self.killTimer(self.timer)
+                self.timer = None
+            self.setVisible(False)
+
+    def timerEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
+        self.counter = self.counter + 1 if self.counter < self.dots - 1 else 0
+        self.update()
+
+
 class Communicate(QtCore.QObject):
     """LanguagesWindow' communication bus."""
 
@@ -164,7 +240,11 @@ class LanguagesWindow(QtWidgets.QDialog):
         layout.addLayout(h_layout)
         layout.addWidget(self.close_button)
         layout.addWidget(self.tessdata_label)
+
         self.setLayout(layout)
+
+        self.loading_indicator = LoadingIndicator(self, size=256)
+        self.loading_indicator.raise_()
 
         self._update_models()
         self.close_button.setFocus()
@@ -194,18 +274,19 @@ class LanguagesWindow(QtWidgets.QDialog):
             fh.write(data)
 
         self._update_models()
-        self._set_in_progress(True)
+        self._set_in_progress(False)
 
     def _download(self) -> None:
         indexes = self.available_layout.view.selectedIndexes()
         if indexes:
-            self._set_in_progress(False)
+            self._set_in_progress(True)
             index = indexes[0]
             language = self.available_layout.model.languages[index.row()][0]
             save_language_partial = partial(self._save_language, language=language)
             url = constants.TESSDATA_BASE_URL + language + ".traineddata"
             self.downloader.com.on_download_finished.connect(save_language_partial)
             self.downloader.get(url)
+            QtWidgets.QApplication.processEvents()
             # TODO: Handle also failed downloads!
 
     def _delete(self) -> None:
@@ -222,14 +303,15 @@ class LanguagesWindow(QtWidgets.QDialog):
             )
             return
 
-        self._set_in_progress(False)
+        self._set_in_progress(True)
         index = indexes[0]
         language = self.installed_layout.model.languages[index.row()][0]
         Path(self.tessdata_path / f"{language}.traineddata").unlink()
         self._update_models()
-        self._set_in_progress(True)
+        self._set_in_progress(False)
 
     def _set_in_progress(self, value: bool) -> None:
-        self.available_layout.view.setEnabled(value)
-        self.installed_layout.view.setEnabled(value)
+        self.available_layout.view.setEnabled(not value)
+        self.installed_layout.view.setEnabled(not value)
+        self.loading_indicator.is_active(value)
         QtWidgets.QApplication.processEvents()
