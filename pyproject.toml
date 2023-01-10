@@ -1,3 +1,7 @@
+[build-system]
+requires = ["poetry-core>=1.0.0", "briefcase"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "normcap"
 version = "0.3.15"
@@ -20,6 +24,14 @@ classifiers = [
   "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX :: Linux",
   "Operating System :: MacOS",
+]
+include = [
+  "README.md",
+  "CHANGELOG.md",
+  "LICENSE",
+  "src/**/*.icns",
+  "src/**/*.ico",
+  "src/**/*.png",
 ]
 
 [tool.poetry.scripts]
@@ -123,6 +135,7 @@ per-file-ignores = { "src/tests*" = [
 ], "package/*" = [
   "ANN",
 ] }
+# TODO: Annoate types in build scripts
 
 [tool.mypy]
 files = ["src/normcap/**/*.py", "src/tests/**/*.py", "package/**/*.py"]
@@ -142,10 +155,6 @@ xvfb_height = 1080
 
 [tool.coverage.run]
 source = ["normcap"]
-
-[build-system]
-requires = ["poetry-core>=1.0.0", "briefcase"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.briefcase]
 project_name = "NormCap"
