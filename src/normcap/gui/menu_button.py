@@ -75,11 +75,15 @@ class MenuButton(QtWidgets.QToolButton):
     title_font = QtGui.QFont(QtGui.QFont().family(), pointSize=10, weight=600)
 
     def __init__(
-        self, parent: QtWidgets.QMainWindow, settings: QtCore.QSettings
+        self,
+        parent: QtWidgets.QMainWindow,
+        settings: QtCore.QSettings,
+        has_language_manager: bool = False,
     ) -> None:
         super().__init__(parent)
         self.setObjectName("settings_icon")
         self.settings = settings
+        self.has_language_manager = has_language_manager
 
         self.setCursor(QtCore.Qt.CursorShape.ArrowCursor)
         self.setFixedSize(38, 38)
@@ -115,7 +119,13 @@ class MenuButton(QtWidgets.QToolButton):
         self._add_mode_section(menu)
         menu.addSeparator()
         self._add_title(menu, "Languages")
-        self._add_languages_section(menu)
+        # TODO: Remove! Used for LanguageManager Debug
+        # system_info.is_briefcase_package = lambda: True
+        languages = ocr.utils.get_tesseract_languages(
+            tesseract_cmd=system_info.get_tesseract_path(),
+            tessdata_path=system_info.get_tessdata_path(),
+        )
+        self._add_languages_section(menu, languages=languages)
         menu.addSeparator()
         self._add_title(menu, "Application")
         self._add_application_section(menu)
@@ -210,12 +220,10 @@ class MenuButton(QtWidgets.QToolButton):
         action.setChecked(self.settings.value("mode") == "raw")
         menu.addAction(action)
 
-    def _add_languages_section(self, menu: QtWidgets.QMenu) -> None:
-        tesseract_languages = ocr.utils.get_tesseract_languages(
-            tesseract_cmd=system_info.get_tesseract_path(),
-            tessdata_path=system_info.get_tessdata_path(),
-        )
-        if len(tesseract_languages) <= 7:
+    def _add_languages_section(
+        self, menu: QtWidgets.QMenu, languages: list[str]
+    ) -> None:
+        if len(languages) <= 7:
             language_menu = menu
         else:
             language_menu = QtWidgets.QMenu("select", menu)
@@ -225,19 +233,20 @@ class MenuButton(QtWidgets.QToolButton):
         language_group = QtGui.QActionGroup(language_menu)
         language_group.setObjectName("language_group")
         language_group.setExclusive(False)
-        for language in tesseract_languages:
+        for language in languages:
             action = QtGui.QAction(language, language_group)
             action.setObjectName(language)
             action.setCheckable(True)
             action.setChecked(language in str(self.settings.value("language")))
             language_menu.addAction(action)
 
-        if system_info.is_prebuild_package():
+        if self.has_language_manager:
             action = QtGui.QAction("add/remove...", menu)
             action.setObjectName("manage_languages")
         else:
             action = QtGui.QAction("... need more?", menu)
             action.setObjectName("message_languages")
+
         menu.addAction(action)
 
     def _add_application_section(self, menu: QtWidgets.QMenu) -> None:
