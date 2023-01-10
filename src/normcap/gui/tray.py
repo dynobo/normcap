@@ -21,7 +21,6 @@ from normcap.gui.notifier import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
-from normcap.version import Version
 
 logger = logging.getLogger(__name__)
 
@@ -158,11 +157,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             return
 
         checker = UpdateChecker(self, packaged=system_info.is_prebuild_package())
-        checker.com.on_version_parsed.connect(self._update_time_of_last_update_check)
+        checker.com.on_version_checked.connect(self._update_time_of_last_update_check)
         checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
         QtCore.QTimer.singleShot(500, checker.check)
 
-    def _update_time_of_last_update_check(self, newest_version: Version) -> None:
+    def _update_time_of_last_update_check(self, newest_version: str) -> None:
         if newest_version is not None:
             today = f"{datetime.datetime.now():%Y-%m-%d}"
             self.settings.setValue("last-update-check", today)
