@@ -85,10 +85,17 @@ class Window(QtWidgets.QMainWindow):
             utils.move_active_window_to_position_on_kde(screen_geometry)
         self.is_positioned = True
 
+    # TODO: Shouldn't be in window, but in tray
     def create_settings_menu(self, tray: QtWidgets.QSystemTrayIcon) -> None:
         """Add settings menu to current window."""
-        self.settings_menu = MenuButton(self, tray.settings)
-        # TODO: Is this relay necessary?
+        # TODO: Remove! Used for LanguageManager Debug
+        # system_info.is_prebuild_package = lambda: True
+        self.settings_menu = MenuButton(
+            parent=self,
+            settings=tray.settings,
+            has_language_manager=system_info.is_prebuild_package(),
+        )
+        # TODO: Is this signal chaining relly necessary?
         self.settings_menu.com.on_open_url.connect(tray.com.on_open_url_and_hide)
         self.settings_menu.com.on_manage_languages.connect(tray.com.on_manage_languages)
         self.settings_menu.com.on_close_in_settings.connect(
@@ -178,6 +185,7 @@ class Window(QtWidgets.QMainWindow):
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802
         """Adjust child widget on resize."""
         self.ui_layer.resize(self.size())
+        # TODO: Should be in menu_button (with signal to parent)
         if self.settings_menu:
             self.settings_menu.move(self.width() - self.settings_menu.width() - 26, 26)
         super().resizeEvent(event)
