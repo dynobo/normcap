@@ -11,8 +11,6 @@ from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.version import Version
-
 logger = logging.getLogger(__name__)
 
 
@@ -62,7 +60,7 @@ def _get_gnome_version_xml() -> str:
 
 
 @functools.lru_cache
-def get_gnome_version() -> Optional[Version]:
+def get_gnome_version() -> Optional[str]:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux":
         return None
@@ -77,7 +75,7 @@ def get_gnome_version() -> Optional[Version]:
     return _parse_gnome_version_from_xml() or _parse_gnome_version_from_shell_cmd()
 
 
-def _parse_gnome_version_from_xml() -> Optional[Version]:
+def _parse_gnome_version_from_xml() -> Optional[str]:
     """Try parsing gnome-version xml file."""
     gnome_version = None
     try:
@@ -90,7 +88,7 @@ def _parse_gnome_version_from_xml() -> Optional[Version]:
             minor = int(result[0])
         else:
             raise ValueError("<minor> not found.")
-        gnome_version = Version(f"{platform}.{minor}")
+        gnome_version = f"{platform}.{minor}"
     except FileNotFoundError:
         logger.debug("Couldn't find from gnome-version.xml")
     except Exception as e:
@@ -101,14 +99,14 @@ def _parse_gnome_version_from_xml() -> Optional[Version]:
     return gnome_version
 
 
-def _parse_gnome_version_from_shell_cmd() -> Optional[Version]:
+def _parse_gnome_version_from_shell_cmd() -> Optional[str]:
     """Try parsing gnome-shell output."""
     gnome_version = None
     try:
         output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
         output = output_raw.decode().strip()
         if result := re.search(r"\s+([\d.]+)", output):
-            gnome_version = Version(result.groups()[0])
+            gnome_version = result.groups()[0]
     except (subprocess.CalledProcessError, FileNotFoundError):
         pass
     except Exception as e:
@@ -118,8 +116,10 @@ def _parse_gnome_version_from_shell_cmd() -> Optional[Version]:
 
 
 def has_dbus_portal_support() -> bool:
-    gnome_version = get_gnome_version()
-    return not gnome_version or gnome_version >= Version("41")
+    if gnome_version := get_gnome_version():
+        if gnome_version < "41":
+            return False
+    return True
 
 
 def macos_reset_screenshot_permission() -> None:

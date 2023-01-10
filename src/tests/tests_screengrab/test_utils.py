@@ -6,7 +6,6 @@ from pathlib import Path
 import PySide6
 import pytest
 from normcap.screengrab import dbus_shell, get_capture_func, qt, utils
-from normcap.version import Version
 from PySide6 import QtCore, QtGui, QtWidgets
 
 
@@ -119,12 +118,12 @@ def test_get_appropriate_capture_on_wayland(monkeypatch):
     monkeypatch.setattr(utils.sys, "platform", "linux")
 
     monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
-    monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("40.3"))
+    monkeypatch.setattr(utils, "get_gnome_version", lambda: "40.3")
     capture = get_capture_func()
     assert capture == dbus_shell.capture
 
     monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
-    monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("41.0"))
+    monkeypatch.setattr(utils, "get_gnome_version", lambda: "41.0")
     capture = get_capture_func()
     assert capture == dbus_portal.capture
 
@@ -134,7 +133,7 @@ def test_get_appropriate_capture_on_wayland(monkeypatch):
     assert capture == dbus_portal.capture
 
     monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: True)
-    monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("41.0"))
+    monkeypatch.setattr(utils, "get_gnome_version", lambda: "41.0")
     monkeypatch.setattr(PySide6, "__version__", "6.2.1")
     capture = get_capture_func()
     assert capture == dbus_portal_legacy.capture
@@ -147,7 +146,7 @@ def test_get_appropriate_capture_on_non_wayland(monkeypatch):
     assert capture == qt.capture
 
     monkeypatch.setattr(utils, "has_wayland_display_manager", lambda: False)
-    monkeypatch.setattr(utils, "get_gnome_version", lambda: Version("41.0"))
+    monkeypatch.setattr(utils, "get_gnome_version", lambda: "41.0")
     grab_screens = get_capture_func()
     assert grab_screens == qt.capture
 
