@@ -5,7 +5,6 @@ import pytest
 from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.models import OcrResult, TessArgs
 from normcap.utils import create_argparser
-from normcap.version import Version
 from PIL import Image
 from PySide6 import QtGui
 
@@ -33,9 +32,7 @@ def capture() -> Generator[Capture, None, None]:
 def ocr_result() -> OcrResult:
     """Create argparser and provide its default values."""
     return OcrResult(
-        tess_args=TessArgs(
-            path=Path(), lang="eng", oem=2, psm=2, version=Version("5.0.0")
-        ),
+        tess_args=TessArgs(path=Path(), lang="eng", oem=2, psm=2, version="5.0.0"),
         image=Image.Image(),
         magic_scores={},
         transformed="",

@@ -6,8 +6,6 @@ from typing import Optional
 
 from pytesseract import pytesseract
 
-from normcap.version import Version
-
 logger = logging.getLogger(__name__)
 
 
@@ -59,8 +57,7 @@ def get_tesseract_languages(
 
 
 @functools.lru_cache
-def get_tesseract_version(tesseract_cmd: os.PathLike) -> Version:
+def get_tesseract_version(tesseract_cmd: os.PathLike) -> str:
     """Get info abput tesseract setup."""
     pytesseract.tesseract_cmd = str(tesseract_cmd)
-    tesseract_version = str(pytesseract.get_tesseract_version()).splitlines()[0]
-    return Version(tesseract_version)
+    return str(pytesseract.get_tesseract_version()).splitlines()[0]

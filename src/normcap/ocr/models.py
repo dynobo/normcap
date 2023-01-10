@@ -6,8 +6,6 @@ from typing import Optional
 
 from PIL import Image
 
-from normcap.version import Version
-
 
 @dataclass
 class TessArgs:
@@ -17,7 +15,7 @@ class TessArgs:
     lang: str
     oem: int
     psm: int
-    version: Version
+    version: str
 
     def to_config_str(self) -> str:
         """Generate command line args for pytesseract/tesseract.
