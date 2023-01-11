@@ -78,6 +78,7 @@ def _parse_gnome_version_from_shell_cmd() -> Optional[str]:
     except Exception as e:
         logger.warning("Exception when trying to get gnome version from cli %s", e)
 
+    logger.debug("Detected Gnome Version: %s", gnome_version)
     return gnome_version
 
 
