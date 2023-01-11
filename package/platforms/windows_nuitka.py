@@ -12,11 +12,11 @@ class WindowsNuitka(BuilderBase):
 
     binary_suffix = "_EXPERIMENTAL"
 
-    def bundle_tesseract(self):
+    def bundle_tesseract(self) -> None:
         """Download tesseract binaries including dependencies into resource path."""
         bundle_tesseract_windows_ub_mannheim(self)
 
-    def download_wix(self):
+    def download_wix(self) -> None:
         wix_path = self.BUILD_PATH / "wix"
         wix_path.mkdir(exist_ok=True)
         wix_zip = wix_path / "wix-binaries.zip"
@@ -32,7 +32,7 @@ class WindowsNuitka(BuilderBase):
 
         wix_zip.unlink()
 
-    def build_installer(self):
+    def build_installer(self) -> None:
         wxs = self.BUILD_PATH / "normcap.wxs"
         shutil.copy(wxs, self.BUILD_PATH / "app.dist")
 
@@ -88,7 +88,7 @@ class WindowsNuitka(BuilderBase):
             cwd=self.BUILD_PATH / "app.dist",
         )
 
-    def run_framework(self):
+    def run_framework(self) -> None:
         tls_path = (
             self.VENV_PATH / "lib" / "site-packages" / "PySide6" / "plugins" / "tls"
         )
@@ -119,10 +119,10 @@ class WindowsNuitka(BuilderBase):
         normcap_exe.unlink(missing_ok=True)
         (self.BUILD_PATH / "app.dist" / "app.exe").rename(normcap_exe)
 
-    def install_system_deps(self):
+    def install_system_deps(self) -> None:
         pass
 
-    def create(self):
+    def create(self) -> None:
         self.download_tessdata()
         self.bundle_tesseract()
         self.run_framework()

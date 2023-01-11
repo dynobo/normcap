@@ -128,14 +128,7 @@ ignore = [
   "ANN101", # Missing type annotation for `self` in method
   "UP007",  # Use X | Y for type annotations
 ]
-per-file-ignores = { "src/tests*" = [
-  "S101",
-  "ANN",
-  "D",
-], "package/*" = [
-  "ANN",
-] }
-# TODO: Annoate types in build scripts
+per-file-ignores = { "src/tests*" = ["S101", "ANN", "D"] }
 
 [tool.mypy]
 files = ["src/normcap/**/*.py", "src/tests/**/*.py", "package/**/*.py"]

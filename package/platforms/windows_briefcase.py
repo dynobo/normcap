@@ -19,11 +19,11 @@ class WindowsBriefcase(BuilderBase):
 
     binary_suffix = ""
 
-    def bundle_tesseract(self):
+    def bundle_tesseract(self) -> None:
         """Download tesseract binaries including dependencies into resource path."""
         bundle_tesseract_windows_ub_mannheim(self)
 
-    def download_openssl(self):
+    def download_openssl(self) -> None:
         """Download openssl needed for QNetwork https connections."""
         # For mirrors see: https://wiki.openssl.org/index.php/Binaries
         # OPENSSL_URL = "http://mirror.firedaemon.com/OpenSSL/openssl-1.1.1q.zip"
@@ -37,7 +37,7 @@ class WindowsBriefcase(BuilderBase):
 
         zip_path.unlink()
 
-    def patch_windows_installer(self):
+    def patch_windows_installer(self) -> None:
         """Customize wix-installer."""
         wxs_file = self.PROJECT_PATH / "windows" / "app" / "NormCap" / "normcap.wxs"
 
@@ -51,6 +51,8 @@ class WindowsBriefcase(BuilderBase):
         tree = ElementTree.parse(wxs_file)
         root = tree.getroot()
         product = root.find(f"{ns}Product")
+        if not product:
+            raise ValueError("Product section not found!")
 
         # Copy installer images
         left = "normcap_install_bg.bmp"
@@ -88,6 +90,8 @@ class WindowsBriefcase(BuilderBase):
             },
         )
         sequence = product.find(f"{ns}InstallExecuteSequence")
+        if not sequence:
+            raise ValueError("InstallExecuteSequence section not found!")
         ElementTree.SubElement(
             sequence,
             "Custom",
@@ -96,9 +100,11 @@ class WindowsBriefcase(BuilderBase):
 
         # Remove node which throws error during compilation
         remove_existing_product = sequence.find(f"{ns}RemoveExistingProducts")
-        sequence.remove(remove_existing_product)
+        sequence.remove(remove_existing_product)  # type: ignore
 
         upgrade = product.find(f"{ns}Upgrade")
+        if not upgrade:
+            raise ValueError("Upgrade section not found!")
         product.remove(upgrade)
 
         # Write & fix header
@@ -108,7 +114,7 @@ class WindowsBriefcase(BuilderBase):
             f.seek(0)
             f.writelines(header_lines + lines)
 
-    def rename_package_file(self):
+    def rename_package_file(self) -> None:
         source = list(Path(self.PROJECT_PATH / "windows").glob("*.msi"))[0]
         target = (
             self.BUILD_PATH
@@ -117,7 +123,7 @@ class WindowsBriefcase(BuilderBase):
         target.unlink(missing_ok=True)
         shutil.move(source, target)
 
-    def run_framework(self):
+    def run_framework(self) -> None:
         app_dir = (
             self.PROJECT_PATH / "windows" / "app" / "NormCap" / "src" / "app_packages"
         )
@@ -130,10 +136,10 @@ class WindowsBriefcase(BuilderBase):
         self.patch_windows_installer()
         self.run(cmd="briefcase package", cwd=self.PROJECT_PATH)
 
-    def install_system_deps(self):
+    def install_system_deps(self) -> None:
         pass
 
-    def create(self):
+    def create(self) -> None:
         self.download_tessdata()
         self.download_openssl()
         self.bundle_tesseract()

@@ -11,7 +11,7 @@ class LinuxNuitka(BuilderBase):
 
     binary_suffix = "_EXPERIMENTAL"
 
-    def bundle_tesseract(self):
+    def bundle_tesseract(self) -> None:
         target_path = self.RESOURCE_PATH / "tesseract"
         target_path.mkdir(exist_ok=True)
         lib_cache_path = self.BUILD_PATH / ".cache"
@@ -31,14 +31,14 @@ class LinuxNuitka(BuilderBase):
             dependency = list(lib_cache_path.glob(pattern))[0]
             shutil.copy(dependency, target_path)
 
-    def install_system_deps(self):
+    def install_system_deps(self) -> None:
         if system_requires := self.get_system_requires():
             github_actions_uid = 1001
             if os.getuid() == github_actions_uid:  # type: ignore
                 self.run(cmd="sudo apt update")
                 self.run(cmd=f"sudo apt install {' '.join(system_requires)}")
 
-    def run_framework(self):
+    def run_framework(self) -> None:
         tls_path = (
             self.VENV_PATH
             / "lib"
@@ -65,7 +65,7 @@ class LinuxNuitka(BuilderBase):
             cwd=self.BUILD_PATH,
         )
 
-    def create(self):
+    def create(self) -> None:
         self.download_tessdata()
         self.install_system_deps()
         self.bundle_tesseract()
