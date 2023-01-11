@@ -14,8 +14,6 @@ from PySide6 import QtCore
 
 from normcap.gui import system_info
 from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION, URLS
-from normcap.gui.models import Capture
-from normcap.ocr.models import OcrResult
 
 logger = logging.getLogger("normcap")
 
@@ -118,12 +116,9 @@ def _redact_by_key(local_vars: dict) -> dict:
             if f in func_vars:
                 func_vars[f] = redacted
         for k, v in func_vars.items():
-            if isinstance(v, Capture):
-                func_vars[k].ocr_text = redacted
-            if isinstance(v, OcrResult):
-                func_vars[k].words = redacted
-                func_vars[k].transformed = redacted
-
+            for attribute in ["ocr_text", "words", "transformed"]:
+                if hasattr(v, attribute):
+                    setattr(func_vars[k], attribute, redacted)
     return local_vars
 
 
@@ -145,7 +140,10 @@ def hook_exceptions(
     exc_value: BaseException,
     exc_traceback: Optional[TracebackType],
 ) -> None:  # sourcery skip: extract-method
-    """Print traceback and quit application."""
+    """Print traceback and quit application.
+
+    TODO: Think about removing/simplifying exception hook after switch to Python 3.11
+    """
     try:
         logger.critical("Uncaught exception! Quitting NormCap!")
 
