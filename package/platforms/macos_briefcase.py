@@ -12,7 +12,7 @@ class MacBriefcase(BuilderBase):
 
     binary_suffix = ""
 
-    def run_framework(self):
+    def run_framework(self) -> None:
         app_dir = (
             self.PROJECT_PATH
             / "macOS"
@@ -42,7 +42,7 @@ class MacBriefcase(BuilderBase):
             return Path(which).resolve()
         return Path("/usr/local/bin/tesseract")
 
-    def bundle_tesseract(self):
+    def bundle_tesseract(self) -> None:
         bin_path = (
             self.PROJECT_PATH / "macOS/app/NormCap/NormCap.app/Contents/Resources/bin"
         )
@@ -62,7 +62,7 @@ class MacBriefcase(BuilderBase):
         )
         shutil.copy(tesseract_source, tesseract_target)
 
-    def patch_info_plist_for_proper_fullscreen(self):
+    def patch_info_plist_for_proper_fullscreen(self) -> None:
         """Set attribute to keep dock and menubar hidden in fullscreen.
 
         See details:
@@ -81,11 +81,11 @@ class MacBriefcase(BuilderBase):
             mark_patched=False,
         )
 
-    def install_system_deps(self):
+    def install_system_deps(self) -> None:
         self.run(cmd="brew install tesseract")
         self.run(cmd="brew install dylibbundler")
 
-    def rename_package_file(self):
+    def rename_package_file(self) -> None:
         source = list(Path(self.PROJECT_PATH / "macOS").glob("*.dmg"))[0]
         arch = "M1" if platform.machine().startswith("arm64") else "x86_64"
         target = (
@@ -95,7 +95,7 @@ class MacBriefcase(BuilderBase):
         target.unlink(missing_ok=True)
         shutil.move(source, target)
 
-    def create(self):
+    def create(self) -> None:
         self.download_tessdata()
         self.install_system_deps()
         self.run_framework()

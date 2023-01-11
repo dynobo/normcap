@@ -80,8 +80,11 @@ BRIEFCASE_EXCLUDES = {
 }
 
 
-def rm_recursive(directory, exclude):
-    """Remove excluded files from package."""
+def rm_recursive(directory, exclude: list[str]) -> None:  # noqa: ANN001
+    """Remove excluded files from package.
+
+    This function is patched into briefcase source!
+    """
     for package_path in directory.glob(r"**/*"):
         path_str = str(package_path.absolute()).lower()
         if any(e in path_str for e in exclude):
@@ -93,7 +96,11 @@ def rm_recursive(directory, exclude):
                 os.remove(package_path)
 
 
-def build_wl_clipboard(self, app_packages_path):
+def build_wl_clipboard(self, app_packages_path) -> None:  # noqa: ANN001
+    """Build wl clipboard binaryW.
+
+    This function is patched into briefcase source!
+    """
     self.subprocess.run(
         "git clone https://github.com/bugaevc/wl-clipboard.git".split(),
         check=True,
@@ -116,19 +123,19 @@ class BuilderBase(ABC):
     TESSDATA_PATH = RESOURCE_PATH / "tessdata"
 
     @abstractmethod
-    def run_framework(self):
+    def run_framework(self) -> None:
         """Run nuitka compiler and rename resulting package."""
 
     @abstractmethod
-    def bundle_tesseract(self):
+    def bundle_tesseract(self) -> None:
         """Include tesseract binary and its dependencies."""
 
     @abstractmethod
-    def install_system_deps(self):
+    def install_system_deps(self) -> None:
         """Install system dependencies required for building."""
 
     @abstractmethod
-    def create(self):
+    def create(self) -> None:
         """Run all steps to build prebuild packages."""
 
     def get_system_requires(self) -> list[str]:
@@ -149,7 +156,7 @@ class BuilderBase(ABC):
         return pyproject_toml["tool"]["poetry"]["version"]
 
     @staticmethod
-    def run(cmd: Union[str, list], cwd=None) -> Optional[str]:
+    def run(cmd: Union[str, list], cwd: Optional[Path] = None) -> Optional[str]:
         """Executes a shell command and raises in case of error."""
         if not isinstance(cmd, str):
             cmd = " ".join(cmd)
@@ -174,7 +181,7 @@ class BuilderBase(ABC):
             else None
         )
 
-    def download_tessdata(self):
+    def download_tessdata(self) -> None:
         """Download trained data for tesseract to include in packages."""
         target_path = self.TESSDATA_PATH
         target_path.mkdir(exist_ok=True, parents=True)
@@ -199,7 +206,7 @@ class BuilderBase(ABC):
     @staticmethod
     def patch_file(
         file_path: Path, insert_after: str, patch: str, mark_patched: bool = True
-    ):
+    ) -> None:
         """Insert lines in file, if not already done.
 
         Indents the patch like the line after which it is inserted.
@@ -234,7 +241,7 @@ class BuilderBase(ABC):
 
 
 # TODO: Make sure it's copied to the correct path!
-def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase):
+def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
     """Download tesseract binaries including dependencies into resource path."""
     # Link to download artifact might change
 
@@ -279,7 +286,7 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase):
     shutil.rmtree(tesseract_path)
 
 
-def bundle_tesseract_windows_appveyor(builder: BuilderBase):
+def bundle_tesseract_windows_appveyor(builder: BuilderBase) -> None:
     """Download tesseract binaries including dependencies into resource path."""
     # Link to download artifact might change
 

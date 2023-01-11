@@ -20,7 +20,7 @@ class LinuxBriefcase(BuilderBase):
 
     binary_suffix = ""
 
-    def patch_briefcase_appimage_to_prune_deps(self):
+    def patch_briefcase_appimage_to_prune_deps(self) -> None:
         """Insert code into briefcase appimage code to remove unnecessary libs."""
         def_rm_recursive = inspect.getsource(rm_recursive)
 
@@ -40,7 +40,7 @@ rm_recursive(directory=lib_dir / "PySide6", exclude={BRIEFCASE_EXCLUDES["pyside6
         insert_after = 'self.logger.info("Building AppImage...", prefix=app.app_name)'
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
-    def patch_briefcase_appimage_to_build_wl_clipboard(self):
+    def patch_briefcase_appimage_to_build_wl_clipboard(self) -> None:
         """Patch briefcase appimage code to build wl clipboard inside docker."""
         def_build_wl_clipboard = inspect.getsource(build_wl_clipboard)
 
@@ -52,7 +52,7 @@ build_wl_clipboard(self, app_packages_path)
         insert_after = "        # Install dependencies"
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
-    def patch_briefcase_appimage_to_include_tesseract_and_wlcopy(self):
+    def patch_briefcase_appimage_to_include_tesseract_and_wlcopy(self) -> None:
         """Insert code into briefcase appimage code to remove unnecessary libs."""
         file_path = (
             Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
@@ -66,7 +66,7 @@ f"{self.appdir_path(app).parent.parent.parent / 'build' / 'src' / 'wl-copy'}",
 """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
-    def patch_briefcase_create_to_adjust_dockerfile(self):
+    def patch_briefcase_create_to_adjust_dockerfile(self) -> None:
         """Add code to add tesseract ppa to Dockerfile."""
         file_path = Path(briefcase.__file__).parent / "commands" / "create.py"
         insert_after = "self.install_app_support_package(app=app)"
@@ -83,20 +83,20 @@ if "linux" in str(bundle_path):
 """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
-    def install_system_deps(self):
+    def install_system_deps(self) -> None:
         if system_requires := self.get_system_requires():
             github_actions_uid = 1001
             if os.getuid() == github_actions_uid:  # type: ignore
                 self.run(cmd="sudo apt update")
                 self.run(cmd=f"sudo apt install {' '.join(system_requires)}")
 
-    def run_framework(self):
+    def run_framework(self) -> None:
         self.run(cmd="briefcase create --no-input", cwd=self.PROJECT_PATH)
         self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
         self.add_metainfo_to_appimage()
         self.run(cmd="briefcase package", cwd=self.PROJECT_PATH)
 
-    def rename_package_file(self):
+    def rename_package_file(self) -> None:
         source = list(Path(self.PROJECT_PATH / "linux").glob("*.AppImage"))[0]
         target = (
             self.BUILD_PATH
@@ -105,7 +105,7 @@ if "linux" in str(bundle_path):
         target.unlink(missing_ok=True)
         shutil.move(source, target)
 
-    def add_metainfo_to_appimage(self):
+    def add_metainfo_to_appimage(self) -> None:
         """Copy metainfo file with info for appimage hub."""
         metainfo = self.BUILD_PATH / "metainfo"
         target_path = (
@@ -119,10 +119,10 @@ if "linux" in str(bundle_path):
         )
         shutil.copy(metainfo, target_path / "metainfo")
 
-    def bundle_tesseract(self):
+    def bundle_tesseract(self) -> None:
         ...
 
-    def create(self):
+    def create(self) -> None:
         self.download_tessdata()
         self.install_system_deps()
 

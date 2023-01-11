@@ -11,7 +11,7 @@ class MacNuitka(BuilderBase):
 
     binary_suffix = "_EXPERIMENTAL"
 
-    def run_framework(self):
+    def run_framework(self) -> None:
         cache_dir = (self.BUILD_PATH / ".cache").resolve()
         self.run(
             cmd=f"""python -m nuitka \
@@ -41,14 +41,18 @@ class MacNuitka(BuilderBase):
             new_app_path / "Contents" / "macOS" / "NormCap",
         )
         shutil.make_archive(
-            base_name=self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-x86_64-macOS{self.binary_suffix}",
+            base_name=str(
+                (
+                    self.BUILD_PATH
+                    / f"NormCap-{self.get_version()}-x86_64-macOS{self.binary_suffix}"
+                ).resolve()
+            ),
             format="zip",
             root_dir=self.BUILD_PATH,
             base_dir="NormCap.app",
         )
 
-    def bundle_tesseract(self):
+    def bundle_tesseract(self) -> None:
         tesseract_source = "/usr/local/bin/tesseract"
         install_path = "@executable_path/"
         self.run(
@@ -62,7 +66,7 @@ class MacNuitka(BuilderBase):
         )
         shutil.copy(tesseract_source, self.TESSERACT_PATH)
 
-    def bundle_tls(self):
+    def bundle_tls(self) -> None:
         cache_path = self.BUILD_PATH / ".cache"
         cache_path.mkdir(exist_ok=True)
         shutil.rmtree(cache_path)
@@ -98,20 +102,22 @@ class MacNuitka(BuilderBase):
                 cwd=cache_path,
             )
 
-    def install_system_deps(self):
+    def install_system_deps(self) -> None:
         self.run(cmd="brew install tesseract")
         self.run(cmd="brew install dylibbundler")
 
-    def reinstall_pillow_without_binary(self):
+    def reinstall_pillow_without_binary(self) -> None:
         output = self.run(cmd="poetry run pip show pillow | grep Version")
-        version = output.decode("utf-8").split(":")[1].strip()
+        if not output:
+            raise RuntimeError("Could not retrieve pillow version!")
+        version = output.split(":")[1].strip()
         self.run(cmd="pip uninstall pillow -y", cwd=self.PROJECT_PATH)
         self.run(
             cmd=f"pip install --no-binary=pillow pillow=={version}",
             cwd=self.PROJECT_PATH,
         )
 
-    def create(self):
+    def create(self) -> None:
         self.download_tessdata()
         self.install_system_deps()
         self.bundle_tesseract()
