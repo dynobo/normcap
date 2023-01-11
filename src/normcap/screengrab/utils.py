@@ -6,7 +6,6 @@ import os
 import re
 import subprocess
 import sys
-from pathlib import Path
 from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -51,14 +50,6 @@ def has_wayland_display_manager() -> bool:
     return "wayland" in wayland_display or "wayland" in xdg_session_type
 
 
-def _get_gnome_version_xml() -> str:
-    gnome_version_xml = Path("/usr/share/gnome/gnome-version.xml")
-    if gnome_version_xml.exists():
-        return gnome_version_xml.read_text(encoding="utf-8")
-
-    raise FileNotFoundError
-
-
 @functools.lru_cache
 def get_gnome_version() -> Optional[str]:
     """Get gnome-shell version (Linux, Gnome)."""
@@ -68,35 +59,10 @@ def get_gnome_version() -> Optional[str]:
     if (
         os.environ.get("GNOME_DESKTOP_SESSION_ID", "") == ""
         and "gnome" not in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
-        and "unity" not in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
     ):
         return None
 
-    return _parse_gnome_version_from_xml() or _parse_gnome_version_from_shell_cmd()
-
-
-def _parse_gnome_version_from_xml() -> Optional[str]:
-    """Try parsing gnome-version xml file."""
-    gnome_version = None
-    try:
-        content = _get_gnome_version_xml()
-        if result := re.search(r"(?<=<platform>)\d+(?=<\/platform>)", content):
-            platform = int(result[0])
-        else:
-            raise ValueError("<platform> not found.")
-        if result := re.search(r"(?<=<minor>)\d+(?=<\/minor>)", content):
-            minor = int(result[0])
-        else:
-            raise ValueError("<minor> not found.")
-        gnome_version = f"{platform}.{minor}"
-    except FileNotFoundError:
-        logger.debug("Couldn't find from gnome-version.xml")
-    except Exception as e:
-        logger.warning(
-            "Couldn't parse gnome version from gnome-version.xml", exc_info=e
-        )
-
-    return gnome_version
+    return _parse_gnome_version_from_shell_cmd()
 
 
 def _parse_gnome_version_from_shell_cmd() -> Optional[str]:
