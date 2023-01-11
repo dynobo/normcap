@@ -184,7 +184,6 @@ def test_to_dict():
         "envs",
         "desktop_environment",
         "display_manager_is_wayland",
-        "gnome_version",
         "screens",
     ]
     for item in expected:
