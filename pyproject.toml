@@ -142,11 +142,6 @@ files = ["src/normcap/**/*.py", "src/tests/**/*.py", "package/**/*.py"]
 follow_imports = "skip"
 ignore_missing_imports = true
 
-[[tool.mypy.overrides]]
-module = "normcap.window_base_ui"
-follow_imports = "skip"
-ignore_errors = true
-
 [tool.pytest.ini_options]
 testpaths = ["src/tests"]
 qt_api = "pyside6"
