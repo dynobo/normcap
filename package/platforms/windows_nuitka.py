@@ -111,7 +111,7 @@ class WindowsNuitka(BuilderBase):
                 --enable-plugin=pyside6 \
                 --include-data-dir={(self.RESOURCE_PATH).resolve()}=normcap/resources \
                 --include-data-dir={tls_path.resolve()}=PySide6/qt-plugins/tls \
-                {(self.PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
+                {(self.PROJECT_PATH / "normcap" / "app.py").resolve()}
                 """,
             cwd=self.BUILD_PATH,
         )

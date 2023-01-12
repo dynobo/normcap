@@ -28,7 +28,7 @@ class WindowsBriefcase(BuilderBase):
         # For mirrors see: https://wiki.openssl.org/index.php/Binaries
         # OPENSSL_URL = "http://mirror.firedaemon.com/OpenSSL/openssl-1.1.1q.zip"
         openssl_url = "http://wiki.overbyte.eu/arch/openssl-1.1.1q-win64.zip"
-        target_path = self.PROJECT_PATH / "src" / "normcap" / "resources" / "openssl"
+        target_path = self.PROJECT_PATH / "normcap" / "resources" / "openssl"
         target_path.mkdir(exist_ok=True)
         zip_path = self.BUILD_PATH / "openssl.zip"
         urllib.request.urlretrieve(openssl_url, zip_path)
@@ -124,9 +124,7 @@ class WindowsBriefcase(BuilderBase):
         shutil.move(source, target)
 
     def run_framework(self) -> None:
-        app_dir = (
-            self.PROJECT_PATH / "windows" / "app" / "NormCap" / "src" / "app_packages"
-        )
+        app_dir = self.PROJECT_PATH / "windows" / "app" / "NormCap" / "app_packages"
         self.run(cmd="briefcase create", cwd=self.PROJECT_PATH)
         rm_recursive(directory=app_dir, exclude=BRIEFCASE_EXCLUDES["app_packages"])
         rm_recursive(
