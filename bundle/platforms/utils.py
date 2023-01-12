@@ -113,7 +113,7 @@ class BuilderBase(ABC):
     """Creates a prebuild package."""
 
     PROJECT_PATH = Path(__file__).absolute().parent.parent.parent
-    BUILD_PATH = (PROJECT_PATH / "package").resolve()
+    BUILD_PATH = (PROJECT_PATH / "bundle").resolve()
     IMG_PATH = BUILD_PATH / "imgs"
     RESOURCE_PATH = PROJECT_PATH / "normcap" / "resources"
     TESSERACT_PATH = RESOURCE_PATH / "tesseract"

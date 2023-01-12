@@ -113,14 +113,14 @@ jobs:
       # Build test packages
       - name: Build test package briefcase
         shell: bash -l {0}
-        run: poetry run python package/build.py --framework=briefcase --dev
+        run: poetry run python bundle/build.py --framework=briefcase --dev
       # - name: Build test package nuitka
       #   continue-on-error: true
       #   shell: bash -l {0}
-      #   run: poetry run python package/build.py --framework=nuitka --dev
+      #   run: poetry run python bundle/build.py --framework=nuitka --dev
       - name: List files
         shell: bash -l {0}
-        run: ls -la ./package
+        run: ls -la ./bundle
 
       # Release test package
       - name: Set current date as env variable
@@ -190,7 +190,7 @@ jobs:
         run: poetry install
       - name: Build package briefcase
         shell: bash -l {0}
-        run: poetry run python package/build.py --framework=briefcase
+        run: poetry run python bundle/build.py --framework=briefcase
       - name: Draft release
         uses: ncipollo/release-action@v1
         with:
@@ -211,7 +211,7 @@ jobs:
           username: ${{ secrets.WEBGO_FTP_USER }}
           password: ${{ secrets.WEBGO_FTP_PASS }}
           protocol: ftps
-          local-dir: ./package/
+          local-dir: ./bundle/
           exclude: |
             **/platforms/**
             **/imgs/**
