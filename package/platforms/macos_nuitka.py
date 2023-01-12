@@ -28,7 +28,7 @@ class MacNuitka(BuilderBase):
                     --enable-plugin=pyside6 \
                     --include-data-dir={(self.RESOURCE_PATH).resolve()}=resources \
                     --include-data-dir={cache_dir}=PySide6/qt-plugins/tls \
-                    {(self.PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
+                    {(self.PROJECT_PATH / "normcap" / "app.py").resolve()}
                 """,
             cwd=self.BUILD_PATH,
         )

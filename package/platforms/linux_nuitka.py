@@ -60,7 +60,7 @@ class LinuxNuitka(BuilderBase):
             --include-data-files={(self.BUILD_PATH / "metainfo").resolve()}=usr/share/ \
             --include-data-files={(self.BUILD_PATH / ".cache").resolve()}/*.*=./ \
             -o NormCap-{self.get_version()}-x86_64{self.binary_suffix}.AppImage \
-            {(self.PROJECT_PATH / "src"/ "normcap" / "app.py").resolve()}
+            {(self.PROJECT_PATH / "normcap" / "app.py").resolve()}
             """,
             cwd=self.BUILD_PATH,
         )

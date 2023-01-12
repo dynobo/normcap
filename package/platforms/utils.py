@@ -115,7 +115,7 @@ class BuilderBase(ABC):
     PROJECT_PATH = Path(__file__).absolute().parent.parent.parent
     BUILD_PATH = (PROJECT_PATH / "package").resolve()
     IMG_PATH = BUILD_PATH / "imgs"
-    RESOURCE_PATH = PROJECT_PATH / "src" / "normcap" / "resources"
+    RESOURCE_PATH = PROJECT_PATH / "normcap" / "resources"
     TESSERACT_PATH = RESOURCE_PATH / "tesseract"
     PYPROJECT_PATH = PROJECT_PATH / "pyproject.toml"
     VENV_PATH = Path(os.environ["VIRTUAL_ENV"])
@@ -247,6 +247,7 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
 
     tesseract_path = builder.BUILD_PATH / "tesseract"
     tesseract_path.mkdir(exist_ok=True)
+    builder.TESSERACT_PATH.mkdir(exist_ok=True)
 
     installer_path = tesseract_path / "tesseract-setup.exe"
 

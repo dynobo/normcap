@@ -28,7 +28,7 @@ repos:
         name: black
         stages: [commit]
         language: system
-        entry: poetry run black src/normcap src/tests/ package/
+        entry: poetry run black normcap tests/ package/
         types: [python]
 
       - id: pip-audit
@@ -65,7 +65,7 @@ repos:
         stages: [commit]
         language: system
         entry:
-          poetry run pytest src/tests/ -vv --cov --cov-report xml:cov.xml
+          poetry run pytest tests/ -vv --cov --cov-report xml:cov.xml
           --cov-report html
         types: [python]
         pass_filenames: false
@@ -75,7 +75,7 @@ repos:
         stages: [commit]
         language: system
         entry:
-          poetry run pydeps src/normcap --max-bacon=2 --cluster
-          --max-cluster-size=1 --no-show -o=dependency_graph.png -T=png
+          poetry run pydeps normcap --max-bacon=2 --cluster --max-cluster-size=1
+          --no-show -o=dependency_graph.png -T=png
         types: [python]
         pass_filenames: false
