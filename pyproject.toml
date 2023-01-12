@@ -131,7 +131,7 @@ ignore = [
 per-file-ignores = { "tests*" = ["S101", "ANN", "D"] }
 
 [tool.mypy]
-files = ["normcap/**/*.py", "tests/**/*.py", "package/**/*.py"]
+files = ["normcap/**/*.py", "tests/**/*.py", "bundle/**/*.py"]
 follow_imports = "skip"
 ignore_missing_imports = true
 
@@ -157,9 +157,9 @@ author_email = "dynobo@mailbox.org"
 formal_name = "NormCap"
 description = "OCR-powered screen-capture tool to capture information instead of images"
 sources = ["normcap"]
-icon = "package/imgs/normcap"
-installer_icon = "package/imgs/normcap_install"
-installer_background = "package/imgs/normcap_install_bg"
+icon = "bundle/imgs/normcap"
+installer_icon = "bundle/imgs/normcap_install"
+installer_background = "bundle/imgs/normcap_install_bg"
 requires = ["pyside6", "jeepney", "pytesseract", "certifi"]
 
 [tool.briefcase.app.normcap.macOS]
@@ -224,7 +224,7 @@ src = "README.md"
 search = 'download/v{current_version}/'
 
 [[tool.tbump.file]]
-src = "package/normcap.wxs"
+src = "bundle/normcap.wxs"
 search = 'ProductVersion = "{current_version}"'
 
 [[tool.tbump.before_commit]]

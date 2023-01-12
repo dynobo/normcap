@@ -28,7 +28,7 @@ repos:
         name: black
         stages: [commit]
         language: system
-        entry: poetry run black normcap tests/ package/
+        entry: poetry run black normcap tests/ bundle/
         types: [python]
 
       - id: pip-audit

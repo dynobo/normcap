@@ -10,7 +10,7 @@ normcap/resources/openssl/
 normcap/resources/wl-copy/*
 !normcap/resources/wl-copy/.keep
 normcap/resources/tessseract
-
+logs/
 wix/
 linux/
 windows/
