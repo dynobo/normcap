@@ -110,15 +110,6 @@ jobs:
           path-to-lcov: coverage.lcov
           parallel: true
 
-      - name: SonarCloud
-        if:
-          ${{ matrix.os  == 'ubuntu-22.04' && github.repository
-          =='dynobo/normcap' }}
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
       # Build test packages
       - name: Build test package briefcase
         shell: bash -l {0}

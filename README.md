@@ -8,7 +8,6 @@ macOS and Windows._**
 [![Build](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/python.yaml?branch=main)](https://github.com/dynobo/normcap/releases)
 [![Coverage Status](https://img.shields.io/coverallsCoverage/github/dynobo/normcap?label=Test%20coverage&branch=main)](https://coveralls.io/github/dynobo/normcap)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/codeql-analysis.yml?branch=main&label=CodeQL)](https://github.com/dynobo/normcap/actions/workflows/codeql-analysis.yml)
-[![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/dynobo_normcap?label=Sonar%20Quality%20Gate&server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/project/overview?id=dynobo_normcap)
 
 [![GitHub](https://img.shields.io/github/downloads/dynobo/normcap/total?label=Github%20downloads&color=blue)](https://github.com/dynobo/normcap/releases)
 [![PyPi](https://img.shields.io/pypi/dm/normcap?label=PyPi%20downloads&color=blue)](https://pypi.org/project/normcap)
