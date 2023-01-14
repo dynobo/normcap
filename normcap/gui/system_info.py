@@ -133,7 +133,12 @@ def screens() -> list[Screen]:
         Screen(
             is_primary=screen == QtWidgets.QApplication.primaryScreen(),
             device_pixel_ratio=QtGui.QScreen.devicePixelRatio(screen),
-            geometry=Rect(*screen.geometry().getRect()),
+            geometry=Rect(
+                left=screen.geometry().left(),
+                top=screen.geometry().top(),
+                right=screen.geometry().left() + screen.geometry().width(),
+                bottom=screen.geometry().top() + screen.geometry().height(),
+            ),
             index=idx,
         )
         for idx, screen in enumerate(QtWidgets.QApplication.screens())
