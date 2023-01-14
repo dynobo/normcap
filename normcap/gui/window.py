@@ -9,7 +9,7 @@ from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.gui import system_info, utils
+from normcap.gui import system_info, tray, utils
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import CaptureMode, DesktopEnvironment, Rect
 
@@ -30,7 +30,7 @@ class Window(QtWidgets.QMainWindow):
 
         self.screen_idx: int = screen_idx
         self.color: QtGui.QColor = QtGui.QColor(color)
-        self.tray: QtWidgets.QSystemTrayIcon = parent
+        self.tray: tray.SystemTray = parent
         self.is_positioned: bool = False
 
         self.setWindowTitle("NormCap")
@@ -49,6 +49,8 @@ class Window(QtWidgets.QMainWindow):
     def _get_scale_factor(self) -> float:
         """Calculate scale factor from image and screen dimenensions."""
         screen = self.tray.screens[self.screen_idx]
+        if not screen.screenshot:
+            raise ValueError("Screenshot image is missing!")
         return screen.screenshot.width() / screen.width
 
     def _add_image_layer(self) -> None:

@@ -19,7 +19,7 @@ except ImportError:
     HAS_QTDBUS = False
 
 
-from normcap.gui import system_info
+from normcap.gui import models, system_info
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ def save_image_in_tempfolder(
         logger.debug("Store debug image in: %s", file_dir / file_name)
 
 
-def move_active_window_to_position_on_gnome(screen_geometry: QtCore.QRect) -> None:
+def move_active_window_to_position_on_gnome(screen_rect: models.Rect) -> None:
     """Move currently active window to a certain position.
 
     This is a workaround for not being able to reposition windows on wayland.
@@ -53,10 +53,10 @@ def move_active_window_to_position_on_gnome(screen_geometry: QtCore.QRect) -> No
         if (mw.has_focus()) {{
             mw.move_resize_frame(
                 0,
-                {screen_geometry.left},
-                {screen_geometry.top},
-                {screen_geometry.width},
-                {screen_geometry.height}
+                {screen_rect.left},
+                {screen_rect.top},
+                {screen_rect.width},
+                {screen_rect.height}
             );
         }}
     }});
@@ -79,7 +79,7 @@ def move_active_window_to_position_on_gnome(screen_geometry: QtCore.QRect) -> No
         logger.warning("Invalid dbus interface on Gnome")
 
 
-def move_active_window_to_position_on_kde(screen_geometry: QtCore.QRect) -> None:
+def move_active_window_to_position_on_kde(screen_rect: models.Rect) -> None:
     """Move currently active window to a certain position.
 
     This is a workaround for not being able to reposition windows on wayland.
@@ -91,10 +91,10 @@ def move_active_window_to_position_on_kde(screen_geometry: QtCore.QRect) -> None
     js_code = f"""
     client = workspace.activeClient;
     client.geometry = {{
-        "x": {screen_geometry.left},
-        "y": {screen_geometry.top},
-        "width": {screen_geometry.width},
-        "height": {screen_geometry.height}
+        "x": {screen_rect.left},
+        "y": {screen_rect.top},
+        "width": {screen_rect.width},
+        "height": {screen_rect.height}
     }};
     """
     with tempfile.NamedTemporaryFile(delete=False, suffix=".js") as script_file:
