@@ -68,8 +68,8 @@ class Rect:
 
     def __str__(self) -> str:
         return (
-            f"(top={self.top}, left={self.left}, "
-            f"bottom={self.bottom}, right={self.right})"
+            f"(left={self.left}, top={self.top}, "
+            f"right={self.right}, bottom={self.bottom})"
         )
 
     @property
