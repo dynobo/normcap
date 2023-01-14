@@ -133,7 +133,7 @@ def screens() -> list[Screen]:
         Screen(
             is_primary=screen == QtWidgets.QApplication.primaryScreen(),
             device_pixel_ratio=QtGui.QScreen.devicePixelRatio(screen),
-            geometry=Rect(
+            rect=Rect(
                 left=screen.geometry().left(),
                 top=screen.geometry().top(),
                 right=screen.geometry().left() + screen.geometry().width(),
