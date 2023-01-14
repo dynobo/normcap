@@ -113,7 +113,7 @@ class Screen:
 
     is_primary: bool
     device_pixel_ratio: float
-    geometry: Rect
+    rect: Rect
     index: int
 
     screenshot: Optional[QtGui.QImage] = None
@@ -121,12 +121,12 @@ class Screen:
     @property
     def width(self) -> int:
         """Get screen width."""
-        return self.geometry.width
+        return self.rect.width
 
     @property
     def height(self) -> int:
         """Get screen height."""
-        return self.geometry.height
+        return self.rect.height
 
 
 @dataclass()

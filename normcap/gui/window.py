@@ -77,12 +77,12 @@ class Window(QtWidgets.QMainWindow):
         client itself can't do this. However, there are DE dependent workarounds.
         """
         self.setFocus()
-        screen_geometry = self.tray.screens[self.screen_idx].geometry
-        logger.debug("Move window %s to position  %s", self.screen_idx, screen_geometry)
+        screen_rect = self.tray.screens[self.screen_idx].rect
+        logger.debug("Move window %s to position  %s", self.screen_idx, screen_rect)
         if system_info.desktop_environment() == DesktopEnvironment.GNOME:
-            utils.move_active_window_to_position_on_gnome(screen_geometry)
+            utils.move_active_window_to_position_on_gnome(screen_rect)
         elif system_info.desktop_environment() == DesktopEnvironment.KDE:
-            utils.move_active_window_to_position_on_kde(screen_geometry)
+            utils.move_active_window_to_position_on_kde(screen_rect)
         self.is_positioned = True
 
     # TODO: Shouldn't be in window, but in tray
@@ -116,18 +116,12 @@ class Window(QtWidgets.QMainWindow):
         self.setFocusPolicy(QtGui.Qt.StrongFocus)
 
         # Moving window to corresponding monitor
-        screen_geometry = self.tray.screens[self.screen_idx].geometry
-        self.setGeometry(
-            screen_geometry.left,
-            screen_geometry.top,
-            screen_geometry.width,
-            screen_geometry.height,
-        )
+        self.setGeometry(*self.tray.screens[self.screen_idx].rect.geometry)
 
         # On unity, setting min/max window size breaks fullscreen.
         if system_info.desktop_environment() != DesktopEnvironment.UNITY:
-            self.setMinimumSize(QtCore.QSize(*screen_geometry.size))
-            self.setMaximumSize(QtCore.QSize(*screen_geometry.size))
+            self.setMinimumSize(self.geometry().size())
+            self.setMaximumSize(self.geometry().size())
 
         self.showFullScreen()
 
