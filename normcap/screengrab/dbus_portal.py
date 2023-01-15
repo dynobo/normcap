@@ -2,6 +2,7 @@
 
 import logging
 import random
+from typing import Optional
 from urllib.parse import urlparse
 
 from PySide6 import QtCore, QtDBus, QtGui
@@ -32,6 +33,12 @@ class OrgFreedesktopPortalRequestInterface(QtDBus.QDBusAbstractInterface):
 
 class OrgFreedesktopPortalScreenshot(QtCore.QObject):
     on_response = QtCore.Signal(str)
+
+    def __init__(
+        self, parent: Optional[QtCore.QObject] = None, interactive: bool = False
+    ) -> None:
+        super().__init__(parent)
+        self.interactive = interactive
 
     def grab_full_desktop(self) -> None:
         bus = QtDBus.QDBusConnection.sessionBus()
