@@ -54,7 +54,7 @@ def main() -> None:
     app.setQuitOnLastWindowClosed(False)
 
     tray = SystemTray(app, vars(args))
-    tray.setVisible(True)
+    tray.show()
 
     sys.exit(app.exec())
 
