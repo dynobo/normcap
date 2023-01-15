@@ -1,3 +1,4 @@
+import sys
 from collections.abc import Generator
 from pathlib import Path
 
@@ -12,6 +13,17 @@ from normcap.utils import create_argparser
 
 def pytest_configure(config):
     config.addinivalue_line("markers", "skip_on_gh: do not run during CI/CD on github")
+
+
+@pytest.fixture()
+def dbus_portal():
+    try:
+        from normcap.screengrab import dbus_portal
+
+        return dbus_portal
+    except ImportError as e:
+        if sys.platform != "linux":
+            pytest.xfail(f"Import error: {e}")
 
 
 @pytest.fixture()
