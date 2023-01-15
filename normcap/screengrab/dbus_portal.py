@@ -12,8 +12,6 @@ from PySide6 import QtCore, QtDBus, QtGui, QtWidgets
 from normcap.screengrab import ScreenshotRequestError, ScreenshotResponseError
 from normcap.screengrab.utils import split_full_desktop_to_screens
 
-# FIXME: Not working with Gnome 43 in FlatPak?
-
 logger = logging.getLogger(__name__)
 
 TIMEOUT_SECONDS = 10
