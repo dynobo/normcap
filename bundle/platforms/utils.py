@@ -101,6 +101,7 @@ def build_wl_clipboard(self, app_packages_path) -> None:  # noqa: ANN001
 
     This function is patched into briefcase source!
     """
+    self.subprocess.run("rm -rf wl-clipboard")
     self.subprocess.run(
         "git clone https://github.com/bugaevc/wl-clipboard.git".split(),
         check=True,
