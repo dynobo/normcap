@@ -65,6 +65,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         )
         if not (
             isinstance(result, QtDBus.QDBusMessage)
+            and result.arguments()
             and isinstance(result.arguments()[0], QtDBus.QDBusObjectPath)
         ):
             raise ScreenshotRequestError("No object path received from xdg-portal.")
