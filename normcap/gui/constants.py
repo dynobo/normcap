@@ -4,9 +4,6 @@ from normcap.gui.models import Urls
 
 UPDATE_CHECK_INTERVAL_DAYS = 7
 
-DESCRIPTION = (
-    "OCR-powered screen-capture tool to capture information instead of images."
-)
 
 MESSAGE_LANGUAGES = (
     "You are not using the prebuild package version of NormCap. "
@@ -22,8 +19,6 @@ URLS = Urls(
     issues="https://github.com/dynobo/normcap/issues",
     faqs="https://dynobo.github.io/normcap/#faqs",
     website="https://dynobo.github.io/normcap",
-    xcb_error="https://github.com/dynobo/normcap/blob/main/FAQ.md"
-    + "#linux-could-not-load-the-qt-platform-plugin-xcb",
 )
 
 TESSDATA_REPO = "https://github.com/tesseract-ocr/tessdata_fast"

@@ -44,7 +44,6 @@ class Urls:
     issues: str
     website: str
     faqs: str
-    xcb_error: str
 
     @property
     def releases_atom(self) -> str:
