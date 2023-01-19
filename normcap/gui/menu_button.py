@@ -119,8 +119,6 @@ class MenuButton(QtWidgets.QToolButton):
         self._add_mode_section(menu)
         menu.addSeparator()
         self._add_title(menu, "Languages")
-        # TODO: Remove! Used for LanguageManager Debug
-        # system_info.is_briefcase_package = lambda: True
         languages = ocr.utils.get_tesseract_languages(
             tesseract_cmd=system_info.get_tesseract_path(),
             tessdata_path=system_info.get_tessdata_path(),
@@ -144,6 +142,7 @@ class MenuButton(QtWidgets.QToolButton):
         action.setFont(self.title_font)
         menu.addAction(action)
 
+    @QtCore.Slot(QtGui.QAction)
     def _on_item_click(self, action: QtGui.QAction) -> None:
         action_name = action.objectName()
         group = action.actionGroup()
