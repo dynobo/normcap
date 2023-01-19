@@ -5,7 +5,7 @@ import re
 from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__
-from normcap.gui.constants import URLS
+from normcap.gui.constants import INFO_UPDATE_GITHUB, INFO_UPDATE_PIP, URLS
 from normcap.gui.downloader import Downloader
 from normcap.gui.utils import get_icon, set_cursor
 
@@ -114,23 +114,9 @@ class UpdateChecker(QtCore.QObject):
     def _show_update_message(self, new_version: str) -> None:
         """Show dialog informing about available update."""
         text = f"<b>NormCap v{new_version} is available.</b> (You have v{__version__})"
-        if self.packaged:
-            # TODO: Move longer strings to contants module
-            info_text = (
-                "You can download the new version for your operating system from "
-                "GitHub.\n\n"
-                "Do you want to visit the release website now?"
-            )
-            update_url = URLS.releases
-        else:
-            info_text = (
-                "You should be able to upgrade from command line with "
-                "'pip install normcap --upgrade'.\n\n"
-                "Do you want to view the changelog on github?"
-            )
-            update_url = URLS.changelog
-
         self.message_box.setText(text)
+
+        info_text = INFO_UPDATE_GITHUB if self.packaged else INFO_UPDATE_PIP
         self.message_box.setInformativeText(info_text)
 
         set_cursor(QtCore.Qt.CursorShape.ArrowCursor)
@@ -138,6 +124,7 @@ class UpdateChecker(QtCore.QObject):
         set_cursor(QtCore.Qt.CursorShape.CrossCursor)
 
         if choice == 1024:
+            update_url = URLS.releases if self.packaged else URLS.changelog
             self.com.on_click_get_new_version.emit(update_url)
 
     def check(self) -> None:

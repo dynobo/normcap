@@ -4,6 +4,15 @@ from normcap.gui.models import Urls
 
 UPDATE_CHECK_INTERVAL_DAYS = 7
 
+INFO_UPDATE_GITHUB = (
+    "You can download the new version for your operating system from GitHub.\n\n"
+    "Do you want to visit the release website now?"
+)
+
+INFO_UPDATE_PIP = (
+    "You should upgrade from command line with 'pip install normcap --upgrade'.\n\n"
+    "Do you want to view the changelog on github?"
+)
 
 MESSAGE_LANGUAGES = (
     "You are not using the prebuild package version of NormCap. "
