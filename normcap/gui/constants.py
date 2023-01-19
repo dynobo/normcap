@@ -1,6 +1,6 @@
 """Global constants."""
 
-from normcap.gui.models import Setting, Urls
+from normcap.gui.models import Urls
 
 UPDATE_CHECK_INTERVAL_DAYS = 7
 
@@ -24,89 +24,6 @@ URLS = Urls(
     website="https://dynobo.github.io/normcap",
     xcb_error="https://github.com/dynobo/normcap/blob/main/FAQ.md"
     + "#linux-could-not-load-the-qt-platform-plugin-xcb",
-)
-
-DEFAULT_SETTINGS = (
-    Setting(
-        key="color",
-        flag="c",
-        type_=str,
-        value="#FF2E88",
-        help="Set primary color for UI, e.g. '#FF2E88'",
-        choices=None,
-        cli_arg=True,
-        nargs=None,
-    ),
-    Setting(
-        key="language",
-        flag="l",
-        type_=str,
-        value="eng",
-        help="Set language(s) for text recognition, e.g. '-l eng' or '-l eng deu'",
-        choices=None,
-        cli_arg=True,
-        nargs="+",
-    ),
-    Setting(
-        key="mode",
-        flag="m",
-        type_=str,
-        value="parse",
-        help="Set capture mode",
-        choices=("raw", "parse"),
-        cli_arg=True,
-        nargs=None,
-    ),
-    Setting(
-        key="notification",
-        flag="n",
-        type_=bool,
-        value=True,
-        help="Disable or enable notification after ocr detection",
-        choices=(True, False),
-        cli_arg=True,
-        nargs=None,
-    ),
-    Setting(
-        key="tray",
-        flag="t",
-        type_=bool,
-        value=False,
-        help="Disable or enable system tray",
-        choices=(True, False),
-        cli_arg=True,
-        nargs=None,
-    ),
-    Setting(
-        key="update",
-        flag="u",
-        type_=bool,
-        value=False,
-        help="Disable or enable check for updates",
-        choices=(True, False),
-        cli_arg=True,
-        nargs=None,
-    ),
-    Setting(
-        key="version",
-        flag="c",
-        type_=str,
-        value="0.0.0",
-        help="NormCap version number",
-        choices=None,
-        cli_arg=False,
-        nargs=None,
-    ),
-    Setting(
-        key="last-update-check",
-        flag="d",
-        type_=str,
-        value="0",
-        help="Date of last successful update check in format yyyy-mm-dd",
-        choices=None,
-        cli_arg=False,
-        nargs=None,
-    ),
 )
 
 TESSDATA_REPO = "https://github.com/tesseract-ocr/tessdata_fast"
