@@ -13,15 +13,26 @@ from typing import Optional
 from PySide6 import QtCore
 
 from normcap.gui import system_info
-from normcap.gui.constants import DESCRIPTION, URLS
 from normcap.gui.settings import DEFAULT_SETTINGS
 
 logger = logging.getLogger("normcap")
 
 
+_ISSUES_URLS = "https://github.com/dynobo/normcap/issues"
+_XCB_ERROR_URL = (
+    "https://github.com/dynobo/normcap/blob/main/FAQ.md"
+    + "#linux-could-not-load-the-qt-platform-plugin-xcb",
+)
+
+
 def create_argparser() -> argparse.ArgumentParser:
     """Parse command line arguments."""
-    parser = argparse.ArgumentParser(prog="normcap", description=DESCRIPTION)
+    parser = argparse.ArgumentParser(
+        prog="normcap",
+        description=(
+            "OCR-powered screen-capture tool to capture information instead of images."
+        ),
+    )
 
     for setting in DEFAULT_SETTINGS:
         if not setting.cli_arg:
@@ -177,7 +188,7 @@ def hook_exceptions(
             exc_info=(exc_type, exc_value, exc_traceback),
         )
 
-    logger.critical("Please open an issue with the output above on %s", URLS.issues)
+    logger.critical("Please open an issue with the output above on %s", _ISSUES_URLS)
     sys.exit(1)
 
 
@@ -201,8 +212,8 @@ def qt_log_wrapper(
         logger.debug("[QT] %s - %s", level, msg)
 
     if ("xcb" in msg) and ("it was found" in msg):
-        logger.error("Try solving the problem as described here: %s", URLS.xcb_error)
-        logger.error("If that doesn't help, please open an issue: %s", URLS.issues)
+        logger.error("Try solving the problem as described here: %s", _XCB_ERROR_URL)
+        logger.error("If that doesn't help, please open an issue: %s", _ISSUES_URLS)
 
 
 def copy_traineddata_files(target_path: Optional[os.PathLike]) -> None:
