@@ -1,15 +1,15 @@
 """Window for managing downloaded language files."""
 
 import logging
-import math
 from functools import partial
 from pathlib import Path
 from typing import Optional, Union
 
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from normcap.gui import constants, system_info, utils
 from normcap.gui.downloader import Downloader
+from normcap.gui.loading_indicator import LoadingIndicator
 
 logger = logging.getLogger(__name__)
 
@@ -101,81 +101,6 @@ class LanguageModel(QtCore.QAbstractTableModel):
 
     def columnCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802
         return len(self.languages[0]) if self.languages else 0
-
-
-class LoadingIndicator(QtWidgets.QWidget):
-    def __init__(
-        self,
-        parent: Optional[QtWidgets.QWidget] = None,
-        size: int = 128,
-        center_on_parent: bool = True,
-    ) -> None:
-        super().__init__(parent)
-        self.setVisible(False)
-
-        self.indicator_size = size
-
-        self.dots = 9
-        self.dot_size_factor = 1.6
-        self.max_opacity = 200
-        self.framerate = 80
-        self.counter = 0
-        self.timer = None
-
-        self.radius = int(self.indicator_size / self.dots * self.dot_size_factor)
-        self.opacities = [
-            int((self.max_opacity / self.dots) * i) for i in range(self.dots)
-        ][::-1]
-
-        self.setMinimumSize(QtCore.QSize(self.indicator_size, self.indicator_size))
-
-        if parent and center_on_parent:
-            self.move(
-                QtCore.QPoint(
-                    int((parent.width() - self.indicator_size) / 2),
-                    int((parent.height() - self.indicator_size) / 2),
-                )
-            )
-
-    def paintEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
-        painter = QtGui.QPainter()
-        painter.begin(self)
-        painter.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
-        painter.setPen(QtGui.QPen(QtCore.Qt.PenStyle.NoPen))
-        for i in range(self.dots):
-            opacity = self.opacities[(self.counter + i) % self.dots]
-            painter.setBrush(QtGui.QBrush(QtGui.QColor(255, 46, 136, opacity)))
-            painter.drawEllipse(
-                int(
-                    self.width() / 2
-                    + (self.width() / 2 - self.radius)
-                    * math.cos(2 * math.pi * i / self.dots)
-                    - self.radius / 2
-                ),
-                int(
-                    self.height() / 2
-                    + (self.width() / 2 - self.radius)
-                    * math.sin(2 * math.pi * i / self.dots)
-                    - self.radius / 2
-                ),
-                self.radius,
-                self.radius,
-            )
-        painter.end()
-
-    def is_active(self, value: bool) -> None:
-        if value:
-            self.setVisible(True)
-            self.timer = self.startTimer(self.framerate)
-        else:
-            if self.timer:
-                self.killTimer(self.timer)
-                self.timer = None
-            self.setVisible(False)
-
-    def timerEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
-        self.counter = self.counter + 1 if self.counter < self.dots - 1 else 0
-        self.update()
 
 
 class Communicate(QtCore.QObject):
@@ -310,4 +235,4 @@ class LanguageManager(QtWidgets.QDialog):
     def _set_in_progress(self, value: bool) -> None:
         self.available_layout.view.setEnabled(not value)
         self.installed_layout.view.setEnabled(not value)
-        self.loading_indicator.is_active(value)
+        self.loading_indicator.set_active(value)
