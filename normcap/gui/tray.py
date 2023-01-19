@@ -28,18 +28,18 @@ logger = logging.getLogger(__name__)
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
-    on_tray_menu_capture_clicked = QtCore.Signal()
-    on_quit = QtCore.Signal()
-    on_ocr_performed = QtCore.Signal()
-    on_copied_to_clipboard = QtCore.Signal()
-    on_send_notification = QtCore.Signal(Capture)
-    on_window_positioned = QtCore.Signal()
-    on_open_url_and_hide = QtCore.Signal(str)
     on_close_or_exit = QtCore.Signal(str)
-    on_region_selected = QtCore.Signal(Rect)
+    on_copied_to_clipboard = QtCore.Signal()
     on_image_cropped = QtCore.Signal()
-    on_screenshots_updated = QtCore.Signal()
     on_manage_languages = QtCore.Signal()
+    on_ocr_performed = QtCore.Signal()
+    on_open_url_and_hide = QtCore.Signal(str)
+    on_quit = QtCore.Signal()
+    on_region_selected = QtCore.Signal(Rect)
+    on_screenshots_updated = QtCore.Signal()
+    on_send_notification = QtCore.Signal(Capture)
+    on_tray_menu_capture_clicked = QtCore.Signal()
+    on_window_positioned = QtCore.Signal()
 
 
 class SystemTray(QtWidgets.QSystemTrayIcon):
@@ -109,6 +109,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _set_tray_icon(self) -> None:
         self.setIcon(utils.get_icon("tool-magic-symbolic"))
 
+    @QtCore.Slot()
     def _color_tray_icon(self) -> None:
         if sizes := self.icon().availableSizes():
             pixmap = self.icon().pixmap(sizes[-1])
@@ -137,6 +138,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
         self.com.on_manage_languages.connect(self._open_language_manager_and_hide)
 
+    @QtCore.Slot(QtWidgets.QSystemTrayIcon.ActivationReason)
     def _handle_tray_click(
         self, reason: QtWidgets.QSystemTrayIcon.ActivationReason
     ) -> None:
@@ -205,6 +207,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.setContextMenu(menu)
 
+    @QtCore.Slot()
     def _show_windows(self) -> None:
         """Initialize child windows with method depending on system."""
         if not system_info.display_manager_is_wayland():
@@ -262,6 +265,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     # OCR Functionality #
     #####################
 
+    @QtCore.Slot(Rect)
     def _crop_image(self, grab_info: tuple[Rect, int]) -> None:
         """Crop image to selected region."""
         logger.info("Crop image to selected region %s", grab_info[0].points)
@@ -289,6 +293,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         image.save(buffer, "PNG")  # type:ignore
         return Image.open(io.BytesIO(buffer.data()))
 
+    @QtCore.Slot()
     def _capture_to_ocr(self) -> None:
         """Perform content recognition on grabed image."""
         if self.capture.image_area < 25:
@@ -321,22 +326,28 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     # Helper                #
     #########################
 
+    @QtCore.Slot(str)
     def _open_url_and_hide(self, url: str) -> None:
         """Open url in default browser, then hide to tray or exit."""
         logger.debug("Open %s", url)
         QtGui.QDesktopServices.openUrl(url)
         self.com.on_close_or_exit.emit("opened web browser")
 
+    @QtCore.Slot()
     def _open_language_manager_and_hide(self) -> None:
         """Open url in default browser, then hide to tray or exit."""
         logger.debug("Loading language manager...")
-        self.language_window = LanguageManager(self.windows[0])
+        self.language_window = LanguageManager(
+            tessdata_path=system_info.config_directory() / "tessdata",
+            parent=self.windows[0],
+        )
         self.language_window.com.on_open_url.connect(self._open_url_and_hide)
         self.language_window.com.on_change_installed_languages.connect(
             self._update_settings_menu
         )
         self.language_window.show()
 
+    @QtCore.Slot()
     def _copy_to_clipboard(self) -> None:
         """Copy results to clipboard."""
         # Signal is only temporarily connected to avoid being triggered
@@ -345,12 +356,14 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.copy_to_clipboard(self.capture.ocr_text)
         self.com.on_copied_to_clipboard.emit()
 
+    @QtCore.Slot()
     def _notify_or_close(self) -> None:
         if self.settings.value("notification", type=bool):
             self.com.on_send_notification.emit(self.capture)
         else:
             self.com.on_close_or_exit.emit("detection completed")
 
+    @QtCore.Slot()
     def _close_windows(self) -> None:
         """Hide all windows of normcap."""
         logger.debug("Hide %s window(s)", len(self.windows))
@@ -359,6 +372,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             window.close()
         self.windows = {}
 
+    @QtCore.Slot(str)
     def _close_or_exit(self, reason: str) -> None:
         if self.settings.value("tray", type=bool):
             self._close_windows()

@@ -6,7 +6,7 @@ from typing import Optional, Union
 
 from PySide6 import QtCore, QtWidgets
 
-from normcap.gui import constants, system_info, utils
+from normcap.gui import constants, utils
 from normcap.gui.downloader import Downloader
 from normcap.gui.loading_indicator import LoadingIndicator
 
@@ -105,14 +105,16 @@ class Communicate(QtCore.QObject):
 
 
 class LanguageManager(QtWidgets.QDialog):
-    def __init__(self, parent: Optional[QtWidgets.QWidget] = None) -> None:
+    def __init__(
+        self, tessdata_path: Path, parent: Optional[QtWidgets.QWidget] = None
+    ) -> None:
         super().__init__(parent)
 
         self.setModal(True)
         self.setWindowTitle("Manage Languages (experimental)")
         self.setMinimumSize(800, 600)
 
-        self.tessdata_path = system_info.config_directory() / "tessdata"
+        self.tessdata_path = tessdata_path
 
         self.com = Communicate()
         self.downloader = Downloader()
@@ -226,4 +228,4 @@ class LanguageManager(QtWidgets.QDialog):
     def _set_in_progress(self, value: bool) -> None:
         self.available_layout.view.setEnabled(not value)
         self.installed_layout.view.setEnabled(not value)
-        self.loading_indicator.set_active(value)
+        self.loading_indicator.setVisible(value)

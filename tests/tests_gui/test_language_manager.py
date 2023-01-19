@@ -9,11 +9,8 @@ from normcap.gui import language_manager
 def test_language_manager_download(monkeypatch, tmp_path, qtbot: QtBot):
     Path(tmp_path / "tessdata").mkdir()
     Path(tmp_path / "tessdata" / "eng.traineddata").touch()
-    monkeypatch.setattr(
-        language_manager.system_info, "config_directory", lambda: tmp_path
-    )
 
-    window = language_manager.LanguageManager()
+    window = language_manager.LanguageManager(tessdata_path=tmp_path / "tessdata")
     window.show()
     qtbot.add_widget(window)
 

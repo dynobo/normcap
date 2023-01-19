@@ -74,11 +74,11 @@ class LoadingIndicator(QtWidgets.QWidget):
             )
         painter.end()
 
-    def set_active(self, value: bool) -> None:
-        self.setVisible(value)
-        if value:
-            self.timer = self.startTimer(self.framerate)
-        elif self.timer:
+    def showEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
+        self.timer = self.startTimer(self.framerate)
+
+    def hideEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
+        if self.timer:
             self.killTimer(self.timer)
             self.timer = None
 
