@@ -13,7 +13,8 @@ from typing import Optional
 from PySide6 import QtCore
 
 from normcap.gui import system_info
-from normcap.gui.constants import DEFAULT_SETTINGS, DESCRIPTION, URLS
+from normcap.gui.constants import DESCRIPTION, URLS
+from normcap.gui.settings import DEFAULT_SETTINGS
 
 logger = logging.getLogger("normcap")
 
