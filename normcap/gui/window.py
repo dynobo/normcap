@@ -223,6 +223,11 @@ class UiLayerLabel(QtWidgets.QLabel):
 
     def paintEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802
         """Draw screenshot and selection rectangle on window."""
+        super().paintEvent(event)
+
+        if not (self.parent().is_selecting or self.draw_debug_infos):
+            return
+
         painter = QtGui.QPainter(self)
         rect = QtCore.QRect(self.parent().selection_start, self.parent().selection_end)
         rect = rect.normalized()
@@ -244,4 +249,3 @@ class UiLayerLabel(QtWidgets.QLabel):
         mode_indicator.paint(painter, rect.right() - 24, rect.top() - 30, 24, 24)
 
         painter.end()
-        super().paintEvent(event)
