@@ -6,12 +6,14 @@ from normcap.gui.downloader import Downloader
 
 @pytest.mark.skip_on_gh
 def test_downloader_retrieves_website(qtbot: QtBot):
+    test_url = "https://www.google.com"
     downloader = Downloader()
     with qtbot.wait_signal(downloader.com.on_download_finished) as result:
-        downloader.get("https://www.google.com")
+        downloader.get(test_url)
 
-    raw = result.args[0]
+    raw, url = result.args
     assert isinstance(raw, bytes)
+    assert url == test_url
 
     text = raw.decode(encoding="utf-8", errors="ignore")
     assert "</html>" in text.lower()

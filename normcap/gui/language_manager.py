@@ -1,7 +1,6 @@
 """Window for managing downloaded language files."""
 
 import logging
-from functools import partial
 from pathlib import Path
 from typing import Optional, Union
 
@@ -17,9 +16,7 @@ logger = logging.getLogger(__name__)
 class IconLabel(QtWidgets.QWidget):
     """Label with icon in front."""
 
-    IconSize = QtCore.QSize(16, 16)
-
-    def __init__(self, icon: str, text: str, final_stretch: bool = True) -> None:
+    def __init__(self, icon: str, text: str) -> None:
         super().__init__()
 
         layout = QtWidgets.QHBoxLayout()
@@ -27,14 +24,12 @@ class IconLabel(QtWidgets.QWidget):
 
         icon_label = QtWidgets.QLabel()
         pixmapi = getattr(QtWidgets.QStyle, icon)
-        icon_label.setPixmap(self.style().standardIcon(pixmapi).pixmap(self.IconSize))
+        icon_label.setPixmap(self.style().standardIcon(pixmapi).pixmap(16, 16))
 
         layout.addWidget(icon_label)
         layout.addSpacing(2)
         layout.addWidget(QtWidgets.QLabel(text))
-
-        if final_stretch:
-            layout.addStretch()
+        layout.addStretch()
 
 
 class MinimalTableView(QtWidgets.QTableView):
@@ -65,7 +60,6 @@ class LanguageLayout(QtWidgets.QVBoxLayout):
 
     def __init__(
         self,
-        model: QtCore.QAbstractTableModel,
         label_text: str,
         label_icon: str,
         button_text: str,
@@ -75,7 +69,7 @@ class LanguageLayout(QtWidgets.QVBoxLayout):
         label_text = IconLabel(label_icon, label_text)
         self.addWidget(label_text)
 
-        self.model = model
+        self.model = LanguageModel()
         self.view = MinimalTableView(self.model)
         self.addWidget(self.view)
 
@@ -115,29 +109,29 @@ class LanguageManager(QtWidgets.QDialog):
         super().__init__(parent)
 
         self.setModal(True)
-        self.setWindowTitle("Manage Languages")
-        self.setMinimumSize(QtCore.QSize(800, 600))
+        self.setWindowTitle("Manage Languages (experimental)")
+        self.setMinimumSize(800, 600)
+
+        self.tessdata_path = system_info.config_directory() / "tessdata"
 
         self.com = Communicate()
-        self.tessdata_path = system_info.config_directory() / "tessdata"
-        self.all_languages = constants.LANGUAGES
         self.downloader = Downloader()
+        self.downloader.com.on_download_failed.connect(self._on_download_error)
+        self.downloader.com.on_download_finished.connect(self._on_download_finished)
 
         self.installed_layout = LanguageLayout(
-            model=LanguageModel(),
             label_icon="SP_DialogApplyButton",
             label_text="Installed:",
-            button_text="Delete",
             button_icon="SP_DialogDiscardButton",
+            button_text="Delete",
         )
         self.installed_layout.button.pressed.connect(self._delete)
 
         self.available_layout = LanguageLayout(
-            model=LanguageModel(),
             label_icon="SP_ArrowDown",
             label_text="Available:",
-            button_text="Download",
             button_icon="SP_ArrowDown",
+            button_text="Download",
         )
         self.available_layout.button.pressed.connect(self._download)
 
@@ -168,17 +162,33 @@ class LanguageManager(QtWidgets.QDialog):
         self._update_models()
         self.close_button.setFocus()
 
+    @QtCore.Slot(str, str)
+    def _on_download_error(self, reason: str, url: str) -> None:
+        self._set_in_progress(False)
+        QtWidgets.QMessageBox.critical(
+            self, "Error", f"<b>Language download failed!</b><br><br>{reason}"
+        )
+
+    @QtCore.Slot(bytes, str)
+    def _on_download_finished(self, data: bytes, url: str) -> None:
+        """Save language to tessdata folder."""
+        file_name = url.split("/")[-1]
+        with open(self.tessdata_path / file_name, "wb") as fh:
+            fh.write(data)
+        self._update_models()
+        self._set_in_progress(False)
+
     def _update_models(self) -> None:
         installed = self._get_installed_languages()
         self.installed_layout.model.languages = [
-            lang for lang in self.all_languages if lang[0] in installed
+            lang for lang in constants.LANGUAGES if lang[0] in installed
         ]
         self.available_layout.model.languages = [
-            lang for lang in self.all_languages if lang[0] not in installed
+            lang for lang in constants.LANGUAGES if lang[0] not in installed
         ]
         self.installed_layout.model.layoutChanged.emit()
-        self.available_layout.model.layoutChanged.emit()
         self.installed_layout.view.clearSelection()
+        self.available_layout.model.layoutChanged.emit()
         self.available_layout.view.clearSelection()
         self.com.on_change_installed_languages.emit(installed)
 
@@ -186,30 +196,13 @@ class LanguageManager(QtWidgets.QDialog):
         languages = [f.stem for f in self.tessdata_path.glob("*.traineddata")]
         return sorted(languages)
 
-    def _save_language(self, data: bytes, language: str) -> None:
-        with open(self.tessdata_path / f"{language}.traineddata", "wb") as fh:
-            fh.write(data)
-
-        self._update_models()
-        self._set_in_progress(False)
-
     def _download(self) -> None:
         indexes = self.available_layout.view.selectedIndexes()
         if indexes:
             self._set_in_progress(True)
             index = indexes[0]
             language = self.available_layout.model.languages[index.row()][0]
-            save_language_partial = partial(self._save_language, language=language)
-            url = constants.TESSDATA_BASE_URL + language + ".traineddata"
-            self.downloader.com.on_download_finished.connect(save_language_partial)
-            self.downloader.com.on_download_failed.connect(self._on_download_error)
-            self.downloader.get(url)
-
-    def _on_download_error(self, reason: str) -> None:
-        self._set_in_progress(False)
-        QtWidgets.QMessageBox.critical(
-            self, "Error", f"<b>Language download failed!</b><br><br>{reason}"
-        )
+            self.downloader.get(constants.TESSDATA_BASE_URL + language + ".traineddata")
 
     def _delete(self) -> None:
         indexes = self.installed_layout.view.selectedIndexes()
@@ -225,12 +218,10 @@ class LanguageManager(QtWidgets.QDialog):
             )
             return
 
-        self._set_in_progress(True)
         index = indexes[0]
         language = self.installed_layout.model.languages[index.row()][0]
         Path(self.tessdata_path / f"{language}.traineddata").unlink()
         self._update_models()
-        self._set_in_progress(False)
 
     def _set_in_progress(self, value: bool) -> None:
         self.available_layout.view.setEnabled(not value)
