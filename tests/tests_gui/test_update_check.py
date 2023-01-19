@@ -53,7 +53,7 @@ def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
     with qtbot.waitSignal(
         checker.com.on_version_checked, raising=False, timeout=4000
     ) as result:
-        checker._parse_version(text)
+        checker._on_download_finished(text, "some url")
 
     assert not result.signal_triggered
     assert "ERROR" in caplog.text

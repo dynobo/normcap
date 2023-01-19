@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
-    on_download_finished = QtCore.Signal(bytes)
-    on_download_failed = QtCore.Signal(str)
+    on_download_finished = QtCore.Signal(bytes, str)  # response, url
+    on_download_failed = QtCore.Signal(str, str)  # msg, url
 
 
 class Worker(QtCore.QRunnable):
@@ -31,9 +31,9 @@ class Worker(QtCore.QRunnable):
         except Exception as e:
             msg = f"Exception '{e}' during download of '{self.url}'"
             logger.error(msg)
-            self.com.on_download_failed.emit(msg)
+            self.com.on_download_failed.emit(msg, self.url)
         else:
-            self.com.on_download_finished.emit(raw_data)
+            self.com.on_download_finished.emit(raw_data, self.url)
 
 
 class Downloader(QtCore.QObject):
