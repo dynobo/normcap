@@ -7,13 +7,14 @@ import sys
 import tempfile
 import time
 from functools import partial
+from pathlib import Path
 from typing import Any, Iterable, NoReturn
 
 from PIL import Image
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__, clipboard, ocr, screengrab
-from normcap.gui import resources, system_info, utils
+from normcap.gui import resources, system_info
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
@@ -28,6 +29,19 @@ if not resources.qt_resource_data:
 logger = logging.getLogger(__name__)
 
 UPDATE_CHECK_INTERVAL_DAYS = 7
+
+
+def _save_image_in_tempfolder(
+    image: Image.Image, postfix: str = "", log_level: int = logging.DEBUG
+) -> None:
+    """For debugging it can be useful to store the cropped image."""
+    if logger.getEffectiveLevel() == log_level:
+        file_dir = Path(tempfile.gettempdir()) / "normcap"
+        file_dir.mkdir(exist_ok=True)
+        now = datetime.datetime.now()
+        file_name = f"{now:%Y-%m-%d_%H-%M-%S_%f}{postfix}.png"
+        image.save(str(file_dir / file_name))
+        logger.debug("Store debug image in: %s", file_dir / file_name)
 
 
 class Communicate(QtCore.QObject):
@@ -193,7 +207,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             return
 
         for idx, screenshot in enumerate(screens):
-            utils.save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
+            _save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
             self.screens[idx].screenshot = screenshot
 
         self.com.on_screenshots_updated.emit()
@@ -304,7 +318,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.capture.screen = self.screens[screen_idx]
         self.capture.image = screenshot.copy(QtCore.QRect(*rect.geometry))
 
-        utils.save_image_in_tempfolder(self.capture.image, postfix="_cropped")
+        _save_image_in_tempfolder(self.capture.image, postfix="_cropped")
 
         self.com.on_image_cropped.emit()
 
@@ -338,7 +352,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             resize_factor=3.2,
             padding_size=80,
         )
-        utils.save_image_in_tempfolder(ocr_result.image, postfix="_enhanced")
+        _save_image_in_tempfolder(ocr_result.image, postfix="_enhanced")
 
         self.capture.ocr_text = ocr_result.text
         self.capture.ocr_applied_magic = ocr_result.best_scored_magic
