@@ -76,6 +76,16 @@ repos:
         language: system
         entry:
           poetry run pydeps normcap --max-bacon=2 --cluster --max-cluster-size=1
-          --no-show -o=dependency_graph.png -T=png
+          --no-show -o=pydeps.png -T=png
+        types: [python]
+        pass_filenames: false
+
+      - id: pydeps-internal
+        name: pydeps-internal
+        stages: [commit]
+        language: system
+        entry:
+          poetry run pydeps normcap --max-bacon=1 --cluster --max-cluster-size=1
+          --no-show -o=pydeps_internal.png -T=png
         types: [python]
         pass_filenames: false

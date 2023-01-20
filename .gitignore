@@ -24,7 +24,8 @@ tesseract/
 *.dmg
 .DS_Store
 tesseract.zip
-dependency_graph.png
+pydeps.png
+pydeps_internal.png
 result.json
 result.html
 cov.xml
