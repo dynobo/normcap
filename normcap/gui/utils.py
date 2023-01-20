@@ -1,12 +1,8 @@
 """Some utility functions."""
 
-import datetime
 import logging
 import os
 import tempfile
-from pathlib import Path
-
-from PIL import Image
 
 try:
     from PySide6 import QtDBus
@@ -19,19 +15,6 @@ except ImportError:
 from normcap.gui import models
 
 logger = logging.getLogger(__name__)
-
-
-def save_image_in_tempfolder(
-    image: Image.Image, postfix: str = "", log_level: int = logging.DEBUG
-) -> None:
-    """For debugging it can be useful to store the cropped image."""
-    if logger.getEffectiveLevel() == log_level:
-        file_dir = Path(tempfile.gettempdir()) / "normcap"
-        file_dir.mkdir(exist_ok=True)
-        now = datetime.datetime.now()
-        file_name = f"{now:%Y-%m-%d_%H-%M-%S_%f}{postfix}.png"
-        image.save(str(file_dir / file_name))
-        logger.debug("Store debug image in: %s", file_dir / file_name)
 
 
 def move_active_window_to_position_on_gnome(screen_rect: models.Rect) -> None:
