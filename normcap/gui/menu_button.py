@@ -76,14 +76,14 @@ class MenuButton(QtWidgets.QToolButton):
 
     def __init__(
         self,
-        parent: QtWidgets.QMainWindow,
         settings: QtCore.QSettings,
-        has_language_manager: bool = False,
+        language_manager: bool = False,
+        parent: Optional[QtWidgets.QWidget] = None,
     ) -> None:
         super().__init__(parent)
         self.setObjectName("settings_icon")
         self.settings = settings
-        self.has_language_manager = has_language_manager
+        self.has_language_manager = language_manager
 
         self.setCursor(QtCore.Qt.CursorShape.ArrowCursor)
         self.setFixedSize(38, 38)
