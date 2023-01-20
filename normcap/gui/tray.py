@@ -170,11 +170,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             return
 
         interval = datetime.timedelta(days=UPDATE_CHECK_INTERVAL_DAYS)
-        today_minus_interval = f"{datetime.datetime.now() - interval:%Y-%m-%d}"
-        if not (  # TODO: Change
-            str(self.settings.value("last-update-check", type=str))
-            > today_minus_interval
-        ):
+        today_sub_interval = f"{datetime.datetime.now() - interval:%Y-%m-%d}"
+        if str(self.settings.value("last-update-check", type=str)) > today_sub_interval:
             return
 
         checker = UpdateChecker(self, packaged=system_info.is_prebuild_package())
@@ -261,7 +258,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.windows[index] = new_window
 
     def _create_menu_button(self) -> QtWidgets.QLayout:
-        # system_info.is_prebuild_package = lambda: True  # TODO: REMOVE!!!
+        # system_info.is_prebuild_package = lambda: True  # For LanguageManager debug
         settings_menu = MenuButton(
             settings=self.settings,
             language_manager=system_info.is_prebuild_package(),
