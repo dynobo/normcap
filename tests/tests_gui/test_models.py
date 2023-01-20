@@ -9,6 +9,7 @@ def test_rect_properties():
     assert rect.height == 200
     assert rect.points == (10, 20, 110, 220)
     assert rect.geometry == (10, 20, 100, 200)
+    assert rect.size == (100, 200)
     assert "=10" in str(rect)
     assert "=20" in str(rect)
     assert "=110" in str(rect)
