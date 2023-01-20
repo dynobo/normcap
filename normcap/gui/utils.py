@@ -1,7 +1,6 @@
 """Some utility functions."""
 
 import datetime
-import functools
 import logging
 import os
 import tempfile
@@ -9,7 +8,7 @@ from pathlib import Path
 from typing import Optional
 
 from PIL import Image
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 try:
     from PySide6 import QtDBus
@@ -19,7 +18,7 @@ except ImportError:
     HAS_QTDBUS = False
 
 
-from normcap.gui import models, system_info
+from normcap.gui import models
 
 logger = logging.getLogger(__name__)
 
@@ -120,34 +119,6 @@ def move_active_window_to_position_on_kde(screen_rect: models.Rect) -> None:
         logger.warning("Invalid dbus interface on KDE")
 
     os.unlink(script_file.name)
-
-
-def _get_local_icon_path(icon_name: str) -> Optional[Path]:
-    """Probe local resource folder for icon file and return it."""
-    potential_suffixes = ["", ".svg", ".png"]
-    for suffix in potential_suffixes:
-        icon_path = system_info.get_resources_path() / (icon_name + suffix)
-        if icon_path.exists():
-            return icon_path.resolve()
-    return None
-
-
-@functools.cache
-def get_icon(icon_name: str) -> QtGui.QIcon:
-    """Load icon from system or if not available from resources."""
-    # TODO: Simplify, see https://openapplibrary.org/dev-tutorials/qt-icon-themes
-    if QtGui.QIcon.hasThemeIcon(icon_name):
-        return QtGui.QIcon.fromTheme(icon_name)
-
-    if pixmapi := getattr(QtWidgets.QStyle.StandardPixmap, icon_name, None):
-        return QtWidgets.QApplication.style().standardIcon(pixmapi)
-
-    if icon_path := _get_local_icon_path(icon_name):
-        icon = QtGui.QIcon()
-        icon.addFile(str(icon_path))
-        return icon
-
-    raise ValueError(f"Could not find icon '{icon_name}'.")
 
 
 def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None) -> None:

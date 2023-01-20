@@ -5,11 +5,10 @@ import subprocess
 import sys
 import textwrap
 
-from PySide6 import QtCore
+from PySide6 import QtCore, QtGui
 
 from normcap.gui import system_info
 from normcap.gui.models import Capture, CaptureMode
-from normcap.gui.utils import get_icon
 
 logger = logging.getLogger(__name__)
 
@@ -108,6 +107,6 @@ class Notifier(QtCore.QObject):
             - Linux (Fallback in case no notify-send)
         """
         logger.debug("Send notification using QT showMessage.")
-        notification_icon = get_icon("normcap")
+        notification_icon = QtGui.QIcon(":normcap")
         self.parent().show()
         self.parent().showMessage(title, message, notification_icon)

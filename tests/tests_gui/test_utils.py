@@ -4,7 +4,6 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 
-import pytest
 from PySide6 import QtCore, QtGui
 
 from normcap import clipboard
@@ -36,39 +35,6 @@ def test_save_image_in_tempfolder():
 
     png_files = (Path(tempfile.gettempdir()) / "normcap").glob(f"*{test_id}.png")
     assert len(list(png_files)) == 1
-
-
-@pytest.mark.parametrize(
-    "icon_name",
-    (
-        "normcap.png",  # use extension to override system icon
-        "tool-magic-symbolic.png",  # use extension to override system icon
-        "normcap-raw",
-        "normcap-parse",
-        "normcap-settings",
-    ),
-)
-def test_get_icon_custom(qtbot, icon_name):
-    icon = utils.get_icon(icon_name)
-    assert icon.name() == ""
-    assert not icon.isNull()
-
-
-def test_get_icon_default(qtbot):
-    icon = utils.get_icon("SP_DialogApplyButton")
-    assert not icon.isNull()
-
-
-@pytest.mark.skip_on_gh  # No icon themes on github runners available
-def test_get_icon_system(qtbot):
-    icon = utils.get_icon("edit")
-    assert not icon.isNull()
-
-
-def test_get_icon_raise_on_not_existing(qtbot):
-    icon_name = "not-existing-icon"
-    with pytest.raises(ValueError, match=icon_name):
-        _ = utils.get_icon("not-existing-icon")
 
 
 def test_set_cursor():
