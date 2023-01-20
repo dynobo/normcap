@@ -65,7 +65,6 @@ def test_argparser_defaults_are_correct(argparser_defaults):
 
 
 def test_set_environ_for_wayland(monkeypatch):
-
     xcursor_size = os.environ.get("XCURSOR_SIZE", "")
     qt_qpa_platform = os.environ.get("QT_QPA_PLATFORM", "")
 
@@ -100,7 +99,78 @@ def test_set_environ_for_flatpak(monkeypatch):
         assert os.environ.get("LD_PRELOAD", None) is None
 
 
-def test_copy_traineddata_files(tmp_path, monkeypatch):
+def test_copy_traineddata_files_briefcase(tmp_path, monkeypatch):
+    # sourcery skip: extract-method
+    # Create placeholder for traineddata files, if they don't exist
+    monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
+    resource_path = Path(resources.files("normcap.resources"))
+    traineddata_files = list((resource_path / "tessdata").glob("*.traineddata"))
+    if not traineddata_files:
+        (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
+        (resource_path / "tessdata" / "placeholder_2.traineddata").touch()
+
+    try:
+        tessdata_path = tmp_path / "tessdata"
+        traineddatas = list(tessdata_path.glob("*.traineddata"))
+        txts = list(tessdata_path.glob("*.txt"))
+        assert not traineddatas
+        assert not txts
+
+        # Copying without should copy the temporary traineddata files
+        for _ in range(3):
+            utils.copy_traineddata_files(target_path=tessdata_path)
+
+            traineddatas = list(tessdata_path.glob("*.traineddata"))
+            txts = list(tessdata_path.glob("*.txt"))
+            assert traineddatas
+            assert len(txts) == 2
+
+    finally:
+        # Make sure to delete possible placeholder files
+        for f in (resource_path / "tessdata").glob("placeholder_?.traineddata"):
+            f.unlink()
+
+
+def test_copy_traineddata_files_flatpak(tmp_path, monkeypatch):
+    # sourcery skip: extract-method
+    # Create placeholder for traineddata files, if they don't exist
+    monkeypatch.setattr(utils.system_info, "is_flatpak_package", lambda: True)
+    resource_path = Path(resources.files("normcap.resources"))
+    traineddata_files = list((resource_path / "tessdata").glob("*.traineddata"))
+    if not traineddata_files:
+        (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
+        (resource_path / "tessdata" / "placeholder_2.traineddata").touch()
+    try:
+        tessdata_path = tmp_path / "tessdata"
+        traineddatas = list(tessdata_path.glob("*.traineddata"))
+        txts = list(tessdata_path.glob("*.txt"))
+        assert not traineddatas
+        assert not txts
+
+        paths = []
+
+        def _mocked_path(path_str: str):
+            paths.append(path_str)
+            if path_str == "/app/share/tessdata":
+                path_str = resource_path / "tessdata"
+            return Path(path_str)
+
+        monkeypatch.setattr(utils, "Path", _mocked_path)
+        for _ in range(3):
+            utils.copy_traineddata_files(target_path=tessdata_path)
+
+            traineddatas = list(tessdata_path.glob("*.traineddata"))
+            txts = list(tessdata_path.glob("*.txt"))
+            assert traineddatas
+            assert len(txts) == 2
+            assert "/app/share/tessdata" in paths
+    finally:
+        # Make sure to delete possible placeholder files
+        for f in (resource_path / "tessdata").glob("placeholder_?.traineddata"):
+            f.unlink()
+
+
+def test_copy_traineddata_files_not_copying(tmp_path, monkeypatch):
     # sourcery skip: extract-method
     # Create placeholder for traineddata files, if they don't exist
     resource_path = Path(resources.files("normcap.resources"))
@@ -109,21 +179,25 @@ def test_copy_traineddata_files(tmp_path, monkeypatch):
         (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
         (resource_path / "tessdata" / "placeholder_2.traineddata").touch()
 
-    monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
     try:
         tessdata_path = tmp_path / "tessdata"
+
+        # Copying without being flatpak or briefcase should do nothing
+        utils.copy_traineddata_files(target_path=tessdata_path)
+
         traineddatas = list(tessdata_path.glob("*.traineddata"))
         txts = list(tessdata_path.glob("*.txt"))
         assert not traineddatas
         assert not txts
 
-        for _ in range(3):
-            utils.copy_traineddata_files(tessdata_path)
+        # Copying within package but with target_path=None should do nothing
+        monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
+        utils.copy_traineddata_files(target_path=None)
 
-            traineddatas = list(tessdata_path.glob("*.traineddata"))
-            txts = list(tessdata_path.glob("*.txt"))
-            assert traineddatas
-            assert len(txts) == 2
+        traineddatas = list(tessdata_path.glob("*.traineddata"))
+        txts = list(tessdata_path.glob("*.txt"))
+        assert not traineddatas
+        assert not txts
     finally:
         # Make sure to delete possible placeholder files
         for f in (resource_path / "tessdata").glob("placeholder_?.traineddata"):
@@ -145,6 +219,17 @@ def test_qt_log_wrapper(qtlog, caplog):
     assert "should_show_in_logger_only" in caplog.text
     assert "[QT]" in caplog.text
     assert "debug" in caplog.text
+
+
+def test_qt_log_wrapper_silence_opentype_warning(caplog):
+    logger = logging.getLogger(__name__).root
+    logger.setLevel("DEBUG")
+    QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
+
+    QtCore.qDebug("Warning, OpenType support missing for OpenSans")
+
+    assert "[qt]" not in caplog.text.lower()
+    assert "error" not in caplog.text.lower()
 
 
 def test_qt_log_wrapper_no_platform_as_error(caplog):
