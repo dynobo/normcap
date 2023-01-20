@@ -228,6 +228,8 @@ def copy_traineddata_files(target_path: Optional[os.PathLike]) -> None:
         src_path = Path("/app/share/tessdata")
     elif system_info.is_briefcase_package():
         src_path = system_info.get_resources_path() / "tessdata"
+    else:
+        return
 
     target_path.mkdir(parents=True, exist_ok=True)
     for f in src_path.glob("*.*"):
