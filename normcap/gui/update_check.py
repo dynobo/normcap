@@ -7,7 +7,6 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from normcap import __version__
 from normcap.gui.constants import INFO_UPDATE_GITHUB, INFO_UPDATE_PIP, URLS
 from normcap.gui.downloader import Downloader
-from normcap.gui.utils import set_cursor
 
 logger = logging.getLogger(__name__)
 
@@ -119,10 +118,9 @@ class UpdateChecker(QtCore.QObject):
 
         info_text = INFO_UPDATE_GITHUB if self.packaged else INFO_UPDATE_PIP
         self.message_box.setInformativeText(info_text)
+        self.message_box.setCursor(QtCore.Qt.CursorShape.ArrowCursor)
 
-        set_cursor(QtCore.Qt.CursorShape.ArrowCursor)
         choice = self.message_box.exec_()
-        set_cursor(QtCore.Qt.CursorShape.CrossCursor)
 
         if choice == 1024:
             update_url = URLS.releases if self.packaged else URLS.changelog

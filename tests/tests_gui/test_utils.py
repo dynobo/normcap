@@ -4,7 +4,7 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 
-from PySide6 import QtCore, QtGui
+from PySide6 import QtGui
 
 from normcap import clipboard
 from normcap.gui import utils
@@ -35,10 +35,3 @@ def test_save_image_in_tempfolder():
 
     png_files = (Path(tempfile.gettempdir()) / "normcap").glob(f"*{test_id}.png")
     assert len(list(png_files)) == 1
-
-
-def test_set_cursor():
-    # I do not know how to read cursor shape. Therefor I just test that
-    # no exceptions are thrown.
-    utils.set_cursor()
-    utils.set_cursor(QtCore.Qt.CrossCursor)

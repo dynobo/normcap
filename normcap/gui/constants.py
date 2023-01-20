@@ -1,8 +1,6 @@
-"""Global constants."""
+"""Global constant strings."""
 
 from normcap.gui.models import Urls
-
-UPDATE_CHECK_INTERVAL_DAYS = 7
 
 INFO_UPDATE_GITHUB = (
     "You can download the new version for your operating system from GitHub.\n\n"
