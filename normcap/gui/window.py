@@ -5,12 +5,10 @@ in multi display setups).
 """
 
 import logging
-from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.gui import system_info, tray, utils
-from normcap.gui.menu_button import MenuButton
+from normcap.gui import system_info, utils
 from normcap.gui.models import CaptureMode, DesktopEnvironment, Rect
 
 logger = logging.getLogger(__name__)
@@ -18,8 +16,6 @@ logger = logging.getLogger(__name__)
 
 class Window(QtWidgets.QMainWindow):
     """Used for child windows and as base class for MainWindow."""
-
-    settings_menu: Optional[QtWidgets.QToolButton] = None
 
     def __init__(
         self, screen_idx: int, color: str, parent: QtWidgets.QSystemTrayIcon
@@ -30,7 +26,7 @@ class Window(QtWidgets.QMainWindow):
 
         self.screen_idx: int = screen_idx
         self.color: QtGui.QColor = QtGui.QColor(color)
-        self.tray: tray.SystemTray = parent
+        self.tray = parent
         self.is_positioned: bool = False
 
         self.setWindowTitle("NormCap")
@@ -86,25 +82,6 @@ class Window(QtWidgets.QMainWindow):
         elif system_info.desktop_environment() == DesktopEnvironment.KDE:
             utils.move_active_window_to_position_on_kde(screen_rect)
         self.is_positioned = True
-
-    # TODO: Shouldn't be in window, but in tray
-    def create_settings_menu(self, tray: QtWidgets.QSystemTrayIcon) -> None:
-        """Add settings menu to current window."""
-        # TODO: Remove! Used for LanguageManager Debug
-        # system_info.is_prebuild_package = lambda: True
-        self.settings_menu = MenuButton(
-            parent=self,
-            settings=tray.settings,
-            has_language_manager=system_info.is_prebuild_package(),
-        )
-        # TODO: Is this signal chaining relly necessary?
-        self.settings_menu.com.on_open_url.connect(tray.com.on_open_url_and_hide)
-        self.settings_menu.com.on_manage_languages.connect(tray.com.on_manage_languages)
-        self.settings_menu.com.on_close_in_settings.connect(
-            lambda: self.tray.com.on_close_or_exit.emit("clicked close in menu")
-        )
-        self.settings_menu.move(self.width() - self.settings_menu.width() - 26, 26)
-        self.settings_menu.show()
 
     def set_fullscreen(self) -> None:
         """Set window to full screen using platform specific methods."""
@@ -181,9 +158,6 @@ class Window(QtWidgets.QMainWindow):
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802
         """Adjust child widget on resize."""
         self.ui_layer.resize(self.size())
-        # TODO: Should be in menu_button (with signal to parent)
-        if self.settings_menu:
-            self.settings_menu.move(self.width() - self.settings_menu.width() - 26, 26)
         super().resizeEvent(event)
 
     def showEvent(self, event: QtGui.QShowEvent) -> None:  # noqa: N802

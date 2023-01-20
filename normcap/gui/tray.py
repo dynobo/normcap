@@ -16,6 +16,7 @@ from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import system_info, utils
 from normcap.gui.constants import UPDATE_CHECK_INTERVAL_DAYS
 from normcap.gui.language_manager import LanguageManager
+from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.notifier import Notifier
 from normcap.gui.settings import Settings
@@ -230,15 +231,31 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _create_window(self, index: int) -> None:
         """Open a child window for the specified screen."""
         new_window = Window(
-            screen_idx=index,
-            parent=self,
-            color=str(self.settings.value("color")),
+            screen_idx=index, parent=self, color=str(self.settings.value("color"))
         )
         if index == 0:
-            new_window.create_settings_menu(self)
+            new_window.ui_layer.setLayout(self._create_menu_button())
 
         new_window.set_fullscreen()
         self.windows[index] = new_window
+
+    def _create_menu_button(self) -> QtWidgets.QLayout:
+        # system_info.is_prebuild_package = lambda: True  # TODO: REMOVE!!!
+        settings_menu = MenuButton(
+            settings=self.settings,
+            language_manager=system_info.is_prebuild_package(),
+        )
+        settings_menu.com.on_open_url.connect(self.com.on_open_url_and_hide)
+        settings_menu.com.on_manage_languages.connect(self.com.on_manage_languages)
+        settings_menu.com.on_close_in_settings.connect(
+            lambda: self.com.on_close_or_exit.emit("clicked close in menu")
+        )
+        layout = QtWidgets.QGridLayout()
+        layout.setContentsMargins(26, 26, 26, 26)
+        layout.setRowStretch(1, 1)
+        layout.setColumnStretch(0, 1)
+        layout.addWidget(settings_menu, 0, 1)
+        return layout
 
     def _update_settings_menu(self, installed_languages: list[str]) -> None:
         """After Language settings changed, recreate menu button the update menus."""
