@@ -9,24 +9,37 @@ import logging
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.gui import system_info, utils
-from normcap.gui.models import CaptureMode, DesktopEnvironment, Rect
+from normcap.gui.models import CaptureMode, DesktopEnvironment, Rect, Screen
+from normcap.gui.settings import Settings
 
 logger = logging.getLogger(__name__)
+
+
+class Communicate(QtCore.QObject):
+    """Window's communication bus."""
+
+    on_esc_key_pressed = QtCore.Signal()
+    on_region_selected = QtCore.Signal(Rect)
+    on_window_positioned = QtCore.Signal()
 
 
 class Window(QtWidgets.QMainWindow):
     """Used for child windows and as base class for MainWindow."""
 
     def __init__(
-        self, screen_idx: int, color: str, parent: QtWidgets.QSystemTrayIcon
+        self,
+        screen: Screen,
+        settings: Settings,
     ) -> None:
         """Initialize window."""
         super().__init__()
-        logger.debug("Create window for screen %s", screen_idx)
+        logger.debug("Create window for screen %s", screen.index)
 
-        self.screen_idx: int = screen_idx
-        self.color: QtGui.QColor = QtGui.QColor(color)
-        self.tray = parent
+        self.settings = settings
+        self.screen_ = screen
+
+        self.com = Communicate()
+        self.color: QtGui.QColor = QtGui.QColor(str(settings.value("color")))
         self.is_positioned: bool = False
 
         self.setWindowTitle("NormCap")
@@ -44,10 +57,9 @@ class Window(QtWidgets.QMainWindow):
 
     def _get_scale_factor(self) -> float:
         """Calculate scale factor from image and screen dimenensions."""
-        screen = self.tray.screens[self.screen_idx]
-        if not screen.screenshot:
+        if not self.screen_.screenshot:
             raise ValueError("Screenshot image is missing!")
-        return screen.screenshot.width() / screen.width
+        return self.screen_.screenshot.width() / self.screen_.width
 
     def _add_image_layer(self) -> None:
         """Add widget showing screenshot."""
@@ -63,9 +75,8 @@ class Window(QtWidgets.QMainWindow):
 
     def _draw_background_image(self) -> None:
         """Draw screenshot as background image."""
-        screen = self.tray.screens[self.screen_idx]
         pixmap = QtGui.QPixmap()
-        pixmap.convertFromImage(screen.screenshot)
+        pixmap.convertFromImage(self.screen_.screenshot)
         self.image_layer.setPixmap(pixmap)
 
     def _position_windows_on_wayland(self) -> None:
@@ -75,17 +86,16 @@ class Window(QtWidgets.QMainWindow):
         client itself can't do this. However, there are DE dependent workarounds.
         """
         self.setFocus()
-        screen_rect = self.tray.screens[self.screen_idx].rect
-        logger.debug("Move window %s to position  %s", self.screen_idx, screen_rect)
+        logger.debug("Move window %s to %s", self.screen_.index, self.screen_.rect)
         if system_info.desktop_environment() == DesktopEnvironment.GNOME:
-            utils.move_active_window_to_position_on_gnome(screen_rect)
+            utils.move_active_window_to_position_on_gnome(self.screen_.rect)
         elif system_info.desktop_environment() == DesktopEnvironment.KDE:
-            utils.move_active_window_to_position_on_kde(screen_rect)
+            utils.move_active_window_to_position_on_kde(self.screen_.rect)
         self.is_positioned = True
 
     def set_fullscreen(self) -> None:
         """Set window to full screen using platform specific methods."""
-        logger.debug("Set window for screen %s to fullscreen", self.screen_idx)
+        logger.debug("Set window for screen %s to fullscreen", self.screen_.index)
 
         self.setWindowFlags(
             QtGui.Qt.FramelessWindowHint
@@ -95,7 +105,7 @@ class Window(QtWidgets.QMainWindow):
         self.setFocusPolicy(QtGui.Qt.StrongFocus)
 
         # Moving window to corresponding monitor
-        self.setGeometry(*self.tray.screens[self.screen_idx].rect.geometry)
+        self.setGeometry(*self.screen_.rect.geometry)
 
         # On unity, setting min/max window size breaks fullscreen.
         if system_info.desktop_environment() != DesktopEnvironment.UNITY:
@@ -111,7 +121,7 @@ class Window(QtWidgets.QMainWindow):
                 self.is_selecting = False
                 self.update()
             else:
-                self.tray.com.on_close_or_exit.emit("esc button pressed")
+                self.com.on_esc_key_pressed.emit()
         super().keyPressEvent(event)
 
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
@@ -134,8 +144,8 @@ class Window(QtWidgets.QMainWindow):
             self.selection_end = event.position().toPoint()
 
             rect = QtCore.QRect(self.selection_start, self.selection_end).normalized()
-            self.tray.com.on_region_selected.emit(
-                (Rect(*rect.getCoords()).scaled(self.scale_factor), self.screen_idx)
+            self.com.on_region_selected.emit(
+                (Rect(*rect.getCoords()).scaled(self.scale_factor), self.screen_.index)
             )
 
             self.selection_start = self.selection_end = QtCore.QPoint()
@@ -152,7 +162,7 @@ class Window(QtWidgets.QMainWindow):
             and not self.is_positioned
         ):
             self._position_windows_on_wayland()
-            self.tray.com.on_window_positioned.emit()
+            self.com.on_window_positioned.emit()
         super().changeEvent(event)
 
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802
@@ -185,15 +195,14 @@ class UiLayerLabel(QtWidgets.QLabel):
         scale_factor = self.parent().scale_factor
         selection_scaled = selection.scaled(scale_factor)
 
-        screen = self.parent().tray.screens[self.parent().screen_idx]
         x = y = 25
         painter.setPen(QtGui.QPen(self.color))
-        painter.drawText(x, y * 1, f"QScreen: {screen.geometry}")
-        painter.drawText(x, y * 2, f"Image: {screen.screenshot.size().toTuple()}")
+        painter.drawText(x, y * 1, f"QScreen: {self.screen_.geometry}")
+        painter.drawText(x, y * 2, f"Image: {self.screen_.screenshot.size().toTuple()}")
         painter.drawText(x, y * 3, f"Pos QScreen: {selection.geometry}")
         painter.drawText(x, y * 4, f"Pos Image: {selection_scaled.geometry}")
         painter.drawText(x, y * 5, f"Scale factor: {scale_factor}")
-        painter.drawText(x, y * 6, f"DPR: {screen.device_pixel_ratio}")
+        painter.drawText(x, y * 6, f"DPR: {self.screen_.device_pixel_ratio}")
 
     def paintEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802
         """Draw screenshot and selection rectangle on window."""
@@ -215,7 +224,7 @@ class UiLayerLabel(QtWidgets.QLabel):
         painter.setPen(QtGui.QPen(self.color, 2, QtGui.Qt.DashLine))
         painter.drawRect(rect)
 
-        mode = self.parent().tray.settings.value("mode")
+        mode = self.parent().settings.value("mode")
         if CaptureMode[mode.upper()] is CaptureMode.PARSE:
             mode_indicator = utils.get_icon("normcap-parse")
         else:
