@@ -189,14 +189,7 @@ class BuilderBase(ABC):
         url_prefix = (
             "https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/4.1.0"
         )
-        files = [
-            "ara.traineddata",
-            "chi_sim.traineddata",
-            "deu.traineddata",
-            "rus.traineddata",
-            "spa.traineddata",
-            "eng.traineddata",
-        ]
+        files = ["eng.traineddata"]
         if len(list(target_path.glob("*.traineddata"))) >= len(files):
             return
 
