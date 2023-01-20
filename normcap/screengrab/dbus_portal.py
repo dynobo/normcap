@@ -98,7 +98,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
     def got_signal(self, message: QtDBus.QDBusMessage) -> None:
         self.timeout_timer.stop()
 
-        code, arg = message.arguments()
+        code, _ = message.arguments()
         if code != 0:
             msg = f"Error code {code} received from xdg-portal."
             logger.error(msg)

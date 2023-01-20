@@ -13,7 +13,7 @@ from PIL import Image
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__, clipboard, ocr, screengrab
-from normcap.gui import system_info, utils
+from normcap.gui import resources, system_info, utils
 from normcap.gui.constants import UPDATE_CHECK_INTERVAL_DAYS
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.menu_button import MenuButton
@@ -22,6 +22,9 @@ from normcap.gui.notifier import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
+
+if not resources.qt_resource_data:
+    raise ValueError("Couldn't load QT resources")
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +111,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self._exit_application("Screen Recording permissions missing on macOS")
 
     def _set_tray_icon(self) -> None:
-        self.setIcon(utils.get_icon("tool-magic-symbolic"))
+        self.setIcon(QtGui.QIcon.fromTheme("tool-magic-symbolic", QtGui.QIcon(":tray")))
 
     @QtCore.Slot()
     def _color_tray_icon(self) -> None:

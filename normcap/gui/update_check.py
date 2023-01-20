@@ -2,12 +2,12 @@
 import logging
 import re
 
-from PySide6 import QtCore, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__
 from normcap.gui.constants import INFO_UPDATE_GITHUB, INFO_UPDATE_PIP, URLS
 from normcap.gui.downloader import Downloader
-from normcap.gui.utils import get_icon, set_cursor
+from normcap.gui.utils import set_cursor
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +64,7 @@ class UpdateChecker(QtCore.QObject):
         # Necessary on wayland for main window to regain focus:
         message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
-        message_box.setIconPixmap(get_icon("normcap").pixmap(48, 48))
+        message_box.setIconPixmap(QtGui.QIcon(":normcap").pixmap(48, 48))
         message_box.setStandardButtons(
             QtWidgets.QMessageBox.StandardButton.Ok
             | QtWidgets.QMessageBox.StandardButton.Cancel

@@ -6,7 +6,7 @@ from typing import Optional, Union
 
 from PySide6 import QtCore, QtWidgets
 
-from normcap.gui import constants, utils
+from normcap.gui import constants
 from normcap.gui.downloader import Downloader
 from normcap.gui.loading_indicator import LoadingIndicator
 
@@ -74,7 +74,9 @@ class LanguageLayout(QtWidgets.QVBoxLayout):
         self.addWidget(self.view)
 
         self.button = QtWidgets.QPushButton(button_text)
-        self.button.setIcon(utils.get_icon(button_icon))
+
+        pixmapi = getattr(QtWidgets.QStyle.StandardPixmap, button_icon, None)
+        self.button.setIcon(QtWidgets.QApplication.style().standardIcon(pixmapi))
         self.addWidget(self.button)
 
 

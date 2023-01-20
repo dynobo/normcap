@@ -43,7 +43,7 @@ class Window(QtWidgets.QMainWindow):
         self.is_positioned: bool = False
 
         self.setWindowTitle("NormCap")
-        self.setWindowIcon(utils.get_icon("normcap"))
+        self.setWindowIcon(QtGui.QIcon(":normcap"))
         self.setAnimated(False)
         self.setEnabled(True)
 
@@ -226,9 +226,9 @@ class UiLayerLabel(QtWidgets.QLabel):
 
         mode = self.parent().settings.value("mode")
         if CaptureMode[mode.upper()] is CaptureMode.PARSE:
-            mode_indicator = utils.get_icon("normcap-parse")
+            mode_indicator = QtGui.QIcon(":parse")
         else:
-            mode_indicator = utils.get_icon("normcap-raw")
+            mode_indicator = QtGui.QIcon(":raw")
         mode_indicator.paint(painter, rect.right() - 24, rect.top() - 30, 24, 24)
 
         painter.end()
