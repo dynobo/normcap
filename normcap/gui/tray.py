@@ -14,7 +14,6 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import resources, system_info, utils
-from normcap.gui.constants import UPDATE_CHECK_INTERVAL_DAYS
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
@@ -27,6 +26,8 @@ if not resources.qt_resource_data:
     raise ValueError("Couldn't load QT resources")
 
 logger = logging.getLogger(__name__)
+
+UPDATE_CHECK_INTERVAL_DAYS = 7
 
 
 class Communicate(QtCore.QObject):
@@ -156,7 +157,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         interval = datetime.timedelta(days=UPDATE_CHECK_INTERVAL_DAYS)
         today_minus_interval = f"{datetime.datetime.now() - interval:%Y-%m-%d}"
-        if (
+        if not (  # TODO: Change
             str(self.settings.value("last-update-check", type=str))
             > today_minus_interval
         ):
@@ -390,7 +391,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _close_windows(self) -> None:
         """Hide all windows of normcap."""
         logger.debug("Hide %s window(s)", len(self.windows))
-        utils.set_cursor(None)
+        QtWidgets.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.processEvents()
         for window in self.windows.values():
             window.close()
         self.windows = {}

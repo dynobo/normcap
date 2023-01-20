@@ -5,10 +5,8 @@ import logging
 import os
 import tempfile
 from pathlib import Path
-from typing import Optional
 
 from PIL import Image
-from PySide6 import QtCore, QtWidgets
 
 try:
     from PySide6 import QtDBus
@@ -119,12 +117,3 @@ def move_active_window_to_position_on_kde(screen_rect: models.Rect) -> None:
         logger.warning("Invalid dbus interface on KDE")
 
     os.unlink(script_file.name)
-
-
-def set_cursor(cursor: Optional[QtCore.Qt.CursorShape] = None) -> None:
-    """Show in-progress cursor for application."""
-    if cursor is not None:
-        QtWidgets.QApplication.setOverrideCursor(cursor)
-    else:
-        QtWidgets.QApplication.restoreOverrideCursor()
-    QtWidgets.QApplication.processEvents()
