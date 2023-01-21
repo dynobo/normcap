@@ -49,13 +49,15 @@ class Notifier(QtCore.QObject):
             count = capture.ocr_text.count(" ") + 1
             title = f"{count} word"
         elif capture.ocr_applied_magic == "MultiLineMagic":
-            count = capture.ocr_text.count("\n") + 1
+            count = capture.ocr_text.count(os.linesep) + 1
             title = f"{count} line"
         elif capture.ocr_applied_magic == "UrlMagic":
-            count = capture.ocr_text.count("\n") + 1
+            count = capture.ocr_text.count(os.linesep) + 1
             title = f"{count} URL"
         elif capture.mode == CaptureMode.RAW:
             count = len(capture.ocr_text)
+            # Count linesep only as single char:
+            count -= (len(os.linesep) - 1) * capture.ocr_text.count(os.linesep)
             title = f"{count} char"
         else:
             count = 0
