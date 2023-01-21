@@ -92,7 +92,7 @@ DEFAULT_SETTINGS = (
 
 
 class Settings(QtCore.QSettings):
-    """Customized settings."""
+    """Provide interface to persisted user settings."""
 
     default_settings = DEFAULT_SETTINGS
 

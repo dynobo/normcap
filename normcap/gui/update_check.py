@@ -19,7 +19,7 @@ class Communicate(QtCore.QObject):
 
 
 class UpdateChecker(QtCore.QObject):
-    """Helper to check for a new version."""
+    """Check for a new normcap version."""
 
     def __init__(self, parent: QtCore.QObject, packaged: bool = False) -> None:
         super().__init__(parent)

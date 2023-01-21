@@ -1,4 +1,4 @@
-"""Adjustments executed while packaging with briefcase during CI/CD."""
+"""Run adjustments while packaging with briefcase during CI/CD."""
 
 import platform
 import shutil

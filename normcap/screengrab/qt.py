@@ -1,5 +1,3 @@
-"""Some utility functions."""
-
 import logging
 
 from PySide6 import QtGui, QtWidgets

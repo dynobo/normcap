@@ -1,11 +1,10 @@
-"""Base class for templating magics."""
 import abc
 
 from normcap.ocr.models import OcrResult
 
 
 class BaseMagic(abc.ABC):
-    """Base Class to be instantiated."""
+    """Provide Base Class to be instantiated."""
 
     @abc.abstractmethod
     def score(self, ocr_result: OcrResult) -> float:

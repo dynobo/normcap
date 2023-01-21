@@ -46,7 +46,7 @@ class TessArgs:
 
 @dataclass
 class OcrResult:
-    """Encapsulates recognized text and meta information."""
+    """Encapsulate recognized text and meta information."""
 
     tess_args: TessArgs
     words: list[dict]  # Words+metadata detected by OCR

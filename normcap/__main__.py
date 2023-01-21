@@ -1,4 +1,4 @@
-"""Used as entry point by briefcase."""
+"""Use this as entry point by briefcase."""
 
 from normcap.app import main
 

@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 
 
 class FreedesktopPortalScreenshot(MessageGenerator):
-    """Using Portal API to get screenshot.
+    """Use Portal API to get screenshot.
 
     This has to be used for gnome-shell 41.+ on Wayland.
     """

@@ -1,5 +1,3 @@
-"""Loading Indicator Widget."""
-
 import math
 from typing import Optional
 

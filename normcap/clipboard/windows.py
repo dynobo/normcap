@@ -132,7 +132,7 @@ def _windll_copy(text: str) -> None:
 
     @contextlib.contextmanager
     def clipboard(hwnd: HWND) -> Generator:
-        """Opens the clipboard and prevents other apps from modifying its content."""
+        """Open the clipboard and prevents other apps from modifying its content."""
         # We may not get the clipboard handle immediately because
         # some other application is accessing it (?)
         # We try for at least 500ms to get the clipboard.
