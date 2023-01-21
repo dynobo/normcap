@@ -1,4 +1,6 @@
 import os
+import subprocess
+from pathlib import Path
 
 import pytest
 from PySide6 import QtGui
@@ -57,3 +59,19 @@ def test_compose_notification(
     title, text = notifier._compose_notification(capture)
     assert output_title in title
     assert output_text in text
+
+
+def test_send_via_libnotify(monkeypatch):
+    def mocked_popen(cmd: str, start_new_session: bool):
+        assert cmd[0] == "notify-send"
+        assert cmd[1].startswith("--icon=")
+        assert cmd[2] == "--app-name=NormCap"
+        assert cmd[3] == "Titel"
+        assert cmd[4] == "Message"
+
+        icon = cmd[1].removeprefix("--icon=")
+        assert Path(icon).exists()
+
+    monkeypatch.setattr(subprocess, "Popen", mocked_popen)
+    notifier = Notifier(None)
+    notifier.send_via_libnotify("Titel", "Message")

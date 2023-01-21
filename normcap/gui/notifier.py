@@ -83,7 +83,7 @@ class Notifier(QtCore.QObject):
         Running in detached mode to avoid freezing KDE bar in some distributions.
         """
         logger.debug("Send notification using notify-send.")
-        icon_path = system_info.get_resources_path() / "normcap.png"
+        icon_path = system_info.get_resources_path() / "icons" / "normcap.svg"
 
         # Escape chars interpreted by notifiy-send
         message = message.replace("\\", "\\\\")
