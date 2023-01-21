@@ -258,7 +258,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.windows[index] = new_window
 
     def _create_menu_button(self) -> QtWidgets.QLayout:
-        # system_info.is_prebuild_package = lambda: True  # For LanguageManager debug
+        # system_info.is_briefcase_package = lambda: True  # For LanguageManager debug
         settings_menu = MenuButton(
             settings=self.settings,
             language_manager=system_info.is_prebuild_package(),
@@ -278,7 +278,17 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _update_settings_menu(self, installed_languages: list[str]) -> None:
         """After Language settings changed, recreate menu button the update menus."""
         self._sanatize_language_settings(installed_languages)
-        self.windows[0].create_settings_menu(self)
+
+        # TODO: Implement clean way to update the menu than delete & recreate
+        menu_layout = self.windows[0].ui_layer.layout()
+        if menu_layout:
+            while menu_layout.count():
+                menu_layout.takeAt(0).widget().deleteLater()
+            menu_layout.deleteLater()
+
+        QtCore.QTimer.singleShot(
+            5, lambda: self.windows[0].ui_layer.setLayout(self._create_menu_button())
+        )
 
     def _sanatize_language_settings(self, installed_languages: list[str]) -> None:
         """Verify that languages selected in the settings exist.
