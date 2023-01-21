@@ -174,6 +174,8 @@ class PermissionWindow(QtWidgets.QMainWindow):
             "<br><br>"
             "Please grant NormCap permission to take<br>"
             "screenshots, if you get asked for it in a pop-up!"
+            "<br><br>"
+            "(You should not see this Window on the next start!)"
         )
         self.setCentralWidget(label)
         self.setContentsMargins(20, 10, 20, 10)

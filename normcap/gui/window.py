@@ -119,7 +119,7 @@ class Communicate(QtCore.QObject):
 
 
 class Window(QtWidgets.QMainWindow):
-    """Used for child windows and as base class for MainWindow."""
+    """Provide fullscreen UI for interacting with NormCap."""
 
     def __init__(
         self,

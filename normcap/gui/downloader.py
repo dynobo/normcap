@@ -37,7 +37,7 @@ class Worker(QtCore.QRunnable):
 
 
 class Downloader(QtCore.QObject):
-    """Downloader using QNetworkAccessManager.
+    """Download content using QNetworkAccessManager.
 
     It is async (provides signal) and avoids an issue on macOS, where the import
     of urllib.request fails with 'no module named _scproxy' in the packaged version.

@@ -1,4 +1,4 @@
-"""Handler to load available magics, get scores for every magic & apply top scored."""
+"""Handle loading of available magics, get scores for every magic & apply top scored."""
 
 import logging
 
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class Magic:
-    """Loads available magics, scores, and trigger magic with highest score.
+    """Load available magics, scores, and trigger magic with highest score.
 
     Arguments:
         AbstractHandler {[type]} -- [description]

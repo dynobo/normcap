@@ -1,5 +1,3 @@
-"""Adjustments executed while packaging with briefcase during CI/CD."""
-
 import fileinput
 import hashlib
 import os
@@ -111,7 +109,7 @@ def build_wl_clipboard(self, app_packages_path) -> None:  # noqa: ANN001
 
 
 class BuilderBase(ABC):
-    """Creates a prebuild package."""
+    """Create a prebuild package."""
 
     PROJECT_PATH = Path(__file__).absolute().parent.parent.parent
     BUILD_PATH = (PROJECT_PATH / "bundle").resolve()
@@ -158,7 +156,7 @@ class BuilderBase(ABC):
 
     @staticmethod
     def run(cmd: Union[str, list], cwd: Optional[Path] = None) -> Optional[str]:
-        """Executes a shell command and raises in case of error."""
+        """Execute a shell command and raises in case of error."""
         if not isinstance(cmd, str):
             cmd = " ".join(cmd)
 

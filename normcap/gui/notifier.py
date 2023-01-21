@@ -20,7 +20,7 @@ class Communicate(QtCore.QObject):
 
 
 class Notifier(QtCore.QObject):
-    """Sends notifications."""
+    """Send notifications."""
 
     def __init__(self, parent: QtCore.QObject) -> None:
         super().__init__(parent)
@@ -75,7 +75,7 @@ class Notifier(QtCore.QObject):
         self.com.on_notification_sent.emit()
 
     def send_via_libnotify(self, title: str, message: str) -> None:
-        """Sending via notify-send.
+        """Send via notify-send.
 
         Seems to work more reliable on Linux + Gnome, but requires libnotify.
         Running in detached mode to avoid freezing KDE bar in some distributions.
@@ -99,7 +99,7 @@ class Notifier(QtCore.QObject):
         subprocess.Popen(cmds, start_new_session=True)
 
     def send_via_qt_tray(self, title: str, message: str) -> None:
-        """Sending via QT trayicon.
+        """Send via QT trayicon.
 
         Used for:
             - Windows
