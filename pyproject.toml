@@ -32,6 +32,7 @@ include = [
   "normcap/**/*.icns",
   "normcap/**/*.ico",
   "normcap/**/*.png",
+  "normcap/**/*.svg",
 ]
 
 [tool.poetry.scripts]
