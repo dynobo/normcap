@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Iterable
+from typing import Any, Iterable, Optional
 
 from PySide6 import QtCore
 
@@ -96,10 +96,12 @@ class Settings(QtCore.QSettings):
 
     default_settings = DEFAULT_SETTINGS
 
-    def __init__(self, *args: Iterable[Any], init_settings: dict) -> None:
+    def __init__(
+        self, *args: Iterable[Any], init_settings: Optional[dict] = None
+    ) -> None:
         super().__init__(*args)
         self.setFallbacksEnabled(False)
-        self.init_settings = init_settings
+        self.init_settings: dict = init_settings if init_settings else {}
         self._prepare_and_sync()
 
     def _prepare_and_sync(self) -> None:
