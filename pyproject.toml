@@ -158,9 +158,10 @@ author_email = "dynobo@mailbox.org"
 formal_name = "NormCap"
 description = "OCR-powered screen-capture tool to capture information instead of images"
 sources = ["normcap"]
-icon = "normcap/resources/icons/normcap"
-installer_icon = "normcap/resources/icons/installer_icon"
-installer_background = "normcap/resources/icons/installer_bg"
+icon = "bundle/imgs/normcap"
+installer_icon = "bundle/imgs/normcap_install"
+installer_background = "bundle/imgs/normcap_install_bg"
+
 requires = ["pyside6", "jeepney", "pytesseract", "certifi"]
 
 [tool.briefcase.app.normcap.macOS]
