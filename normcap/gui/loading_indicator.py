@@ -29,6 +29,8 @@ class LoadingIndicator(QtWidgets.QWidget):
         if parent and center_on_parent:
             self._center_on_parent()
 
+        self.raise_()
+
     @property
     def radius(self) -> int:
         return int(self.height() / self.dots * self.dot_size_factor)
