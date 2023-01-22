@@ -10,6 +10,7 @@ keywords = ["screenshot", "ocr", "capture", "clipboard"]
 license = "GPLv3"
 authors = ["dynobo <dynobo@mailbox.org>"]
 readme = "README.md"
+homepage = "https://dynobo.github.io/normcap/"
 repository = "https://github.com/dynobo/normcap"
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -34,6 +35,10 @@ include = [
   "normcap/**/*.png",
   "normcap/**/*.svg",
 ]
+
+[tool.poetry.urls]
+"FAQs" = "https://dynobo.github.io/normcap/#faqs"
+"Issues" = "https://github.com/dynobo/normcap/issues"
 
 [tool.poetry.scripts]
 normcap = "normcap.app:main"
