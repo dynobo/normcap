@@ -4,12 +4,11 @@ pyside6-rcc normcap/resources/icons/resources.qrc -o normcap/gui/resources.py &&
 -->
 <RCC version="1.0">
     <qresource prefix="/">
-        <file>normcap.svg</file>
-        <file>settings.svg</file>
-        <file>tray.svg</file>
-        <file>parse.svg</file>
-        <file>raw.svg</file>
-        <file>installer_icon.svg</file>
-        <file>installer_bg.svg</file>
+        <file alias="normcap">normcap.png</file>
+        <file alias="settings">settings.png</file>
+        <file alias="tray">tray.png</file>
+        <file alias="parse">parse.png</file>
+        <file alias="raw">raw.png</file>
+        <file alias="notification">notification.png</file>
     </qresource>
 </RCC>

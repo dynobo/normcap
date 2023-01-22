@@ -14,7 +14,7 @@ from normcap.screengrab.utils import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)
 
-TIMEOUT_SECONDS = 10
+TIMEOUT_SECONDS = 7
 
 
 class OrgFreedesktopPortalRequestInterface(QtDBus.QDBusAbstractInterface):
