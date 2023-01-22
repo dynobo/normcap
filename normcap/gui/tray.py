@@ -86,7 +86,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             if self.settings.value("mode") == "parse"
             else CaptureMode.RAW
         )
-        self.copy_to_clipboard = clipboard.get_copy_func()
 
         self.screens: list[Screen] = system_info.screens()
 
@@ -375,10 +374,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         logger.info("Text from OCR:\n%s", self.capture.ocr_text)
         self.com.on_ocr_performed.emit()
 
-    #########################
-    # Helper                #
-    #########################
-
     @QtCore.Slot(str)
     def _open_url_and_hide(self, url: str) -> None:
         """Open url in default browser, then hide to tray or exit."""
@@ -403,10 +398,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot()
     def _copy_to_clipboard(self) -> None:
         """Copy results to clipboard."""
-        # Signal is only temporarily connected to avoid being triggered
-        # on arbitrary clipboard changes
-
-        self.copy_to_clipboard(self.capture.ocr_text)
+        copy_to_clipboard = clipboard.get_copy_func()
+        copy_to_clipboard(self.capture.ocr_text)
         self.com.on_copied_to_clipboard.emit()
 
     @QtCore.Slot()
