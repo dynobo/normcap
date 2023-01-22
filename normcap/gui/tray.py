@@ -68,12 +68,16 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     windows: dict[int, Window] = {}
 
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
+        # system_info.is_briefcase_package = lambda: True  # For LanguageManager debug
         logger.debug("System info:\n%s", system_info.to_dict())
         logger.debug("Set up tray icon")
         super().__init__(parent)
 
         self.com = Communicate()
+
         self.settings = Settings("normcap", "settings", init_settings=args)
+        self._sanatize_active_language(self.settings)
+
         if args.get("reset", False):
             self.settings.reset()
 
@@ -258,7 +262,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.windows[index] = new_window
 
     def _create_menu_button(self) -> QtWidgets.QLayout:
-        # system_info.is_briefcase_package = lambda: True  # For LanguageManager debug
         settings_menu = MenuButton(
             settings=self.settings,
             language_manager=system_info.is_prebuild_package(),
@@ -277,7 +280,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _update_settings_menu(self, installed_languages: list[str]) -> None:
         """After Language settings changed, recreate menu button the update menus."""
-        self._sanatize_language_settings(installed_languages)
+        self._sanatize_active_language(self.settings)
 
         # TODO: Implement clean way to update the menu than delete & recreate
         menu_layout = self.windows[0].ui_layer.layout()
@@ -290,21 +293,26 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             5, lambda: self.windows[0].ui_layer.setLayout(self._create_menu_button())
         )
 
-    def _sanatize_language_settings(self, installed_languages: list[str]) -> None:
+    @staticmethod
+    def _sanatize_active_language(settings: QtCore.QSettings) -> None:
         """Verify that languages selected in the settings exist.
 
         If one doesn't, remove it. If none does, autoselect the first in list.
         """
-        activated_languages = self.settings.value("language")
-        if not isinstance(activated_languages, list):
-            activated_languages = [activated_languages]
+        installed_languages = ocr.utils.get_tesseract_languages(
+            tesseract_cmd=system_info.get_tesseract_path(),
+            tessdata_path=system_info.get_tessdata_path(),
+        )
 
-        activated_languages = [
-            lang for lang in activated_languages if lang in installed_languages
-        ]
-        if not activated_languages:
-            activated_languages = installed_languages[0]
-        self.settings.setValue("language", activated_languages)
+        active_languages = settings.value("language")
+        if not isinstance(active_languages, list):
+            active_languages = [active_languages]
+
+        active_languages = [a for a in active_languages if a in installed_languages]
+        if not active_languages:
+            active_languages = [installed_languages[0]]
+
+        settings.setValue("language", active_languages)
 
     #####################
     # OCR Functionality #
