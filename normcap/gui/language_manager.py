@@ -13,92 +13,6 @@ from normcap.gui.loading_indicator import LoadingIndicator
 logger = logging.getLogger(__name__)
 
 
-class IconLabel(QtWidgets.QWidget):
-    """Label with icon in front."""
-
-    def __init__(self, icon: str, text: str) -> None:
-        super().__init__()
-
-        layout = QtWidgets.QHBoxLayout()
-        self.setLayout(layout)
-
-        icon_label = QtWidgets.QLabel()
-        pixmapi = getattr(QtWidgets.QStyle, icon)
-        icon_label.setPixmap(self.style().standardIcon(pixmapi).pixmap(16, 16))
-
-        layout.addWidget(icon_label)
-        layout.addSpacing(2)
-        layout.addWidget(QtWidgets.QLabel(text))
-        layout.addStretch()
-
-
-class MinimalTableView(QtWidgets.QTableView):
-    """TableView without grid, headers.
-
-    - Only allows selection of rows.
-    - Focus is disabled to avoid cells being focused. (Didn't found a better workaround)
-    """
-
-    def __init__(self, model: QtCore.QAbstractTableModel) -> None:
-        super().__init__()
-        self.setShowGrid(False)
-        self.horizontalHeader().setSectionResizeMode(
-            QtWidgets.QHeaderView.ResizeMode.ResizeToContents
-        )
-        self.horizontalHeader().setVisible(False)
-        self.verticalHeader().setVisible(False)
-        self.setSelectionBehavior(
-            QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows
-        )
-        self.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-        self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
-        self.setModel(model)
-
-
-class LanguageLayout(QtWidgets.QVBoxLayout):
-    """Layout includes: Label, TableView with Model, Button."""
-
-    def __init__(
-        self,
-        label_text: str,
-        label_icon: str,
-        button_text: str,
-        button_icon: str,
-    ) -> None:
-        super().__init__()
-        label_text = IconLabel(label_icon, label_text)
-        self.addWidget(label_text)
-
-        self.model = LanguageModel()
-        self.view = MinimalTableView(self.model)
-        self.addWidget(self.view)
-
-        self.button = QtWidgets.QPushButton(button_text)
-
-        pixmapi = getattr(QtWidgets.QStyle.StandardPixmap, button_icon, None)
-        self.button.setIcon(QtWidgets.QApplication.style().standardIcon(pixmapi))
-        self.addWidget(self.button)
-
-
-class LanguageModel(QtCore.QAbstractTableModel):
-    def __init__(self, languages: Optional[list] = None) -> None:
-        super().__init__()
-        self.languages: list = languages if languages else []
-
-    def data(
-        self, index: QtCore.QModelIndex, role: QtCore.Qt.ItemDataRole
-    ) -> Union[str, QtCore.QSize, None]:
-        if role == QtCore.Qt.ItemDataRole.DisplayRole:
-            return self.languages[index.row()][index.column()]
-        return None
-
-    def rowCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802
-        return len(self.languages)
-
-    def columnCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802
-        return len(self.languages[0]) if self.languages else 0
-
-
 class Communicate(QtCore.QObject):
     """LanguagesWindow' communication bus."""
 
@@ -111,6 +25,7 @@ class LanguageManager(QtWidgets.QDialog):
         self, tessdata_path: Path, parent: Optional[QtWidgets.QWidget] = None
     ) -> None:
         super().__init__(parent)
+        # TODO: Avoid unnecessary properties
 
         self.setModal(True)
         self.setWindowTitle("Manage Languages (experimental)")
@@ -162,7 +77,6 @@ class LanguageManager(QtWidgets.QDialog):
         self.setLayout(layout)
 
         self.loading_indicator = LoadingIndicator(self, size=256)
-        self.loading_indicator.raise_()
 
         self._update_models()
         self.close_button.setFocus()
@@ -232,3 +146,85 @@ class LanguageManager(QtWidgets.QDialog):
         self.available_layout.view.setEnabled(not value)
         self.installed_layout.view.setEnabled(not value)
         self.loading_indicator.setVisible(value)
+
+
+class IconLabel(QtWidgets.QWidget):
+    """Label with icon in front."""
+
+    def __init__(self, icon: str, text: str) -> None:
+        super().__init__()
+
+        layout = QtWidgets.QHBoxLayout()
+        self.setLayout(layout)
+
+        icon_label = QtWidgets.QLabel()
+        pixmapi = getattr(QtWidgets.QStyle, icon)
+        icon_label.setPixmap(self.style().standardIcon(pixmapi).pixmap(16, 16))
+
+        layout.addWidget(icon_label)
+        layout.addSpacing(2)
+        layout.addWidget(QtWidgets.QLabel(text))
+        layout.addStretch()
+
+
+class MinimalTableView(QtWidgets.QTableView):
+    """TableView without grid, headers.
+
+    - Only allows selection of rows.
+    - Focus is disabled to avoid cells being focused. (Didn't found a better workaround)
+    """
+
+    def __init__(self, model: QtCore.QAbstractTableModel) -> None:
+        super().__init__()
+        self.setShowGrid(False)
+        self.horizontalHeader().setSectionResizeMode(
+            QtWidgets.QHeaderView.ResizeMode.ResizeToContents
+        )
+        self.horizontalHeader().setVisible(False)
+        self.verticalHeader().setVisible(False)
+        self.setSelectionBehavior(
+            QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows
+        )
+        self.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
+        self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.setModel(model)
+
+
+class LanguageLayout(QtWidgets.QVBoxLayout):
+    """Layout includes: Label, TableView with Model, Button."""
+
+    def __init__(
+        self, label_text: str, label_icon: str, button_text: str, button_icon: str
+    ) -> None:
+        super().__init__()
+        label_text = IconLabel(label_icon, label_text)
+        self.addWidget(label_text)
+
+        self.model = LanguageModel()
+        self.view = MinimalTableView(self.model)
+        self.addWidget(self.view)
+
+        self.button = QtWidgets.QPushButton(button_text)
+
+        pixmapi = getattr(QtWidgets.QStyle.StandardPixmap, button_icon, None)
+        self.button.setIcon(QtWidgets.QApplication.style().standardIcon(pixmapi))
+        self.addWidget(self.button)
+
+
+class LanguageModel(QtCore.QAbstractTableModel):
+    def __init__(self, languages: Optional[list] = None) -> None:
+        super().__init__()
+        self.languages: list = languages if languages else []
+
+    def data(
+        self, index: QtCore.QModelIndex, role: QtCore.Qt.ItemDataRole
+    ) -> Union[str, QtCore.QSize, None]:
+        if role == QtCore.Qt.ItemDataRole.DisplayRole:
+            return self.languages[index.row()][index.column()]
+        return None
+
+    def rowCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802
+        return len(self.languages)
+
+    def columnCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802
+        return len(self.languages[0]) if self.languages else 0
