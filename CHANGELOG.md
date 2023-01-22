@@ -2,11 +2,20 @@
 
 ## v0.4.0 (unreleased)
 
-- All: Removed support for Tesseract \< 5.0
-- All: Faster startup if "Check for updates" is selected.
-- All: Added UI for downloading additional languages (experimental)
+- All: Remove support for Tesseract \< 5.0
+- All: Faster startup if "Check for updates" is enabled.
+- All: Fix crash if tesseract data for English is missing.
+  ([#353](https://github.com/dynobo/normcap/issues/353))
+- Linux: Fix FlatPak crashes due to missing permissions
+  ([#320](https://github.com/dynobo/normcap/issues/320)).
+- Prebuild packages: Add UI for downloading additional languages.
+- Prebuild packages: Remove all default languages except English to reduce size.
+- Prebuild packages (Windows): Switch to different tesseract binaries, which should work
+  more reliable across systems. Unfortunately, it also enlarges the file size a lot.
+  Would be great to [get your feedback](https://github.com/dynobo/normcap/discussions)
+  on this! ([#254](https://github.com/dynobo/normcap/issues/254))
 
-## v0.3.15 (unreleased)
+## v0.3.15 (2022-11-20)
 
 - All: Add possibility to capture by left-clicking (or double-clicking) the tray icon.
   This also improves a bit the situation regarding
