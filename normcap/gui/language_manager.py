@@ -152,6 +152,7 @@ class LanguageManager(QtWidgets.QDialog):
         )
         self.tessdata_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
         self.tessdata_label.linkActivated.connect(self.com.on_open_url)
+        self.com.on_open_url.connect(self.close)
 
         layout = QtWidgets.QVBoxLayout()
         layout.addLayout(h_layout)

@@ -68,7 +68,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     windows: dict[int, Window] = {}
 
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
-        # system_info.is_briefcase_package = lambda: True  # For LanguageManager debug
         logger.debug("System info:\n%s", system_info.to_dict())
         logger.debug("Set up tray icon")
         super().__init__(parent)
@@ -261,6 +260,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.windows[index] = new_window
 
     def _create_menu_button(self) -> QtWidgets.QLayout:
+        # system_info.is_briefcase_package = lambda: True  # For LanguageManager debug
         settings_menu = MenuButton(
             settings=self.settings,
             language_manager=system_info.is_prebuild_package(),
