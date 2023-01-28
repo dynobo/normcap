@@ -3,3 +3,6 @@ singleQuote: False
 printWidth: 88
 tabWidth: 2
 semi: true
+bracketSpacing: False
+bracketSameLine: False
+proseWrap: always

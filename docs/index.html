@@ -59,8 +59,7 @@
                 href="https://en.wikipedia.org/wiki/Optical_character_recognition"
                 target="_blank"
                 >OCR</a
-              >
-              -powered screenshot tool to capture text instead of images.
+              >-powered screenshot tool to capture text instead of images.
             </h2>
           </div>
           <p>
@@ -78,7 +77,7 @@
                 href="https://github.com/dynobo/normcap/releases/download/v0.3.15/NormCap-0.3.15-x86_64-Windows.msi"
                 >NormCap-<strong>Windows</strong>-x86_64.msi</a
               >
-              <small>~120 MB</small>
+              <small>~250 MB</small>
               <span data-tooltip="Run installer and start through start menu">🛈</span>
             </li>
             <li>
@@ -166,7 +165,6 @@
           </div>
         </div>
       </article>
-
       <article id="usage">
         <div class="hgroup">
           <h2>Usage</h2>
@@ -337,15 +335,9 @@
         <details id="faqs-languages">
           <summary>How can I add additional languages to NormCap?</summary>
           <p>
-            The <strong>prebuild packages</strong> are shipped with the following
-            languages English, Arabic, Chinese, German, Spanish and Russian. If you miss
-            a language, click the settings icon and "open data folder..." (in the
-            "Languages" section), then follow the instructions in the file
-            <a
-              href="https://github.com/dynobo/normcap/blob/main/normcap/resources/tessdata/add_more_languages.txt"
-              target="_blank"
-              >add_more_languages.txt</a
-            >.
+            The <strong>prebuild packages</strong> are shipped with support for English
+            only. To install additional languages, click the settings icon and in the
+            "Languages" section of the menu "add/remove...".
           </p>
           <p>
             If you installed NormCap as <strong>Python package</strong>, refer to the
@@ -388,7 +380,7 @@
           </p>
         </details>
         <details id="faqs-cloud">
-          <summary>Is my image/text analyzed in "the cloud"?</summary>
+          <summary>Is my image/text analyzed in The Cloud™?</summary>
           <p>
             No. The text recognition is performed offline using the OCR framework
             <a href="https://github.com/tesseract-ocr/tesseract" target="_blank"
@@ -436,7 +428,7 @@
                   >
                 </li>
                 <li>
-                  Manjaro/XFCE, Plasma:
+                  Manjaro/Xfce, Plasma:
                   <a href="https://wiki.manjaro.org/index.php?title=Keyboard_Shortcuts"
                     >Keyboard Shortcuts</a
                   >
@@ -459,6 +451,26 @@
           </ul>
           <p>
             Ask your preferred search engine for support or different ways to do this.
+          </p>
+        </details>
+        <details id="faqs-windows-file-size">
+          <summary>Why is the Windows-Installer's file size so large?</summary>
+          <p>
+            NormCap's MSI installer is much larger than the ones for Linux and macOS
+            because the included
+            <a href="https://tesseract-ocr.github.io/">Tesseract</a> binaries are
+            larger.
+          </p>
+          <p>
+            NormCap used to include a set of smaller binaries, which resulted in more
+            consistent installer file sizes for all operating systems. Unfortunately,
+            they seemed to lack some dependencies and lead to issues on some Windows
+            systems. Hopefully, the larger binaries will fix this issue. This decision
+            is not set in stone, so please
+            <a href="https://github.com/dynobo/normcap/discussions"
+              >feel free to leave some feedback</a
+            >
+            regarding this topic!
           </p>
         </details>
         <details id="faqs-alternatives">
@@ -505,81 +517,62 @@
         <h4>Troubleshooting</h4>
         <details id="faqs-debug">
           <summary>How to get debug information?</summary>
+          <p>
+            You can start NormCap from the command line with the verbosity option to get
+            an idea about what it is doing. The command to run depends on the OS and
+            install method.
+          </p>
           <ul>
             <li>
-              <strong>With Python package:</strong><br>
-              <p>
-                Run: <code>normcap -v debug</code>
-              </p>
-              </li>
+              <strong>With Python package:</strong><br />
+              <p>Run: <code>normcap -v debug</code></p>
+            </li>
             <li>
-              <strong>On Windows (msi):</strong><br>
+              <strong>On Windows (MSI):</strong><br />
               <p>
-                Run: <code>%LOCALAPPDATA%\Programs\dynobo\NormCap\NormCap.exe -- -v debug</code>
+                Run:
+                <code
+                  >%LOCALAPPDATA%\Programs\dynobo\NormCap\NormCap.exe -- -v debug</code
+                >
               </p>
             </li>
             <li>
-              <strong>On macOS (dmg):</strong>
+              <strong>On macOS (DMG):</strong>
               <p>
-                Run: <code>/Applications/NormCap.app/Contents/MacOS/NormCap -v debug</code>
+                Run:
+                <code>/Applications/NormCap.app/Contents/MacOS/NormCap -v debug</code>
               </p>
             </li>
             <li>
               <strong>On Linux (AppImage):</strong>
-              <p>
-                Run: <code>./NormCap-{version}-x86_64.AppImage -v debug</code>
-              </p>
+              <p>Run: <code>./NormCap-{version}-x86_64.AppImage -v debug</code></p>
             </li>
             <li>
               <strong>On Linux (FlatPak):</strong>
               <p>
-                Run: <code>flatpak run --command=normcap com.github.dynobo.normcap -v debug</code>
+                Run:
+                <code
+                  >flatpak run --command=normcap com.github.dynobo.normcap -v
+                  debug</code
+                >
               </p>
             </li>
             <li>
               <strong>On Linux (AUR):</strong>
-              <p>
-                Run: <code>normcap -v debug</code>
-              </p>
+              <p>Run: <code>normcap -v debug</code></p>
             </li>
           </ul>
-          </p>
         </details>
         <details id="faqs-is-not-starting">
           <summary>NormCap is not starting</summary>
           <p>
-            Please try to take a look at the <a href="#faqs-debug">debug information</a>. It might provide
-            enough information for you to solve the issue for yourself. If it doesn't help you, don't
-            hesitate to <a href="https://github.com/dynobo/normcap/issues">report</a> your problem description together with debug information.
+            Please try to take a look at the
+            <a href="#faqs-debug">debug information</a>. It might provide enough
+            information for you to solve the issue for yourself. If it doesn't help you,
+            don't hesitate to
+            <a href="https://github.com/dynobo/normcap/issues">report</a> your problem
+            description together with debug information.
           </p>
-        </details>
-        <details id="faqs-couldnt-load-xcb">
-          <summary>[Linux] Could not load the Qt platform plugin xcb</summary>
-          <p>In case you get the following output...</p>
-          <pre><code>$ normcap -v debug
-12:06:34 - INFO    - normcap.app            - L:32  - Starting Normcap v0.2.0
-12:06:34 - DEBUG   - normcap.utils          - L:199 - [QT] L:0, func: None, file: None
-12:06:34 - DEBUG   - normcap.utils          - L:200 - [QT] QtInfoMsg - Could not load the Qt platform plugin "xcb" in "" even though it was found.
-12:06:34 - DEBUG   - normcap.utils          - L:199 - [QT] L:0, func: None, file: None
-12:06:34 - DEBUG   - normcap.utils          - L:200 - [QT] QtFatalMsg - This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
-Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl, xcb.</code></pre>
-          <p>
-            ... the chances are, some system requirements are outdated. You can check
-            this with <code>apt list "libxcb-util*"</code>:
-          </p>
-          <pre><code>$ apt list "libxcb-util*"
-Listing... Done
-libxcb-util-dev/hirsute 0.4.0-1 amd64
-libxcb-util-dev/hirsute 0.4.0-1 i386
-libxcb-util0-dev/hirsute 0.4.0-1 amd64
-libxcb-util0-dev/hirsute 0.4.0-1 i386
-libxcb-util1/hirsute,now 0.4.0-1 amd64 [installed,automatic]
-libxcb-util1/hirsute 0.4.0-1 i386</code></pre>
-          <p>
-            Is only <code>libxcb-util0</code> shown but <code>libxcb-util1</code> is
-            missing? Then you can try to create a symlink for the missing version:
-          </p>
-          <pre><code>sudo ln -s /lib/x86_64-linux-gnu/libxcb-util.so.0 /lib/x86_64-linux-gnu/libxcb-util.so.1</code></pre>
         </details>
         <details id="faqs-doesnt-show-system-tray">
           <summary>[Linux] Normcap does not show up in system tray</summary>
@@ -622,12 +615,40 @@ libxcb-util1/hirsute 0.4.0-1 i386</code></pre>
           </ul>
         </details>
         <details id="faqs-doesnt-show-notification">
-          <summary>[Linux] Normcap doesn't show a notification after capture</summary>
+          <summary>[Linux] NormCap doesn't show a notification after capture</summary>
           <p>
-            NormCap's notifications depend on the system tray functionality. Try running
-            normcap with the <code>--tray</code> flag, and if nothing is shown in the
-            system tray, proceed like in the question above.
+            NormCap's notifications depend on the system tray functionality. If you
+            start NormCap, but its Icon doesn't appear in the system tray, proceed like
+            in the question above.
           </p>
+        </details>
+        <details id="faqs-couldnt-load-xcb">
+          <summary>[Linux] Could not load the Qt platform plugin xcb</summary>
+          <p>In case you get the following output...</p>
+          <pre><code>$ normcap -v debug
+12:06:34 - INFO    - normcap.app            - L:32  - Starting Normcap v0.2.0
+12:06:34 - DEBUG   - normcap.utils          - L:199 - [QT] L:0, func: None, file: None
+12:06:34 - DEBUG   - normcap.utils          - L:200 - [QT] QtInfoMsg - Could not load the Qt platform plugin "xcb" in "" even though it was found.
+12:06:34 - DEBUG   - normcap.utils          - L:199 - [QT] L:0, func: None, file: None
+12:06:34 - DEBUG   - normcap.utils          - L:200 - [QT] QtFatalMsg - This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl, xcb.</code></pre>
+          <p>
+            ... the chances are, some system requirements are outdated. You can check
+            this with <code>apt list "libxcb-util*"</code>:
+          </p>
+          <pre><code>$ apt list "libxcb-util*"
+Listing... Done
+libxcb-util-dev/hirsute 0.4.0-1 amd64
+libxcb-util-dev/hirsute 0.4.0-1 i386
+libxcb-util0-dev/hirsute 0.4.0-1 amd64
+libxcb-util0-dev/hirsute 0.4.0-1 i386
+libxcb-util1/hirsute,now 0.4.0-1 amd64 [installed,automatic]
+libxcb-util1/hirsute 0.4.0-1 i386</code></pre>
+          <p>
+            Is only <code>libxcb-util0</code> shown but <code>libxcb-util1</code> is
+            missing? Then you can try to create a symlink for the missing version:
+          </p>
+          <pre><code>sudo ln -s /lib/x86_64-linux-gnu/libxcb-util.so.0 /lib/x86_64-linux-gnu/libxcb-util.so.1</code></pre>
         </details>
         <details id="faqs-appimage-needs-fuse">
           <summary>[Linux] AppImages require FUSE to run</summary>
@@ -635,42 +656,61 @@ libxcb-util1/hirsute 0.4.0-1 i386</code></pre>
             This is not a NormCap issue but a requirement for AppImages. You need to
             make sure, that the <code>FUSE</code> library is installed on your system.
             E.g. on Ubuntu 22.04 you need to run <code>sudo apt install libfuse2</code>.
-            See <a href="https://techpiezo.com/linux/error-appimages-require-fuse-to-run-in-ubuntu-22-04/">
-            this blog post for details</a>.
+            See
+            <a
+              href="https://techpiezo.com/linux/error-appimages-require-fuse-to-run-in-ubuntu-22-04/"
+            >
+              this blog post for details</a
+            >.
           </p>
         </details>
         <details id="faqs-macos-empty-desktop">
           <summary>[macOS] When NormCap is started, an empty desktop shows up</summary>
-          <p>This issue ususally occures on the after installing NormCap, either
-            for the first time or after an update.
+          <p>
+            This issue usually occurs on the after installing NormCap, either for the
+            first time or after an update.
           </p>
           <p>
-            This is a known issue related to macOS's permissions settings: If NormCap doesn't
-            have the system's permission to take a screenshot, an empty desktop will be shown.<br>
-           <small>(To be precise: NormCap doesn't <em>know</em> that it lacks permissions,
-            tries to take a screenshot nevertheless, which results in a screenshot of the
-            empty desktop.)</small>
+            This is a known issue related to macOS's permissions settings: If NormCap
+            doesn't have the system's permission to take a screenshot, an empty desktop
+            will be shown.<br />
+            <small
+              >(To be precise: NormCap doesn't <em>know</em> that it lacks permissions,
+              tries to take a screenshot nevertheless, which results in a screenshot of
+              the empty desktop.)</small
+            >
           </p>
           <p>Steps to solve this:</p>
           <ol>
             <li>Close NormCap, if it is running.</li>
-            <li>Navigate to "System Preferences" → "Security & Privacy" → "Privacy" →
-              "Screen Recording" → "Click unlock".</li>
-            <li>Do you already see "NormCap" on the right side? If yes, "remove" [ – ]
-               it. <strong>Un-ticking the checkbox is not enough!</strong></li>
+            <li>
+              Navigate to "System Preferences" → "Security & Privacy" → "Privacy" →
+              "Screen Recording" → "Click unlock".
+            </li>
+            <li>
+              Do you already see "NormCap" on the right side? If yes, "remove" [ – ] it.
+              <strong>Un-ticking the checkbox is not enough!</strong>
+            </li>
             <li>Click "add" [＋] → "Applications" → "NormCap".</li>
-            <li>Confirm that you see NormCap on the right side with a checkmark in front of it.</li>
+            <li>
+              Confirm that you see NormCap on the right side with a checkmark in front
+              of it.
+            </li>
             <li>Start NormCap, it should work now.</li>
-            <li>You might need to repeat those steps after installing a new version
-            of NormCap.</li>
+            <li>
+              You might need to repeat those steps after installing a new version of
+              NormCap.
+            </li>
           </ol>
-          <p>Hopefully, this cumbersome user experience can be improved in a future release.</p>
+          <p>
+            Hopefully, this cumbersome user experience can be improved in a future
+            release.
+          </p>
         </details>
         <h4>Development</h4>
         <details id="faqs-no-such-file">
           <summary>
-            "No such file or directory" error when running
-            <code>briefcase build</code>
+            "No such file or directory" error when running <code>briefcase build</code>
           </summary>
           <p>
             To verify, if this is the issue you are facing, run the docker image
