@@ -157,7 +157,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_copied_to_clipboard.connect(self._color_tray_icon)
         self.com.on_close_or_exit.connect(self._close_or_exit)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
-        self.com.on_manage_languages.connect(self._open_language_manager_and_hide)
+        self.com.on_manage_languages.connect(self._open_language_manager)
 
     @QtCore.Slot(QtWidgets.QSystemTrayIcon.ActivationReason)
     def _handle_tray_click(
@@ -260,7 +260,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.windows[index] = new_window
 
     def _create_menu_button(self) -> QtWidgets.QLayout:
-        # system_info.is_briefcase_package = lambda: True  # For LanguageManager debug
+        # system_info.is_briefcase_package = lambda: True  # LanguageManager debugging
         settings_menu = MenuButton(
             settings=self.settings,
             language_manager=system_info.is_prebuild_package(),
@@ -382,7 +382,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_close_or_exit.emit("opened web browser")
 
     @QtCore.Slot()
-    def _open_language_manager_and_hide(self) -> None:
+    def _open_language_manager(self) -> None:
         """Open url in default browser, then hide to tray or exit."""
         logger.debug("Loading language manager...")
         self.language_window = LanguageManager(
@@ -393,7 +393,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.language_window.com.on_change_installed_languages.connect(
             self._update_settings_menu
         )
-        self.language_window.show()
+        self.language_window.exec_()
 
     @QtCore.Slot()
     def _copy_to_clipboard(self) -> None:
