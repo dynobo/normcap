@@ -80,6 +80,12 @@ def set_environ_for_wayland() -> None:
         logger.debug("Set QT_QPA_PLATFORM=wayland")
         os.environ["QT_QPA_PLATFORM"] = "wayland"
 
+    # Adopt PATH to find wl-copy if not installed on system (FlatPak brings its own)
+    if system_info.is_briefcase_package() and not shutil.which("wl-copy"):
+        binary_path = str((Path(__file__).parent.parent.parent / "bin").resolve())
+        logger.debug("Append path to wl-copy to PATH+=%s", binary_path)
+        os.environ["PATH"] = binary_path + ":" + os.environ["PATH"]
+
 
 def set_environ_for_flatpak() -> None:
     # Unity DE (and maybe others) use gtk-nocsd to remove client side decorations.
