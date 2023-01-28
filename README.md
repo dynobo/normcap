@@ -140,7 +140,7 @@ See [XKCD](https://xkcd.com):
 ## Development
 
 Prerequisites for setting up a development environment are: **Python >=3.9**,
-**Poetry>=1.2.0b2** and **Tesseract** (incl. **language data**).
+**Poetry>=1.3.2** and **Tesseract** (incl. **language data**).
 
 ```sh
 # Clone repository
