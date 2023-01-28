@@ -146,6 +146,7 @@ testpaths = ["tests"]
 qt_api = "pyside6"
 xvfb_width = 1920
 xvfb_height = 1080
+addopts = ["--durations=7"]
 
 [tool.coverage.run]
 source = ["normcap"]
