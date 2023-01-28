@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.4.0 (unreleased)
+## v0.4.0 (2022-01-29)
 
 - All: Remove support for Tesseract \< 5.0
 - All: Faster startup if "Check for updates" is enabled.
