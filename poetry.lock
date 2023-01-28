@@ -607,14 +607,14 @@ lxml = ["lxml"]
 
 [[package]]
 name = "identify"
-version = "2.5.13"
+version = "2.5.15"
 description = "File identification library for Python"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "identify-2.5.13-py2.py3-none-any.whl", hash = "sha256:8aa48ce56e38c28b6faa9f261075dea0a942dfbb42b341b4e711896cbb40f3f7"},
-    {file = "identify-2.5.13.tar.gz", hash = "sha256:abb546bca6f470228785338a01b539de8a85bbf46491250ae03363956d8ebb10"},
+    {file = "identify-2.5.15-py2.py3-none-any.whl", hash = "sha256:1f4b36c5f50f3f950864b2a047308743f064eaa6f6645da5e5c780d1c7125487"},
+    {file = "identify-2.5.15.tar.gz", hash = "sha256:c22aa206f47cc40486ecf585d27ad5f40adbfc494a3fa41dc3ed0499a23b123f"},
 ]
 
 [package.extras]
@@ -1210,13 +1210,13 @@ setuptools = "*"
 
 [[package]]
 name = "nuitka"
-version = "1.3.8"
+version = "1.4"
 description = "Python compiler with full language support and CPython compatibility"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "Nuitka-1.3.8.tar.gz", hash = "sha256:9f77cfd6da53f18a0ca29b789e3ed01dc6d6c5f27da1bb094c63d2963c067d95"},
+    {file = "Nuitka-1.4.tar.gz", hash = "sha256:9016acd8a9311f830be90c162d517c1d890fa95b2670a9d6b3c64114be7cbe17"},
 ]
 
 [[package]]
@@ -1261,14 +1261,14 @@ files = [
 
 [[package]]
 name = "pathspec"
-version = "0.10.3"
+version = "0.11.0"
 description = "Utility library for gitignore style pattern matching of file paths."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pathspec-0.10.3-py3-none-any.whl", hash = "sha256:3c95343af8b756205e2aba76e843ba9520a24dd84f68c22b9f93251507509dd6"},
-    {file = "pathspec-0.10.3.tar.gz", hash = "sha256:56200de4077d9d0791465aa9095a01d421861e405b5096955051deefd697d6f6"},
+    {file = "pathspec-0.11.0-py3-none-any.whl", hash = "sha256:3a66eb970cbac598f9e5ccb5b2cf58930cd8e3ed86d393d541eaf2d8b1705229"},
+    {file = "pathspec-0.11.0.tar.gz", hash = "sha256:64d338d4e0914e91c1792321e6907b5a593f1ab1851de7fc269557a21b30ebbc"},
 ]
 
 [[package]]
@@ -1286,6 +1286,13 @@ files = [
     {file = "Pillow-9.4.0-1-cp39-cp39-macosx_10_10_x86_64.whl", hash = "sha256:b8c2f6eb0df979ee99433d8b3f6d193d9590f735cf12274c108bd954e30ca858"},
     {file = "Pillow-9.4.0-1-pp38-pypy38_pp73-macosx_10_10_x86_64.whl", hash = "sha256:b70756ec9417c34e097f987b4d8c510975216ad26ba6e57ccb53bc758f490dab"},
     {file = "Pillow-9.4.0-1-pp39-pypy39_pp73-macosx_10_10_x86_64.whl", hash = "sha256:43521ce2c4b865d385e78579a082b6ad1166ebed2b1a2293c3be1d68dd7ca3b9"},
+    {file = "Pillow-9.4.0-2-cp310-cp310-macosx_10_10_x86_64.whl", hash = "sha256:9d9a62576b68cd90f7075876f4e8444487db5eeea0e4df3ba298ee38a8d067b0"},
+    {file = "Pillow-9.4.0-2-cp311-cp311-macosx_10_10_x86_64.whl", hash = "sha256:87708d78a14d56a990fbf4f9cb350b7d89ee8988705e58e39bdf4d82c149210f"},
+    {file = "Pillow-9.4.0-2-cp37-cp37m-macosx_10_10_x86_64.whl", hash = "sha256:8a2b5874d17e72dfb80d917213abd55d7e1ed2479f38f001f264f7ce7bae757c"},
+    {file = "Pillow-9.4.0-2-cp38-cp38-macosx_10_10_x86_64.whl", hash = "sha256:83125753a60cfc8c412de5896d10a0a405e0bd88d0470ad82e0869ddf0cb3848"},
+    {file = "Pillow-9.4.0-2-cp39-cp39-macosx_10_10_x86_64.whl", hash = "sha256:9e5f94742033898bfe84c93c831a6f552bb629448d4072dd312306bab3bd96f1"},
+    {file = "Pillow-9.4.0-2-pp38-pypy38_pp73-macosx_10_10_x86_64.whl", hash = "sha256:013016af6b3a12a2f40b704677f8b51f72cb007dac785a9933d5c86a72a7fe33"},
+    {file = "Pillow-9.4.0-2-pp39-pypy39_pp73-macosx_10_10_x86_64.whl", hash = "sha256:99d92d148dd03fd19d16175b6d355cc1b01faf80dae93c6c3eb4163709edc0a9"},
     {file = "Pillow-9.4.0-cp310-cp310-macosx_10_10_x86_64.whl", hash = "sha256:2968c58feca624bb6c8502f9564dd187d0e1389964898f5e9e1fbc8533169157"},
     {file = "Pillow-9.4.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:c5c1362c14aee73f50143d74389b2c158707b4abce2cb055b7ad37ce60738d47"},
     {file = "Pillow-9.4.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:bd752c5ff1b4a870b7661234694f24b1d2b9076b8bf337321a814c612665f343"},
@@ -1465,14 +1472,14 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "pre-commit"
-version = "2.21.0"
+version = "3.0.1"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 category = "dev"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "pre_commit-2.21.0-py2.py3-none-any.whl", hash = "sha256:e2f91727039fc39a92f58a588a25b87f936de6567eed4f0e673e0507edc75bad"},
-    {file = "pre_commit-2.21.0.tar.gz", hash = "sha256:31ef31af7e474a8d8995027fefdfcf509b5c913ff31f2015b4ec4beb26a6f658"},
+    {file = "pre_commit-3.0.1-py2.py3-none-any.whl", hash = "sha256:61ecb75e0e99939cc30c79181c0394545657855e9172c42ff98ebecb0e02fcb7"},
+    {file = "pre_commit-3.0.1.tar.gz", hash = "sha256:3a3f9229e8c19a626a7f91be25b3c8c135e52de1a678da98eb015c0d0baea7a5"},
 ]
 
 [package.dependencies]
@@ -1946,22 +1953,22 @@ test = ["commentjson", "packaging", "pytest"]
 
 [[package]]
 name = "rich"
-version = "13.2.0"
+version = "13.3.1"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 category = "dev"
 optional = false
 python-versions = ">=3.7.0"
 files = [
-    {file = "rich-13.2.0-py3-none-any.whl", hash = "sha256:7c963f0d03819221e9ac561e1bc866e3f95a02248c1234daa48954e6d381c003"},
-    {file = "rich-13.2.0.tar.gz", hash = "sha256:f1a00cdd3eebf999a15d85ec498bfe0b1a77efe9b34f645768a54132ef444ac5"},
+    {file = "rich-13.3.1-py3-none-any.whl", hash = "sha256:8aa57747f3fc3e977684f0176a88e789be314a99f99b43b75d1e9cb5dc6db9e9"},
+    {file = "rich-13.3.1.tar.gz", hash = "sha256:125d96d20c92b946b983d0d392b84ff945461e5a06d3867e9f9e575f8697b67f"},
 ]
 
 [package.dependencies]
 markdown-it-py = ">=2.1.0,<3.0.0"
-pygments = ">=2.6.0,<3.0.0"
+pygments = ">=2.14.0,<3.0.0"
 
 [package.extras]
-jupyter = ["ipywidgets (>=7.5.1,<8.0.0)"]
+jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
 name = "rope"
@@ -1984,28 +1991,28 @@ doc = ["pytoolconfig[doc]", "sphinx (>=4.5.0)", "sphinx-autodoc-typehints (>=1.1
 
 [[package]]
 name = "ruff"
-version = "0.0.228"
+version = "0.0.236"
 description = "An extremely fast Python linter, written in Rust."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "ruff-0.0.228-py3-none-macosx_10_7_x86_64.whl", hash = "sha256:5f54beddd2d88af3ff711852942b304ed3f896cebdac443c123cdc5128d4deed"},
-    {file = "ruff-0.0.228-py3-none-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:9e4b409dc1a2e083bc50fb29fbff5f9d72d9ac8735f31ce7cbbb0154192ba06f"},
-    {file = "ruff-0.0.228-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:05449420409952ca87646460315284117d0abdd7011d1c15667cd6a9c86eb05f"},
-    {file = "ruff-0.0.228-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:d38327e1ac1d2e2f01b3ac2489f00c729cd38acf3bfd7cfe3fc420acd58172c4"},
-    {file = "ruff-0.0.228-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:7b4c6a9b29889992f38f3482b61324e8d8a8b8a5489094228ff69fc87cbe94d8"},
-    {file = "ruff-0.0.228-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:0cb4cbe6d7f6408052a694b7fc36467b939c86682040ff8d98ed8e6486db3f50"},
-    {file = "ruff-0.0.228-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:25277dd2df59adac8d3344cc821e0b7a2806e79db52ca1f2f53a398f08948243"},
-    {file = "ruff-0.0.228-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:b54699c7bbbd52f80efe7440369c547a8ecbb4bcc1089e7bd848cfec7c675139"},
-    {file = "ruff-0.0.228-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f248c57ab0999e5ba03c8464adfb688678cb5d6fe2fd5af6fe770306722e2e75"},
-    {file = "ruff-0.0.228-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:a6730f3df5ef0cac794f03e4995858c33e5f080bde619ce0f012dc420057c84f"},
-    {file = "ruff-0.0.228-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:c18070b0de1eb8ab706f7a7eaa1cc1d8dfc3e5dbb2c87109358097d0328d5a41"},
-    {file = "ruff-0.0.228-py3-none-musllinux_1_2_i686.whl", hash = "sha256:b6da76668324db26fb38a1c50c2f99205f567ff33d060642a9c0648ea28542ae"},
-    {file = "ruff-0.0.228-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:de06793e1c1d979d3770c4e1067ddfc4d3362a313a8ee00a7253c8facee54b7b"},
-    {file = "ruff-0.0.228-py3-none-win32.whl", hash = "sha256:468f9ec825bcd6c99c6e10c4bc1a57f4da7ad2cc6b2eb4df74e1c604b5980a65"},
-    {file = "ruff-0.0.228-py3-none-win_amd64.whl", hash = "sha256:37396e6965ee67629966f96bd99c59f8a6197fc79cf361a104e93dd252073fab"},
-    {file = "ruff-0.0.228.tar.gz", hash = "sha256:90ab392d766aca465e8ea566c12e5512eb237f513ebb0de85637e97202afd103"},
+    {file = "ruff-0.0.236-py3-none-macosx_10_7_x86_64.whl", hash = "sha256:d4d8f3646f678c0148ddc1477151f14068d35609681663a916aae643ae724a0f"},
+    {file = "ruff-0.0.236-py3-none-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:1f9121c656021720391b1ddba843813569910adf7c08b4c0ed325a4418ff4acd"},
+    {file = "ruff-0.0.236-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:53495204366169766b501332909a245072f5bc6a976972150f4df5fef961c119"},
+    {file = "ruff-0.0.236-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:2939a8360c45a76373554e426aae691b4dc785e1fec647a74626cb8c7ea9429c"},
+    {file = "ruff-0.0.236-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:3bea5d101c5918ff5b4bf997565667e4ea040fa9ec0ef98f63d5168c84219519"},
+    {file = "ruff-0.0.236-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:7cd622e5d4f6aa356b4193840a2ca39cf6eb6d37de80c4e54a79f61f7c6b52ef"},
+    {file = "ruff-0.0.236-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:6c21e3f42eb2d943d8437b365b7ec3c6d7d98a6c742cf08fd385671744737e5e"},
+    {file = "ruff-0.0.236-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:be96ee774c3e30c2aa0314bf73e3f5144e8e1d5971d13e60bf2f4a07112de6f9"},
+    {file = "ruff-0.0.236-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4185c328c78adabfb0417a3e7f86395f8d5b3bcfb0e763d6cdde7246c3d08b35"},
+    {file = "ruff-0.0.236-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:055438a8b3ba5de45e2bf606f2aae0c6b928b5fba3928ad008c3019440f40547"},
+    {file = "ruff-0.0.236-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:71f87d4e841b18c8b2c1a1f9c04e822285cfac7786fcde4ae34d4b107ab0bc81"},
+    {file = "ruff-0.0.236-py3-none-musllinux_1_2_i686.whl", hash = "sha256:29654591e610630f3c3614a4ae16524ac4e0baa2680cf7fc8676fd047cb3f1c6"},
+    {file = "ruff-0.0.236-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:ce82f88a2e8ad530a8ae81886b4bcbb33ba12643e873bcd65c2193fdf96bf49f"},
+    {file = "ruff-0.0.236-py3-none-win32.whl", hash = "sha256:e3b09c10cabae034babdc0864985101f417d26ad70fccdd0022593b9cbd8e0b6"},
+    {file = "ruff-0.0.236-py3-none-win_amd64.whl", hash = "sha256:a5765fe2434e85f6c058cdda2538e18a7c6c87594ee63f3999fe39f558ee7c63"},
+    {file = "ruff-0.0.236.tar.gz", hash = "sha256:64826b12171080be6731d5d46494fbb51b90cf6593134bed5a76f424dc98a480"},
 ]
 
 [[package]]
@@ -2385,18 +2392,18 @@ test = ["pytest (>=3.0.0)"]
 
 [[package]]
 name = "zipp"
-version = "3.11.0"
+version = "3.12.0"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "zipp-3.11.0-py3-none-any.whl", hash = "sha256:83a28fcb75844b5c0cdaf5aa4003c2d728c77e05f5aeabe8e95e56727005fbaa"},
-    {file = "zipp-3.11.0.tar.gz", hash = "sha256:a7a22e05929290a67401440b39690ae6563279bced5f314609d9d03798f56766"},
+    {file = "zipp-3.12.0-py3-none-any.whl", hash = "sha256:9eb0a4c5feab9b08871db0d672745b53450d7f26992fd1e4653aa43345e97b86"},
+    {file = "zipp-3.12.0.tar.gz", hash = "sha256:73efd63936398aac78fd92b6f4865190119d6c91b531532e798977ea8dd402eb"},
 ]
 
 [package.extras]
-docs = ["furo", "jaraco.packaging (>=9)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)"]
+docs = ["furo", "jaraco.packaging (>=9)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-lint"]
 testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools", "more-itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.3)", "pytest-flake8", "pytest-mypy (>=0.9.1)"]
 
 [metadata]
