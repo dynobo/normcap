@@ -101,16 +101,6 @@ def set_environ_for_flatpak() -> None:
         os.environ["LD_PRELOAD"] = ""
 
 
-# def set_env_for_tesseract_cmd() -> None:
-#     # TODO: PATH still necessary?
-#     if sys.platform == "linux":
-#         bin_path = system_info.get_app_path() / "bin"
-#         if bin_path.is_dir():
-#             os.environ["PATH"] = (
-#                 f"{bin_path.absolute().resolve()}:" + os.environ["PATH"]
-#             )
-
-
 def init_logger(level: str = "WARNING") -> None:
     log_format = "%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s"
     datefmt = "%H:%M:%S"
@@ -134,7 +124,7 @@ def _redact_by_key(local_vars: dict) -> dict:
             if f in func_vars:
                 func_vars[f] = redacted
         for k, v in func_vars.items():
-            for attribute in ["ocr_text", "words", "transformed"]:
+            for attribute in ["ocr_text", "words", "parsed"]:
                 if hasattr(v, attribute):
                     setattr(func_vars[k], attribute, redacted)
     return local_vars

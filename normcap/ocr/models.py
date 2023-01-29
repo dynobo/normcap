@@ -52,7 +52,7 @@ class OcrResult:
     words: list[dict]  # Words+metadata detected by OCR
     image: Image.Image
     magic_scores: dict[str, float] = field(default_factory=dict)  # magics with scores
-    transformed: str = ""  # Transformed result
+    parsed: str = ""  # Transformed result
 
     def _count_unique_sections(self, level: str) -> int:
         postfix = "_num"
@@ -77,7 +77,7 @@ class OcrResult:
     def text(self) -> str:
         """OCR text as single line string."""
         raw_text = " ".join(w["text"].strip() for w in self.words).strip()
-        return self.transformed or raw_text
+        return self.parsed or raw_text
 
     @property
     def lines(self) -> str:

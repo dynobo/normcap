@@ -48,7 +48,7 @@ def ocr_result() -> OcrResult:
         tess_args=TessArgs(path=Path(), lang="eng", oem=2, psm=2, version="5.0.0"),
         image=Image.Image(),
         magic_scores={},
-        transformed="",
+        parsed="",
         words=[
             {
                 "level": 1,

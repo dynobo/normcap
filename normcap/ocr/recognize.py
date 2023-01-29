@@ -54,6 +54,6 @@ def recognize(
 
     if parse:
         result = Magic().apply(result)
-        logger.debug("Transformed text: %s", result.transformed)
+        logger.debug("Parsed text:\n%s", result.parsed)
 
     return result
