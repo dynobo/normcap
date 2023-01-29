@@ -1,3 +1,3 @@
 """Normcap Package."""
 
-__version__ = "0.3.15"
+__version__ = "0.4.0"
