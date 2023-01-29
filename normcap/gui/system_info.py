@@ -93,7 +93,9 @@ def get_tessdata_path() -> Optional[os.PathLike]:
         if tessdata_path.is_dir() and list(tessdata_path.glob("*.traineddata")):
             return tessdata_path.resolve()
 
-    logger.warning("No tessdata directory found.")
+    if sys.platform == "win32":
+        logger.warning("Missing tessdata directory. (Is TESSDATA_PREFIX variable set?)")
+
     return None
 
 

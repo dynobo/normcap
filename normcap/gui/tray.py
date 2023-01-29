@@ -40,8 +40,8 @@ def _save_image_in_tempfolder(
         file_dir.mkdir(exist_ok=True)
         now = datetime.datetime.now()
         file_name = f"{now:%Y-%m-%d_%H-%M-%S_%f}{postfix}.png"
+        logger.debug("Save debug image as %s", file_dir / file_name)
         image.save(str(file_dir / file_name))
-        logger.debug("Store debug image in: %s", file_dir / file_name)
 
 
 class Communicate(QtCore.QObject):
@@ -69,7 +69,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("System info:\n%s", system_info.to_dict())
-        logger.debug("Set up tray icon")
         super().__init__(parent)
 
         self.com = Communicate()
@@ -320,7 +319,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot(Rect)
     def _crop_image(self, grab_info: tuple[Rect, int]) -> None:
         """Crop image to selected region."""
-        logger.info("Crop image to selected region %s", grab_info[0].points)
+        logger.info("Crop image to region %s", grab_info[0].points)
         rect, screen_idx = grab_info
 
         screenshot = self.screens[screen_idx].screenshot
@@ -399,6 +398,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _copy_to_clipboard(self) -> None:
         """Copy results to clipboard."""
         copy_to_clipboard = clipboard.get_copy_func()
+        logger.debug("Copy text to clipboard")
         copy_to_clipboard(self.capture.ocr_text)
         self.com.on_copied_to_clipboard.emit()
 
@@ -412,7 +412,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot()
     def _close_windows(self) -> None:
         """Hide all windows of normcap."""
-        logger.debug("Hide %s window(s)", len(self.windows))
+        window_count = len(self.windows)
+        if window_count < 1:
+            return
+        logger.debug("Hide %s window%s", window_count, "s" if window_count > 1 else "")
         QtWidgets.QApplication.restoreOverrideCursor()
         QtWidgets.QApplication.processEvents()
         for window in self.windows.values():
@@ -437,8 +440,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.hide()
         QtWidgets.QApplication.processEvents()
         time.sleep(0.05)
-        logger.debug("Path to debug images: %s%snormcap", tempfile.gettempdir(), os.sep)
-        logger.info("Exit normcap (reason: %s)", reason)
+        logger.info("Exit normcap (%s)", reason)
+        logger.debug("Debug images saved in %s%snormcap", tempfile.gettempdir(), os.sep)
         # The preferable QApplication.quit() doesn't work reliably on macOS. E.g. when
         # right clicking on "close" in tray menu, NormCap process keeps running.
         sys.exit(0)

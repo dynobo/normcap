@@ -82,7 +82,7 @@ class Notifier(QtCore.QObject):
         Seems to work more reliable on Linux + Gnome, but requires libnotify.
         Running in detached mode to avoid freezing KDE bar in some distributions.
         """
-        logger.debug("Send notification using notify-send.")
+        logger.debug("Send notification via notify-send")
         icon_path = system_info.get_resources_path() / "icons" / "notification.png"
 
         # Escape chars interpreted by notifiy-send
@@ -108,7 +108,7 @@ class Notifier(QtCore.QObject):
             - macOS
             - Linux (Fallback in case no notify-send)
         """
-        logger.debug("Send notification using QT showMessage.")
+        logger.debug("Send notification via QT")
 
         # Need to load icon from path, as icon from resources.py won't show up:
         self.parent().show()

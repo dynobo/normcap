@@ -33,7 +33,7 @@ def add_padding(img: Image.Image, padding: int = 80) -> Image.Image:
     TODO: Test padding strategy where the edge colors are extended
             (might be useful in case of bars etc, but problematic on images)
     """
-    logger.debug("Pad image by %s px", padding)
+    logger.debug("Pad image by %spx", padding)
 
     bg_col = _identify_most_frequent_edge_color(img)
 
@@ -51,7 +51,7 @@ def resize_image(image: Image.Image, factor: float = 3.2) -> Image.Image:
 
     Useful because most displays are around ~100dpi, while Tesseract works best ~300dpi.
     """
-    logger.debug("Resize screenshot by factor %s", factor)
+    logger.debug("Scale image x%s", factor)
 
     # Ensure backwords compatibility with Pillow < 9.2
     if hasattr(Image, "Resampling"):
@@ -70,7 +70,7 @@ def invert_image(image: Image.Image) -> Image.Image:
 
     Improves detection in case of bright text on dark background.
     """
-    logger.debug("Inverting screenshot")
+    logger.debug("Invert image")
     return ImageOps.invert(image)
 
 

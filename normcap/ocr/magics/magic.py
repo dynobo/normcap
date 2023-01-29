@@ -74,5 +74,5 @@ class Magic:
             dict -- Scores in format {<magic Name>: <score>}
         """
         scores = {name: magic.score(ocr_result) for name, magic in self._magics.items()}
-        logger.debug("All scores: %s", scores)
+        logger.debug("Magic scores:\n%s", scores)
         return scores

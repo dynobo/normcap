@@ -190,7 +190,7 @@ class Window(QtWidgets.QMainWindow):
 
     def set_fullscreen(self) -> None:
         """Set window to full screen using platform specific methods."""
-        logger.debug("Set window for screen %s to fullscreen", self.screen_.index)
+        logger.debug("Set window of screen %s to fullscreen", self.screen_.index)
 
         self.setWindowFlags(
             QtGui.Qt.FramelessWindowHint

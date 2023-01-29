@@ -21,8 +21,8 @@ def pbcopy(text: str) -> None:
 
 def get_copy_func() -> Callable:
     if shutil.which("pbcopy") is not None:
-        logger.debug("Use pbcopy to copy to clipboard.")
+        logger.debug("Select clipboard method pbcopy")
         return pbcopy
 
-    logger.debug("Use Qt to copy to clipboard.")
+    logger.debug("Select clipboard method QT")
     return qt.copy

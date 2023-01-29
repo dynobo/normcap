@@ -183,5 +183,5 @@ def _windll_copy(text: str) -> None:
 
 
 def get_copy_func() -> Callable:
-    logger.debug("Use windll to copy to clipboard.")
+    logger.debug("Select clipboard method windll")
     return _windll_copy

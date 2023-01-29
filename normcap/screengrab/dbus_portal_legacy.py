@@ -62,10 +62,7 @@ class FreedesktopPortalScreenshot(MessageGenerator):
 
 def grab_full_desktop() -> Optional[QtGui.QImage]:
     """Capture rect of screen on gnome systems using wayland."""
-    logger.debug("Use capture method: DBUS portal legacy")
-
     image = None
-
     try:
         connection = open_dbus_connection(bus="SESSION")
         pseudo_unique_str = "".join(random.choice("abcdefghijklmnop") for _ in range(8))
