@@ -4,6 +4,8 @@
 
 - All: Remove support for Tesseract \< 5.0
 - All: Faster startup if "Check for updates" is enabled.
+- All: Refactor icon handling. Fixes a bug in the AUR package.
+  ([#353](https://github.com/dynobo/normcap/issues/353))
 - All: Fix crash if tesseract data for English is missing.
   ([#353](https://github.com/dynobo/normcap/issues/353))
 - Linux: Fix FlatPak crashes due to missing permissions
