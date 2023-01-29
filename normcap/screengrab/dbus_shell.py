@@ -54,8 +54,6 @@ def capture() -> list[QtGui.QImage]:
 
     This methods works gnome-shell < v41 and wayland.
     """
-    logger.debug("Use capture method: DBUS Shell")
-
     _, temp_file = tempfile.mkstemp(prefix="normcap")
     try:
         _fullscreen_to_file(temp_file)

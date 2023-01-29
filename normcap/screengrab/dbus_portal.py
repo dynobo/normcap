@@ -75,17 +75,15 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
             and result.arguments()
             and isinstance(result.arguments()[0], QtDBus.QDBusObjectPath)
         ):
-            logger.debug(
-                "Requested screenshot. Object path: %s", result.arguments()[0].path()
-            )
+            logger.debug("Request accepted")
         else:
-            msg = "No object path received from xdg-portal."
+            msg = "No object path received from xdg-portal!"
             logger.error(msg)
             self.on_exception.emit(ScreenshotRequestError(msg))
 
     def _get_timeout_timer(self, timeout_sec: int) -> QtCore.QTimer:
         def _timeout_triggered() -> None:
-            msg = f"No response from xdg-portal within {timeout_sec}s."
+            msg = f"No response from xdg-portal within {timeout_sec}s!"
             logger.error(msg)
             self.on_exception.emit(TimeoutError(msg))
 
@@ -100,12 +98,11 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
 
         code, _ = message.arguments()
         if code != 0:
-            msg = f"Error code {code} received from xdg-portal."
+            msg = f"Error code {code} received from xdg-portal!"
             logger.error(msg)
             self.on_exception.emit(ScreenshotResponseError(msg))
 
-        logger.debug("Received response from freedesktop.portal.request: %s", message)
-
+        logger.debug("Parse response")
         uri = str(message).split('[Variant(QString): "')[1]
         uri = uri.split('"]}')[0]
         # TODO: Parse from arguments instead?
@@ -124,8 +121,6 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
 
 
 def _synchronized_capture(interactive: bool) -> list[QtGui.QImage]:
-    logger.debug("Use capture method: DBUS portal")
-
     loop = QtCore.QEventLoop()
     result = []
     exceptions = []
@@ -196,31 +191,31 @@ def capture() -> list[QtGui.QImage]:
     """
     result = []
     try:
-        logger.debug("Requesting screenshot with interactive=False...")
+        logger.debug("Request screenshot with interactive=False")
         result = _synchronized_capture(interactive=False)
     except TimeoutError:
-        logger.warning("Timeout when taking screenshot.")
+        logger.warning("Timeout when taking screenshot!")
     else:
         return result
 
     if not os.getenv("FLATPAK_ID"):
         logger.warning(
-            "Didn't receive screenshot. Are permissions missing or did you "
+            "Didn't receive screenshot! Are permissions missing or did you "
             "cancel the intermediate dialog?"
         )
         return result
 
-    logger.debug("Retrying requesting screenshot with interactive=True...")
+    logger.debug("Retry requesting screenshot with interactive=True")
     window = PermissionWindow()
     window.show()
     while not window.isActiveWindow():
         QtWidgets.QApplication.processEvents()
         time.sleep(0.3)
     try:
-        logger.debug("Requesting screenshot with interactive=True...")
+        logger.debug("Request screenshot with interactive=True")
         result = _synchronized_capture(interactive=True)
         window.hide()
     except TimeoutError:
-        logger.warning("Timeout when taking screenshot.")
+        logger.warning("Timeout when taking screenshot!")
 
     return result

@@ -34,8 +34,9 @@ def recognize(
         version=utils.get_tesseract_version(tesseract_cmd),  # type: ignore
         # For the type ignore, see: https://github.com/python/mypy/issues/5107
     )
-    logger.debug("Init tesseract with args: %s", tess_args)
-    logger.debug("Image size: %s", image.size)
+    logger.debug(
+        "Run Tesseract on image of size %s with args:\n%s", image.size, tess_args
+    )
 
     pytesseract.tesseract_cmd = str(tesseract_cmd)
     tsv_data = pytesseract.image_to_data(
@@ -49,7 +50,7 @@ def recognize(
     result = OcrResult(
         tess_args=tess_args, words=utils.tsv_to_list_of_dicts(tsv_data), image=image
     )
-    logger.debug("OCR result: %s", result)
+    logger.debug("OCR result:\n%s", result)
 
     if parse:
         result = Magic().apply(result)

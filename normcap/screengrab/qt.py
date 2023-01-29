@@ -10,7 +10,6 @@ def capture() -> list[QtGui.QImage]:
 
     Works well on X11, fails on multi monitor macOS.
     """
-    logger.debug("Use capture method: QT")
     images = []
     for screen in QtWidgets.QApplication.screens():
         screenshot = QtGui.QScreen.grabWindow(screen, 0)

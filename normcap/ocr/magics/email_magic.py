@@ -43,7 +43,7 @@ class EmailMagic(BaseMagic):
         all_chars = max([len(text), 1])
         ratio = email_chars / (all_chars * 0.75)
 
-        logger.debug("%s/%s chars in emails. Ratio: %s)", email_chars, all_chars, ratio)
+        logger.debug("%s/%s (%s) chars in emails", email_chars, all_chars, ratio)
         return round(100 * ratio, 2)
 
     def transform(self, ocr_result: OcrResult) -> str:

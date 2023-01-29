@@ -31,7 +31,7 @@ def get_copy_func() -> Callable:
 
     if _is_wayland_display_manager():
         if shutil.which("wl-copy") is not None:
-            logger.debug("Use wl-clipboard to copy to clipboard.")
+            logger.debug("Select clipboard method wl-copy")
             return _wl_copy
 
         logger.warning(
@@ -40,5 +40,5 @@ def get_copy_func() -> Callable:
             "the clipboard correctly."
         )
 
-    logger.debug("Use Qt to copy to clipboard.")
+    logger.debug("Select clipboard method QT")
     return qt.copy
