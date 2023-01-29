@@ -4,6 +4,7 @@ import functools
 import logging
 import os
 import re
+import shutil
 import subprocess
 import sys
 from typing import Optional
@@ -62,24 +63,20 @@ def get_gnome_version() -> Optional[str]:
     ):
         return None
 
-    return _parse_gnome_version_from_shell_cmd()
+    if not shutil.which("gnome-shell"):
+        return None
 
-
-def _parse_gnome_version_from_shell_cmd() -> Optional[str]:
-    """Try parsing gnome-shell output."""
-    gnome_version = None
     try:
         output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
         output = output_raw.decode().strip()
         if result := re.search(r"\s+([\d.]+)", output):
             gnome_version = result.groups()[0]
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        pass
     except Exception as e:
         logger.warning("Exception when trying to get gnome version from cli %s", e)
-
-    logger.debug("Detected Gnome Version: %s", gnome_version)
-    return gnome_version
+        return None
+    else:
+        logger.debug("Detected Gnome Version: %s", gnome_version)
+        return gnome_version
 
 
 def has_dbus_portal_support() -> bool:
