@@ -269,7 +269,7 @@ def test_hook_exception(monkeypatch, caplog, capsys):
                 tess_args=None,
                 image=Image.Image(),
                 words="secret",
-                transformed="secret",
+                parsed="secret",
             )
             raise RuntimeError
 

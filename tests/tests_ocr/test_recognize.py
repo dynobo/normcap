@@ -23,5 +23,5 @@ def test_remove_spaces_in_chi(data):
         languages=data["lang"].split(","),
     )
 
-    similarity = Levenshtein.ratio(result.transformed, data["transformed"])
-    assert similarity >= 0.90, (result.transformed, data["transformed"])
+    similarity = Levenshtein.ratio(result.parsed, data["transformed"])
+    assert similarity >= 0.90, (result.parsed, data["transformed"])

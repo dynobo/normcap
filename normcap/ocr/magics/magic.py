@@ -48,16 +48,16 @@ class Magic:
         # Transform with best magic
         if best_magic_name := ocr_result.best_scored_magic:
             best_magic = self._magics[best_magic_name]
-            ocr_result.transformed = best_magic.transform(ocr_result)
+            ocr_result.parsed = best_magic.transform(ocr_result)
 
-        ocr_result.transformed = self._post_process(ocr_result)
+        ocr_result.parsed = self._post_process(ocr_result)
         return ocr_result
 
     @staticmethod
     def _post_process(ocr_result: OcrResult) -> str:
         """Apply postprocessing to transformed output."""
-        transformed = ocr_result.transformed
-        # TODO: Check if still necessary:
+        transformed = ocr_result.parsed
+        # TODO: Check tesseract issue if whitespace workaround still necessary:
         # https://github.com/tesseract-ocr/tesseract/issues/2702
         if ocr_result.tess_args.is_language_without_spaces():
             transformed = transformed.replace(" ", "")
