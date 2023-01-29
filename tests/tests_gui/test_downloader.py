@@ -24,7 +24,7 @@ def test_downloader_handles_not_existing_url(caplog, qtbot: QtBot):
 
     downloader = Downloader()
     # Do not trigger download finished signal on error
-    with qtbot.assert_not_emitted(downloader.com.on_download_finished, wait=4000):
+    with qtbot.assert_not_emitted(downloader.com.on_download_finished, wait=1000):
         downloader.get(wrong_url)
 
     assert "ERROR" in caplog.text
@@ -32,7 +32,7 @@ def test_downloader_handles_not_existing_url(caplog, qtbot: QtBot):
     assert "Exception" in caplog.text
 
     # Do trigger download failed signal
-    with qtbot.wait_signal(downloader.com.on_download_failed, timeout=4000) as result:
+    with qtbot.wait_signal(downloader.com.on_download_failed, timeout=1000) as result:
         downloader.get(wrong_url)
 
     assert result.signal_triggered

@@ -12,7 +12,7 @@ def test_update_checker_triggers_checked_signal(monkeypatch, qtbot, packaged):
     monkeypatch.setattr(update_check, "__version__", "0.0.0")
     checker = update_check.UpdateChecker(None, packaged=packaged)
     monkeypatch.setattr(checker, "_show_update_message", lambda *args, **kwargs: ...)
-    with qtbot.waitSignal(checker.com.on_version_checked, timeout=4000) as _:
+    with qtbot.waitSignal(checker.com.on_version_checked, timeout=2000) as _:
         checker.check()
 
 
@@ -51,7 +51,7 @@ def test_update_checker_is_new_version(current, other, is_new):
 def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
     checker = update_check.UpdateChecker(None, packaged=packaged)
     with qtbot.waitSignal(
-        checker.com.on_version_checked, raising=False, timeout=4000
+        checker.com.on_version_checked, raising=False, timeout=2000
     ) as result:
         checker._on_download_finished(text, "some url")
 
