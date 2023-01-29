@@ -43,7 +43,7 @@ def test_gnome_version_on_windows(monkeypatch):
 
 def test_gnome_version_on_linux_from_cmd(monkeypatch):
     monkeypatch.setattr(utils.sys, "platform", "linux")
-
+    monkeypatch.setattr(utils.shutil, "which", lambda _: True)
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "wayland")
     version = utils.get_gnome_version.__wrapped__()
@@ -57,14 +57,10 @@ def test_gnome_version_on_linux_from_cmd(monkeypatch):
     assert str(version) == "33.3"
 
 
-def test_gnome_version_on_linux_file_not_found(monkeypatch):
+def test_gnome_version_on_linux_without_gnome_shell(monkeypatch):
     monkeypatch.setattr(utils.sys, "platform", "linux")
-
-    def _mocked_subprocess(*args, **kwargs):
-        raise FileNotFoundError()
-
+    monkeypatch.setattr(utils.shutil, "which", lambda _: False)
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
-    monkeypatch.setattr(utils.subprocess, "check_output", _mocked_subprocess)
 
     version = utils.get_gnome_version.__wrapped__()
     assert version is None
@@ -72,6 +68,7 @@ def test_gnome_version_on_linux_file_not_found(monkeypatch):
 
 def test_gnome_version_on_linux_unknown_exception(monkeypatch, caplog):
     monkeypatch.setattr(utils.sys, "platform", "linux")
+    monkeypatch.setattr(utils.shutil, "which", lambda _: True)
 
     def _mocked_subprocess(*args, **kwargs):
         raise DivisionByZero()
