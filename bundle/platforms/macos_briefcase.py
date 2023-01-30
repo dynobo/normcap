@@ -87,7 +87,7 @@ class MacBriefcase(BuilderBase):
 
     def rename_package_file(self) -> None:
         source = list(Path(self.PROJECT_PATH / "macOS").glob("*.dmg"))[0]
-        arch = "M1" if platform.machine().startswith("arm64") else "x86_64"
+        arch = "arm64" if platform.machine().startswith("arm64") else "x86_64"
         target = (
             self.BUILD_PATH
             / f"NormCap-{self.get_version()}-{arch}-macOS{self.binary_suffix}.dmg"
