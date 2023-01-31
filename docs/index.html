@@ -348,36 +348,71 @@
         <details id="faqs-improve-detection">
           <summary>How can I improve the detection accuracy?</summary>
           <p>
-            The most import thing is to specify the correct language(s) (via settings
-            menu or the <code>--language</code> command line argument). Keep in mind:
-            selecting multiple languages at once slows down the recognition a bit.
+            The quality of detections is mainly determined by
+            <a href="https://tesseract-ocr.github.io">Tesseract</a>, an open source
+            project for OCR mainly of <i>printed</i> text. NormCap builds upon this
+            great library and can influence the quality only a bit by preprocessing the
+            images regarding screen specific properties. <i>You</i>, the user, have much
+            more influence on the quality by paying attention to certain aspects:
           </p>
-          <p>
-            Sometimes Tesseract struggles with recognizing text with just very few
-            characters, like a single word. In this case try selecting a larger portion
-            of text.
-          </p>
-          <p>
-            The prebuild NormCap packages are shipped with the
-            <a href="https://github.com/tesseract-ocr/tessdata_fast" target="_blank"
-              >tessdata-fast</a
-            >
-            models, which offer a very good accuracy to speed compromise. But you can
-            also try to add the models from
-            <a href="https://github.com/tesseract-ocr/tessdata" target="_blank"
-              >tessdata</a
-            >
-            or
-            <a href="https://github.com/tesseract-ocr/tessdata_best" target="_blank"
-              >tessdata-best</a
-            >
-            instead as <a href="#faqs-languages">described above</a>.
-          </p>
-          <p>
-            If the results are still bad, please submit a screenshot of the text you are
-            trying to recognize
-            <a href="https://github.com/dynobo/normcap/issues">as an issue</a>.
-          </p>
+          <ol>
+            <li>
+              <b>Select the correct language</b> &ndash; To specify the correct
+              language(s) in the settings menu is the very important. But keep in mind:
+              selecting multiple languages at once slows down the recognition a bit.
+            </li>
+            <li>
+              <b>Avoid selecting decorations</b> &ndash; The text detection is very
+              sensible to elements <i>other</i> than text, for example borders, lines or
+              icons. If possible, do not select those:<br />
+              <img src="img/selections_1.png" /><br />
+            </li>
+            <li>
+              <b>Avoid heterogeneous colors</b> &ndash; If the text you want to
+              recognize has different backgrounds, it can help to select those portions
+              of text separately:<br />
+              <img src="img/selections_2.png" />
+            </li>
+            <li>
+              <b>Zoom in</b> &ndash; If possible, enlarge the region you want to detect,
+              before selecting it with NormCap. This has a huge effect in situations,
+              where zooming in doesn't decrease the quality, e.g. zooming into webpages,
+              PDF documents or images which are not yet at their full resolution. It has
+              little effect, if enlarging decreases the quality, e.g. for images with
+              low resolutions.
+            </li>
+            <li>
+              <b>Select more text</b> &ndash; Sometimes Tesseract struggles with
+              recognizing text with only very few characters, like a single word. In
+              this case, selecting a larger portion of text can improve the accuracy.
+            </li>
+            <li>
+              <b>Try different language models</b> &ndash; The prebuild NormCap packages
+              are using
+              <a href="https://github.com/tesseract-ocr/tessdata_fast" target="_blank"
+                >tessdata-fast</a
+              >
+              models, which offer a very good accuracy to speed compromise. But you can
+              also try the slower and larger models from
+              <a href="https://github.com/tesseract-ocr/tessdata" target="_blank"
+                >tessdata</a
+              >
+              or
+              <a href="https://github.com/tesseract-ocr/tessdata_best" target="_blank"
+                >tessdata-best</a
+              >
+              instead.<br />
+              To find the directory in which you have to put the manually downloaded
+              models navigate to the "Language" section of NormCap's settings, then
+              click "add/remove" and finally "View tessdata folder in File Manager".
+            </li>
+            <li>
+              <b>Report examples</b> &ndash; If the results are still bad, please submit
+              a screenshot of the text you are trying to recognize
+              <a href="https://github.com/dynobo/normcap/issues">as an issue</a>.
+              Chances are small, but we might be able to improve something.
+            </li>
+          </ol>
         </details>
         <details id="faqs-cloud">
           <summary>Is my image/text analyzed in The Cloud™?</summary>
