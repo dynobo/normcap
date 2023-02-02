@@ -49,6 +49,9 @@ Install from repositories:
 - **FlatPak (Linux)**: Install
   [com.github.dynobo.normcap](https://flathub.org/apps/details/com.github.dynobo.normcap)
   from FlatHub.
+- **Microsoft Store**: Search
+  "[NormCap](https://apps.microsoft.com/store/detail/normcap/XPDLJNB4B6C2ZR)" in the
+  Store app.
 
 If you experience issues please look at the
 [FAQs](https://dynobo.github.io/normcap/#faqs) or
