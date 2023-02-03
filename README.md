@@ -49,9 +49,6 @@ Install from repositories:
 - **FlatPak (Linux)**: Install
   [com.github.dynobo.normcap](https://flathub.org/apps/details/com.github.dynobo.normcap)
   from FlatHub.
-- **Microsoft Store**: Search
-  "[NormCap](https://apps.microsoft.com/store/detail/normcap/XPDLJNB4B6C2ZR)" in the
-  Store app.
 
 If you experience issues please look at the
 [FAQs](https://dynobo.github.io/normcap/#faqs) or
@@ -194,6 +191,7 @@ If NormCap doesn't fit your needs, try those alternatives (no particular order):
 - [Capture2Text](https://sourceforge.net/projects/capture2text) (Windows)
 - [Frog](https://github.com/TenderOwl/Frog) (Linux)
 - [Textinator](https://github.com/RhetTbull/textinator) (macOS)
+- [Text-Grab](https://github.com/TheJoeFin/Text-Grab) (Windows)
 
 ## Certification
 
