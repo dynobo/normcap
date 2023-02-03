@@ -191,6 +191,21 @@ system_requires = [
   "git",
   # "wl-clipboard", Only available on Ubuntu 20.04+
 ]
+dockerfile_extra_content = """
+USER root
+
+# Upgrade Tesseract 4 to 5
+RUN apt-add-repository ppa:alex-p/tesseract-ocr-devel
+RUN apt-get update -y && apt-get upgrade --with-new-pkgs -y
+
+# Build wl-clipboard
+RUN git clone https://github.com/bugaevc/wl-clipboard.git
+RUN meson build wl-clipboard && ninja -C build
+RUN mv build/src/wl-copy /usr/bin/
+
+USER brutus
+"""
+
 
 [tool.briefcase.app.normcap.windows]
 
