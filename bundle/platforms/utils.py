@@ -13,86 +13,6 @@ from typing import Optional, Union
 
 import toml
 
-BRIEFCASE_EXCLUDES = {
-    "pyside6": [
-        "3danimation",
-        "3dcore",
-        "3dextras",
-        "3drender",
-        "assistant",
-        "audio",
-        "bluetooth",
-        "canbus",
-        "charts",
-        "datavisualization",
-        "designer",
-        "examples",
-        "gamepad",
-        "geoservices",
-        "help",
-        "icudtl",
-        "labs",
-        "libexec",
-        "linguist",
-        "location",
-        "lupdate",
-        "mediaservice",
-        "multimedia",
-        "nfc",
-        "openglfunct",
-        "pdf",
-        "purchasing",
-        "qmllint",
-        "qmltooling",
-        "qt3dinput",
-        "qt63d",
-        "qt6quick",
-        "qt6shadertools",
-        "qtopengl",
-        "qtpositioning",
-        "qtprintsupport",
-        "qtquick",
-        "qtqml",
-        "qtshadertools",
-        "rcc",
-        "remoteobjects",
-        "scene",
-        "sensor",
-        "serialport",
-        "sql",
-        "test",
-        "texttospeech",
-        "uic",
-        "uitools",
-        "virtualkeyboard",
-        "webchannel",
-        "webengine",
-        "websockets",
-        "webview",
-    ],
-    "app_packages": [
-        "/tests/",
-        "docs",
-    ],
-    "lib": ["qt6"],
-}
-
-
-def rm_recursive(directory, exclude: list[str]) -> None:  # noqa: ANN001
-    """Remove excluded files from package.
-
-    This function is patched into briefcase source!
-    """
-    for package_path in directory.glob(r"**/*"):
-        path_str = str(package_path.absolute()).lower()
-        if any(e in path_str for e in exclude):
-            if not package_path.exists():
-                continue
-            if package_path.is_dir():
-                shutil.rmtree(package_path)
-            if package_path.is_file():
-                os.remove(package_path)
-
 
 class BuilderBase(ABC):
     """Create a prebuild package."""
@@ -218,11 +138,8 @@ class BuilderBase(ABC):
             )
 
 
-# TODO: Make sure it's copied to the correct path!
 def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
     """Download tesseract binaries including dependencies into resource path."""
-    # Link to download artifact might change
-
     tesseract_path = builder.BUILD_PATH / "tesseract"
     tesseract_path.mkdir(exist_ok=True)
     builder.TESSERACT_PATH.mkdir(exist_ok=True)
@@ -267,23 +184,17 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
 
 def bundle_tesseract_windows_appveyor(builder: BuilderBase) -> None:
     """Download tesseract binaries including dependencies into resource path."""
-    # Link to download artifact might change
-
     zip_path = builder.BUILD_PATH / "tesseract.zip"
 
     if zip_path.exists():
         return
 
-    # TODO: Check if the official build is up again, then remove this mirror:
-    # TODO: Extract UB Mannheims installer instead:
-    # https://github.com/UB-Mannheim/tesseract/wiki
-    url = "https://normcap.needleinthehay.de/tesseract.zip"
-
+    # TODO: Check if the official build is up again
     # The official tesseract artefact for windows is build and available here:
     # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
-    # url = (
-    #     "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
-    # )
+    url = (
+        "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
+    )
 
     urllib.request.urlretrieve(url, zip_path)
 
