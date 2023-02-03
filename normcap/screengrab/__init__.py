@@ -34,7 +34,6 @@ def _is_pyside6_64plus() -> bool:
 
 
 def get_capture_func() -> Callable:
-
     # fmt: off
     if sys.platform != "linux" or not utils.has_wayland_display_manager():
         logger.debug("Select capture method QT")

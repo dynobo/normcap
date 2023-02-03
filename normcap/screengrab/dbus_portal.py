@@ -18,7 +18,6 @@ TIMEOUT_SECONDS = 7
 
 
 class OrgFreedesktopPortalRequestInterface(QtDBus.QDBusAbstractInterface):
-
     Response = QtCore.Signal(QtDBus.QDBusMessage)
 
     def __init__(

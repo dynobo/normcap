@@ -28,7 +28,6 @@ def _is_wayland_display_manager() -> bool:
 
 
 def get_copy_func() -> Callable:
-
     if _is_wayland_display_manager():
         if shutil.which("wl-copy") is not None:
             logger.debug("Select clipboard method wl-copy")

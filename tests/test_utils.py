@@ -84,7 +84,6 @@ def test_set_environ_for_wayland(monkeypatch):
 
 def test_set_environ_for_flatpak(monkeypatch):
     with monkeypatch.context() as m:
-
         test_value = "something"
         m.setenv("LD_PRELOAD", test_value)
         utils.set_environ_for_flatpak()

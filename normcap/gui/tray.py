@@ -6,9 +6,10 @@ import os
 import sys
 import tempfile
 import time
+from collections.abc import Iterable
 from functools import partial
 from pathlib import Path
-from typing import Any, Iterable, NoReturn
+from typing import Any, NoReturn
 
 from PIL import Image
 from PySide6 import QtCore, QtGui, QtWidgets

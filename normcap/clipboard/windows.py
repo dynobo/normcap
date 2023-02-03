@@ -13,8 +13,9 @@ import ctypes
 import logging
 import sys
 import time
+from collections.abc import Generator, Iterator
 from ctypes import c_size_t, c_wchar, c_wchar_p, get_errno, sizeof
-from typing import Any, Callable, Generator, Iterator
+from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
 
