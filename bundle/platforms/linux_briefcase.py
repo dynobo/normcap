@@ -62,24 +62,7 @@ build_wl_clipboard(self, app_packages_path)
 "--executable",
 "/usr/bin/tesseract",
 "--executable",
-f"{self.appdir_path(app).parent.parent.parent / 'build' / 'src' / 'wl-copy'}",
-"""
-        self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
-
-    def patch_briefcase_create_to_adjust_dockerfile(self) -> None:
-        """Add code to add tesseract ppa to Dockerfile."""
-        file_path = Path(briefcase.__file__).parent / "commands" / "create.py"
-        insert_after = "self.install_app_support_package(app=app)"
-        patch = """
-if "linux" in str(bundle_path):
-    print()
-    print("Patching Dockerfile on Linux")
-    import fileinput
-    patch = "\\nRUN apt-add-repository ppa:alex-p/tesseract-ocr-devel"
-    for line in fileinput.FileInput(bundle_path / "Dockerfile", inplace=1):
-        if "RUN apt-add-repository ppa:deadsnakes/ppa" in line:
-            line = line.replace(line, line + patch)
-        print(line, end="")
+"/usr/bin/wl-copy",
 """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
