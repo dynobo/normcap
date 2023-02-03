@@ -1,56 +1,18 @@
 """Run adjustments while packaging with briefcase during CI/CD."""
 
-import inspect
 import os
 import shutil
 from pathlib import Path
 
 import briefcase
 
-from platforms.utils import (
-    BRIEFCASE_EXCLUDES,
-    BuilderBase,
-    build_wl_clipboard,
-    rm_recursive,
-)
+from platforms.utils import BuilderBase
 
 
 class LinuxBriefcase(BuilderBase):
     """Create prebuild package for Linux using Briefcase."""
 
     binary_suffix = ""
-
-    def patch_briefcase_appimage_to_prune_deps(self) -> None:
-        """Insert code into briefcase appimage code to remove unnecessary libs."""
-        def_rm_recursive = inspect.getsource(rm_recursive)
-
-        file_path = (
-            Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
-        )
-        patch = f"""
-import shutil, os
-{def_rm_recursive}
-app_dir = self.appdir_path(app) / "usr" / "app_packages"
-rm_recursive(directory=app_dir, exclude={BRIEFCASE_EXCLUDES["app_packages"]})
-rm_recursive(directory=app_dir / "PySide6", exclude={BRIEFCASE_EXCLUDES["pyside6"]})
-
-lib_dir = self.appdir_path(app) / "usr" / "lib"
-rm_recursive(directory=lib_dir / "PySide6", exclude={BRIEFCASE_EXCLUDES["pyside6"]})
-"""
-        insert_after = 'self.logger.info("Building AppImage...", prefix=app.app_name)'
-        self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
-
-    def patch_briefcase_appimage_to_build_wl_clipboard(self) -> None:
-        """Patch briefcase appimage code to build wl clipboard inside docker."""
-        def_build_wl_clipboard = inspect.getsource(build_wl_clipboard)
-
-        file_path = Path(briefcase.__file__).parent / "commands" / "create.py"
-        patch = f"""
-{def_build_wl_clipboard}
-build_wl_clipboard(self, app_packages_path)
-"""
-        insert_after = "        # Install dependencies"
-        self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
     def patch_briefcase_appimage_to_include_tesseract_and_wlcopy(self) -> None:
         """Insert code into briefcase appimage code to remove unnecessary libs."""
@@ -109,10 +71,7 @@ build_wl_clipboard(self, app_packages_path)
         self.download_tessdata()
         self.install_system_deps()
 
-        self.patch_briefcase_appimage_to_build_wl_clipboard()
-        self.patch_briefcase_appimage_to_prune_deps()
         self.patch_briefcase_appimage_to_include_tesseract_and_wlcopy()
-        self.patch_briefcase_create_to_adjust_dockerfile()
 
         self.run_framework()
         self.rename_package_file()

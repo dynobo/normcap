@@ -94,20 +94,6 @@ def rm_recursive(directory, exclude: list[str]) -> None:  # noqa: ANN001
                 os.remove(package_path)
 
 
-def build_wl_clipboard(self, app_packages_path) -> None:  # noqa: ANN001
-    """Build wl clipboard binaryW.
-
-    This function is patched into briefcase source!
-    """
-    self.subprocess.run("rm -rf wl-clipboard")
-    self.subprocess.run(
-        "git clone https://github.com/bugaevc/wl-clipboard.git".split(),
-        check=True,
-    )
-    self.subprocess.run("meson build wl-clipboard".split(), check=True)
-    self.subprocess.run("ninja -C build".split(), capture_output=True, text=True)
-
-
 class BuilderBase(ABC):
     """Create a prebuild package."""
 

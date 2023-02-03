@@ -167,9 +167,71 @@ sources = ["normcap"]
 icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
-
+# TODO: Switch to pyside6-essentials, once build works with Ubuntu 20.04+
 requires = ["pyside6", "jeepney", "pytesseract", "certifi"]
-
+cleanup_paths = [
+  # Globs
+  "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",
+  "**/*.debug",
+  "**/*[bB]odymovin*",
+  "**/*[lL]abs*",
+  "**/*[qQ]t[xX]ml*",
+  "**/*[qQ]t*[bB]luetooth*",
+  "**/*[qQ]t*[cC]harts*",
+  "**/*[qQ]t*[dD]ata[vV]isualization*",
+  "**/*[qQ]t*[dD]esigner*",
+  "**/*[qQ]t*[hH]elp*",
+  "**/*[qQ]t*[mM]ultimedia*",
+  "**/*[qQ]t*[pP]ositioning*",
+  "**/*[qQ]t*[pP]rint[sS]upport*",
+  "**/*[qQ]t*[rR]emote[oO]bjects*",
+  "**/*[qQ]t*[sS]ensor*",
+  "**/*[qQ]t*[sS]erial*",
+  "**/*[qQ]t*[sS]hader[tT]ools*",
+  "**/*[qQ]t*[sS]ql*",
+  "**/*[qQ]t*[sS]tate[mM]achine*",
+  "**/*[qQ]t*[tT]est*",
+  "**/*[qQ]t*[wW]eb[cC]hannel*",
+  "**/*[qQ]t*[wW]eb[eE]ngine*",
+  "**/*[qQ]t*[wW]eb[sS]ockets*",
+  "**/*[qQ]t*3[dD]*",
+  "**/*[qQ]uick*",
+  "**/*[sS]cene*",
+  "**/*[sS]cxml*",
+  "**/*[uU]i[tT]ools*",
+  "**/*[vV]irtual[kK]eyboard*",
+  "**/*[wW]eb[vV]iew*",
+  "**/*QtQml*",
+  "**/bin/pyside6-*",
+  "**/libQt6Nfc*",
+  "**/render*",
+  # Folders
+  "**/__pycache__",
+  "**/docs",
+  "**/examples",
+  "**/libexec",
+  "**/plugins/assetimporters",
+  "**/plugins/canbus",
+  "**/plugins/designer",
+  "**/plugins/printsupport",
+  "**/plugins/qmltooling",
+  "**/plugins/sceneparsers",
+  "**/plugins/sensors",
+  "**/plugins/sqldrivers",
+  "**/PySide6/Examples",
+  "**/Qt/qml/QtQml",
+  "**/Qt/resources",
+  "**/Qt/translations",
+  "**/tests",
+  "**/typesystems",
+  # Files
+  "**/icudtl.dat",
+  "**/PySide6/assistant",
+  "**/PySide6/designer",
+  "**/PySide6/linguist",
+  "**/PySide6/lrelease",
+  "**/PySide6/lupdate",
+]
 [tool.briefcase.app.normcap.macOS]
 requires = ["std-nslog==1.0.0"]
 
