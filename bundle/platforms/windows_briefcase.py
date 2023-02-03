@@ -6,12 +6,7 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree
 
-from platforms.utils import (
-    BRIEFCASE_EXCLUDES,
-    BuilderBase,
-    bundle_tesseract_windows_ub_mannheim,
-    rm_recursive,
-)
+from platforms.utils import BuilderBase, bundle_tesseract_windows_ub_mannheim
 
 
 class WindowsBriefcase(BuilderBase):
@@ -124,12 +119,7 @@ class WindowsBriefcase(BuilderBase):
         shutil.move(source, target)
 
     def run_framework(self) -> None:
-        app_dir = self.PROJECT_PATH / "windows" / "app" / "NormCap" / "app_packages"
         self.run(cmd="briefcase create", cwd=self.PROJECT_PATH)
-        rm_recursive(directory=app_dir, exclude=BRIEFCASE_EXCLUDES["app_packages"])
-        rm_recursive(
-            directory=app_dir / "PySide6", exclude=BRIEFCASE_EXCLUDES["pyside6"]
-        )
         self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
         self.patch_windows_installer()
         self.run(cmd="briefcase package", cwd=self.PROJECT_PATH)

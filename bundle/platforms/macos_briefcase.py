@@ -4,7 +4,7 @@ import platform
 import shutil
 from pathlib import Path
 
-from platforms.utils import BRIEFCASE_EXCLUDES, BuilderBase, rm_recursive
+from platforms.utils import BuilderBase
 
 
 class MacBriefcase(BuilderBase):
@@ -13,24 +13,8 @@ class MacBriefcase(BuilderBase):
     binary_suffix = ""
 
     def run_framework(self) -> None:
-        app_dir = (
-            self.PROJECT_PATH
-            / "macOS"
-            / "app"
-            / "NormCap"
-            / "NormCap.app"
-            / "Contents"
-            / "Resources"
-            / "app_packages"
-        )
         self.run(cmd="briefcase create", cwd=self.PROJECT_PATH)
-
-        rm_recursive(directory=app_dir, exclude=BRIEFCASE_EXCLUDES["app_packages"])
-        rm_recursive(
-            directory=app_dir / "PySide6", exclude=BRIEFCASE_EXCLUDES["pyside6"]
-        )
         self.bundle_tesseract()
-
         self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
         # TODO: Re-enable if we have a solution for unfocusing on macOS
         # patch_info_plist_for_proper_fullscreen()
