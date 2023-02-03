@@ -1,8 +1,9 @@
 """Detect OCR tool & language and perform OCR on selected part of image."""
 
 import logging
+from collections.abc import Iterable
 from os import PathLike
-from typing import Iterable, Optional, Union
+from typing import Optional, Union
 
 from PIL import Image
 from pytesseract import pytesseract
