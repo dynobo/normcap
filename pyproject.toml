@@ -183,6 +183,7 @@ cleanup_paths = [
   "**/*[qQ]t*[hH]elp*",
   "**/*[qQ]t*[mM]ultimedia*",
   "**/*[qQ]t*[pP]ositioning*",
+  "**/*[qQ]t*[pP]df*",
   "**/*[qQ]t*[pP]rint[sS]upport*",
   "**/*[qQ]t*[rR]emote[oO]bjects*",
   "**/*[qQ]t*[sS]ensor*",
@@ -205,6 +206,9 @@ cleanup_paths = [
   "**/bin/pyside6-*",
   "**/libQt6Nfc*",
   "**/render*",
+  "**/PySide6/[aA]ssistant*",
+  "**/PySide6/[dD]esigner*",
+  "**/PySide6/[lL]inguist*",
   # Folders
   "**/__pycache__",
   "**/docs",
@@ -226,9 +230,6 @@ cleanup_paths = [
   "**/typesystems",
   # Files
   "**/icudtl.dat",
-  "**/PySide6/assistant",
-  "**/PySide6/designer",
-  "**/PySide6/linguist",
   "**/PySide6/lrelease",
   "**/PySide6/lupdate",
 ]
