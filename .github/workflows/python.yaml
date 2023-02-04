@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11, windows-2019, ubuntu-22.04]
+        os: [macos-12, windows-2022, ubuntu-22.04]
     steps:
       # Setup environment
       - uses: actions/checkout@v3
@@ -57,14 +57,14 @@ jobs:
           echo "XDG_SESSION_TYPE=gnome" >> $GITHUB_ENV
 
       - name: Prepare macOS
-        if: matrix.os  == 'macos-11'
+        if: matrix.os  == 'macos-12'
         run: |
           brew install pkg-config tesseract tesseract-lang dylibbundler
           brew info tesseract
           "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
 
       - name: Prepare Windows
-        if: matrix.os  == 'windows-2019'
+        if: matrix.os  == 'windows-2022'
         run: |
           $url = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.1.20220118.exe"
           Invoke-WebRequest -Uri $url -OutFile "tesseract_installer.exe"
@@ -113,10 +113,10 @@ jobs:
       - name: Build test package briefcase
         shell: bash -l {0}
         run: poetry run python bundle/build.py --framework=briefcase --dev
-      - name: Print briefcase error log
+      - name: Print briefcase log in case of error
         if: failure()
         shell: bash -l {0}
-        run: cat /Users/runner/work/normcap/normcap/logs/briefcase*
+        run: cat logs/briefcase*
 
       # Release test package
       - name: Set current date as env variable
@@ -170,7 +170,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-11, windows-2019]
+        os: [ubuntu-22.04, macos-12, windows-2022]
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
@@ -198,7 +198,7 @@ jobs:
           draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: FTP upload windows package
-        if: matrix.os  == 'windows-2019' && github.repository == 'dynobo/normcap'
+        if: matrix.os  == 'windows-2022' && github.repository == 'dynobo/normcap'
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.WEBGO_FTP_HOST }}
