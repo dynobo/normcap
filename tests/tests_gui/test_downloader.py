@@ -1,7 +1,7 @@
 import pytest
 from pytestqt.qtbot import QtBot
 
-from normcap.gui.downloader import Downloader
+from normcap.gui.downloader import Downloader, Worker
 
 
 @pytest.mark.skip_on_gh
@@ -38,3 +38,25 @@ def test_downloader_handles_not_existing_url(caplog, qtbot: QtBot):
     assert result.signal_triggered
     assert wrong_url in result.args[0]
     assert "Exception" in result.args[0]
+
+
+def test_worker_not_existing_url(qtbot):
+    test_url = "https://sth.needleinthehay.de"
+
+    worker = Worker(test_url)
+    with qtbot.waitSignal(worker.com.on_download_failed) as signal:
+        worker.run()
+
+    assert signal.args[0].startswith("Exception")
+    assert signal.args[1] == test_url
+
+
+def test_worker_existing_url(qtbot):
+    test_url = "https://github.com"
+
+    worker = Worker(test_url)
+    with qtbot.waitSignal(worker.com.on_download_finished) as signal:
+        worker.run()
+
+    assert type(signal.args[0]) is bytes
+    assert signal.args[1] == test_url
