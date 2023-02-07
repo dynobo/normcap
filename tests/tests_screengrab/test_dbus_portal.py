@@ -8,6 +8,7 @@ from normcap.screengrab import ScreenshotRequestError, ScreenshotResponseError
 #       which is probably with Ubuntu 22.10+
 
 
+@pytest.mark.gui
 @pytest.mark.skip_on_gh
 def test_synchronized_capture(qtbot, dbus_portal):
     result = dbus_portal._synchronized_capture(interactive=False)
@@ -39,6 +40,7 @@ def test_synchronized_capture_triggers_request_error(monkeypatch, qtbot, dbus_po
         _ = dbus_portal._synchronized_capture(interactive=False)
 
 
+@pytest.mark.gui
 @pytest.mark.skip_on_gh
 def test_synchronized_capture_triggers_response_error(monkeypatch, qtbot, dbus_portal):
     def _decorate_got_signal(method):

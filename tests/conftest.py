@@ -11,10 +11,6 @@ from normcap.ocr.models import OcrResult, TessArgs
 from normcap.utils import create_argparser
 
 
-def pytest_configure(config):
-    config.addinivalue_line("markers", "skip_on_gh: do not run during CI/CD on github")
-
-
 @pytest.fixture()
 def dbus_portal():
     try:

@@ -1,11 +1,13 @@
 from pathlib import Path
 
+import pytest
 from PySide6 import QtCore
 from pytestqt.qtbot import QtBot
 
 from normcap.gui import language_manager
 
 
+@pytest.mark.gui
 def test_language_manager_download(monkeypatch, tmp_path, qtbot: QtBot):
     Path(tmp_path / "tessdata").mkdir()
     Path(tmp_path / "tessdata" / "eng.traineddata").touch()
