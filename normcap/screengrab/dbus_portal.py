@@ -104,7 +104,9 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         logger.debug("Parse response")
         uri = str(message).split('[Variant(QString): "')[1]
         uri = uri.split('"]}')[0]
-        # TODO: Parse from arguments instead?
+        # ONHOLD: Extracting DBusArgument as below should work, but it doesn't.
+        # _, arg = message.arguments()
+        # QtDBus.QDBusMessage()
         # arg.beginArray()
         # while not arg.atEnd():
         #     arg.beginMap()
@@ -112,7 +114,6 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         #         arg.beginMapEntry()
         #         key = arg.asVariant()
         #         value = arg.asVariant()
-        #         # v = value.variant()
         #         arg.endMapEntry()
         #     arg.endMap()
         # arg.endArray()
