@@ -171,7 +171,7 @@ sources = ["normcap"]
 icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
-# TODO: Switch to pyside6-essentials, once build works with Ubuntu 20.04+
+# ONHOLD: Switch to pyside6-essentials, once build works with Ubuntu 20.04+
 requires = ["pyside6", "jeepney", "pytesseract", "certifi"]
 cleanup_paths = [
   # Globs

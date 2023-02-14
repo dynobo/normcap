@@ -4,7 +4,7 @@ import pytest
 
 from normcap.screengrab import ScreenshotRequestError, ScreenshotResponseError
 
-# TODO: Remove skip_on_gh's once gh-runners support portal.Screenshot w/o dialog
+# ONHOLD: Remove skip_on_gh's once gh-runners support portal.Screenshot w/o dialog
 #       which is probably with Ubuntu 22.10+
 
 

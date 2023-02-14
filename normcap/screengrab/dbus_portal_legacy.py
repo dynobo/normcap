@@ -2,8 +2,8 @@
 
 Legacy version using jeepney.
 
-# FIXME: Not working with Gnome 43 in FlatPak (If new version doesnt work their, either)
-# TODO: Remove legacy dbus portal module once it is deprecated. Check in 2023-05-01.
+# FIXME: Not working with Gnome 43 in FlatPak (If new version doesnt work there, too)
+# ONHOLD: Remove legacy dbus portal module once it is deprecated. Check in 2023-05-01.
 
 AppImage related dependency chain necessary to be resolved before removal:
 
@@ -16,7 +16,7 @@ AppImage related dependency chain necessary to be resolved before removal:
   As this is not present on Ubuntu 16.04 AppImage, PySide6 v6.4+ won't install.
   Sidenote: the missing glibc 2.28+ probably also is the reason for some failures on old
   host distributions and during the appimage.github.io checks.
-  TODO: Let's retry appimage.github.io submission
+  ONHOLD: Let's retry appimage.github.io submission
   Details see https://lists.qt-project.org/pipermail/pyside/2022-December/003253.html
 
 - Briefcase support image on Ubuntu 18.04.6 LTS

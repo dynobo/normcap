@@ -57,7 +57,7 @@ class Magic:
     def _post_process(ocr_result: OcrResult) -> str:
         """Apply postprocessing to transformed output."""
         transformed = ocr_result.parsed
-        # TODO: Check tesseract issue if whitespace workaround still necessary:
+        # ONHOLD: Check tesseract issue if whitespace workaround still necessary:
         # https://github.com/tesseract-ocr/tesseract/issues/2702
         if ocr_result.tess_args.is_language_without_spaces():
             transformed = transformed.replace(" ", "")
