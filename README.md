@@ -44,6 +44,8 @@ Install a prebuilt release:
 
 Install from repositories:
 
+- **Windows**: Install from
+  [Microsoft Store](https://apps.microsoft.com/store/detail/normcap/XPDLJNB4B6C2ZR%22).
 - **Arch / Manjaro**: Install the
   [`normcap`](https://aur.archlinux.org/packages/normcap) package from AUR.
 - **FlatPak (Linux)**: Install
