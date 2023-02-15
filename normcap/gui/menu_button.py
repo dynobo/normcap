@@ -151,7 +151,7 @@ class MenuButton(QtWidgets.QToolButton):
 
         if action_name == "close":
             self.com.on_close_in_settings.emit("Clicked close in settings")
-        elif action_name == "message_languages":
+        elif action_name == "show_help_languages":
             self.message_box.setText(MESSAGE_LANGUAGES)
             self.message_box.exec_()
         elif action_name == "manage_languages":
@@ -243,7 +243,7 @@ class MenuButton(QtWidgets.QToolButton):
             action.setObjectName("manage_languages")
         else:
             action = QtGui.QAction("... need more?", menu)
-            action.setObjectName("message_languages")
+            action.setObjectName("show_help_languages")
 
         menu.addAction(action)
 
