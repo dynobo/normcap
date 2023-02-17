@@ -4,11 +4,18 @@ from pathlib import Path
 
 import pytest
 from PIL import Image
-from PySide6 import QtGui
+from PySide6 import QtCore, QtGui
 
 from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.models import OcrResult, TessArgs
 from normcap.utils import create_argparser
+
+
+@pytest.fixture()
+def temp_settings():
+    settings = QtCore.QSettings("dynobo", "normcap_tests")
+    yield settings
+    settings.remove("")
 
 
 @pytest.fixture()
