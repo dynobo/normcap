@@ -1,4 +1,7 @@
 """Find new version on github or pypi."""
+# TODO: Lazy load & import to improve startup time. Eg. certifi is slow!
+# https://stackoverflow.com/a/69080459
+# TODO: Also reevaluate using QTNetwork for downloading, to avoid certifi
 import logging
 import ssl
 from urllib.request import urlopen

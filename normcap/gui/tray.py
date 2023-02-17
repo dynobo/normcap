@@ -88,6 +88,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.screens: list[Screen] = system_info.screens()
 
+        # TODO: most of the things below should be executed _after_ window is drawn
         self._set_tray_icon()
         self._add_tray_menu()
         self._ensure_screenshot_permission()
