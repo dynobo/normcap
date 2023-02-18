@@ -128,7 +128,7 @@ class UpdateChecker(QtCore.QObject):
 
         choice = self.message_box.exec_()
 
-        if choice == 1024:
+        if choice == QtWidgets.QMessageBox.Ok:
             update_url = URLS.releases if self.packaged else URLS.changelog
             self.com.on_click_get_new_version.emit(update_url)
 
