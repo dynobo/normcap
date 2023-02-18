@@ -33,9 +33,10 @@ def test_urls_reachable(url):
         ("0.3.15", "0.13.14", True),
         ("0.3.15", "0.3.6", False),
         ("0.3.15", "0.3.15-beta1", False),
-        ("0.3.15-beta3", "0.3.15-beta12", True),
-        ("0.3.15-beta3", "0.3.15-alpha2", False),
+        ("0.3.15-beta3", "0.3.15-beta12", False),
         ("0.3.15-beta3", "0.3.15-alpha5", False),
+        ("0.3.15-beta3", "0.3.15", False),
+        ("0.3.15-beta3", "0.3.16", True),
     ),
 )
 def test_update_checker_is_new_version(current, other, is_new):

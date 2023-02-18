@@ -76,46 +76,21 @@ class UpdateChecker(QtCore.QObject):
         """Compare version strings.
 
         As the versions compare are within the scope of this project, a simple parsing
-        logic will do. It is based on the assumption that semver and only the suffixes
-        "alpha" and "beta" are used.
+        logic will do. It is based on the assumption that semver is used. Pre-releases
+        are discarded and will not pre considered a new version.
 
         NOTE: This is not very robust, so do not use elsewhere! But the standard
         solution packaging.version is not used here on purpose to avoid that dependency.
         That reduces importtime and package size.
         """
-        current_version = [c.zfill(8) for c in re.split(r"\.|\-", current)]
-        other_version = [c.zfill(8) for c in re.split(r"\.|\-", other)]
-
-        # Remove padding for suffix element
-        if len(current_version) >= 4:
-            current_version[3] = current_version[3].lstrip("0")
-        if len(other_version) >= 4:
-            other_version[3] = other_version[3].lstrip("0")
-
-        # Compare just the major.minor.patch for the clear cases
-        if other_version[:3] > current_version[:3]:
-            return True
-
-        if other_version[:3] < current_version[:3]:
+        if "-" in other:
+            logging.debug("Discarding pre-release version %s", other)
             return False
 
-        if len(other_version) == 3 and len(current_version) == 3:
-            return False
-
-        # We have one or more pre-release suffixes to handle.
-
-        # Check if only one version has suffix, which also is a clear case:
-        if len(other_version) != len(current_version):
-            return len(other_version) < len(current_version)
-
-        # Check if the suffix (alpha, beta) are different by comparing first letters
-        if current_version[3][0] != other_version[3][0]:
-            return other_version[3][0] > current_version[3][0]
-
-        # Suffixes are the same, compare numbers
-        current_suffix_digits = re.sub(r"[^0-9]", "", current_version[3])
-        other_suffix_digits = re.sub(r"[^0-9]", "", other_version[3])
-        return int(other_suffix_digits) > int(current_suffix_digits)
+        current = current.split("-")[0]
+        current_version = [int(c) for c in current.split(".")]
+        other_version = [int(c) for c in other.split(".")]
+        return other_version > current_version
 
     def _show_update_message(self, new_version: str) -> None:
         """Show dialog informing about available update."""
