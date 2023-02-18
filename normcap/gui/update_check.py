@@ -83,32 +83,38 @@ class UpdateChecker(QtCore.QObject):
         solution packaging.version is not used here on purpose to avoid that dependency.
         That reduces importtime and package size.
         """
-        current_tuple = tuple([c.zfill(8) for c in re.split(r"\.|\-", current)])
-        other_tuple = tuple([c.zfill(8) for c in re.split(r"\.|\-", other)])
+        current_version = [c.zfill(8) for c in re.split(r"\.|\-", current)]
+        other_version = [c.zfill(8) for c in re.split(r"\.|\-", other)]
+
+        # Remove padding for suffix element
+        if len(current_version) >= 4:
+            current_version[3] = current_version[3].lstrip("0")
+        if len(other_version) >= 4:
+            other_version[3] = other_version[3].lstrip("0")
 
         # Compare just the major.minor.patch for the clear cases
-        if other_tuple[:3] > current_tuple[:3]:
+        if other_version[:3] > current_version[:3]:
             return True
 
-        if other_tuple[:3] < current_tuple[:3]:
+        if other_version[:3] < current_version[:3]:
             return False
 
-        if len(other_tuple) == 3 and len(current_tuple) == 3:
+        if len(other_version) == 3 and len(current_version) == 3:
             return False
 
         # We have one or more pre-release suffixes to handle.
 
         # Check if only one version has suffix, which also is a clear case:
-        if len(other_tuple) != len(current_tuple):
-            return len(other_tuple) < len(current_tuple)
+        if len(other_version) != len(current_version):
+            return len(other_version) < len(current_version)
 
         # Check if the suffix (alpha, beta) are different by comparing first letters
-        if current_tuple[3][0] != other_tuple[3][0]:
-            return other_tuple[3][0] > current_tuple[3][0]
+        if current_version[3][0] != other_version[3][0]:
+            return other_version[3][0] > current_version[3][0]
 
         # Suffixes are the same, compare numbers
-        current_suffix_digits = re.sub(r"[^0-9]", "", current_tuple[3])
-        other_suffix_digits = re.sub(r"[^0-9]", "", other_tuple[3])
+        current_suffix_digits = re.sub(r"[^0-9]", "", current_version[3])
+        other_suffix_digits = re.sub(r"[^0-9]", "", other_version[3])
         return int(other_suffix_digits) > int(current_suffix_digits)
 
     def _show_update_message(self, new_version: str) -> None:
