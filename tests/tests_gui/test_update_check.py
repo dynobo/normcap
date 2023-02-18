@@ -1,6 +1,7 @@
 import urllib
 
 import pytest
+from PySide6 import QtWidgets
 
 from normcap.gui import update_check
 from normcap.gui.constants import URLS
@@ -47,7 +48,7 @@ def test_update_checker_is_new_version(current, other, is_new):
 @pytest.mark.skip_on_gh
 @pytest.mark.parametrize(
     "packaged,text",
-    [(True, b"abc"), (False, b'{"no relevant":"info"}'), (False, b'{"invalid":"json"')],
+    [(True, b"abc"), (False, b'{"no relevant":"info"}'), (False, "not binary")],
 )
 def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
     checker = update_check.UpdateChecker(None, packaged=packaged)
@@ -58,3 +59,14 @@ def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
 
     assert not result.signal_triggered
     assert "ERROR" in caplog.text
+
+
+def test_show_update_message(qtbot, monkeypatch):
+    checker = update_check.UpdateChecker(None)
+    monkeypatch.setattr(checker.message_box, "exec_", lambda: QtWidgets.QMessageBox.Ok)
+
+    version = "99.0.0"
+    with qtbot.waitSignal(checker.com.on_click_get_new_version):
+        checker._show_update_message(new_version=version)
+
+    assert version in checker.message_box.text()
