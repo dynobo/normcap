@@ -8,7 +8,7 @@ from normcap.gui import language_manager
 
 
 @pytest.mark.gui
-def test_download_language(monkeypatch, tmp_path, qtbot: QtBot):
+def test_download_language(tmp_path, qtbot: QtBot):
     Path(tmp_path / "tessdata").mkdir()
     Path(tmp_path / "tessdata" / "eng.traineddata").touch()
 
@@ -18,9 +18,6 @@ def test_download_language(monkeypatch, tmp_path, qtbot: QtBot):
 
     assert len(window.installed_layout.model.languages) == 1
     assert window.installed_layout.model.languages[0][0] == "eng"
-
-    qtbot.wait(200)
-    qtbot.wait_active(window, timeout=5000)
 
     qtbot.mouseClick(
         window.available_layout.view.children()[0],
@@ -33,8 +30,7 @@ def test_download_language(monkeypatch, tmp_path, qtbot: QtBot):
         window.com.on_change_installed_languages, timeout=5000
     ) as result:
         qtbot.mouseClick(
-            window.available_layout.button,
-            QtCore.Qt.MouseButton.LeftButton,
+            window.available_layout.button, QtCore.Qt.MouseButton.LeftButton
         )
 
     assert result.signal_triggered
@@ -42,6 +38,82 @@ def test_download_language(monkeypatch, tmp_path, qtbot: QtBot):
     assert len(window.installed_layout.model.languages) == 2
     assert window.installed_layout.model.languages[0][0] == "afr"
     assert window.installed_layout.model.languages[1][0] == "eng"
+
+
+@pytest.mark.gui
+def test_delete_language(tmp_path, qtbot: QtBot):
+    Path(tmp_path / "tessdata").mkdir()
+    Path(tmp_path / "tessdata" / "deu.traineddata").touch()
+    Path(tmp_path / "tessdata" / "eng.traineddata").touch()
+
+    window = language_manager.LanguageManager(tessdata_path=tmp_path / "tessdata")
+    window.show()
+    qtbot.add_widget(window)
+
+    assert len(window.installed_layout.model.languages) == 2
+    assert window.installed_layout.model.languages[0][0] == "deu"
+
+    qtbot.mouseClick(
+        window.installed_layout.view.children()[0],
+        QtCore.Qt.MouseButton.LeftButton,
+        pos=QtCore.QPoint(10, 10),
+        delay=500,
+    )
+
+    with qtbot.wait_signal(
+        window.com.on_change_installed_languages, timeout=100
+    ) as result:
+        qtbot.mouseClick(
+            window.installed_layout.button, QtCore.Qt.MouseButton.LeftButton
+        )
+
+    assert result.signal_triggered
+    assert result.args[0] == ["eng"]
+    assert len(window.installed_layout.model.languages) == 1
+    assert window.installed_layout.model.languages[0][0] == "eng"
+
+
+@pytest.mark.gui
+def test_delete_last_language_impossible(monkeypatch, tmp_path, qtbot: QtBot):
+    Path(tmp_path / "tessdata").mkdir()
+    Path(tmp_path / "tessdata" / "eng.traineddata").touch()
+
+    messagebox_args = []
+
+    def mocked_messagebox(cls, title, text):
+        messagebox_args.extend([title, text])
+
+    monkeypatch.setattr(
+        language_manager.QtWidgets.QMessageBox, "information", mocked_messagebox
+    )
+
+    window = language_manager.LanguageManager(tessdata_path=tmp_path / "tessdata")
+    window.show()
+    qtbot.add_widget(window)
+
+    assert len(window.installed_layout.model.languages) == 1
+    assert window.installed_layout.model.languages[0][0] == "eng"
+
+    qtbot.mouseClick(
+        window.installed_layout.view.children()[0],
+        QtCore.Qt.MouseButton.LeftButton,
+        pos=QtCore.QPoint(10, 10),
+        delay=500,
+    )
+
+    with qtbot.wait_signal(
+        window.com.on_change_installed_languages, timeout=100, raising=False
+    ) as result:
+        qtbot.mouseClick(
+            window.installed_layout.button, QtCore.Qt.MouseButton.LeftButton
+        )
+
+    assert not result.signal_triggered
+    assert len(window.installed_layout.model.languages) == 1
+    assert window.installed_layout.model.languages[0][0] == "eng"
+
+    assert "information" in messagebox_args[0].lower()
+    assert "at least one" in messagebox_args[1].lower()
 
 
 def test_download_error_show_messagebox(qtbot, tmp_path, monkeypatch):
