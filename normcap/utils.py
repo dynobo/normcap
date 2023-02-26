@@ -84,7 +84,7 @@ def set_environ_for_wayland() -> None:
     if system_info.is_briefcase_package() and not shutil.which("wl-copy"):
         binary_path = str((Path(__file__).parent.parent.parent / "bin").resolve())
         logger.debug("Append path to wl-copy to PATH+=%s", binary_path)
-        os.environ["PATH"] = binary_path + ":" + os.environ["PATH"]
+        os.environ["PATH"] = binary_path + ":" + os.environ.get("PATH", "")
 
 
 def set_environ_for_flatpak() -> None:
