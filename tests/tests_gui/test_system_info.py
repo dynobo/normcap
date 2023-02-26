@@ -163,7 +163,7 @@ def test_config_directory_on_linux_macos(monkeypatch, tmp_path):
 def test_config_directory_fallback(monkeypatch):
     with monkeypatch.context() as m:
         m.setattr(sys, "platform", "unknown")
-        m.delenv("XDG_CONFIG_HOME")
+        m.delenv("XDG_CONFIG_HOME", raising=False)
         config_dir = system_info.config_directory()
     assert config_dir.name == "normcap"
     assert config_dir.parent.name == ".config"
