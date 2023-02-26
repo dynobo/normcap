@@ -5,8 +5,8 @@ from pathlib import Path
 import pytest
 from PySide6 import QtGui
 
+from normcap.gui import notifier
 from normcap.gui.models import Capture, CaptureMode, Rect
-from normcap.gui.notifier import Notifier
 
 
 @pytest.mark.parametrize(
@@ -55,8 +55,8 @@ def test_compose_notification(
         scale_factor=1,
         rect=Rect(0, 0, 10, 10),
     )
-    notifier = Notifier(None)
-    title, text = notifier._compose_notification(capture)
+    notifi = notifier.Notifier(None)
+    title, text = notifi._compose_notification(capture)
     assert output_title in title
     assert output_text in text
 
@@ -73,5 +73,58 @@ def test_send_via_libnotify(monkeypatch):
         assert Path(icon).exists()
 
     monkeypatch.setattr(subprocess, "Popen", mocked_popen)
-    notifier = Notifier(None)
-    notifier.send_via_libnotify("Titel", "Message")
+    notifi = notifier.Notifier(None)
+    notifi.send_via_libnotify("Titel", "Message")
+
+
+def test_send_notification(monkeypatch):
+    capture = Capture(
+        ocr_text="text",
+        ocr_applied_magic="SingleLineMagic",
+        mode=CaptureMode.PARSE,
+        image=QtGui.QImage(),
+        screen=None,
+        scale_factor=1,
+        rect=Rect(0, 0, 10, 10),
+    )
+
+    result = []
+
+    def mocked_libnotify(cls, title, message):
+        result.append({"title": title, "message": message, "method": "libnotify"})
+
+    def mocked_qt_tray(cls, title, message):
+        result.append({"title": title, "message": message, "method": "qt_tray"})
+
+    monkeypatch.setattr(notifier.Notifier, "send_via_libnotify", mocked_libnotify)
+    monkeypatch.setattr(notifier.Notifier, "send_via_qt_tray", mocked_qt_tray)
+
+    # On linux systems w/o libnotify
+    monkeypatch.setattr(notifier.sys, "platform", "linux")
+    monkeypatch.setattr(notifier.shutil, "which", lambda _: False)
+
+    notifi = notifier.Notifier(None)
+    notifi.send_notification(capture)
+    assert result[-1]["title"] == "1 word captured"
+    assert result[-1]["message"] == "text"
+    assert result[-1]["method"] == "qt_tray"
+
+    # On linux systems with libnotify
+    monkeypatch.setattr(notifier.sys, "platform", "linux")
+    monkeypatch.setattr(notifier.shutil, "which", lambda _: True)
+
+    notifi = notifier.Notifier(None)
+    notifi.send_notification(capture)
+    assert result[-1]["title"] == "1 word captured"
+    assert result[-1]["message"] == "text"
+    assert result[-1]["method"] == "libnotify"
+
+    # On other systems
+    monkeypatch.setattr(notifier.sys, "platform", "win32")
+    monkeypatch.setattr(notifier.shutil, "which", lambda _: True)
+
+    notifi = notifier.Notifier(None)
+    notifi.send_notification(capture)
+    assert result[-1]["title"] == "1 word captured"
+    assert result[-1]["message"] == "text"
+    assert result[-1]["method"] == "qt_tray"
