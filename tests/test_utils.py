@@ -91,8 +91,7 @@ def test_set_environ_for_wayland_use_wlcopy(monkeypatch):
             m.delenv("PATH", raising=False)
             utils.set_environ_for_wayland()
             new_path = os.environ.get("PATH")
-            assert new_path.count(":") == 1
-            assert new_path.endswith("/bin:")
+            assert new_path.endswith(f"{os.sep}bin{os.pathsep}")
     finally:
         os.environ["PATH"] = path
 

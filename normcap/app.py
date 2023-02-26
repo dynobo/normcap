@@ -15,7 +15,7 @@ def _get_args() -> Namespace:
     """Start main application logic."""
     args = utils.create_argparser().parse_args()
     if args.version:
-        print(f"NormCap {__version__}")  # noqa: T201
+        print(f"NormCap {__version__}")
         sys.exit(0)
     return args
 

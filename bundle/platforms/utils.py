@@ -129,7 +129,7 @@ class BuilderBase(ABC):
                 patch = patch.replace("\n", f"\n{pad * ' '}")
                 line = line.replace(line, line + pad * " " + patch + "\n")
                 patch_applied = True
-            print(line, end="")  # noqa
+            print(line, end="")
 
         if not patch_applied:
             raise RuntimeError(
