@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def _wl_copy(text: str) -> None:
     """Use wl-clipboard package to copy text to system clipboard."""
     subprocess.run(
-        ["wl-copy"],
+        args=["wl-copy"],
         shell=False,
         input=text,
         encoding="utf-8",

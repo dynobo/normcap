@@ -1,5 +1,8 @@
 import logging
 import os
+import shutil
+import subprocess
+import sys
 
 import pytest
 
@@ -53,3 +56,37 @@ def test_get_copy_func_on_wayland_without_wl_copy(monkeypatch, caplog):
     assert get_copy == clipboard.qt.copy
     assert "warning" in caplog.text.lower()
     assert "wl-clipboard" in caplog.text.lower()
+
+
+def test_wl_copy_called(monkeypatch):
+    text = "this is a test"
+
+    called_kwargs = {}
+
+    def mocked_run(**kwargs):
+        called_kwargs.update(kwargs)
+
+    monkeypatch.setattr(clipboard.linux.subprocess, "run", mocked_run)
+
+    clipboard.linux._wl_copy(text)
+    assert called_kwargs["args"][0] == "wl-copy"
+    assert len(called_kwargs["args"]) == 1
+    assert called_kwargs["input"] == text
+    assert called_kwargs["shell"] is False
+
+
+def test_wl_copy(monkeypatch):
+    if sys.platform != "linux":
+        pytest.xfail("no Linux")
+
+    if not shutil.which("wl-copy"):
+        pytest.xfail("no wl-copy")
+
+    text = "this is a test"
+    clipboard.linux._wl_copy(text)
+
+    with subprocess.Popen(["wl-paste"], stdout=subprocess.PIPE, close_fds=True) as p:
+        stdout = p.communicate()[0]
+    clipped = stdout.decode("utf-8").strip()
+
+    assert text == clipped
