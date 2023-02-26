@@ -37,32 +37,34 @@ def test_display_manager_is_wayland_on_linux_xdg_session_type(monkeypatch):
 
 def test_gnome_version_on_windows(monkeypatch):
     monkeypatch.setattr(utils.sys, "platform", "win32")
-    version = utils.get_gnome_version.__wrapped__()
+    version = utils.get_gnome_version()
     assert version is None
 
 
 def test_gnome_version_on_linux_from_cmd(monkeypatch):
     monkeypatch.setattr(utils.sys, "platform", "linux")
-    monkeypatch.setattr(utils.shutil, "which", lambda _: True)
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "wayland")
-    version = utils.get_gnome_version.__wrapped__()
+    monkeypatch.setattr(utils.shutil, "which", lambda _: True)
+    utils.get_gnome_version.cache_clear()
+    version = utils.get_gnome_version()
     assert version is None
 
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
     monkeypatch.setattr(
         utils.subprocess, "check_output", lambda *args, **kwargs: b"GNOME Shell 33.3\n"
     )
-    version = utils.get_gnome_version.__wrapped__()
+    utils.get_gnome_version.cache_clear()
+    version = utils.get_gnome_version()
     assert str(version) == "33.3"
 
 
 def test_gnome_version_on_linux_without_gnome_shell(monkeypatch):
     monkeypatch.setattr(utils.sys, "platform", "linux")
-    monkeypatch.setattr(utils.shutil, "which", lambda _: False)
+    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
-
-    version = utils.get_gnome_version.__wrapped__()
+    monkeypatch.setattr(utils.shutil, "which", lambda _: False)
+    version = utils.get_gnome_version()
     assert version is None
 
 
@@ -76,7 +78,7 @@ def test_gnome_version_on_linux_unknown_exception(monkeypatch, caplog):
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
     monkeypatch.setattr(utils.subprocess, "check_output", _mocked_subprocess)
 
-    version = utils.get_gnome_version.__wrapped__()
+    version = utils.get_gnome_version()
     assert version is None
     assert "exception when trying to get gnome version" in caplog.text.lower()
 
@@ -157,6 +159,12 @@ def test_macos_reset_screenshot_permission(caplog):
 def test_has_screenshot_permission():
     result = utils.has_screenshot_permission()
     assert isinstance(result, bool)
+
+
+def test_has_screenshot_permission_raises(monkeypatch):
+    monkeypatch.setattr(utils.sys, "platform", "unknown")
+    with pytest.raises(RuntimeError, match="Unknown platform"):
+        _ = utils.has_screenshot_permission()
 
 
 def test_macos_open_privacy_settings(caplog):
