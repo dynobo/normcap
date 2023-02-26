@@ -78,6 +78,30 @@ def test_delete_last_language_impossible(monkeypatch, tmp_path, qtbot: QtBot):
     Path(tmp_path / "tessdata").mkdir()
     Path(tmp_path / "tessdata" / "eng.traineddata").touch()
 
+    window = language_manager.LanguageManager(tessdata_path=tmp_path / "tessdata")
+    window.show()
+    qtbot.add_widget(window)
+
+    assert len(window.installed_layout.model.languages) == 1
+    assert window.installed_layout.model.languages[0][0] == "eng"
+
+    with qtbot.wait_signal(
+        window.com.on_change_installed_languages, timeout=100, raising=False
+    ) as result:
+        qtbot.mouseClick(
+            window.installed_layout.button, QtCore.Qt.MouseButton.LeftButton
+        )
+
+    assert not result.signal_triggered
+    assert len(window.installed_layout.model.languages) == 1
+    assert window.installed_layout.model.languages[0][0] == "eng"
+
+
+@pytest.mark.gui
+def test_delete_without_selection_does_nothing(monkeypatch, tmp_path, qtbot: QtBot):
+    Path(tmp_path / "tessdata").mkdir()
+    Path(tmp_path / "tessdata" / "eng.traineddata").touch()
+
     messagebox_args = []
 
     def mocked_messagebox(cls, title, text):

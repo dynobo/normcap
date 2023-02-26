@@ -13,6 +13,7 @@ def test_ocr_result(ocr_result):
     assert len(lines) == 2
     assert lines[0] == "one two"
 
+    assert ocr_result.num_chars == 11
     assert ocr_result.num_blocks == 2
     assert ocr_result.num_pars == 3
     assert ocr_result.num_lines == 2

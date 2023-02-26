@@ -82,6 +82,21 @@ def test_set_environ_for_wayland(monkeypatch):
         os.environ["QT_QPA_PLATFORM"] = qt_qpa_platform
 
 
+def test_set_environ_for_wayland_use_wlcopy(monkeypatch):
+    path = os.environ.get("PATH", "")
+    try:
+        with monkeypatch.context() as m:
+            m.setattr(utils.system_info, "is_briefcase_package", lambda: True)
+            m.setattr(utils.shutil, "which", lambda *args: False)
+            m.delenv("PATH", raising=False)
+            utils.set_environ_for_wayland()
+            new_path = os.environ.get("PATH")
+            assert new_path.count(":") == 1
+            assert new_path.endswith("/bin:")
+    finally:
+        os.environ["PATH"] = path
+
+
 def test_set_environ_for_flatpak(monkeypatch):
     with monkeypatch.context() as m:
         test_value = "something"
