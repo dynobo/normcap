@@ -6,9 +6,25 @@ import pytest
 from PIL import Image
 from PySide6 import QtCore, QtGui
 
+from normcap.gui import system_info
 from normcap.gui.models import Capture, CaptureMode, Rect
+from normcap.ocr import utils as ocr_utils
+from normcap.ocr.magics import email_magic, url_magic
 from normcap.ocr.models import OcrResult, TessArgs
+from normcap.screengrab import utils as screengrab_utils
 from normcap.utils import create_argparser
+
+
+@pytest.fixture(autouse=True)
+def clear_caches():
+    screengrab_utils.get_gnome_version.cache_clear()
+    url_magic.UrlMagic._extract_urls.cache_clear()
+    email_magic.EmailMagic._extract_emails.cache_clear()
+    ocr_utils.get_tesseract_version.cache_clear()
+    system_info.desktop_environment.cache_clear()
+    system_info.display_manager_is_wayland.cache_clear()
+    system_info.get_tesseract_path.cache_clear()
+    system_info.config_directory.cache_clear()
 
 
 @pytest.fixture()
