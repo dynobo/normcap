@@ -63,11 +63,11 @@ def get_tesseract_path() -> Path:
         elif sys.platform == "darwin":
             binary_path = Path(__file__).parent.parent.parent.parent / "bin"
         else:
-            raise ValueError(f"Platform {sys.platform} is currently not supported")
+            raise ValueError(f"Platform {sys.platform} is not supported")
         extension = ".exe" if sys.platform == "win32" else ""
         tesseract_path = binary_path / f"tesseract{extension}"
         if not tesseract_path.exists():
-            raise RuntimeError(f"Couldn't locate tesseract binary in {tesseract_path}!")
+            raise RuntimeError(f"Could not locate Tesseract binary {tesseract_path}!")
         return tesseract_path
 
     # Then try to find tesseract on system

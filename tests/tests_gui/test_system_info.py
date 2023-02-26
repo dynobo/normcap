@@ -35,6 +35,10 @@ def test_desktop_environment_gnome(monkeypatch):
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "")
     assert system_info.desktop_environment() == models.DesktopEnvironment.GNOME
 
+    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "this-is-deprecated")
+    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
+    assert system_info.desktop_environment() == models.DesktopEnvironment.GNOME
+
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
     assert system_info.desktop_environment() == models.DesktopEnvironment.GNOME
@@ -60,6 +64,15 @@ def test_desktop_environment_sway(monkeypatch):
 
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "sway")
     assert system_info.desktop_environment() == models.DesktopEnvironment.SWAY
+
+
+def test_desktop_environment_unity(monkeypatch):
+    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
+    monkeypatch.setenv("KDE_FULL_SESSION", "")
+    monkeypatch.setenv("DESKTOP_SESSION", "")
+
+    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
+    assert system_info.desktop_environment() == models.DesktopEnvironment.UNITY
 
 
 def test_desktop_environment_other(monkeypatch):
@@ -185,6 +198,29 @@ def test_get_tesseract_path_in_briefcase(monkeypatch, platform, binary, director
         path = system_info.get_tesseract_path()
     assert path.name == binary
     assert path.parent.name == directory
+
+
+def test_get_tesseract_path_unknown_platform_raises(monkeypatch):
+    with monkeypatch.context() as m:
+        m.setattr(system_info, "is_briefcase_package", lambda: True)
+        m.setattr(system_info.Path, "exists", lambda *args: True)
+        m.setattr(system_info.sys, "platform", "unknown")
+        with pytest.raises(ValueError, match="Platform unknown is not supported"):
+            _ = system_info.get_tesseract_path()
+
+
+def test_get_tesseract_path_missing_binary_raises(monkeypatch):
+    with monkeypatch.context() as m:
+        m.setattr(system_info, "is_briefcase_package", lambda: True)
+        with pytest.raises(RuntimeError, match="Could not locate Tesseract binary"):
+            _ = system_info.get_tesseract_path()
+
+
+def test_get_tesseract_path_missing_tesseract_raises(monkeypatch):
+    with monkeypatch.context() as m:
+        m.setattr(system_info.shutil, "which", lambda _: False)
+        with pytest.raises(RuntimeError, match="No Tesseract binary found"):
+            _ = system_info.get_tesseract_path()
 
 
 def test_to_dict():
