@@ -65,3 +65,31 @@ def test_preprocess():
     assert img.width * factor + padding * 2 == img_result.width
     assert img_result.getpixel((0, 0)) == (255, 255, 255)
     assert img_result.getpixel((99, 49)) == (255, 255, 255)
+
+
+def test_resize_select_resampling(monkeypatch):
+    resamples = []
+
+    def mocked_resize(size, resample):
+        resamples.append(resample)
+        return True
+
+    img = Image.open(Path(__file__).parent / "testimages" / "dark.png")
+    monkeypatch.setattr(img, "resize", mocked_resize)
+
+    class MockedEnum:
+        LANCZOS = 0
+        LANCZOS_OLD = 1
+
+    # New resampling enum
+    monkeypatch.setattr(enhance.Image, "Resampling", MockedEnum)
+    img_result = enhance.resize_image(img, factor=2)
+    assert img_result is True
+    assert resamples[0] == MockedEnum.LANCZOS
+
+    # Old resampling enum
+    monkeypatch.delattr(enhance.Image, "Resampling")
+    monkeypatch.setattr(enhance.Image, "LANCZOS", MockedEnum.LANCZOS_OLD)
+    img_result = enhance.resize_image(img, factor=2)
+    assert img_result is True
+    assert resamples[1] == MockedEnum.LANCZOS_OLD

@@ -13,7 +13,7 @@ def test_update_checker_triggers_checked_signal(monkeypatch, qtbot, packaged):
     monkeypatch.setattr(update_check, "__version__", "0.0.0")
     checker = update_check.UpdateChecker(None, packaged=packaged)
     monkeypatch.setattr(checker, "_show_update_message", lambda *args, **kwargs: ...)
-    with qtbot.waitSignal(checker.com.on_version_checked, timeout=2000) as _:
+    with qtbot.waitSignal(checker.com.on_version_checked, timeout=5000) as _:
         checker.check()
 
 
