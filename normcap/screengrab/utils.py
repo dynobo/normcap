@@ -51,7 +51,7 @@ def has_wayland_display_manager() -> bool:
     return "wayland" in wayland_display or "wayland" in xdg_session_type
 
 
-@functools.lru_cache
+@functools.cache
 def get_gnome_version() -> Optional[str]:
     """Get gnome-shell version (Linux, Gnome)."""
     if sys.platform != "linux":
