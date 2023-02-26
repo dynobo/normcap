@@ -1,5 +1,6 @@
 """Magic Class to handle e-mail adresses contained in the text."""
 
+import functools
 import logging
 import re
 
@@ -12,38 +13,34 @@ logger = logging.getLogger(__name__)
 class EmailMagic(BaseMagic):
     """Detect and extract email adress(es) in the OCR results."""
 
-    _emails: list[str] = []
+    @staticmethod
+    @functools.cache
+    def _extract_emails(text: str) -> list[str]:
+        reg_email = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+"
+        return re.findall(reg_email, text)
 
     def score(self, ocr_result: OcrResult) -> float:
         """Calc score based on chars in email adresses vs. overall chars.
 
         Arguments:
-            BaseMagic {class} -- Base class for magics
-            capture {Capture} -- NormCap's session data
+            ocr_result: Recognized text and meta information.
 
         Returns
         -------
-            float -- score between 0-100 (100 = more likely)
+            score between 0-100 (100 = more likely)
         """
-        # Get concatenated lines
         text = ocr_result.text
-
-        # Search email addresses in line
-        reg_email = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+"
-        self._emails = re.findall(reg_email, text)
-
+        emails = self._extract_emails(text)
         logger.info(
-            "%s emails found %s",
-            len(self._emails),
-            [": " + " ".join(self._emails) if self._emails else ""],
+            "%s emails found %s", len(emails), f": {' '.join(emails)}" if emails else ""
         )
 
         # Calc chars & ratio
-        email_chars = sum(len(e) for e in self._emails)
-        all_chars = max([len(text), 1])
-        ratio = email_chars / (all_chars * 0.75)
+        email_chars = sum(len(e) for e in emails)
+        count_chars = ocr_result.num_chars
+        ratio = min(email_chars / count_chars, 1)
 
-        logger.debug("%s/%s (%s) chars in emails", email_chars, all_chars, ratio)
+        logger.debug("%s/%s (%s) chars in emails", email_chars, count_chars, ratio)
         return round(100 * ratio, 2)
 
     def transform(self, ocr_result: OcrResult) -> str:
@@ -52,11 +49,11 @@ class EmailMagic(BaseMagic):
         Other chars not contained in email adresses are discarded.
 
         Arguments:
-            capture {Capture} -- NormCap's session data
+            ocr_result: Recognized text and meta information.
 
         Returns
         -------
-            str -- comma separated email adresses
+            Comma separated email adresses
         """
         logger.info("Transform with Email magic")
-        return ", ".join(self._emails)
+        return ", ".join(self._extract_emails(ocr_result.text))

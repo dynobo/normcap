@@ -1,5 +1,6 @@
 """Magic to handle URL(s) in selection."""
 
+import functools
 import logging
 import os
 import re
@@ -13,35 +14,22 @@ logger = logging.getLogger(__name__)
 class UrlMagic(BaseMagic):
     """Detect and extract urls adress(es) in the OCR results."""
 
-    _urls: list[str] = []
-    _manual_correction_table = {
-        r"[hn]\w{0,1}t+\w{0,1}ps\s*\:\s*\/+\s*": "https://",
-        r"(\w),(\w{1,4}\s*$)": r"\1.\2",  # e.g. gle,com -> gle.com
-        r"(https?:\/\/)*[wW]{3}\s*\.\s*": "https://www.",
-        r"qithub\.com": "github.com",
-        r"[gq]oo[gq]le": "google",
-        r"(\s+)([A-Za-z0-9-]{4,}\.[A-Za-z0-9-]{2,4})": r"\1https://\2",  # add https://
-    }
-
-    def score(self, ocr_result: OcrResult) -> float:
-        """Calculate score based on chars in URLs vs overall chars.
-
-        Arguments:
-            BaseMagic {class} -- Base class for magics
-            capture {Capture} -- NormCap's session data
-
-        Returns
-        -------
-            float -- score between 0-100 (100 = more likely)
-        """
-        # Get concatenated lines
-        text = ocr_result.text
-
+    @staticmethod
+    @functools.cache
+    def _extract_urls(text: str) -> list[str]:
+        manual_correction_table = {
+            r"[hn]\w{0,1}t+\w{0,1}ps\s*\:\s*\/+\s*": "https://",
+            r"(\w),(\w{1,4}\s*$)": r"\1.\2",  # e.g. gle,com -> gle.com
+            r"(https?:\/\/)*[wW]{3}\s*\.\s*": "https://www.",
+            r"qithub\.com": "github.com",
+            r"[gq]oo[gq]le": "google",
+            r"(\s+)([A-Za-z0-9-]{4,}\.[A-Za-z0-9-]{2,4})": r"\1https://\2",  # add proto
+        }
         # Remove whitespace between two chars
         # because OCR will often read e.g. "http: //github.com"
         text = re.sub(r":\s+\/", ":/", text)
         # Correct commonly misrecognized parts
-        for k, v in self._manual_correction_table.items():
+        for k, v in manual_correction_table.items():
             text = re.sub(k, v, text)
 
         # Search urls in line
@@ -51,31 +39,43 @@ class UrlMagic(BaseMagic):
             r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*"
             r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])"
         )
-        self._urls = re.findall(reg_url, text, flags=re.IGNORECASE)
+        return re.findall(reg_url, text, flags=re.IGNORECASE)
+
+    def score(self, ocr_result: OcrResult) -> float:
+        """Calculate score based on chars in URLs vs overall chars.
+
+        Arguments:
+            ocr_result: Recognized text and meta information.
+
+        Returns
+        -------
+            score between 0-100 (100 = more likely)
+        """
+        text = ocr_result.text
+        urls = self._extract_urls(text)
         logger.info(
-            "%s URLs found %s",
-            len(self._urls),
-            [": " + " ".join(self._urls) if self._urls else ""],
+            "%s URLs found %s", len(urls), [": " + " ".join(urls) if urls else ""]
         )
 
         # Calc chars & ratio
-        url_chars = sum(len(e) for e in self._urls)
+        url_chars = sum(len(e) for e in urls)
         all_chars = max([len(text), 1])
         ratio = url_chars / all_chars
         logger.debug("%s/%s (%s) chars in urls", url_chars, all_chars, ratio)
-        return round(100 * (ratio * 0.85), 2)
+
+        return round(100 * min(ratio * 0.85, 1), 2)
 
     def transform(self, ocr_result: OcrResult) -> str:
         """Parse URLs and return as newline separated string.
 
         Arguments:
-            capture {Capture} -- NormCap's session data
+            ocr_result: Recognized text and meta information.
 
         Returns
         -------
-            str -- URL(s), separated bye newline
+            URL(s), separated bye newline
         """
         logger.info("Transform with URL magic")
+        urls = self._extract_urls(ocr_result.text)
 
-        # Return as line separated list
-        return os.linesep.join(self._urls)
+        return os.linesep.join(urls)

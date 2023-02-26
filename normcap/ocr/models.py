@@ -95,6 +95,11 @@ class OcrResult:
         return os.linesep.join(all_lines)
 
     @property
+    def num_chars(self) -> int:
+        """Provide number of chars without word separators."""
+        return sum(len(w["text"]) for w in self.words)
+
+    @property
     def num_lines(self) -> int:
         """Provide number of lines in OCR text."""
         return self._count_unique_sections("line")
