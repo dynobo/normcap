@@ -9,20 +9,24 @@ from normcap.gui import models, system_info
 def test_display_manager_is_wayland(monkeypatch):
     monkeypatch.setenv("XDG_SESSION_TYPE", "")
     monkeypatch.setenv("WAYLAND_DISPLAY", "wayland")
+    system_info.display_manager_is_wayland.cache_clear()
     assert system_info.display_manager_is_wayland()
 
     monkeypatch.setenv("XDG_SESSION_TYPE", "wayland")
     monkeypatch.setenv("WAYLAND_DISPLAY", "")
+    system_info.display_manager_is_wayland.cache_clear()
     assert system_info.display_manager_is_wayland()
 
 
 def test_display_manager_is_not_wayland(monkeypatch):
     monkeypatch.setenv("WAYLAND_DISPLAY", "")
     monkeypatch.setenv("XDG_SESSION_TYPE", "x11")
+    system_info.display_manager_is_wayland.cache_clear()
     assert not system_info.display_manager_is_wayland()
 
     monkeypatch.setenv("WAYLAND_DISPLAY", "something")
     monkeypatch.setenv("XDG_SESSION_TYPE", "something")
+    system_info.display_manager_is_wayland.cache_clear()
     assert not system_info.display_manager_is_wayland()
 
 
@@ -33,14 +37,17 @@ def test_desktop_environment():
 def test_desktop_environment_gnome(monkeypatch):
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "1")
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "")
+    system_info.desktop_environment.cache_clear()
     assert system_info.desktop_environment() == models.DesktopEnvironment.GNOME
 
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "this-is-deprecated")
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
+    system_info.desktop_environment.cache_clear()
     assert system_info.desktop_environment() == models.DesktopEnvironment.GNOME
 
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
+    system_info.desktop_environment.cache_clear()
     assert system_info.desktop_environment() == models.DesktopEnvironment.GNOME
 
 
@@ -50,10 +57,12 @@ def test_desktop_environment_kde(monkeypatch):
 
     monkeypatch.setenv("KDE_FULL_SESSION", "1")
     monkeypatch.setenv("DESKTOP_SESSION", "")
+    system_info.desktop_environment.cache_clear()
     assert system_info.desktop_environment() == models.DesktopEnvironment.KDE
 
     monkeypatch.setenv("KDE_FULL_SESSION", "")
     monkeypatch.setenv("DESKTOP_SESSION", "kde-plasma")
+    system_info.desktop_environment.cache_clear()
     assert system_info.desktop_environment() == models.DesktopEnvironment.KDE
 
 
