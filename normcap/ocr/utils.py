@@ -39,10 +39,10 @@ def get_tesseract_languages(
                 config=get_tesseract_config(tessdata_path)
             )
         )
-    except RuntimeError as e:
+    except (RuntimeError, pytesseract.TesseractNotFoundError) as e:
         traceback.print_tb(e.__traceback__)
         raise RuntimeError(
-            "Couldn't determine Tesseract information. If you pip installed NormCap "
+            "Could not run Tesseract binary. If you pip installed NormCap "
             + "make sure Tesseract is installed and configured correctly."
         ) from e
 
@@ -56,7 +56,7 @@ def get_tesseract_languages(
     return languages
 
 
-@functools.lru_cache
+@functools.cache
 def get_tesseract_version(tesseract_cmd: os.PathLike) -> str:
     """Get info abput tesseract setup."""
     pytesseract.tesseract_cmd = str(tesseract_cmd)
