@@ -189,9 +189,6 @@ def bundle_tesseract_windows_appveyor(builder: BuilderBase) -> None:
     if zip_path.exists():
         return
 
-    # TODO: Check if the official build is up again
-    # The official tesseract artefact for windows is build and available here:
-    # https://ci.appveyor.com/project/zdenop/tesseract/build/artifacts
     url = (
         "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
     )

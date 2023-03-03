@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from PySide6 import QtGui
+from PySide6 import QtGui, QtWidgets
 
 from normcap.gui import notifier
 from normcap.gui.models import Capture, CaptureMode, Rect
@@ -75,6 +75,13 @@ def test_send_via_libnotify(monkeypatch):
     monkeypatch.setattr(subprocess, "Popen", mocked_popen)
     notifi = notifier.Notifier(None)
     notifi.send_via_libnotify("Titel", "Message")
+
+
+def test_send_via_qt_tray(qtbot):
+    """Only tests if no exception occurs."""
+    tray = QtWidgets.QSystemTrayIcon()
+    notifi = notifier.Notifier(tray)
+    notifi.send_via_qt_tray("Titel", "Message")
 
 
 def test_send_notification(monkeypatch):

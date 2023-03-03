@@ -1,3 +1,4 @@
+import logging
 import sys
 from pathlib import Path
 
@@ -124,7 +125,7 @@ def test_screens(qtbot):
     assert isinstance(screens[0].height, int)
 
 
-def test_get_tessdata_path(monkeypatch, tmp_path):
+def test_get_tessdata_path(monkeypatch, caplog):
     data_file = system_info.config_directory() / "tessdata" / "mocked.traineddata"
     data_file.parent.mkdir(parents=True, exist_ok=True)
     data_file.touch(exist_ok=True)
@@ -134,23 +135,34 @@ def test_get_tessdata_path(monkeypatch, tmp_path):
             m.setattr(system_info, "is_briefcase_package", lambda: True)
             m.setattr(system_info, "is_flatpak_package", lambda: False)
             path_briefcase = system_info.get_tessdata_path()
+            assert str(path_briefcase).endswith("tessdata")
 
             m.setattr(system_info, "is_briefcase_package", lambda: False)
             m.setattr(system_info, "is_flatpak_package", lambda: True)
             path_flatpak = system_info.get_tessdata_path()
+            assert str(path_flatpak).endswith("tessdata")
 
             m.setattr(system_info, "is_briefcase_package", lambda: False)
             m.setattr(system_info, "is_flatpak_package", lambda: False)
             m.setenv("TESSDATA_PREFIX", f"{data_file.parent.parent.resolve()}")
             path_env_var = system_info.get_tessdata_path()
+            assert str(path_env_var).endswith("tessdata")
+
             m.setenv("TESSDATA_PREFIX", "")
             path_non = system_info.get_tessdata_path()
+            assert path_non is None
+
+            m.setenv("TESSDATA_PREFIX", "")
+            monkeypatch.setattr(system_info.sys, "platform", "win32")
+            with caplog.at_level(logging.WARNING):
+                caplog.clear()
+                _ = system_info.get_tessdata_path()
+            assert path_non is None
+            assert "TESSDATA_PREFIX" in caplog.records[0].msg
+
     finally:
         data_file.unlink()
 
-    assert str(path_briefcase).endswith("tessdata")
-    assert str(path_flatpak).endswith("tessdata")
-    assert str(path_env_var).endswith("tessdata")
     assert path_non is None
 
 
