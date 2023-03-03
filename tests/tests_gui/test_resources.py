@@ -26,6 +26,11 @@ def test_resources_complete(qtbot):
         assert QtGui.QIcon(f":{stem}").availableSizes(), stem
 
 
+def test_cleanup_resources():
+    resources.qCleanupResources()
+    resources.qInitResources()
+
+
 def test_resources_png_and_svg_exist_for_all_icons(qtbot):
     icons_path = Path(importlib_resources.files("normcap.resources")) / "icons"
     icon_names_svg = [f.stem for f in icons_path.glob("*.svg")]
