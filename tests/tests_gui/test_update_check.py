@@ -1,3 +1,4 @@
+import logging
 import urllib
 
 import pytest
@@ -71,3 +72,32 @@ def test_show_update_message(qtbot, monkeypatch):
         checker._show_update_message(new_version=version)
 
     assert version in checker.message_box.text()
+
+
+@pytest.mark.parametrize(
+    "packaged,data,message_args,debug_log",
+    (
+        (True, b"doesn't include version", [], "Could not detect remote version"),
+        (True, "not-decodable", [], "Parsing response of update check failed"),
+        (True, b'/releases/tag/v9.9.9"', ["9.9.9"], "Newest version: 9.9.9"),
+        (False, b'"version": "9.9.9"', ["9.9.9"], "Newest version: 9.9.9"),
+        (True, b'/releases/tag/v0.0.0"', [], "Newest version: 0.0.0"),
+    ),
+)
+def test_on_download_finished(
+    caplog, qtbot, monkeypatch, packaged, data, message_args, debug_log
+):
+    args = []
+
+    def mocked_show(new_version):
+        args.append(new_version)
+
+    checker = update_check.UpdateChecker(None)
+    monkeypatch.setattr(checker, "packaged", packaged)
+    monkeypatch.setattr(checker, "_show_update_message", mocked_show)
+
+    with caplog.at_level(logging.DEBUG):
+        checker._on_download_finished(data=data, url="")
+
+    assert args == message_args
+    assert debug_log in caplog.records[0].message

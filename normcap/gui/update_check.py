@@ -54,7 +54,7 @@ class UpdateChecker(QtCore.QObject):
             if self._is_new_version(current=__version__, other=newest_version):
                 self._show_update_message(new_version=newest_version)
         else:
-            logger.error("Couldn't detect remote version. Update check won't work!")
+            logger.error("Could not detect remote version. Update check won't work!")
 
     @staticmethod
     def _create_message_box() -> QtWidgets.QMessageBox:

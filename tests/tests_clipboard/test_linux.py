@@ -85,7 +85,7 @@ def test_wl_copy(monkeypatch):
     text = "this is a test"
     clipboard.linux._wl_copy(text)
 
-    with subprocess.Popen(["wl-paste"], stdout=subprocess.PIPE, close_fds=True) as p:
+    with subprocess.Popen(["wl-paste"], stdout=subprocess.PIPE) as p:
         stdout = p.communicate()[0]
     clipped = stdout.decode("utf-8").strip()
 
