@@ -63,7 +63,13 @@ def test_gnome_version_on_linux_without_gnome_shell(monkeypatch):
     monkeypatch.setattr(utils.sys, "platform", "linux")
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
+    utils.get_gnome_version.cache_clear()
+    version = utils.get_gnome_version()
+    assert version is None
+
+    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "some-id")
     monkeypatch.setattr(utils.shutil, "which", lambda _: False)
+    utils.get_gnome_version.cache_clear()
     version = utils.get_gnome_version()
     assert version is None
 

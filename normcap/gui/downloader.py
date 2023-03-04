@@ -1,12 +1,6 @@
 """Find new version on github or pypi."""
-# TODO: Lazy load & import to improve startup time. Eg. certifi is slow!
-# https://stackoverflow.com/a/69080459
-# TODO: Also reevaluate using QTNetwork for downloading, to avoid certifi
 import logging
-import ssl
-from urllib.request import urlopen
 
-import certifi
 from PySide6 import QtCore
 
 logger = logging.getLogger(__name__)
@@ -28,6 +22,11 @@ class Worker(QtCore.QRunnable):
     @QtCore.Slot()
     def run(self) -> None:
         try:
+            import ssl
+            from urllib.request import urlopen
+
+            import certifi
+
             context = ssl.create_default_context(cafile=certifi.where())
             with urlopen(self.url, context=context) as response:  # nosec B310
                 raw_data = response.read()

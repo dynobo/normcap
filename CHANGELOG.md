@@ -1,8 +1,12 @@
 # Changelog
 
+## v0.4.1 (upcoming)
+
+- All: Slightly improve start-up time.
+
 ## v0.4.0 (2023-01-29)
 
-- All: Remove support for Tesseract \< 5.0
+- All: Remove support for Tesseract \< 5.0.
 - All: Faster startup if "Check for updates" is enabled.
 - All: Refactor icon handling. Fixes a bug in the AUR package.
   ([#353](https://github.com/dynobo/normcap/issues/353))
