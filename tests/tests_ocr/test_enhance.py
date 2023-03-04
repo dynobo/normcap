@@ -40,7 +40,7 @@ def test_resize_image():
     assert img.height * factor == img_result.height
 
 
-@pytest.mark.parametrize("pixel", ((0, 0), (99, 99)))
+@pytest.mark.parametrize("pixel", [(0, 0), (99, 99)])
 def test_invert_image(pixel):
     img = Image.open(Path(__file__).parent / "testimages" / "color.png")
     img_result = enhance.invert_image(img)

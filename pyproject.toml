@@ -106,25 +106,27 @@ target-version = "py39"
 line-length = 88
 exclude = [".vscode", ".venv", "linux"]
 select = [
-  "F",  # Pyflakes
-  "E",  # pycodestyle
-  "I",  # Isort
-  "D",  # pydocstyle
-  "W",  # warning
-  "UP", # pyupgrad
-  "N",  # pep8-naming
-  "S",  # flake8-bandits
-  "C4", # flake8-comprehensions
-  "B",  # flake8-bugbear
-  # "FBT", # flake8-boolean-trap
-  "A", # flake8-builtins
-  # "ISC", # flake8-implicit-str-concat
+  "F",   # Pyflakes
+  "E",   # pycodestyle
+  "I",   # Isort
+  "D",   # pydocstyle
+  "W",   # warning
+  "UP",  # pyupgrad
+  "N",   # pep8-naming
+  "S",   # flake8-bandits
+  "C4",  # flake8-comprehensions
+  "B",   # flake8-bugbear
+  "A",   # flake8-builtins
+  "ISC", # flake8-implicit-str-concat
   "ICN", # flake8-import-conventions
   "T20", # flake8-print
-  # "PT",  # flake8-pytest-style
+  "PT",  # flake8-pytest-style
   "Q",   # flake8-quotes
   "ANN", # flake8-annotations
+  "SIM", # flake8-simplify
+  "PTH", # flake8-use-pathlib
   "RUF", # meta rules (unused noqa)
+  "PL",  # meta rules (unused noqa)
 ]
 ignore = [
   "D100",   # Missing docstring in public module
@@ -134,13 +136,13 @@ ignore = [
   "D104",   # Missing docstring in public package
   "D105",   # Missing docstring in magic method
   "D107",   # Missing docstring in __init__
-  "D203",   # 1 blank line required before class docstring
-  "D213",   # Multi-line docstring summary should start at the second line
-  "D407",   # Missing dashed underline after section
   "ANN101", # Missing type annotation for `self` in method
   "UP007",  # Use X | Y for type annotations
 ]
-per-file-ignores = { "tests*" = ["S101", "ANN", "D"] }
+per-file-ignores = { "tests*" = ["S101", "ANN", "D", "PLR2004"] }
+
+[tool.ruff.pydocstyle]
+convention = "google"
 
 [tool.mypy]
 files = ["normcap/**/*.py", "tests/**/*.py", "bundle/**/*.py"]

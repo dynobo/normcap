@@ -221,7 +221,8 @@ class MenuButton(QtWidgets.QToolButton):
     def _add_languages_section(
         self, menu: QtWidgets.QMenu, languages: list[str]
     ) -> None:
-        if len(languages) <= 7:
+        overflow_languages_count = 7
+        if len(languages) <= overflow_languages_count:
             language_menu = menu
         else:
             language_menu = QtWidgets.QMenu("select", menu)

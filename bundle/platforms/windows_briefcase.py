@@ -37,7 +37,7 @@ class WindowsBriefcase(BuilderBase):
         wxs_file = self.PROJECT_PATH / "windows" / "app" / "NormCap" / "normcap.wxs"
 
         # Cache header for inserting later
-        with open(wxs_file, encoding="utf-8") as f:
+        with Path(wxs_file).open(encoding="utf-8") as f:
             header_lines = f.readlines()[:3]
 
         ns = "{http://schemas.microsoft.com/wix/2006/wi}"
@@ -76,8 +76,10 @@ class WindowsBriefcase(BuilderBase):
             {
                 "Id": "Cleanup_tessdata",
                 "Directory": "TARGETDIR",
-                "ExeCommand": 'cmd /C "rmdir /s /q %localappdata%\\normcap '
-                + '& rmdir /s /q %localappdata%\\dynobo";',
+                "ExeCommand": (
+                    'cmd /C "rmdir /s /q %localappdata%\\normcap '
+                    '& rmdir /s /q %localappdata%\\dynobo";'
+                ),
                 "Execute": "deferred",
                 "Return": "ignore",
                 "HideTarget": "no",
@@ -104,7 +106,7 @@ class WindowsBriefcase(BuilderBase):
 
         # Write & fix header
         tree.write(wxs_file, encoding="utf-8", xml_declaration=False)
-        with open(wxs_file, "r+", encoding="utf-8") as f:
+        with Path(wxs_file).open("r+", encoding="utf-8") as f:
             lines = f.readlines()
             f.seek(0)
             f.writelines(header_lines + lines)

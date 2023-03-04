@@ -4,7 +4,7 @@ from pytestqt.qtbot import QtBot
 from normcap.gui.downloader import Downloader, Worker
 
 
-@pytest.mark.skip_on_gh
+@pytest.mark.skip_on_gh()
 def test_downloader_retrieves_website(qtbot: QtBot):
     test_url = "https://www.google.com"
     downloader = Downloader()

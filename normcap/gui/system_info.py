@@ -78,7 +78,7 @@ def get_tesseract_path() -> Path:
 
     raise RuntimeError(
         "No Tesseract binary found! Tesseract has to be installed and added "
-        + "to PATH environment variable."
+        "to PATH environment variable."
     )
 
 

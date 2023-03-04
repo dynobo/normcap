@@ -8,7 +8,7 @@ from normcap.gui import update_check
 from normcap.gui.constants import URLS
 
 
-@pytest.mark.skip_on_gh
+@pytest.mark.skip_on_gh()
 @pytest.mark.parametrize("packaged", [True, False])
 def test_update_checker_triggers_checked_signal(monkeypatch, qtbot, packaged):
     monkeypatch.setattr(update_check, "__version__", "0.0.0")
@@ -18,7 +18,7 @@ def test_update_checker_triggers_checked_signal(monkeypatch, qtbot, packaged):
         checker.check()
 
 
-@pytest.mark.skip_on_gh
+@pytest.mark.skip_on_gh()
 @pytest.mark.parametrize("url", [URLS.releases_atom, URLS.pypi_json])
 def test_urls_reachable(url):
     with urllib.request.urlopen(url) as response:
@@ -26,8 +26,8 @@ def test_urls_reachable(url):
 
 
 @pytest.mark.parametrize(
-    "current, other, is_new",
-    (
+    ("current", "other", "is_new"),
+    [
         ("0.3.15", "0.3.16", True),
         ("0.3.16", "0.3.15", False),
         ("0.3.15", "0.3.15", False),
@@ -38,7 +38,7 @@ def test_urls_reachable(url):
         ("0.3.15-beta3", "0.3.15-alpha5", False),
         ("0.3.15-beta3", "0.3.15", False),
         ("0.3.15-beta3", "0.3.16", True),
-    ),
+    ],
 )
 def test_update_checker_is_new_version(current, other, is_new):
     assert (
@@ -47,9 +47,9 @@ def test_update_checker_is_new_version(current, other, is_new):
     )
 
 
-@pytest.mark.skip_on_gh
+@pytest.mark.skip_on_gh()
 @pytest.mark.parametrize(
-    "packaged,text",
+    ("packaged", "text"),
     [(True, b"abc"), (False, b'{"no relevant":"info"}'), (False, "not binary")],
 )
 def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
@@ -75,16 +75,16 @@ def test_show_update_message(qtbot, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "packaged,data,message_args,debug_log",
-    (
+    ("packaged", "data", "message_args", "debug_log"),
+    [
         (True, b"doesn't include version", [], "Could not detect remote version"),
         (True, "not-decodable", [], "Parsing response of update check failed"),
         (True, b'/releases/tag/v9.9.9"', ["9.9.9"], "Newest version: 9.9.9"),
         (False, b'"version": "9.9.9"', ["9.9.9"], "Newest version: 9.9.9"),
         (True, b'/releases/tag/v0.0.0"', [], "Newest version: 0.0.0"),
-    ),
+    ],
 )
-def test_on_download_finished(
+def test_on_download_finished(  # noqa: PLR0913
     caplog, qtbot, monkeypatch, packaged, data, message_args, debug_log
 ):
     args = []

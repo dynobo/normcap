@@ -24,4 +24,9 @@ def test_remove_spaces_in_chi(data):
     )
 
     similarity = Levenshtein.ratio(result.parsed, data["transformed"])
-    assert similarity >= 0.90, (result.parsed, data["transformed"])
+
+    is_equal = 1
+    assert pytest.approx(similarity, abs=0.1) == is_equal, (
+        result.parsed,
+        data["transformed"],
+    )

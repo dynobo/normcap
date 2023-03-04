@@ -6,7 +6,7 @@ from normcap.ocr.magics.paragraph_magic import ParagraphMagic
 
 
 @pytest.mark.parametrize(
-    "words,transformed_expected",
+    ("words", "transformed_expected"),
     [
         (
             (

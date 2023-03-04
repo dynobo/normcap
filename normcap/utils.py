@@ -21,7 +21,7 @@ logger = logging.getLogger("normcap")
 _ISSUES_URLS = "https://github.com/dynobo/normcap/issues"
 _XCB_ERROR_URL = (
     "https://github.com/dynobo/normcap/blob/main/FAQ.md"
-    + "#linux-could-not-load-the-qt-platform-plugin-xcb",
+    "#linux-could-not-load-the-qt-platform-plugin-xcb",
 )
 
 

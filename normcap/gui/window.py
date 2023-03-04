@@ -5,8 +5,8 @@ in multi display setups).
 """
 
 import logging
-import os
 import tempfile
+from pathlib import Path
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -107,7 +107,7 @@ def _move_active_window_to_position_on_kde(screen_rect: Rect) -> None:
     else:
         logger.warning("Invalid dbus interface on KDE")
 
-    os.unlink(script_file.name)
+    Path(script_file.name).unlink()
 
 
 class Communicate(QtCore.QObject):

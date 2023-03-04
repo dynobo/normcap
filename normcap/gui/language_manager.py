@@ -92,7 +92,7 @@ class LanguageManager(QtWidgets.QDialog):
     def _on_download_finished(self, data: bytes, url: str) -> None:
         """Save language to tessdata folder."""
         file_name = url.split("/")[-1]
-        with open(self.tessdata_path / file_name, "wb") as fh:
+        with Path(self.tessdata_path / file_name).open(mode="wb") as fh:
             fh.write(data)
         self._update_models()
         self._set_in_progress(False)
@@ -132,8 +132,10 @@ class LanguageManager(QtWidgets.QDialog):
             QtWidgets.QMessageBox.information(
                 self,
                 "Information",
-                "It is not possible to delete all languages. "
-                + "NormCap needs at least one to function correctly.",
+                (
+                    "It is not possible to delete all languages. "
+                    "NormCap needs at least one to function correctly."
+                ),
             )
             return
 

@@ -1,7 +1,7 @@
 """Run adjustments while packaging with briefcase during CI/CD."""
 
-import os
 import shutil
+from pathlib import Path
 
 from platforms.utils import BuilderBase
 
@@ -35,9 +35,8 @@ class MacNuitka(BuilderBase):
         old_app_path = self.BUILD_PATH / "app.app"
         new_app_path = self.BUILD_PATH / "NormCap.app"
         shutil.rmtree(new_app_path, ignore_errors=True)
-        os.rename(old_app_path, new_app_path)
-        os.rename(
-            new_app_path / "Contents" / "macOS" / "app",
+        Path(old_app_path).rename(new_app_path)
+        Path(new_app_path / "Contents" / "macOS" / "app").rename(
             new_app_path / "Contents" / "macOS" / "NormCap",
         )
         shutil.make_archive(
@@ -56,12 +55,14 @@ class MacNuitka(BuilderBase):
         tesseract_source = "/usr/local/bin/tesseract"
         install_path = "@executable_path/"
         self.run(
-            cmd="dylibbundler "
-            + f"--fix-file {tesseract_source} "
-            + f"--dest-dir {self.TESSERACT_PATH.resolve()} "
-            + f"--install-path {install_path} "
-            + "--bundle-deps "
-            + "--overwrite-files",
+            cmd=(
+                "dylibbundler "
+                f"--fix-file {tesseract_source} "
+                f"--dest-dir {self.TESSERACT_PATH.resolve()} "
+                f"--install-path {install_path} "
+                "--bundle-deps "
+                "--overwrite-files"
+            ),
             cwd=self.BUILD_PATH,
         )
         shutil.copy(tesseract_source, self.TESSERACT_PATH)
@@ -88,17 +89,21 @@ class MacNuitka(BuilderBase):
         ]
         for dylib in dylibs:
             self.run(
-                cmd="install_name_tool -change "
-                + "'@rpath/QtNetwork.framework/Versions/A/QtNetwork' "
-                + "'@executable_path/QtNetwork' "
-                + f"{(cache_path / dylib).resolve()}",
+                cmd=(
+                    "install_name_tool -change "
+                    "'@rpath/QtNetwork.framework/Versions/A/QtNetwork' "
+                    "'@executable_path/QtNetwork' "
+                    f"{(cache_path / dylib).resolve()}"
+                ),
                 cwd=cache_path,
             )
             self.run(
-                cmd="install_name_tool -change "
-                + "'@rpath/QtCore.framework/Versions/A/QtCore' "
-                + "'@executable_path/QtCore' "
-                + f"{(cache_path / dylib).resolve()}",
+                cmd=(
+                    "install_name_tool -change "
+                    "'@rpath/QtCore.framework/Versions/A/QtCore' "
+                    "'@executable_path/QtCore' "
+                    f"{(cache_path / dylib).resolve()}"
+                ),
                 cwd=cache_path,
             )
 

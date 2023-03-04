@@ -37,7 +37,7 @@ class CheckedCall:
         setattr(self.f, key, value)
 
 
-def _windll_copy(text: str) -> None:
+def _windll_copy(text: str) -> None:  # noqa: PLR0915
     if sys.platform != "win32":
         raise RuntimeError("Windows clipboard only available on Windows OS.")
 
@@ -153,32 +153,31 @@ def _windll_copy(text: str) -> None:
             safeCloseClipboard()
 
     def copy_windows(text: str) -> None:
-        with window() as hwnd:
+        with window() as hwnd, clipboard(hwnd):
             # http://msdn.com/ms649048
             # If an application calls OpenClipboard with hwnd set to NULL,
             # EmptyClipboard sets the clipboard owner to NULL;
             # this causes SetClipboardData to fail.
             # => We need a valid hwnd to copy something.
-            with clipboard(hwnd):
-                safeEmptyClipboard()
+            safeEmptyClipboard()
 
-                if text:
-                    # http://msdn.com/ms649051
-                    # If the hMem parameter identifies a memory object,
-                    # the object must have been allocated using the
-                    # function with the GMEM_MOVEABLE flag.
-                    count = wcslen(text) + 1
-                    handle = safeGlobalAlloc(GMEM_MOVEABLE, count * sizeof(c_wchar))
-                    locked_handle = safeGlobalLock(handle)
+            if text:
+                # http://msdn.com/ms649051
+                # If the hMem parameter identifies a memory object,
+                # the object must have been allocated using the
+                # function with the GMEM_MOVEABLE flag.
+                count = wcslen(text) + 1
+                handle = safeGlobalAlloc(GMEM_MOVEABLE, count * sizeof(c_wchar))
+                locked_handle = safeGlobalLock(handle)
 
-                    ctypes.memmove(
-                        c_wchar_p(locked_handle),
-                        c_wchar_p(text),
-                        count * sizeof(c_wchar),
-                    )
+                ctypes.memmove(
+                    c_wchar_p(locked_handle),
+                    c_wchar_p(text),
+                    count * sizeof(c_wchar),
+                )
 
-                    safeGlobalUnlock(handle)
-                    safeSetClipboardData(CF_UNICODETEXT, handle)
+                safeGlobalUnlock(handle)
+                safeSetClipboardData(CF_UNICODETEXT, handle)
 
     copy_windows(text)
 

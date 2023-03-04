@@ -25,15 +25,15 @@ def test_save_image_in_tempfolder():
 
 
 @pytest.mark.parametrize(
-    "active, available, sanatized",
-    (
+    ("active", "available", "sanatized"),
+    [
         ("eng", ["eng"], ["eng"]),
         (["eng"], ["deu"], ["deu"]),
         (["eng"], ["afr", "eng"], ["eng"]),
         (["eng"], ["afr", "deu"], ["afr"]),
         (["deu", "eng"], ["afr", "deu"], ["deu"]),
         (["afr", "deu", "eng"], ["afr", "ben", "deu"], ["afr", "deu"]),
-    ),
+    ],
 )
 def test_sanatize_active_language(monkeypatch, active, available, sanatized):
     monkeypatch.setattr(

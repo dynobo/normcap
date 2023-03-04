@@ -45,7 +45,7 @@ class BuilderBase(ABC):
 
     def get_system_requires(self) -> list[str]:
         """Get versions string from pyproject.toml."""
-        with open(self.PYPROJECT_PATH, encoding="utf8") as toml_file:
+        with Path(self.PYPROJECT_PATH).open(encoding="utf8") as toml_file:
             pyproject_toml = toml.load(toml_file)
         return pyproject_toml["tool"]["briefcase"]["app"]["normcap"][sys.platform][
             "system_requires"
@@ -56,7 +56,7 @@ class BuilderBase(ABC):
         if "--dev" in sys.argv:
             return "0.0.1"
 
-        with open(self.PYPROJECT_PATH, encoding="utf8") as toml_file:
+        with Path(self.PYPROJECT_PATH).open(encoding="utf8") as toml_file:
             pyproject_toml = toml.load(toml_file)
         return pyproject_toml["tool"]["poetry"]["version"]
 
@@ -111,7 +111,7 @@ class BuilderBase(ABC):
         """
         patch_hash = hashlib.md5(patch.encode()).hexdigest()  # noqa: S324
 
-        with open(file_path, encoding="utf8") as f:
+        with Path(file_path).open(encoding="utf8") as f:
             if f.read().find(patch_hash) > -1:
                 return
 
@@ -127,14 +127,14 @@ class BuilderBase(ABC):
             if insert_after in line:
                 pad = len(line) - len(line.lstrip(" "))
                 patch = patch.replace("\n", f"\n{pad * ' '}")
-                line = line.replace(line, line + pad * " " + patch + "\n")
+                line = line + pad * " " + patch + "\n"  # noqa: PLW2901
                 patch_applied = True
             print(line, end="")  # noqa: T201
 
         if not patch_applied:
             raise RuntimeError(
                 f"Couldn't apply patch to file {file_path}! "
-                + f"Line '{insert_after}' not found!"
+                f"Line '{insert_after}' not found!"
             )
 
 
@@ -148,7 +148,7 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
 
     url = (
         "https://digi.bib.uni-mannheim.de/tesseract/"
-        + "tesseract-ocr-w64-setup-v5.2.0.20220712.exe"
+        "tesseract-ocr-w64-setup-v5.2.0.20220712.exe"
     )
     urllib.request.urlretrieve(url, installer_path)
 

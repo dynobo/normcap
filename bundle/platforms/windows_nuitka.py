@@ -23,7 +23,7 @@ class WindowsNuitka(BuilderBase):
 
         url = (
             "https://github.com/wixtoolset/wix3/releases/download/"
-            + "wix3112rtm/wix311-binaries.zip"
+            "wix3112rtm/wix311-binaries.zip"
         )
         urllib.request.urlretrieve(f"{url}", wix_zip)
 
@@ -94,7 +94,7 @@ class WindowsNuitka(BuilderBase):
         )
         description = (
             "OCR powered screen-capture tool to capture information "
-            + "instead of images."
+            "instead of images."
         )
         self.run(
             cmd=f"""python -m nuitka \

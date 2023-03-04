@@ -10,7 +10,7 @@ from normcap import clipboard
 
 
 @pytest.mark.parametrize(
-    "wayland_display,xdg_session_type,result",
+    ("wayland_display", "xdg_session_type", "result"),
     [
         ("Wayland", "", True),
         ("", "Gnome Wayland", True),

@@ -273,7 +273,8 @@ def test_qt_log_wrapper_xcb_as_error(caplog):
 def test_hook_exception(monkeypatch, caplog, capsys):
     with monkeypatch.context() as m:
         m.setattr(sys, "exit", lambda _: True)
-        with pytest.raises(RuntimeError) as excinfo:
+
+        def raise_exception():
             text = words = tsv_data = "secret"  # noqa: F841 (unused variable)
             transformed = v = self = "secret"  # noqa: F841
             other_variable = "should be printed"  # noqa: F841
@@ -285,6 +286,9 @@ def test_hook_exception(monkeypatch, caplog, capsys):
                 parsed="secret",
             )
             raise RuntimeError
+
+        with pytest.raises(RuntimeError) as excinfo:
+            raise_exception()
 
         utils.hook_exceptions(excinfo.type, excinfo.value, excinfo.tb)
 
