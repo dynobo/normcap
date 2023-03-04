@@ -176,7 +176,7 @@ def hook_exceptions(
             message,
             flags=re.IGNORECASE,
         )
-        print(message, file=sys.stderr, flush=True)
+        print(message, file=sys.stderr, flush=True)  # noqa: T201
 
     except Exception:
         logger.critical(

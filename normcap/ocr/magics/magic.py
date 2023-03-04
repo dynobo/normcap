@@ -17,10 +17,6 @@ class Magic:
 
     Arguments:
         AbstractHandler {[type]} -- [description]
-
-    Returns
-    -------
-        [type] -- [description]
     """
 
     _magics = {
@@ -34,13 +30,11 @@ class Magic:
     def apply(self, ocr_result: OcrResult) -> OcrResult:
         """Load magics, calculate score, execture magic with highest score.
 
-        Arguments:
-            AbstractHandler {class} -- self
-            capture {Capture} -- NormCap's session data
+        Args:
+            ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
-            Capture -- Enriched NormCap's session data
+        Returns:
+            Enriched NormCap's session data.
         """
         # Get score per magic
         ocr_result.magic_scores = self._calc_scores(ocr_result)
@@ -67,11 +61,10 @@ class Magic:
         """Calculate score for every loaded magic.
 
         Arguments:
-            capture {Capture} -- NormCap's session data
+            ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
-            dict -- Scores in format {<magic Name>: <score>}
+        Returns:
+            Scores in format {<magic Name>: <score>}.
         """
         scores = {name: magic.score(ocr_result) for name, magic in self._magics.items()}
         logger.debug("Magic scores:\n%s", scores)

@@ -106,17 +106,22 @@ target-version = "py39"
 line-length = 88
 exclude = [".vscode", ".venv", "linux"]
 select = [
-  "F",   # Pyflakes
-  "E",   # pycodestyle
-  "I",   # Isort
-  "D",   # pydocstyle
-  "UP",  # pyupgrad
-  "N",   # pep8-naming
-  "S",   # flake8-bandits
-  "C",   # flake8-comprehensions
-  "B",   # flake8-bugbear
-  "A",   # flake8-builtins
-  "T",   # flake8-print
+  "F",  # Pyflakes
+  "E",  # pycodestyle
+  "I",  # Isort
+  "D",  # pydocstyle
+  "W",  # warning
+  "UP", # pyupgrad
+  "N",  # pep8-naming
+  "S",  # flake8-bandits
+  "C4", # flake8-comprehensions
+  "B",  # flake8-bugbear
+  # "FBT", # flake8-boolean-trap
+  "A", # flake8-builtins
+  # "ISC", # flake8-implicit-str-concat
+  "ICN", # flake8-import-conventions
+  "T20", # flake8-print
+  # "PT",  # flake8-pytest-style
   "Q",   # flake8-quotes
   "ANN", # flake8-annotations
   "RUF", # meta rules (unused noqa)
@@ -131,6 +136,7 @@ ignore = [
   "D107",   # Missing docstring in __init__
   "D203",   # 1 blank line required before class docstring
   "D213",   # Multi-line docstring summary should start at the second line
+  "D407",   # Missing dashed underline after section
   "ANN101", # Missing type annotation for `self` in method
   "UP007",  # Use X | Y for type annotations
 ]

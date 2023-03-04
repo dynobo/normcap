@@ -25,9 +25,8 @@ class EmailMagic(BaseMagic):
         Arguments:
             ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
-            score between 0-100 (100 = more likely)
+        Returns:
+            score between 0-100 (100 = more likely).
         """
         text = ocr_result.text
         emails = self._extract_emails(text)
@@ -51,9 +50,8 @@ class EmailMagic(BaseMagic):
         Arguments:
             ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
-            Comma separated email adresses
+        Returns:
+            Comma separated email adresses.
         """
         logger.info("Transform with Email magic")
         return ", ".join(self._extract_emails(ocr_result.text))

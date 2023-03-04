@@ -122,7 +122,6 @@ def _macos_has_screenshot_permission() -> bool:
     """Use CoreGraphics to check if application has screen recording permissions.
 
     Returns
-    -------
         True if permissions are available or can't be detected.
     """
     try:

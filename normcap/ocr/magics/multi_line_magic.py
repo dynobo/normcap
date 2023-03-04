@@ -12,12 +12,10 @@ class MultiLineMagic(BaseMagic):
         """Calc score based on amount of lines and breaks.
 
         Arguments:
-            BaseMagic {class} -- Base class for magics
-            capture {Capture} -- NormCap's session data
+            ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
-            float -- score between 0-100 (100 = more likely)
+        Returns:
+            Score between 0-100 (100 = more likely)
         """
         if (ocr_result.num_lines > 1) and (
             ocr_result.num_blocks == ocr_result.num_pars == 1
@@ -29,12 +27,11 @@ class MultiLineMagic(BaseMagic):
     def transform(self, ocr_result: OcrResult) -> str:
         """Just transform into multiple lines of text.
 
-        Arguments:
-            capture {Capture} -- NormCap's session data
+        Args:
+            ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
-            str -- Lines of text
+        Returns:
+            Lines of text.
         """
         # Just return concatenated text
         return ocr_result.lines
