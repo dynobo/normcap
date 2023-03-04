@@ -10,13 +10,11 @@ class SingleLineMagic(BaseMagic):
     def score(self, ocr_result: OcrResult) -> float:
         """Calc score based on amount of lines.
 
-        Arguments:
-            BaseMagic {class} -- Base class for magics
-            capture {Capture} -- NormCap's session data
+        Args:
+            ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
-            float -- score between 0-100 (100 = more likely)
+        Returns:
+           Score between 0-100 (100 = more likely).
         """
         if len(ocr_result.text) == 0:
             return 1
@@ -29,12 +27,11 @@ class SingleLineMagic(BaseMagic):
     def transform(self, ocr_result: OcrResult) -> str:
         """Just transform into single line of text.
 
-        Arguments:
-            capture {Capture} -- NormCap's session data
+        Args:
+            ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
-            str -- Single line of text
+        Returns:
+            Single line of text.
         """
         # Just return concatenated text
         return ocr_result.text.strip()

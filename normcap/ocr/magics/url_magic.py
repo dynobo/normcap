@@ -44,11 +44,10 @@ class UrlMagic(BaseMagic):
     def score(self, ocr_result: OcrResult) -> float:
         """Calculate score based on chars in URLs vs overall chars.
 
-        Arguments:
+        Args:
             ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
+        Returns:
             score between 0-100 (100 = more likely)
         """
         text = ocr_result.text
@@ -68,11 +67,10 @@ class UrlMagic(BaseMagic):
     def transform(self, ocr_result: OcrResult) -> str:
         """Parse URLs and return as newline separated string.
 
-        Arguments:
+        Args:
             ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
+        Returns:
             URL(s), separated bye newline
         """
         logger.info("Transform with URL magic")

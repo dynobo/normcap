@@ -12,13 +12,11 @@ class ParagraphMagic(BaseMagic):
     def score(self, ocr_result: OcrResult) -> float:
         """Calc score based on layout of amount of paragraphs and blocks.
 
-        Arguments:
-            BaseMagic {class} -- Base class for magics
-            capture {Capture} -- NormCap's session data
+        Arg:
+            ocr_result: Recognized text and meta information.
 
         Returns
-        -------
-            float -- score between 0-100 (100 = more likely)
+            Score between 0-100 (100 = more likely).
         """
         breaks = ocr_result.num_blocks + ocr_result.num_pars - 1
         return 100 - (100 / (breaks))
@@ -26,12 +24,11 @@ class ParagraphMagic(BaseMagic):
     def transform(self, ocr_result: OcrResult) -> str:
         """Transform wordboxes into nicely formatted paragraphs.
 
-        Arguments:
-            capture {Capture} -- NormCap's session data
+        Args:
+            ocr_result: Recognized text and meta information.
 
-        Returns
-        -------
-            str -- Transformed text
+        Returns:
+            Transformed text.
         """
         result = ""
         current_par_num = 1

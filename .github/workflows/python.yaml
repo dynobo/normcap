@@ -116,7 +116,7 @@ jobs:
       - name: Print briefcase log in case of error
         if: failure()
         shell: bash -l {0}
-        run: cat logs/briefcase*
+        run: (cat logs/briefcase*) || true
 
       # Release test package
       - name: Set current date as env variable
