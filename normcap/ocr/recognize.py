@@ -15,7 +15,7 @@ from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
 logger = logging.getLogger(__name__)
 
 
-def recognize(
+def recognize(  # noqa: PLR0913
     tesseract_cmd: PathLike,
     languages: Union[str, Iterable[str]],
     image: Image.Image,

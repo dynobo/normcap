@@ -1,5 +1,6 @@
 import logging
 import sys
+from pathlib import Path
 
 import pytest
 import toml
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def test_version():
-    with open("pyproject.toml", encoding="utf8") as toml_file:
+    with Path("pyproject.toml").open(encoding="utf8") as toml_file:
         pyproject_toml = toml.load(toml_file)
 
     briefcase_version = pyproject_toml["tool"]["briefcase"]["version"]
@@ -47,11 +48,11 @@ def test_get_args_version(monkeypatch, capsys):
 
 
 @pytest.mark.parametrize(
-    "level,result",
-    (
+    ("level", "result"),
+    [
         ("info", {"level": logging.INFO, "has_hook": True}),
         ("debug", {"level": logging.DEBUG, "has_hook": False}),
-    ),
+    ],
 )
 def test_prepare_logging(monkeypatch, level, result, caplog):
     with monkeypatch.context() as m:

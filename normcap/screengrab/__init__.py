@@ -45,10 +45,10 @@ def get_capture_func() -> Callable:
             logger.debug("Select capture method DBUS portal")
             from normcap.screengrab import dbus_portal
             return dbus_portal.capture
-        else:
-            logger.debug("Select capture method DBUS portal legacy")
-            from normcap.screengrab import dbus_portal_legacy
-            return dbus_portal_legacy.capture
+
+        logger.debug("Select capture method DBUS portal legacy")
+        from normcap.screengrab import dbus_portal_legacy
+        return dbus_portal_legacy.capture
 
     logger.debug("Select capture method DBUS shell")
     from normcap.screengrab import dbus_shell

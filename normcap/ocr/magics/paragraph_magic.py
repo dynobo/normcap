@@ -15,7 +15,7 @@ class ParagraphMagic(BaseMagic):
         Arg:
             ocr_result: Recognized text and meta information.
 
-        Returns
+        Returns:
             Score between 0-100 (100 = more likely).
         """
         breaks = ocr_result.num_blocks + ocr_result.num_pars - 1

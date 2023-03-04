@@ -4,7 +4,7 @@ from normcap.ocr.magics.email_magic import EmailMagic
 
 
 @pytest.mark.parametrize(
-    "words,transformed_expected",
+    ("words", "transformed_expected"),
     [
         (("dy@no.bo",), "dy@no.bo"),
         ((" dy@no.bo ",), "dy@no.bo"),
@@ -24,7 +24,7 @@ def test_email_magic_transform(ocr_result, words, transformed_expected):
 
 
 @pytest.mark.parametrize(
-    "words,score_expected",
+    ("words", "score_expected"),
     [
         (("dy@no.bo",), 100),
         ((" dy@no.bo ",), 80),

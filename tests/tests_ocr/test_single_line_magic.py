@@ -4,7 +4,7 @@ from normcap.ocr.magics.single_line_magic import SingleLineMagic
 
 
 @pytest.mark.parametrize(
-    "words,transformed_expected",
+    ("words", "transformed_expected"),
     [
         ((), ""),
         (("oneword",), "oneword"),
@@ -22,7 +22,7 @@ def test_single_line_magic_transform(ocr_result, words, transformed_expected):
 
 
 @pytest.mark.parametrize(
-    "words,score_expected",
+    ("words", "score_expected"),
     [
         ([], 1),
         ([{"text": "w1", "line_num": 1}], 50),

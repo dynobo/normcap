@@ -1,5 +1,4 @@
 import sys
-from collections.abc import Generator
 from pathlib import Path
 
 import pytest
@@ -16,7 +15,7 @@ from normcap.utils import create_argparser
 
 
 @pytest.fixture(autouse=True)
-def clear_caches():
+def _clear_caches():
     screengrab_utils.get_gnome_version.cache_clear()
     url_magic.UrlMagic._extract_urls.cache_clear()
     email_magic.EmailMagic._extract_emails.cache_clear()
@@ -46,12 +45,12 @@ def dbus_portal():
 
 
 @pytest.fixture()
-def capture() -> Generator[Capture, None, None]:
+def capture() -> Capture:
     """Create argparser and provide its default values."""
     image = QtGui.QImage(200, 300, QtGui.QImage.Format.Format_RGB32)
     image.fill(QtGui.QColor("#ff0000"))
 
-    yield Capture(
+    return Capture(
         mode=CaptureMode.PARSE,
         rect=Rect(20, 30, 220, 330),
         ocr_text="one two three",

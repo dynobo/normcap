@@ -7,7 +7,7 @@ from pytestqt.qtbot import QtBot
 from normcap.gui import language_manager
 
 
-@pytest.mark.gui
+@pytest.mark.gui()
 def test_download_language(tmp_path, qtbot: QtBot):
     Path(tmp_path / "tessdata").mkdir()
     Path(tmp_path / "tessdata" / "eng.traineddata").touch()
@@ -40,7 +40,7 @@ def test_download_language(tmp_path, qtbot: QtBot):
     assert window.installed_layout.model.languages[1][0] == "eng"
 
 
-@pytest.mark.gui
+@pytest.mark.gui()
 def test_delete_language(tmp_path, qtbot: QtBot):
     Path(tmp_path / "tessdata").mkdir()
     Path(tmp_path / "tessdata" / "deu.traineddata").touch()
@@ -73,7 +73,7 @@ def test_delete_language(tmp_path, qtbot: QtBot):
     assert window.installed_layout.model.languages[0][0] == "eng"
 
 
-@pytest.mark.gui
+@pytest.mark.gui()
 def test_delete_last_language_impossible(monkeypatch, tmp_path, qtbot: QtBot):
     Path(tmp_path / "tessdata").mkdir()
     Path(tmp_path / "tessdata" / "eng.traineddata").touch()
@@ -97,7 +97,7 @@ def test_delete_last_language_impossible(monkeypatch, tmp_path, qtbot: QtBot):
     assert window.installed_layout.model.languages[0][0] == "eng"
 
 
-@pytest.mark.gui
+@pytest.mark.gui()
 def test_delete_without_selection_does_nothing(monkeypatch, tmp_path, qtbot: QtBot):
     Path(tmp_path / "tessdata").mkdir()
     Path(tmp_path / "tessdata" / "eng.traineddata").touch()

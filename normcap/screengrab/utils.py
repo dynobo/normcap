@@ -80,9 +80,9 @@ def get_gnome_version() -> Optional[str]:
 
 
 def has_dbus_portal_support() -> bool:
-    if gnome_version := get_gnome_version():
-        if gnome_version < "41":
-            return False
+    gnome_version = get_gnome_version()
+    if gnome_version and gnome_version < "41":
+        return False
     return True
 
 
@@ -121,7 +121,7 @@ def has_screenshot_permission() -> bool:
 def _macos_has_screenshot_permission() -> bool:
     """Use CoreGraphics to check if application has screen recording permissions.
 
-    Returns
+    Returns:
         True if permissions are available or can't be detected.
     """
     try:
@@ -153,7 +153,7 @@ def macos_request_screenshot_permission() -> None:
 def macos_open_privacy_settings() -> None:
     link_to_preferences = (
         "x-apple.systempreferences:com.apple.preference.security"
-        + "?Privacy_ScreenCapture"
+        "?Privacy_ScreenCapture"
     )
     try:
         if sys.platform != "darwin":

@@ -36,12 +36,14 @@ class MacBriefcase(BuilderBase):
         tesseract_target = bin_path / "tesseract"
         install_path = "@executable_path/"
         self.run(
-            cmd="dylibbundler "
-            + f"--fix-file {tesseract_source.resolve()} "
-            + f"--dest-dir {bin_path.resolve()} "
-            + f"--install-path {install_path} "
-            + "--bundle-deps "
-            + "--overwrite-files",
+            cmd=(
+                "dylibbundler "
+                f"--fix-file {tesseract_source.resolve()} "
+                f"--dest-dir {bin_path.resolve()} "
+                f"--install-path {install_path} "
+                "--bundle-deps "
+                "--overwrite-files"
+            ),
             cwd=self.BUILD_PATH,
         )
         shutil.copy(tesseract_source, tesseract_target)

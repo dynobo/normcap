@@ -78,7 +78,8 @@ def is_dark(image: Image.Image) -> Image.Image:
     """Detect if mean pixel brightness is below 125."""
     image_grayscale = image.convert("L")
     stat = ImageStat.Stat(image_grayscale)
-    return stat.mean[0] < 125
+    middle_grey = 125
+    return stat.mean[0] < middle_grey
 
 
 def preprocess(

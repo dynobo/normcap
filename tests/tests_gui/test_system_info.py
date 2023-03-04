@@ -180,10 +180,9 @@ def test_config_directory_on_windows(monkeypatch, tmp_path):
 
         m.setenv("LOCALAPPDATA", "")
         m.setenv("APPDATA", "")
-        with pytest.raises(ValueError) as e:
-            system_info.config_directory.cache_clear()
+        system_info.config_directory.cache_clear()
+        with pytest.raises(ValueError, match="Could not determine the appdata"):
             _ = system_info.config_directory()
-        assert "could not determine the appdata" in str(e.value).lower()
 
 
 def test_config_directory_on_linux_macos(monkeypatch, tmp_path):
@@ -204,12 +203,12 @@ def test_config_directory_fallback(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "platform,binary,directory",
-    (
+    ("platform", "binary", "directory"),
+    [
         ("linux", "tesseract", "bin"),
         ("win32", "tesseract.exe", "tesseract"),
         ("darwin", "tesseract", "bin"),
-    ),
+    ],
 )
 def test_get_tesseract_path_in_briefcase(monkeypatch, platform, binary, directory):
     with monkeypatch.context() as m:

@@ -43,14 +43,14 @@ def get_tesseract_languages(
         traceback.print_tb(e.__traceback__)
         raise RuntimeError(
             "Could not run Tesseract binary. If you pip installed NormCap "
-            + "make sure Tesseract is installed and configured correctly."
+            "make sure Tesseract is installed and configured correctly."
         ) from e
 
     if not languages:
         raise ValueError(
             "Could not load any languages for tesseract. "
-            + "On Windows, make sure that TESSDATA_PREFIX environment variable is set. "
-            + "On Linux/macOS see if 'tesseract --list-langs' work is the command line."
+            "On Windows, make sure that TESSDATA_PREFIX environment variable is set. "
+            "On Linux/macOS see if 'tesseract --list-langs' work is the command line."
         )
 
     return languages

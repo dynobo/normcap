@@ -28,7 +28,7 @@ def _load_test_image(image):
     return __load_test_image
 
 
-@pytest.mark.gui
+@pytest.mark.gui()
 @pytest.mark.parametrize("data", TESTCASES[:1])
 def test_app(monkeypatch, qapp, qtbot, data):
     """Tests complete OCR workflow."""

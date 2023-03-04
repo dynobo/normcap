@@ -214,7 +214,7 @@ def test_split_full_desktop_to_screens(monkeypatch):
     image.load(str(img_path.resolve()))
     split_images = utils.split_full_desktop_to_screens(image)
 
-    assert len(split_images) == 3
+    assert len(split_images) == len(mocked_screens())
     assert {split_images[i].size().toTuple() for i in range(3)} == {(100, 100)}
 
     assert set(_convert_to_pixels(split_images[0])) == {(0, 0, 255, 255)}

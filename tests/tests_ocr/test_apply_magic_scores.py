@@ -4,7 +4,7 @@ from normcap.ocr.magics import Magic
 
 
 @pytest.mark.parametrize(
-    "words,scores_expected",
+    ("words", "scores_expected"),
     [
         (
             (

@@ -117,9 +117,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             button = QtWidgets.QMessageBox.critical(
                 None,
                 "Error!",
-                f"{app} is missing permissions for 'Screen Recording'.\n\n"
-                + "Grant the permissions via 'Privacy & Security' settings "
-                + "and restart NormCap.\n\nClick OK to exit.",
+                (
+                    f"{app} is missing permissions for 'Screen Recording'.\n\n"
+                    "Grant the permissions via 'Privacy & Security' settings "
+                    "and restart NormCap.\n\nClick OK to exit."
+                ),
                 buttons=QtWidgets.QMessageBox.Open | QtWidgets.QMessageBox.Cancel,
             )
             if button == QtWidgets.QMessageBox.Open:
@@ -349,7 +351,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot()
     def _capture_to_ocr(self) -> None:
         """Perform content recognition on grabed image."""
-        if self.capture.image_area < 25:
+        minimum_image_area = 25
+        if self.capture.image_area < minimum_image_area:
             logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
             self.com.on_close_or_exit.emit("selection too small")
             return

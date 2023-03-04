@@ -2,6 +2,7 @@
 
 import os
 import shutil
+from contextlib import suppress
 
 from platforms.utils import BuilderBase
 
@@ -16,13 +17,12 @@ class LinuxNuitka(BuilderBase):
         target_path.mkdir(exist_ok=True)
         lib_cache_path = self.BUILD_PATH / ".cache"
         lib_cache_path.mkdir(exist_ok=True)
-        try:
+        with suppress(shutil.SameFileError):
             shutil.copy("/usr/bin/tesseract", target_path)
-        except shutil.SameFileError:
-            pass
         self.run(
             r"ldd /usr/bin/tesseract | grep '=> /' | awk '{print $3}' | "
-            "xargs -I '{}' cp --verbose '{}' " + f"{(lib_cache_path).resolve()}/"
+            "xargs -I '{}' cp --verbose '{}'"
+            f"{(lib_cache_path).resolve()}/"
         )
 
         # deps = ("liblept*", "libtesseract*", "libtiff*", "libjbig*", "*")
