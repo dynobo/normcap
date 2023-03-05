@@ -658,36 +658,30 @@
             in the question above.
           </p>
         </details>
-        <details id="faqs-couldnt-load-xcb">
-          <summary>[Linux] Could not load the Qt platform plugin xcb</summary>
-          <p>In case you get the following output...</p>
-          <pre><code>$ normcap -v debug
-12:06:34 - INFO    - normcap.app            - L:32  - Starting Normcap v0.2.0
-12:06:34 - DEBUG   - normcap.utils          - L:199 - [QT] L:0, func: None, file: None
-12:06:34 - DEBUG   - normcap.utils          - L:200 - [QT] QtInfoMsg - Could not load the Qt platform plugin "xcb" in "" even though it was found.
-12:06:34 - DEBUG   - normcap.utils          - L:199 - [QT] L:0, func: None, file: None
-12:06:34 - DEBUG   - normcap.utils          - L:200 - [QT] QtFatalMsg - This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
-Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl, xcb.</code></pre>
+        <details id="faqs-couldnt-load-platform-plugin">
+          <summary>[Linux] Error: Could not load the Qt platform plugin</summary>
+          <p>In case you get an output like this...</p>
+          <pre><code>$ normcap
+QtFatalMsg - This application failed to start because no Qt platform plugin
+could be initialized. Reinstalling the application may fix this problem.
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen,
+vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl, xcb.</code></pre>
           <p>
-            ... the chances are, some system requirements are outdated. You can check
-            this with <code>apt list "libxcb-util*"</code>:
+            ... the chances are, some system packages are missing or outdated. Please
+          ensure you have the following packages installed:
           </p>
-          <pre><code>$ apt list "libxcb-util*"
-Listing... Done
-libxcb-util-dev/hirsute 0.4.0-1 amd64
-libxcb-util-dev/hirsute 0.4.0-1 i386
-libxcb-util0-dev/hirsute 0.4.0-1 amd64
-libxcb-util0-dev/hirsute 0.4.0-1 i386
-libxcb-util1/hirsute,now 0.4.0-1 amd64 [installed,automatic]
-libxcb-util1/hirsute 0.4.0-1 i386</code></pre>
+          <ol>
+            <li><code>qt6-base</code></li>
+            <li><code>qt6-wayland</code> (only when using Wayland)</li>
+            <li><code>libxcb</code> (only when using X.Org)</li>
+          </ol>
           <p>
-            Is only <code>libxcb-util0</code> shown but <code>libxcb-util1</code> is
-            missing? Then you can try to create a symlink for the missing version:
+          <small>Those are the package names on Arch Linux, other Linux distributions
+            might call have named them differently.</small>
           </p>
-          <pre><code>sudo ln -s /lib/x86_64-linux-gnu/libxcb-util.so.0 /lib/x86_64-linux-gnu/libxcb-util.so.1</code></pre>
         </details>
         <details id="faqs-appimage-needs-fuse">
-          <summary>[Linux] AppImages require FUSE to run</summary>
+          <summary>[Linux] Error: AppImages require FUSE to run</summary>
           <p>
             This is not a NormCap issue but a requirement for AppImages. You need to
             make sure, that the <code>FUSE</code> library is installed on your system.
