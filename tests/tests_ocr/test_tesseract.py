@@ -1,0 +1,64 @@
+import subprocess
+
+import pytest
+from PIL import Image
+
+from normcap.gui import system_info
+from normcap.ocr import tesseract
+
+
+def test_get_languages():
+    tesseract_cmd = system_info.get_tesseract_path()
+    tessdata_path = system_info.get_tessdata_path()
+    langs = tesseract.get_languages(
+        tesseract_cmd=tesseract_cmd, tessdata_path=tessdata_path
+    )
+    assert langs
+
+
+def test_get_languages_on_windows(monkeypatch):
+    def mocked_output(*_, **__):
+        return subprocess.CompletedProcess(
+            args="",
+            returncode=0,
+            stdout=(
+                b"List of available languages in "
+                b'C:\\Program Files\\Tesseract-OCR\\tessdata/" (2):\r\n'
+                b"\r\n"
+                b"ara\r\n"
+                b"eng\r\n"
+            ),
+        )
+
+    monkeypatch.setattr(tesseract.subprocess, "run", mocked_output)
+    tesseract_cmd = system_info.get_tesseract_path()
+    tessdata_path = system_info.get_tessdata_path()
+    langs = tesseract.get_languages(
+        tesseract_cmd=tesseract_cmd, tessdata_path=tessdata_path
+    )
+    assert langs == ["ara", "eng"]
+
+
+def test_get_languages_raise_on_wrong_cmd():
+    tesseract_cmd = "non-existing-binary"
+    tessdata_path = system_info.get_tessdata_path()
+    with pytest.raises(FileNotFoundError, match="Could not find Tesseract binary"):
+        _ = tesseract.get_languages(
+            tesseract_cmd=tesseract_cmd, tessdata_path=tessdata_path
+        )
+
+
+def test_get_languages_raise_on_no_languages(tmp_path):
+    tesseract_cmd = system_info.get_tesseract_path()
+    tessdata_path = tmp_path
+    with pytest.raises(ValueError, match="Could not load any languages"):
+        _ = tesseract.get_languages(
+            tesseract_cmd=tesseract_cmd, tessdata_path=tessdata_path
+        )
+
+
+def test_orc_perform_raises_on_wrong_cmd():
+    tesseract_cmd = "non-existing-binary"
+    img = Image.new("RGB", (200, 50), color=(255, 255, 255))
+    with pytest.raises(FileNotFoundError, match="Could not find Tesseract binary"):
+        _ = tesseract.perform_ocr(cmd=tesseract_cmd, image=img, args="")

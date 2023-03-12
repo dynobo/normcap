@@ -7,9 +7,8 @@ from PySide6 import QtCore, QtGui
 
 from normcap.gui import system_info
 from normcap.gui.models import Capture, CaptureMode, Rect
-from normcap.ocr import utils as ocr_utils
 from normcap.ocr.magics import email_magic, url_magic
-from normcap.ocr.models import OcrResult, TessArgs
+from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
 from normcap.screengrab import utils as screengrab_utils
 from normcap.utils import create_argparser
 
@@ -19,7 +18,6 @@ def _clear_caches():
     screengrab_utils.get_gnome_version.cache_clear()
     url_magic.UrlMagic._extract_urls.cache_clear()
     email_magic.EmailMagic._extract_emails.cache_clear()
-    ocr_utils.get_tesseract_version.cache_clear()
     system_info.desktop_environment.cache_clear()
     system_info.display_manager_is_wayland.cache_clear()
     system_info.get_tesseract_path.cache_clear()
@@ -63,7 +61,12 @@ def capture() -> Capture:
 def ocr_result() -> OcrResult:
     """Create argparser and provide its default values."""
     return OcrResult(
-        tess_args=TessArgs(path=Path(), lang="eng", oem=2, psm=2, version="5.0.0"),
+        tess_args=TessArgs(
+            tessdata_path=Path(),
+            lang="eng",
+            oem=OEM.TESSERACT_LSTM_COMBINED,
+            psm=PSM.AUTO_ONLY,
+        ),
         image=Image.Image(),
         magic_scores={},
         parsed="",

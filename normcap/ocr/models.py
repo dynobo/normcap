@@ -7,27 +7,60 @@ from typing import Optional
 from PIL import Image
 
 
+class PSM(IntEnum):
+    """Available tesseract mode options."""
+
+    OSD_ONLY = 0  # Orientation and script detection (OSD) only.
+    AUTO_OSD = 1  # Automatic page segmentation with orientation & script detection.
+    AUTO_ONLY = 2  # Automatic page segmentation, but no OSD, or OCR.
+    AUTO = 3  # Fully automatic page segmentation, but no OSD. (`tesserocr` default)
+    SINGLE_COLUMN = 4  # Assume a single column of text of variable sizes.
+    SINGLE_BLOCK_VERT_TEXT = 5  # Assume a  uniform block of vertically aligned text.
+    SINGLE_BLOCK = 6  # Assume a single uniform block of text.
+    SINGLE_LINE = 7  # Treat the image as a single text line.
+    SINGLE_WORD = 8  # Treat the image as a single word.
+    CIRCLE_WORD = 9  # Treat the image as a single word in a circle.
+    SINGLE_CHAR = 10  # Treat the image as a single character.
+    SPARSE_TEXT = 11  # Find as much text as possible in no particular order.
+    SPARSE_TEXT_OSD = 12  # Sparse text with orientation and script det.
+    RAW_LINE = 13  # Treat the image as a single text line, bypassing Tesseract hacks.
+    COUNT = 14  # Number of enum entries.
+
+
+class OEM(IntEnum):
+    """Available tesseract model options."""
+
+    TESSERACT_ONLY = 0  # Run Tesseract only - fastest
+    LSTM_ONLY = 1  # Run just the LSTM line recognizer. (>=v4.00)
+    TESSERACT_LSTM_COMBINED = 2  # Run the LSTM recognizer, but allow fallback
+    # to Tesseract when things get difficult. (>=v4.00)
+    DEFAULT = 3  # Run both and combine results - best accuracy.
+
+
 @dataclass
 class TessArgs:
     """Arguments used when envoking tesseract."""
 
-    path: Optional[PathLike]
+    tessdata_path: Optional[PathLike]
     lang: str
-    oem: int
-    psm: int
-    version: str
+    oem: OEM
+    psm: PSM
 
-    def to_config_str(self) -> str:
-        """Generate command line args for pytesseract/tesseract.
-
-        The language is ommited, as pytesseract takes an extra argument for that.
-        """
-        config_str = f"--oem {self.oem} --psm {self.psm}"
-        if self.path:
-            config_str += f' --tessdata-dir "{self.path}"'
+    def as_list(self) -> list[str]:
+        """Generate command line args for tesseract."""
+        arg_list = [
+            "-l",
+            self.lang,
+            "--oem",
+            str(self.oem.value),
+            "--psm",
+            str(self.psm.value),
+        ]
+        if self.tessdata_path:
+            arg_list.extend(["--tessdata-dir", str(self.tessdata_path)])
         if self.is_language_without_spaces():
-            config_str += " -c preserve_interword_spaces=1"
-        return config_str
+            arg_list.extend(["-c", "preserve_interword_spaces=1"])
+        return arg_list
 
     def is_language_without_spaces(self) -> bool:
         """Check if selected languages are only languages w/o spaces between words."""
@@ -113,33 +146,3 @@ class OcrResult:
     def num_blocks(self) -> int:
         """Provide number of text blocks in OCR text."""
         return self._count_unique_sections("block")
-
-
-class PSM(IntEnum):
-    """Available tesseract mode options."""
-
-    OSD_ONLY = 0  # Orientation and script detection (OSD) only.
-    AUTO_OSD = 1  # Automatic page segmentation with orientation & script detection.
-    AUTO_ONLY = 2  # Automatic page segmentation, but no OSD, or OCR.
-    AUTO = 3  # Fully automatic page segmentation, but no OSD. (`tesserocr` default)
-    SINGLE_COLUMN = 4  # Assume a single column of text of variable sizes.
-    SINGLE_BLOCK_VERT_TEXT = 5  # Assume a  uniform block of vertically aligned text.
-    SINGLE_BLOCK = 6  # Assume a single uniform block of text.
-    SINGLE_LINE = 7  # Treat the image as a single text line.
-    SINGLE_WORD = 8  # Treat the image as a single word.
-    CIRCLE_WORD = 9  # Treat the image as a single word in a circle.
-    SINGLE_CHAR = 10  # Treat the image as a single character.
-    SPARSE_TEXT = 11  # Find as much text as possible in no particular order.
-    SPARSE_TEXT_OSD = 12  # Sparse text with orientation and script det.
-    RAW_LINE = 13  # Treat the image as a single text line, bypassing Tesseract hacks.
-    COUNT = 14  # Number of enum entries.
-
-
-class OEM(IntEnum):
-    """Available tesseract model options."""
-
-    TESSERACT_ONLY = 0  # Run Tesseract only - fastest
-    LSTM_ONLY = 1  # Run just the LSTM line recognizer. (>=v4.00)
-    TESSERACT_LSTM_COMBINED = 2  # Run the LSTM recognizer, but allow fallback
-    # to Tesseract when things get difficult. (>=v4.00)
-    DEFAULT = 3  # Run both and combine results - best accuracy.

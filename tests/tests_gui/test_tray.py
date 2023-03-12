@@ -36,9 +36,7 @@ def test_save_image_in_tempfolder():
     ],
 )
 def test_sanatize_active_language(monkeypatch, active, available, sanatized):
-    monkeypatch.setattr(
-        ocr.utils, "get_tesseract_languages", lambda **kwargs: available
-    )
+    monkeypatch.setattr(ocr.tesseract, "get_languages", lambda **kwargs: available)
     try:
         settings = Settings("TEST_normcap", "settings")
         settings.setValue("language", active)

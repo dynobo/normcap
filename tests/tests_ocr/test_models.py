@@ -1,4 +1,4 @@
-from normcap.ocr.models import TessArgs
+from normcap.ocr.models import OEM, PSM, TessArgs
 
 
 def test_ocr_result(ocr_result):
@@ -29,21 +29,21 @@ def test_ocr_result(ocr_result):
 
 def test_tess_args_jpn():
     tess_args = TessArgs(
-        path="./tessdata", lang="jpn", oem=111, psm=222, version="4.1.1"
+        tessdata_path="./tessdata", lang="jpn", oem=OEM.DEFAULT, psm=PSM.COUNT
     )
-    config = tess_args.to_config_str()
-    assert '--tessdata-dir "./tessdata"' in config
-    assert "-c preserve_interword_spaces=1" in config
-    assert "--oem 111" in config
-    assert "--psm 222" in config
+    args = " ".join(tess_args.as_list())
+    assert "--tessdata-dir ./tessdata" in args
+    assert "-c preserve_interword_spaces=1" in args
+    assert "--oem 3" in args
+    assert "--psm 14" in args
     assert tess_args.is_language_without_spaces()
 
 
 def test_tess_args_eng():
-    tess_args = TessArgs(path=None, lang="eng", oem=111, psm=222, version="4.1.1")
-    config = tess_args.to_config_str()
-    assert "--oem 111" in config
-    assert "--psm 222" in config
-    assert "--tessdata-dir" not in config
-    assert "-c preserve_interword_spaces=1" not in config
+    tess_args = TessArgs(tessdata_path=None, lang="eng", oem=OEM.DEFAULT, psm=PSM.COUNT)
+    args = " ".join(tess_args.as_list())
+    assert "--oem 3" in args
+    assert "--psm 14" in args
+    assert "--tessdata-dir" not in args
+    assert "-c preserve_interword_spaces=1" not in args
     assert not tess_args.is_language_without_spaces()

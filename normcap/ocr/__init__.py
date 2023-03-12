@@ -1,3 +1,3 @@
-from normcap.ocr.recognize import pytesseract, recognize
+from normcap.ocr.recognize import recognize, tesseract
 
-__all__ = ["pytesseract", "recognize"]
+__all__ = ["recognize", "tesseract"]
