@@ -33,8 +33,8 @@ def test_languages_section_does_overflow(monkeypatch, qtbot, temp_settings):
     threshold = 8
     # Test does _not_ overflow below threshold
     monkeypatch.setattr(
-        menu_button.ocr.utils,
-        "get_tesseract_languages",
+        menu_button.ocr.tesseract,
+        "get_languages",
         lambda **kwargs: [str(i) for i in range(threshold - 1)],
     )
 
@@ -47,8 +47,8 @@ def test_languages_section_does_overflow(monkeypatch, qtbot, temp_settings):
 
     # Test _does_ overflow on threshold
     monkeypatch.setattr(
-        menu_button.ocr.utils,
-        "get_tesseract_languages",
+        menu_button.ocr.tesseract,
+        "get_languages",
         lambda **kwargs: [str(i) for i in range(threshold)],
     )
 
@@ -82,7 +82,7 @@ def test_open_url_triggered(qtbot, monkeypatch, temp_settings):
 def test_language_group(monkeypatch, qtbot, temp_settings):
     langs = ["afr", "deu", "eng"]
     monkeypatch.setattr(
-        menu_button.ocr.utils, "get_tesseract_languages", lambda **kwargs: langs
+        menu_button.ocr.tesseract, "get_languages", lambda **kwargs: langs
     )
     menu_btn = menu_button.MenuButton(settings=temp_settings, language_manager=False)
 

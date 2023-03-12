@@ -75,7 +75,6 @@ def set_environ_for_wayland() -> None:
         os.environ["XCURSOR_SIZE"] = "24"
 
     # Select wayland extension for better rendering
-
     if "QT_QPA_PLATFORM" not in os.environ:
         logger.debug("Set QT_QPA_PLATFORM=wayland")
         os.environ["QT_QPA_PLATFORM"] = "wayland"
@@ -89,8 +88,7 @@ def set_environ_for_wayland() -> None:
 
 def set_environ_for_flatpak() -> None:
     # Unity DE (and maybe others) use gtk-nocsd to remove client side decorations.
-    # It doesn't work within FlatPak, and the error message make pytesseract crash.
-    # Therefore we deactivate it within the Flatpak.
+    # It doesn't work within FlatPak, therefore we deactivate it.
     # See: https://github.com/dynobo/normcap/issues/290#issuecomment-1289629427
     ld_preload = os.environ.get("LD_PRELOAD", "")
     if "nocsd" in ld_preload.lower():

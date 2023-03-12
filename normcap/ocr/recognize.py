@@ -6,9 +6,8 @@ from os import PathLike
 from typing import Optional, Union
 
 from PIL import Image
-from pytesseract import pytesseract
 
-from normcap.ocr import enhance, utils
+from normcap.ocr import enhance, tesseract
 from normcap.ocr.magics import Magic
 from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
 
@@ -28,29 +27,18 @@ def recognize(  # noqa: PLR0913
     image = enhance.preprocess(image, resize_factor=resize_factor, padding=padding_size)
 
     tess_args = TessArgs(
-        path=tessdata_path,
+        tessdata_path=tessdata_path,
         lang=languages if isinstance(languages, str) else "+".join(languages),
         oem=OEM.DEFAULT,
         psm=PSM.AUTO_OSD,
-        version=utils.get_tesseract_version(tesseract_cmd),  # type: ignore
-        # For the type ignore, see: https://github.com/python/mypy/issues/5107
     )
     logger.debug(
         "Run Tesseract on image of size %s with args:\n%s", image.size, tess_args
     )
-
-    pytesseract.tesseract_cmd = str(tesseract_cmd)
-    tsv_data = pytesseract.image_to_data(
-        image,
-        lang=tess_args.lang,
-        output_type=pytesseract.Output.DICT,
-        timeout=30,
-        config=tess_args.to_config_str(),
+    ocr_result_data = tesseract.perform_ocr(
+        cmd=tesseract_cmd, image=image, args=tess_args.as_list()
     )
-
-    result = OcrResult(
-        tess_args=tess_args, words=utils.tsv_to_list_of_dicts(tsv_data), image=image
-    )
+    result = OcrResult(tess_args=tess_args, words=ocr_result_data, image=image)
     logger.debug("OCR result:\n%s", result)
 
     if parse:

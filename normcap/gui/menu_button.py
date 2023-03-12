@@ -118,7 +118,7 @@ class MenuButton(QtWidgets.QToolButton):
         self._add_mode_section(menu)
         menu.addSeparator()
         self._add_title(menu, "Languages")
-        languages = ocr.utils.get_tesseract_languages(
+        languages = ocr.tesseract.get_languages(
             tesseract_cmd=system_info.get_tesseract_path(),
             tessdata_path=system_info.get_tessdata_path(),
         )

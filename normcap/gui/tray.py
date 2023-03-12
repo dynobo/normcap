@@ -301,7 +301,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         If one doesn't, remove it. If none does, autoselect the first in list.
         """
-        installed_languages = ocr.utils.get_tesseract_languages(
+        installed_languages = ocr.tesseract.get_languages(
             tesseract_cmd=system_info.get_tesseract_path(),
             tessdata_path=system_info.get_tessdata_path(),
         )

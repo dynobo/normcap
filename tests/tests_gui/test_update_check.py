@@ -84,7 +84,7 @@ def test_show_update_message(qtbot, monkeypatch):
         (True, b'/releases/tag/v0.0.0"', [], "Newest version: 0.0.0"),
     ],
 )
-def test_on_download_finished(  # noqa: PLR0913
+def test_on_download_finished(  # noqa:PLR0913
     caplog, qtbot, monkeypatch, packaged, data, message_args, debug_log
 ):
     args = []

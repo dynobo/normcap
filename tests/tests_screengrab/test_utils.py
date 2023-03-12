@@ -1,4 +1,5 @@
 import logging
+import subprocess
 import sys
 from decimal import DivisionByZero
 from pathlib import Path
@@ -160,6 +161,17 @@ def test_macos_reset_screenshot_permission(caplog):
         assert "couldn't reset" not in caplog.text.lower()
     else:
         assert "couldn't reset" in caplog.text.lower()
+
+
+def test_macos_reset_screenshot_permission_logs_error(monkeypatch, caplog):
+    def mock_failed_cmd(*_, **__):
+        return subprocess.CompletedProcess(args="", returncode=1)
+
+    monkeypatch.setattr(utils.subprocess, "run", mock_failed_cmd)
+    with caplog.at_level(logging.ERROR):
+        utils.macos_reset_screenshot_permission()
+
+    assert "failed resetting screen recording permissions" in caplog.text.lower()
 
 
 def test_has_screenshot_permission():
