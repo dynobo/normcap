@@ -52,8 +52,8 @@ QToolButton::hover {
     background: qradialgradient(
         cx: 0.5, cy: 0.5,
         fx: 0.5, fy: 0.5,
-        radius: 0.5,
-        stop: 0 rgba(0,0,0,0) stop: 0.25 rgba(255,255,255,80) stop: 0.95 rgba(0,0,0,0)
+        radius: 0.55,
+        stop: 0 rgba(0,0,0,0) stop: 0.25 rgba(255,255,255,120) stop: 0.95 rgba(0,0,0,0)
     );
 }
 QToolButton::menu-indicator { image: none; }
@@ -85,11 +85,11 @@ class MenuButton(QtWidgets.QToolButton):
         self.has_language_manager = language_manager
 
         self.setCursor(QtCore.Qt.CursorShape.ArrowCursor)
-        self.setFixedSize(38, 38)
+        self.setFixedSize(44, 44)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
 
         self.setIcon(QtGui.QIcon(":settings"))
-        self.setIconSize(QtCore.QSize(26, 26))
+        self.setIconSize(QtCore.QSize(32, 32))
         self.setPopupMode(QtWidgets.QToolButton.ToolButtonPopupMode.InstantPopup)
         self.setAutoRaise(True)
 
