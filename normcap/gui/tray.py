@@ -167,7 +167,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self, reason: QtWidgets.QSystemTrayIcon.ActivationReason
     ) -> None:
         logger.debug("Tray event: %s", reason)
-        if reason == QtWidgets.QSystemTrayIcon.ActivationReason.Trigger:
+        if (
+            reason == QtWidgets.QSystemTrayIcon.ActivationReason.Trigger
+            and self.settings.value("tray", False, type=bool)
+        ):
             self._update_screenshots()
 
     def _add_update_checker(self) -> None:
@@ -219,6 +222,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         menu = QtWidgets.QMenu()
 
         action = QtGui.QAction("Capture", menu)
+        action.setObjectName("capture")
+        action.setVisible(bool(self.settings.value("tray", False, type=bool)))
         action.triggered.connect(self.com.on_tray_menu_capture_clicked.emit)
         menu.addAction(action)
 
@@ -270,6 +275,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         settings_menu.com.on_open_url.connect(self.com.on_open_url_and_hide)
         settings_menu.com.on_manage_languages.connect(self.com.on_manage_languages)
+        settings_menu.com.on_setting_change.connect(self.on_setting_change)
         settings_menu.com.on_close_in_settings.connect(
             lambda: self.com.on_close_or_exit.emit("clicked close in menu")
         )
@@ -279,6 +285,12 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         layout.setColumnStretch(0, 1)
         layout.addWidget(settings_menu, 0, 1)
         return layout
+
+    @QtCore.Slot(str)
+    def on_setting_change(self, setting: str) -> None:
+        if setting == "tray":
+            capture_action = self.contextMenu().findChild(QtGui.QAction, name="capture")
+            capture_action.setVisible(self.settings.value(setting, False, type=bool))
 
     def _update_settings_menu(self, installed_languages: list[str]) -> None:
         """After Language settings changed, recreate menu button the update menus."""

@@ -66,6 +66,7 @@ class Communicate(QtCore.QObject):
     on_open_url = QtCore.Signal(str)
     on_close_in_settings = QtCore.Signal(str)
     on_manage_languages = QtCore.Signal()
+    on_setting_change = QtCore.Signal(str)
 
 
 class MenuButton(QtWidgets.QToolButton):
@@ -175,6 +176,7 @@ class MenuButton(QtWidgets.QToolButton):
 
         if None not in (setting, value):
             self.settings.setValue(str(setting), value)
+            self.com.on_setting_change.emit(str(setting))
 
     def _add_settings_section(
         self, menu: QtWidgets.QMenu
