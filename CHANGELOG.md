@@ -3,6 +3,10 @@
 ## v0.4.1 (upcoming)
 
 - All: Slightly improve start-up time.
+- All: Enlarge settings button a bit to make it easier to spot.
+  ([#254](https://github.com/dynobo/normcap/issues/254))
+- All: Fix unintended re-capture if tray icon is disabled.
+  ([#254](https://github.com/dynobo/normcap/issues/254))
 
 ## v0.4.0 (2023-01-29)
 
