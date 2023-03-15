@@ -5,6 +5,8 @@ from normcap.gui import menu_button
 
 def test_enable_language_manager(qtbot, temp_settings):
     menu_btn = menu_button.MenuButton(settings=temp_settings, language_manager=True)
+    menu_btn.menu().aboutToShow.emit()
+
     language_action = menu_btn.findChild(QtGui.QAction, "manage_languages")
     assert "add/remove" in language_action.text()
 
@@ -15,6 +17,8 @@ def test_enable_language_manager(qtbot, temp_settings):
 
 def test_disable_language_manager(qtbot, monkeypatch, temp_settings):
     menu_btn = menu_button.MenuButton(settings=temp_settings, language_manager=False)
+    menu_btn.menu().aboutToShow.emit()
+
     language_action = menu_btn.findChild(QtGui.QAction, "show_help_languages")
     assert "need more" in language_action.text()
 
@@ -32,13 +36,10 @@ def test_disable_language_manager(qtbot, monkeypatch, temp_settings):
 def test_languages_section_does_overflow(monkeypatch, qtbot, temp_settings):
     threshold = 8
     # Test does _not_ overflow below threshold
-    monkeypatch.setattr(
-        menu_button.ocr.tesseract,
-        "get_languages",
-        lambda **kwargs: [str(i) for i in range(threshold - 1)],
-    )
-
     menu_btn = menu_button.MenuButton(settings=temp_settings, language_manager=False)
+    menu_btn.on_languages_changed([str(i) for i in range(threshold - 1)])
+    menu_btn.menu().aboutToShow.emit()
+
     select_menu = menu_btn.findChild(QtWidgets.QMenu, "language_menu")
     assert not select_menu
 
@@ -46,13 +47,10 @@ def test_languages_section_does_overflow(monkeypatch, qtbot, temp_settings):
     assert len(language_group.children()) == threshold - 1
 
     # Test _does_ overflow on threshold
-    monkeypatch.setattr(
-        menu_button.ocr.tesseract,
-        "get_languages",
-        lambda **kwargs: [str(i) for i in range(threshold)],
-    )
-
     menu_btn = menu_button.MenuButton(settings=temp_settings, language_manager=False)
+    menu_btn.on_languages_changed([str(i) for i in range(threshold)])
+    menu_btn.menu().aboutToShow.emit()
+
     select_menu = menu_btn.findChild(QtWidgets.QMenu, "language_menu")
     assert select_menu
 
@@ -62,14 +60,16 @@ def test_languages_section_does_overflow(monkeypatch, qtbot, temp_settings):
 
 def test_close_triggered(qtbot, monkeypatch, temp_settings):
     menu_btn = menu_button.MenuButton(settings=temp_settings, language_manager=False)
+    menu_btn.menu().aboutToShow.emit()
 
     action = menu_btn.findChild(QtGui.QAction, "close")
     with qtbot.wait_signal(menu_btn.com.on_close_in_settings, timeout=1000):
         action.trigger()
 
 
-def test_open_url_triggered(qtbot, monkeypatch, temp_settings):
+def test_open_url_triggered(qtbot, temp_settings):
     menu_btn = menu_button.MenuButton(settings=temp_settings, language_manager=False)
+    menu_btn.menu().aboutToShow.emit()
 
     action_group = menu_btn.findChild(QtGui.QActionGroup, "website_group")
     for action in action_group.children():
@@ -80,11 +80,10 @@ def test_open_url_triggered(qtbot, monkeypatch, temp_settings):
 
 
 def test_language_group(monkeypatch, qtbot, temp_settings):
-    langs = ["afr", "deu", "eng"]
-    monkeypatch.setattr(
-        menu_button.ocr.tesseract, "get_languages", lambda **kwargs: langs
-    )
     menu_btn = menu_button.MenuButton(settings=temp_settings, language_manager=False)
+    langs = ["afr", "deu", "eng"]
+    menu_btn.on_languages_changed(langs)
+    menu_btn.menu().aboutToShow.emit()
 
     # enabling all
     settings_group = menu_btn.findChild(QtGui.QActionGroup, "language_group")
@@ -102,6 +101,7 @@ def test_language_group(monkeypatch, qtbot, temp_settings):
 
 def test_mode_group(monkeypatch, qtbot, temp_settings):
     menu_btn = menu_button.MenuButton(settings=temp_settings, language_manager=False)
+    menu_btn.menu().aboutToShow.emit()
 
     settings_group = menu_btn.findChild(QtGui.QActionGroup, "mode_group")
     for action in settings_group.children():
@@ -111,6 +111,7 @@ def test_mode_group(monkeypatch, qtbot, temp_settings):
 
 def test_settings_group(monkeypatch, qtbot, temp_settings):
     menu_btn = menu_button.MenuButton(settings=temp_settings, language_manager=False)
+    menu_btn.menu().aboutToShow.emit()
 
     settings_group = menu_btn.findChild(QtGui.QActionGroup, "settings_group")
     for action in settings_group.children():

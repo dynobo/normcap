@@ -16,7 +16,7 @@ def _run_command(cmd_args: list[str]) -> str:
     try:
         output = subprocess.run(cmd_args, capture_output=True)
         output_str = output.stdout.decode("utf-8")
-        logger.debug(output_str)
+        logger.debug("Tesseract command output:\n%s", output_str.strip())
         if output.returncode != 0:
             raise subprocess.CalledProcessError(
                 returncode=output.returncode, cmd=output.args, stderr=output.stderr
