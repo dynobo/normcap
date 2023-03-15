@@ -4,8 +4,7 @@ from typing import Any, Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import __version__, ocr
-from normcap.gui import system_info
+from normcap import __version__
 from normcap.gui.constants import MESSAGE_LANGUAGES, URLS
 
 _MENU_STYLE = """
@@ -81,6 +80,7 @@ class MenuButton(QtWidgets.QToolButton):
         parent: Optional[QtWidgets.QWidget] = None,
     ) -> None:
         super().__init__(parent)
+        self.languages: list[str] = []
         self.setObjectName("settings_icon")
         self.settings = settings
         self.has_language_manager = language_manager
@@ -99,51 +99,18 @@ class MenuButton(QtWidgets.QToolButton):
         # Necessary on wayland for main window to regain focus:
         self.message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
-        self._add_menu()
+        self.setMenu(QtWidgets.QMenu(self))
+        self.menu().aboutToShow.connect(self.populate_menu_entries)
 
         self.setStyleSheet(_BUTTON_STYLE)
         self.com = Communicate()
 
-    def _add_menu(self) -> None:
-        menu = QtWidgets.QMenu(self)
-        menu.setObjectName("settings_menu")
-        menu.setStyleSheet(
-            _MENU_STYLE.replace("$COLOR", str(self.settings.value("color")))
-        )
-        menu.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
-
-        self._add_title(menu, "Settings")
-        self._add_settings_section(menu)
-        menu.addSeparator()
-        self._add_title(menu, "Capture mode")
-        self._add_mode_section(menu)
-        menu.addSeparator()
-        self._add_title(menu, "Languages")
-        languages = ocr.tesseract.get_languages(
-            tesseract_cmd=system_info.get_tesseract_path(),
-            tessdata_path=system_info.get_tessdata_path(),
-        )
-        self._add_languages_section(menu, languages=languages)
-        menu.addSeparator()
-        self._add_title(menu, "Application")
-        self._add_application_section(menu)
-        menu.triggered.connect(self._on_item_click)
-
-        self.setMenu(menu)
-
-    def _add_title(
-        self,
-        menu: QtWidgets.QMenu,
-        text: str,
-        action_parent: Optional[QtGui.QAction] = None,
-    ) -> None:
-        action = QtGui.QAction(text, action_parent or menu)
-        action.setEnabled(False)
-        action.setFont(self.title_font)
-        menu.addAction(action)
+    @QtCore.Slot(list)
+    def on_languages_changed(self, installed_languages: list[str]) -> None:
+        self.languages = installed_languages
 
     @QtCore.Slot(QtGui.QAction)
-    def _on_item_click(self, action: QtGui.QAction) -> None:
+    def on_item_click(self, action: QtGui.QAction) -> None:
         action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None
@@ -177,6 +144,39 @@ class MenuButton(QtWidgets.QToolButton):
         if None not in (setting, value):
             self.settings.setValue(str(setting), value)
             self.com.on_setting_change.emit(str(setting))
+
+    @QtCore.Slot()
+    def populate_menu_entries(self) -> None:
+        menu = self.menu()
+        menu.setObjectName("settings_menu")
+        menu.setStyleSheet(
+            _MENU_STYLE.replace("$COLOR", str(self.settings.value("color")))
+        )
+        menu.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
+
+        self._add_title(menu, "Settings")
+        self._add_settings_section(menu)
+        menu.addSeparator()
+        self._add_title(menu, "Capture mode")
+        self._add_mode_section(menu)
+        menu.addSeparator()
+        self._add_title(menu, "Languages")
+        self._add_languages_section(menu)
+        menu.addSeparator()
+        self._add_title(menu, "Application")
+        self._add_application_section(menu)
+        menu.triggered.connect(self.on_item_click)
+
+    def _add_title(
+        self,
+        menu: QtWidgets.QMenu,
+        text: str,
+        action_parent: Optional[QtGui.QAction] = None,
+    ) -> None:
+        action = QtGui.QAction(text, action_parent or menu)
+        action.setEnabled(False)
+        action.setFont(self.title_font)
+        menu.addAction(action)
 
     def _add_settings_section(
         self, menu: QtWidgets.QMenu
@@ -220,9 +220,8 @@ class MenuButton(QtWidgets.QToolButton):
         action.setChecked(self.settings.value("mode") == "raw")
         menu.addAction(action)
 
-    def _add_languages_section(
-        self, menu: QtWidgets.QMenu, languages: list[str]
-    ) -> None:
+    def _add_languages_section(self, menu: QtWidgets.QMenu) -> None:
+        languages = self.languages
         overflow_languages_count = 7
         if len(languages) <= overflow_languages_count:
             language_menu = menu
