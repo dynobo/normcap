@@ -105,7 +105,7 @@ def test_set_environ_for_flatpak(monkeypatch):
 
         m.setenv("LD_PRELOAD", "nocsd")
         utils.set_environ_for_flatpak()
-        assert os.environ.get("LD_PRELOAD") == ""
+        assert not os.environ.get("LD_PRELOAD")
 
         m.delenv("LD_PRELOAD", raising=False)
         utils.set_environ_for_flatpak()

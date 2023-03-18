@@ -58,7 +58,7 @@ def get_gnome_version() -> Optional[str]:
         return None
 
     if (
-        os.environ.get("GNOME_DESKTOP_SESSION_ID", "") == ""
+        not os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
         and "gnome" not in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
     ):
         return None

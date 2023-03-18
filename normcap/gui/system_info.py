@@ -117,9 +117,9 @@ def desktop_environment() -> DesktopEnvironment:
     if gnome_desktop_session_id == "this-is-deprecated":
         gnome_desktop_session_id = ""
 
-    if gnome_desktop_session_id != "" or "gnome" in xdg_current_desktop:
+    if gnome_desktop_session_id or "gnome" in xdg_current_desktop:
         return DesktopEnvironment.GNOME
-    if kde_full_session != "" or "kde-plasma" in desktop_session:
+    if kde_full_session or "kde-plasma" in desktop_session:
         return DesktopEnvironment.KDE
     if "sway" in xdg_current_desktop:
         return DesktopEnvironment.SWAY
