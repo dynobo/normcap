@@ -1,6 +1,4 @@
 """Various Data Models."""
-from __future__ import annotations
-
 import enum
 import logging
 from collections import namedtuple
@@ -96,7 +94,8 @@ class Rect:
         """Width and height of rect."""
         return (self.width, self.height)
 
-    def scaled(self, scale_factor: float) -> Rect:
+    # ONHOLD: Annotate as Self with Python 3.11
+    def scaled(self, scale_factor: float):  # noqa: ANN201
         """Create an integer-scaled copy of the Rect."""
         return Rect(
             top=int(self.top * scale_factor),

@@ -46,7 +46,6 @@ normcap = "normcap.app:main"
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
 PySide6-Essentials = "^6.4.2"
-certifi = "^2022.12.7"
 jeepney = "^0.8.0"
 pillow = "^9.4.0"
 
@@ -180,7 +179,7 @@ icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
 # ONHOLD: Switch to pyside6-essentials, once build works with Ubuntu 20.04+
-requires = ["pyside6", "jeepney", "pillow", "certifi"]
+requires = ["pyside6", "jeepney", "pillow"]
 cleanup_paths = [
   # Globs
   "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",

@@ -41,7 +41,7 @@ def test_downloader_handles_not_existing_url(caplog, qtbot: QtBot):
 
 
 def test_worker_not_existing_url(qtbot):
-    test_url = "https://sth.needleinthehay.de"
+    test_url = "https://does-not-exist-h4k8u4-p9v1m3-0kplnf.net"
 
     worker = Worker(test_url)
     with qtbot.waitSignal(worker.com.on_download_failed) as signal:

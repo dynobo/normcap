@@ -25,9 +25,9 @@ class Worker(QtCore.QRunnable):
             import ssl
             from urllib.request import urlopen
 
-            import certifi
-
-            context = ssl.create_default_context(cafile=certifi.where())
+            context = ssl.SSLContext()
+            context.load_default_certs()
+            context.verify_mode = ssl.CERT_NONE
             with urlopen(self.url, context=context) as response:  # nosec B310
                 raw_data = response.read()
         except Exception as e:
