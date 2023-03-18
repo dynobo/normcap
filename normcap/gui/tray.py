@@ -50,7 +50,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     capture = Capture()
     windows: dict[int, Window] = {}
     installed_languages: list[str] = []
-    _socket_name = "com.github.dynobo.normcap"
+    _socket_name = f"v{__version__}-normcap"
     _socket_out: Optional[QtNetwork.QLocalSocket] = None
     _socket_in: Optional[QtNetwork.QLocalSocket] = None
     _socket_server: Optional[QtNetwork.QLocalServer] = None
@@ -303,7 +303,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self._socket_server = QtNetwork.QLocalServer(self)
         self._socket_server.newConnection.connect(self._on_new_connection)
         self._socket_server.listen(self._socket_name)
-        logger.debug("Socket open, listen on %s.", self._socket_server.serverName())
+        logger.debug("Listen on local socket %s.", self._socket_server.serverName())
 
     def _ensure_screenshot_permission(self) -> None:
         if screengrab.has_screenshot_permission():
