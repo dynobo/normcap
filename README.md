@@ -193,6 +193,7 @@ If NormCap doesn't fit your needs, try those alternatives (no particular order):
 - [Frog](https://github.com/TenderOwl/Frog) (Linux)
 - [Textinator](https://github.com/RhetTbull/textinator) (macOS)
 - [Text-Grab](https://github.com/TheJoeFin/Text-Grab) (Windows)
+- [dpScreenOCR](https://danpla.github.io/dpscreenocr/) (Linux, macOS, Windows)
 
 ## Certification
 
