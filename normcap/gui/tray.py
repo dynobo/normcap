@@ -203,7 +203,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         ocr_result = ocr.recognize(
             tesseract_cmd=system_info.get_tesseract_path(),
             languages=language,
-            image=utils._qimage_to_pil_image(self.capture.image),
+            image=self.capture.image,
             tessdata_path=system_info.get_tessdata_path(),
             parse=self.capture.mode is CaptureMode.PARSE,
             resize_factor=3.2,

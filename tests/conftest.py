@@ -2,7 +2,6 @@ import sys
 from pathlib import Path
 
 import pytest
-from PIL import Image
 from PySide6 import QtCore, QtGui
 
 from normcap.gui import system_info
@@ -67,7 +66,7 @@ def ocr_result() -> OcrResult:
             oem=OEM.TESSERACT_LSTM_COMBINED,
             psm=PSM.AUTO_ONLY,
         ),
-        image=Image.Image(),
+        image=QtGui.QImage(),
         magic_scores={},
         parsed="",
         words=[

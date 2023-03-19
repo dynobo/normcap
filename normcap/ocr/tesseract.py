@@ -1,5 +1,6 @@
 import csv
 import logging
+import os
 import re
 import subprocess
 import tempfile
@@ -7,14 +8,15 @@ from os import PathLike
 from pathlib import Path
 from typing import Optional
 
-from PIL import Image  # TODO: Get rid of Pillow in favor of QImage?
+from PySide6 import QtCore
+from PySide6.QtGui import QImage
 
 logger = logging.getLogger(__name__)
 
 
-def _run_command(cmd_args: list[str]) -> str:
+def _run_command(cmd_args: list[str], stdin: Optional[bytes] = None) -> str:
     try:
-        output = subprocess.run(cmd_args, capture_output=True)
+        output = subprocess.run(cmd_args, capture_output=True, input=stdin)
         output_str = output.stdout.decode("utf-8")
         logger.debug("Tesseract command output:\n%s", output_str.strip())
         if output.returncode != 0:
@@ -46,18 +48,15 @@ def get_languages(
     return languages
 
 
-def _run_tesseract(
-    cmd: PathLike, image: Image.Image, args: list[str]
-) -> list[list[str]]:
+def _run_tesseract(cmd: PathLike, image: QImage, args: list[str]) -> list[list[str]]:
+    with tempfile.NamedTemporaryFile(
+        prefix="normcap_", suffix=".png", delete=False
+    ) as input_image_fh:
+        image.save(input_image_fh.name)
+        input_image_path = input_image_fh.name
+    output_tsv_path = f"{input_image_path}.tsv"
+
     try:
-        with tempfile.NamedTemporaryFile(
-            prefix="normcap_", suffix=".png", delete=False
-        ) as input_image_fh:
-            image.save(input_image_fh)
-            input_image_path = input_image_fh.name
-
-        output_tsv_path = f"{input_image_path}.tsv"
-
         cmd_args = [
             str(cmd),
             input_image_path,
@@ -77,6 +76,37 @@ def _run_tesseract(
     return lines
 
 
+def _run_tesseract_piped(
+    cmd: PathLike, image: QImage, args: list[str]
+) -> list[list[str]]:
+    """Pipe image through stdin and read the result through stdout.
+
+    TODO: Seems a bit slower. Needs further testing.
+    """
+    cmd_args = [
+        str(cmd),
+        "stdin",
+        "stdout",
+        "-c",
+        "tessedit_create_tsv=1",
+        *args,
+    ]
+
+    buffer = QtCore.QBuffer()
+    try:
+        qt_openmode = QtCore.QIODevice.OpenModeFlag
+    except AttributeError:
+        qt_openmode = QtCore.QIODevice.OpenMode
+    buffer.open(qt_openmode.ReadWrite)
+    image.save(buffer, "png")  # type: ignore
+
+    output = _run_command(cmd_args=cmd_args, stdin=buffer.data())
+    lines = output.strip().split(os.linesep)
+    tsv_file = csv.reader(lines, delimiter="\t")
+    lines = list(tsv_file)  # type: ignore
+    return lines  # type:ignore
+
+
 def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
     fields = tsv_lines.pop(0)
     words: list[dict] = [{} for _ in range(len(tsv_lines))]
@@ -90,10 +120,11 @@ def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
                 words[idx][field] = int(value)
 
     # Filter empty words
+    words = [w for w in words if "text" in w]
     return [w for w in words if w["text"].strip()]
 
 
-def perform_ocr(cmd: PathLike, image: Image.Image, args: list[str]) -> list[dict]:
+def perform_ocr(cmd: PathLike, image: QImage, args: list[str]) -> list[dict]:
     lines = _run_tesseract(cmd=cmd, image=image, args=args)
     word_data_new = _tsv_to_list_of_dict(lines)
     return word_data_new

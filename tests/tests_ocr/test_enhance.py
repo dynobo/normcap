@@ -2,94 +2,72 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
-from PIL import Image
+from PySide6 import QtGui
 
 from normcap.ocr import enhance
 
 
 def test_identify_most_frequent_edge_color():
-    image = Image.open(Path(__file__).parent / "testimages" / "color.png")
+    image = QtGui.QImage(Path(__file__).parent / "testimages" / "color.png")
     color = enhance._identify_most_frequent_edge_color(image)
     assert color == (0, 0, 255)
 
 
 def test_add_padding():
     padding = 33
-    img = Image.open(Path(__file__).parent / "testimages" / "color.png")
+    img = QtGui.QImage(Path(__file__).parent / "testimages" / "color.png")
     img_pad = enhance.add_padding(img, padding=padding)
-    assert img.width == img_pad.width - padding * 2
-    assert img.height == img_pad.height - padding * 2
+    assert img.width() == img_pad.width() - padding * 2
+    assert img.height() == img_pad.height() - padding * 2
 
-    # Top and bottom edge
-    colors = [img_pad.getpixel((x, 0)) for x in range(img_pad.width)]
-    colors += [img_pad.getpixel((x, img_pad.height - 1)) for x in range(img_pad.width)]
+    points = [(x, 0) for x in range(img_pad.width())]  # top
+    points += [(x, img_pad.height() - 1) for x in range(img_pad.width())]  # bottom
+    points += [(0, x) for x in range(img_pad.height())]  # left
+    points += [(img_pad.width() - 1, x) for x in range(img_pad.height())]  # right
 
-    # Left and right edge
-    colors += [img_pad.getpixel((0, y)) for y in range(img_pad.height)]
-    colors += [img_pad.getpixel((img_pad.width - 1, y)) for y in range(img_pad.height)]
-
-    color_count = Counter(colors)
+    edge_pixels = enhance._get_pixels(image=img_pad, points=points)
+    color_count = Counter(edge_pixels)
     assert set(color_count.keys()) == {(0, 0, 255)}
 
 
 def test_resize_image():
     factor = 2.5
-    img = Image.open(Path(__file__).parent / "testimages" / "color.png")
-    img_result = enhance.resize_image(img, factor=factor)
-    assert img.width * factor == img_result.width
-    assert img.height * factor == img_result.height
+    img = QtGui.QImage(Path(__file__).parent / "testimages" / "color.png")
+    img_result = enhance.resize_image(img.copy(), factor=factor)
+    assert img.width() * factor == img_result.width()
+    assert img.height() * factor == img_result.height()
 
 
 @pytest.mark.parametrize("pixel", [(0, 0), (99, 99)])
 def test_invert_image(pixel):
-    img = Image.open(Path(__file__).parent / "testimages" / "color.png")
-    img_result = enhance.invert_image(img)
+    img = QtGui.QImage(Path(__file__).parent / "testimages" / "color.png")
+    img_result = enhance.invert_image(img.copy())
 
-    pixel_values = zip(img.getpixel(pixel), img_result.getpixel(pixel))
-    pixel_wise_sum = list(map(sum, pixel_values))
-    assert pixel_wise_sum == [255, 255, 255]
+    points = [(x, y) for x in range(img.width()) for y in range(img.height())]
+    img_orig_pixels = enhance._get_pixels(img, points=points)
+    img_result_pixels = enhance._get_pixels(img_result, points=points)
+
+    pixel_pairs = list(zip(img_orig_pixels, img_result_pixels))
+    pixel_wise_sum = [list(map(sum, zip(*p))) for p in pixel_pairs]
+    assert all(s == [255, 255, 255] for s in pixel_wise_sum)
 
 
 def test_is_dark():
-    img = Image.open(Path(__file__).parent / "testimages" / "dark.png")
+    img = QtGui.QImage(Path(__file__).parent / "testimages" / "dark.png")
     assert enhance.is_dark(img)
-    img = Image.open(Path(__file__).parent / "testimages" / "light.png")
+    img = QtGui.QImage(Path(__file__).parent / "testimages" / "light.png")
     assert not enhance.is_dark(img)
 
 
 def test_preprocess():
-    img = Image.open(Path(__file__).parent / "testimages" / "dark.png")
+    img = QtGui.QImage(Path(__file__).parent / "testimages" / "dark.png")
     factor = 2
     padding = 10
-    img_result = enhance.preprocess(img, resize_factor=factor, padding=padding)
-    assert img.width * factor + padding * 2 == img_result.width
-    assert img_result.getpixel((0, 0)) == (255, 255, 255)
-    assert img_result.getpixel((99, 49)) == (255, 255, 255)
-
-
-def test_resize_select_resampling(monkeypatch):
-    resamples = []
-
-    def mocked_resize(size, resample):
-        resamples.append(resample)
-        return True
-
-    img = Image.open(Path(__file__).parent / "testimages" / "dark.png")
-    monkeypatch.setattr(img, "resize", mocked_resize)
-
-    class MockedEnum:
-        LANCZOS = 0
-        LANCZOS_OLD = 1
-
-    # New resampling enum
-    monkeypatch.setattr(enhance.Image, "Resampling", MockedEnum)
-    img_result = enhance.resize_image(img, factor=2)
-    assert img_result is True
-    assert resamples[0] == MockedEnum.LANCZOS
-
-    # Old resampling enum
-    monkeypatch.delattr(enhance.Image, "Resampling")
-    monkeypatch.setattr(enhance.Image, "LANCZOS", MockedEnum.LANCZOS_OLD)
-    img_result = enhance.resize_image(img, factor=2)
-    assert img_result is True
-    assert resamples[1] == MockedEnum.LANCZOS_OLD
+    img_result = enhance.preprocess(img.copy(), resize_factor=factor, padding=padding)
+    assert img.width() * factor + padding * 2 == img_result.width()
+    assert enhance._get_pixels(image=img_result, points=[(0, 0)])[0] == (255, 255, 255)
+    assert enhance._get_pixels(image=img_result, points=[(99, 49)])[0] == (
+        255,
+        255,
+        255,
+    )

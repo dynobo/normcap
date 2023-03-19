@@ -4,7 +4,7 @@ from enum import IntEnum
 from os import PathLike
 from typing import Optional
 
-from PIL import Image
+from PySide6.QtGui import QImage
 
 
 class PSM(IntEnum):
@@ -83,7 +83,7 @@ class OcrResult:
 
     tess_args: TessArgs
     words: list[dict]  # Words+metadata detected by OCR
-    image: Image.Image
+    image: QImage
     magic_scores: dict[str, float] = field(default_factory=dict)  # magics with scores
     parsed: str = ""  # Transformed result
 

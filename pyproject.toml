@@ -47,7 +47,6 @@ normcap = "normcap.app:main"
 python = ">=3.9,<3.12"
 PySide6-Essentials = "^6.4.2"
 jeepney = "^0.8.0"
-pillow = "^9.4.0"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=23.1.0"
@@ -67,7 +66,6 @@ rope = ">=1.7.0"
 ruff = ">=0.0.239"
 tbump = ">=6.9.0"
 toml = ">=0.10.2"
-types-Pillow = ">=9.4.0.5"
 types-toml = ">=0.10.8.1"
 typing-extensions = "^4.4.0"
 pip-audit = "^2.4.14"
@@ -179,7 +177,7 @@ icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
 # ONHOLD: Switch to pyside6-essentials, once build works with Ubuntu 20.04+
-requires = ["pyside6", "jeepney", "pillow"]
+requires = ["pyside6", "jeepney"]
 cleanup_paths = [
   # Globs
   "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",
@@ -248,7 +246,6 @@ cleanup_paths = [
 requires = ["std-nslog==1.0.0"]
 
 [tool.briefcase.app.normcap.linux]
-requires = ["Pillow==9.4.0", "--no-binary", "pillow"]
 system_requires = [
   "tesseract-ocr",
   "libnotify-bin",

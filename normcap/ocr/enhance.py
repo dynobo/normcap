@@ -1,91 +1,119 @@
 """Optimizes the captured image for OCR."""
 
 import logging
+import random
 from collections import Counter
-from typing import Optional, cast
+from collections.abc import Iterable
+from typing import Optional
 
-from PIL import Image, ImageOps, ImageStat
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor, QImage, QPainter
 
 logger = logging.getLogger(__name__)
 
 
-def _identify_most_frequent_edge_color(img: Image.Image) -> tuple[int, int, int]:
+def _get_pixels(
+    image: QImage, points: Iterable[tuple[int, int]]
+) -> list[tuple[int, ...]]:
+    pixel_size = 4  ## One pixel consists of 4 values: R,G,B,A
+    ptr = image.bits()
+    width = image.width()
+
+    pixel = []
+    for left, top in points:
+        start = (left + width * top) * pixel_size
+        rgb = tuple(ptr[x] for x in range(start + 2, start - 1, -1))
+        pixel.append(rgb)
+
+    return pixel
+
+
+def _identify_most_frequent_edge_color(img: QImage) -> tuple[int, ...]:
     """Heuristically find color for padding."""
-    # Top and bottom edge
-    edge_colors = [img.getpixel((x, 0)) for x in range(img.width)]
-    edge_colors += [img.getpixel((x, img.height - 1)) for x in range(img.width)]
+    points = [(x, 0) for x in range(img.width())]  # top
+    points += [(x, img.height() - 1) for x in range(img.width())]  # bottom
+    points += [(0, x) for x in range(img.height())]  # left
+    points += [(img.width() - 1, x) for x in range(img.height())]  # right
 
-    # Left and right edge
-    edge_colors += [img.getpixel((0, y)) for y in range(img.height)]
-    edge_colors += [img.getpixel((img.width - 1, y)) for y in range(img.height)]
+    sample_size = 400
+    points = random.sample(points, sample_size)
+    edge_pixels = _get_pixels(image=img, points=points)
 
-    color_count = Counter(edge_colors)
+    color_count = Counter(edge_pixels)
     return color_count.most_common()[0][0]
 
 
-def add_padding(img: Image.Image, padding: int = 80) -> Image.Image:
+def add_padding(img: QImage, padding: int = 80) -> QImage:
     """Pad the selected part of the image.
 
     Tesseract is optimized for e.g. scans or documents and therefore
     works better with a certain amount of padding around the content.
 
     Uses the most frequent edge color as background color.
-    TODO: Test padding strategy where the edge colors are extended
-            (might be useful in case of bars etc, but problematic on images)
     """
     logger.debug("Pad image by %spx", padding)
 
-    bg_col = _identify_most_frequent_edge_color(img)
-
-    padded_img = Image.new(
-        cast("Image._Mode", img.mode),
-        (img.width + padding * 2, img.height + padding * 2),
-        bg_col,
+    padded_img = QImage(
+        img.width() + padding * 2,
+        img.height() + padding * 2,
+        QImage.Format.Format_RGB32,
     )
-    padded_img.paste(img, (padding, padding))
+
+    bg_col = _identify_most_frequent_edge_color(img)
+    padded_img.fill(QColor(*bg_col))
+
+    painter = QPainter(padded_img)
+    painter.drawImage(padding, padding, img)
+
     return padded_img
 
 
-def resize_image(image: Image.Image, factor: float = 3.2) -> Image.Image:
+def resize_image(image: QImage, factor: float = 3.2) -> QImage:
     """Resize image to get equivalent of 300dpi.
 
     Useful because most displays are around ~100dpi, while Tesseract works best ~300dpi.
     """
     logger.debug("Scale image x%s", factor)
 
-    # Ensure backwords compatibility with Pillow < 9.2
-    if hasattr(Image, "Resampling"):
-        resample_method = Image.Resampling.LANCZOS  # type: ignore
-    else:
-        resample_method = Image.LANCZOS  # type: ignore
-
-    return image.resize(
-        size=(int(image.width * factor), int(image.height * factor)),
-        resample=resample_method,
+    image = image.scaled(
+        int(image.width() * factor),
+        int(image.height() * factor),
+        Qt.AspectRatioMode.KeepAspectRatio,
+        Qt.TransformationMode.SmoothTransformation,
     )
+    return image
 
 
-def invert_image(image: Image.Image) -> Image.Image:
+def invert_image(image: QImage) -> QImage:
     """Invert image.
 
     Improves detection in case of bright text on dark background.
     """
     logger.debug("Invert image")
-    return ImageOps.invert(image)
+    image.invertPixels()
+    return image
 
 
-def is_dark(image: Image.Image) -> Image.Image:
+def is_dark(image: QImage) -> bool:
     """Detect if mean pixel brightness is below 125."""
-    image_grayscale = image.convert("L")
-    stat = ImageStat.Stat(image_grayscale)
+    sample_size = 400
+
+    points_x = tuple(random.randint(0, image.width() - 1) for _ in range(sample_size))
+    points_y = tuple(random.randint(0, image.height() - 1) for _ in range(sample_size))
+    points = zip(points_x, points_y)
+
+    pixels = _get_pixels(image=image, points=points)
+
+    mean_color_value = sum(sum(p) for p in pixels) / 3 / sample_size
     middle_grey = 125
-    return stat.mean[0] < middle_grey
+
+    return mean_color_value < middle_grey
 
 
 def preprocess(
-    image: Image.Image, resize_factor: Optional[float], padding: Optional[int]
-) -> Image.Image:
-    image = image.convert("RGB")
+    image: QImage, resize_factor: Optional[float], padding: Optional[int]
+) -> QImage:
+    image = image.convertToFormat(QImage.Format.Format_RGB32)
     if resize_factor:
         image = resize_image(image, factor=resize_factor)
     if padding:
