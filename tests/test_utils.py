@@ -5,8 +5,7 @@ from importlib import resources
 from pathlib import Path
 
 import pytest
-from PIL import Image
-from PySide6 import QtCore
+from PySide6 import QtCore, QtGui
 
 from normcap import utils
 from normcap.gui import system_info
@@ -281,7 +280,7 @@ def test_hook_exception(monkeypatch, caplog, capsys):
             capture = Capture(ocr_text="secret")  # noqa: F841
             ocr_result = OcrResult(  # noqa: F841
                 tess_args=None,
-                image=Image.Image(),
+                image=QtGui.QImage(),
                 words="secret",
                 parsed="secret",
             )

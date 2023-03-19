@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from os import PathLike
 from typing import Optional, Union
 
-from PIL import Image
+from PySide6.QtGui import QImage
 
 from normcap.ocr import enhance, tesseract
 from normcap.ocr.magics import Magic
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 def recognize(  # noqa: PLR0913
     tesseract_cmd: PathLike,
     languages: Union[str, Iterable[str]],
-    image: Image.Image,
+    image: QImage,
     tessdata_path: Optional[PathLike] = None,
     parse: bool = True,
     resize_factor: Optional[float] = None,
