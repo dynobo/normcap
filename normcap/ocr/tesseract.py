@@ -1,6 +1,5 @@
 import csv
 import logging
-import os
 import re
 import subprocess
 import tempfile
@@ -8,7 +7,6 @@ from os import PathLike
 from pathlib import Path
 from typing import Optional
 
-from PySide6 import QtCore
 from PySide6.QtGui import QImage
 
 logger = logging.getLogger(__name__)
@@ -74,37 +72,6 @@ def _run_tesseract(cmd: PathLike, image: QImage, args: list[str]) -> list[list[s
         Path(output_tsv_path).unlink(missing_ok=True)
 
     return lines
-
-
-def _run_tesseract_piped(
-    cmd: PathLike, image: QImage, args: list[str]
-) -> list[list[str]]:
-    """Pipe image through stdin and read the result through stdout.
-
-    TODO: Seems a bit slower. Needs further testing.
-    """
-    cmd_args = [
-        str(cmd),
-        "stdin",
-        "stdout",
-        "-c",
-        "tessedit_create_tsv=1",
-        *args,
-    ]
-
-    buffer = QtCore.QBuffer()
-    try:
-        qt_openmode = QtCore.QIODevice.OpenModeFlag
-    except AttributeError:
-        qt_openmode = QtCore.QIODevice.OpenMode
-    buffer.open(qt_openmode.ReadWrite)
-    image.save(buffer, "png")  # type: ignore
-
-    output = _run_command(cmd_args=cmd_args, stdin=buffer.data())
-    lines = output.strip().split(os.linesep)
-    tsv_file = csv.reader(lines, delimiter="\t")
-    lines = list(tsv_file)  # type: ignore
-    return lines  # type:ignore
 
 
 def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
