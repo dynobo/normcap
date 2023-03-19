@@ -50,6 +50,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     capture = Capture()
     windows: dict[int, Window] = {}
     installed_languages: list[str] = []
+    _debug_language_manager = False
     _socket_name = f"v{__version__}-normcap"
     _socket_out: Optional[QtNetwork.QLocalSocket] = None
     _socket_in: Optional[QtNetwork.QLocalSocket] = None
@@ -237,7 +238,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         self.language_window.com.on_open_url.connect(self._open_url_and_hide)
         self.language_window.com.on_change_installed_languages.connect(
-            self._sanatize_language_setting
+            self.com.on_languages_changed
         )
         self.language_window.exec_()
 
@@ -440,7 +441,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_window_ready.emit()
 
     def _create_menu_button(self) -> QtWidgets.QLayout:
-        # system_info.is_briefcase_package = lambda: True  # LanguageManager debugging
+        if self._debug_language_manager:
+            system_info.is_briefcase_package = lambda: True
         settings_menu = MenuButton(
             settings=self.settings,
             language_manager=system_info.is_prebuild_package(),
