@@ -87,6 +87,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self._ensure_screenshot_permission()
         self._set_signals()
         self._update_screenshots(delayed=False)
+        self.setContextMenu(QtWidgets.QMenu())
+        self._populate_context_menu_entries()
+        self.contextMenu().aboutToShow.connect(self._populate_context_menu_entries)
 
     @QtCore.Slot()
     def _color_tray_icon(self) -> None:
@@ -286,7 +289,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             tessdata_path=system_info.get_tessdata_path(),
         )
         self.com.on_languages_changed.emit(installed_languages)
-        self._add_tray_menu()
         self._add_update_checker()
         self._add_notifier()
         self._set_tray_icon()
@@ -400,21 +402,21 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.com.on_screenshots_updated.emit()
 
-    def _add_tray_menu(self) -> None:
+    @QtCore.Slot()
+    def _populate_context_menu_entries(self) -> None:
         """Create menu for system tray."""
-        menu = QtWidgets.QMenu()
+        menu = self.contextMenu()
+        menu.clear()
 
-        action = QtGui.QAction("Capture", menu)
-        action.setObjectName("capture")
-        action.setVisible(bool(self.settings.value("tray", False, type=bool)))
-        action.triggered.connect(self.com.on_tray_menu_capture_clicked.emit)
-        menu.addAction(action)
+        if bool(self.settings.value("tray", False, type=bool)):
+            action = QtGui.QAction("Capture", menu)
+            action.setObjectName("capture")
+            action.triggered.connect(self.com.on_tray_menu_capture_clicked.emit)
+            menu.addAction(action)
 
         action = QtGui.QAction("Exit", menu)
         action.triggered.connect(self.com.on_quit.emit)
         menu.addAction(action)
-
-        self.setContextMenu(menu)
 
     def _create_next_window(self) -> None:
         """Open child window only for next display."""
