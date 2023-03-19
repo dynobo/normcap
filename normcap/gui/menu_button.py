@@ -148,6 +148,7 @@ class MenuButton(QtWidgets.QToolButton):
     @QtCore.Slot()
     def populate_menu_entries(self) -> None:
         menu = self.menu()
+        menu.clear()
         menu.setObjectName("settings_menu")
         menu.setStyleSheet(
             _MENU_STYLE.replace("$COLOR", str(self.settings.value("color")))
