@@ -25,9 +25,10 @@ class Worker(QtCore.QRunnable):
             import ssl
             from urllib.request import urlopen
 
-            context = ssl.SSLContext()
+            context = ssl.SSLContext(
+                protocol=ssl.PROTOCOL_TLS_CLIENT, verify_mode=ssl.CERT_NONE
+            )
             context.load_default_certs()
-            context.verify_mode = ssl.CERT_NONE
             with urlopen(self.url, context=context) as response:  # nosec B310
                 raw_data = response.read()
         except Exception as e:
