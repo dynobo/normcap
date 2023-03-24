@@ -1,5 +1,4 @@
 """Create system tray and its menu."""
-import datetime  # TODO: Probably can be removed in favor of time
 import logging
 import os
 import sys
@@ -363,9 +362,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if self.settings.value("update", type=bool) is False:
             return
 
-        interval = datetime.timedelta(days=UPDATE_CHECK_INTERVAL_DAYS)
-        today_sub_interval = f"{datetime.datetime.now() - interval:%Y-%m-%d}"
-        if str(self.settings.value("last-update-check", type=str)) > today_sub_interval:
+        now_sub_interval_sec = time.time() - (60 * 60 * 24 * UPDATE_CHECK_INTERVAL_DAYS)
+        now_sub_interval = time.strftime("%Y-%m-%d", time.gmtime(now_sub_interval_sec))
+        if str(self.settings.value("last-update-check", type=str)) > now_sub_interval:
             return
 
         checker = UpdateChecker(self, packaged=system_info.is_prebuild_package())
@@ -375,7 +374,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _update_time_of_last_update_check(self, newest_version: str) -> None:
         if newest_version is not None:
-            today = f"{datetime.datetime.now():%Y-%m-%d}"
+            today = time.strftime("%Y-%m-%d", time.gmtime())
             self.settings.setValue("last-update-check", today)
 
     def _add_notifier(self) -> None:

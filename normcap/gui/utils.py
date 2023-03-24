@@ -1,6 +1,6 @@
-import datetime
 import logging
 import tempfile
+import time
 from pathlib import Path
 
 from PySide6.QtGui import QImage
@@ -15,7 +15,7 @@ def _save_image_in_tempfolder(
     if logger.getEffectiveLevel() == log_level:
         file_dir = Path(tempfile.gettempdir()) / "normcap"
         file_dir.mkdir(exist_ok=True)
-        now = datetime.datetime.now()
-        file_name = f"{now:%Y-%m-%d_%H-%M-%S_%f}{postfix}.png"
+        now = time.strftime("%Y-%m-%d_%H-%M-%S_%f", time.gmtime())
+        file_name = f"{now}{postfix}.png"
         logger.debug("Save debug image as %s", file_dir / file_name)
         image.save(str(file_dir / file_name))
