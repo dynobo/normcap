@@ -15,7 +15,9 @@ def _save_image_in_tempfolder(
     if logger.getEffectiveLevel() == log_level:
         file_dir = Path(tempfile.gettempdir()) / "normcap"
         file_dir.mkdir(exist_ok=True)
-        now = time.strftime("%Y-%m-%d_%H-%M-%S_%f", time.gmtime())
+        now = time.time()
+        now_str = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime(now))
+        now_str += f"{now % 1}"[:-3]
         file_name = f"{now}{postfix}.png"
         logger.debug("Save debug image as %s", file_dir / file_name)
         image.save(str(file_dir / file_name))
