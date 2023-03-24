@@ -5,6 +5,10 @@ from normcap.gui import tray
 from normcap.gui.settings import Settings
 
 
+def test_debug_language_manager_is_deactivated(qapp):
+    assert not tray.SystemTray._debug_language_manager
+
+
 @pytest.mark.parametrize(
     ("active", "available", "sanatized"),
     [

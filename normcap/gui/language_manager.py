@@ -58,8 +58,8 @@ class LanguageManager(QtWidgets.QDialog):
         h_layout.addLayout(self.installed_layout)
         h_layout.addLayout(self.available_layout)
 
-        self.close_button = QtWidgets.QPushButton("&Close")
-        self.close_button.pressed.connect(self.close)
+        close_button = QtWidgets.QPushButton("&Close")
+        close_button.pressed.connect(self.close)
 
         self.tessdata_label = QtWidgets.QLabel(
             f"<a href='file:///{self.tessdata_path.resolve()}'>"
@@ -71,7 +71,7 @@ class LanguageManager(QtWidgets.QDialog):
 
         layout = QtWidgets.QVBoxLayout()
         layout.addLayout(h_layout)
-        layout.addWidget(self.close_button)
+        layout.addWidget(close_button)
         layout.addWidget(self.tessdata_label)
 
         self.setLayout(layout)
@@ -79,7 +79,7 @@ class LanguageManager(QtWidgets.QDialog):
         self.loading_indicator = LoadingIndicator(self, size=256)
 
         self._update_models()
-        self.close_button.setFocus()
+        close_button.setFocus()
 
     @QtCore.Slot(str, str)
     def _on_download_error(self, reason: str, url: str) -> None:
