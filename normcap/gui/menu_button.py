@@ -101,6 +101,7 @@ class MenuButton(QtWidgets.QToolButton):
         self.message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
         self.setMenu(QtWidgets.QMenu(self))
+        self.menu().triggered.connect(self.on_item_click)
         self.menu().aboutToShow.connect(self.populate_menu_entries)
 
         self.setStyleSheet(_BUTTON_STYLE)
@@ -167,7 +168,6 @@ class MenuButton(QtWidgets.QToolButton):
         menu.addSeparator()
         self._add_title(menu, "Application")
         self._add_application_section(menu)
-        menu.triggered.connect(self.on_item_click)
 
     def _add_title(
         self,
