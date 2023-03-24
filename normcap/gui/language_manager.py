@@ -63,7 +63,7 @@ class LanguageManager(QtWidgets.QDialog):
 
         self.tessdata_label = QtWidgets.QLabel(
             f"<a href='file:///{self.tessdata_path.resolve()}'>"
-            "View tessdata folder in file manager...</a>"
+            "Close and view tessdata folder in file manager...</a>"
         )
         self.tessdata_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
         self.tessdata_label.linkActivated.connect(self.com.on_open_url)
@@ -146,7 +146,10 @@ class LanguageManager(QtWidgets.QDialog):
 
     def _set_in_progress(self, value: bool) -> None:
         self.available_layout.view.setEnabled(not value)
+        self.available_layout.button.setEnabled(not value)
         self.installed_layout.view.setEnabled(not value)
+        self.installed_layout.button.setEnabled(not value)
+        self.tessdata_label.setEnabled(not value)
         self.loading_indicator.setVisible(value)
 
 
