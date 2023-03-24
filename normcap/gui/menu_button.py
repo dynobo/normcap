@@ -121,15 +121,22 @@ class MenuButton(QtWidgets.QToolButton):
 
         if action_name == "close":
             self.com.on_close_in_settings.emit("Clicked close in settings")
-        elif action_name == "show_help_languages":
+            return
+
+        if action_name == "show_help_languages":
             self.message_box.setText(MESSAGE_LANGUAGES)
             self.message_box.exec_()
-        elif action_name == "manage_languages":
+            return
+
+        if action_name == "manage_languages":
             self.com.on_manage_languages.emit()
-        elif group_name == "website_group" or action_name.startswith("file:/"):
-            url = action_name
-            self.com.on_open_url.emit(url)
-        elif group_name == "settings_group":
+            return
+
+        if group_name == "website_group" or action_name.startswith("file:/"):
+            self.com.on_open_url.emit(action_name)
+            return
+
+        if group_name == "settings_group":
             setting = action_name
             value = action.isChecked()
         elif group_name == "mode_group":
