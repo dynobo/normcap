@@ -225,8 +225,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _open_url_and_hide(self, url: str) -> None:
         """Open url in default browser, then hide to tray or exit."""
         logger.debug("Open %s", url)
-        QtGui.QDesktopServices.openUrl(url)
-        self.com.on_close_or_exit.emit("opened web browser")
+        # FIXME: Click on "View in folder" can crash NormCap on Linux
+        result = QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
+        )
+        self.com.on_close_or_exit.emit(f"opened uri with result={result}")
 
     @QtCore.Slot()
     def _open_language_manager(self) -> None:
