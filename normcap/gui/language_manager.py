@@ -25,7 +25,6 @@ class LanguageManager(QtWidgets.QDialog):
         self, tessdata_path: Path, parent: Optional[QtWidgets.QWidget] = None
     ) -> None:
         super().__init__(parent)
-        # TODO: Avoid unnecessary properties
 
         self.setModal(True)
         self.setWindowTitle("Manage Languages (experimental)")

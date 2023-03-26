@@ -148,7 +148,7 @@ def hook_exceptions(
 ) -> None:  # sourcery skip: extract-method
     """Print traceback and quit application.
 
-    TODO: Think about removing/simplifying exception hook after switch to Python 3.11
+    ONHOLD: Think about removing/simplifying exception hook after switch to Python 3.11
     """
     try:
         logger.critical("Uncaught exception! Quitting NormCap!")
