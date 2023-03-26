@@ -37,8 +37,7 @@ class EmailMagic(BaseMagic):
         # Calc chars & ratio
         email_chars = sum(len(e) for e in emails)
         count_chars = ocr_result.num_chars
-        ratio = min(email_chars / count_chars, 1)
-
+        ratio = min(email_chars / count_chars, 1) if count_chars else 0
         logger.debug("%s/%s (%s) chars in emails", email_chars, count_chars, ratio)
         return round(100 * ratio, 2)
 
