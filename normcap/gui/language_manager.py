@@ -27,7 +27,7 @@ class LanguageManager(QtWidgets.QDialog):
         super().__init__(parent)
 
         self.setModal(True)
-        self.setWindowTitle("Manage Languages (experimental)")
+        self.setWindowTitle("Manage Languages")
         self.setMinimumSize(800, 600)
 
         self.tessdata_path = tessdata_path
