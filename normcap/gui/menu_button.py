@@ -68,7 +68,6 @@ class Communicate(QtCore.QObject):
     on_setting_change = QtCore.Signal(str)
 
 
-# FIXME: Language Menus don't update after language download!
 class MenuButton(QtWidgets.QToolButton):
     """Button to adjust setting on main window top right."""
 

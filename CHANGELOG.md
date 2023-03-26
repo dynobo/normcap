@@ -7,8 +7,9 @@
   ([#254](https://github.com/dynobo/normcap/issues/254))
 - All: Fix unintended re-capture if tray icon is disabled.
   ([#254](https://github.com/dynobo/normcap/issues/254))
-- All: Prevent running multiple instances and start capture in original instance  
+- All: Prevent running multiple instances and start capture in original instance
   instead. ([#306](https://github.com/dynobo/normcap/issues/306))
+- All: Fix occasional crashes after use of Language Manager.
 
 ## v0.4.0 (2023-01-29)
 
