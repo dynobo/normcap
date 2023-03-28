@@ -246,6 +246,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         self.language_window.exec_()
 
+    # TODO: Create alternative to copy_to_clipboard which prints to STDOUT
+    # via print(text, file=sys.stdout)
     @QtCore.Slot()
     def _copy_to_clipboard(self) -> None:
         """Copy results to clipboard."""
