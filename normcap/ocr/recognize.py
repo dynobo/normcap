@@ -33,7 +33,9 @@ def recognize(  # noqa: PLR0913
         psm=PSM.AUTO_OSD,
     )
     logger.debug(
-        "Run Tesseract on image of size %s with args:\n%s", image.size, tess_args
+        "Run Tesseract on image of size %s with args:\n%s",
+        image.size().toTuple(),
+        tess_args,
     )
     ocr_result_data = tesseract.perform_ocr(
         cmd=tesseract_cmd, image=image, args=tess_args.as_list()

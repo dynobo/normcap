@@ -39,7 +39,6 @@ class Communicate(QtCore.QObject):
     on_send_notification = QtCore.Signal(Capture)
     on_tray_menu_capture_clicked = QtCore.Signal()
     on_window_positioned = QtCore.Signal()
-    on_window_ready = QtCore.Signal()
     on_languages_changed = QtCore.Signal(list)
 
 
@@ -90,6 +89,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.setContextMenu(QtWidgets.QMenu())
         self._populate_context_menu_entries()
         self.contextMenu().aboutToShow.connect(self._populate_context_menu_entries)
+        QtCore.QTimer.singleShot(100, self._delayed_init)
 
     @QtCore.Slot()
     def _color_tray_icon(self) -> None:
@@ -357,7 +357,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_close_or_exit.connect(self._close_or_exit)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
         self.com.on_manage_languages.connect(self._open_language_manager)
-        self.com.on_window_ready.connect(self._delayed_init)
         self.com.on_languages_changed.connect(self._sanatize_language_setting)
 
     def _add_update_checker(self) -> None:
@@ -439,7 +438,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         new_window.set_fullscreen()
         self.windows[index] = new_window
-        self.com.on_window_ready.emit()
 
     def _create_menu_button(self) -> QtWidgets.QLayout:
         if self._debug_language_manager:
