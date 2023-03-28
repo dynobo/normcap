@@ -53,7 +53,7 @@ class UrlMagic(BaseMagic):
         text = ocr_result.text
         urls = self._extract_urls(text)
         logger.info(
-            "%s URLs found %s", len(urls), [": " + " ".join(urls) if urls else ""]
+            "%s URLs found %s", len(urls), ": " + " ".join(urls) if urls else ""
         )
 
         # Calc chars & ratio
