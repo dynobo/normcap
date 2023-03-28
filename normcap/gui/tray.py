@@ -153,7 +153,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _apply_setting_change(self, setting: str) -> None:
         if setting == "tray":
             capture_action = self.contextMenu().findChild(QtGui.QAction, name="capture")
-            capture_action.setVisible(self.settings.value(setting, False, type=bool))
+            if capture_action:
+                capture_action.setVisible(
+                    self.settings.value(setting, False, type=bool)
+                )
 
     @QtCore.Slot(list)
     def _sanatize_language_setting(self, installed_languages: list[str]) -> None:
