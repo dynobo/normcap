@@ -1,15 +1,25 @@
-______________________________________________________________________
+---
+name: Detection quality 
+about: If the recognized text is different from what you expected
+title: ''
+labels: 'ocr accuracy'
+assignees: ''
 
-name: Detection quality about: If the recognized text is different from what you
-expected title: '' labels: 'ocr accuracy' assignees: ''
+---
 
-______________________________________________________________________
 
-**Sample image:** \[Please upload a screenshot of the text you tried to recognize.\]
+**Sample image:** 
 
-**Expected detection output:** \[Words/characters you had expected\]
+Please upload a screenshot of the text you tried to recognize.
 
-**Actual detection output:** \[Words/characters which NormCap copied to the clipboard\]
+**Expected detection output:** 
 
-**Further information or remarks:** \[Any ideas regarding what lead to the problem or
-what might help?\]
+Words/characters you had expected.
+
+**Actual detection output:** 
+
+Words/characters which NormCap copied to the clipboard.
+
+**Further information or remarks:** 
+
+Any ideas regarding what lead to the problem or what might help?

@@ -1,21 +1,27 @@
-______________________________________________________________________
-
-name: Bug report about: Create a report to help us improve title: '' labels: 'bug'
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: 'bug'
 assignees: ''
 
-______________________________________________________________________
+---
 
-**Describe the bug:** \[A description of what the problem is. Include screenshots, if
-useful.\]
+**Describe the bug:** 
+
+A description of what the problem is. Include screenshots, if
+useful.
 
 **System information:**
 
-- Operating System: \[e.g. Windows 11, macOS Ventura, Ubuntu 23.03, Fedora 37, Arch\]
-- NormCap installation method: \[e.g. Python package, MSI, DMG, AppImage, AUR, Microsoft
-  Store\]
-- (Linux only) Display Server : \[e.g. XOrg, Wayland\]
+- Operating System: [e.g. Windows 11, macOS Ventura, Ubuntu 23.03, Fedora 37, Arch]
+- NormCap installation method: [e.g. Python package, MSI, DMG, AppImage, AUR, Microsoft
+  Store]
+- (Linux only) Display Server : [e.g. XOrg, Wayland]
 
-**Debug output:** Please start NormCap with `-v debug` option from the command line,
+**Debug output:** 
+
+Please start NormCap with `-v debug` option from the command line,
 reproduce the bug and post the output printed in the terminal:
 
 ```
