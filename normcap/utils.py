@@ -65,6 +65,11 @@ def create_argparser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print NormCap version and exit",
     )
+    parser.add_argument(
+        "--cli-mode",
+        action="store_true",
+        help="Print text after detection to stdout and exits immediately",
+    )
     return parser
 
 
