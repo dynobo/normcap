@@ -1,45 +1,38 @@
-______________________________________________________________________
-
-name: Bug report about: Create a report to help us improve title: '' labels: 'bug'
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
 assignees: ''
 
-______________________________________________________________________
+---
 
-**Describe the bug:** \[A description of what the problem is. Include screenshots, if
-useful.\]
+**Describe the bug**
+A clear and concise description of what the bug is.
 
-**System information:**
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
 
-- Operating System: \[e.g. Windows 11, macOS Ventura, Ubuntu 23.03, Fedora 37, Arch\]
-- NormCap installation method: \[e.g. Python package, MSI, DMG, AppImage, AUR, Microsoft
-  Store\]
-- (Linux only) Display Server : \[e.g. XOrg, Wayland\]
+**Expected behavior**
+A clear and concise description of what you expected to happen.
 
-**Debug output:** Please start NormCap with `-v debug` option from the command line,
-reproduce the bug and post the output printed in the terminal:
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
 
-```
-paste debug output here
-```
+**Desktop (please complete the following information):**
+ - OS: [e.g. iOS]
+ - Browser [e.g. chrome, safari]
+ - Version [e.g. 22]
 
-<!--
-Hint: The command to start normcap with the debug option depends on how you have installed it:
+**Smartphone (please complete the following information):**
+ - Device: [e.g. iPhone6]
+ - OS: [e.g. iOS8.1]
+ - Browser [e.g. stock browser, safari]
+ - Version [e.g. 22]
 
-- Python package:
-  normcap -v debug
-
-- MSI installer:
-  %LOCALAPPDATA%\Programs\dynobo\NormCap\NormCap.exe -- -v debug
-
-- DMG installer:
-  /Applications/NormCap.app/Contents/MacOS/NormCap -v debug
-
-- AppImage:
-  ./NormCap-{version}-x86_64.AppImage -v debug
-
-- Flatpak:
-  flatpak run --command=normcap com.github.dynobo.normcap -v debug
-
-- AUR:
-  normcap -v debug
--->
+**Additional context**
+Add any other context about the problem here.
