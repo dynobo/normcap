@@ -2,14 +2,21 @@
 
 ## v0.4.1 (upcoming)
 
-- All: Slightly improve start-up time.
-- All: Enlarge settings button a bit to make it easier to spot.
+**All:**
+
+- Enlarge settings button a bit to make it easier to spot.
   ([#254](https://github.com/dynobo/normcap/issues/254))
-- All: Fix unintended re-capture if tray icon is disabled.
+- Prevent running multiple instances and start capture in original instance instead.
+  ([#306](https://github.com/dynobo/normcap/issues/306))
+- Fix unintended re-capture if tray icon is disabled.
   ([#254](https://github.com/dynobo/normcap/issues/254))
-- All: Prevent running multiple instances and start capture in original instance
-  instead. ([#306](https://github.com/dynobo/normcap/issues/306))
-- All: Fix occasional crashes after use of Language Manager.
+- Fix occasional crashes after use of Language Manager.
+- Add experimental `--cli-mode` switch to print NormCap's detection to STDOUT and exit
+  immediately. This is useful if you want to use the detected text as input for other
+  programs or commands. E.g.:
+  ```sh
+  normcap --cli-mode | xargs -I {} firefox "http://duckduckgo.com/?q={}"`
+  ```
 
 ## v0.4.0 (2023-01-29)
 

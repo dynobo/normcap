@@ -75,6 +75,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if args.get("reset", False):
             self.settings.reset()
 
+        self.cli_mode = args.get("cli_mode", False)
+
         self.capture.mode = (
             CaptureMode.PARSE
             if self.settings.value("mode") == "parse"
@@ -246,8 +248,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         self.language_window.exec_()
 
-    # TODO: Create alternative to copy_to_clipboard which prints to STDOUT
-    # via print(text, file=sys.stdout)
     @QtCore.Slot()
     def _copy_to_clipboard(self) -> None:
         """Copy results to clipboard."""
@@ -255,6 +255,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         logger.debug("Copy text to clipboard")
         copy_to_clipboard(self.capture.ocr_text)
         self.com.on_copied_to_clipboard.emit()
+
+    @QtCore.Slot()
+    def _print_to_stdout(self) -> None:
+        """Print results to stdout ."""
+        logger.debug("Print text to stdout")
+        print(self.capture.ocr_text, file=sys.stdout)  # noqa: T201
+        self._exit_application(reason="printed to stdout")
 
     @QtCore.Slot()
     def _notify_or_close(self) -> None:
@@ -356,7 +363,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_region_selected.connect(self._close_windows)
         self.com.on_region_selected.connect(self._crop_image)
         self.com.on_image_cropped.connect(self._capture_to_ocr)
-        self.com.on_ocr_performed.connect(self._copy_to_clipboard)
+        self.com.on_ocr_performed.connect(
+            self._print_to_stdout if self.cli_mode else self._copy_to_clipboard
+        )
         self.com.on_copied_to_clipboard.connect(self._notify_or_close)
         self.com.on_copied_to_clipboard.connect(self._color_tray_icon)
         self.com.on_close_or_exit.connect(self._close_or_exit)
