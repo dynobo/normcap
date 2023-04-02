@@ -25,7 +25,7 @@ class WindowsNuitka(BuilderBase):
             "https://github.com/wixtoolset/wix3/releases/download/"
             "wix3112rtm/wix311-binaries.zip"
         )
-        urllib.request.urlretrieve(f"{url}", wix_zip)
+        urllib.request.urlretrieve(f"{url}", wix_zip)  # noqa: S310
 
         with zipfile.ZipFile(wix_zip, "r") as zip_ref:
             zip_ref.extractall(wix_path)

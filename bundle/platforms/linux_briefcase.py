@@ -37,12 +37,12 @@ class LinuxBriefcase(BuilderBase):
 
     def run_framework(self) -> None:
         self.run(cmd="briefcase create --no-input", cwd=self.PROJECT_PATH)
-        self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
+        self.run(cmd="briefcase build linux appimage", cwd=self.PROJECT_PATH)
         self.add_metainfo_to_appimage()
-        self.run(cmd="briefcase package", cwd=self.PROJECT_PATH)
+        self.run(cmd="briefcase package linux appimage", cwd=self.PROJECT_PATH)
 
     def rename_package_file(self) -> None:
-        source = list(Path(self.PROJECT_PATH / "linux").glob("*.AppImage"))[0]
+        source = list(Path(self.PROJECT_PATH / "dist").glob("*.AppImage"))[0]
         target = (
             self.BUILD_PATH
             / f"NormCap-{self.get_version()}-x86_64{self.binary_suffix}.AppImage"
@@ -55,9 +55,10 @@ class LinuxBriefcase(BuilderBase):
         metainfo = self.BUILD_PATH / "metainfo"
         target_path = (
             self.PROJECT_PATH
+            / "build"
+            / "normcap"
             / "linux"
             / "appimage"
-            / "NormCap"
             / "NormCap.AppDir"
             / "usr"
             / "share"

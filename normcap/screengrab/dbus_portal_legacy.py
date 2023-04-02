@@ -65,8 +65,8 @@ def grab_full_desktop() -> Optional[QtGui.QImage]:
     image = None
     try:
         connection = open_dbus_connection(bus="SESSION")
-        pseudo_unique_str = "".join(random.choice("abcdefghijklmnop") for _ in range(8))
-        token = f"normcap_{pseudo_unique_str}"
+        random_str = "".join(random.choice("abcdefghi") for _ in range(8))  # noqa: S311
+        token = f"normcap_{random_str}"
         sender_name = connection.unique_name[1:].replace(".", "_")
         handle = f"/org/freedesktop/portal/desktop/request/{sender_name}/{token}"
 

@@ -26,7 +26,7 @@ class WindowsBriefcase(BuilderBase):
         target_path = self.PROJECT_PATH / "normcap" / "resources" / "openssl"
         target_path.mkdir(exist_ok=True)
         zip_path = self.BUILD_PATH / "openssl.zip"
-        urllib.request.urlretrieve(openssl_url, zip_path)
+        urllib.request.urlretrieve(openssl_url, zip_path)  # noqa: S310
         with zipfile.ZipFile(zip_path, "r") as zip_ref:
             zip_ref.extractall(target_path)
 
@@ -34,7 +34,9 @@ class WindowsBriefcase(BuilderBase):
 
     def patch_windows_installer(self) -> None:
         """Customize wix-installer."""
-        wxs_file = self.PROJECT_PATH / "windows" / "app" / "NormCap" / "normcap.wxs"
+        wxs_file = (
+            self.PROJECT_PATH / "build" / "windows" / "app" / "NormCap" / "normcap.wxs"
+        )
 
         # Cache header for inserting later
         with Path(wxs_file).open(encoding="utf-8") as f:
@@ -43,7 +45,7 @@ class WindowsBriefcase(BuilderBase):
         ns = "{http://schemas.microsoft.com/wix/2006/wi}"
         ElementTree.register_namespace("", ns[1:-1])
 
-        tree = ElementTree.parse(wxs_file)
+        tree = ElementTree.parse(wxs_file)  # noqa: S314
         root = tree.getroot()
         product = root.find(f"{ns}Product")
         if not product:
@@ -54,7 +56,7 @@ class WindowsBriefcase(BuilderBase):
         top = "normcap_install_top.bmp"
         for image in (left, top):
             original = self.IMG_PATH / image
-            target = self.PROJECT_PATH / "windows" / "app" / "NormCap" / image
+            target = self.PROJECT_PATH / "build" / "windows" / "app" / "NormCap" / image
             shutil.copy(original, target)
 
         # Set installer images
@@ -112,7 +114,7 @@ class WindowsBriefcase(BuilderBase):
             f.writelines(header_lines + lines)
 
     def rename_package_file(self) -> None:
-        source = list(Path(self.PROJECT_PATH / "windows").glob("*.msi"))[0]
+        source = list(Path(self.PROJECT_PATH / "dist").glob("*.msi"))[0]
         target = (
             self.BUILD_PATH
             / f"NormCap-{self.get_version()}-x86_64-Windows{self.binary_suffix}.msi"

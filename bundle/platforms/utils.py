@@ -99,7 +99,7 @@ class BuilderBase(ABC):
 
         for file_name in files:
             url = f"{url_prefix}/{file_name}"
-            urllib.request.urlretrieve(f"{url}", target_path / file_name)
+            urllib.request.urlretrieve(f"{url}", target_path / file_name)  # noqa: S310
 
     @staticmethod
     def patch_file(
@@ -150,7 +150,7 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
         "https://digi.bib.uni-mannheim.de/tesseract/"
         "tesseract-ocr-w64-setup-v5.2.0.20220712.exe"
     )
-    urllib.request.urlretrieve(url, installer_path)
+    urllib.request.urlretrieve(url, installer_path)  # noqa: S310
 
     if not installer_path.exists():
         raise FileNotFoundError("Downloading of tesseract binaries might have failed!")
@@ -193,7 +193,7 @@ def bundle_tesseract_windows_appveyor(builder: BuilderBase) -> None:
         "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
     )
 
-    urllib.request.urlretrieve(url, zip_path)
+    urllib.request.urlretrieve(url, zip_path)  # noqa: S310
 
     if not zip_path.exists():
         raise FileNotFoundError("Downloading of tesseract.zip might have failed!")

@@ -15,7 +15,7 @@ def test_resources_complete(qtbot):
     assert resources.qt_resource_name
     assert resources.qt_resource_struct
 
-    tree = ElementTree.parse(icons_path / "resources.qrc")
+    tree = ElementTree.parse(icons_path / "resources.qrc")  # noqa: S314
     root = tree.getroot()
     icons_qrc = [el.text for el in root.find("qresource").findall("file")]
 

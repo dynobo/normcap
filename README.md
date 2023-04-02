@@ -18,7 +18,7 @@ macOS and Windows._**
 [Documentation](https://dynobo.github.io/normcap/) |
 [FAQs](https://dynobo.github.io/normcap/#faqs) |
 [Releases](https://github.com/dynobo/normcap/releases) |
-[Changelog](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md)
+[Changelog](https://github.com/dynobo/normcap/blob/main/CHANGELOG)
 
 [![Screencast](https://user-images.githubusercontent.com/11071876/189767585-8bc45c18-8392-411d-84dc-cef1cb5dbc47.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
