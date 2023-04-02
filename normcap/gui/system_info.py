@@ -61,7 +61,9 @@ def get_tesseract_path() -> Path:
         elif sys.platform == "win32":
             binary_path = Path(__file__).parent.parent / "resources" / "tesseract"
         elif sys.platform == "darwin":
-            binary_path = Path(__file__).parent.parent.parent.parent / "bin"
+            binary_path = (
+                Path(__file__).parent.parent.parent.parent / "app_packages" / "bin"
+            )
         else:
             raise ValueError(f"Platform {sys.platform} is not supported")
         extension = ".exe" if sys.platform == "win32" else ""

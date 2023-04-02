@@ -78,12 +78,6 @@ radon = ">=5.1.0"
 viztracer = ">=0.15.3"
 vulture = "^2.4"
 
-[tool.poetry.group.nuitka]
-optional = true
-
-[tool.poetry.group.nuitka.dependencies]
-Nuitka = "^1.0.3"
-
 [tool.black]
 line-length = 88
 include = '''
