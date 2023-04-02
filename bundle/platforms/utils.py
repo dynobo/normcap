@@ -29,7 +29,7 @@ class BuilderBase(ABC):
 
     @abstractmethod
     def run_framework(self) -> None:
-        """Run nuitka compiler and rename resulting package."""
+        """Run compiler and rename resulting package."""
 
     @abstractmethod
     def bundle_tesseract(self) -> None:

@@ -10,7 +10,7 @@ from platforms.utils import BuilderBase, bundle_tesseract_windows_ub_mannheim
 
 
 class WindowsBriefcase(BuilderBase):
-    """Create prebuild package for Windows using Nuitka."""
+    """Create prebuild package for Windows using Briefcase."""
 
     binary_suffix = ""
 
@@ -35,7 +35,7 @@ class WindowsBriefcase(BuilderBase):
     def patch_windows_installer(self) -> None:
         """Customize wix-installer."""
         wxs_file = (
-            self.PROJECT_PATH / "build" / "windows" / "app" / "NormCap" / "normcap.wxs"
+            self.PROJECT_PATH / "build" / "normcap" / "windows" / "app" / "normcap.wxs"
         )
 
         # Cache header for inserting later
@@ -54,9 +54,10 @@ class WindowsBriefcase(BuilderBase):
         # Copy installer images
         left = "normcap_install_bg.bmp"
         top = "normcap_install_top.bmp"
+
         for image in (left, top):
             original = self.IMG_PATH / image
-            target = self.PROJECT_PATH / "build" / "windows" / "app" / "NormCap" / image
+            target = self.PROJECT_PATH / "build" / "normcap" / "windows" / "app" / image
             shutil.copy(original, target)
 
         # Set installer images

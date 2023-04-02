@@ -25,7 +25,11 @@ class Worker(QtCore.QRunnable):
             import ssl
             from urllib.request import urlopen
 
-            context = ssl._create_unverified_context()  # noqa: S323
+            context = ssl.SSLContext()
+            context.load_default_certs()
+            if not context.get_ca_certs():
+                context = ssl._create_unverified_context()  # noqa: S323
+                logger.debug("Fallback to ssl without verification")
             if not self.url.startswith("http"):
                 raise ValueError(f"Downloading from {self.url[:9]}... is not allowed.")
             with urlopen(self.url, context=context) as response:  # noqa: S310

@@ -30,12 +30,13 @@ class MacBriefcase(BuilderBase):
         bin_path = (
             self.PROJECT_PATH
             / "build"
-            / "macOS"
+            / "normcap"
+            / "macos"
             / "app"
-            / "NormCap"
             / "NormCap.app"
             / "Contents"
             / "Resources"
+            / "app_packages"
             / "bin"
         )
         bin_path.mkdir(exist_ok=True)
