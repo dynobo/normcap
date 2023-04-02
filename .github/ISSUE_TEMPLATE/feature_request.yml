@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest an idea for this project
+labels: ["enhancement", "triage"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe your problem
+      placeholder: E.g. I'd like to achieve X, but ... / I'm confused by ...
+  - type: textarea
+    id: expected
+    attributes:
+      label: Solution you'd like to see
+      description:
+        E.g. NormCap could have an option to ... / NormCap should be able to ...
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: E.g. I could also use tool Y, ...
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional information or remarks
+      description: E.g. Here is a screenshot of ...

@@ -1,8 +1,0 @@
-blank_issues_enabled: true
-contact_links:
-  - name: NormCap Discussions
-    url: https://github.com/dynobo/normcap/discussions/categories/q-a
-    about: Please ask here for support or general questions
-  - name: NormCap FAQs
-    url: https://dynobo.github.io/normcap/#faqs
-    about: Maybe your question is already covered here?
