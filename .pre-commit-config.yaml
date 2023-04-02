@@ -38,8 +38,7 @@ repos:
         language: system
         entry:
           bash -c "poetry run pip-audit --strict -r <(poetry export -f requirements.txt
-          --with dev | sed 's/\[.*\]//g' | sed -z 's/\n\W//g' | sed -z 's/\\//g' | uniq
-          )"
+          --with=dev)"
         # First `sed` removes potential "[<extra>]" after package names
         # Second `sed` removes "\n" in front of "--hash" to get one line per package
         # Final `uniq` is the used to de-duplicated those lines

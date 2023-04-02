@@ -96,7 +96,7 @@ jobs:
         if: matrix.os  == 'ubuntu-22.04'
         run:
           bash -c "poetry run pip-audit --strict -r <(poetry export -f requirements.txt
-          --with dev | sed 's/\[.*\]//g' | sed -z 's/\n\W//g' | uniq )"
+          --with=dev)"
       - name: Pytest
         run: poetry run pytest -vv -m "not skip_on_gh" --cov --cov-report=xml
       - name: Coverage
@@ -118,7 +118,7 @@ jobs:
         shell: bash -l {0}
         run: |
           (cat logs/briefcase*) || true
-          tree -L 3 build/normcap
+          find build/normcap || true
 
       # Release test package
       - name: Set current date as env variable
