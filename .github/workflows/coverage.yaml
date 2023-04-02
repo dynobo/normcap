@@ -46,6 +46,8 @@ jobs:
             libxcb-shape0 \
             libegl1 \
             libegl1-mesa
+          sudo apt-get install \
+            ca-certificates
           echo "XDG_SESSION_TYPE=gnome" >> $GITHUB_ENV
 
       - name: Prepare macOS
