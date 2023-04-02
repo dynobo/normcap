@@ -26,24 +26,21 @@ body:
     id: operating-system
     attributes:
       label: Operating System + Version?
-      placeholder: e.g. Windows 11, macOS Ventura, Ubuntu 23.04, Fedora 37, Arch
+      placeholder: e.g. Windows 11, macOS 13.3, Ubuntu 23.04
   - type: input
     id: linux-environment
     attributes:
-      label: "[Linux only] Display Server (DS) and Desktop environment (DE)?"
+      label: "[Linux only] Display Server (DS) + Desktop environment (DE)?"
       placeholder: "e.g. DS: Xorg/Wayland, DE: Gnome/KDE Plasma/Xfce/Unity"
   - type: textarea
     id: logs
     attributes:
       label: Debug log output?
-      description:
-        Start NormCap with `-v debug` option from the command line, reproduce the bug
-        and copy & paste the output from the terminal here.
       render: shell
   - type: markdown
     attributes:
       value: |
-        Don't know, how to start NormCap with the `-v debug` option?
+        Don't know, how to generate debug log output?
         1. Open a terminal/command prompt.
         2. Run the command according to your NormCap installation method:
            - Python package: `normcap -v debug`
@@ -53,5 +50,5 @@ body:
            - Flatpak: `flatpak run --command=normcap com.github.dynobo.normcap -v debug`
            - AUR: `normcap -v debug`
         3. Reproduce the bug and exit NormCap.
-        4. Select all the output that was printed to the terminal and copy it to your clipboard
+        4. Select all the text that was printed to the terminal and copy it to your clipboard
         5. Paste the text in the field above.

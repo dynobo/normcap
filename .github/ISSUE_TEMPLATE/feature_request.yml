@@ -5,21 +5,21 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Describe your problem
+      label: "Describe your problem:"
       placeholder: E.g. I'd like to achieve X, but ... / I'm confused by ...
   - type: textarea
     id: expected
     attributes:
-      label: Solution you'd like to see
-      description:
+      label: "Solution you'd like to see:"
+      placeholder:
         E.g. NormCap could have an option to ... / NormCap should be able to ...
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives you considered
-      description: E.g. I could also use tool Y, ...
+      label: "Alternatives you considered:"
+      placeholder: E.g. I could also use tool Y, ...
   - type: textarea
     id: additional-info
     attributes:
-      label: Additional information or remarks
-      description: E.g. Here is a screenshot of ...
+      label: "Additional information or remarks:"
+      placeholder: E.g. Here is a screenshot of ...

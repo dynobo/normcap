@@ -1,28 +1,27 @@
 name: Detection quality
-description:
-  Report cases where text that NormCap recognized is different from what you expected.
+description: When the recognized text differs a lot from what you expected.
 labels: ["ocr", "triage"]
 body:
   - type: textarea
     id: sample-image
     attributes:
-      label: Sample image
+      label: Sample image?
       placeholder: Drag & drop a screenshot of the text you tried to recognize.
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: Expected detection output
+      label: Expected detection output?
       placeholder: Words/characters you think NormCap should have copy to the clipboard.
   - type: textarea
     id: actual
     attributes:
-      label: Actual detection output
+      label: Actual detection output?
       placeholder: Words/characters which NormCap did copy to the clipboard.
   - type: textarea
     id: additional-info
     attributes:
-      label: Additional information or remarks
+      label: Additional information or remarks?
       placeholder:
         E.g. ideas regarding what lead to the problem or what might help to solve it.
