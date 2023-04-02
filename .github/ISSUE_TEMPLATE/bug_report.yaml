@@ -1,0 +1,84 @@
+name: Bug Report
+description: File a bug report
+title: ""
+labels: ["bug", "triage"]
+assignees:
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: NormCap installation method
+      description: Which option did you choose to install NormCap?
+      options:
+        - Unknown
+        - MSI installer (Windows)
+        - DMG installer (macOS)
+        - DMG ARM64 installer (macOS, M1)
+        - AppImage (Linux)
+        - FlatPak (Linux)
+        - AUR (Linux)
+        - Python Package (pip install)
+    validations:
+      required: true
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating System
+      description: Which Operating System and version do you use?
+      placeholder: e.g. Windows 11, macOS Ventura, Ubuntu 23.04, Fedora 37, Arch
+    validations:
+      required: true
+  - type: input
+    id: linux-environment
+    attributes:
+      label: (Linux only) Display Server (DS) & Desktop environment (DE)
+      description: Which setup are are you using to display windows?
+      placeholder: "e.g. DS: Xorg/Wayland, DE: Gnome/KDE Plasma/Xfce/Unity"
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Debug log output
+      description:
+        Please start NormCap with `-v debug` option from the command line, reproduce the
+        bug and copy & paste the output from the terminal here.
+      render: shell
+  - type: markdown
+    attributes:
+      value: |
+        **Hint:** The command to start NormCap with the debug option depends on how you
+        have installed it:
+        - Python package: `normcap -v debug`
+        - MSI installer:
+          ```cmd
+          %LOCALAPPDATA%\Programs\dynobo\NormCap\NormCap.exe -- -v debug
+          ```
+        - DMG installer:
+          ```sh
+          /Applications/NormCap.app/Contents/MacOS/NormCap -v debug
+          ```
+        - AppImage:
+          ```sh
+          ./NormCap-{version}-x86_64.AppImage -v debug
+          ```
+        - Flatpak:
+          ```sh
+          flatpak run --command=normcap com.github.dynobo.normcap -v debug
+          ```
+        - AUR:
+          ```sh
+          normcap -v debug
+          ```
