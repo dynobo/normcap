@@ -51,8 +51,8 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
 
         base = bus.baseService()[1:].replace(".", "_")
 
-        pseudo_unique_str = "".join(random.choice("abcdefghijklmnop") for _ in range(8))
-        token = f"normcap_{pseudo_unique_str}"
+        random_str = "".join(random.choice("abcdefghi") for _ in range(8))  # noqa: S311
+        token = f"normcap_{random_str}"
         object_path = f"/org/freedesktop/portal/desktop/request/{base}/{token}"
 
         request = OrgFreedesktopPortalRequestInterface(object_path, bus, self)

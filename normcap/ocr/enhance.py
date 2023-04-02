@@ -96,15 +96,14 @@ def invert_image(image: QImage) -> QImage:
 
 def is_dark(image: QImage) -> bool:
     """Detect if mean pixel brightness is below 125."""
-    sample_size = 400
-
-    points_x = tuple(random.randint(0, image.width() - 1) for _ in range(sample_size))
-    points_y = tuple(random.randint(0, image.height() - 1) for _ in range(sample_size))
-    points = zip(points_x, points_y)
+    i = 400  # points to sample
+    x = tuple(random.randint(0, image.width() - 1) for _ in range(i))  # noqa: S311
+    y = tuple(random.randint(0, image.height() - 1) for _ in range(i))  # noqa: S311
+    points = tuple(zip(x, y))
 
     pixels = _get_pixels(image=image, points=points)
 
-    mean_color_value = sum(sum(p) for p in pixels) / 3 / sample_size
+    mean_color_value = sum(sum(p) for p in pixels) / 3 / len(points)
     middle_grey = 125
 
     return mean_color_value < middle_grey

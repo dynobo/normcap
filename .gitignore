@@ -12,9 +12,7 @@ normcap/resources/wl-copy/*
 normcap/resources/tessseract
 logs/
 wix/
-linux/
-windows/
-macOS/
+build/
 tesseract/
 *.spec
 *.wixpdb

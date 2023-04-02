@@ -20,7 +20,7 @@ MESSAGE_LANGUAGES = (
 
 URLS = Urls(
     releases="https://github.com/dynobo/normcap/releases",
-    changelog="https://github.com/dynobo/normcap/blob/main/CHANGELOG.md",
+    changelog="https://github.com/dynobo/normcap/blob/main/CHANGELOG",
     pypi="https://pypi.org/pypi/normcap",
     github="https://github.com/dynobo/normcap",
     issues="https://github.com/dynobo/normcap/issues",

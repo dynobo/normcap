@@ -28,7 +28,15 @@ class MacBriefcase(BuilderBase):
 
     def bundle_tesseract(self) -> None:
         bin_path = (
-            self.PROJECT_PATH / "macOS/app/NormCap/NormCap.app/Contents/Resources/bin"
+            self.PROJECT_PATH
+            / "build"
+            / "macOS"
+            / "app"
+            / "NormCap"
+            / "NormCap.app"
+            / "Contents"
+            / "Resources"
+            / "bin"
         )
         bin_path.mkdir(exist_ok=True)
 
@@ -72,7 +80,7 @@ class MacBriefcase(BuilderBase):
         self.run(cmd="brew install dylibbundler")
 
     def rename_package_file(self) -> None:
-        source = list(Path(self.PROJECT_PATH / "macOS").glob("*.dmg"))[0]
+        source = list(Path(self.PROJECT_PATH / "dist").glob("*.dmg"))[0]
         arch = "arm64" if platform.machine().startswith("arm64") else "x86_64"
         target = (
             self.BUILD_PATH

@@ -21,7 +21,7 @@ def test_update_checker_triggers_checked_signal(monkeypatch, qtbot, packaged):
 @pytest.mark.skip_on_gh()
 @pytest.mark.parametrize("url", [URLS.releases_atom, URLS.pypi_json])
 def test_urls_reachable(url):
-    with urllib.request.urlopen(url) as response:
+    with urllib.request.urlopen(url) as response:  # noqa: S310
         assert response.code == 200
 
 

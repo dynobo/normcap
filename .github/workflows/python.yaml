@@ -116,7 +116,9 @@ jobs:
       - name: Print briefcase log in case of error
         if: failure()
         shell: bash -l {0}
-        run: (cat logs/briefcase*) || true
+        run: |
+          (cat logs/briefcase*) || true
+          tree -L 3 build/normcap
 
       # Release test package
       - name: Set current date as env variable
@@ -190,8 +192,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           body:
-            See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG.md)
-            for details.
+            See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG) for
+            details.
           artifacts: "*/*.+(dmg|AppImage|msi|zip)"
           artifactErrorsFailBuild: false
           allowUpdates: true
