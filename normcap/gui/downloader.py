@@ -14,9 +14,10 @@ class Communicate(QtCore.QObject):
 
 
 class Worker(QtCore.QRunnable):
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str, timeout: int = 30) -> None:
         super().__init__()
         self.url = url
+        self.timeout = timeout
         self.com = Communicate()
 
     @QtCore.Slot()
@@ -32,7 +33,9 @@ class Worker(QtCore.QRunnable):
                 logger.debug("Fallback to ssl without verification")
             if not self.url.startswith("http"):
                 raise ValueError(f"Downloading from {self.url[:9]}... is not allowed.")
-            with urlopen(self.url, context=context) as response:  # noqa: S310
+            with urlopen(  # noqa: S310
+                self.url, context=context, timeout=self.timeout
+            ) as response:
                 raw_data = response.read()
         except Exception as e:
             msg = f"Exception '{e}' during download of '{self.url}'"
@@ -54,10 +57,10 @@ class Downloader(QtCore.QObject):
         self.com = Communicate()
         self.threadpool = QtCore.QThreadPool()
 
-    def get(self, url: str) -> None:
+    def get(self, url: str, timeout: int = 30) -> None:
         """Start downloading url. Emits signal, when done."""
         logger.debug("Download %s", url)
-        worker = Worker(url=url)
+        worker = Worker(url=url, timeout=timeout)
         worker.com.on_download_finished.connect(self.com.on_download_finished)
         worker.com.on_download_failed.connect(self.com.on_download_failed)
         self.threadpool.start(worker)

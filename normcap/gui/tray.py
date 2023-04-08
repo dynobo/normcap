@@ -374,7 +374,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_languages_changed.connect(self._sanatize_language_setting)
 
     def _add_update_checker(self) -> None:
-        if self.settings.value("update", type=bool) is False:
+        if not self.settings.value("update", type=bool):
             return
 
         now_sub_interval_sec = time.time() - (60 * 60 * 24 * UPDATE_CHECK_INTERVAL_DAYS)

@@ -111,4 +111,4 @@ class UpdateChecker(QtCore.QObject):
         """Start the update check."""
         url = URLS.releases_atom if self.packaged else f"{URLS.pypi_json}"
         logger.debug("Search for new version on %s", url)
-        self.downloader.get(url)
+        self.downloader.get(url, timeout=10)
