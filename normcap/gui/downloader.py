@@ -26,7 +26,7 @@ class Worker(QtCore.QRunnable):
             import ssl
             from urllib.request import urlopen
 
-            context = ssl.SSLContext()
+            context = ssl.SSLContext(protocol=ssl.PROTOCOL_TLS_CLIENT)
             context.load_default_certs()
             if not context.get_ca_certs():
                 context = ssl._create_unverified_context()  # noqa: S323
