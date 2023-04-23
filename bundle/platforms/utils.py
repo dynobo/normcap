@@ -69,7 +69,7 @@ class BuilderBase(ABC):
         cmd_str = re.sub(r"\s+", " ", cmd)
 
         completed_proc = subprocess.run(
-            cmd_str, shell=True, cwd=cwd, capture_output=False
+            cmd_str, shell=True, cwd=cwd, capture_output=False  # noqa: S602
         )
 
         if completed_proc.returncode != 0:
@@ -156,7 +156,10 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
         raise FileNotFoundError("Downloading of tesseract binaries might have failed!")
 
     subprocess.run(
-        "7z e tesseract-setup.exe", shell=True, cwd=tesseract_path, check=True
+        "7z e tesseract-setup.exe",  # noqa: S607
+        shell=True,  # noqa: S602
+        cwd=tesseract_path,
+        check=True,
     )
 
     excluded = [

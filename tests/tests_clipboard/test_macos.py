@@ -24,7 +24,9 @@ def test_perform_pbcopy():
 
     text = "my test string"
     clipboard.macos.pbcopy(text)
-    with subprocess.Popen(["pbpaste", "r"], stdout=subprocess.PIPE) as p:
+    with subprocess.Popen(
+        ["pbpaste", "r"], stdout=subprocess.PIPE  # noqa: S603, S607
+    ) as p:
         stdout = p.communicate()[0]
     clipped = stdout.decode("utf-8")
     assert text == clipped

@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 def pbcopy(text: str) -> None:
     subprocess.run(
-        ["pbcopy", "w"],
-        shell=False,
+        ["pbcopy", "w"],  # noqa: S607
+        shell=False,  # noqa: S603
         input=text,
         encoding="utf-8",
         check=True,

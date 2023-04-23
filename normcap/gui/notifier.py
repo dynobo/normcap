@@ -98,7 +98,7 @@ class Notifier(QtCore.QObject):
         ]
 
         # Left detached on purpose!
-        subprocess.Popen(cmds, start_new_session=True)
+        subprocess.Popen(cmds, start_new_session=True)  # noqa: S603
 
     def send_via_qt_tray(self, title: str, message: str) -> None:
         """Send via QT trayicon.

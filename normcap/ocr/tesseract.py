@@ -14,16 +14,16 @@ logger = logging.getLogger(__name__)
 
 def _run_command(cmd_args: list[str], stdin: Optional[bytes] = None) -> str:
     try:
-        output = subprocess.run(cmd_args, capture_output=True, input=stdin)
-        output_str = output.stdout.decode("utf-8")
-        logger.debug("Tesseract command output:\n%s", output_str.strip())
-        if output.returncode != 0:
+        out = subprocess.run(cmd_args, capture_output=True, input=stdin)  # noqa: S603
+        out_str = out.stdout.decode("utf-8")
+        logger.debug("Tesseract command output:\n%s", out_str.strip())
+        if out.returncode != 0:
             raise subprocess.CalledProcessError(
-                returncode=output.returncode, cmd=output.args, stderr=output.stderr
+                returncode=out.returncode, cmd=out.args, stderr=out.stderr
             )
     except FileNotFoundError as e:
         raise FileNotFoundError("Could not find Tesseract binary") from e
-    return output_str
+    return out_str
 
 
 def get_languages(

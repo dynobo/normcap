@@ -67,7 +67,9 @@ def get_gnome_version() -> Optional[str]:
         return None
 
     try:
-        output_raw = subprocess.check_output(["gnome-shell", "--version"], shell=False)
+        output_raw = subprocess.check_output(
+            ["gnome-shell", "--version"], shell=False  # noqa: S607, S603
+        )
         output = output_raw.decode().strip()
         if result := re.search(r"\s+([\d.]+)", output):
             gnome_version = result.groups()[0]
@@ -93,7 +95,7 @@ def macos_reset_screenshot_permission() -> None:
     try:
         completed_proc = subprocess.run(
             cmd,
-            shell=False,
+            shell=False,  # noqa: S603
             encoding="utf-8",
             check=False,
             timeout=10,
@@ -159,8 +161,8 @@ def macos_open_privacy_settings() -> None:
         if sys.platform != "darwin":
             raise RuntimeError(f"Tried opening macOS settings on {sys.platform}")
         subprocess.run(
-            ["open", link_to_preferences],
-            shell=False,
+            ["open", link_to_preferences],  # noqa: S607
+            shell=False,  # noqa: S603
             check=True,
             timeout=30,
         )
