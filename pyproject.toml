@@ -50,7 +50,7 @@ jeepney = "^0.8.0"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=23.1.0"
-briefcase = "0.3.13"
+briefcase = "0.3.14"
 coverage = { extras = ["toml"], version = "^6.4.2" }
 coveralls = ">=3.3.1"
 Levenshtein = ">=0.20.1"
