@@ -14,7 +14,8 @@ def test_windll_copy():
     clipboard.windows._windll_copy(text)
 
     with subprocess.Popen(
-        ["powershell", "-command", "Get-Clipboard"], stdout=subprocess.PIPE
+        ["powershell", "-command", "Get-Clipboard"],  # noqa: S603, S607
+        stdout=subprocess.PIPE,
     ) as p:
         stdout = p.communicate()[0]
     clipped = stdout.decode("utf-8").strip()
