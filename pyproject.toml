@@ -253,6 +253,7 @@ system_requires = [
   "wayland-protocols",
   "meson",
   "git",
+  "software-properties-common", # required for apt-add-repository
   # "wl-clipboard", Only available on Ubuntu 20.04+
 ]
 dockerfile_extra_content = """
