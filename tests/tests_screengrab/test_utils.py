@@ -53,7 +53,7 @@ def test_gnome_version_on_linux_from_cmd(monkeypatch):
 
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
     monkeypatch.setattr(
-        utils.subprocess, "check_output", lambda *args, **kwargs: b"GNOME Shell 33.3\n"
+        utils.subprocess, "check_output", lambda *args, **kwargs: "GNOME Shell 33.3\n"
     )
     utils.get_gnome_version.cache_clear()
     version = utils.get_gnome_version()

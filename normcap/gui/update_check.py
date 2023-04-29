@@ -34,7 +34,7 @@ class UpdateChecker(QtCore.QObject):
         """Parse the tag version from the response and emit version retrieved signal."""
         newest_version = None
         try:
-            text = data.decode("utf-8", "ignore")
+            text = data.decode("utf-8", errors="ignore")
             if self.packaged:
                 regex = r"/releases/tag/v(\d+\.\d+\.\d+)\""  # atom
             else:

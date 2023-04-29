@@ -16,8 +16,10 @@ def _run_command(cmd_args: list[str]) -> str:
     try:
         creationflags = getattr(subprocess, "CREATE_NOW_WINDOW", None)
         kwargs = {"creationflags": creationflags} if creationflags else {}
-        out = subprocess.run(cmd_args, capture_output=True, **kwargs)  # noqa: S603
-        out_str = out.stdout.decode("utf-8")
+        out = subprocess.run(
+            cmd_args, capture_output=True, text=True, **kwargs  # noqa: S603
+        )
+        out_str = out.stdout
         logger.debug("Tesseract command output:\n%s", out_str.strip())
         if out.returncode != 0:
             raise subprocess.CalledProcessError(

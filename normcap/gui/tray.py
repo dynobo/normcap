@@ -122,7 +122,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if not self._socket_in:
             return
         message = self._socket_in.readAll()
-        if message and bytes(message).decode("utf-8") == "capture":
+        if message and bytes(message).decode("utf-8", errors="ignore") == "capture":
             logger.info("Received socket signal to capture.")
             self._update_screenshots()
 
