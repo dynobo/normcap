@@ -103,7 +103,7 @@ class BuilderBase(ABC):
 
     @staticmethod
     def patch_file(
-        file_path: Path, insert_after: str, patch: str, mark_patched: bool = True
+        file_path: Path, insert_after: str, patch: str, mark_patched: str = "# "
     ) -> None:
         """Insert lines in file, if not already done.
 
@@ -117,9 +117,9 @@ class BuilderBase(ABC):
 
         if mark_patched:
             patch = (
-                f"# dynobo: {patch_hash} >>>>>>>>>>>>>>"
+                f"{mark_patched} dynobo: {patch_hash} >>>>>>>>>>>>>>"
                 + patch
-                + f"# dynobo: {patch_hash} <<<<<<<<<<<<<<\n"
+                + f"{mark_patched} dynobo: {patch_hash} <<<<<<<<<<<<<<\n"
             )
 
         patch_applied = False
@@ -136,6 +136,35 @@ class BuilderBase(ABC):
                 f"Couldn't apply patch to file {file_path}! "
                 f"Line '{insert_after}' not found!"
             )
+
+    @staticmethod
+    def remove_lines_from_file(
+        file_path: Path, delete_from: str, delete_to: str
+    ) -> None:
+        """Delete range of lines (from included, to excluded."""
+        from_idx = 0
+        to_idx = 0
+
+        with open(Path(file_path)) as fh:
+            lines = fh.readlines()
+
+        # Find lines
+        for idx, line in enumerate(lines):
+            if (not from_idx) and (delete_from in line):
+                from_idx = idx
+            if (not to_idx) and (delete_to in line):
+                to_idx = idx
+
+        if not from_idx or not to_idx:
+            raise RuntimeError(
+                "Could't remove lines. References not found in file. "
+                + f"(from_idx={from_idx}, to_idx={to_idx})"
+            )
+
+        lines = lines[:from_idx] + lines[to_idx:]
+
+        with open(file_path, "w") as f:
+            f.writelines(lines)
 
 
 def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:

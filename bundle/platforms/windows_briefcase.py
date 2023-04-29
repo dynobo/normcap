@@ -32,10 +32,75 @@ class WindowsBriefcase(BuilderBase):
 
         zip_path.unlink()
 
+    def patch_main_cpp(self) -> None:
+        main_cpp = (
+            self.PROJECT_PATH
+            / "build"
+            / "normcap"
+            / "windows"
+            / "visualstudio"
+            / "NormCap"
+            / "Main.cpp"
+        )
+        # Make sure console get's attached
+        self.patch_file(
+            file_path=main_cpp,
+            insert_after="#include <windows.h>",
+            patch="#include <iostream>",
+            mark_patched="",
+        )
+        insert_after = "CoUninitialize();"
+        patch = """
+if(AttachConsole(ATTACH_PARENT_PROCESS)) {
+    FILE * pNewStdout = nullptr;
+    FILE * pNewStderr = nullptr;
+    FILE * pNewStdin = nullptr;
+
+    ::freopen_s(&pNewStdout, "CONOUT$", "w", stdout);
+    ::freopen_s(&pNewStderr, "CONOUT$", "w", stderr);
+    ::freopen_s(&pNewStdin, "CONIN$", "r", stdin);
+
+    std::cout.clear();
+    std::cerr.clear();
+    std::cin.clear();
+
+    std::wcout.clear();
+    std::wcerr.clear();
+    std::wcin.clear();
+}
+"""
+        self.patch_file(
+            file_path=main_cpp,
+            insert_after=insert_after,
+            patch=patch,
+            mark_patched="// ",
+        )
+        self.patch_file(
+            file_path=main_cpp,
+            insert_after="Py_Finalize();",
+            patch="\nFreeConsole();",
+            mark_patched="// ",
+        )
+        self.remove_lines_from_file(
+            file_path=main_cpp,
+            delete_from="// If we can attach to the console",
+            delete_to='printf("Log started',
+        )
+        self.remove_lines_from_file(
+            file_path=main_cpp,
+            delete_from="String^ log_folder;",
+            delete_to="PyStatus status;",
+        )
+
     def patch_windows_installer(self) -> None:
         """Customize wix-installer."""
         wxs_file = (
-            self.PROJECT_PATH / "build" / "normcap" / "windows" / "app" / "normcap.wxs"
+            self.PROJECT_PATH
+            / "build"
+            / "normcap"
+            / "windows"
+            / "visualstudio"
+            / "normcap.wxs"
         )
 
         # Cache header for inserting later
@@ -57,7 +122,14 @@ class WindowsBriefcase(BuilderBase):
 
         for image in (left, top):
             original = self.IMG_PATH / image
-            target = self.PROJECT_PATH / "build" / "normcap" / "windows" / "app" / image
+            target = (
+                self.PROJECT_PATH
+                / "build"
+                / "normcap"
+                / "windows"
+                / "visualstudio"
+                / image
+            )
             shutil.copy(original, target)
 
         # Set installer images
@@ -124,10 +196,11 @@ class WindowsBriefcase(BuilderBase):
         shutil.move(source, target)
 
     def run_framework(self) -> None:
-        self.run(cmd="briefcase create", cwd=self.PROJECT_PATH)
-        self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
+        self.run(cmd="briefcase create windows VisualStudio", cwd=self.PROJECT_PATH)
+        self.patch_main_cpp()
+        self.run(cmd="briefcase build windows VisualStudio", cwd=self.PROJECT_PATH)
         self.patch_windows_installer()
-        self.run(cmd="briefcase package", cwd=self.PROJECT_PATH)
+        self.run(cmd="briefcase package windows VisualStudio", cwd=self.PROJECT_PATH)
 
     def install_system_deps(self) -> None:
         pass
