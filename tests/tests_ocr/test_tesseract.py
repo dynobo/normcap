@@ -34,11 +34,11 @@ def test_get_languages_on_windows(monkeypatch):
             args="",
             returncode=0,
             stdout=(
-                b"List of available languages in "
-                b'C:\\Program Files\\Tesseract-OCR\\tessdata/" (2):\r\n'
-                b"\r\n"
-                b"ara\r\n"
-                b"eng\r\n"
+                "List of available languages in "
+                'C:\\Program Files\\Tesseract-OCR\\tessdata/" (2):\r\n'
+                "\r\n"
+                "ara\r\n"
+                "eng\r\n"
             ),
         )
 
