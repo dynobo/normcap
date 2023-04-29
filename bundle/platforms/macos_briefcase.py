@@ -73,7 +73,7 @@ class MacBriefcase(BuilderBase):
             file_path=file_path,
             insert_after=insert_after,
             patch=patch,
-            mark_patched=False,
+            comment_prefix="",
         )
 
     def install_system_deps(self) -> None:

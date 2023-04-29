@@ -12,9 +12,11 @@ from PySide6.QtGui import QImage
 logger = logging.getLogger(__name__)
 
 
-def _run_command(cmd_args: list[str], stdin: Optional[bytes] = None) -> str:
+def _run_command(cmd_args: list[str]) -> str:
     try:
-        out = subprocess.run(cmd_args, capture_output=True, input=stdin)  # noqa: S603
+        creationflags = getattr(subprocess, "CREATE_NOW_WINDOW", None)
+        kwargs = {"creationflags": creationflags} if creationflags else {}
+        out = subprocess.run(cmd_args, capture_output=True, **kwargs)  # noqa: S603
         out_str = out.stdout.decode("utf-8")
         logger.debug("Tesseract command output:\n%s", out_str.strip())
         if out.returncode != 0:
