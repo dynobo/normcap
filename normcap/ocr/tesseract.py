@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 def _run_command(cmd_args: list[str]) -> str:
     try:
-        creationflags = getattr(subprocess, "CREATE_NOW_WINDOW", None)
+        creationflags = getattr(subprocess, "CREATE_NO_WINDOW", None)
         kwargs = {"creationflags": creationflags} if creationflags else {}
         out = subprocess.run(
             cmd_args, capture_output=True, text=True, **kwargs  # noqa: S603
