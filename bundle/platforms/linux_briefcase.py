@@ -36,7 +36,9 @@ class LinuxBriefcase(BuilderBase):
                 self.run(cmd=f"sudo apt install {' '.join(system_requires)}")
 
     def run_framework(self) -> None:
-        self.run(cmd="briefcase create --no-input", cwd=self.PROJECT_PATH)
+        self.run(
+            cmd="briefcase create linux appimage --no-input", cwd=self.PROJECT_PATH
+        )
         self.run(cmd="briefcase build linux appimage", cwd=self.PROJECT_PATH)
         self.add_metainfo_to_appimage()
         self.run(cmd="briefcase package linux appimage", cwd=self.PROJECT_PATH)
@@ -70,7 +72,6 @@ class LinuxBriefcase(BuilderBase):
 
     def create(self) -> None:
         self.download_tessdata()
-        self.install_system_deps()
 
         self.patch_briefcase_appimage_to_include_tesseract_and_wlcopy()
 
