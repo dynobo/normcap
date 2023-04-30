@@ -171,7 +171,7 @@ icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
 # ONHOLD: Switch to pyside6-essentials, once build works with Ubuntu 20.04+
-requires = ["pyside6", "jeepney"]
+requires = ["pyside6==6.2.4", "jeepney"]
 cleanup_paths = [
   # Globs
   "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",
@@ -267,6 +267,8 @@ RUN apt-get update -y && apt-get upgrade --with-new-pkgs -y
 RUN git clone https://github.com/bugaevc/wl-clipboard.git
 RUN meson build wl-clipboard && ninja -C build
 RUN mv build/src/wl-copy /usr/bin/ && rm -rf wl-clipboard
+
+RUN apt-get autoremove -y
 
 USER brutus
 """
