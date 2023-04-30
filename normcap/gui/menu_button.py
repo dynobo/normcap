@@ -1,14 +1,11 @@
 """Create the settings button and its menu."""
 
-import logging
 from typing import Any, Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__
 from normcap.gui.constants import MESSAGE_LANGUAGES, URLS
-
-logger = logging.getLogger(__name__)
 
 _MENU_STYLE = """
 QMenu {
@@ -121,7 +118,6 @@ class MenuButton(QtWidgets.QToolButton):
 
     @QtCore.Slot(list)
     def on_languages_changed(self, installed_languages: list[str]) -> None:
-        logger.debug("Updating language menu to {installed_languages}")
         self.languages = installed_languages
 
     @QtCore.Slot(QtGui.QAction)
