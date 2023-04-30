@@ -579,9 +579,7 @@
               <strong>On Windows (MSI):</strong><br />
               <p>
                 Run:
-                <code
-                  >%LOCALAPPDATA%\Programs\dynobo\NormCap\NormCap.exe -v debug</code
-                >
+                <code>%LOCALAPPDATA%\Programs\dynobo\NormCap\NormCap.exe -v debug</code>
               </p>
             </li>
             <li>
@@ -692,6 +690,26 @@ vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl
               >Those are the package names on Arch Linux, other Linux distributions
               might call have named them differently.</small
             >
+          </p>
+        </details>
+        <details id="faqs-shortcut-doesnt-copy-to-clipboard">
+          <summary>
+            [Linux] NormCap doesn't copy the results to clipboard when launched via shortcut
+          </summary>
+          <p>
+            This is behavior
+            <a href="https://github.com/dynobo/normcap/issues/422"
+              >was observed only on KDE + Wayland (#422)</a
+            >
+            so far, and only when NormCap was started via a keyboard shortcut / key
+            binding. The root cause is still unknown, if you have any information or
+            ideas, please comment in the ticket above.
+          </p>
+          <p>
+            Strangely, a workaround seems to be to configure the keyboard shortcut via
+            "System Settings" → "Shortcuts" → "Add command" and configure the command
+            in a way, that it pipes the output to somewhere, e.g. /dev/null:
+            <pre><code>normcap 2>&1 | tee /dev/null</code></pre>
           </p>
         </details>
         <details id="faqs-appimage-needs-fuse">
