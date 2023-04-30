@@ -1,11 +1,14 @@
 """Create the settings button and its menu."""
 
+import logging
 from typing import Any, Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__
 from normcap.gui.constants import MESSAGE_LANGUAGES, URLS
+
+logger = logging.getLogger(__name__)
 
 _MENU_STYLE = """
 QMenu {
@@ -76,11 +79,12 @@ class MenuButton(QtWidgets.QToolButton):
     def __init__(
         self,
         settings: QtCore.QSettings,
+        installed_languages: list[str],
         language_manager: bool = False,
         parent: Optional[QtWidgets.QWidget] = None,
     ) -> None:
         super().__init__(parent)
-        self.languages: list[str] = []
+        self.languages = installed_languages
         self.setObjectName("settings_icon")
         self.settings = settings
         self.has_language_manager = language_manager
@@ -99,15 +103,26 @@ class MenuButton(QtWidgets.QToolButton):
         # Necessary on wayland for main window to regain focus:
         self.message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
-        self.setMenu(QtWidgets.QMenu(self))
-        self.menu().triggered.connect(self.on_item_click)
-        self.menu().aboutToShow.connect(self.populate_menu_entries)
+        self._add_menu()
 
         self.setStyleSheet(_BUTTON_STYLE)
         self.com = Communicate()
 
+    def _add_menu(self) -> None:
+        self.setMenu(QtWidgets.QMenu(self))
+        self.menu().setObjectName("settings_menu")
+        self.menu().setStyleSheet(
+            _MENU_STYLE.replace("$COLOR", str(self.settings.value("color")))
+        )
+        self.menu().setAttribute(
+            QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True
+        )
+        self.menu().triggered.connect(self.on_item_click)
+        self.menu().aboutToShow.connect(self.populate_menu_entries)
+
     @QtCore.Slot(list)
     def on_languages_changed(self, installed_languages: list[str]) -> None:
+        logger.debug("Updating language menu to {installed_languages}")
         self.languages = installed_languages
 
     @QtCore.Slot(QtGui.QAction)
@@ -157,11 +172,6 @@ class MenuButton(QtWidgets.QToolButton):
     def populate_menu_entries(self) -> None:
         menu = self.menu()
         menu.clear()
-        menu.setObjectName("settings_menu")
-        menu.setStyleSheet(
-            _MENU_STYLE.replace("$COLOR", str(self.settings.value("color")))
-        )
-        menu.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
 
         self._add_title(menu, "Settings")
         self._add_settings_section(menu)

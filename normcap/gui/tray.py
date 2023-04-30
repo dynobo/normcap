@@ -71,6 +71,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self._create_socket_server()
 
         self.settings = Settings("normcap", "settings", init_settings=args)
+        self.installed_languages: list[str] = []
 
         if args.get("reset", False):
             self.settings.reset()
@@ -298,11 +299,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self._exit_application(reason)
 
     def _delayed_init(self) -> None:
-        installed_languages = ocr.tesseract.get_languages(
+        self.installed_languages = ocr.tesseract.get_languages(
             tesseract_cmd=system_info.get_tesseract_path(),
             tessdata_path=system_info.get_tessdata_path(),
         )
-        self.com.on_languages_changed.emit(installed_languages)
+        self.com.on_languages_changed.emit(self.installed_languages)
         self._add_update_checker()
         self._add_notifier()
         self._set_tray_icon()
@@ -459,6 +460,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         settings_menu = MenuButton(
             settings=self.settings,
             language_manager=system_info.is_prebuild_package(),
+            installed_languages=self.installed_languages,
         )
         settings_menu.com.on_open_url.connect(self.com.on_open_url_and_hide)
         settings_menu.com.on_manage_languages.connect(self.com.on_manage_languages)
