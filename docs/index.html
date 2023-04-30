@@ -694,7 +694,8 @@ vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl
         </details>
         <details id="faqs-shortcut-doesnt-copy-to-clipboard">
           <summary>
-            [Linux] NormCap doesn't copy the results to clipboard when launched via shortcut
+            [Linux] NormCap doesn't copy the results to clipboard when launched via
+            shortcut
           </summary>
           <p>
             This is behavior
@@ -707,13 +708,13 @@ vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl
           </p>
           <p>
             Strangely, a workaround seems to be to configure the keyboard shortcut via
-            "System Settings" → "Shortcuts" → "Add command" and configure the command
-            in a way, that it pipes the output to somewhere, e.g. /dev/null:
-            <pre><code>normcap 2>&1 | tee /dev/null</code></pre>
+            "System Settings" → "Shortcuts" → "Add command" and configure the command in
+            a way, that it pipes the output to somewhere, e.g. /dev/null:
           </p>
+          <pre><code>normcap 2>&1 | tee /dev/null</code></pre>
         </details>
         <details id="faqs-appimage-needs-fuse">
-          <summary>[Linux] Error: AppImages require FUSE to run</summary>
+          <summary>[Linux, AppImage] Error: AppImages require FUSE to run</summary>
           <p>
             This is not a NormCap issue but a requirement for AppImages. You need to
             make sure, that the <code>FUSE</code> library is installed on your system.
@@ -724,6 +725,24 @@ vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl
             >
               this blog post for details</a
             >.
+          </p>
+        </details>
+        <details id="faqs-error-libcrypt">
+          <summary>
+            [Linux, AppImage] Error while loading shared libraries: libcrypt.so.1
+          </summary>
+          <p>
+            The
+            <a
+              href="https://gregoryszorc.com/docs/python-build-standalone/main/running.html#runtime-requirements"
+              >application used to package the AppImage</a
+            >
+            has a number of runtime requirements. One of those requirements is
+            <code>libcrypt.so.1</code>, which should be provided by most modern Linux
+            distributions, as it is mandated as part of the Linux Standard Base Core
+            Specification. However, some distributions don't include
+            <code>libcrypt.so.1</code> as part of the base OS configuration. This can
+            usually be fixed by installing the <code>libxcrypt-compat</code> package.
           </p>
         </details>
         <details id="faqs-macos-empty-desktop">
