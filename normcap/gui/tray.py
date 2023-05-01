@@ -177,6 +177,15 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.settings.setValue("language", active_languages)
 
+    @QtCore.Slot(list)
+    def _update_installed_languages(self, installed_languages: list[str]) -> None:
+        """Update instance attribute to reflect changes.
+
+        the instance attribute is used e.g. to create a menu_button with an up to
+        date language menu.
+        """
+        self.installed_languages = installed_languages
+
     @QtCore.Slot(Rect)
     def _crop_image(self, grab_info: tuple[Rect, int]) -> None:
         """Crop image to selected region."""
@@ -373,6 +382,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
         self.com.on_manage_languages.connect(self._open_language_manager)
         self.com.on_languages_changed.connect(self._sanatize_language_setting)
+        self.com.on_languages_changed.connect(self._update_installed_languages)
 
     def _add_update_checker(self) -> None:
         if not self.settings.value("update", type=bool):
