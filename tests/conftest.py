@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from PySide6 import QtCore, QtGui
 
-from normcap.gui import system_info
+from normcap.gui import menu_button, system_info
 from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.magics import email_magic, url_magic
 from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
@@ -28,6 +28,20 @@ def temp_settings():
     settings = QtCore.QSettings("dynobo", "normcap_tests")
     yield settings
     settings.remove("")
+
+
+@pytest.fixture()
+def menu_btn(temp_settings):
+    return menu_button.MenuButton(
+        settings=temp_settings, language_manager=True, installed_languages=["eng"]
+    )
+
+
+@pytest.fixture()
+def menu_btn_without_lang_man(temp_settings):
+    return menu_button.MenuButton(
+        settings=temp_settings, language_manager=False, installed_languages=["eng"]
+    )
 
 
 @pytest.fixture()

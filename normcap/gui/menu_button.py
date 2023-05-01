@@ -103,22 +103,21 @@ class MenuButton(QtWidgets.QToolButton):
         # Necessary on wayland for main window to regain focus:
         self.message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
-        self._add_menu()
+        self.setMenu(self._create_menu())
 
         self.setStyleSheet(_BUTTON_STYLE)
         self.com = Communicate()
 
-    def _add_menu(self) -> None:
-        self.setMenu(QtWidgets.QMenu(self))
-        self.menu().setObjectName("settings_menu")
-        self.menu().setStyleSheet(
+    def _create_menu(self) -> QtWidgets.QMenu:
+        menu = QtWidgets.QMenu(self)
+        menu.setObjectName("settings_menu")
+        menu.setStyleSheet(
             _MENU_STYLE.replace("$COLOR", str(self.settings.value("color")))
         )
-        self.menu().setAttribute(
-            QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True
-        )
-        self.menu().triggered.connect(self.on_item_click)
-        self.menu().aboutToShow.connect(self.populate_menu_entries)
+        menu.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
+        menu.triggered.connect(self.on_item_click)
+        menu.aboutToShow.connect(self.populate_menu_entries)
+        return menu
 
     @QtCore.Slot(list)
     def on_languages_changed(self, installed_languages: list[str]) -> None:
