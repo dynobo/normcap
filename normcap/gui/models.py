@@ -42,6 +42,7 @@ class Urls:
     issues: str
     website: str
     faqs: str
+    buymeacoffee: str
 
     @property
     def releases_atom(self) -> str:
