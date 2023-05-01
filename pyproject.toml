@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "normcap"
-version = "0.4.0"
+version = "0.4.1"
 description = "OCR-powered screen-capture tool to capture information instead of images."
 keywords = ["screenshot", "ocr", "capture", "clipboard"]
 license = "GPLv3"
@@ -157,7 +157,7 @@ source = ["normcap"]
 [tool.briefcase]
 project_name = "NormCap"
 bundle = "eu.dynobo"
-version = "0.4.0"
+version = "0.4.1"
 url = "https://github.com/dynobo/normcap"
 license = "GPLv3"
 author = 'dynobo'
@@ -276,7 +276,7 @@ USER brutus
 [tool.tbump]
 
 [tool.tbump.version]
-current = "0.4.0"
+current = "0.4.1"
 regex = '''
   (?P<major>\d+)
   \.
