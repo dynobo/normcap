@@ -26,6 +26,7 @@ URLS = Urls(
     issues="https://github.com/dynobo/normcap/issues",
     faqs="https://dynobo.github.io/normcap/#faqs",
     website="https://dynobo.github.io/normcap",
+    buymeacoffee="https://buymeacoffee.com/dynobo",
 )
 
 TESSDATA_REPO = "https://github.com/tesseract-ocr/tessdata_fast"

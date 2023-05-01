@@ -292,6 +292,10 @@ class MenuButton(QtWidgets.QToolButton):
         action.setObjectName(URLS.issues)
         submenu.addAction(action)
 
+        action = QtGui.QAction("Buy me a coffee", about_group)
+        action.setObjectName(URLS.buymeacoffee)
+        submenu.addAction(action)
+
         menu.addMenu(submenu)
 
         action = QtGui.QAction("Close", menu)
