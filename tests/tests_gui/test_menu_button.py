@@ -1,12 +1,7 @@
 from PySide6 import QtGui, QtWidgets
 
-from normcap.gui import menu_button
 
-
-def test_enable_language_manager(qtbot, temp_settings):
-    menu_btn = menu_button.MenuButton(
-        settings=temp_settings, language_manager=True, installed_languages=["eng"]
-    )
+def test_enable_language_manager(qtbot, menu_btn):
     menu_btn.menu().aboutToShow.emit()
 
     language_action = menu_btn.findChild(QtGui.QAction, "manage_languages")
@@ -17,10 +12,8 @@ def test_enable_language_manager(qtbot, temp_settings):
     assert result.signal_triggered
 
 
-def test_disable_language_manager(qtbot, monkeypatch, temp_settings):
-    menu_btn = menu_button.MenuButton(
-        settings=temp_settings, language_manager=False, installed_languages=["eng"]
-    )
+def test_disable_language_manager(qtbot, monkeypatch, menu_btn_without_lang_man):
+    menu_btn = menu_btn_without_lang_man
     menu_btn.menu().aboutToShow.emit()
 
     language_action = menu_btn.findChild(QtGui.QAction, "show_help_languages")
@@ -37,12 +30,9 @@ def test_disable_language_manager(qtbot, monkeypatch, temp_settings):
     assert mock_called
 
 
-def test_languages_section_does_overflow(monkeypatch, qtbot, temp_settings):
+def test_languages_section_does_overflow(qtbot, menu_btn):
     threshold = 8
     # Test does _not_ overflow below threshold
-    menu_btn = menu_button.MenuButton(
-        settings=temp_settings, language_manager=False, installed_languages=["eng"]
-    )
     menu_btn.on_languages_changed([str(i) for i in range(threshold - 1)])
     menu_btn.menu().aboutToShow.emit()
 
@@ -53,9 +43,6 @@ def test_languages_section_does_overflow(monkeypatch, qtbot, temp_settings):
     assert len(language_group.children()) == threshold - 1
 
     # Test _does_ overflow on threshold
-    menu_btn = menu_button.MenuButton(
-        settings=temp_settings, language_manager=False, installed_languages=["eng"]
-    )
     menu_btn.on_languages_changed([str(i) for i in range(threshold)])
     menu_btn.menu().aboutToShow.emit()
 
@@ -66,10 +53,7 @@ def test_languages_section_does_overflow(monkeypatch, qtbot, temp_settings):
     assert len(language_group.children()) == threshold
 
 
-def test_close_triggered(qtbot, monkeypatch, temp_settings):
-    menu_btn = menu_button.MenuButton(
-        settings=temp_settings, language_manager=False, installed_languages=["eng"]
-    )
+def test_close_triggered(qtbot, menu_btn):
     menu_btn.menu().aboutToShow.emit()
 
     action = menu_btn.findChild(QtGui.QAction, "close")
@@ -77,10 +61,7 @@ def test_close_triggered(qtbot, monkeypatch, temp_settings):
         action.trigger()
 
 
-def test_open_url_triggered(qtbot, temp_settings):
-    menu_btn = menu_button.MenuButton(
-        settings=temp_settings, language_manager=False, installed_languages=["eng"]
-    )
+def test_open_url_triggered(qtbot, menu_btn):
     menu_btn.menu().aboutToShow.emit()
 
     action_group = menu_btn.findChild(QtGui.QActionGroup, "website_group")
@@ -91,10 +72,7 @@ def test_open_url_triggered(qtbot, temp_settings):
             action.trigger()
 
 
-def test_language_group(monkeypatch, qtbot, temp_settings):
-    menu_btn = menu_button.MenuButton(
-        settings=temp_settings, language_manager=False, installed_languages=["eng"]
-    )
+def test_language_group(qtbot, menu_btn):
     langs = ["afr", "deu", "eng"]
     menu_btn.on_languages_changed(langs)
     menu_btn.menu().aboutToShow.emit()
@@ -104,35 +82,29 @@ def test_language_group(monkeypatch, qtbot, temp_settings):
     for action in settings_group.children():
         action.trigger()
 
-    assert temp_settings.value("language") == langs
+    assert menu_btn.settings.value("language") == langs
 
     # disabling all should last one be enabled
     for action in settings_group.children():
         action.trigger()
 
-    assert temp_settings.value("language") == [langs[-1]]
+    assert menu_btn.settings.value("language") == [langs[-1]]
 
 
-def test_mode_group(monkeypatch, qtbot, temp_settings):
-    menu_btn = menu_button.MenuButton(
-        settings=temp_settings, language_manager=False, installed_languages=["eng"]
-    )
+def test_mode_group(qtbot, menu_btn):
     menu_btn.menu().aboutToShow.emit()
 
     settings_group = menu_btn.findChild(QtGui.QActionGroup, "mode_group")
     for action in settings_group.children():
         action.trigger()
-        assert temp_settings.value("mode") == action.objectName()
+        assert menu_btn.settings.value("mode") == action.objectName()
 
 
-def test_settings_group(monkeypatch, qtbot, temp_settings):
-    menu_btn = menu_button.MenuButton(
-        settings=temp_settings, language_manager=False, installed_languages=["eng"]
-    )
+def test_settings_group(qtbot, menu_btn):
     menu_btn.menu().aboutToShow.emit()
 
     settings_group = menu_btn.findChild(QtGui.QActionGroup, "settings_group")
     for action in settings_group.children():
         action.trigger()
-        setting_value = temp_settings.value(action.objectName())
+        setting_value = menu_btn.settings.value(action.objectName())
         assert str(setting_value).lower() == str(action.isChecked()).lower()
