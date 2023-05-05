@@ -58,6 +58,9 @@ QToolButton::hover {
 QToolButton::menu-indicator { image: none; }
 """
 
+# TODO: Add translations
+# https://doc.qt.io/qtforpython-6/tutorials/basictutorial/translations.html
+
 
 class Communicate(QtCore.QObject):
     """SettingsMenu' communication bus."""

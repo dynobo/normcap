@@ -13,6 +13,8 @@ from .testcases.data import TESTCASES
 
 logger = logging.getLogger(__name__)
 
+# TODO: Add more UI tests
+
 
 def _check_ocr_result(normcap_tray):
     def __check_ocr_result():

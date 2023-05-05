@@ -174,7 +174,7 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
     builder.TESSERACT_PATH.mkdir(exist_ok=True)
 
     installer_path = tesseract_path / "tesseract-setup.exe"
-
+    # TODO: Update tesseract version. Also in FlatPak etc.
     url = (
         "https://digi.bib.uni-mannheim.de/tesseract/"
         "tesseract-ocr-w64-setup-v5.2.0.20220712.exe"
