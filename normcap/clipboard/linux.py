@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 import subprocess
+from pathlib import Path
 from typing import Callable
 
 from normcap.clipboard import qt
@@ -17,6 +18,10 @@ def _wl_copy(text: str) -> None:
         input=text,
         encoding="utf-8",
         check=True,
+        # It seems like wl-copy works more reliabel when output is piped to
+        # somewhere. This is e.g. the case when NormCap got started via a shortcut
+        # on KDE (#422).
+        stdout=Path("/dev/null").open("w"),
         timeout=30,
     )
 
