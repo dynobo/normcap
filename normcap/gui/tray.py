@@ -23,6 +23,8 @@ logger = logging.getLogger(__name__)
 
 UPDATE_CHECK_INTERVAL_DAYS = 7
 
+# TODO: Add tutorial screen
+
 
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
