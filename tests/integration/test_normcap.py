@@ -1,8 +1,8 @@
 import logging
 import sys
+from difflib import SequenceMatcher
 from pathlib import Path
 
-import Levenshtein
 import pytest
 from PySide6 import QtCore, QtGui
 
@@ -89,7 +89,9 @@ def test_app(monkeypatch, qapp, qtbot, data):
         capture = tray.capture
 
         # Text output is not 100% predictable across different machines:
-        similarity = Levenshtein.ratio(capture.ocr_text, data["transformed"])
+        similarity = SequenceMatcher(
+            None, capture.ocr_text, data["transformed"]
+        ).ratio()
 
     assert capture.ocr_applied_magic == data["ocr_applied_magic"], capture.ocr_text
     assert similarity >= 0.98, f"{capture.ocr_text=}"
