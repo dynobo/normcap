@@ -22,7 +22,7 @@ jobs:
           python-version: "3.10"
       - uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: "1.3.2"
+          poetry-version: "1.4.2"
       - name: Prepare Linux
         if: matrix.os  == 'ubuntu-22.04'
         run: |
