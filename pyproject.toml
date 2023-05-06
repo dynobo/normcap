@@ -53,7 +53,6 @@ black = ">=23.1.0"
 briefcase = "0.3.14"
 coverage = { extras = ["toml"], version = "^6.4.2" }
 coveralls = ">=3.3.1"
-Levenshtein = ">=0.20.1"
 mdformat-gfm = ">=0.3.5"
 mypy = ">=0.991"
 pre-commit = ">=3.0.2"
@@ -67,8 +66,8 @@ ruff = ">=0.0.239"
 tbump = ">=6.9.0"
 toml = ">=0.10.2"
 types-toml = ">=0.10.8.1"
-typing-extensions = "^4.4.0"
-pip-audit = "^2.4.14"
+typing-extensions = ">=4.4.0"
+pip-audit = ">=2.5.5"
 
 [tool.poetry.group.analysis]
 optional = true
@@ -76,7 +75,7 @@ optional = true
 [tool.poetry.group.analysis.dependencies]
 radon = ">=5.1.0"
 viztracer = ">=0.15.3"
-vulture = "^2.4"
+vulture = ">=2.4"
 
 [tool.black]
 line-length = 88

@@ -59,6 +59,9 @@ def test_get_copy_func_on_wayland_without_wl_copy(monkeypatch, caplog):
 
 
 def test_wl_copy_called(monkeypatch):
+    if sys.platform != "linux":
+        pytest.xfail("no Linux")
+
     text = "this is a test"
 
     called_kwargs = {}

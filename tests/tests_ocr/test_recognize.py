@@ -1,7 +1,7 @@
 import sys
+from difflib import SequenceMatcher
 from pathlib import Path
 
-import Levenshtein
 import pytest
 from PySide6 import QtGui
 
@@ -23,7 +23,7 @@ def test_remove_spaces_in_chi(data):
         languages=data["lang"].split(","),
     )
 
-    similarity = Levenshtein.ratio(result.parsed, data["transformed"])
+    similarity = SequenceMatcher(None, result.parsed, data["transformed"]).ratio()
 
     is_equal = 1
     assert pytest.approx(similarity, abs=0.1) == is_equal, (
