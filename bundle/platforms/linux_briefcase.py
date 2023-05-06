@@ -28,13 +28,6 @@ class LinuxBriefcase(BuilderBase):
 """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
-    def install_system_deps(self) -> None:
-        if system_requires := self.get_system_requires():
-            github_actions_uid = 1001
-            if os.getuid() == github_actions_uid:  # type: ignore
-                self.run(cmd="sudo apt update")
-                self.run(cmd=f"sudo apt install {' '.join(system_requires)}")
-
     def run_framework(self) -> None:
         self.run(
             cmd="briefcase create linux appimage --no-input", cwd=self.PROJECT_PATH
