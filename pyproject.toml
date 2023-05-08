@@ -45,7 +45,8 @@ normcap = "normcap.app:main"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-PySide6-Essentials = "6.4.2"
+# ONHOLD: Set to ^6.5.1, once released (6.5.0 breaks mypy)
+PySide6-Essentials = "6.4.3"
 jeepney = "^0.8.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -68,6 +69,8 @@ toml = ">=0.10.2"
 types-toml = ">=0.10.8.1"
 typing-extensions = ">=4.4.0"
 pip-audit = ">=2.5.5"
+# ONHOLD: Needed for pip-audit https://github.com/ionrock/cachecontrol/issues/292
+urllib3 = "1.26.15"
 
 [tool.poetry.group.analysis]
 optional = true
@@ -169,69 +172,43 @@ sources = ["normcap"]
 icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
-# ONHOLD: Switch to pyside6-essentials, once build works with Ubuntu 20.04+
-requires = ["pyside6", "jeepney"]
+requires = ["PySide6-Essentials==6.4.3", "jeepney"]
 cleanup_paths = [
   # Globs
   "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",
   "**/*.debug",
-  "**/*[bB]odymovin*",
   "**/*[lL]abs*",
   "**/*[qQ]t[xX]ml*",
-  "**/*[qQ]t*[bB]luetooth*",
-  "**/*[qQ]t*[cC]harts*",
-  "**/*[qQ]t*[dD]ata[vV]isualization*",
   "**/*[qQ]t*[dD]esigner*",
   "**/*[qQ]t*[hH]elp*",
-  "**/*[qQ]t*[mM]ultimedia*",
-  "**/*[qQ]t*[pP]ositioning*",
   "**/*[qQ]t*[pP]df*",
   "**/*[qQ]t*[pP]rint[sS]upport*",
-  "**/*[qQ]t*[rR]emote[oO]bjects*",
-  "**/*[qQ]t*[sS]ensor*",
-  "**/*[qQ]t*[sS]erial*",
-  "**/*[qQ]t*[sS]hader[tT]ools*",
   "**/*[qQ]t*[sS]ql*",
   "**/*[qQ]t*[sS]tate[mM]achine*",
   "**/*[qQ]t*[tT]est*",
-  "**/*[qQ]t*[wW]eb[cC]hannel*",
-  "**/*[qQ]t*[wW]eb[eE]ngine*",
+  "**/*[qQ]t*[lL]anguage[sS]erver*",
   "**/*[qQ]t*[wW]eb[sS]ockets*",
-  "**/*[qQ]t*3[dD]*",
   "**/*[qQ]uick*",
   "**/*[sS]cene*",
-  "**/*[sS]cxml*",
   "**/*[uU]i[tT]ools*",
   "**/*[vV]irtual[kK]eyboard*",
-  "**/*[wW]eb[vV]iew*",
   "**/*QtQml*",
   "**/bin/pyside6-*",
-  "**/libQt6Nfc*",
-  "**/render*",
   "**/PySide6/[aA]ssistant*",
   "**/PySide6/[dD]esigner*",
   "**/PySide6/[lL]inguist*",
   # Folders
   "**/__pycache__",
-  "**/docs",
-  "**/examples",
   "**/libexec",
-  "**/plugins/assetimporters",
-  "**/plugins/canbus",
   "**/plugins/designer",
   "**/plugins/printsupport",
   "**/plugins/qmltooling",
-  "**/plugins/sceneparsers",
-  "**/plugins/sensors",
   "**/plugins/sqldrivers",
-  "**/PySide6/Examples",
   "**/Qt/qml/QtQml",
-  "**/Qt/resources",
   "**/Qt/translations",
   "**/tests",
   "**/typesystems",
   # Files
-  "**/icudtl.dat",
   "**/PySide6/lrelease",
   "**/PySide6/lupdate",
 ]
@@ -250,25 +227,24 @@ system_requires = [
   "libfuse2",
   "libwayland-dev",
   "wayland-protocols",
-  "meson",
-  "git",
   "software-properties-common", # required for apt-add-repository
-  # "wl-clipboard", Only available on Ubuntu 20.04+
+  "wl-clipboard",
 ]
 dockerfile_extra_content = """
 USER root
 
 # Upgrade Tesseract 4 to 5
-RUN apt-add-repository ppa:alex-p/tesseract-ocr-devel
-RUN apt-get update -y && apt-get upgrade --with-new-pkgs -y
-
-# Build wl-clipboard
-RUN git clone https://github.com/bugaevc/wl-clipboard.git
-RUN meson build wl-clipboard && ninja -C build
-RUN mv build/src/wl-copy /usr/bin/ && rm -rf wl-clipboard
+RUN apt-add-repository ppa:alex-p/tesseract-ocr-devel \
+  && apt-get update -y \
+  && apt-get upgrade --with-new-pkgs -y \
+  && apt-get autoremove -y
 
 USER brutus
 """
+
+[tool.briefcase.app.normcap.linux.appimage]
+template = "https://github.com/dynobo/briefcase-linux-appimage-template"
+template_branch = "main"
 
 [tool.briefcase.app.normcap.windows]
 
