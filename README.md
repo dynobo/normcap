@@ -168,7 +168,6 @@ poetry run python -m normcap
 This project uses the following non-standard libraries:
 
 - [pyside6](https://pypi.org/project/PySide6/) _- bindings for Qt UI Framework_
-- [jeepney](https://pypi.org/project/jeepney/) _- DBUS client_
 
 And it depends on external software:
 

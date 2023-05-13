@@ -26,13 +26,6 @@ class ScreenshotRequestError(ScreenshotError):
 logger = logging.getLogger(__name__)
 
 
-def _is_pyside6_64plus() -> bool:
-    import PySide6
-
-    version_tuple = PySide6.__version__.split(".")
-    return version_tuple[0] >= "6" and version_tuple[1] >= "4"
-
-
 def get_capture_func() -> Callable:
     # fmt: off
     if sys.platform != "linux" or not utils.has_wayland_display_manager():
@@ -41,18 +34,13 @@ def get_capture_func() -> Callable:
         return qt.capture
 
     if utils.has_dbus_portal_support():
-        if _is_pyside6_64plus():
-            logger.debug("Select capture method DBUS portal")
-            from normcap.screengrab import dbus_portal
-            return dbus_portal.capture
+        logger.debug("Select capture method DBUS portal")
+        from normcap.screengrab import dbus_portal
+        return dbus_portal.capture
 
-        logger.debug("Select capture method DBUS portal legacy")
-        from normcap.screengrab import dbus_portal_legacy
-        return dbus_portal_legacy.capture
 
     logger.debug("Select capture method DBUS shell")
     from normcap.screengrab import dbus_shell
-
     return dbus_shell.capture
     # fmt: on
 
