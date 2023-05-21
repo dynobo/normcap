@@ -1,8 +1,12 @@
 # Changelog
 
-## v0.4.1 (2023-05-01)
+## v0.4.2 (2023-05-21)
 
-**All:**
+- Fix quotes in detected text can result in wrong detection.
+  ([#446](https://github.com/dynobo/normcap/issues/446))
+- Update AppImage base image from Ubuntu 18.04 (deprected) to 20.04.
+
+## v0.4.1 (2023-05-01)
 
 - Enlarge settings button a bit to make it easier to spot.
   ([#254](https://github.com/dynobo/normcap/issues/254))
