@@ -152,6 +152,11 @@ markers = [
 [tool.coverage.run]
 source = ["normcap"]
 
+[tool.pydeps]
+cluster = true
+max_cluster_size = 1
+no_show = true
+
 [tool.briefcase]
 project_name = "NormCap"
 bundle = "eu.dynobo"
