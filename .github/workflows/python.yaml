@@ -163,6 +163,7 @@ jobs:
         with:
           python-version: "3.10"
       - name: Poetry publish
+        continue-on-error: true
         run: |
           poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
 
@@ -203,7 +204,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: FTP upload windows package
         if: matrix.os  == 'windows-2022' && github.repository == 'dynobo/normcap'
-        uses: SamKirkland/FTP-Deploy-Action@4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.WEBGO_FTP_HOST }}
           username: ${{ secrets.WEBGO_FTP_USER }}
