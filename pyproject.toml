@@ -263,7 +263,7 @@ regex = '''
   '''
 
 [tool.tbump.git]
-message_template = "Bump to {new_version}"
+message_template = "build(release): bump to {new_version}"
 tag_template = "v{new_version}"
 
 [[tool.tbump.file]]
