@@ -17,6 +17,7 @@ from normcap.ocr.models import OcrResult
 def test_argparser_defaults_are_complete(argparser_defaults):
     args_keys = set(argparser_defaults.keys())
     expected_options = {
+        "background_mode",
         "color",
         "cli_mode",
         "language",
@@ -43,7 +44,7 @@ def test_argparser_attributes_in_settings(argparser_defaults):
     settings = Settings("normcap", "settings", init_settings={})
 
     for arg in argparser_defaults:
-        if arg in ("verbosity", "reset", "cli_mode"):
+        if arg in ("verbosity", "reset", "cli_mode", "background_mode"):
             continue
         assert arg in settings.allKeys()
 
@@ -60,6 +61,7 @@ def test_argparser_defaults_are_correct(argparser_defaults):
     assert argparser_defaults.pop("reset") is False
     assert argparser_defaults.pop("version") is False
     assert argparser_defaults.pop("cli_mode") is False
+    assert argparser_defaults.pop("background_mode") is False
     assert argparser_defaults.pop("verbosity") == "warning"
     for value in argparser_defaults.values():
         assert value is None

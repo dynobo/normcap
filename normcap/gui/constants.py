@@ -35,16 +35,16 @@ TESSDATA_BASE_URL = f"{TESSDATA_REPO}/raw/4.1.0/"
 LANGUAGES = (
     ("afr", "2.5 MB", "Afrikaans", "Afrikaans"),
     ("amh", "5.2 MB", "Amharic", "አማርኛ"),
-    ("ara", "1.3 MB", "Arabic", "العربية"),  # noqa: RUF001
+    ("ara", "1.3 MB", "Arabic", "العربية"),
     ("asm", "1.9 MB", "Assamese", "অসমীয়া"),
-    ("aze", "3.3 MB", "Azerbaijani", "آذربایجان دیلی"),  # noqa: RUF001
-    ("aze_cyrl", "1.8 MB", "Azerbaijani (cyrillic)", "Азәрбајҹан дили"),  # noqa: RUF001
-    ("bel", "3.5 MB", "Belarusian", "беларуская мова"),  # noqa: RUF001
+    ("aze", "3.3 MB", "Azerbaijani", "آذربایجان دیلی"),
+    ("aze_cyrl", "1.8 MB", "Azerbaijani (cyrillic)", "Азәрбајҹан дили"),
+    ("bel", "3.5 MB", "Belarusian", "беларуская мова"),
     ("ben", "0.8 MB", "Bengali", "বাংলা"),
     ("bod", "1.8 MB", "Tibetan", "བོད་ཡིག"),
     ("bos", "2.3 MB", "Bosnian", "bosanski jezik"),
     ("bre", "6.0 MB", "Breton", "brezhoneg"),
-    ("bul", "1.6 MB", "Bulgarian", "български език"),  # noqa: RUF001
+    ("bul", "1.6 MB", "Bulgarian", "български език"),
     ("cat", "1.0 MB", "Catalan; Valencian", "català"),
     ("ceb", "0.6 MB", "Cebuano", "Sinugbuanong Binisayâ"),
     ("ces", "3.6 MB", "Czech", "čeština; český jazyk"),
@@ -52,7 +52,7 @@ LANGUAGES = (
     ("chi_sim_vert", "1.8 MB", "Chinese, simplified (vertical)", "中文; 汉语; 漢語"),
     ("chi_tra", "2.2 MB", "Chinese, traditional", "中文; 汉语; 漢語"),
     ("chi_tra_vert", "1.7 MB", "Chinese, traditional (vertical)", "中文; 汉语; 漢語"),
-    ("chr", "0.3 MB", "Cherokee", "ᏣᎳᎩ ᎦᏬᏂᎯᏍᏗ"),  # noqa: RUF001
+    ("chr", "0.3 MB", "Cherokee", "ᏣᎳᎩ ᎦᏬᏂᎯᏍᏗ"),
     ("cos", "2.1 MB", "Corsican", "corsu"),
     ("cym", "2.1 MB", "Welsh", "Cymraeg"),
     ("dan", "2.4 MB", "Danish", "dansk"),
@@ -61,7 +61,7 @@ LANGUAGES = (
     ("deu_frak", "2.0 MB", "German (fraktur)", "Deutsch"),
     ("div", "1.6 MB", "Divehi; Dhivehi; Maldivian", "ދިވެހި"),
     ("dzo", "0.4 MB", "Dzongkha", "རྫོང་ཁ"),
-    ("ell", "1.3 MB", "Greek", "ελληνικά"),  # noqa: RUF001
+    ("ell", "1.3 MB", "Greek", "ελληνικά"),
     ("eng", "3.9 MB", "English", "English"),
     ("enm", "2.9 MB", "Middle English (1100-1500)", ""),
     ("epo", "4.5 MB", "Esperanto", "Esperanto"),
@@ -69,7 +69,7 @@ LANGUAGES = (
     ("est", "4.2 MB", "Estonian", "eesti keel"),
     ("eus", "4.9 MB", "Basque", "euskara; euskera"),
     ("fao", "3.2 MB", "Faroese", "føroyskt"),
-    ("fas", "0.4 MB", "Persian; Farsi", "فارسی"),  # noqa: RUF001
+    ("fas", "0.4 MB", "Persian; Farsi", "فارسی"),
     ("fil", "1.7 MB", "Filipino", "wikang filipino"),
     ("fin", "7.5 MB", "Finnish", "suomen kieli"),
     ("fra", "1.0 MB", "French", "français"),
@@ -82,11 +82,11 @@ LANGUAGES = (
     ("grc", "2.1 MB", "Ancient Greek (to 1453)", ""),
     ("guj", "1.3 MB", "Gujarati", "ગુજરાતી"),
     ("hat", "1.8 MB", "Haitian", "Kreyòl ayisyen"),
-    ("heb", "0.9 MB", "Hebrew", "עברית"),  # noqa: RUF001
+    ("heb", "0.9 MB", "Hebrew", "עברית"),
     ("hin", "1.0 MB", "Hindi", "हिन्दी; हिंदी"),
     ("hrv", "3.9 MB", "Croatian", "hrvatski jezik"),
     ("hun", "5.0 MB", "Hungarian", "magyar"),
-    ("hye", "3.3 MB", "Armenian", "Հայերեն"),  # noqa: RUF001
+    ("hye", "3.3 MB", "Armenian", "Հայերեն"),
     ("iku", "2.6 MB", "Inuktitut", "ᐃᓄᒃᑎᑐᑦ"),
     ("ind", "1.0 MB", "Indonesian", "Bahasa Indonesia"),
     ("isl", "2.1 MB", "Icelandic", "Íslenska"),
@@ -98,9 +98,9 @@ LANGUAGES = (
     ("kan", "3.4 MB", "Kannada", "ಕನ್ನಡ"),
     ("kat", "2.4 MB", "Georgian", "ქართული"),
     ("kat_old", "0.4 MB", "Georgian (old)", "ქართული"),
-    ("kaz", "4.5 MB", "Kazakh", "қазақ тілі"),  # noqa: RUF001
+    ("kaz", "4.5 MB", "Kazakh", "қазақ тілі"),
     ("khm", "1.3 MB", "Khmer", "ខ្មែរ; ខេមរភាសា; ភាសាខ្មែរ"),
-    ("kir", "9.4 MB", "Kirghiz", "Кыргыз тили"),  # noqa: RUF001
+    ("kir", "9.4 MB", "Kirghiz", "Кыргыз тили"),
     ("kmr", "3.4 MB", "Northern Kurdish", ""),
     ("kor", "1.6 MB", "Korean", "한국어"),
     ("kor_vert", "1.0 MB", "Korean (vertical)", "한국어"),
@@ -109,13 +109,13 @@ LANGUAGES = (
     ("lav", "2.5 MB", "Latvian", "latviešu valoda"),
     ("lit", "3.0 MB", "Lithuanian", "lietuvių kalba"),
     ("ltz", "2.4 MB", "Luxembourgish", "Lëtzebuergesch"),
-    ("mal", "5.0 MB", "Malayalam", "മലയാളം"),  # noqa: RUF001
+    ("mal", "5.0 MB", "Malayalam", "മലയാളം"),
     ("mar", "2.0 MB", "Marathi", "मराठी"),
-    ("mkd", "1.5 MB", "Macedonian", "македонски јазик"),  # noqa: RUF001
+    ("mkd", "1.5 MB", "Macedonian", "македонски јазик"),
     ("mlt", "2.2 MB", "Maltese", "Malti"),
-    ("mon", "2.0 MB", "Mongolian", "Монгол хэл"),  # noqa: RUF001
+    ("mon", "2.0 MB", "Mongolian", "Монгол хэл"),
     ("mri", "0.8 MB", "Maori", "te reo Māori"),
-    ("msa", "1.6 MB", "Malay", "bahasa Melayu; بهاس ملايو\u200e"),  # noqa: RUF001
+    ("msa", "1.6 MB", "Malay", "bahasa Melayu; بهاس ملايو\u200e"),
     ("mya", "4.4 MB", "Burmese", "ဗမာစာ"),
     ("nep", "0.9 MB", "Nepali", "नेपाली"),
     ("nld", "5.7 MB", "Dutch; Flemish", "Nederlands; Vlaams"),
@@ -123,43 +123,43 @@ LANGUAGES = (
     ("oci", "6.0 MB", "Occitan (post 1500)", "lenga d'òc"),
     ("ori", "1.4 MB", "Oriya", "ଓଡ଼ିଆ"),
     ("osd", "10 MB", "Orientation & Script", ""),
-    ("pan", "0.4 MB", "Panjabi; Punjabi", "ਪੰਜਾਬੀ; پنجابی\u200e"),  # noqa: RUF001
+    ("pan", "0.4 MB", "Panjabi; Punjabi", "ਪੰਜਾਬੀ; پنجابی\u200e"),
     ("pol", "4.5 MB", "Polish", "język polski"),
     ("por", "1.8 MB", "Portuguese", "português"),
     ("pus", "1.6 MB", "Pushto; Pashto", "پښتو"),
     ("que", "4.7 MB", "Quechua", "Runa Simi; Kichwa"),
     ("ron", "2.2 MB", "Romanian; Moldavian", "limba română"),
-    ("rus", "3.6 MB", "Russian", "Русский"),  # noqa: RUF001
+    ("rus", "3.6 MB", "Russian", "Русский"),
     ("san", "11 MB", "Sanskrit; Saṁskṛta", "संस्कृतम्"),
-    ("sin", "1.6 MB", "Sinhala; Sinhalese", "සිංහල"),  # noqa: RUF001
+    ("sin", "1.6 MB", "Sinhala; Sinhalese", "සිංහල"),
     ("slk", "4.2 MB", "Slovak", "slovenský jazyk"),
     ("slk_frak", "0.8 MB", "Slovak (fraktur)", "slovenský jazyk"),
     ("slv", "2.8 MB", "Slovenian", "slovenski jezik"),
-    ("snd", "1.6 MB", "Sindhi", "सिन्धी; سنڌي، سندھی\u200e"),  # noqa: RUF001
+    ("snd", "1.6 MB", "Sindhi", "सिन्धी; سنڌي، سندھی\u200e"),
     ("spa", "2.1 MB", "Spanish; Castilian", "español"),
     ("spa_old", "2.7 MB", "Spanish; Castilian (old)", ""),
     ("sqi", "1.7 MB", "Albanian", "Shqip"),
-    ("srp", "2.0 MB", "Serbian", "српски језик"),  # noqa: RUF001
-    ("srp_latn", "3.1 MB", "Serbian (latin)", "српски језик"),  # noqa: RUF001
+    ("srp", "2.0 MB", "Serbian", "српски језик"),
+    ("srp_latn", "3.1 MB", "Serbian (latin)", "српски језик"),
     ("sun", "1.3 MB", "Sundanese", "Basa Sunda"),
     ("swa", "2.0 MB", "Swahili", "Kiswahili"),
     ("swe", "3.9 MB", "Swedish", "svenska"),
     ("syr", "2.1 MB", "Syriac", "ܠܫܢܐ ܣܘܪܝܝܐ"),
     ("tam", "3.0 MB", "Tamil", "தமிழ்"),
-    ("tat", "1.0 MB", "Tatar", "татар теле"),  # noqa: RUF001
+    ("tat", "1.0 MB", "Tatar", "татар теле"),
     ("tel", "2.6 MB", "Telugu", "తెలుగు"),
-    ("tgk", "2.4 MB", "Tajik", "тоҷикӣ; toçikī; تاجیکی\u200e"),  # noqa: RUF001
+    ("tgk", "2.4 MB", "Tajik", "тоҷикӣ; toçikī; تاجیکی\u200e"),
     ("tgl", "7.3 MB", "Tagalog", "Wikang Tagalog"),
     ("tha", "1.0 MB", "Thai", "ไทย"),
     ("tir", "0.3 MB", "Tigrinya", "ትግርኛ"),
     ("ton", "0.9 MB", "Tonga", "faka Tonga"),
     ("tur", "4.3 MB", "Turkish", "Türkçe"),
-    ("uig", "2.6 MB", "Uighur", "ئۇيغۇرچە\u200e"),  # noqa: RUF001
-    ("ukr", "3.6 MB", "Ukrainian", "Українська"),  # noqa: RUF001
-    ("urd", "1.3 MB", "Urdu", "اردو"),  # noqa: RUF001
+    ("uig", "2.6 MB", "Uighur", "ئۇيغۇرچە\u200e"),
+    ("ukr", "3.6 MB", "Ukrainian", "Українська"),
+    ("urd", "1.3 MB", "Urdu", "اردو"),
     ("uzb", "6.1 MB", "Uzbek", "أۇزبېك\u200e"),
-    ("uzb_cyrl", "1.4 MB", "Uzbek (cyrillic)", "Ўзбек"),  # noqa: RUF001
+    ("uzb_cyrl", "1.4 MB", "Uzbek (cyrillic)", "Ўзбек"),
     ("vie", "0.5 MB", "Vietnamese", "Tiếng Việt"),
-    ("yid", "0.5 MB", "Yiddish", "ייִדיש"),  # noqa: RUF001
+    ("yid", "0.5 MB", "Yiddish", "ייִדיש"),
     ("yor", "0.9 MB", "Yoruba", "Yorùbá"),
 )
