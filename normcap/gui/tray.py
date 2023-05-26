@@ -350,7 +350,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
             # Message box to explain what's happening and open the preferences
             app = "NormCap" if system_info.is_prebuild_package() else "Terminal"
-            button = QtWidgets.QMessageBox.critical(
+            QtWidgets.QMessageBox.critical(
                 None,
                 "Error!",
                 (
@@ -358,12 +358,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
                     "Grant the permissions via 'Privacy & Security' settings "
                     "and restart NormCap.\n\nClick OK to exit."
                 ),
-                buttons=QtWidgets.QMessageBox.Open | QtWidgets.QMessageBox.Cancel,
+                buttons=QtWidgets.QMessageBox.Ok,
             )
-            if button == QtWidgets.QMessageBox.Open:
-                logger.debug("Open macOS privacy settings")
-                screengrab.macos_open_privacy_settings()
-
             self._exit_application("Screen Recording permissions missing on macOS")
 
     def _set_signals(self) -> None:
