@@ -70,6 +70,11 @@ def create_argparser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print text after detection to stdout and exits immediately",
     )
+    parser.add_argument(
+        "--background-mode",
+        action="store_true",
+        help="Start minimized to tray, without capturing",
+    )
     return parser
 
 

@@ -12,8 +12,9 @@ from normcap.gui.tray import SystemTray
 
 
 def _get_args() -> Namespace:
-    """Start main application logic."""
     args = utils.create_argparser().parse_args()
+    if args.background_mode:
+        args.tray = True
     if args.version:
         print(f"NormCap {__version__}")  # noqa: T201
         sys.exit(0)

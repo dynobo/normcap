@@ -2,6 +2,8 @@
 
 ## v0.4.3 (upcoming)
 
+- All: Add command line flag `--background-mode` to start normcap minimized
+  ([#439](https://github.com/dynobo/normcap/issues/439))
 - macOS: Improve dialog that is shown in case screenshot permissions are missing.
 
 ## v0.4.2 (2023-05-21)

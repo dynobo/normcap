@@ -88,13 +88,16 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.screens: list[Screen] = system_info.screens()
 
-        self._ensure_screenshot_permission()
-        self._set_signals()
-        self._update_screenshots(delayed=False)
         self.setContextMenu(QtWidgets.QMenu())
         self._populate_context_menu_entries()
         self.contextMenu().aboutToShow.connect(self._populate_context_menu_entries)
+
+        self._ensure_screenshot_permission()
+        self._set_signals()
         QtCore.QTimer.singleShot(100, self._delayed_init)
+
+        if not args.get("background_mode", False):
+            self._update_screenshots(delayed=False)
 
     @QtCore.Slot()
     def _color_tray_icon(self) -> None:
@@ -310,6 +313,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self._exit_application(reason)
 
     def _delayed_init(self) -> None:
+        """Setup things that can be done independent of the first capture.
+
+        By running this async of __init__(),  its runtime of ~30ms doesn't
+        contribute to the delay until the GUI becomes active for the user on startup.
+        """
         self.installed_languages = ocr.tesseract.get_languages(
             tesseract_cmd=system_info.get_tesseract_path(),
             tessdata_path=system_info.get_tessdata_path(),
