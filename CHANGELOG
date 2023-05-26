@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.3 (upcoming)
+
+- macOS: Improve dialog that is shown in case screenshot permissions are missing.
+
 ## v0.4.2 (2023-05-21)
 
 - Fix quotes in detected text can result in wrong detection.
