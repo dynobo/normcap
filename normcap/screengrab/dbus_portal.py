@@ -33,7 +33,8 @@ class OrgFreedesktopPortalRequestInterface(QtDBus.QDBusAbstractInterface):
 
 
 class OrgFreedesktopPortalScreenshot(QtCore.QObject):
-    on_response = QtCore.Signal(str)
+    on_response = QtCore.Signal(QtDBus.QDBusMessage)
+    on_result = QtCore.Signal(str)
     on_exception = QtCore.Signal(Exception)
 
     def __init__(
@@ -45,6 +46,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         super().__init__(parent)
         self.interactive = interactive
         self.timeout_timer = self._get_timeout_timer(timeout_sec)
+        self.on_response.connect(self.got_signal)
 
     def grab_full_desktop(self) -> None:
         bus = QtDBus.QDBusConnection.sessionBus()
@@ -56,7 +58,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         object_path = f"/org/freedesktop/portal/desktop/request/{base}/{token}"
 
         request = OrgFreedesktopPortalRequestInterface(object_path, bus, self)
-        request.Response.connect(self.got_signal)
+        request.Response.connect(self.on_response)
 
         interface = QtDBus.QDBusInterface(
             "org.freedesktop.portal.Desktop",
@@ -117,7 +119,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         #         arg.endMapEntry()
         #     arg.endMap()
         # arg.endArray()
-        self.on_response.emit(uri)
+        self.on_result.emit(uri)
 
 
 def _synchronized_capture(interactive: bool) -> list[QtGui.QImage]:
@@ -136,14 +138,14 @@ def _synchronized_capture(interactive: bool) -> list[QtGui.QImage]:
     portal = OrgFreedesktopPortalScreenshot(
         interactive=interactive, timeout_sec=TIMEOUT_SECONDS
     )
-    portal.on_response.connect(_signal_triggered)
+    portal.on_result.connect(_signal_triggered)
     portal.on_exception.connect(_exception_triggered)
 
     portal.timeout_timer.start()
     QtCore.QTimer.singleShot(0, portal.grab_full_desktop)
     loop.exec()
 
-    portal.on_response.disconnect(_signal_triggered)
+    portal.on_result.disconnect(_signal_triggered)
     portal.on_exception.disconnect(_exception_triggered)
 
     for error in exceptions:

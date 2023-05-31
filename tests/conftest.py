@@ -12,11 +12,6 @@ from normcap.screengrab import utils as screengrab_utils
 from normcap.utils import create_argparser
 
 
-@pytest.fixture(scope="session")
-def qapp_args():
-    return [sys.argv[0]]
-
-
 @pytest.fixture(autouse=True)
 def _clear_caches():
     screengrab_utils.get_gnome_version.cache_clear()
@@ -50,7 +45,7 @@ def menu_btn_without_lang_man(temp_settings):
 
 
 @pytest.fixture()
-def dbus_portal():
+def dbus_portal(qapp):
     try:
         from normcap.screengrab import dbus_portal
 
