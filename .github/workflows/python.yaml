@@ -52,11 +52,13 @@ jobs:
             libxcb-xinerama0 \
             libxcb-xfixes0 \
             libxcb-shape0 \
+            libxcb-cursor0 \
             libegl1 \
             libegl1-mesa
           sudo apt-get install \
             ca-certificates
           echo "XDG_SESSION_TYPE=gnome" >> $GITHUB_ENV
+          echo "QT_DEBUG_PLUGINS=1" >> $GITHUB_ENV
 
       - name: Prepare macOS
         if: matrix.os  == 'macos-12'
@@ -166,7 +168,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pipx install poetry==1.3.2
+        run: pipx install poetry==1.4.2
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
@@ -214,7 +216,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pipx install poetry==1.3.2
+        run: pipx install poetry==1.4.2
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"

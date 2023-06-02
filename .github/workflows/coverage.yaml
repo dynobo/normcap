@@ -17,12 +17,12 @@ jobs:
     steps:
       # SETUP ENVIRONMENT
       - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry==1.4.2
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-      - uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: "1.4.2"
+          cache: "poetry"
       - name: Prepare Linux
         if: matrix.os  == 'ubuntu-22.04'
         run: |
@@ -44,6 +44,7 @@ jobs:
             libxcb-xinerama0 \
             libxcb-xfixes0 \
             libxcb-shape0 \
+            libxcb-cursor0 \
             libegl1 \
             libegl1-mesa
           sudo apt-get install \
