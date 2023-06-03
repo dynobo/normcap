@@ -1,10 +1,14 @@
 # Changelog
 
-## v0.4.3 (upcoming)
+## v0.4.3 (2023-06-03)
 
 - All: Add command line flag `--background-mode` to start normcap minimized
   ([#439](https://github.com/dynobo/normcap/issues/439))
 - macOS: Improve dialog that is shown in case screenshot permissions are missing.
+- Windows: Fix upgrading with `msi`-installer might lead to error on startup.
+  ([#452](https://github.com/dynobo/normcap/issues/452))
+- Windows: Upgrading with `msi`-installer should not remove downloaded languages in
+  future versions anymore.
 
 ## v0.4.2 (2023-05-21)
 
