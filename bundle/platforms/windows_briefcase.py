@@ -142,6 +142,7 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
 
         # Allow upgrades
         major_upgrade = ElementTree.SubElement(product, "MajorUpgrade")
+        major_upgrade.set("Schedule", "afterInstallInitialize")
         major_upgrade.set("DowngradeErrorMessage", "Can't downgrade. Uninstall first.")
 
         # Cleanup tessdata folder on uninstall
@@ -149,7 +150,7 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
             product,
             "CustomAction",
             {
-                "Id": "Cleanup_tessdata",
+                "Id": "Cleanup_orphaned_files",
                 "Directory": "TARGETDIR",
                 "ExeCommand": (
                     'cmd /C "rmdir /s /q %localappdata%\\normcap '
@@ -167,8 +168,8 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
         ElementTree.SubElement(
             sequence,
             "Custom",
-            {"Action": "Cleanup_tessdata", "Before": "RemoveFiles"},
-        ).text = 'REMOVE="ALL"'
+            {"Action": "Cleanup_orphaned_files", "Before": "RemoveFiles"},
+        ).text = '(REMOVE = "ALL") AND NOT UPGRADINGPRODUCTCODE'
 
         # Remove node which throws error during compilation
         remove_existing_product = sequence.find(f"{ns}RemoveExistingProducts")

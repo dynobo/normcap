@@ -200,6 +200,7 @@ cleanup_paths = [
   "**/PySide6/[lL]inguist*",
   # Folders
   "**/__pycache__",
+  "**/examples",
   "**/libexec",
   "**/plugins/designer",
   "**/plugins/printsupport",
@@ -285,10 +286,6 @@ search = 'NormCap-{current_version}-'
 [[tool.tbump.file]]
 src = "README.md"
 search = 'download/v{current_version}/'
-
-[[tool.tbump.file]]
-src = "bundle/normcap.wxs"
-search = 'ProductVersion = "{current_version}"'
 
 [[tool.tbump.before_commit]]
 name = "check changelog"
