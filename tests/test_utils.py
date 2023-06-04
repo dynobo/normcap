@@ -269,7 +269,7 @@ def test_qt_log_wrapper_xcb_as_error(caplog):
 
     assert "[qt]" in caplog.text.lower()
     assert "xcb it was found" in caplog.text.lower()
-    assert "try solving the problem" in caplog.text.lower()
+    assert "installing additional dep" in caplog.text.lower()
     assert "error" in caplog.text.lower()
 
 

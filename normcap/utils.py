@@ -19,10 +19,7 @@ logger = logging.getLogger("normcap")
 
 
 _ISSUES_URLS = "https://github.com/dynobo/normcap/issues"
-_XCB_ERROR_URL = (
-    "https://github.com/dynobo/normcap/blob/main/FAQ.md"
-    "#linux-could-not-load-the-qt-platform-plugin-xcb",
-)
+_XCB_ERROR_URL = "https://dynobo.github.io/normcap/#faqs-couldnt-load-platform-plugin"
 
 
 def create_argparser() -> argparse.ArgumentParser:
@@ -216,8 +213,11 @@ def qt_log_wrapper(
         logger.debug("[QT] %s - %s", level, msg)
 
     if ("xcb" in msg) and ("it was found" in msg):
-        logger.error("Try solving the problem as described here: %s", _XCB_ERROR_URL)
-        logger.error("If that doesn't help, please open an issue: %s", _ISSUES_URLS)
+        logger.error(
+            "Please check if installing additional dependencies might help, see: %s",
+            _XCB_ERROR_URL,
+        )
+        logger.error("If that doesn't solve it, please open an issue: %s", _ISSUES_URLS)
 
 
 def copy_traineddata_files(target_path: Optional[os.PathLike]) -> None:
