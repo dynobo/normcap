@@ -522,8 +522,8 @@
             to autostart NormCap after system start.
           </p>
           <p>
-            Note that `--background-mode` automatically enables the setting "Keep in system
-            tray"!
+            Note that `--background-mode` automatically enables the setting "Keep in
+            system tray"!
           </p>
         </details>
         <details id="faqs-windows-file-size">
@@ -712,20 +712,16 @@ could be initialized. Reinstalling the application may fix this problem.
 Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen,
 vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl, xcb.</code></pre>
           <p>
-            ... the chances are, some system packages are missing or outdated. Please
-            ensure you have the following packages installed:
+            ... the chances are, this can be solved by installing additional dependencies:
           </p>
-          <ol>
-            <li><code>qt6-base</code></li>
-            <li><code>qt6-wayland</code> (only when using Wayland)</li>
-            <li><code>libxcb</code> (only when using X.Org)</li>
-          </ol>
-          <p>
-            <small
-              >Those are the package names on Arch Linux, other Linux distributions
-              might call have named them differently.</small
-            >
-          </p>
+          <ul>
+            <li>Arch (Wayland): <code>pacman -S qt6-wayland</code></li>
+            <li>Arch (Xorg): <code>pacman -S libxcb xcb-util-cursor</code></li>
+            <li>Debian/Ubuntu (Wayland): <code>apt install qt6-wayland</code></li>
+            <li>Debian/Ubuntu (Xorg): <code>apt install libxcb1 libxcb-cursor</code></li>
+            <li>Fedora (Wayland): <code>dnf install qt6-qtwayland</code></li>
+            <li>Fedora (Xorg): <code>dnf install libxcb xcb-util-cursor</code></li>
+          </ul>
         </details>
         <details id="faqs-shortcut-doesnt-copy-to-clipboard">
           <summary>

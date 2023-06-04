@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.4 (2023-06-04)
+
+- All: Fix regression causing exit through system tray not working.
+  ([#458](https://github.com/dynobo/normcap/issues/458))
+
 ## v0.4.3 (2023-06-03)
 
 - All: Add command line flag `--background-mode` to start normcap minimized

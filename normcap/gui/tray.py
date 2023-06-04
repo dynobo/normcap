@@ -447,7 +447,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             menu.addAction(action)
 
         action = QtGui.QAction("Exit", menu)
-        action.triggered.connect(self.com.on_quit.emit)
+        # Better would be: action_exit.triggered.connect(self.com.on_quit.emit)
+        # but that strangly doesn't work anymore since PySide 6.5.1 and will tigger
+        # the capture acture instead...?!
+        action.triggered.connect(lambda: self._exit_application("clicked exit in tray"))
         menu.addAction(action)
 
     def _create_next_window(self) -> None:
