@@ -25,6 +25,8 @@ class LinuxBriefcase(BuilderBase):
 "/usr/bin/tesseract",
 "--executable",
 "/usr/bin/wl-copy",
+"--library",
+"/usr/lib/x86_64-linux-gnu/libxcb-cursor.so.0"
 """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
