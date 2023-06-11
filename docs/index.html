@@ -959,17 +959,31 @@ $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
                 >.
               </li>
               <li>
-                Set the environment variable TESSDATA_PREFIX to Tesseract's data folder,
-                e.g.:
-                <pre><code>setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"</code></pre>
+                Identify the path to Tesseract base folder. It should contain a
+                <code>/tessdata</code> subfolder and the
+                <code>tesseract.exe</code> binary. Depending on if you installed
+                Tesseract system-wide or in userspace, the base folder should be:
+                <pre><code>C:\Program Files\Tesseract-OCR
+or
+C:\Users\USERNAME\AppData\Local\Programs\Tesseract-OCR</code></pre>
               </li>
               <li>
-                Append Tesseract's location to the environment variable "Path", e.g.:
-                <pre><code>setx Path "%Path%;C:\Program Files\Tesseract-OCR"</code></pre>
+                Create an environment variable <code>TESSDATA_PREFIX</code> and set it
+                to <em>your</em> Tesseract base folder, e.g.:<br />"System Properties" →
+                Tab "Advanced" → "Environment Variables..." →
+                "New..." → Variable: <code>TESSDATA_PREFIX</code>, Value:
+                <code>"C:\Program Files\Tesseract-OCR"</code>
               </li>
               <li>
-                Make sure to close and reopen your current terminal window to apply the
-                new variables. Test it by running:
+                Append Tesseract's base folder to the environment variable
+                <code>PATH</code>, e.g.:<br />
+                "System Properties" → Tab "Advanced" → "Environment Variables..." →
+                Select
+                <code>PATH</code> → "Edit..." → Add a new entry
+                <code>"C:\Program Files\Tesseract-OCR"</code>
+              </li>
+              <li>
+                To test your setup, open a new cmd-terminal and run:
                 <pre><code>tesseract --list-langs</code></pre>
               </li>
               <li>
