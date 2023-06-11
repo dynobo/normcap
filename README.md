@@ -103,29 +103,37 @@ pip install normcap
 1\. Install `Tesseract 5` by using the
 [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
 
-2\. Adjust environment variables:
+2\. Identify the path to Tesseract base folder. It should contain a `/tessdata` subfolder
+and the `tesseract.exe` binary. Depending on if you installed Tesseract system-wide or
+in userspace, the base folder should be:
 
-- Create an environment variable `TESSDATA_PREFIX` and set it to Tesseract's data
-  folder, e.g.:
+```
+C:\Program Files\Tesseract-OCR
+```
 
-  ```cmd
-  setx TESSDATA_PREFIX "C:\Program Files\Tesseract-OCR\tessdata"
-  ```
+or
 
-- Append Tesseract's location to the environment variable `Path`, e.g.:
+```
+C:\Users\<USERNAME>\AppData\Local\Programs\Tesseract-OCR
+```
 
-  ```cmd
-  setx Path "%Path%;C:\Program Files\Tesseract-OCR"
-  ```
+3\. Adjust environment variables:
 
-- Make sure to close and reopen your current terminal window to apply the new variables.
-  Test it by running:
+- Create an environment variable `TESSDATA_PREFIX` and set it to _your_ Tesseract base
+  folder, e.g.: "System Properties" → Tab "Advanced" → "Environment Variables..." →
+  "New..." → Variable: `TESSDATA_PREFIX`, Value: `"C:\Program Files\Tesseract-OCR"`
+
+- Append Tesseract's base folder to the environment variable `PATH`, e.g.: "System
+  Properties" → Tab "Advanced" → "Environment Variables..." → Section "User variables" →
+  Select `PATH` → "Edit..." → Add a new entry `"C:\Program Files\Tesseract-OCR"`
+
+- To test your setup, open a new `cmd`-terminal and run:
 
   ```cmd
   tesseract --list-langs
   ```
 
-3\. Install and run NormCap:
+4\. Install and run NormCap:
 
 ```bash
 # Install normcap
