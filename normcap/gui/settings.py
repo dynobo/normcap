@@ -1,6 +1,4 @@
 import logging
-from collections.abc import Iterable
-from typing import Any, Optional
 
 from PySide6 import QtCore
 
@@ -107,9 +105,13 @@ class Settings(QtCore.QSettings):
     default_settings = DEFAULT_SETTINGS
 
     def __init__(
-        self, *args: Iterable[Any], init_settings: Optional[dict] = None
+        self,
+        organization: str = "normcap",
+        application: str = "settings",
+        parent: QtCore.QObject | None = None,
+        init_settings: dict | None = None,
     ) -> None:
-        super().__init__(*args)
+        super().__init__(organization, application=application, parent=parent)
         self.setFallbacksEnabled(False)
         self.init_settings: dict = init_settings or {}
         self._prepare_and_sync()
