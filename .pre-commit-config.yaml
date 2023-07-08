@@ -1,4 +1,6 @@
 # See https://pre-commit.com/ for usage and config
+fail_fast: true
+
 repos:
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v2.3.0
