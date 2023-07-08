@@ -45,7 +45,7 @@ normcap = "normcap.app:main"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-PySide6-Essentials = "6.5.1"
+PySide6-Essentials = "6.5.1.1"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=23.1.0"
@@ -75,6 +75,7 @@ optional = true
 radon = ">=5.1.0"
 viztracer = ">=0.15.3"
 vulture = ">=2.4"
+code2flow = "^2.5.1"
 
 [tool.black]
 line-length = 88
@@ -102,6 +103,9 @@ select = [
   "W",   # warning
   "UP",  # pyupgrad
   "N",   # pep8-naming
+  "C90", # mccabe
+  "TRY", # tryceratops (exception handling)
+  "ANN", # flake8-annotations
   "S",   # flake8-bandits
   "C4",  # flake8-comprehensions
   "B",   # flake8-bugbear
@@ -109,11 +113,13 @@ select = [
   "ISC", # flake8-implicit-str-concat
   "ICN", # flake8-import-conventions
   "T20", # flake8-print
+  "PYI", # flake8-pyi
   "PT",  # flake8-pytest-style
   "Q",   # flake8-quotes
-  "ANN", # flake8-annotations
+  "RET", # flake8-return
   "SIM", # flake8-simplify
   "PTH", # flake8-use-pathlib
+  "PL",  # pylint
   "RUF", # meta rules (unused noqa)
   "PL",  # meta rules (unused noqa)
 ]
@@ -127,8 +133,9 @@ ignore = [
   "D107",   # Missing docstring in __init__
   "ANN101", # Missing type annotation for `self` in method
   "UP007",  # Use X | Y for type annotations
+  "TRY003", # Avoid specifying long messages outside the exception class
 ]
-per-file-ignores = { "tests*" = ["S101", "ANN", "D", "PLR2004"] }
+per-file-ignores = { "tests*" = ["S101", "ANN", "D", "PLR2004", "PLR0913"] }
 
 [tool.ruff.pydocstyle]
 convention = "google"
@@ -173,7 +180,7 @@ sources = ["normcap"]
 icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
-requires = ["PySide6-Essentials==6.5.1"]
+requires = ["PySide6-Essentials==6.5.1.1"]
 cleanup_paths = [
   # Globs
   "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",

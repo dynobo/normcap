@@ -1,7 +1,7 @@
 # See https://pre-commit.com/ for usage and config
 repos:
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v2.2.0
+    rev: v2.3.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
@@ -32,18 +32,6 @@ repos:
         entry: poetry run black normcap tests/ bundle/
         types: [python]
 
-      - id: pip-audit
-        name: pip-audit
-        stages: [commit]
-        language: system
-        entry:
-          bash -c "poetry run pip-audit --strict -r <(poetry export -f requirements.txt
-          --with=dev)"
-        # First `sed` removes potential "[<extra>]" after package names
-        # Second `sed` removes "\n" in front of "--hash" to get one line per package
-        # Final `uniq` is the used to de-duplicated those lines
-        pass_filenames: false
-
       - id: ruff
         name: ruff
         stages: [commit]
@@ -67,6 +55,18 @@ repos:
         entry:
           poetry run pytest tests/ -vv --cov --cov-report xml:cov.xml --cov-report html
         types: [python]
+        pass_filenames: false
+
+      - id: pip-audit
+        name: pip-audit
+        stages: [commit]
+        language: system
+        entry:
+          bash -c "poetry run pip-audit --strict -r <(poetry export -f requirements.txt
+          --with=dev)"
+        # First `sed` removes potential "[<extra>]" after package names
+        # Second `sed` removes "\n" in front of "--hash" to get one line per package
+        # Final `uniq` is the used to de-duplicated those lines
         pass_filenames: false
 
       - id: pydeps
