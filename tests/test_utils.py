@@ -41,6 +41,25 @@ def test_argparser_help_is_complete():
         assert len(action.help) > 10
 
 
+def test_argparser_parses_all_types(monkeypatch):
+    argparser = utils.create_argparser()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        """python
+           --notification True
+           --tray False
+           --verbosity info
+           --language uvw xyz
+        """.split(),
+    )
+    args = argparser.parse_args()
+    assert args.notification is True
+    assert args.tray is False
+    assert args.verbosity == "info"
+    assert args.language == ["uvw", "xyz"]
+
+
 def test_argparser_attributes_in_settings(argparser_defaults):
     settings = Settings("normcap", "settings", init_settings={})
 
@@ -295,10 +314,10 @@ def test_hook_exception(monkeypatch, caplog, capsys):
             )
             raise RuntimeError
 
-        with pytest.raises(RuntimeError) as excinfo:
+        with pytest.raises(RuntimeError) as exc:
             raise_exception()
 
-        utils.hook_exceptions(excinfo.type, excinfo.value, excinfo.tb)
+        utils.hook_exceptions(exc.type, exc.value, exc.tb)
 
     captured = capsys.readouterr()
 
@@ -320,12 +339,12 @@ def test_hook_exception(monkeypatch, caplog, capsys):
 def test_hook_exception_fails(monkeypatch, caplog):
     with monkeypatch.context() as m:
         m.setattr(sys, "exit", lambda _: True)
-        with pytest.raises(RuntimeError) as excinfo:
+        with pytest.raises(RuntimeError) as exc:
             raise RuntimeError
 
         # Cause exception _inside_ the exception hook
         m.setattr(utils.pprint, "pformat", lambda _: 1 / 0)
-        utils.hook_exceptions(excinfo.type, excinfo.value, excinfo.tb)
+        utils.hook_exceptions(exc.type, exc.value, exc.tb)
 
     assert "Uncaught exception! Quitting NormCap!" in caplog.text
     assert "debug output limited" in caplog.text

@@ -8,7 +8,7 @@ from PySide6 import QtGui
 from normcap.gui import utils
 
 
-def testsave_image_in_temp_folder():
+def test_save_image_in_tempfolder():
     logger = logging.getLogger(__name__).root
     logger.setLevel("DEBUG")
 
