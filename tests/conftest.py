@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 
 import pytest
@@ -49,10 +48,12 @@ def dbus_portal(qapp):
     try:
         from normcap.screengrab import dbus_portal
 
-        return dbus_portal
     except ImportError as e:
-        if sys.platform != "linux":
-            pytest.xfail(f"Import error: {e}")
+        raise RuntimeError(
+            "Could not load DBUS! Consider skipping this test on this platform!"
+        ) from e
+    else:
+        return dbus_portal
 
 
 @pytest.fixture()

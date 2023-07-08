@@ -22,10 +22,8 @@ def test_debug_language_manager_is_deactivated(qapp):
 )
 def test_sanitize_active_language(qapp, monkeypatch, active, available, sanitized):
     monkeypatch.setattr(ocr.tesseract, "get_languages", lambda **kwargs: available)
+    settings = Settings("TEST_normcap", "settings")
     try:
-        settings = Settings(
-            organization="TEST_normcap", application="settings", parent=qapp
-        )
         settings.setValue("language", active)
         tray_cls = tray.SystemTray
         tray_cls.settings = settings

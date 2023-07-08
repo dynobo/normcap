@@ -119,6 +119,12 @@ def has_screenshot_permission() -> bool:
     raise RuntimeError("Unknown platform")
 
 
+def _load_core_graphics() -> ctypes.CDLL:
+    if core_graphics := ctypes.util.find_library("CoreGraphics"):
+        return ctypes.cdll.LoadLibrary(core_graphics)
+    raise RuntimeError("Couldn't load CoreGraphics")
+
+
 def _macos_has_screenshot_permission() -> bool:
     """Use CoreGraphics to check if application has screen recording permissions.
 
@@ -126,10 +132,7 @@ def _macos_has_screenshot_permission() -> bool:
         True if permissions are available or can't be detected.
     """
     try:
-        core_graphics = ctypes.util.find_library("CoreGraphics")
-        if not core_graphics:
-            raise RuntimeError("Couldn't load CoreGraphics")
-        cg = ctypes.cdll.LoadLibrary(core_graphics)
+        cg = _load_core_graphics()
         has_permission = bool(cg.CGPreflightScreenCaptureAccess())
     except Exception as e:
         has_permission = True
@@ -141,10 +144,7 @@ def _macos_has_screenshot_permission() -> bool:
 def macos_request_screenshot_permission() -> None:
     """Use CoreGraphics to request screen recording permissions."""
     try:
-        core_graphics = ctypes.util.find_library("CoreGraphics")
-        if not core_graphics:
-            raise ValueError("Couldn' find CoreGraphics")
-        cg = ctypes.cdll.LoadLibrary(core_graphics)
+        cg = _load_core_graphics()
         logger.debug("Request screen recording access")
         cg.CGRequestScreenCaptureAccess()
     except Exception as e:

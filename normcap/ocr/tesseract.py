@@ -12,19 +12,23 @@ from PySide6.QtGui import QImage
 logger = logging.getLogger(__name__)
 
 
+def _raise_on_error(proc: subprocess.CompletedProcess) -> None:
+    if proc.returncode != 0:
+        raise subprocess.CalledProcessError(
+            returncode=proc.returncode, cmd=proc.args, stderr=proc.stderr
+        )
+
+
 def _run_command(cmd_args: list[str]) -> str:
     try:
         creationflags = getattr(subprocess, "CREATE_NO_WINDOW", None)
         kwargs = {"creationflags": creationflags} if creationflags else {}
-        out = subprocess.run(
+        proc = subprocess.run(
             cmd_args, capture_output=True, text=True, **kwargs  # noqa: S603
         )
-        out_str = out.stdout
+        _raise_on_error(proc)
+        out_str = proc.stdout
         logger.debug("Tesseract command output:\n%s", out_str.strip())
-        if out.returncode != 0:
-            raise subprocess.CalledProcessError(
-                returncode=out.returncode, cmd=out.args, stderr=out.stderr
-            )
     except FileNotFoundError as e:
         raise FileNotFoundError("Could not find Tesseract binary") from e
     return out_str
@@ -39,15 +43,14 @@ def get_languages(
 
     output = _run_command(cmd_args=cmd_args)
 
-    languages = re.findall(r"^([a-zA-Z_]+)\r{0,1}$", output, flags=re.M)
+    if languages := re.findall(r"^([a-zA-Z_]+)\r{0,1}$", output, flags=re.M):
+        return languages
 
-    if not languages:
-        raise ValueError(
-            "Could not load any languages for tesseract. "
-            "On Windows, make sure that TESSDATA_PREFIX environment variable is set. "
-            "On Linux/macOS see if 'tesseract --list-langs' work is the command line."
-        )
-    return languages
+    raise ValueError(
+        "Could not load any languages for tesseract. "
+        "On Windows, make sure that TESSDATA_PREFIX environment variable is set. "
+        "On Linux/macOS see if 'tesseract --list-langs' work is the command line."
+    )
 
 
 def _run_tesseract(cmd: PathLike, image: QImage, args: list[str]) -> list[list[str]]:
