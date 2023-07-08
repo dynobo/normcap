@@ -62,15 +62,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.capture = Capture()
         self.installed_languages: list[str] = []
 
-        self._socket_out = QtNetwork.QLocalSocket(self)
-        self._socket_out.connectToServer(self._socket_name)
-        if self._socket_out.waitForConnected():
-            logger.debug("Another instance is already running. Sending capture signal.")
-            self._socket_out.write(b"capture")
-            self._socket_out.waitForBytesWritten(1000)
-            self._exit_application("NormCap already running")
-        else:
-            self._create_socket_server()
+        if args.get("multi_instances", False) is not True:
+            self._ensure_single_instance()
 
         self.settings = Settings("normcap", "settings", init_settings=args)
 
@@ -97,6 +90,17 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         if not args.get("background_mode", False):
             self._update_screenshots(delayed=False)
+
+    def _ensure_single_instance(self) -> None:
+        self._socket_out = QtNetwork.QLocalSocket(self)
+        self._socket_out.connectToServer(self._socket_name)
+        if self._socket_out.waitForConnected():
+            logger.debug("Another instance is already running. Sending capture signal.")
+            self._socket_out.write(b"capture")
+            self._socket_out.waitForBytesWritten(1000)
+            self._exit_application("Another instance is already running.")
+        else:
+            self._create_socket_server()
 
     @QtCore.Slot()
     def _color_tray_icon(self) -> None:

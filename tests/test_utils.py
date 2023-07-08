@@ -22,6 +22,7 @@ def test_argparser_defaults_are_complete(argparser_defaults):
         "cli_mode",
         "language",
         "mode",
+        "multi_instances",
         "notification",
         "reset",
         "tray",
@@ -44,7 +45,13 @@ def test_argparser_attributes_in_settings(argparser_defaults):
     settings = Settings("normcap", "settings", init_settings={})
 
     for arg in argparser_defaults:
-        if arg in ("verbosity", "reset", "cli_mode", "background_mode"):
+        if arg in (
+            "verbosity",
+            "reset",
+            "cli_mode",
+            "background_mode",
+            "multi_instances",
+        ):
             continue
         assert arg in settings.allKeys()
 
@@ -62,6 +69,7 @@ def test_argparser_defaults_are_correct(argparser_defaults):
     assert argparser_defaults.pop("version") is False
     assert argparser_defaults.pop("cli_mode") is False
     assert argparser_defaults.pop("background_mode") is False
+    assert argparser_defaults.pop("multi_instances") is False
     assert argparser_defaults.pop("verbosity") == "warning"
     for value in argparser_defaults.values():
         assert value is None
@@ -116,7 +124,6 @@ def test_set_environ_for_flatpak(monkeypatch):
 
 
 def test_copy_traineddata_files_briefcase(tmp_path, monkeypatch):
-    # sourcery skip: extract-method
     # Create placeholder for traineddata files, if they don't exist
     monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
     resource_path = Path(resources.files("normcap.resources"))
@@ -148,7 +155,6 @@ def test_copy_traineddata_files_briefcase(tmp_path, monkeypatch):
 
 
 def test_copy_traineddata_files_flatpak(tmp_path, monkeypatch):
-    # sourcery skip: extract-method
     # Create placeholder for traineddata files, if they don't exist
     monkeypatch.setattr(utils.system_info, "is_flatpak_package", lambda: True)
     resource_path = Path(resources.files("normcap.resources"))
@@ -187,7 +193,6 @@ def test_copy_traineddata_files_flatpak(tmp_path, monkeypatch):
 
 
 def test_copy_traineddata_files_not_copying(tmp_path, monkeypatch):
-    # sourcery skip: extract-method
     # Create placeholder for traineddata files, if they don't exist
     resource_path = Path(resources.files("normcap.resources"))
     traineddata_files = list((resource_path / "tessdata").glob("*.traineddata"))
