@@ -1,6 +1,5 @@
 import sys
 from difflib import SequenceMatcher
-from pathlib import Path
 
 import pytest
 from PySide6 import QtGui
@@ -8,25 +7,24 @@ from PySide6 import QtGui
 from normcap import ocr
 from normcap.gui import system_info
 
-from .testcases.data import TESTCASES
+from .testcases import testcases
 
 
-@pytest.mark.parametrize("data", TESTCASES)
-def test_remove_spaces_in_chi(data):
-    if sys.platform == "win32":
-        pytest.xfail("Default windows installer misses required languages.")
-
-    image = QtGui.QImage(Path(__file__).parent / "testcases" / data["image"])
+# TODO: Check if we can install chi on Windows
+@pytest.mark.skipif(sys.platform == "win32", reason="Chi not available on Windows")
+@pytest.mark.parametrize("testcase", testcases)
+def test_remove_spaces_in_chi(testcase):
+    image = QtGui.QImage(testcase.image_path)
     result = ocr.recognize(
         tesseract_cmd=system_info.get_tesseract_path(),
         image=image,
-        languages=data["lang"].split(","),
+        languages=testcase.lang.split(","),
     )
 
-    similarity = SequenceMatcher(None, result.parsed, data["transformed"]).ratio()
+    similarity = SequenceMatcher(None, result.parsed, testcase.transformed).ratio()
 
     is_equal = 1
     assert pytest.approx(similarity, abs=0.1) == is_equal, (
         result.parsed,
-        data["transformed"],
+        testcase.transformed,
     )
