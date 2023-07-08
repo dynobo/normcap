@@ -8,6 +8,15 @@ from normcap.gui.models import Setting
 
 logger = logging.getLogger(__name__)
 
+
+def _parse_str_to_bool(string: str) -> bool:
+    if string.lower() in {"true", "1"}:
+        return True
+    if string.lower() in {"false", "0"}:
+        return False
+    raise ValueError("Expected bool, got '{string}'")
+
+
 DEFAULT_SETTINGS = (
     Setting(
         key="color",
@@ -42,7 +51,7 @@ DEFAULT_SETTINGS = (
     Setting(
         key="notification",
         flag="n",
-        type_=bool,
+        type_=_parse_str_to_bool,
         value=True,
         help="Disable or enable notification after ocr detection",
         choices=(True, False),
@@ -52,7 +61,7 @@ DEFAULT_SETTINGS = (
     Setting(
         key="tray",
         flag="t",
-        type_=bool,
+        type_=_parse_str_to_bool,
         value=False,
         help="Disable or enable system tray",
         choices=(True, False),
@@ -62,7 +71,7 @@ DEFAULT_SETTINGS = (
     Setting(
         key="update",
         flag="u",
-        type_=bool,
+        type_=_parse_str_to_bool,
         value=False,
         help="Disable or enable check for updates",
         choices=(True, False),
