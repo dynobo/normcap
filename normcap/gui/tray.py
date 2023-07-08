@@ -56,14 +56,12 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("System info:\n%s", system_info.to_dict())
         super().__init__(parent)
+        self._ensure_single_instance()
 
         self.com = Communicate(parent=self)
         self.windows: dict[int, Window] = {}
         self.capture = Capture()
         self.installed_languages: list[str] = []
-
-        if args.get("multi_instances", False) is not True:
-            self._ensure_single_instance()
 
         self.settings = Settings("normcap", "settings", init_settings=args)
 

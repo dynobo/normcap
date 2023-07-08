@@ -72,11 +72,6 @@ def create_argparser() -> argparse.ArgumentParser:
         action="store_true",
         help="Start minimized to tray, without capturing",
     )
-    parser.add_argument(
-        "--multi-instances",
-        action="store_true",
-        help="Allow multiple instances of NormCap to run. Used for tests.",
-    )
     return parser
 
 
