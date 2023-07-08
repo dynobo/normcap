@@ -259,7 +259,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             parent=self.windows[0],
         )
         self.language_window.com.on_open_url.connect(self._open_url_and_hide)
-        self.language_window.com.on_change_installed_languages.connect(
+        self.language_window.com.on_languages_changed.connect(
             self.com.on_languages_changed
         )
         self.language_window.exec_()
