@@ -7,7 +7,7 @@ def test_reset_settings():
     default = "parse"
     non_default = "raw"
     try:
-        settings = Settings("normcap", "tests")
+        settings = Settings(organization="normcap_TEST")
         settings.setValue("mode", non_default)
         assert settings.value("mode") == non_default
 
@@ -22,8 +22,7 @@ def test_update_from_init_settings(caplog):
     try:
         with caplog.at_level(logging.DEBUG):
             settings = Settings(
-                "normcap",
-                "tests",
+                organization="normcap_TEST",
                 init_settings={"mode": init_setting, "non_existing": True},
             )
         assert settings.value("mode") == init_setting
@@ -39,7 +38,7 @@ def test_set_missing_to_default(caplog):
     default_language = "eng"
 
     try:
-        settings = Settings("normcap", "tests")
+        settings = Settings(organization="normcap_TEST")
         assert settings.value("mode") == default_mode
 
         settings.setValue("mode", non_default_mode)
@@ -51,7 +50,7 @@ def test_set_missing_to_default(caplog):
 
         caplog.clear()
         with caplog.at_level(logging.DEBUG):
-            settings = Settings("normcap", "tests")
+            settings = Settings(organization="normcap_TEST")
 
         assert settings.value("mode") == non_default_mode
         assert settings.value("language") == default_language
