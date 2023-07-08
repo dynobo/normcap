@@ -63,7 +63,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.capture = Capture()
         self.installed_languages: list[str] = []
 
-        self.settings = Settings(init_settings=args)
+        self.settings = Settings("normcap", "settings", init_settings=args)
 
         if args.get("reset", False):
             self.settings.reset()
