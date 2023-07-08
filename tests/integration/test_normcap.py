@@ -31,7 +31,7 @@ def _load_test_image(image):
 
 
 @pytest.mark.gui()
-@pytest.mark.parametrize("testcase", testcases[:1])
+@pytest.mark.parametrize("testcase", testcases)
 def test_app(monkeypatch, qapp, qtbot, testcase):
     """Tests complete OCR workflow."""
     screen_rect = qapp.primaryScreen().size()
@@ -92,6 +92,8 @@ def test_app(monkeypatch, qapp, qtbot, testcase):
         similarity = SequenceMatcher(
             None, capture.ocr_text, testcase.ocr_transformed
         ).ratio()
+
+        tray._exit_application(reason="test done", sys_exit=False)
 
     assert capture.ocr_applied_magic in testcase.ocr_magics
     assert similarity >= 0.98, f"{capture.ocr_text=}"
