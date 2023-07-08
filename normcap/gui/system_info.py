@@ -55,6 +55,15 @@ def is_prebuild_package() -> bool:
 
 @functools.cache
 def get_tesseract_path() -> Path:
+    """Get the path to the Tesseract binary.
+
+    Returns:
+        Path: The path to the Tesseract binary.
+
+    Raises:
+        ValueError: If the platform is not supported.
+        RuntimeError: If the Tesseract binary cannot be located.
+    """
     if is_briefcase_package():
         if sys.platform == "linux":
             binary_path = Path(__file__).parent.parent.parent.parent / "bin"
@@ -85,7 +94,7 @@ def get_tesseract_path() -> Path:
 
 
 def get_tessdata_path() -> Optional[os.PathLike]:
-    """Deside which path for tesseract language files to use."""
+    """Decide which path for tesseract language files to use."""
     if is_briefcase_package() or is_flatpak_package():
         tessdata_path = config_directory() / "tessdata"
         return tessdata_path.resolve()
@@ -95,7 +104,7 @@ def get_tessdata_path() -> Optional[os.PathLike]:
         if tessdata_path.is_dir() and list(tessdata_path.glob("*.traineddata")):
             return tessdata_path.resolve()
 
-    if sys.platform.startswith("win"):
+    if sys.platform == "win32":
         logger.warning("Missing tessdata directory. (Is TESSDATA_PREFIX variable set?)")
 
     return None
@@ -132,7 +141,7 @@ def desktop_environment() -> DesktopEnvironment:
 
 
 def screens() -> list[Screen]:
-    """Get informations about available monitors."""
+    """Get information about available monitors."""
     return [
         Screen(
             is_primary=screen == QtWidgets.QApplication.primaryScreen(),
@@ -161,7 +170,7 @@ def to_dict() -> dict:
         "qt_library_path": ", ".join(QtCore.QCoreApplication.libraryPaths()),
         "config_directory": config_directory(),
         "normcap_version": __version__,
-        "ressources_path": get_resources_path(),
+        "resources_path": get_resources_path(),
         "tesseract_path": get_tesseract_path(),
         "tessdata_path": get_tessdata_path(),
         "envs": {

@@ -102,7 +102,7 @@ class Settings(QtCore.QSettings):
     ) -> None:
         super().__init__(*args)
         self.setFallbacksEnabled(False)
-        self.init_settings: dict = init_settings if init_settings else {}
+        self.init_settings: dict = init_settings or {}
         self._prepare_and_sync()
 
     def _prepare_and_sync(self) -> None:

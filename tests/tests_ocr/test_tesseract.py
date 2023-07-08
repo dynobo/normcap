@@ -8,14 +8,11 @@ from normcap.gui import system_info
 from normcap.ocr import tesseract
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Not implemented for Windows")
 def test_run_command_raises_on_cmd_returned_error_code():
-    if sys.platform.startswith("win"):
-        pytest.xfail("Windows not implemented")
-
     cmd = ["bash", "-c", "'(exit 42);'"]
     with pytest.raises(subprocess.CalledProcessError) as e:
         _ = tesseract._run_command(cmd_args=cmd)
-
     assert e.value.cmd == cmd
 
 

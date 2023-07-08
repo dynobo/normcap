@@ -1,4 +1,5 @@
 """Find new version on github or pypi."""
+
 import logging
 import re
 
@@ -43,8 +44,8 @@ class UpdateChecker(QtCore.QObject):
             match = re.search(regex, text)
             if match and match[1]:
                 newest_version = match[1]
-        except Exception as e:
-            logger.exception("Parsing response of update check failed: %s", e)
+        except Exception:
+            logger.exception("Parsing response of update check failed.")
 
         if newest_version:
             logger.debug(
@@ -81,7 +82,7 @@ class UpdateChecker(QtCore.QObject):
 
         NOTE: This is not very robust, so do not use elsewhere! But the standard
         solution packaging.version is not used here on purpose to avoid that dependency.
-        That reduces importtime and package size.
+        That reduces import time and package size.
         """
         if "-" in other:
             logging.debug("Discarding pre-release version %s", other)

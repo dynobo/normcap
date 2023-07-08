@@ -5,7 +5,7 @@ import sys
 import time
 from collections.abc import Iterable
 from functools import partial
-from typing import Any, NoReturn, Optional
+from typing import Any, NoReturn
 
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
@@ -47,20 +47,20 @@ class Communicate(QtCore.QObject):
 class SystemTray(QtWidgets.QSystemTrayIcon):
     """System tray icon with menu."""
 
-    capture = Capture()
-    windows: dict[int, Window] = {}
-    installed_languages: list[str] = []
     _debug_language_manager = False
     _socket_name = f"v{__version__}-normcap"
-    _socket_out: Optional[QtNetwork.QLocalSocket] = None
-    _socket_in: Optional[QtNetwork.QLocalSocket] = None
-    _socket_server: Optional[QtNetwork.QLocalServer] = None
+    _socket_out: QtNetwork.QLocalSocket | None = None
+    _socket_in: QtNetwork.QLocalSocket | None = None
+    _socket_server: QtNetwork.QLocalServer | None = None
 
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("System info:\n%s", system_info.to_dict())
         super().__init__(parent)
 
-        self.com = Communicate()
+        self.com = Communicate(parent=self)
+        self.windows: dict[int, Window] = {}
+        self.capture = Capture()
+        self.installed_languages: list[str] = []
 
         self._socket_out = QtNetwork.QLocalSocket(self)
         self._socket_out.connectToServer(self._socket_name)
@@ -73,7 +73,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self._create_socket_server()
 
         self.settings = Settings("normcap", "settings", init_settings=args)
-        self.installed_languages: list[str] = []
 
         if args.get("reset", False):
             self.settings.reset()
@@ -167,18 +166,18 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
                 )
 
     @QtCore.Slot(list)
-    def _sanatize_language_setting(self, installed_languages: list[str]) -> None:
+    def _sanitize_language_setting(self, installed_languages: list[str]) -> None:
         """Verify that languages selected in the settings exist.
 
-        If one doesn't, remove it. If none does, autoselect the first in list.
+        If one doesn't, remove it. If none does, select the first in list.
         """
         active_languages = self.settings.value("language")
         if not isinstance(active_languages, list):
             active_languages = [active_languages]
 
-        active_languages = [a for a in active_languages if a in installed_languages]
-        if not active_languages:
-            active_languages = [installed_languages[0]]
+        active_languages = [
+            a for a in active_languages if a in installed_languages
+        ] or [installed_languages[0]]
 
         self.settings.setValue("language", active_languages)
 
@@ -206,7 +205,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.capture.screen = self.screens[screen_idx]
         self.capture.image = screenshot.copy(QtCore.QRect(*rect.geometry))
 
-        utils._save_image_in_tempfolder(self.capture.image, postfix="_cropped")
+        utils.save_image_in_temp_folder(self.capture.image, postfix="_cropped")
 
         self.com.on_image_cropped.emit()
 
@@ -232,7 +231,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             resize_factor=3.2,
             padding_size=80,
         )
-        utils._save_image_in_tempfolder(ocr_result.image, postfix="_enhanced")
+        utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")
 
         self.capture.ocr_text = ocr_result.text
         self.capture.ocr_applied_magic = ocr_result.best_scored_magic
@@ -387,7 +386,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_close_or_exit.connect(self._close_or_exit)
         self.com.on_open_url_and_hide.connect(self._open_url_and_hide)
         self.com.on_manage_languages.connect(self._open_language_manager)
-        self.com.on_languages_changed.connect(self._sanatize_language_setting)
+        self.com.on_languages_changed.connect(self._sanitize_language_setting)
         self.com.on_languages_changed.connect(self._update_installed_languages)
 
     def _add_update_checker(self) -> None:
@@ -429,7 +428,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             return
 
         for idx, screenshot in enumerate(screens):
-            utils._save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
+            utils.save_image_in_temp_folder(screenshot, postfix=f"_raw_screen{idx}")
             self.screens[idx].screenshot = screenshot
 
         self.com.on_screenshots_updated.emit()

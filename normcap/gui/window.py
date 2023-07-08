@@ -4,7 +4,9 @@ Inherited for the main window, instantiated for the child windows (which get cre
 in multi display setups).
 """
 
+
 import logging
+import sys
 import tempfile
 from pathlib import Path
 
@@ -31,7 +33,7 @@ def _move_active_window_to_position_on_gnome(screen_rect: Rect) -> None:
     This is a workaround for not being able to reposition windows on wayland.
     It only works on Gnome Shell.
     """
-    if not HAS_QTDBUS:
+    if not HAS_QTDBUS or sys.platform != "linux":
         raise TypeError("QtDBus should only be called on Linux systems!")
 
     js_code = f"""
@@ -73,7 +75,7 @@ def _move_active_window_to_position_on_kde(screen_rect: Rect) -> None:
     This is a workaround for not being able to reposition windows on wayland.
     It only works on KDE.
     """
-    if not HAS_QTDBUS:
+    if not HAS_QTDBUS or sys.platform != "linux":
         raise TypeError("QtDBus should only be called on Linux systems!")
 
     js_code = f"""

@@ -1,4 +1,5 @@
-"""Find new version on github or pypi."""
+"""Download any file from url asynchronously."""
+
 import logging
 
 from PySide6 import QtCore
@@ -20,6 +21,11 @@ class Worker(QtCore.QRunnable):
         self.timeout = timeout
         self.com = Communicate()
 
+    @staticmethod
+    def _raise_on_non_safe_urls(url: str) -> None:
+        if not url.startswith("http"):
+            raise ValueError(f"Downloading from {url[:9]}... is not allowed.")
+
     @QtCore.Slot()
     def run(self) -> None:
         try:
@@ -31,15 +37,16 @@ class Worker(QtCore.QRunnable):
             if not context.get_ca_certs():
                 context = ssl._create_unverified_context()  # noqa: S323
                 logger.debug("Fallback to ssl without verification")
-            if not self.url.startswith("http"):
-                raise ValueError(f"Downloading from {self.url[:9]}... is not allowed.")
+
+            self._raise_on_non_safe_urls(url=self.url)
+
             with urlopen(  # noqa: S310
                 self.url, context=context, timeout=self.timeout
             ) as response:
                 raw_data = response.read()
         except Exception as e:
             msg = f"Exception '{e}' during download of '{self.url}'"
-            logger.error(msg)
+            logger.exception(msg)
             self.com.on_download_failed.emit(msg, self.url)
         else:
             self.com.on_download_finished.emit(raw_data, self.url)

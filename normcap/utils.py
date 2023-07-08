@@ -152,7 +152,7 @@ def hook_exceptions(
     exc_type: type[BaseException],
     exc_value: BaseException,
     exc_traceback: Optional[TracebackType],
-) -> None:  # sourcery skip: extract-method
+) -> None:
     """Print traceback and quit application.
 
     ONHOLD: Think about removing/simplifying exception hook after switch to Python 3.11

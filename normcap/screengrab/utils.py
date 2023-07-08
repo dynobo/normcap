@@ -105,8 +105,8 @@ def macos_reset_screenshot_permission() -> None:
                 completed_proc.stdout,
                 completed_proc.stderr,
             )
-    except Exception as e:
-        logger.error("Couldn't reset screen recording permissions: %s", e)
+    except Exception:
+        logger.exception("Couldn't reset screen recording permissions.")
 
 
 def has_screenshot_permission() -> bool:
@@ -119,6 +119,12 @@ def has_screenshot_permission() -> bool:
     raise RuntimeError("Unknown platform")
 
 
+def _load_core_graphics() -> ctypes.CDLL:
+    if core_graphics := ctypes.util.find_library("CoreGraphics"):
+        return ctypes.cdll.LoadLibrary(core_graphics)
+    raise RuntimeError("Couldn't load CoreGraphics")
+
+
 def _macos_has_screenshot_permission() -> bool:
     """Use CoreGraphics to check if application has screen recording permissions.
 
@@ -126,10 +132,7 @@ def _macos_has_screenshot_permission() -> bool:
         True if permissions are available or can't be detected.
     """
     try:
-        core_graphics = ctypes.util.find_library("CoreGraphics")
-        if not core_graphics:
-            raise RuntimeError("Couldn't load CoreGraphics")
-        cg = ctypes.cdll.LoadLibrary(core_graphics)
+        cg = _load_core_graphics()
         has_permission = bool(cg.CGPreflightScreenCaptureAccess())
     except Exception as e:
         has_permission = True
@@ -141,10 +144,7 @@ def _macos_has_screenshot_permission() -> bool:
 def macos_request_screenshot_permission() -> None:
     """Use CoreGraphics to request screen recording permissions."""
     try:
-        core_graphics = ctypes.util.find_library("CoreGraphics")
-        if not core_graphics:
-            raise ValueError("Couldn' find CoreGraphics")
-        cg = ctypes.cdll.LoadLibrary(core_graphics)
+        cg = _load_core_graphics()
         logger.debug("Request screen recording access")
         cg.CGRequestScreenCaptureAccess()
     except Exception as e:
@@ -158,12 +158,14 @@ def macos_open_privacy_settings() -> None:
     )
     try:
         if sys.platform != "darwin":
-            raise RuntimeError(f"Tried opening macOS settings on {sys.platform}")
+            logger.error("Couldn't open macOS privacy settings on non macOS platform.")
+            return
+
         subprocess.run(
             ["open", link_to_preferences],  # noqa: S607
             shell=False,  # noqa: S603
             check=True,
             timeout=30,
         )
-    except Exception as e:
-        logger.error("Couldn't open privacy settings: %s", e)
+    except Exception:
+        logger.exception("Couldn't open macOS privacy settings.")

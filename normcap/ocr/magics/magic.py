@@ -1,7 +1,9 @@
 """Handle loading of available magics, get scores for every magic & apply top scored."""
 
 import logging
+from typing import ClassVar
 
+from normcap.ocr.magics.base_magic import BaseMagic
 from normcap.ocr.magics.email_magic import EmailMagic
 from normcap.ocr.magics.multi_line_magic import MultiLineMagic
 from normcap.ocr.magics.paragraph_magic import ParagraphMagic
@@ -19,7 +21,7 @@ class Magic:
         AbstractHandler {[type]} -- [description]
     """
 
-    _magics = {
+    _magics: ClassVar[dict[str, BaseMagic]] = {
         "SingleLineMagic": SingleLineMagic(),
         "MultiLineMagic": MultiLineMagic(),
         "ParagraphMagic": ParagraphMagic(),
@@ -28,7 +30,7 @@ class Magic:
     }
 
     def apply(self, ocr_result: OcrResult) -> OcrResult:
-        """Load magics, calculate score, execture magic with highest score.
+        """Load magics, calculate score, execute magic with highest score.
 
         Args:
             ocr_result: Recognized text and meta information.

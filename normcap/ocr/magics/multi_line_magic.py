@@ -8,7 +8,6 @@ class MultiLineMagic(BaseMagic):
     """Format multi line text."""
 
     def score(self, ocr_result: OcrResult) -> float:
-        # sourcery skip: assign-if-exp, inline-immediately-returned-variable
         """Calc score based on amount of lines and breaks.
 
         Arguments:

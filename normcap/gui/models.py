@@ -1,4 +1,5 @@
 """Various Data Models."""
+
 import enum
 import logging
 from collections import namedtuple

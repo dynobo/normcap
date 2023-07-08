@@ -58,10 +58,8 @@ def test_get_copy_func_on_wayland_without_wl_copy(monkeypatch, caplog):
     assert "wl-clipboard" in caplog.text.lower()
 
 
+@pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
 def test_wl_copy_called(monkeypatch):
-    if sys.platform != "linux":
-        pytest.xfail("no Linux")
-
     text = "this is a test"
 
     called_kwargs = {}
@@ -78,13 +76,9 @@ def test_wl_copy_called(monkeypatch):
     assert called_kwargs["shell"] is False
 
 
+@pytest.mark.skipif(not shutil.which("wl-copy"), reason="Needs wl-copy")
+@pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
 def test_wl_copy(monkeypatch):
-    if sys.platform != "linux":
-        pytest.xfail("no Linux")
-
-    if not shutil.which("wl-copy"):
-        pytest.xfail("no wl-copy")
-
     text = "this is a test"
     clipboard.linux._wl_copy(text)
 

@@ -22,7 +22,7 @@ class BaseMagic(abc.ABC):
 
     @abc.abstractmethod
     def transform(self, ocr_result: OcrResult) -> str:
-        """Transform detected lineboxes into single(!) string.
+        """Transform detected line-boxes into single(!) string.
 
         Args:
             ocr_result: Image and meta data on captured section.
