@@ -1,3 +1,4 @@
+import os
 import time
 
 import pytest
@@ -23,7 +24,7 @@ def test_synchronized_capture_triggers_timeout(monkeypatch, dbus_portal):
 
 
 @pytest.mark.gui()
-@pytest.mark.skip_on_gh()
+@pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_synchronized_capture(dbus_portal):
     result = dbus_portal._synchronized_capture(interactive=False)
     assert result
@@ -41,9 +42,9 @@ def test_synchronized_capture_triggers_request_error(monkeypatch, dbus_portal):
 
 
 @pytest.mark.gui()
-@pytest.mark.skip_on_gh()
+@pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_synchronized_capture_triggers_response_error(monkeypatch, dbus_portal):
-    def _decorate_got_signal(method):
+    def _decorated_got_signal(method):
         def decorated_msg(cls, msg):
             args = msg.arguments()
             args[0] = 1  # set error code
@@ -55,7 +56,7 @@ def test_synchronized_capture_triggers_response_error(monkeypatch, dbus_portal):
     monkeypatch.setattr(
         dbus_portal.OrgFreedesktopPortalScreenshot,
         "got_signal",
-        _decorate_got_signal(dbus_portal.OrgFreedesktopPortalScreenshot.got_signal),
+        _decorated_got_signal(dbus_portal.OrgFreedesktopPortalScreenshot.got_signal),
     )
     with pytest.raises(ScreenshotResponseError):
         _ = dbus_portal._synchronized_capture(interactive=False)

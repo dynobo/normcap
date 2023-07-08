@@ -6,10 +6,8 @@ from PySide6 import QtCore, QtGui
 from normcap.gui import models, window
 
 
+@pytest.mark.skipif(sys.platform == "linux", reason="non-Linux specific test")
 def test_move_active_window_to_position_raises_on_non_linux():
-    if not sys.platform.startswith("win"):
-        pytest.xfail("Windows specific test")
-
     rect = models.Rect()
 
     with pytest.raises(TypeError, match="should only be called on Linux"):

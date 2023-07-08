@@ -18,10 +18,8 @@ def test_get_copy_func_without_pbcopy(monkeypatch):
     assert get_copy == clipboard.qt.copy
 
 
+@pytest.mark.skipif(sys.platform != "darwin", reason="macOS specific test")
 def test_perform_pbcopy():
-    if sys.platform != "darwin":
-        pytest.xfail("not macOS")
-
     text = "my test string"
     clipboard.macos.pbcopy(text)
     with subprocess.Popen(

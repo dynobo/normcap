@@ -6,10 +6,8 @@ import pytest
 from normcap import clipboard
 
 
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows specific test")
 def test_windll_copy():
-    if not sys.platform.startswith("win"):
-        pytest.xfail("Skipping Windows specific test")
-
     text = "test"
     clipboard.windows._windll_copy(text)
 
@@ -23,10 +21,8 @@ def test_windll_copy():
     assert text == clipped
 
 
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows specific test")
 def test_unable_to_open_clipboard_raises(monkeypatch):
-    if not sys.platform.startswith("win"):
-        pytest.xfail("Skipping Windows specific test")
-
     # Block Clipboard from being opened
     from ctypes import windll
     from ctypes.wintypes import BOOL, HWND

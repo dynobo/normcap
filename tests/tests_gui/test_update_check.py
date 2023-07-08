@@ -1,4 +1,5 @@
 import logging
+import os
 import urllib
 
 import pytest
@@ -8,8 +9,8 @@ from normcap.gui import update_check
 from normcap.gui.constants import URLS
 
 
-@pytest.mark.skip_on_gh()
 @pytest.mark.parametrize("packaged", [True, False])
+@pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_update_checker_triggers_checked_signal(monkeypatch, qtbot, packaged):
     monkeypatch.setattr(update_check, "__version__", "0.0.0")
     checker = update_check.UpdateChecker(None, packaged=packaged)
@@ -18,8 +19,8 @@ def test_update_checker_triggers_checked_signal(monkeypatch, qtbot, packaged):
         checker.check()
 
 
-@pytest.mark.skip_on_gh()
 @pytest.mark.parametrize("url", [URLS.releases_atom, URLS.pypi_json])
+@pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_urls_reachable(url):
     with urllib.request.urlopen(url) as response:  # noqa: S310
         assert response.code == 200
@@ -47,10 +48,12 @@ def test_update_checker_is_new_version(current, other, is_new):
     )
 
 
-@pytest.mark.skip_on_gh()
 @pytest.mark.parametrize(
     ("packaged", "text"),
     [(True, b"abc"), (False, b'{"no relevant":"info"}'), (False, "not binary")],
+)
+@pytest.mark.skipif(
+    "GITHUB_ACTIONS" in os.environ, reason="Skip on Github Action Runner"
 )
 def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
     checker = update_check.UpdateChecker(None, packaged=packaged)
@@ -84,7 +87,7 @@ def test_show_update_message(qtbot, monkeypatch):
         (True, b'/releases/tag/v0.0.0"', [], "Newest version: 0.0.0"),
     ],
 )
-def test_on_download_finished(  # noqa:PLR0913
+def test_on_download_finished(
     caplog, qtbot, monkeypatch, packaged, data, message_args, debug_log
 ):
     args = []

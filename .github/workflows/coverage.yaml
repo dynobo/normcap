@@ -8,7 +8,7 @@ on:
 
 jobs:
   pytest:
-    name: Run pytests
+    name: Run pytest
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -80,7 +80,7 @@ jobs:
       # PERFORM TESTS
       - name: Pytest
         run: |
-          poetry run pytest -vv -m "not skip_on_gh" --cov --cov-report=xml
+          poetry run pytest -vv --cov --cov-report=xml
           poetry run coverage lcov
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
