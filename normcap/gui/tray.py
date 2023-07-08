@@ -498,7 +498,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         layout.addWidget(settings_menu, 0, 1)
         return layout
 
-    def _exit_application(self, reason: str) -> NoReturn:
+    def _exit_application(self, reason: str, sys_exit: bool = True) -> NoReturn | None:
         self.hide()
         if self._socket_server:
             self._socket_server.close()
@@ -512,4 +512,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         # The preferable QApplication.quit() doesn't work reliably on macOS. E.g. when
         # right clicking on "close" in tray menu, NormCap process keeps running.
-        sys.exit(0)
+        if sys_exit:
+            sys.exit(0)
+        return None
