@@ -60,7 +60,7 @@ def test_argparser_parses_all_types(monkeypatch):
 
 
 def test_argparser_attributes_in_settings(argparser_defaults):
-    settings = Settings("normcap", "settings", init_settings={})
+    settings = Settings(organization="normcap_TEST")
 
     for arg in argparser_defaults:
         if arg in (
@@ -74,7 +74,7 @@ def test_argparser_attributes_in_settings(argparser_defaults):
 
 
 def test_settings_in_argparser_attributes(argparser_defaults):
-    settings = Settings("normcap", "settings", init_settings={})
+    settings = Settings(organization="normcap_TEST")
     for key in settings.allKeys():
         if key in ("version", "last-update-check"):
             continue
