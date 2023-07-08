@@ -26,9 +26,7 @@ def test_download_language(tmp_path, qtbot: QtBot):
         delay=500,
     )
 
-    with qtbot.wait_signal(
-        window.com.on_change_installed_languages, timeout=5000
-    ) as result:
+    with qtbot.wait_signal(window.com.on_languages_changed, timeout=5000) as result:
         qtbot.mouseClick(
             window.available_layout.button, QtCore.Qt.MouseButton.LeftButton
         )
@@ -60,9 +58,7 @@ def test_delete_language(tmp_path, qtbot: QtBot):
         delay=500,
     )
 
-    with qtbot.wait_signal(
-        window.com.on_change_installed_languages, timeout=100
-    ) as result:
+    with qtbot.wait_signal(window.com.on_languages_changed, timeout=100) as result:
         qtbot.mouseClick(
             window.installed_layout.button, QtCore.Qt.MouseButton.LeftButton
         )
@@ -86,7 +82,7 @@ def test_delete_last_language_impossible(monkeypatch, tmp_path, qtbot: QtBot):
     assert window.installed_layout.model.languages[0][0] == "eng"
 
     with qtbot.wait_signal(
-        window.com.on_change_installed_languages, timeout=100, raising=False
+        window.com.on_languages_changed, timeout=100, raising=False
     ) as result:
         qtbot.mouseClick(
             window.installed_layout.button, QtCore.Qt.MouseButton.LeftButton
@@ -104,7 +100,7 @@ def test_delete_without_selection_does_nothing(monkeypatch, tmp_path, qtbot: QtB
 
     messagebox_args = []
 
-    def mocked_messagebox(cls, title, text):
+    def mocked_messagebox(parent, title, text):
         messagebox_args.extend([title, text])
 
     monkeypatch.setattr(
@@ -126,7 +122,7 @@ def test_delete_without_selection_does_nothing(monkeypatch, tmp_path, qtbot: QtB
     )
 
     with qtbot.wait_signal(
-        window.com.on_change_installed_languages, timeout=100, raising=False
+        window.com.on_languages_changed, timeout=100, raising=False
     ) as result:
         qtbot.mouseClick(
             window.installed_layout.button, QtCore.Qt.MouseButton.LeftButton
@@ -143,8 +139,8 @@ def test_delete_without_selection_does_nothing(monkeypatch, tmp_path, qtbot: QtB
 def test_download_error_show_messagebox(qtbot, tmp_path, monkeypatch):
     result = []
 
-    def mocked_messagebox(cls, title, message):
-        result.append(f"{title} {message}")
+    def mocked_messagebox(parent, title, text):
+        result.append(f"{title} {text}")
 
     monkeypatch.setattr(
         language_manager.QtWidgets.QMessageBox, "critical", mocked_messagebox
@@ -158,7 +154,7 @@ def test_download_error_show_messagebox(qtbot, tmp_path, monkeypatch):
     window.available_layout.view.selectRow(0)
 
     with qtbot.wait_signal(window.downloader.com.on_download_failed):
-        window._download()
+        window._on_download_btn_clicked()
 
     assert result
     assert "error" in result[0].lower()

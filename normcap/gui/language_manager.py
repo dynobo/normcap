@@ -2,7 +2,6 @@
 
 import logging
 from pathlib import Path
-from typing import Optional, Union
 
 from PySide6 import QtCore, QtWidgets
 
@@ -17,12 +16,12 @@ class Communicate(QtCore.QObject):
     """LanguagesWindow' communication bus."""
 
     on_open_url = QtCore.Signal(str)
-    on_change_installed_languages = QtCore.Signal(list)
+    on_languages_changed = QtCore.Signal(list)
 
 
 class LanguageManager(QtWidgets.QDialog):
     def __init__(
-        self, tessdata_path: Path, parent: Optional[QtWidgets.QWidget] = None
+        self, tessdata_path: Path, parent: QtWidgets.QWidget | None = None
     ) -> None:
         super().__init__(parent)
 
@@ -43,7 +42,7 @@ class LanguageManager(QtWidgets.QDialog):
             button_icon="SP_DialogDiscardButton",
             button_text="Delete",
         )
-        self.installed_layout.button.pressed.connect(self._delete)
+        self.installed_layout.button.pressed.connect(self._on_delete_btn_clicked)
 
         self.available_layout = LanguageLayout(
             label_icon="SP_ArrowDown",
@@ -51,7 +50,7 @@ class LanguageManager(QtWidgets.QDialog):
             button_icon="SP_ArrowDown",
             button_text="Download",
         )
-        self.available_layout.button.pressed.connect(self._download)
+        self.available_layout.button.pressed.connect(self._on_download_btn_clicked)
 
         h_layout = QtWidgets.QHBoxLayout()
         h_layout.addLayout(self.installed_layout)
@@ -75,7 +74,7 @@ class LanguageManager(QtWidgets.QDialog):
 
         self.setLayout(layout)
 
-        self.loading_indicator = LoadingIndicator(self, size=256)
+        self.loading_indicator = LoadingIndicator(parent=self, size=256)
 
         self._update_models()
         close_button.setFocus()
@@ -84,7 +83,9 @@ class LanguageManager(QtWidgets.QDialog):
     def _on_download_error(self, reason: str, url: str) -> None:
         self._set_in_progress(False)
         QtWidgets.QMessageBox.critical(
-            self, "Error", f"<b>Language download failed!</b><br><br>{reason}"
+            parent=self,
+            title="Error",
+            text=f"<b>Language download failed!</b><br><br>{reason}",
         )
 
     @QtCore.Slot(bytes, str)
@@ -95,6 +96,36 @@ class LanguageManager(QtWidgets.QDialog):
             fh.write(data)
         self._update_models()
         self._set_in_progress(False)
+
+    @QtCore.Slot()
+    def _on_download_btn_clicked(self) -> None:
+        if indexes := self.available_layout.view.selectedIndexes():
+            self._set_in_progress(True)
+            index = indexes[0]
+            language = self.available_layout.model.languages[index.row()][0]
+            self.downloader.get(constants.TESSDATA_BASE_URL + language + ".traineddata")
+
+    @QtCore.Slot()
+    def _on_delete_btn_clicked(self) -> None:
+        indexes = self.installed_layout.view.selectedIndexes()
+        if not indexes:
+            return
+
+        if len(self.installed_layout.model.languages) <= 1:
+            QtWidgets.QMessageBox.information(
+                parent=self,
+                title="Information",
+                text=(
+                    "It is not possible to delete all languages. "
+                    "NormCap needs at least one to function correctly."
+                ),
+            )
+            return
+
+        index = indexes[0]
+        language = self.installed_layout.model.languages[index.row()][0]
+        Path(self.tessdata_path / f"{language}.traineddata").unlink()
+        self._update_models()
 
     def _update_models(self) -> None:
         installed = self._get_installed_languages()
@@ -108,40 +139,11 @@ class LanguageManager(QtWidgets.QDialog):
         self.installed_layout.view.clearSelection()
         self.available_layout.model.layoutChanged.emit()
         self.available_layout.view.clearSelection()
-        self.com.on_change_installed_languages.emit(installed)
+        self.com.on_languages_changed.emit(installed)
 
     def _get_installed_languages(self) -> list[str]:
         languages = [f.stem for f in self.tessdata_path.glob("*.traineddata")]
         return sorted(languages)
-
-    def _download(self) -> None:
-        indexes = self.available_layout.view.selectedIndexes()
-        if indexes:
-            self._set_in_progress(True)
-            index = indexes[0]
-            language = self.available_layout.model.languages[index.row()][0]
-            self.downloader.get(constants.TESSDATA_BASE_URL + language + ".traineddata")
-
-    def _delete(self) -> None:
-        indexes = self.installed_layout.view.selectedIndexes()
-        if not indexes:
-            return
-
-        if len(self.installed_layout.model.languages) <= 1:
-            QtWidgets.QMessageBox.information(
-                self,
-                "Information",
-                (
-                    "It is not possible to delete all languages. "
-                    "NormCap needs at least one to function correctly."
-                ),
-            )
-            return
-
-        index = indexes[0]
-        language = self.installed_layout.model.languages[index.row()][0]
-        Path(self.tessdata_path / f"{language}.traineddata").unlink()
-        self._update_models()
 
     def _set_in_progress(self, value: bool) -> None:
         self.available_layout.view.setEnabled(not value)
@@ -201,28 +203,31 @@ class LanguageLayout(QtWidgets.QVBoxLayout):
         self, label_text: str, label_icon: str, button_text: str, button_icon: str
     ) -> None:
         super().__init__()
-        label_text = IconLabel(label_icon, label_text)
-        self.addWidget(label_text)
+        self.addWidget(IconLabel(icon=label_icon, text=label_text))
 
         self.model = LanguageModel()
-        self.view = MinimalTableView(self.model)
+        self.view = MinimalTableView(model=self.model)
         self.addWidget(self.view)
 
         self.button = QtWidgets.QPushButton(button_text)
-
-        pixmapi = getattr(QtWidgets.QStyle.StandardPixmap, button_icon, None)
-        self.button.setIcon(QtWidgets.QApplication.style().standardIcon(pixmapi))
+        self.button.setIcon(
+            QtWidgets.QApplication.style().standardIcon(
+                getattr(QtWidgets.QStyle, button_icon, None)
+            )
+        )
         self.addWidget(self.button)
 
 
 class LanguageModel(QtCore.QAbstractTableModel):
-    def __init__(self, languages: Optional[list] = None) -> None:
-        super().__init__()
-        self.languages: list = languages if languages else []
+    def __init__(
+        self, parent: QtWidgets.QWidget | None = None, languages: list | None = None
+    ) -> None:
+        super().__init__(parent=parent)
+        self.languages: list = languages or []
 
     def data(
         self, index: QtCore.QModelIndex, role: QtCore.Qt.ItemDataRole
-    ) -> Union[str, QtCore.QSize, None]:
+    ) -> str | QtCore.QSize | None:
         if role == QtCore.Qt.ItemDataRole.DisplayRole:
             return self.languages[index.row()][index.column()]
         return None

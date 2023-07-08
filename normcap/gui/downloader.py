@@ -63,11 +63,12 @@ class Downloader(QtCore.QObject):
         super().__init__()
         self.com = Communicate()
         self.threadpool = QtCore.QThreadPool()
+        self.worker: Worker | None = None
 
     def get(self, url: str, timeout: float = 30) -> None:
         """Start downloading url. Emits failed or finished signal, when done."""
         logger.debug("Download %s", url)
-        worker = Worker(url=url, timeout=timeout)
-        worker.com.on_download_finished.connect(self.com.on_download_finished)
-        worker.com.on_download_failed.connect(self.com.on_download_failed)
-        self.threadpool.start(worker)
+        self.worker = Worker(url=url, timeout=timeout)
+        self.worker.com.on_download_finished.connect(self.com.on_download_finished)
+        self.worker.com.on_download_failed.connect(self.com.on_download_failed)
+        self.threadpool.start(self.worker)
