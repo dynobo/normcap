@@ -27,7 +27,7 @@ def test_email_magic_transform(ocr_result, words, transformed_expected):
     ("words", "score_expected"),
     [
         (("dy@no.bo",), 100),
-        ((" dy@no.bo ",), 80),
+        ((" dy@no.bo ",), 100),
         (("dy@no.bo.uk",), 100),
         (("to", "dy@no.bo"), 80),
         (("dy@no.bo", "no@bo.dy"), 100),

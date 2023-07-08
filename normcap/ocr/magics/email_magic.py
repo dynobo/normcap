@@ -19,6 +19,25 @@ class EmailMagic(BaseMagic):
         reg_email = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+"
         return re.findall(reg_email, text)
 
+    @staticmethod
+    def _remove_email_names_from_text(emails: list[str], text: str) -> str:
+        """Remove names in emails from text.
+
+        In many mail programs, email addresses are displayed together with the
+        person names, e.g.: John Doe <john.doe@domain.com>;
+        This function heuristically removes those names from the text to achieve
+        a more precise score.
+        """
+        for email in emails:
+            components = email.split("@")
+            if len(components) > 1:
+                for name in components[0].split("."):
+                    text = re.sub(
+                        r"(?i)(^|\s)" + re.escape(name) + r"(\s|$)", r"\1\2", text
+                    )
+        text = re.sub(r"(>|<|;|,)", " ", text)
+        return re.sub(r"\s+", " ", text)
+
     def score(self, ocr_result: OcrResult) -> float:
         """Calc score based on chars in email addresses vs. overall chars.
 
@@ -36,7 +55,10 @@ class EmailMagic(BaseMagic):
 
         # Calc chars & ratio
         email_chars = sum(len(e) for e in emails)
-        count_chars = ocr_result.num_chars
+        cleaned_text = self._remove_email_names_from_text(
+            emails=emails, text=ocr_result.text
+        )
+        count_chars = sum(len(w) for w in cleaned_text.split())
         ratio = min(email_chars / count_chars, 1) if count_chars else 0
         logger.debug("%s/%s (%s) chars in emails", email_chars, count_chars, ratio)
         return round(100 * ratio, 2)
