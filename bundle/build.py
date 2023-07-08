@@ -7,7 +7,7 @@ from platforms.windows_briefcase import WindowsBriefcase
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog="Package NormCap", description="Create prebuild packages of Normcap."
+        prog="Package NormCap", description="Create prebuilt packages of Normcap."
     )
     parser.add_argument(
         "--framework",
@@ -23,13 +23,13 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if sys.platform.startswith("win"):
+    if sys.platform == "win32":
         builder = WindowsBriefcase
 
-    elif sys.platform.startswith("darwin"):
+    elif sys.platform == "darwin":
         builder = MacBriefcase
 
-    elif sys.platform.startswith("linux"):
+    elif sys.platform == "linux":
         builder = LinuxBriefcase
 
     builder().create()

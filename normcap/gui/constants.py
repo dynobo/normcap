@@ -13,7 +13,7 @@ INFO_UPDATE_PIP = (
 )
 
 MESSAGE_LANGUAGES = (
-    "You are not using the prebuild package version of NormCap. "
+    "You are not using the prebuilt package version of NormCap. "
     "Please refer to the documentation of Tesseract for your "
     "operating system on how to install additional languages."
 )

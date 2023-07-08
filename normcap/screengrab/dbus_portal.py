@@ -187,9 +187,9 @@ def capture() -> list[QtGui.QImage]:
     "interactive" mode, before the application is allowed to query screenshots without
     the dialog window in between.
 
-    As there is no way to query for that permissen, we try both:
+    As there is no way to query for that permission, we try both:
     1. Try none-interactive mode
-    2. If timout triggers, retry interactive mode
+    2. If timeout triggers, retry interactive mode
     """
     result = []
     try:

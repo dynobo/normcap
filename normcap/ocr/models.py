@@ -39,7 +39,7 @@ class OEM(IntEnum):
 
 @dataclass
 class TessArgs:
-    """Arguments used when envoking tesseract."""
+    """Arguments used when evoking tesseract."""
 
     tessdata_path: Optional[PathLike]
     lang: str

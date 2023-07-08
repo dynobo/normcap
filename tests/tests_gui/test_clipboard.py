@@ -1,6 +1,7 @@
 import sys
 
 import pytest
+from PySide6 import QtGui
 
 from normcap import clipboard
 

@@ -1,4 +1,4 @@
-"""Magic Class to handle e-mail adresses contained in the text."""
+"""Magic Class to handle e-mail addresses contained in the text."""
 
 import functools
 import logging
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class EmailMagic(BaseMagic):
-    """Detect and extract email adress(es) in the OCR results."""
+    """Detect and extract email address(es) in the OCR results."""
 
     @staticmethod
     @functools.cache
@@ -20,7 +20,7 @@ class EmailMagic(BaseMagic):
         return re.findall(reg_email, text)
 
     def score(self, ocr_result: OcrResult) -> float:
-        """Calc score based on chars in email adresses vs. overall chars.
+        """Calc score based on chars in email addresses vs. overall chars.
 
         Arguments:
             ocr_result: Recognized text and meta information.
@@ -42,15 +42,15 @@ class EmailMagic(BaseMagic):
         return round(100 * ratio, 2)
 
     def transform(self, ocr_result: OcrResult) -> str:
-        """Transform to comma separated string of email adresses.
+        """Transform to comma separated string of email addresses.
 
-        Other chars not contained in email adresses are discarded.
+        Other chars not contained in email addresses are discarded.
 
         Arguments:
             ocr_result: Recognized text and meta information.
 
         Returns:
-            Comma separated email adresses.
+            Comma separated email addresses.
         """
         logger.info("Transform with Email magic")
         return ", ".join(self._extract_emails(ocr_result.text))

@@ -206,7 +206,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.capture.screen = self.screens[screen_idx]
         self.capture.image = screenshot.copy(QtCore.QRect(*rect.geometry))
 
-        utils._save_image_in_tempfolder(self.capture.image, postfix="_cropped")
+        utils.save_image_in_temp_folder(self.capture.image, postfix="_cropped")
 
         self.com.on_image_cropped.emit()
 
@@ -232,7 +232,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             resize_factor=3.2,
             padding_size=80,
         )
-        utils._save_image_in_tempfolder(ocr_result.image, postfix="_enhanced")
+        utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")
 
         self.capture.ocr_text = ocr_result.text
         self.capture.ocr_applied_magic = ocr_result.best_scored_magic
@@ -429,7 +429,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             return
 
         for idx, screenshot in enumerate(screens):
-            utils._save_image_in_tempfolder(screenshot, postfix=f"_raw_screen{idx}")
+            utils.save_image_in_temp_folder(screenshot, postfix=f"_raw_screen{idx}")
             self.screens[idx].screenshot = screenshot
 
         self.com.on_screenshots_updated.emit()

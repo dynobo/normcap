@@ -97,5 +97,4 @@ def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
 
 def perform_ocr(cmd: PathLike, image: QImage, args: list[str]) -> list[dict]:
     lines = _run_tesseract(cmd=cmd, image=image, args=args)
-    word_data_new = _tsv_to_list_of_dict(lines)
-    return word_data_new
+    return _tsv_to_list_of_dict(lines)

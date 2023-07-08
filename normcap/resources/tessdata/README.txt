@@ -4,7 +4,7 @@ NormCap's tessdata-folder
 This folder contains Tesseract language data files (*.traineddata). They were
 created and maintained by the Tesseract contributors, all credit belongs to them!
 
-These files are used by NormCap. They have either been shipped with a prebuild package
+These files are used by NormCap. They have either been shipped with a prebuilt package
 or were installed by the user. If you don't use NormCap anymore, it is safe to remove
 this folder!
 

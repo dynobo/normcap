@@ -1,4 +1,5 @@
-"""Find new version on github or pypi."""
+"""Download any file from url asynchronously."""
+
 import logging
 
 from PySide6 import QtCore

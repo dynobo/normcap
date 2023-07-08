@@ -105,8 +105,8 @@ def macos_reset_screenshot_permission() -> None:
                 completed_proc.stdout,
                 completed_proc.stderr,
             )
-    except Exception as e:
-        logger.error("Couldn't reset screen recording permissions: %s", e)
+    except Exception:
+        logger.exception("Couldn't reset screen recording permissions.")
 
 
 def has_screenshot_permission() -> bool:
@@ -158,12 +158,14 @@ def macos_open_privacy_settings() -> None:
     )
     try:
         if sys.platform != "darwin":
-            raise RuntimeError(f"Tried opening macOS settings on {sys.platform}")
+            logger.error("Couldn't open macOS privacy settings on non macOS platform.")
+            return
+
         subprocess.run(
             ["open", link_to_preferences],  # noqa: S607
             shell=False,  # noqa: S603
             check=True,
             timeout=30,
         )
-    except Exception as e:
-        logger.error("Couldn't open privacy settings: %s", e)
+    except Exception:
+        logger.exception("Couldn't open macOS privacy settings.")

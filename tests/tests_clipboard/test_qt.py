@@ -10,7 +10,5 @@ def test_copy(qapp):
     text = "test"
     clipboard.qt.copy(text)
 
-    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication()
-    cb = app.clipboard()
-    clipboard_content = cb.text()
+    clipboard_content = qapp.clipboard().text()
     assert text == clipboard_content

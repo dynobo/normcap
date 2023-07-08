@@ -28,7 +28,7 @@ class Magic:
     }
 
     def apply(self, ocr_result: OcrResult) -> OcrResult:
-        """Load magics, calculate score, execture magic with highest score.
+        """Load magics, calculate score, execute magic with highest score.
 
         Args:
             ocr_result: Recognized text and meta information.

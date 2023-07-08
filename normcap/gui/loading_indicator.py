@@ -11,7 +11,7 @@ class LoadingIndicator(QtWidgets.QWidget):
         size: int = 128,
         center_on_parent: bool = True,
     ) -> None:
-        super().__init__(parent)
+        super().__init__(parent=parent)
         self.setVisible(False)
 
         self.dots = 9

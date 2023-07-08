@@ -22,7 +22,7 @@ class ParagraphMagic(BaseMagic):
         return 100 - (100 / (breaks))
 
     def transform(self, ocr_result: OcrResult) -> str:
-        """Transform wordboxes into nicely formatted paragraphs.
+        """Transform word-boxes into nicely formatted paragraphs.
 
         Args:
             ocr_result: Recognized text and meta information.

@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class UrlMagic(BaseMagic):
-    """Detect and extract urls adress(es) in the OCR results."""
+    """Detect and extract urls address(es) in the OCR results."""
 
     @staticmethod
     @functools.cache
@@ -28,7 +28,7 @@ class UrlMagic(BaseMagic):
         # Remove whitespace between two chars
         # because OCR will often read e.g. "http: //github.com"
         text = re.sub(r":\s+\/", ":/", text)
-        # Correct commonly misrecognized parts
+        # Correct commonly unrecognized parts
         for k, v in manual_correction_table.items():
             text = re.sub(k, v, text)
 

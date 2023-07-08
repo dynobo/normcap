@@ -23,8 +23,8 @@ class Notifier(QtCore.QObject):
     """Send notifications."""
 
     def __init__(self, parent: QtCore.QObject) -> None:
-        super().__init__(parent)
-        self.com = Communicate()
+        super().__init__(parent=parent)
+        self.com = Communicate(parent=self)
 
     @staticmethod
     def _compose_notification(capture: Capture) -> tuple[str, str]:
@@ -85,7 +85,7 @@ class Notifier(QtCore.QObject):
         logger.debug("Send notification via notify-send")
         icon_path = system_info.get_resources_path() / "icons" / "notification.png"
 
-        # Escape chars interpreted by notifiy-send
+        # Escape chars interpreted by notify-send
         message = message.replace("\\", "\\\\")
         message = message.replace("-", "\\-")
 

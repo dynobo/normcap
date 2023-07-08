@@ -41,10 +41,10 @@ def _fullscreen_to_file(filename: Union[os.PathLike, str]) -> None:
 
     screenshot_interface = _get_screenshot_interface()
     if screenshot_interface.isValid():
-        x = screenshot_interface.call("Screenshot", True, False, filename)
-        if x.errorName():
+        result = screenshot_interface.call("Screenshot", True, False, filename)
+        if result.errorName():
             logger.error("Failed move Window!")
-            logger.error(x.errorMessage())
+            logger.error(result.errorMessage())
     else:
         logger.error("Invalid dbus interface")
 

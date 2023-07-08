@@ -10,7 +10,7 @@ def test_debug_language_manager_is_deactivated(qapp):
 
 
 @pytest.mark.parametrize(
-    ("active", "available", "sanatized"),
+    ("active", "available", "sanitized"),
     [
         ("eng", ["eng"], ["eng"]),
         (["eng"], ["deu"], ["deu"]),
@@ -20,15 +20,17 @@ def test_debug_language_manager_is_deactivated(qapp):
         (["afr", "deu", "eng"], ["afr", "ben", "deu"], ["afr", "deu"]),
     ],
 )
-def test_sanatize_active_language(qtbot, monkeypatch, active, available, sanatized):
+def test_sanitize_active_language(qapp, monkeypatch, active, available, sanitized):
     monkeypatch.setattr(ocr.tesseract, "get_languages", lambda **kwargs: available)
     try:
-        settings = Settings("TEST_normcap", "settings")
+        settings = Settings(
+            organization="TEST_normcap", application="settings", parent=qapp
+        )
         settings.setValue("language", active)
         tray_cls = tray.SystemTray
         tray_cls.settings = settings
-        tray_cls._sanatize_language_setting(tray_cls, installed_languages=available)
-        assert settings.value("language") == sanatized
+        tray_cls._sanitize_language_setting(tray_cls, installed_languages=available)
+        assert settings.value("language") == sanitized
     finally:
         for k in settings.allKeys():
             settings.remove(k)

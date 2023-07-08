@@ -4,6 +4,7 @@ Inherited for the main window, instantiated for the child windows (which get cre
 in multi display setups).
 """
 
+
 import logging
 import tempfile
 from pathlib import Path

@@ -75,13 +75,12 @@ def resize_image(image: QImage, factor: float = 3.2) -> QImage:
     """
     logger.debug("Scale image x%s", factor)
 
-    image = image.scaled(
+    return image.scaled(
         int(image.width() * factor),
         int(image.height() * factor),
         Qt.AspectRatioMode.KeepAspectRatio,
         Qt.TransformationMode.SmoothTransformation,
     )
-    return image
 
 
 def invert_image(image: QImage) -> QImage:
