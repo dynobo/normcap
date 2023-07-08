@@ -9,7 +9,7 @@ from PySide6 import QtCore, QtGui
 from normcap import app
 from normcap.gui.tray import SystemTray, screengrab
 
-from .testcases.data import TESTCASES
+from .testcases import testcases
 
 logger = logging.getLogger(__name__)
 
@@ -31,14 +31,14 @@ def _load_test_image(image):
 
 
 @pytest.mark.gui()
-@pytest.mark.parametrize("data", TESTCASES[:1])
-def test_app(monkeypatch, qapp, qtbot, data):
+@pytest.mark.parametrize("testcase", testcases[:1])
+def test_app(monkeypatch, qapp, qtbot, testcase):
     """Tests complete OCR workflow."""
     screen_rect = qapp.primaryScreen().size()
 
-    image = QtGui.QImage(Path(__file__).parent / "testcases" / data["image"])
-    top_left = QtCore.QPoint(*data["tl"])
-    bottom_right = QtCore.QPoint(*data["br"])
+    image = QtGui.QImage(Path(__file__).parent / "testcases" / testcase.image_path)
+    top_left = QtCore.QPoint(*testcase.left_top)
+    bottom_right = QtCore.QPoint(*testcase.right_bottom)
 
     # Scale test data, if necessary
     if screen_rect.width() != image.width() or screen_rect.height() != image.height():
@@ -90,8 +90,8 @@ def test_app(monkeypatch, qapp, qtbot, data):
 
         # Text output is not 100% predictable across different machines:
         similarity = SequenceMatcher(
-            None, capture.ocr_text, data["transformed"]
+            None, capture.ocr_text, testcase.ocr_transformed
         ).ratio()
 
-    assert capture.ocr_applied_magic == data["ocr_applied_magic"], capture.ocr_text
+    assert capture.ocr_applied_magic in testcase.ocr_magics
     assert similarity >= 0.98, f"{capture.ocr_text=}"
