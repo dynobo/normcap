@@ -22,7 +22,6 @@ def test_argparser_defaults_are_complete(argparser_defaults):
         "cli_mode",
         "language",
         "mode",
-        "multi_instances",
         "notification",
         "reset",
         "tray",
@@ -69,7 +68,6 @@ def test_argparser_attributes_in_settings(argparser_defaults):
             "reset",
             "cli_mode",
             "background_mode",
-            "multi_instances",
         ):
             continue
         assert arg in settings.allKeys()
@@ -88,7 +86,6 @@ def test_argparser_defaults_are_correct(argparser_defaults):
     assert argparser_defaults.pop("version") is False
     assert argparser_defaults.pop("cli_mode") is False
     assert argparser_defaults.pop("background_mode") is False
-    assert argparser_defaults.pop("multi_instances") is False
     assert argparser_defaults.pop("verbosity") == "warning"
     for value in argparser_defaults.values():
         assert value is None
