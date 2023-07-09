@@ -15,7 +15,7 @@ class Communicate(QtCore.QObject):
 
 
 class Worker(QtCore.QRunnable):
-    def __init__(self, url: str, timeout: float = 30) -> None:
+    def __init__(self, url: str, timeout: int = 30) -> None:
         super().__init__()
         self.url = url
         self.timeout = timeout
@@ -44,8 +44,8 @@ class Worker(QtCore.QRunnable):
                 self.url, context=context, timeout=self.timeout
             ) as response:
                 raw_data = response.read()
-        except Exception:
-            msg = f"Exception during download of '{self.url}'"
+        except Exception as e:
+            msg = f"Exception '{e}' during download of '{self.url}'"
             logger.exception(msg)
             self.com.on_download_failed.emit(msg, self.url)
         else:
@@ -53,7 +53,7 @@ class Worker(QtCore.QRunnable):
 
 
 class Downloader(QtCore.QObject):
-    """Download content async using a threadpool and urllib.
+    """Download content using QNetworkAccessManager.
 
     It is async (provides signal) and avoids an issue on macOS, where the import
     of urllib.request fails with 'no module named _scproxy' in the packaged version.
@@ -64,8 +64,8 @@ class Downloader(QtCore.QObject):
         self.com = Communicate()
         self.threadpool = QtCore.QThreadPool()
 
-    def get(self, url: str, timeout: float = 30) -> None:
-        """Start downloading url. Emits failed or finished signal, when done."""
+    def get(self, url: str, timeout: int = 30) -> None:
+        """Start downloading url. Emits signal, when done."""
         logger.debug("Download %s", url)
         worker = Worker(url=url, timeout=timeout)
         worker.com.on_download_finished.connect(self.com.on_download_finished)
