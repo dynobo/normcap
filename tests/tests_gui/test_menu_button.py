@@ -12,22 +12,21 @@ def test_enable_language_manager(qtbot, menu_btn):
     assert result.signal_triggered
 
 
-def test_disable_language_manager(qtbot, monkeypatch, menu_btn_without_lang_man):
+def test_disable_language_manager(monkeypatch, menu_btn_without_lang_man):
     menu_btn = menu_btn_without_lang_man
+    messages_shown = []
+
+    def _mocked_show_message_box(text):
+        messages_shown.append(text)
+
+    monkeypatch.setattr(menu_btn, "_show_message_box", _mocked_show_message_box)
     menu_btn.menu().aboutToShow.emit()
 
     language_action = menu_btn.findChild(QtGui.QAction, "show_help_languages")
     assert "need more" in language_action.text()
 
-    mock_called = False
-
-    def mocked_msg_exec():
-        nonlocal mock_called
-        mock_called = True
-
-    monkeypatch.setattr(menu_btn.message_box, "exec_", mocked_msg_exec)
     language_action.trigger()
-    assert mock_called
+    assert "you are not using the prebuilt" in messages_shown[0].lower()
 
 
 def test_languages_section_does_overflow(qtbot, menu_btn):
@@ -72,7 +71,7 @@ def test_open_url_triggered(qtbot, menu_btn):
             action.trigger()
 
 
-def test_language_group(qtbot, menu_btn):
+def test_language_group(menu_btn):
     langs = ["afr", "deu", "eng"]
     menu_btn.on_languages_changed(langs)
     menu_btn.menu().aboutToShow.emit()
@@ -91,7 +90,7 @@ def test_language_group(qtbot, menu_btn):
     assert menu_btn.settings.value("language") == [langs[-1]]
 
 
-def test_mode_group(qtbot, menu_btn):
+def test_mode_group(menu_btn):
     menu_btn.menu().aboutToShow.emit()
 
     settings_group = menu_btn.findChild(QtGui.QActionGroup, "mode_group")
@@ -100,7 +99,7 @@ def test_mode_group(qtbot, menu_btn):
         assert menu_btn.settings.value("mode") == action.objectName()
 
 
-def test_settings_group(qtbot, menu_btn):
+def test_settings_group(menu_btn):
     menu_btn.menu().aboutToShow.emit()
 
     settings_group = menu_btn.findChild(QtGui.QActionGroup, "settings_group")

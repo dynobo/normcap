@@ -98,11 +98,6 @@ class MenuButton(QtWidgets.QToolButton):
         self.setPopupMode(QtWidgets.QToolButton.ToolButtonPopupMode.InstantPopup)
         self.setAutoRaise(True)
 
-        self.message_box = QtWidgets.QMessageBox()
-        self.message_box.setIconPixmap(QtGui.QIcon(":normcap").pixmap(48, 48))
-        # Necessary on wayland for main window to regain focus:
-        self.message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
-
         self.setMenu(self._create_menu())
 
         self.setStyleSheet(_BUTTON_STYLE)
@@ -110,6 +105,7 @@ class MenuButton(QtWidgets.QToolButton):
 
     def _create_menu(self) -> QtWidgets.QMenu:
         menu = QtWidgets.QMenu(self)
+        menu.setParent(self)
         menu.setObjectName("settings_menu")
         menu.setStyleSheet(
             _MENU_STYLE.replace("$COLOR", str(self.settings.value("color")))
@@ -122,6 +118,15 @@ class MenuButton(QtWidgets.QToolButton):
     @QtCore.Slot(list)
     def on_languages_changed(self, installed_languages: list[str]) -> None:
         self.languages = installed_languages
+
+    def _show_message_box(self, text: str) -> None:
+        self.message_box = QtWidgets.QMessageBox(self)
+        self.message_box.setParent(self)
+        self.message_box.setIconPixmap(QtGui.QIcon(":normcap").pixmap(48, 48))
+        # Necessary on wayland for main window to regain focus:
+        self.message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
+        self.message_box.setText(text)
+        self.message_box.exec_()
 
     @QtCore.Slot(QtGui.QAction)
     def on_item_click(self, action: QtGui.QAction) -> None:
@@ -136,8 +141,7 @@ class MenuButton(QtWidgets.QToolButton):
             return
 
         if action_name == "show_help_languages":
-            self.message_box.setText(MESSAGE_LANGUAGES)
-            self.message_box.exec_()
+            self._show_message_box(text=MESSAGE_LANGUAGES)
             return
 
         if action_name == "manage_languages":
@@ -240,7 +244,8 @@ class MenuButton(QtWidgets.QToolButton):
         if len(languages) <= overflow_languages_count:
             language_menu = menu
         else:
-            language_menu = QtWidgets.QMenu("select", menu)
+            language_menu = QtWidgets.QMenu("select")
+            language_menu.setParent(menu)
             language_menu.setObjectName("language_menu")
             menu.addMenu(language_menu)
 
@@ -264,7 +269,8 @@ class MenuButton(QtWidgets.QToolButton):
         menu.addAction(action)
 
     def _add_application_section(self, menu: QtWidgets.QMenu) -> None:
-        submenu = QtWidgets.QMenu(menu)
+        submenu = QtWidgets.QMenu()
+        submenu.setParent(menu)
         submenu.setObjectName("settings_menu_website")
         submenu.setTitle("About")
 

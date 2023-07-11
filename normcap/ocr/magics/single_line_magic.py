@@ -19,10 +19,7 @@ class SingleLineMagic(BaseMagic):
         if len(ocr_result.text) == 0:
             return 1
 
-        if ocr_result.num_lines == 1:
-            return 50
-
-        return 0
+        return 50 if ocr_result.num_lines == 1 else 0
 
     def transform(self, ocr_result: OcrResult) -> str:
         """Just transform into single line of text.
