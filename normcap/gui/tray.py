@@ -462,9 +462,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _create_window(self, index: int) -> None:
         """Open a child window for the specified screen."""
-        new_window = Window(screen=self.screens[index], settings=self.settings)
-        new_window.com.on_esc_key_pressed.connect(
-            lambda: self.com.on_close_or_exit.emit("esc button pressed")
+        new_window = Window(
+            screen=self.screens[index], settings=self.settings, parent=None
         )
         new_window.com.on_region_selected.connect(self.com.on_region_selected)
         new_window.com.on_window_positioned.connect(self.com.on_window_positioned)
