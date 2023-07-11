@@ -127,6 +127,7 @@ class Window(QtWidgets.QMainWindow):
         self,
         screen: Screen,
         settings: Settings,
+        parent: QtWidgets.QWidget | None = None,
     ) -> None:
         """Initialize window."""
         super().__init__()

@@ -1,6 +1,6 @@
 """Create the settings button and its menu."""
 
-from typing import Any, Optional
+from typing import Any
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -81,7 +81,7 @@ class MenuButton(QtWidgets.QToolButton):
         settings: QtCore.QSettings,
         installed_languages: list[str],
         language_manager: bool = False,
-        parent: Optional[QtWidgets.QWidget] = None,
+        parent: QtWidgets.QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self.languages = installed_languages
@@ -128,7 +128,7 @@ class MenuButton(QtWidgets.QToolButton):
         action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None
-        value: Optional[Any] = None
+        value: Any | None = None
         setting = None
 
         if action_name == "close":
@@ -187,16 +187,14 @@ class MenuButton(QtWidgets.QToolButton):
         self,
         menu: QtWidgets.QMenu,
         text: str,
-        action_parent: Optional[QtGui.QAction] = None,
+        action_parent: QtGui.QAction | None = None,
     ) -> None:
         action = QtGui.QAction(text, action_parent or menu)
         action.setEnabled(False)
         action.setFont(self.title_font)
         menu.addAction(action)
 
-    def _add_settings_section(
-        self, menu: QtWidgets.QMenu
-    ) -> None:  # sourcery skip: class-extract-method
+    def _add_settings_section(self, menu: QtWidgets.QMenu) -> None:
         settings_group = QtGui.QActionGroup(menu)
         settings_group.setObjectName("settings_group")
         settings_group.setExclusive(False)
