@@ -8,7 +8,7 @@ from platforms.utils import BuilderBase
 
 
 class MacBriefcase(BuilderBase):
-    """Create prebuild package for macOS using Briefcase."""
+    """Create prebuilt package for macOS using Briefcase."""
 
     binary_suffix = ""
 

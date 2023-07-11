@@ -358,7 +358,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             screengrab.macos_request_screenshot_permission()
 
             # Message box to explain what's happening and open the preferences
-            app = "NormCap" if system_info.is_prebuild_package() else "Terminal"
+            app = "NormCap" if system_info.is_prebuilt_package() else "Terminal"
             QtWidgets.QMessageBox.critical(
                 None,
                 "Error!",
@@ -400,7 +400,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if str(self.settings.value("last-update-check", type=str)) > now_sub_interval:
             return
 
-        checker = UpdateChecker(self, packaged=system_info.is_prebuild_package())
+        checker = UpdateChecker(self, packaged=system_info.is_prebuilt_package())
         checker.com.on_version_checked.connect(self._update_time_of_last_update_check)
         checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
         QtCore.QTimer.singleShot(500, checker.check)
@@ -479,7 +479,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             system_info.is_briefcase_package = lambda: True
         settings_menu = MenuButton(
             settings=self.settings,
-            language_manager=system_info.is_prebuild_package(),
+            language_manager=system_info.is_prebuilt_package(),
             installed_languages=self.installed_languages,
         )
         settings_menu.com.on_open_url.connect(self.com.on_open_url_and_hide)
