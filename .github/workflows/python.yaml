@@ -164,7 +164,7 @@ jobs:
           parallel-finished: true
 
   build-packages:
-    name: Build prebuild packages & draft release
+    name: Build prebuilt packages & draft release
     needs: test
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ${{ matrix.os }}

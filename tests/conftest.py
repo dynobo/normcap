@@ -1,8 +1,14 @@
+import sys
+from contextlib import contextmanager
+from functools import partial
 from pathlib import Path
+from typing import Callable
+from urllib import request
 
 import pytest
-from PySide6 import QtCore, QtGui
+from PySide6 import QtCore, QtGui, QtWidgets
 
+from normcap import app
 from normcap.gui import menu_button, system_info
 from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.magics import email_magic, url_magic
@@ -135,3 +141,99 @@ def ocr_result() -> OcrResult:
 def argparser_defaults():
     argparser = create_argparser()
     return vars(argparser.parse_args([]))
+
+
+@pytest.fixture()
+def cli_args():
+    return [
+        sys.argv[0],
+        "--notification=False",
+        "--verbosity=debug",
+        "--update=False",
+        "--multi-instances",
+        # TODO: Why are notification still show during tests?
+    ]
+
+
+@pytest.fixture()
+def run_normcap(monkeypatch, qapp, cli_args):
+    def _run_normcap(extra_cli_args=None):
+        extra_cli_args = extra_cli_args or []
+        cli_args.extend(extra_cli_args)
+        monkeypatch.setattr(sys, "argv", cli_args)
+
+        monkeypatch.setattr(app, "_get_application", lambda: qapp)
+        _, tray = app._prepare_app_and_tray()
+        return tray
+
+    return _run_normcap
+
+
+@pytest.fixture()
+def screen_size(qapp) -> QtCore.QSize:
+    return QtWidgets.QApplication.instance()
+
+
+@pytest.fixture()
+def mock_urlopen(monkeypatch) -> Callable:
+    """Provide a function to patch urllib.request.urlopen with a fake contextmanager.
+
+    The fake urlopen contextmanager will yield a fake Response instance, which has
+    only one `read()` method that returns the `response` data used as argument to patch
+    function.
+
+    If `response` is `None`, an exception is raised to simulate a download error.
+    """
+
+    class _MockedResponse:
+        def __init__(self, response: bytes | None):
+            self._response = response
+
+        def read(self) -> bytes:
+            if not self._response:
+                raise RuntimeError("Simulate download failed")
+            return self._response
+
+    @contextmanager
+    def _mocked_urlopen(*_, response: bytes | None, **__):
+        yield _MockedResponse(response=response)
+
+    def _monkeypatch_urlopen(response: bytes | None):
+        monkeypatch.setattr(
+            request, "urlopen", partial(_mocked_urlopen, response=response)
+        )
+
+    return _monkeypatch_urlopen
+
+
+@pytest.fixture()
+def select_region(qtbot):
+    def _select_region(on: QtWidgets.QWidget, pos: tuple[QtCore.QPoint, QtCore.QPoint]):
+        top_left, bottom_right = pos
+        qtbot.mousePress(on, QtCore.Qt.MouseButton.LeftButton, pos=top_left)
+        qtbot.mouseMove(on, pos=bottom_right)
+        qtbot.mouseRelease(on, QtCore.Qt.MouseButton.LeftButton, pos=bottom_right)
+
+    return _select_region
+
+
+@pytest.fixture()
+def check_ocr_result():
+    def _check_ocr_result(normcap_tray):
+        def __check_ocr_result():
+            assert normcap_tray.capture.ocr_text is not None
+
+        return __check_ocr_result
+
+    return _check_ocr_result
+
+
+@pytest.fixture()
+def check_windows_exist():
+    def _check_windows_exist(normcap_tray):
+        def __check_window_exist():
+            assert len(normcap_tray.windows) > 0
+
+        return __check_window_exist
+
+    return _check_windows_exist

@@ -25,7 +25,7 @@ def test_move_active_window_to_position_raises_on_non_linux():
         ((1200, 800), (600, 400), 2.0),
     ],
 )
-def test_window_get_scale_factor(qapp, temp_settings, img_size, screen_size, factor):
+def test_window_get_scale_factor(qtbot, temp_settings, img_size, screen_size, factor):
     image = QtGui.QImage(*img_size, QtGui.QImage.Format.Format_RGB32)
     screen = models.Screen(
         is_primary=True,
@@ -34,12 +34,13 @@ def test_window_get_scale_factor(qapp, temp_settings, img_size, screen_size, fac
         index=0,
         screenshot=image,
     )
-    win = window.Window(screen=screen, settings=temp_settings)
+    win = window.Window(screen=screen, settings=temp_settings, parent=None)
+    qtbot.addWidget(win)
 
     assert win._get_scale_factor() == factor
 
 
-def test_window_get_scale_factor_raises_if_missing(qapp, temp_settings):
+def test_window_get_scale_factor_raises_if_missing(qtbot, temp_settings):
     image = QtGui.QImage(600, 400, QtGui.QImage.Format.Format_RGB32)
     screen = models.Screen(
         is_primary=True,
@@ -48,7 +49,9 @@ def test_window_get_scale_factor_raises_if_missing(qapp, temp_settings):
         index=0,
         screenshot=image,
     )
-    win = window.Window(screen=screen, settings=temp_settings)
+    win = window.Window(screen=screen, settings=temp_settings, parent=None)
+    qtbot.addWidget(win)
+
     win.screen_.screenshot = None
     with pytest.raises(ValueError, match="image is missing"):
         _ = win._get_scale_factor()
@@ -63,7 +66,7 @@ def test_window_esc_key_pressed(qtbot, temp_settings):
         index=0,
         screenshot=image,
     )
-    win = window.Window(screen=screen, settings=temp_settings)
+    win = window.Window(screen=screen, settings=temp_settings, parent=None)
     qtbot.add_widget(win)
 
     # Test propagated, if not selecting

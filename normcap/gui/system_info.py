@@ -49,21 +49,12 @@ def is_flatpak_package() -> bool:
     return os.getenv("FLATPAK_ID") is not None
 
 
-def is_prebuild_package() -> bool:
+def is_prebuilt_package() -> bool:
     return is_briefcase_package() or is_flatpak_package()
 
 
 @functools.cache
 def get_tesseract_path() -> Path:
-    """Get the path to the Tesseract binary.
-
-    Returns:
-        Path: The path to the Tesseract binary.
-
-    Raises:
-        ValueError: If the platform is not supported.
-        RuntimeError: If the Tesseract binary cannot be located.
-    """
     if is_briefcase_package():
         if sys.platform == "linux":
             binary_path = Path(__file__).parent.parent.parent.parent / "bin"

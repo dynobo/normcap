@@ -55,8 +55,8 @@ def test_compose_notification(
         scale_factor=1,
         rect=Rect(0, 0, 10, 10),
     )
-    notifi = notifier.Notifier(None)
-    title, text = notifi._compose_notification(capture)
+    notify = notifier.Notifier(None)
+    title, text = notify._compose_notification(capture)
     assert output_title in title
     assert output_text in text
 
@@ -66,22 +66,22 @@ def test_send_via_libnotify(monkeypatch):
         assert cmd[0] == "notify-send"
         assert cmd[1].startswith("--icon=")
         assert cmd[2] == "--app-name=NormCap"
-        assert cmd[3] == "Titel"
+        assert cmd[3] == "Title"
         assert cmd[4] == "Message"
 
         icon = cmd[1].removeprefix("--icon=")
         assert Path(icon).exists()
 
     monkeypatch.setattr(subprocess, "Popen", mocked_popen)
-    notifi = notifier.Notifier(None)
-    notifi.send_via_libnotify("Titel", "Message")
+    notify = notifier.Notifier(None)
+    notify._send_via_libnotify("Title", "Message")
 
 
 def test_send_via_qt_tray(qtbot):
     """Only tests if no exception occurs."""
     tray = QtWidgets.QSystemTrayIcon()
-    notifi = notifier.Notifier(tray)
-    notifi.send_via_qt_tray("Titel", "Message")
+    notify = notifier.Notifier(tray)
+    notify._send_via_qt_tray("Title", "Message")
 
 
 def test_send_notification(monkeypatch):
@@ -103,15 +103,15 @@ def test_send_notification(monkeypatch):
     def mocked_qt_tray(cls, title, message):
         result.append({"title": title, "message": message, "method": "qt_tray"})
 
-    monkeypatch.setattr(notifier.Notifier, "send_via_libnotify", mocked_libnotify)
-    monkeypatch.setattr(notifier.Notifier, "send_via_qt_tray", mocked_qt_tray)
+    monkeypatch.setattr(notifier.Notifier, "_send_via_libnotify", mocked_libnotify)
+    monkeypatch.setattr(notifier.Notifier, "_send_via_qt_tray", mocked_qt_tray)
 
     # On linux systems w/o libnotify
     monkeypatch.setattr(notifier.sys, "platform", "linux")
     monkeypatch.setattr(notifier.shutil, "which", lambda _: False)
 
-    notifi = notifier.Notifier(None)
-    notifi.send_notification(capture)
+    notify = notifier.Notifier(None)
+    notify._send_notification(capture)
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
     assert result[-1]["method"] == "qt_tray"
@@ -120,8 +120,8 @@ def test_send_notification(monkeypatch):
     monkeypatch.setattr(notifier.sys, "platform", "linux")
     monkeypatch.setattr(notifier.shutil, "which", lambda _: True)
 
-    notifi = notifier.Notifier(None)
-    notifi.send_notification(capture)
+    notify = notifier.Notifier(None)
+    notify._send_notification(capture)
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
     assert result[-1]["method"] == "libnotify"
@@ -130,8 +130,8 @@ def test_send_notification(monkeypatch):
     monkeypatch.setattr(notifier.sys, "platform", "win32")
     monkeypatch.setattr(notifier.shutil, "which", lambda _: True)
 
-    notifi = notifier.Notifier(None)
-    notifi.send_notification(capture)
+    notify = notifier.Notifier(None)
+    notify._send_notification(capture)
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
     assert result[-1]["method"] == "qt_tray"

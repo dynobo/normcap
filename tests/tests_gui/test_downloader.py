@@ -27,11 +27,17 @@ def test_downloader_handles_not_existing_url(caplog, qtbot: QtBot):
     wrong_url = "https://not_existing_url.normcap"
 
     downloader = Downloader()
+    # Do not trigger download finished signal on error
+    with qtbot.assert_not_emitted(downloader.com.on_download_finished, wait=1000):
+        downloader.get(wrong_url)
 
-    with qtbot.assert_not_emitted(
-        downloader.com.on_download_finished, wait=1500
-    ), qtbot.wait_signal(downloader.com.on_download_failed) as result:
-        downloader.get(wrong_url, timeout=0.5)
+    assert "ERROR" in caplog.text
+    assert wrong_url in caplog.text
+    assert "Exception" in caplog.text
+
+    # Do trigger download failed signal
+    with qtbot.wait_signal(downloader.com.on_download_failed, timeout=1000) as result:
+        downloader.get(wrong_url)
 
     assert result.signal_triggered
     assert wrong_url in result.args[0]
@@ -41,7 +47,7 @@ def test_downloader_handles_not_existing_url(caplog, qtbot: QtBot):
 def test_worker_not_existing_url(qtbot):
     test_url = "https://does-not-exist-h4k8u4-p9v1m3-0kplnf.net"
 
-    worker = Worker(test_url, timeout=1)
+    worker = Worker(test_url)
     with qtbot.waitSignal(worker.com.on_download_failed) as signal:
         worker.run()
 

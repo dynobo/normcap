@@ -23,7 +23,7 @@ class LanguageManager(QtWidgets.QDialog):
     def __init__(
         self, tessdata_path: Path, parent: QtWidgets.QWidget | None = None
     ) -> None:
-        super().__init__(parent)
+        super().__init__(parent=parent)
 
         self.setModal(True)
         self.setWindowTitle("Manage Languages")
@@ -31,8 +31,8 @@ class LanguageManager(QtWidgets.QDialog):
 
         self.tessdata_path = tessdata_path
 
-        self.com = Communicate()
-        self.downloader = Downloader()
+        self.com = Communicate(parent=self)
+        self.downloader = Downloader(parent=self)
         self.downloader.com.on_download_failed.connect(self._on_download_error)
         self.downloader.com.on_download_finished.connect(self._on_download_finished)
 
@@ -205,7 +205,7 @@ class LanguageLayout(QtWidgets.QVBoxLayout):
         super().__init__()
         self.addWidget(IconLabel(icon=label_icon, text=label_text))
 
-        self.model = LanguageModel()
+        self.model = LanguageModel(parent=self)
         self.view = MinimalTableView(model=self.model)
         self.addWidget(self.view)
 
@@ -220,7 +220,7 @@ class LanguageLayout(QtWidgets.QVBoxLayout):
 
 class LanguageModel(QtCore.QAbstractTableModel):
     def __init__(
-        self, parent: QtWidgets.QWidget | None = None, languages: list | None = None
+        self, parent: QtWidgets.QWidget, languages: list | None = None
     ) -> None:
         super().__init__(parent=parent)
         self.languages: list = languages or []

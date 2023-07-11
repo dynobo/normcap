@@ -19,14 +19,14 @@ class Communicate(QtCore.QObject):
     on_click_get_new_version = QtCore.Signal(str)  # url to new version
 
 
-class UpdateChecker(QtCore.QObject):
+class UpdateChecker(QtWidgets.QWidget):
     """Check for a new normcap version."""
 
-    def __init__(self, parent: QtCore.QObject, packaged: bool = False) -> None:
-        super().__init__(parent)
+    def __init__(self, parent: QtCore.QObject | None, packaged: bool = False) -> None:
+        super().__init__(parent=parent)
         self.packaged = packaged
-        self.com = Communicate()
-        self.downloader = Downloader()
+        self.com = Communicate(parent=self)
+        self.downloader = Downloader(parent=self)
         self.downloader.com.on_download_finished.connect(self._on_download_finished)
         self.message_box = self._create_message_box()
 
@@ -57,9 +57,8 @@ class UpdateChecker(QtCore.QObject):
         else:
             logger.error("Could not detect remote version. Update check won't work!")
 
-    @staticmethod
-    def _create_message_box() -> QtWidgets.QMessageBox:
-        message_box = QtWidgets.QMessageBox()
+    def _create_message_box(self) -> QtWidgets.QMessageBox:
+        message_box = QtWidgets.QMessageBox(parent=self.parent())
 
         # Necessary on wayland for main window to regain focus:
         message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)

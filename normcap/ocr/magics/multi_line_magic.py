@@ -16,8 +16,10 @@ class MultiLineMagic(BaseMagic):
         Returns:
             Score between 0-100 (100 = more likely)
         """
-        if (ocr_result.num_lines > 1) and (
-            ocr_result.num_blocks == ocr_result.num_pars == 1
+        if (
+            (ocr_result.num_lines > 1)
+            and (ocr_result.num_blocks == 1)
+            and (ocr_result.num_pars == 1)
         ):
             return 50.0
 

@@ -48,7 +48,7 @@ def main() -> None:
     args = _get_args()
     _prepare_logging(args)
     _prepare_envs()
-    if system_info.is_prebuild_package():
+    if system_info.is_prebuilt_package():
         utils.copy_traineddata_files(target_path=system_info.get_tessdata_path())
 
     app = QtWidgets.QApplication(sys.argv)

@@ -10,7 +10,7 @@ from platforms.utils import BuilderBase, bundle_tesseract_windows_ub_mannheim
 
 
 class WindowsBriefcase(BuilderBase):
-    """Create prebuild package for Windows using Briefcase."""
+    """Create prebuilt package for Windows using Briefcase."""
 
     binary_suffix = ""
 

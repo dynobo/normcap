@@ -1,6 +1,8 @@
 import logging
 import sys
-from typing import Callable
+from typing import Protocol
+
+from PySide6 import QtGui
 
 from normcap.screengrab import utils
 from normcap.screengrab.utils import (
@@ -26,7 +28,12 @@ class ScreenshotRequestError(ScreenshotError):
 logger = logging.getLogger(__name__)
 
 
-def get_capture_func() -> Callable:
+class Capture(Protocol):
+    def __call__(self) -> list[QtGui.QImage]:
+        ...
+
+
+def get_capture_func() -> Capture:
     # fmt: off
     if sys.platform != "linux" or not utils.has_wayland_display_manager():
         logger.debug("Select capture method QT")
