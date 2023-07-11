@@ -10,7 +10,7 @@ from platforms.utils import BuilderBase
 
 
 class LinuxBriefcase(BuilderBase):
-    """Create prebuild package for Linux using Briefcase."""
+    """Create prebuilt package for Linux using Briefcase."""
 
     binary_suffix = ""
 

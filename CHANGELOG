@@ -47,9 +47,9 @@
   ([#353](https://github.com/dynobo/normcap/issues/353))
 - Linux: Fix FlatPak crashes due to missing permissions
   ([#320](https://github.com/dynobo/normcap/issues/320)).
-- Prebuild packages: Add UI for downloading additional languages.
-- Prebuild packages: Remove all default languages except English to reduce size.
-- Prebuild packages (Windows): Switch to different tesseract binaries, which should work
+- Prebuilt packages: Add UI for downloading additional languages.
+- Prebuilt packages: Remove all default languages except English to reduce size.
+- Prebuilt packages (Windows): Switch to different tesseract binaries, which should work
   more reliable across systems. Unfortunately, it also enlarges the file size a lot.
   Would be great to [get your feedback](https://github.com/dynobo/normcap/discussions)
   on this! ([#254](https://github.com/dynobo/normcap/issues/254))
@@ -115,11 +115,11 @@
 - Windows: Write log files for debugging
   ([see FAQs](https://dynobo.github.io/normcap/#faqs-windows-log)).
 - macOS: Use `pbcopy` for more reliable copy to clipboard.
-- Linux: Fix notifications not showing up in prebuild packages on some systems.
+- Linux: Fix notifications not showing up in prebuilt packages on some systems.
 
 ## v0.3.8 (2022-08-21)
 
-- All: Further reduced file size of prebuild packages
+- All: Further reduced file size of prebuilt packages
   ([#238](https://github.com/dynobo/normcap/issues/238)). Thx,
   [@thecoder-001](https://github.com/thecoder-001)
 - Linux: Fix clipboard issues on Wayland by using
@@ -145,7 +145,7 @@
 
 ## v0.3.5 (2022-07-27)
 
-- All: Reduce the file size of prebuild packages.
+- All: Reduce the file size of prebuilt packages.
 - Windows: Fix bug causing a 5 seconds delay during recognition
   [#218](https://github.com/dynobo/normcap/issues/218).
 - Docu: Add Python version required for installing package from PyPi
@@ -168,7 +168,7 @@
 
 ## v0.3.2 (2022-03-23)
 
-- macOS: Fixed crash in prebuild DMG package
+- macOS: Fixed crash in prebuilt DMG package
   [#199](https://github.com/dynobo/normcap/issues/199).
 
 ## v0.3.1 (2022-03-20)
@@ -184,7 +184,7 @@
   [#170](https://github.com/dynobo/normcap/issues/170)
 - All: Improve image processing for better detection accuracy, especially for bright
   text on dark backgrounds.
-- Prebuild packages: Switched to shipping "fast" language models to reduce package size.
+- Prebuilt packages: Switched to shipping "fast" language models to reduce package size.
 - Linux: Add support for Gnome Shell 41+ (using Screenshot Portal)
   [#153](https://github.com/dynobo/normcap/issues/153)
   [#157](https://github.com/dynobo/normcap/issues/157)
@@ -199,7 +199,7 @@
 ## v0.2.10 (2021-12-27)
 
 - All: Fix language settings not working if only a single language is selected
-- macOS: Fix crash at start of prebuild package due to missing dependency
+- macOS: Fix crash at start of prebuilt package due to missing dependency
 
 ## v0.2.9 (2021-12-26)
 
@@ -212,7 +212,7 @@
 
 - Linux: Fix language option in `settings.conf` not human-readable
   [#143](https://github.com/dynobo/normcap/issues/143)
-- Prebuild packages: On Windows the MSI-installer will now upgrade existing versions
+- Prebuilt packages: On Windows the MSI-installer will now upgrade existing versions
   [#148](https://github.com/dynobo/normcap/issues/148)
 
 ## v0.2.7 (2021-09-25)
@@ -226,7 +226,7 @@
 
 - All: NormCap settings will be reset on upgrade (due to changes in the settings
   system)!
-- Prebuild packages: A different set of languages is shipped! `jpn`, `jpn_vert` & `fra`
+- Prebuilt packages: A different set of languages is shipped! `jpn`, `jpn_vert` & `fra`
   got removed, but you can now add them yourself (Settings → "open data folder")
 
 **Other changes:**
@@ -234,7 +234,7 @@
 - All: Use native settings storage
 - All: Improve settings menu in case of many languages
 - All: Slightly better performance
-- Prebuild packages: Allow extending with additional languages
+- Prebuilt packages: Allow extending with additional languages
   [#137](https://github.com/dynobo/normcap/issues/137)
   [#127](https://github.com/dynobo/normcap/issues/127)
   [#104](https://github.com/dynobo/normcap/issues/104)
@@ -261,7 +261,7 @@
 ## v0.2.4 (2021-07-29)
 
 - All: Improve robustness of settings
-- Prebuild packages: Add languages `jpn` and `jpn_vert`
+- Prebuilt packages: Add languages `jpn` and `jpn_vert`
 - macOS: Fix bug that prevented the selection of a region
 - macOS: Catch `ImportError` of `urllib` in case update check is enabled
 

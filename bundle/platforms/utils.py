@@ -15,7 +15,7 @@ import toml
 
 
 class BuilderBase(ABC):
-    """Create a prebuild package."""
+    """Create a prebuilt package."""
 
     PROJECT_PATH = Path(__file__).absolute().parent.parent.parent
     BUILD_PATH = (PROJECT_PATH / "bundle").resolve()
@@ -41,7 +41,7 @@ class BuilderBase(ABC):
 
     @abstractmethod
     def create(self) -> None:
-        """Run all steps to build prebuild packages."""
+        """Run all steps to build prebuilt packages."""
 
     def get_system_requires(self) -> list[str]:
         """Get versions string from pyproject.toml."""

@@ -49,7 +49,7 @@ def is_flatpak_package() -> bool:
     return os.getenv("FLATPAK_ID") is not None
 
 
-def is_prebuild_package() -> bool:
+def is_prebuilt_package() -> bool:
     return is_briefcase_package() or is_flatpak_package()
 
 
