@@ -2,7 +2,16 @@
 # https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#about-github-hosted-runners
 
 name: Build
-on: [pull_request, push]
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+    inputs:
+      refToBuild:
+        description: "Branch, tag or commit SHA1 to build"
+        required: true
+        type: string
 
 concurrency:
   group: cicd-${{ github.ref }}
@@ -25,6 +34,11 @@ jobs:
     steps:
       # Setup environment
       - uses: actions/checkout@v3
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+      - uses: actions/checkout@v3
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        with:
+          ref: ${{ inputs.refToBuild }}
       - name: Install poetry
         run: pipx install poetry==1.4.2
       - uses: actions/setup-python@v4
