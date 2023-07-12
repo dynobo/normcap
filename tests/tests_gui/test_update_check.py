@@ -5,23 +5,40 @@ import urllib
 import pytest
 from PySide6 import QtWidgets
 
-from normcap.gui import update_check
+from normcap.gui import downloader, update_check
 from normcap.gui.constants import URLS
 
 
 @pytest.mark.parametrize("packaged", [True, False])
 @pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_update_checker_triggers_checked_signal(monkeypatch, qtbot, packaged):
+    # GIVEN we have an older version
     monkeypatch.setattr(update_check, "__version__", "0.0.0")
     checker = update_check.UpdateChecker(None, packaged=packaged)
-    monkeypatch.setattr(checker, "_show_update_message", lambda *args, **kwargs: ...)
-    with qtbot.waitSignal(checker.com.on_version_checked, timeout=5000) as _:
-        checker.check()
+
+    show_message_args = {}
+
+    def _mocked_show_update_message(**kwargs):
+        show_message_args.update(kwargs)
+
+    monkeypatch.setattr(checker, "_show_update_message", _mocked_show_update_message)
+
+    # WHEN the update check is performed
+    with qtbot.waitSignal(checker.com.on_version_checked, timeout=5000) as result:
+        checker.com.check.emit()
+
+    # THEN a signal should be send with the new version
+    #    and the version should also be displayed in the message
+    #    and the version should be a valid one (major.minor.patch)
+    assert result.signal_triggered
+    assert result.args[0] == show_message_args["version"]
+    assert len(result.args[0].split(".")) == 3
 
 
 @pytest.mark.parametrize("url", [URLS.releases_atom, URLS.pypi_json])
 @pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_urls_reachable(url):
+    """Test if the URLs which contain the release information are reachable."""
     with urllib.request.urlopen(url) as response:  # noqa: S310
         assert response.code == 200
 
@@ -67,40 +84,69 @@ def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
 
 
 def test_show_update_message(qtbot, monkeypatch):
+    # GIVEN a UpdateChecker
     checker = update_check.UpdateChecker(None)
     monkeypatch.setattr(checker.message_box, "exec_", lambda: QtWidgets.QMessageBox.Ok)
 
+    # WHEN the method to show "New version available" message is called
     version = "99.0.0"
     with qtbot.waitSignal(checker.com.on_click_get_new_version):
-        checker._show_update_message(new_version=version)
+        checker._show_update_message(version=version)
 
+    # THEN the message box should contain the version
     assert version in checker.message_box.text()
 
 
 @pytest.mark.parametrize(
-    ("packaged", "data", "message_args", "debug_log"),
+    (
+        "packaged",
+        "data",
+        "expected_show_message_args",
+        "expected_log",
+        "expected_triggered",
+    ),
     [
-        (True, b"doesn't include version", [], "Could not detect remote version"),
-        (True, "not-decodable", [], "Parsing response of update check failed"),
-        (True, b'/releases/tag/v9.9.9"', ["9.9.9"], "Newest version: 9.9.9"),
-        (False, b'"version": "9.9.9"', ["9.9.9"], "Newest version: 9.9.9"),
-        (True, b'/releases/tag/v0.0.0"', [], "Newest version: 0.0.0"),
+        (True, b'/releases/tag/v9.9.9"', ["9.9.9"], "Newest version: 9.9.9", True),
+        (True, b'/releases/tag/v0.0.0"', [], "Newest version: 0.0.0", True),
+        (False, b'"version": "9.9.9"', ["9.9.9"], "Newest version: 9.9.9", True),
+        (True, b"doesn't include version", [], "Could not detect remote", False),
+        (True, "not-decodable", [], "Parsing response of update check failed", False),
     ],
 )
 def test_on_download_finished(
-    caplog, qtbot, monkeypatch, packaged, data, message_args, debug_log
+    caplog,
+    qtbot,
+    monkeypatch,
+    packaged,
+    data,
+    expected_show_message_args,
+    expected_log,
+    expected_triggered,
 ):
+    # GIVEN a (un)packaged version of NormCap
+    #   and a mocked response for the request to the version url
+    checker = update_check.UpdateChecker(parent=None, packaged=packaged)
+
     args = []
 
-    def mocked_show(new_version):
-        args.append(new_version)
+    def mocked_show_update_message(version):
+        args.append(version)
 
-    checker = update_check.UpdateChecker(None)
-    monkeypatch.setattr(checker, "packaged", packaged)
-    monkeypatch.setattr(checker, "_show_update_message", mocked_show)
+    monkeypatch.setattr(checker, "_show_update_message", mocked_show_update_message)
 
-    with caplog.at_level(logging.DEBUG):
-        checker._on_download_finished(data=data, url="")
+    def _mocked_downloader_get(cls, url: str, timeout: float):
+        cls.com.on_download_finished.emit(data, url)
 
-    assert args == message_args
-    assert debug_log in caplog.records[0].message
+    monkeypatch.setattr(downloader.Downloader, "get", _mocked_downloader_get)
+
+    # WHEN the update check is triggered (with debug log level)
+    with caplog.at_level(logging.DEBUG), qtbot.wait_signal(
+        checker.com.on_version_checked, timeout=200, raising=False
+    ) as result:
+        checker.com.check.emit()
+
+    # THEN the update message is (not) shown with certain text
+    #    and certain messages are logged
+    assert result.signal_triggered == expected_triggered
+    assert args == expected_show_message_args
+    assert expected_log in caplog.text

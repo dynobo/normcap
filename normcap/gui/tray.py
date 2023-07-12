@@ -280,9 +280,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self._exit_application(reason="printed to stdout")
 
     @QtCore.Slot()
-    def _notify(self) -> None:
+    def _notify_or_close(self) -> None:
         if self.settings.value("notification", type=bool):
             self.notifier.com.send_notification.emit(self.capture)
+        else:
+            self.com.on_close_or_exit.emit("detection completed")
 
     @QtCore.Slot()
     def _close_windows(self) -> None:
@@ -401,7 +403,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         checker = UpdateChecker(self, packaged=system_info.is_prebuilt_package())
         checker.com.on_version_checked.connect(self._update_time_of_last_update_check)
         checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
-        QtCore.QTimer.singleShot(500, checker.check)
+        QtCore.QTimer.singleShot(500, checker.com.check.emit)
 
     def _update_time_of_last_update_check(self, newest_version: str) -> None:
         if newest_version is not None:
@@ -412,7 +414,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.notifier = Notifier(parent=self)
         # TODO: Delayed close or exit
         self.notifier.com.on_notification_sent.connect(
-            lambda: self._close_windows(delayed_exit=True)
+            lambda: self.com.on_close_or_exit.emit("notification sent")
         )
 
     def _update_screenshots(self, delayed: bool = True) -> None:

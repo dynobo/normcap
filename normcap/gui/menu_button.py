@@ -83,7 +83,7 @@ class MenuButton(QtWidgets.QToolButton):
         language_manager: bool = False,
         parent: QtWidgets.QWidget | None = None,
     ) -> None:
-        super().__init__(parent)
+        super().__init__(parent=parent)
         self.languages = installed_languages
         self.setObjectName("settings_icon")
         self.settings = settings
