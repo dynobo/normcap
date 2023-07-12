@@ -14,7 +14,7 @@ from normcap.gui import resources, system_info, utils  # noqa: F401 (loads resou
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
-from normcap.gui.notifier import Notifier
+from normcap.gui.notification import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
@@ -280,11 +280,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self._exit_application(reason="printed to stdout")
 
     @QtCore.Slot()
-    def _notify_or_close(self) -> None:
+    def _notify(self) -> None:
         if self.settings.value("notification", type=bool):
-            self.com.on_send_notification.emit(self.capture)
-        else:
-            self.com.on_close_or_exit.emit("detection completed")
+            self.notifier.com.send_notification.emit(self.capture)
 
     @QtCore.Slot()
     def _close_windows(self) -> None:
@@ -411,10 +409,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.settings.setValue("last-update-check", today)
 
     def _add_notifier(self) -> None:
-        self.notifier = Notifier(self)
-        self.com.on_send_notification.connect(self.notifier.send_notification)
+        self.notifier = Notifier(parent=self)
+        # TODO: Delayed close or exit
         self.notifier.com.on_notification_sent.connect(
-            lambda: self.com.on_close_or_exit.emit("notification sent")
+            lambda: self._close_windows(delayed_exit=True)
         )
 
     def _update_screenshots(self, delayed: bool = True) -> None:
