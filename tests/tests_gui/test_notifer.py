@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from PySide6 import QtGui, QtWidgets
 
-from normcap.gui import notifier
+from normcap.gui import notification
 from normcap.gui.models import Capture, CaptureMode, Rect
 
 
@@ -43,9 +43,10 @@ from normcap.gui.models import Capture, CaptureMode, Rect
         ("RAW", f"W1 W2{os.linesep}W3", "8 chars", "W1 W2 W3"),
     ],
 )
-def test_compose_notification(
-    qtbot, ocr_applied_magic, ocr_text, output_title, output_text
-):
+def test_compose_notification(ocr_applied_magic, ocr_text, output_title, output_text):
+    # GIVEN a Notifier
+    #   and an OCR capture with a certain results
+    notifier = notification.Notifier(None)
     capture = Capture(
         ocr_text=ocr_text,
         ocr_applied_magic=ocr_applied_magic,
@@ -55,36 +56,72 @@ def test_compose_notification(
         scale_factor=1,
         rect=Rect(0, 0, 10, 10),
     )
-    notifi = notifier.Notifier(None)
-    title, text = notifi._compose_notification(capture)
+
+    # WHEN the notification is composed
+    title, text = notifier._compose_notification(capture)
+
+    # THEN certain title and text should be used
     assert output_title in title
     assert output_text in text
 
 
 def test_send_via_libnotify(monkeypatch):
-    def mocked_popen(cmd: str, start_new_session: bool):
-        assert cmd[0] == "notify-send"
-        assert cmd[1].startswith("--icon=")
-        assert cmd[2] == "--app-name=NormCap"
-        assert cmd[3] == "Titel"
-        assert cmd[4] == "Message"
+    # GIVEN a Notification object (and a mocked Popen)
+    notifier = notification.Notifier(None)
 
-        icon = cmd[1].removeprefix("--icon=")
-        assert Path(icon).exists()
+    cmd_args = []
 
-    monkeypatch.setattr(subprocess, "Popen", mocked_popen)
-    notifi = notifier.Notifier(None)
-    notifi.send_via_libnotify("Titel", "Message")
+    def _mocked_popen(cmd: str, start_new_session: bool):
+        cmd_args.extend(cmd)
+
+    monkeypatch.setattr(subprocess, "Popen", _mocked_popen)
+
+    # WHEN a notification is sent via the libnotify cli tool
+    notifier._send_via_libnotify("Title", "Message")
+
+    # THEN the command that gets executed via Popen should be in the specific format
+    #    and the icon image should exist
+    assert cmd_args[0] == "notify-send"
+    assert cmd_args[1].startswith("--icon=")
+    assert cmd_args[2] == "--app-name=NormCap"
+    assert cmd_args[3] == "Title"
+    assert cmd_args[4] == "Message"
+
+    icon = cmd_args[1].removeprefix("--icon=")
+    assert Path(icon).exists()
 
 
+@pytest.mark.gui()
 def test_send_via_qt_tray(qtbot):
     """Only tests if no exception occurs."""
+    # GIVEN a Notification object
+    #    with a QSystemTrayIcon as parent
     tray = QtWidgets.QSystemTrayIcon()
-    notifi = notifier.Notifier(tray)
-    notifi.send_via_qt_tray("Titel", "Message")
+    notifier = notification.Notifier(tray)
+
+    # WHEN a notification is sent via QT (QSystemTrayIcon)
+    notifier._send_via_qt_tray("Title", "Message")
+
+    # THEN we expect no exception (it's hard to test, if the notification is shown)
 
 
 def test_send_notification(monkeypatch):
+    """Test which method is used to send notification under certain conditions."""
+
+    # GIVEN a Notifier (with mocked notification methods)
+    notifier = notification.Notifier(None)
+
+    result = []
+
+    def mocked_libnotify(cls, title, message):
+        result.append({"title": title, "message": message, "method": "libnotify"})
+
+    def mocked_qt_tray(cls, title, message):
+        result.append({"title": title, "message": message, "method": "qt_tray"})
+
+    monkeypatch.setattr(notification.Notifier, "_send_via_libnotify", mocked_libnotify)
+    monkeypatch.setattr(notification.Notifier, "_send_via_qt_tray", mocked_qt_tray)
+
     capture = Capture(
         ocr_text="text",
         ocr_applied_magic="SingleLineMagic",
@@ -95,43 +132,36 @@ def test_send_notification(monkeypatch):
         rect=Rect(0, 0, 10, 10),
     )
 
-    result = []
+    # WHEN a notification signal is emitted on a linux system _without_ libnotify
+    monkeypatch.setattr(notification.sys, "platform", "linux")
+    monkeypatch.setattr(notification.shutil, "which", lambda _: False)
 
-    def mocked_libnotify(cls, title, message):
-        result.append({"title": title, "message": message, "method": "libnotify"})
+    notifier._send_notification(capture)
 
-    def mocked_qt_tray(cls, title, message):
-        result.append({"title": title, "message": message, "method": "qt_tray"})
-
-    monkeypatch.setattr(notifier.Notifier, "send_via_libnotify", mocked_libnotify)
-    monkeypatch.setattr(notifier.Notifier, "send_via_qt_tray", mocked_qt_tray)
-
-    # On linux systems w/o libnotify
-    monkeypatch.setattr(notifier.sys, "platform", "linux")
-    monkeypatch.setattr(notifier.shutil, "which", lambda _: False)
-
-    notifi = notifier.Notifier(None)
-    notifi.send_notification(capture)
+    # THEN QT should be used to send the notification with a certain content
+    assert result[-1]["method"] == "qt_tray"
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
-    assert result[-1]["method"] == "qt_tray"
 
-    # On linux systems with libnotify
-    monkeypatch.setattr(notifier.sys, "platform", "linux")
-    monkeypatch.setattr(notifier.shutil, "which", lambda _: True)
+    # WHEN a notification signal is emitted on a system _with_ libnotify
+    monkeypatch.setattr(notification.sys, "platform", "linux")
+    monkeypatch.setattr(notification.shutil, "which", lambda _: True)
 
-    notifi = notifier.Notifier(None)
-    notifi.send_notification(capture)
+    notifier._send_notification(capture)
+
+    # THEN libnotify should be used to send the notification with a certain content
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
     assert result[-1]["method"] == "libnotify"
 
-    # On other systems
-    monkeypatch.setattr(notifier.sys, "platform", "win32")
-    monkeypatch.setattr(notifier.shutil, "which", lambda _: True)
+    # WHEN a notification signal is emitted on a different system than linux
+    #    and even if a binary libnotify is available
+    monkeypatch.setattr(notification.sys, "platform", "win32")
+    monkeypatch.setattr(notification.shutil, "which", lambda _: True)
 
-    notifi = notifier.Notifier(None)
-    notifi.send_notification(capture)
+    notifier._send_notification(capture)
+
+    # THEN QT should be used to send the notification with a certain content
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
     assert result[-1]["method"] == "qt_tray"

@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 class Communicate(QtCore.QObject):
     """Notifier's communication bus."""
 
+    send_notification = QtCore.Signal(Capture)
     on_notification_sent = QtCore.Signal()
 
 
@@ -25,6 +26,7 @@ class Notifier(QtCore.QObject):
     def __init__(self, parent: QtCore.QObject) -> None:
         super().__init__(parent=parent)
         self.com = Communicate(parent=self)
+        self.com.send_notification.connect(self._send_notification)
 
     @staticmethod
     def _compose_notification(capture: Capture) -> tuple[str, str]:
@@ -67,16 +69,17 @@ class Notifier(QtCore.QObject):
 
         return title, text
 
-    def send_notification(self, capture: Capture) -> None:
+    @QtCore.Slot(Capture)
+    def _send_notification(self, capture: Capture) -> None:
         """Show tray icon then send notification."""
         title, message = self._compose_notification(capture)
         if sys.platform == "linux" and shutil.which("notify-send"):
-            self.send_via_libnotify(title, message)
+            self._send_via_libnotify(title, message)
         else:
-            self.send_via_qt_tray(title, message)
+            self._send_via_qt_tray(title, message)
         self.com.on_notification_sent.emit()
 
-    def send_via_libnotify(self, title: str, message: str) -> None:
+    def _send_via_libnotify(self, title: str, message: str) -> None:
         """Send via notify-send.
 
         Seems to work more reliable on Linux + Gnome, but requires libnotify.
@@ -100,8 +103,8 @@ class Notifier(QtCore.QObject):
         # Left detached on purpose!
         subprocess.Popen(cmds, start_new_session=True)  # noqa: S603
 
-    def send_via_qt_tray(self, title: str, message: str) -> None:
-        """Send via QT trayicon.
+    def _send_via_qt_tray(self, title: str, message: str) -> None:
+        """Send via QSystemTrayIcon.
 
         Used for:
             - Windows
