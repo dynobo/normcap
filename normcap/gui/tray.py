@@ -1,4 +1,5 @@
 """Create system tray and its menu."""
+
 import logging
 import os
 import sys
@@ -162,10 +163,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _apply_setting_change(self, setting: str) -> None:
         if setting == "tray":
             capture_action = self.contextMenu().findChild(QtGui.QAction, name="capture")
-            if capture_action:
-                capture_action.setVisible(
-                    self.settings.value(setting, False, type=bool)
-                )
+            capture_action.setVisible(self.settings.value(setting, False, type=bool))
 
     @QtCore.Slot(list)
     def _sanitize_language_setting(self, installed_languages: list[str]) -> None:
@@ -400,7 +398,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if str(self.settings.value("last-update-check", type=str)) > now_sub_interval:
             return
 
-        checker = UpdateChecker(self, packaged=system_info.is_prebuilt_package())
+        checker = UpdateChecker(parent=None, packaged=system_info.is_prebuilt_package())
         checker.com.on_version_checked.connect(self._update_time_of_last_update_check)
         checker.com.on_click_get_new_version.connect(self.com.on_open_url_and_hide)
         QtCore.QTimer.singleShot(500, checker.com.check.emit)
