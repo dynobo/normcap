@@ -23,7 +23,7 @@ class LanguageManager(QtWidgets.QDialog):
     def __init__(
         self, tessdata_path: Path, parent: QtWidgets.QWidget | None = None
     ) -> None:
-        super().__init__(parent)
+        super().__init__(parent=parent)
 
         self.setModal(True)
         self.setWindowTitle("Manage Languages")
@@ -31,8 +31,8 @@ class LanguageManager(QtWidgets.QDialog):
 
         self.tessdata_path = tessdata_path
 
-        self.com = Communicate()
-        self.downloader = Downloader()
+        self.com = Communicate(parent=self)
+        self.downloader = Downloader(parent=self)
         self.downloader.com.on_download_failed.connect(self._on_download_error)
         self.downloader.com.on_download_finished.connect(self._on_download_finished)
 
@@ -203,18 +203,17 @@ class LanguageLayout(QtWidgets.QVBoxLayout):
         self, label_text: str, label_icon: str, button_text: str, button_icon: str
     ) -> None:
         super().__init__()
+        self.model = LanguageModel(parent=self)
+
         self.addWidget(IconLabel(icon=label_icon, text=label_text))
 
-        self.model = LanguageModel()
         self.view = MinimalTableView(model=self.model)
         self.addWidget(self.view)
 
-        self.button = QtWidgets.QPushButton(button_text)
-        self.button.setIcon(
-            QtWidgets.QApplication.style().standardIcon(
-                getattr(QtWidgets.QStyle, button_icon, None)
-            )
+        button_qicon = QtWidgets.QApplication.style().standardIcon(
+            getattr(QtWidgets.QStyle, button_icon, None)
         )
+        self.button = QtWidgets.QPushButton(button_qicon, button_text)
         self.addWidget(self.button)
 
 
