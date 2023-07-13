@@ -69,9 +69,7 @@ def test_update_checker_is_new_version(current, other, is_new):
     ("packaged", "text"),
     [(True, b"abc"), (False, b'{"no relevant":"info"}'), (False, "not binary")],
 )
-@pytest.mark.skipif(
-    "GITHUB_ACTIONS" in os.environ, reason="Skip on Github Action Runner"
-)
+@pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
     checker = update_check.UpdateChecker(None, packaged=packaged)
     with qtbot.waitSignal(

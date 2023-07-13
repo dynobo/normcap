@@ -59,8 +59,8 @@ class Downloader(QtCore.QObject):
     of urllib.request fails with 'no module named _scproxy' in the packaged version.
     """
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, parent: QtCore.QObject | None = None) -> None:
+        super().__init__(parent=parent)
         self.com = Communicate()
         self.threadpool = QtCore.QThreadPool()
         self.worker: Worker | None = None
