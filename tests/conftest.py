@@ -1,4 +1,8 @@
+from contextlib import contextmanager
+from functools import partial
 from pathlib import Path
+from typing import Callable
+from urllib import request
 
 import pytest
 from PySide6 import QtCore, QtGui
@@ -135,3 +139,35 @@ def ocr_result() -> OcrResult:
 def argparser_defaults():
     argparser = create_argparser()
     return vars(argparser.parse_args([]))
+
+
+@pytest.fixture()
+def mock_urlopen(monkeypatch) -> Callable:
+    """Provide a function to patch urllib.request.urlopen with a fake contextmanager.
+
+    The fake urlopen contextmanager will yield a fake Response instance, which has
+    only one `read()` method that returns the `response` data used as argument to patch
+    function.
+
+    If `response` is `None`, an exception is raised to simulate a download error.
+    """
+
+    class _MockedResponse:
+        def __init__(self, response: bytes | None):
+            self._response = response
+
+        def read(self) -> bytes:
+            if not self._response:
+                raise RuntimeError("Simulate download failed")
+            return self._response
+
+    @contextmanager
+    def _mocked_urlopen(*_, response: bytes | None, **__):
+        yield _MockedResponse(response=response)
+
+    def _monkeypatch_urlopen(response: bytes | None):
+        monkeypatch.setattr(
+            request, "urlopen", partial(_mocked_urlopen, response=response)
+        )
+
+    return _monkeypatch_urlopen
