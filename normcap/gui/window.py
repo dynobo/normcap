@@ -130,13 +130,13 @@ class Window(QtWidgets.QMainWindow):
         parent: QtWidgets.QWidget | None = None,
     ) -> None:
         """Initialize window."""
-        super().__init__()
+        super().__init__(parent=parent)
         logger.debug("Create window for screen %s", screen.index)
 
         self.settings = settings
         self.screen_ = screen
 
-        self.com = Communicate()
+        self.com = Communicate(parent=self)
         self.color: QtGui.QColor = QtGui.QColor(str(settings.value("color")))
         self.is_positioned: bool = False
 
@@ -214,45 +214,54 @@ class Window(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:  # noqa: N802
         """Handle ESC key pressed."""
+        super().keyPressEvent(event)
         if event.key() == QtCore.Qt.Key.Key_Escape:
             if self.is_selecting:
                 self.is_selecting = False
                 self.update()
             else:
                 self.com.on_esc_key_pressed.emit()
-        super().keyPressEvent(event)
 
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
         """Handle left mouse button clicked."""
+        super().mousePressEvent(event)
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
             self.selection_start = self.selection_end = event.position().toPoint()
             self.is_selecting = True
             self.update()
-        super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
         """Update selection on mouse move."""
+        super().mouseMoveEvent(event)
         self.selection_end = event.position().toPoint()
         self.update()
-        super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
         """Start OCR workflow on left mouse button release."""
-        if (event.button() == QtCore.Qt.MouseButton.LeftButton) and self.is_selecting:
-            self.selection_end = event.position().toPoint()
-
-            rect = QtCore.QRect(self.selection_start, self.selection_end).normalized()
-            self.com.on_region_selected.emit(
-                (Rect(*rect.getCoords()).scaled(self.scale_factor), self.screen_.index)
-            )
-
-            self.selection_start = self.selection_end = QtCore.QPoint()
-            self.is_selecting = False
-            self.update()
         super().mouseReleaseEvent(event)
+        if event.button() != QtCore.Qt.MouseButton.LeftButton or not self.is_selecting:
+            return
+
+        self.selection_end = event.position().toPoint()
+        selected_rect = QtCore.QRect(
+            self.selection_start, self.selection_end
+        ).normalized()
+
+        self.selection_start = self.selection_end = QtCore.QPoint()
+        self.is_selecting = False
+        self.update()
+
+        # Emit as last action, cause self might get destroyed by the slots
+        self.com.on_region_selected.emit(
+            (
+                Rect(*selected_rect.getCoords()).scaled(self.scale_factor),
+                self.screen_.index,
+            )
+        )
 
     def changeEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802
         """Update position on Wayland."""
+        super().changeEvent(event)
         if (
             event.type() == QtCore.QEvent.Type.ActivationChange
             and system_info.display_manager_is_wayland()
@@ -261,17 +270,16 @@ class Window(QtWidgets.QMainWindow):
         ):
             self._position_windows_on_wayland()
             self.com.on_window_positioned.emit()
-        super().changeEvent(event)
 
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802
         """Adjust child widget on resize."""
-        self.ui_layer.resize(self.size())
         super().resizeEvent(event)
+        self.ui_layer.resize(self.size())
 
     def showEvent(self, event: QtGui.QShowEvent) -> None:  # noqa: N802
         """Update background image on show/reshow."""
-        self._draw_background_image()
         super().showEvent(event)
+        self._draw_background_image()
 
 
 class UiLayerLabel(QtWidgets.QLabel):
