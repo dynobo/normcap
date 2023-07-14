@@ -78,6 +78,7 @@ def test_app(monkeypatch, qapp, qtbot, testcase):
         app._prepare_envs()
 
         tray = SystemTray(None, vars(args))
+        tray._testing_do_not_sys_exit_on_hide = True
         tray.setVisible(True)
 
         window = tray.windows[0]
@@ -93,7 +94,7 @@ def test_app(monkeypatch, qapp, qtbot, testcase):
             None, capture.ocr_text, testcase.ocr_transformed
         ).ratio()
 
-        tray._exit_application(reason="test done", sys_exit=False)
+        tray._exit_application(delayed=False)
 
     assert capture.ocr_applied_magic in testcase.ocr_magics
     assert similarity >= 0.98, f"{capture.ocr_text=}"

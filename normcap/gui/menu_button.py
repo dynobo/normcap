@@ -244,8 +244,7 @@ class MenuButton(QtWidgets.QToolButton):
         if len(languages) <= overflow_languages_count:
             language_menu = menu
         else:
-            language_menu = QtWidgets.QMenu("select")
-            language_menu.setParent(menu)
+            language_menu = QtWidgets.QMenu("select", menu)
             language_menu.setObjectName("language_menu")
             menu.addMenu(language_menu)
 
@@ -269,8 +268,7 @@ class MenuButton(QtWidgets.QToolButton):
         menu.addAction(action)
 
     def _add_application_section(self, menu: QtWidgets.QMenu) -> None:
-        submenu = QtWidgets.QMenu()
-        submenu.setParent(menu)
+        submenu = QtWidgets.QMenu(menu)
         submenu.setObjectName("settings_menu_website")
         submenu.setTitle("About")
 
