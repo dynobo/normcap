@@ -157,7 +157,7 @@ def test_copy_traineddata_files_briefcase(tmp_path, monkeypatch):
 
         # Copying without should copy the temporary traineddata files
         for _ in range(3):
-            utils.copy_traineddata_files(target_path=tessdata_path)
+            utils.copy_traineddata_files(target_dir=tessdata_path)
 
             traineddatas = list(tessdata_path.glob("*.traineddata"))
             txts = list(tessdata_path.glob("*.txt"))
@@ -195,7 +195,7 @@ def test_copy_traineddata_files_flatpak(tmp_path, monkeypatch):
 
         monkeypatch.setattr(utils, "Path", _mocked_path)
         for _ in range(3):
-            utils.copy_traineddata_files(target_path=tessdata_path)
+            utils.copy_traineddata_files(target_dir=tessdata_path)
 
             traineddatas = list(tessdata_path.glob("*.traineddata"))
             txts = list(tessdata_path.glob("*.txt"))
@@ -220,7 +220,7 @@ def test_copy_traineddata_files_not_copying(tmp_path, monkeypatch):
         tessdata_path = tmp_path / "tessdata"
 
         # Copying without being flatpak or briefcase should do nothing
-        utils.copy_traineddata_files(target_path=tessdata_path)
+        utils.copy_traineddata_files(target_dir=tessdata_path)
 
         traineddatas = list(tessdata_path.glob("*.traineddata"))
         txts = list(tessdata_path.glob("*.txt"))
@@ -229,7 +229,7 @@ def test_copy_traineddata_files_not_copying(tmp_path, monkeypatch):
 
         # Copying within package but with target_path=None should do nothing
         monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
-        utils.copy_traineddata_files(target_path=None)
+        utils.copy_traineddata_files(target_dir=None)
 
         traineddatas = list(tessdata_path.glob("*.traineddata"))
         txts = list(tessdata_path.glob("*.txt"))
