@@ -59,7 +59,7 @@ def test_prepare_logging(monkeypatch, level, result, caplog):
         m.setattr(sys, "argv", [sys.argv[0], "--verbosity", level])
         args = app._get_args()
 
-    app._prepare_logging(args)
+    app._prepare_logging(getattr(args, "verbosity", "ERROR"))
     logger = logging.getLogger("normcap")
 
     assert logger.level == result["level"]

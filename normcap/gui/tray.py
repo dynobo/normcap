@@ -21,10 +21,6 @@ from normcap.gui.window import Window
 
 logger = logging.getLogger(__name__)
 
-UPDATE_CHECK_INTERVAL_DAYS = 7
-
-# TODO: Add tutorial screen
-
 
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
@@ -40,9 +36,11 @@ class Communicate(QtCore.QObject):
 class SystemTray(QtWidgets.QSystemTrayIcon):
     """System tray icon with menu."""
 
-    # Only for (unit-)testing purposes:
+    _EXIT_DELAY_MILLISECONDS: int = 5_000
+    _UPDATE_CHECK_INTERVAL_DAYS: int = 7
+
+    # Only for testing purposes:
     _testing_language_manager = False
-    _testing_do_not_sys_exit_on_hide = False
 
     # Used for singleton:
     _socket_name = f"v{__version__}-normcap"
@@ -75,7 +73,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.screens: list[Screen] = system_info.screens()
 
-        # TODO: Fix menu get's created top level!
         self.tray_menu = QtWidgets.QMenu(None)
         self.tray_menu.aboutToShow.connect(self._populate_context_menu_entries)
         self.setContextMenu(self.tray_menu)
@@ -306,8 +303,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     @QtCore.Slot()
     def _notify_or_close(self) -> None:
-        if self.settings.value("notification", type=bool):
-            self.delayed_exit_timer.start(5000)
+        if not self.settings.value("notification", False, type=bool):
+            self.delayed_exit_timer.start(self._EXIT_DELAY_MILLISECONDS)
 
     @QtCore.Slot()
     def _close_windows(self) -> None:
@@ -398,7 +395,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if not self.settings.value("update", type=bool):
             return
 
-        now_sub_interval_sec = time.time() - (60 * 60 * 24 * UPDATE_CHECK_INTERVAL_DAYS)
+        now_sub_interval_sec = time.time() - (
+            60 * 60 * 24 * self._UPDATE_CHECK_INTERVAL_DAYS
+        )
         now_sub_interval = time.strftime("%Y-%m-%d", time.gmtime(now_sub_interval_sec))
         if str(self.settings.value("last-update-check", type=str)) > now_sub_interval:
             return
@@ -508,7 +507,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self._socket_server.removeServer(self._socket_name)
 
         if delayed:
-            self.delayed_exit_timer.start(5000)
+            self.delayed_exit_timer.start(self._EXIT_DELAY_MILLISECONDS)
         else:
             self.hide()
 
@@ -525,11 +524,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         logger.debug(
             "Debug images saved in %s%snormcap", utils.tempfile.gettempdir(), os.sep
         )
-
-        # Because monkeypatching sys.exit() seems tricky in pytest, we use a flag
-        # to prevent sys.exit() during integration tests.
-        if getattr(self, "_testing_do_not_sys_exit_on_hide", True):
-            return None
 
         # The preferable QApplication.quit() doesn't work reliably on macOS. E.g. when
         # right clicking on "close" in tray menu, NormCap process keeps running.

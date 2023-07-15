@@ -1,3 +1,4 @@
+import sys
 from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
@@ -5,8 +6,9 @@ from typing import Callable
 from urllib import request
 
 import pytest
-from PySide6 import QtCore, QtGui
+from PySide6 import QtCore, QtGui, QtWidgets
 
+from normcap import app
 from normcap.gui import menu_button, system_info
 from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.magics import email_magic, url_magic
@@ -142,6 +144,37 @@ def argparser_defaults():
 
 
 @pytest.fixture()
+def cli_args():
+    return [
+        sys.argv[0],
+        "--notification=False",
+        "--verbosity=debug",
+        "--update=False",
+        "--tray=False",
+    ]
+
+
+@pytest.fixture()
+def run_normcap(monkeypatch, qapp, cli_args):
+    def _run_normcap(extra_cli_args: list[str] | None = None):
+        extra_cli_args = extra_cli_args or []
+        cli_args.extend(extra_cli_args)
+        monkeypatch.setattr(sys, "argv", cli_args)
+
+        monkeypatch.setattr(app, "_get_application", lambda: qapp)
+        _, tray = app._prepare()
+        tray._EXIT_DELAY_MILLISECONDS = 100
+        return tray
+
+    return _run_normcap
+
+
+@pytest.fixture()
+def screen_size(qapp) -> QtCore.QSize:
+    return QtWidgets.QApplication.instance()
+
+
+@pytest.fixture()
 def mock_urlopen(monkeypatch) -> Callable:
     """Provide a function to patch urllib.request.urlopen with a fake contextmanager.
 
@@ -171,3 +204,36 @@ def mock_urlopen(monkeypatch) -> Callable:
         )
 
     return _monkeypatch_urlopen
+
+
+@pytest.fixture()
+def select_region(qtbot):
+    def _select_region(on: QtWidgets.QWidget, pos: tuple[QtCore.QPoint, QtCore.QPoint]):
+        top_left, bottom_right = pos
+        qtbot.mousePress(on, QtCore.Qt.MouseButton.LeftButton, pos=top_left)
+        qtbot.mouseMove(on, pos=bottom_right)
+        qtbot.mouseRelease(on, QtCore.Qt.MouseButton.LeftButton, pos=bottom_right)
+
+    return _select_region
+
+
+@pytest.fixture()
+def check_ocr_result():
+    def _check_ocr_result(normcap_tray):
+        def __check_ocr_result():
+            assert normcap_tray.capture.ocr_text is not None
+
+        return __check_ocr_result
+
+    return _check_ocr_result
+
+
+@pytest.fixture()
+def check_windows_exist():
+    def _check_windows_exist(normcap_tray):
+        def __check_window_exist():
+            assert len(normcap_tray.windows) > 0
+
+        return __check_window_exist
+
+    return _check_windows_exist

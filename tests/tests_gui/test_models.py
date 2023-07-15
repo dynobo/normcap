@@ -35,9 +35,7 @@ def test_capture_image_area(capture: Capture):
 
 
 def test_screen_properties():
-    screen = Screen(
-        is_primary=True, device_pixel_ratio=2, rect=Rect(0, 0, 1920, 1080), index=1
-    )
+    screen = Screen(device_pixel_ratio=2, rect=Rect(0, 0, 1920, 1080), index=1)
 
     assert screen.width == 1920
     assert screen.height == 1080

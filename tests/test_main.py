@@ -12,7 +12,7 @@ def test_main_starts_normcap(monkeypatch):
         nonlocal called
         called = True
 
-    monkeypatch.setattr(app, "main", mocked_app_main)
+    monkeypatch.setattr(app, "run", mocked_app_main)
     main_module = str(
         (Path(__file__).parent.parent / "normcap" / "__main__.py").absolute()
     )

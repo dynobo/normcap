@@ -144,7 +144,6 @@ def screens() -> list[Screen]:
     """Get information about available monitors."""
     return [
         Screen(
-            is_primary=screen == QtWidgets.QApplication.primaryScreen(),
             device_pixel_ratio=QtGui.QScreen.devicePixelRatio(screen),
             rect=Rect(
                 left=screen.geometry().left(),

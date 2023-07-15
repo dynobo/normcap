@@ -111,7 +111,6 @@ class Rect:
 class Screen:
     """About an attached display."""
 
-    is_primary: bool
     device_pixel_ratio: float
     rect: Rect
     index: int
