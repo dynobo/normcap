@@ -10,12 +10,7 @@ from .testcases import testcases
 @pytest.mark.gui()
 @pytest.mark.parametrize("testcase", testcases)
 def test_normcap_ocr_testcases(
-    monkeypatch,
-    qtbot,
-    testcase,
-    run_normcap,
-    select_region,
-    check_ocr_result,
+    monkeypatch, qtbot, testcase, run_normcap, select_region
 ):
     """Tests complete OCR workflow."""
     # GIVEN NormCap is started with "language" set to english
@@ -36,7 +31,8 @@ def test_normcap_ocr_testcases(
     qtbot.waitUntil(lambda: len(exit_codes) > 0, timeout=6_000)
     assert exit_codes == [0]
 
-    qtbot.waitUntil(check_ocr_result(tray), timeout=10_000)
+    qtbot.waitUntil(lambda: tray.capture.ocr_text is not None, timeout=10_000)
+
     capture = tray.capture
     assert capture
 
@@ -46,3 +42,5 @@ def test_normcap_ocr_testcases(
         None, capture.ocr_text, testcase.ocr_transformed
     ).ratio()
     assert similarity >= 0.98, f"{capture.ocr_text=}"
+
+    tray.deleteLater()
