@@ -144,7 +144,8 @@ def argparser_defaults():
 
 
 @pytest.fixture()
-def cli_args():
+def basic_cli_args():
+    """NormCap configuration used by most tests."""
     return [
         sys.argv[0],
         "--notification=False",
@@ -155,11 +156,11 @@ def cli_args():
 
 
 @pytest.fixture()
-def run_normcap(monkeypatch, qapp, cli_args):
+def run_normcap(monkeypatch, qapp, basic_cli_args):
     def _run_normcap(extra_cli_args: list[str] | None = None):
         extra_cli_args = extra_cli_args or []
-        cli_args.extend(extra_cli_args)
-        monkeypatch.setattr(sys, "argv", cli_args)
+        basic_cli_args.extend(extra_cli_args)
+        monkeypatch.setattr(sys, "argv", basic_cli_args)
 
         monkeypatch.setattr(app, "_get_application", lambda: qapp)
         _, tray = app._prepare()
@@ -215,25 +216,3 @@ def select_region(qtbot):
         qtbot.mouseRelease(on, QtCore.Qt.MouseButton.LeftButton, pos=bottom_right)
 
     return _select_region
-
-
-@pytest.fixture()
-def check_ocr_result():
-    def _check_ocr_result(normcap_tray):
-        def __check_ocr_result():
-            assert normcap_tray.capture.ocr_text is not None
-
-        return __check_ocr_result
-
-    return _check_ocr_result
-
-
-@pytest.fixture()
-def check_windows_exist():
-    def _check_windows_exist(normcap_tray):
-        def __check_window_exist():
-            assert len(normcap_tray.windows) > 0
-
-        return __check_window_exist
-
-    return _check_windows_exist

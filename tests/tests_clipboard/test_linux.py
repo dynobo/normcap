@@ -78,7 +78,7 @@ def test_wl_copy_called(monkeypatch):
 
 @pytest.mark.skipif(not shutil.which("wl-copy"), reason="Needs wl-copy")
 @pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
-def test_wl_copy(monkeypatch):
+def test_wl_copy():
     text = "this is a test"
     clipboard.linux._wl_copy(text)
 
