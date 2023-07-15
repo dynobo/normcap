@@ -3,6 +3,7 @@ import logging
 import signal
 import sys
 from argparse import Namespace
+from typing import NoReturn
 
 from PySide6 import QtCore, QtWidgets
 
@@ -12,20 +13,38 @@ from normcap.gui.tray import SystemTray
 
 
 def _get_args() -> Namespace:
+    """Parse command line arguments.
+
+    Exit if NormCap was started with --version flag.
+
+    Auto-enable tray for "background mode", which starts NormCap in tray without
+    immediately opening the select-region window.
+    """
     args = utils.create_argparser().parse_args()
-    if args.background_mode:
-        args.tray = True
     if args.version:
         print(f"NormCap {__version__}")  # noqa: T201
         sys.exit(0)
+    if args.background_mode:
+        args.tray = True
     return args
 
 
-def _prepare_logging(args: Namespace) -> None:
-    if args.verbosity.upper() != "DEBUG":
+def _prepare_logging(level: str) -> None:
+    """Initialize logger with given level.
+
+    Wrap QTs logger to be able to control the output in the Python logger.
+
+    For all levels except DEBUG an exception hook is used to improve the stack trace
+    output to ease bug reporting on Github.
+
+    Args:
+        level: Valid Python log level (debug, warning, error)
+    """
+    level = level.upper()
+    if level != "DEBUG":
         sys.excepthook = utils.hook_exceptions
 
-    utils.init_logger(level=args.verbosity.upper())
+    utils.init_logger(level=level)
     logger = logging.getLogger("normcap")
     logger.info("Start NormCap v%s", __version__)
 
@@ -34,7 +53,10 @@ def _prepare_logging(args: Namespace) -> None:
 
 
 def _prepare_envs() -> None:
-    """Prepare environment variables depending on setup and system."""
+    """Prepare environment variables depending on setup and system.
+
+    Also enable exiting via CTRL+C in Terminal.
+    """
     # Allow closing QT app with CTRL+C in terminal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -44,21 +66,43 @@ def _prepare_envs() -> None:
         utils.set_environ_for_flatpak()
 
 
-def main() -> None:
+def _get_application() -> QtWidgets.QApplication:
+    """Get QApplication instance that doesn't exit on window close.
+
+    Also helpful for testing, where this can easily be mocked to return qapp instead.
+    """
+    app = QtWidgets.QApplication([])
+    app.setQuitOnLastWindowClosed(False)
+    return app
+
+
+def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
+    """Prepares args, environment, application and tray without yet executing.
+
+    Returns:
+        QApplication, ready for execution
+        SystemTray, not yet shown
+    """
     args = _get_args()
-    _prepare_logging(args)
+
+    _prepare_logging(level=str(getattr(args, "verbosity", "ERROR")))
     _prepare_envs()
+
     if system_info.is_prebuilt_package():
         utils.copy_traineddata_files(target_path=system_info.get_tessdata_path())
 
-    app = QtWidgets.QApplication(sys.argv)
-    app.setQuitOnLastWindowClosed(False)
-
+    app = _get_application()
     tray = SystemTray(app, vars(args))
-    tray.show()
 
+    return app, tray
+
+
+def run() -> NoReturn:
+    """Run main application."""
+    app, tray = _prepare()
+    tray.show()
     sys.exit(app.exec())
 
 
 if __name__ == "__main__":
-    main()
+    run()
