@@ -16,7 +16,7 @@ class EmailMagic(BaseMagic):
     @staticmethod
     @functools.cache
     def _extract_emails(text: str) -> list[str]:
-        reg_email = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.(?:\s{1,0})[a-zA-Z0-9._-]+"
+        reg_email = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.(?:\s{0,1})[a-zA-Z0-9._-]+"
         return re.findall(reg_email, text)
 
     @staticmethod
