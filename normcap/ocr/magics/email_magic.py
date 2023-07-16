@@ -16,8 +16,16 @@ class EmailMagic(BaseMagic):
     @staticmethod
     @functools.cache
     def _extract_emails(text: str) -> list[str]:
-        reg_email = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.(?:\s{0,1})[a-zA-Z0-9._-]+"
-        return re.findall(reg_email, text)
+        reg_email = r"""
+            [a-zA-Z0-9._-]+  # Valid chars of an email name
+            @                # name to domain delimiter
+            [a-zA-Z0-9._-]+  # Domain name w/o TLD
+            (?:\s{0,1})\.(?:\s{0,1})  # Dot before TLD, potentially with whitespace
+                                      # around it, which happens sometimes in OCR.
+                                      # The whitespace is not captured.
+            [a-zA-Z0-9._-]{2,15}      # TLD, mostly between 2-15 chars.
+        """
+        return re.findall(reg_email, text, flags=re.X)
 
     @staticmethod
     def _remove_email_names_from_text(emails: list[str], text: str) -> str:
