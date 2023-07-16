@@ -26,6 +26,7 @@ class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
     close_windows = QtCore.Signal()
+    exit_application = QtCore.Signal(bool)
     on_copied_to_clipboard = QtCore.Signal()
     on_image_cropped = QtCore.Signal()
     on_region_selected = QtCore.Signal(Rect)
@@ -39,7 +40,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     _EXIT_DELAY_MILLISECONDS: int = 5_000
     _UPDATE_CHECK_INTERVAL_DAYS: int = 7
 
-    # Only for testing purposes:
+    # Only for testing purposes: forcefully enables language manager in settings menu
+    # (Normally language manager is only available in pre-build version)
     _testing_language_manager = False
 
     # Used for singleton:
@@ -104,7 +106,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             logger.debug("Another instance is already running. Sending capture signal.")
             self._socket_out.write(b"capture")
             self._socket_out.waitForBytesWritten(1000)
-            self._exit_application(delayed=False)
+            self.com.exit_application.emit(False)
         else:
             self._create_socket_server()
 
@@ -294,7 +296,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Print results to stdout ."""
         logger.debug("Print text to stdout and exit.")
         print(self.capture.ocr_text, file=sys.stdout)  # noqa: T201
-        self._exit_application(delayed=False)
+        self.com.exit_application.emit(False)
 
     @QtCore.Slot()
     def _notify(self) -> None:
@@ -375,7 +377,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
                 ),
                 buttons=QtWidgets.QMessageBox.Ok,
             )
-            self._exit_application(delayed=False)
+            self.com.exit_application.emit(False)
 
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
@@ -390,6 +392,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_copied_to_clipboard.connect(self._color_tray_icon)
         self.com.on_languages_changed.connect(self._sanitize_language_setting)
         self.com.on_languages_changed.connect(self._update_installed_languages)
+        self.com.exit_application.connect(self._exit_application)
 
     def _add_update_checker(self) -> None:
         if not self.settings.value("update", type=bool):
@@ -439,7 +442,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         action = QtGui.QAction("Exit", self.tray_menu)
         action.setObjectName("exit")
-        action.triggered.connect(lambda: self._exit_application(delayed=False))
+        action.triggered.connect(lambda: self.com.exit_application.emit(False))
         self.tray_menu.addAction(action)
 
     def _create_next_window(self) -> None:
@@ -497,7 +500,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if self.settings.value("tray", type=bool):
             return
 
-        self._exit_application(delayed=delayed)
+        self.com.exit_application.emit(delayed)
 
     @QtCore.Slot(bool)
     def _exit_application(self, delayed: bool) -> None:
