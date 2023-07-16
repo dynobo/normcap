@@ -163,11 +163,32 @@ def run_normcap(monkeypatch, qapp, basic_cli_args):
         monkeypatch.setattr(sys, "argv", basic_cli_args)
 
         monkeypatch.setattr(app, "_get_application", lambda: qapp)
-        _, tray = app._prepare()
-        tray._EXIT_DELAY_MILLISECONDS = 100
-        return tray
+        _, tray_ = app._prepare()
+        tray_._EXIT_DELAY_MILLISECONDS = 100
+        return tray_
 
     return _run_normcap
+
+
+@pytest.fixture()
+def test_signal():
+    """Create a QT signal for usage with qtbot.waitSignal().
+
+    In many situation it's necessary to let the QT process until a certain condition is
+    met. The of pytest-qt for such a use-case is to use `qtbot.waitUntil(<condition>)`.
+
+    Unfortunately, qtbot.waitUntil() is (sometimes?) unrealiable on macOS and may lead
+    to indefinite hangs. In such a case `qtbot.waitSignal(test_signal.on_event)` can be
+    used in conjunction with monkeypatching `test_signal.on_event.emit(<data>)` at the
+    desired call.
+
+    See e.g. /test/integration/test_normcap.py for an application.
+    """
+
+    class TestSignal(QtCore.QObject):
+        on_event = QtCore.Signal(int)
+
+    return TestSignal()
 
 
 @pytest.fixture()
