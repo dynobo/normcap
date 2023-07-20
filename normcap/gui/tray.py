@@ -172,9 +172,12 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         elif system_info.desktop_environment() in (
             DesktopEnvironment.GNOME,
             DesktopEnvironment.KDE,
+            DesktopEnvironment.SWAY,
         ):
             self.com.on_window_positioned.connect(self._create_next_window)
             self._create_next_window()
+        else:
+            raise RuntimeError("Method for creating window is unspecified!")
 
     @QtCore.Slot(str)
     def _apply_setting_change(self, setting: str) -> None:

@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.0 (work in progress)
+
+- Linux: Fix NormCap to work with Sway DE. ([#485](https://github.com/dynobo/normcap/issues/485))
+
 ## v0.4.4 (2023-06-04)
 
 - All: Fix regression causing exit through system tray not working.
@@ -7,7 +11,7 @@
 
 ## v0.4.3 (2023-06-03)
 
-- All: Add command line flag `--background-mode` to start normcap minimized
+- All: Add command line flag `--background-mode` to start normcap minimized.
   ([#439](https://github.com/dynobo/normcap/issues/439))
 - macOS: Improve dialog that is shown in case screenshot permissions are missing.
 - Windows: Fix upgrading with `msi`-installer might lead to error on startup.
