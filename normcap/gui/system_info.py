@@ -132,7 +132,7 @@ def desktop_environment() -> DesktopEnvironment:
         return DesktopEnvironment.GNOME
     if kde_full_session or "kde-plasma" in desktop_session:
         return DesktopEnvironment.KDE
-    if "sway" in xdg_current_desktop:
+    if "sway" in xdg_current_desktop or "sway" in desktop_session:
         return DesktopEnvironment.SWAY
     if "unity" in xdg_current_desktop:
         return DesktopEnvironment.UNITY
