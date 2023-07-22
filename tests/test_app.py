@@ -4,9 +4,10 @@ from pathlib import Path
 
 import pytest
 import toml
+from PySide6 import QtWidgets
 
 import normcap
-from normcap import app
+from normcap import app, utils
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +64,13 @@ def test_prepare_logging(monkeypatch, level, result, caplog):
     logger = logging.getLogger("normcap")
 
     assert logger.level == result["level"]
-    assert (sys.excepthook == normcap.utils.hook_exceptions) is result["has_hook"]
+    assert (sys.excepthook == utils.hook_exceptions) is result["has_hook"]
+
+
+def test_get_application():
+    qt_app = app._get_application()
+    assert isinstance(qt_app, QtWidgets.QApplication)
+    assert not qt_app.quitOnLastWindowClosed()
 
 
 def test_prepare_env():

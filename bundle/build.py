@@ -32,4 +32,7 @@ if __name__ == "__main__":
     elif sys.platform == "linux":
         builder = LinuxBriefcase
 
+    else:
+        raise RuntimeError(f"Unknown platform '{sys.platform}'.")
+
     builder().create()
