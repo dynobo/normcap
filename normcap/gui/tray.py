@@ -462,7 +462,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         new_window.com.on_esc_key_pressed.connect(
             lambda: self._minimize_or_exit_application(delayed=False)
         )
-        new_window.com.on_esc_key_pressed.connect(self._close_windows)
+        new_window.com.on_esc_key_pressed.connect(self._minimize_or_exit_application)
         new_window.com.on_region_selected.connect(self.com.on_region_selected)
         new_window.com.on_window_positioned.connect(self.com.on_window_positioned)
         if index == 0:
@@ -486,7 +486,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         settings_menu.com.on_open_url.connect(self._open_url_and_hide)
         settings_menu.com.on_manage_languages.connect(self._open_language_manager)
         settings_menu.com.on_setting_change.connect(self._apply_setting_change)
-        settings_menu.com.on_close_in_settings.connect(self._close_windows)
+        settings_menu.com.on_close_in_settings.connect(
+            self._minimize_or_exit_application
+        )
         self.com.on_languages_changed.connect(settings_menu.on_languages_changed)
         return settings_menu
 
