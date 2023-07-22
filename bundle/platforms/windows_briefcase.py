@@ -1,7 +1,7 @@
 """Run adjustments while packaging with briefcase during CI/CD."""
 
 import shutil
-import urllib
+import urllib.request
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree
@@ -188,7 +188,7 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
             f.writelines(header_lines + lines)
 
     def rename_package_file(self) -> None:
-        source = list(Path(self.PROJECT_PATH / "dist").glob("*.msi"))[0]
+        source = next(Path(self.PROJECT_PATH / "dist").glob("*.msi"))
         target = (
             self.BUILD_PATH
             / f"NormCap-{self.get_version()}-x86_64-Windows{self.binary_suffix}.msi"

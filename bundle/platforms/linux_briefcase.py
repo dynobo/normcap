@@ -44,7 +44,7 @@ class LinuxBriefcase(BuilderBase):
         self.run(cmd="briefcase package linux appimage", cwd=self.PROJECT_PATH)
 
     def rename_package_file(self) -> None:
-        source = list(Path(self.PROJECT_PATH / "dist").glob("*.AppImage"))[0]
+        source = next(Path(self.PROJECT_PATH / "dist").glob("*.AppImage"))
         target = (
             self.BUILD_PATH
             / f"NormCap-{self.get_version()}-x86_64{self.binary_suffix}.AppImage"

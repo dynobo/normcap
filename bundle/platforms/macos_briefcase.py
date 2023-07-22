@@ -81,7 +81,7 @@ class MacBriefcase(BuilderBase):
         self.run(cmd="brew install dylibbundler")
 
     def rename_package_file(self) -> None:
-        source = list(Path(self.PROJECT_PATH / "dist").glob("*.dmg"))[0]
+        source = next(Path(self.PROJECT_PATH / "dist").glob("*.dmg"))
         arch = "arm64" if platform.machine().startswith("arm64") else "x86_64"
         target = (
             self.BUILD_PATH
