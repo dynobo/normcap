@@ -10,7 +10,7 @@ import os
 import sys
 import time
 from collections.abc import Iterable
-from typing import Any, NoReturn
+from typing import Any, NoReturn, cast
 
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
@@ -144,7 +144,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if not self._socket_in:
             return
         message = self._socket_in.readAll()
-        if message and bytes(message).decode("utf-8", errors="ignore") == "capture":
+        if message and message.data().decode("utf-8", errors="ignore") == "capture":
             logger.info("Received socket signal to capture.")
             self._show_windows(delay_screenshot=True)
 
@@ -188,7 +188,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _apply_setting_change(self, setting: str) -> None:
         if setting == "tray":
             capture_action = self.contextMenu().findChild(QtGui.QAction, name="capture")
-            capture_action.setVisible(self.settings.value(setting, False, type=bool))
+            capture_action = cast(QtGui.QAction, capture_action)
+            is_tray_visible = bool(self.settings.value(setting, False, type=bool))
+            capture_action.setVisible(is_tray_visible)
 
     @QtCore.Slot(list)
     def _sanitize_language_setting(self, installed_languages: list[str]) -> None:
@@ -480,7 +482,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         new_window.set_fullscreen()
         self.windows[index] = new_window
 
-    def _create_menu_button(self) -> QtWidgets.QLayout:
+    def _create_menu_button(self) -> QtWidgets.QWidget:
         if self._testing_language_manager:
             system_info.is_briefcase_package = lambda: True
         settings_menu = MenuButton(
