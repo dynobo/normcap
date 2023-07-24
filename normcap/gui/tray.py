@@ -315,11 +315,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.notifier.com.send_notification.emit(self.capture)
 
     @QtCore.Slot()
-    def _notify_or_close(self) -> None:
-        if not self.settings.value("notification", False, type=bool):
-            self.delayed_exit_timer.start(self._EXIT_DELAY_MILLISECONDS)
-
-    @QtCore.Slot()
     def _close_windows(self) -> None:
         """Hide all windows of normcap."""
         window_count = len(self.windows)
