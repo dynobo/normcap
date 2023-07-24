@@ -1,5 +1,5 @@
 import math
-from typing import Optional
+from typing import Optional, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -40,9 +40,10 @@ class LoadingIndicator(QtWidgets.QWidget):
         return [int((self.max_opacity / self.dots) * i) for i in range(self.dots)][::-1]
 
     def _center_on_parent(self) -> None:
+        parent = cast(QtWidgets.QWidget, self.parent())
         self.move(
-            (self.parent().width() - self.height()) // 2,
-            (self.parent().height() - self.width()) // 2,
+            (parent.width() - self.height()) // 2,
+            (parent.height() - self.width()) // 2,
         )
 
     def moveEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802

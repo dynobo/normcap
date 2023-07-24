@@ -386,7 +386,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
                     "Grant the permissions via 'Privacy & Security' settings "
                     "and restart NormCap.\n\nClick OK to exit."
                 ),
-                buttons=QtWidgets.QMessageBox.Ok,
+                buttons=QtWidgets.QMessageBox.StandardButton.Ok,
             )
             self.com.exit_application.emit(False)
 

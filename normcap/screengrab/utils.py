@@ -54,6 +54,7 @@ def has_wayland_display_manager() -> bool:
 @functools.cache
 def get_gnome_version() -> Optional[str]:
     """Get gnome-shell version (Linux, Gnome)."""
+    gnome_version = ""
     if sys.platform != "linux":
         return None
 
@@ -75,16 +76,14 @@ def get_gnome_version() -> Optional[str]:
     except Exception as e:
         logger.warning("Exception when trying to get gnome version from cli %s", e)
         return None
-    else:
-        logger.debug("Detected Gnome Version: %s", gnome_version)
-        return gnome_version
+
+    logger.debug("Detected Gnome Version: %s", gnome_version)
+    return gnome_version
 
 
 def has_dbus_portal_support() -> bool:
     gnome_version = get_gnome_version()
-    if gnome_version and gnome_version < "41":
-        return False
-    return True
+    return not gnome_version or gnome_version >= "41"
 
 
 def macos_reset_screenshot_permission() -> None:

@@ -191,7 +191,7 @@ class MenuButton(QtWidgets.QToolButton):
         self,
         menu: QtWidgets.QMenu,
         text: str,
-        action_parent: QtGui.QAction | None = None,
+        action_parent: QtGui.QAction | QtGui.QActionGroup | None = None,
     ) -> None:
         action = QtGui.QAction(text, action_parent or menu)
         action.setEnabled(False)
