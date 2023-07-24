@@ -33,6 +33,7 @@ def test_download_language(tmp_path, qtbot: QtBot, mock_urlopen):
     assert window.installed_layout.model.languages[1][0] == "eng"
 
     assert result.signal_triggered
+    assert result.args
     assert result.args[0] == ["afr", "eng"]
 
 
@@ -61,6 +62,7 @@ def test_delete_language(tmp_path, qtbot: QtBot):
     assert window.installed_layout.model.languages[0][0] == "eng"
 
     assert result.signal_triggered
+    assert result.args
     assert result.args[0] == ["eng"]
 
 

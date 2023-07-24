@@ -17,5 +17,8 @@ def test_main_starts_normcap(monkeypatch):
         (Path(__file__).parent.parent / "normcap" / "__main__.py").absolute()
     )
     loader = SourceFileLoader("__main__", main_module)
-    loader.exec_module(module_from_spec(spec_from_loader(loader.name, loader)))
+    spec = spec_from_loader(loader.name, loader)
+    assert spec
+
+    loader.exec_module(module_from_spec(spec))
     assert called
