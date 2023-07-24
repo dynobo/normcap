@@ -58,7 +58,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("System info:\n%s", system_info.to_dict())
         super().__init__(parent)
-        self._ensure_single_instance()
 
         self.com = Communicate(parent=self)
         self.windows: dict[int, Window] = {}
@@ -71,17 +70,22 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.settings.reset()
 
         self.cli_mode = args.get("cli_mode", False)
-
         self.capture.mode = (
             CaptureMode.PARSE
             if self.settings.value("mode") == "parse"
             else CaptureMode.RAW
         )
-
         self.screens: list[Screen] = system_info.screens()
+
+        self._ensure_screenshot_permission()
+        self._set_signals()
+
+        # Needs to be after set signals, cause it might emit self.com.exit_application:
+        self._ensure_single_instance()
 
         self.tray_menu = QtWidgets.QMenu(None)
         self.tray_menu.aboutToShow.connect(self._populate_context_menu_entries)
+
         self.setContextMenu(self.tray_menu)
         self._populate_context_menu_entries()
 
@@ -92,9 +96,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.delayed_exit_timer = QtCore.QTimer(parent=self)
         self.delayed_exit_timer.setSingleShot(True)
         self.delayed_exit_timer.timeout.connect(self.hide)
-
-        self._ensure_screenshot_permission()
-        self._set_signals()
 
         self.delayed_init_timer = QtCore.QTimer(parent=self)
         self.delayed_init_timer.setSingleShot(True)
@@ -469,7 +470,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         new_window.com.on_esc_key_pressed.connect(
             lambda: self._minimize_or_exit_application(delayed=False)
         )
-        new_window.com.on_esc_key_pressed.connect(self._minimize_or_exit_application)
+        new_window.com.on_esc_key_pressed.connect(
+            lambda: self._minimize_or_exit_application(delayed=False)
+        )
         new_window.com.on_region_selected.connect(self.com.on_region_selected)
         new_window.com.on_window_positioned.connect(self.com.on_window_positioned)
         if index == 0:
@@ -494,7 +497,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         settings_menu.com.on_manage_languages.connect(self._open_language_manager)
         settings_menu.com.on_setting_change.connect(self._apply_setting_change)
         settings_menu.com.on_close_in_settings.connect(
-            self._minimize_or_exit_application
+            lambda: self._minimize_or_exit_application(delayed=False)
         )
         self.com.on_languages_changed.connect(settings_menu.on_languages_changed)
         return settings_menu
