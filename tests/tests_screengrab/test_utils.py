@@ -78,11 +78,11 @@ def test_gnome_version_on_linux_unknown_exception(monkeypatch, caplog):
     monkeypatch.setattr(utils.sys, "platform", "linux")
     monkeypatch.setattr(utils.shutil, "which", lambda _: True)
 
-    def _mocked_subprocess(*args, **kwargs):
+    def mocked_subprocess(*args, **kwargs):
         raise DivisionByZero()
 
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
-    monkeypatch.setattr(utils.subprocess, "check_output", _mocked_subprocess)
+    monkeypatch.setattr(utils.subprocess, "check_output", mocked_subprocess)
 
     version = utils.get_gnome_version()
     assert version is None
@@ -123,7 +123,7 @@ def test_get_appropriate_capture_on_non_wayland(monkeypatch):
     assert grab_screens == qt.capture
 
 
-@pytest.mark.skipif(sys.platform != "darwin", reason="macOS specific test")
+@pytest.mark.skipif(sys.platform in ["win32", "linux"], reason="macOS specific test")
 def test_macos_has_screenshot_permission(caplog):
     with caplog.at_level(logging.WARNING):
         result = utils._macos_has_screenshot_permission()
@@ -138,7 +138,7 @@ def test_macos_has_screenshot_permission_on_non_macos(caplog):
     assert result is True
 
 
-@pytest.mark.skipif(sys.platform != "darwin", reason="macOS specific test")
+@pytest.mark.skipif(sys.platform in ["win32", "linux"], reason="macOS specific test")
 def test_macos_request_screenshot_permission(caplog):
     with caplog.at_level(logging.DEBUG):
         utils.macos_request_screenshot_permission()
@@ -152,7 +152,7 @@ def test_macos_request_screenshot_permission_on_non_macos(caplog):
     assert "couldn't request" in caplog.text.lower()
 
 
-@pytest.mark.skipif(sys.platform != "darwin", reason="macOS specific test")
+@pytest.mark.skipif(sys.platform in ["win32", "linux"], reason="macOS specific test")
 def test_macos_reset_screenshot_permission(caplog):
     with caplog.at_level(logging.ERROR):
         utils.macos_reset_screenshot_permission()
@@ -188,11 +188,22 @@ def test_has_screenshot_permission_raises(monkeypatch):
         _ = utils.has_screenshot_permission()
 
 
-@pytest.mark.skipif(sys.platform != "darwin", reason="macOS specific test")
+@pytest.mark.skipif(sys.platform in ["win32", "linux"], reason="macOS specific test")
 def test_macos_open_privacy_settings(caplog):
     with caplog.at_level(logging.ERROR):
         utils.macos_open_privacy_settings()
     assert "couldn't open" not in caplog.text.lower()
+
+
+@pytest.mark.skipif(sys.platform in ["win32", "linux"], reason="macOS specific test")
+def test_macos_open_privacy_settings_logs_exception(monkeypatch, caplog):
+    def mocked_run(*_, **__):
+        raise ValueError("Mocked exception on 'open' call")
+
+    monkeypatch.setattr(subprocess, "run", mocked_run)
+    with caplog.at_level(logging.ERROR):
+        utils.macos_open_privacy_settings()
+    assert "couldn't open" in caplog.text.lower()
 
 
 @pytest.mark.skipif(sys.platform == "darwin", reason="non-macOS specific test")
