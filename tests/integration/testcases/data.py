@@ -17,8 +17,11 @@ class TestCase:
         return QtGui.QImage(self.image_path)
 
     @property
-    def screen_size(self) -> QtCore.QRect:
-        return QtWidgets.QApplication.instance().primaryScreen().size()
+    def screen_size(self) -> QtCore.QSize:
+        app = QtWidgets.QApplication.instance()
+        if isinstance(app, QtGui.QGuiApplication):
+            return app.primaryScreen().size()
+        raise TypeError("Could not detect QGuiApplication")
 
     @property
     def _scale_factor(self):
@@ -35,9 +38,10 @@ class TestCase:
     @property
     def coords_scaled(self) -> tuple[QtCore.QPoint, QtCore.QPoint]:
         return (
-            QtCore.QPoint(*self.left_top) / self._scale_factor,
-            QtCore.QPoint(*self.right_bottom) / self._scale_factor,
+            QtCore.QPoint(*self.left_top) / self._scale_factor,  # type: ignore # *
+            QtCore.QPoint(*self.right_bottom) / self._scale_factor,  # type: ignore # *
         )
+        # (*) It think __div__ is not correctly specified in PySide6
 
     @property
     def image_scaled(self) -> QtGui.QImage:
@@ -45,8 +49,8 @@ class TestCase:
             return self.image
 
         image = self.image.scaled(
-            self.image.width() // self._scale_factor,
-            self.image.height() // self._scale_factor,
+            int(self.image.width() / self._scale_factor),
+            int(self.image.height() / self._scale_factor),
             QtCore.Qt.AspectRatioMode.KeepAspectRatio,
             QtCore.Qt.TransformationMode.SmoothTransformation,
         )
