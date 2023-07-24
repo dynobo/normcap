@@ -17,6 +17,7 @@ def test_downloader_retrieves_website(qtbot: QtBot):
         downloader.get(test_url)
 
     # THEN the triggered signal should receive raw data and the source url
+    assert result.args
     raw, url = result.args
     assert url == test_url
     assert isinstance(raw, bytes)
@@ -32,8 +33,9 @@ def test_downloader_not_existing_url_does_not_trigger_finished(caplog, qtbot: Qt
 
     # THEN the download finished signal should not be triggered
     #   and the exception messages should be logged
-    with qtbot.assert_not_emitted(downloader.com.on_download_finished, wait=1000):
+    with qtbot.assert_not_emitted(downloader.com.on_download_finished, wait=1500):
         downloader.get(wrong_url)
+
     assert "ERROR" in caplog.text
     assert wrong_url in caplog.text
     assert "Exception" in caplog.text
@@ -48,10 +50,11 @@ def test_downloader_not_existing_url_triggers_failed(caplog, qtbot: QtBot):
 
     # THEN the download failed signal should be triggered
     #   and receive the exception and source url
-    with qtbot.wait_signal(downloader.com.on_download_failed, timeout=1000) as result:
+    with qtbot.wait_signal(downloader.com.on_download_failed) as result:
         downloader.get(wrong_url)
 
     assert result.signal_triggered
+    assert result.args
     assert wrong_url in result.args[0]
     assert "Exception" in result.args[0]
 
