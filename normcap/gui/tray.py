@@ -242,8 +242,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Perform content recognition on grabbed image."""
         minimum_image_area = 25
         if self.capture.image_area < minimum_image_area:
-            logger.warning("Area of %s too small. Skip OCR", self.capture.image_area)
-            self.com.close_windows.emit()
+            logger.warning("Area of %s too small. Skip OCR.", self.capture.image_area)
+            self._minimize_or_exit_application(delayed=False)
             return
 
         logger.debug("Start OCR")
