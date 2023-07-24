@@ -1,7 +1,13 @@
-"""Normcap base window.
+"""Normcap window.
 
-Inherited for the main window, instantiated for the child windows (which get created
-in multi display setups).
+Supposed to show a screenshot of the current desktop in full screen, on which the
+user can draw a selection rectangle.
+
+One instance (single-display) or multiple instances (multi-display) might be created.
+
+On Linux's Wayland DE, where the compositor and not the application is supposed to
+control the window's position, some platform specific workarounds are implemented to
+nevertheless display potentially multiple windows in fullscreen on multiple displays.
 """
 
 
