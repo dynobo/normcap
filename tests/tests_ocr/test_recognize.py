@@ -15,7 +15,7 @@ from .testcases import testcases
 @pytest.mark.parametrize("testcase", testcases)
 def test_remove_spaces_in_chi(testcase):
     image = QtGui.QImage(testcase.image_path)
-    result = ocr.recognize(
+    result = ocr.recognize.get_text_from_image(
         tesseract_cmd=system_info.get_tesseract_path(),
         image=image,
         languages=testcase.lang.split(","),
