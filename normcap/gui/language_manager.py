@@ -210,16 +210,20 @@ class LanguageLayout(QtWidgets.QVBoxLayout):
         self.view = MinimalTableView(model=self.model)
         self.addWidget(self.view)
 
-        button_qicon = QtWidgets.QApplication.style().standardIcon(
-            getattr(QtWidgets.QStyle, button_icon, None)
+        pixmap = getattr(
+            QtWidgets.QStyle.StandardPixmap,
+            button_icon,
+            QtWidgets.QStyle.StandardPixmap.SP_DialogHelpButton,
         )
+
+        button_qicon = QtWidgets.QApplication.style().standardIcon(pixmap)
         self.button = QtWidgets.QPushButton(button_qicon, button_text)
         self.addWidget(self.button)
 
 
 class LanguageModel(QtCore.QAbstractTableModel):
     def __init__(
-        self, parent: QtWidgets.QWidget | None = None, languages: list | None = None
+        self, parent: QtCore.QObject | None = None, languages: list | None = None
     ) -> None:
         super().__init__(parent=parent)
         self.languages: list = languages or []

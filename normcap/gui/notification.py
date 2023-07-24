@@ -5,7 +5,7 @@ import subprocess
 import sys
 import textwrap
 
-from PySide6 import QtCore, QtGui
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.gui import system_info
 from normcap.gui.models import Capture, CaptureMode
@@ -114,5 +114,10 @@ class Notifier(QtCore.QObject):
         logger.debug("Send notification via QT")
 
         # Need to load icon from path, as icon from resources.py won't show up:
-        self.parent().show()
-        self.parent().showMessage(title, message, QtGui.QIcon(":notification"))
+        parent = self.parent()
+
+        if not isinstance(parent, QtWidgets.QSystemTrayIcon):
+            raise TypeError("Parent is expected to be of type QSystemTrayIcon.")
+
+        parent.show()
+        parent.showMessage(title, message, QtGui.QIcon(":notification"))

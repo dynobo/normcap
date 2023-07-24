@@ -26,7 +26,9 @@ class UpdateChecker(QtWidgets.QWidget):
     def __init__(
         self, parent: QtCore.QObject | None = None, packaged: bool = False
     ) -> None:
-        super().__init__(parent=parent)
+        super().__init__(
+            parent=parent if isinstance(parent, QtWidgets.QWidget) else None
+        )
         self.packaged = packaged
 
         self.com = Communicate(parent=self)
@@ -81,12 +83,16 @@ class UpdateChecker(QtWidgets.QWidget):
 
         choice = self.message_box.exec_()
 
-        if choice == QtWidgets.QMessageBox.Ok:
+        if choice == QtWidgets.QMessageBox.StandardButton.Ok:
             update_url = URLS.releases if self.packaged else URLS.changelog
             self.com.on_click_get_new_version.emit(update_url)
 
     def _create_message_box(self) -> QtWidgets.QMessageBox:
-        message_box = QtWidgets.QMessageBox(parent=self.parent())
+        parent = self.parent()
+        if not isinstance(parent, QtWidgets.QWidget):
+            parent = None
+
+        message_box = QtWidgets.QMessageBox(parent=parent)
         # Necessary on wayland for main window to regain focus:
         # TODO: Test if still necessary after transformation to QWidget!
         message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)

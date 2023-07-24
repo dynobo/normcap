@@ -1,6 +1,6 @@
 import logging
 import os
-import urllib
+import urllib.request
 
 import pytest
 from PySide6 import QtWidgets
@@ -84,7 +84,9 @@ def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
 def test_show_update_message(qtbot, monkeypatch):
     # GIVEN a UpdateChecker
     checker = update_check.UpdateChecker(None)
-    monkeypatch.setattr(checker.message_box, "exec_", lambda: QtWidgets.QMessageBox.Ok)
+    monkeypatch.setattr(
+        checker.message_box, "exec_", lambda: QtWidgets.QMessageBox.StandardButton.Ok
+    )
 
     # WHEN the method to show "New version available" message is called
     version = "99.0.0"
