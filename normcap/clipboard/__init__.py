@@ -2,7 +2,7 @@ import logging
 import sys
 from typing import Callable
 
-from normcap.clipboard import linux, macos, windows
+from . import linux, macos, windows
 
 logger = logging.getLogger(__name__)
 
