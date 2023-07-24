@@ -262,9 +262,10 @@ def test_copy_traineddata_files_not_copying(tmp_path, monkeypatch):
 def test_qt_log_wrapper(qtlog, caplog):
     logger = logging.getLogger(__name__).root
     logger.setLevel("DEBUG")
-    QtCore.qDebug("should_show_in_qtlog_only")
+    QtCore.qDebug("should_show_in_qtlog_only")  # type: ignore # Wrong in PySide?
+
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
-    QtCore.qDebug("should_show_in_logger_only")
+    QtCore.qDebug("should_show_in_logger_only")  # type: ignore # Wrong in PySide?
 
     qt_log_entries = [m.message.strip() for m in qtlog.records]
     assert len(qt_log_entries) == 1
@@ -281,7 +282,7 @@ def test_qt_log_wrapper_silence_opentype_warning(caplog):
     logger.setLevel("DEBUG")
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
-    QtCore.qDebug("Warning, OpenType support missing for OpenSans")
+    QtCore.qDebug("Warning, OpenType support missing for OpenSans")  # type: ignore
 
     assert "[qt]" not in caplog.text.lower()
     assert "error" not in caplog.text.lower()
@@ -292,7 +293,7 @@ def test_qt_log_wrapper_no_platform_as_error(caplog):
     logger.setLevel("DEBUG")
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
-    QtCore.qDebug("could not load the qt platform")
+    QtCore.qDebug("could not load the qt platform")  # type: ignore # Wrong in PySide?
 
     assert "could not load the qt platform" in caplog.text
     assert "[qt]" in caplog.text.lower()
@@ -304,7 +305,7 @@ def test_qt_log_wrapper_xcb_as_error(caplog):
     logger.setLevel("DEBUG")
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
-    QtCore.qDebug("xcb it was found")
+    QtCore.qDebug("xcb it was found")  # type: ignore # Wrong in PySide?
 
     assert "[qt]" in caplog.text.lower()
     assert "xcb it was found" in caplog.text.lower()
