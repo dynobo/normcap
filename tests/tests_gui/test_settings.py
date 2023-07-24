@@ -1,6 +1,9 @@
 import logging
+from contextlib import nullcontext as does_not_raise
 
-from normcap.gui.settings import Settings
+import pytest
+
+from normcap.gui.settings import Settings, _parse_str_to_bool
 
 
 def test_reset_settings():
@@ -58,3 +61,23 @@ def test_set_missing_to_default(caplog):
         assert caplog.records[0].args == ("language", default_language)
     finally:
         settings.clear()
+
+
+@pytest.mark.parametrize(
+    ("value", "expected_value", "expected_exc"),
+    [
+        ("True", True, does_not_raise()),
+        ("true", True, does_not_raise()),
+        ("1", True, does_not_raise()),
+        ("False", False, does_not_raise()),
+        ("false", False, does_not_raise()),
+        ("0", False, does_not_raise()),
+        ("foo", None, pytest.raises(ValueError, match="Expected bool")),
+        ("-1", None, pytest.raises(ValueError, match="Expected bool")),
+    ],
+)
+def test_parse_to_bool(value, expected_value, expected_exc):
+    result = None
+    with expected_exc:
+        result = _parse_str_to_bool(value)
+    assert result == expected_value
