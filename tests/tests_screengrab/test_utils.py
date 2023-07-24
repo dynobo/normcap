@@ -213,13 +213,6 @@ def test_macos_open_privacy_settings_on_non_macos(caplog):
     assert "couldn't open" in caplog.text.lower()
 
 
-def _convert_to_pixels(image):
-    image = image.convertToFormat(QtGui.QImage.Format.Format_RGB32)
-    ptr = image.constBits()
-    values = list(ptr)
-    return [tuple(values[i : i + 4]) for i in range(0, len(values), 4)]
-
-
 def test_split_full_desktop_to_screens(monkeypatch):
     class MockedPrimaryScreen:
         def virtualGeometry(self) -> QtCore.QRect:  # noqa: N802
@@ -239,6 +232,12 @@ def test_split_full_desktop_to_screens(monkeypatch):
             MockedScreen(200, 20, 100, 100),
         ]
 
+    def convert_to_pixels(image):
+        image = image.convertToFormat(QtGui.QImage.Format.Format_RGB32)
+        ptr = image.constBits()
+        values = list(ptr)
+        return [tuple(values[i : i + 4]) for i in range(0, len(values), 4)]
+
     monkeypatch.setattr(QtWidgets.QApplication, "primaryScreen", MockedPrimaryScreen)
     monkeypatch.setattr(QtWidgets.QApplication, "screens", mocked_screens)
 
@@ -250,6 +249,6 @@ def test_split_full_desktop_to_screens(monkeypatch):
     assert len(split_images) == len(mocked_screens())
     assert {split_images[i].size().toTuple() for i in range(3)} == {(100, 100)}
 
-    assert set(_convert_to_pixels(split_images[0])) == {(0, 0, 255, 255)}
-    assert set(_convert_to_pixels(split_images[1])) == {(0, 255, 0, 255)}
-    assert set(_convert_to_pixels(split_images[2])) == {(255, 0, 0, 255)}
+    assert set(convert_to_pixels(split_images[0])) == {(0, 0, 255, 255)}
+    assert set(convert_to_pixels(split_images[1])) == {(0, 255, 0, 255)}
+    assert set(convert_to_pixels(split_images[2])) == {(255, 0, 0, 255)}
