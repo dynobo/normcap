@@ -11,11 +11,17 @@ from normcap import utils
 from normcap.gui import system_info
 from normcap.gui.models import Capture
 from normcap.gui.settings import Settings
-from normcap.ocr.models import OcrResult
+from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
 
 
-def test_argparser_defaults_are_complete(argparser_defaults):
-    args_keys = set(argparser_defaults.keys())
+def test_argparser_defaults_are_complete():
+    # GIVEN the argparser parses empty cli args
+    parser = utils.create_argparser()
+
+    # WHEN it parses an empty list of args
+    parsed_args = parser.parse_args([])
+
+    # THEN an expected set of options should be present with default values
     expected_options = {
         "background_mode",
         "color",
@@ -29,37 +35,50 @@ def test_argparser_defaults_are_complete(argparser_defaults):
         "verbosity",
         "version",
     }
-
+    args_keys = set(vars(parsed_args).keys())
     assert args_keys == expected_options
 
 
 def test_argparser_help_is_complete():
+    # WHEN instantiating the argparser
     argparser = utils.create_argparser()
+
+    # THEN it should contain a description
+    #    and all actions should have a help text
+    assert argparser.description
     assert len(argparser.description) > 10
+
     for action in argparser._actions:
+        assert action.help
         assert len(action.help) > 10
 
 
 def test_argparser_parses_all_types(monkeypatch):
+    # GIVEN an argparser
     argparser = utils.create_argparser()
+
+    # WHEN parsing a list of args with string representing various types
     monkeypatch.setattr(
         sys,
         "argv",
         """python
            --notification True
-           --tray False
+           --tray 0
            --verbosity info
            --language uvw xyz
         """.split(),
     )
     args = argparser.parse_args()
+
+    # THEN the various types should be parsed into the correct types
     assert args.notification is True
     assert args.tray is False
     assert args.verbosity == "info"
     assert args.language == ["uvw", "xyz"]
 
 
-def test_argparser_attributes_in_settings(argparser_defaults):
+def test_argparser_attributes_in_settings():
+    argparser_defaults = vars(utils.create_argparser().parse_args([]))
     settings = Settings(organization="normcap_TEST")
 
     for arg in argparser_defaults:
@@ -73,7 +92,8 @@ def test_argparser_attributes_in_settings(argparser_defaults):
         assert arg in settings.allKeys()
 
 
-def test_settings_in_argparser_attributes(argparser_defaults):
+def test_settings_in_argparser_attributes():
+    argparser_defaults = vars(utils.create_argparser().parse_args([]))
     settings = Settings(organization="normcap_TEST")
     for key in settings.allKeys():
         if key in ("version", "last-update-check"):
@@ -81,7 +101,8 @@ def test_settings_in_argparser_attributes(argparser_defaults):
         assert key in argparser_defaults
 
 
-def test_argparser_defaults_are_correct(argparser_defaults):
+def test_argparser_defaults_are_correct():
+    argparser_defaults = vars(utils.create_argparser().parse_args([]))
     assert argparser_defaults.pop("reset") is False
     assert argparser_defaults.pop("version") is False
     assert argparser_defaults.pop("cli_mode") is False
@@ -117,7 +138,7 @@ def test_set_environ_for_wayland_use_wlcopy(monkeypatch):
             m.setattr(utils.shutil, "which", lambda *args: False)
             m.delenv("PATH", raising=False)
             utils.set_environ_for_wayland()
-            new_path = os.environ.get("PATH")
+            new_path = os.environ.get("PATH", "")
             assert new_path.endswith(f"{os.sep}bin{os.pathsep}")
     finally:
         os.environ["PATH"] = path
@@ -142,11 +163,10 @@ def test_set_environ_for_flatpak(monkeypatch):
 def test_copy_traineddata_files_briefcase(tmp_path, monkeypatch):
     # Create placeholder for traineddata files, if they don't exist
     monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
-    resource_path = Path(resources.files("normcap.resources"))
-    traineddata_files = list((resource_path / "tessdata").glob("*.traineddata"))
-    if not traineddata_files:
-        (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
-        (resource_path / "tessdata" / "placeholder_2.traineddata").touch()
+    with resources.as_file(resources.files("normcap.resources")) as file_path:
+        resource_path = Path(file_path)
+    (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
+    (resource_path / "tessdata" / "placeholder_2.traineddata").touch()
 
     try:
         tessdata_path = tmp_path / "tessdata"
@@ -173,11 +193,10 @@ def test_copy_traineddata_files_briefcase(tmp_path, monkeypatch):
 def test_copy_traineddata_files_flatpak(tmp_path, monkeypatch):
     # Create placeholder for traineddata files, if they don't exist
     monkeypatch.setattr(utils.system_info, "is_flatpak_package", lambda: True)
-    resource_path = Path(resources.files("normcap.resources"))
-    traineddata_files = list((resource_path / "tessdata").glob("*.traineddata"))
-    if not traineddata_files:
-        (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
-        (resource_path / "tessdata" / "placeholder_2.traineddata").touch()
+    with resources.as_file(resources.files("normcap.resources")) as file_path:
+        resource_path = Path(file_path)
+    (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
+    (resource_path / "tessdata" / "placeholder_2.traineddata").touch()
     try:
         tessdata_path = tmp_path / "tessdata"
         traineddatas = list(tessdata_path.glob("*.traineddata"))
@@ -187,13 +206,13 @@ def test_copy_traineddata_files_flatpak(tmp_path, monkeypatch):
 
         paths = []
 
-        def _mocked_path(path_str: str):
+        def mocked_path(path_str: str):
             paths.append(path_str)
             if path_str == "/app/share/tessdata":
-                path_str = resource_path / "tessdata"
+                path_str = str(resource_path / "tessdata")
             return Path(path_str)
 
-        monkeypatch.setattr(utils, "Path", _mocked_path)
+        monkeypatch.setattr(utils, "Path", mocked_path)
         for _ in range(3):
             utils.copy_traineddata_files(target_dir=tessdata_path)
 
@@ -210,11 +229,10 @@ def test_copy_traineddata_files_flatpak(tmp_path, monkeypatch):
 
 def test_copy_traineddata_files_not_copying(tmp_path, monkeypatch):
     # Create placeholder for traineddata files, if they don't exist
-    resource_path = Path(resources.files("normcap.resources"))
-    traineddata_files = list((resource_path / "tessdata").glob("*.traineddata"))
-    if not traineddata_files:
-        (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
-        (resource_path / "tessdata" / "placeholder_2.traineddata").touch()
+    with resources.as_file(resources.files("normcap.resources")) as file_path:
+        resource_path = Path(file_path)
+    (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
+    (resource_path / "tessdata" / "placeholder_2.traineddata").touch()
 
     try:
         tessdata_path = tmp_path / "tessdata"
@@ -304,9 +322,9 @@ def test_hook_exception(monkeypatch, caplog, capsys):
             other_variable = "should be printed"  # noqa: F841
             capture = Capture(ocr_text="secret")  # noqa: F841
             ocr_result = OcrResult(  # noqa: F841
-                tess_args=None,
+                tess_args=TessArgs(Path.cwd(), "eng", OEM.DEFAULT, PSM.AUTO),
                 image=QtGui.QImage(),
-                words="secret",
+                words=[{"secret": "value"}],
                 parsed="secret",
             )
             raise RuntimeError

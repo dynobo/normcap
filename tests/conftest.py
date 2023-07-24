@@ -14,7 +14,6 @@ from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.magics import email_magic, url_magic
 from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
 from normcap.screengrab import utils as screengrab_utils
-from normcap.utils import create_argparser
 
 
 @pytest.fixture(autouse=True)
@@ -138,12 +137,6 @@ def ocr_result() -> OcrResult:
 
 
 @pytest.fixture()
-def argparser_defaults():
-    argparser = create_argparser()
-    return vars(argparser.parse_args([]))
-
-
-@pytest.fixture()
 def basic_cli_args():
     """NormCap configuration used by most tests."""
     return [
@@ -189,11 +182,6 @@ def test_signal():
         on_event = QtCore.Signal(int)
 
     return TestSignal()
-
-
-@pytest.fixture()
-def screen_size(qapp) -> QtCore.QSize:
-    return QtWidgets.QApplication.instance()
 
 
 @pytest.fixture()
