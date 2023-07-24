@@ -1,4 +1,9 @@
-"""Create system tray and its menu."""
+"""Main entry point for NormCap's UI.
+
+This module hosts most the UI logic. The tray persists from NormCap's start until
+the application is closed. Potential windows or other components are started from
+here.
+"""
 
 import logging
 import os
