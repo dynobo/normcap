@@ -1,23 +1,21 @@
 import math
-from typing import Optional, cast
+from typing import cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
 
 class LoadingIndicator(QtWidgets.QWidget):
     def __init__(
-        self,
-        parent: Optional[QtWidgets.QWidget] = None,
-        size: int = 128,
-        center_on_parent: bool = True,
+        self, parent: QtWidgets.QWidget, size: int = 128, center_on_parent: bool = True
     ) -> None:
         super().__init__(parent=parent)
         self.setVisible(False)
 
         self.dots = 9
         self.dot_size_factor = 1.6
+        self.dot_color: tuple[int, int, int] = (255, 46, 136)
         self.max_opacity = 200
-        self.framerate = 80
+        self.framerate = 12
 
         self.counter = 0
         self.timer = None
@@ -33,10 +31,12 @@ class LoadingIndicator(QtWidgets.QWidget):
 
     @property
     def radius(self) -> int:
-        return int(self.height() / self.dots * self.dot_size_factor)
+        """Radius of a single dot."""
+        return int(self.height() / self.dots * self.dot_size_factor / 2)
 
     @property
     def opacities(self) -> list[int]:
+        """List of opacities, decreasing for each dot."""
         return [int((self.max_opacity / self.dots) * i) for i in range(self.dots)][::-1]
 
     def _center_on_parent(self) -> None:
@@ -56,27 +56,27 @@ class LoadingIndicator(QtWidgets.QWidget):
         painter.setPen(QtGui.QPen(QtCore.Qt.PenStyle.NoPen))
         for i in range(self.dots):
             opacity = self.opacities[(self.counter + i) % self.dots]
-            painter.setBrush(QtGui.QBrush(QtGui.QColor(255, 46, 136, opacity)))
+            painter.setBrush(QtGui.QBrush(QtGui.QColor(*self.dot_color, opacity)))
             painter.drawEllipse(
                 int(
                     self.width() / 2
-                    + (self.width() / 2 - self.radius)
+                    + (self.width() / 2 - self.radius * 2)
                     * math.cos(2 * math.pi * i / self.dots)
-                    - self.radius / 2
+                    - self.radius
                 ),
                 int(
                     self.height() / 2
-                    + (self.width() / 2 - self.radius)
+                    + (self.width() / 2 - self.radius * 2)
                     * math.sin(2 * math.pi * i / self.dots)
-                    - self.radius / 2
+                    - self.radius
                 ),
-                self.radius,
-                self.radius,
+                self.radius * 2,
+                self.radius * 2,
             )
         painter.end()
 
     def showEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
-        self.timer = self.startTimer(self.framerate)
+        self.timer = self.startTimer(1000 // self.framerate)
 
     def hideEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
         if self.timer:
