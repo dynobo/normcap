@@ -34,7 +34,7 @@ def test_move_active_window_to_position_raises_on_non_linux():
 def test_window_get_scale_factor(
     qtbot, temp_settings, img_size, screen_size, expected_factor
 ):
-    image = QtGui.QImage(*img_size, QtGui.QImage.Format.Format_RGB32)
+    image = QtGui.QImage(QtCore.QSize(*img_size), QtGui.QImage.Format.Format_RGB32)
     screen = models.Screen(
         device_pixel_ratio=1.0,
         rect=models.Rect(0, 0, *screen_size),
@@ -79,6 +79,8 @@ def test_window_esc_key_pressed(qtbot, temp_settings):
         qtbot.keyPress(win, QtCore.Qt.Key.Key_Escape)
 
     # Test resets selecting
-    win.is_selecting = True
+    qtbot.mousePress(win, QtCore.Qt.MouseButton.LeftButton, pos=QtCore.QPoint(10, 10))
+    qtbot.mouseMove(win, pos=QtCore.QPoint(30, 30))
+    assert win.selection_rect
     qtbot.keyPress(win, QtCore.Qt.Key.Key_Escape)
-    assert not win.is_selecting
+    assert not win.selection_rect

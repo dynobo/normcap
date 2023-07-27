@@ -474,7 +474,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             menu_button = self._create_menu_button()
             layout = self._create_layout()
             layout.addWidget(menu_button, 0, 1)
-            new_window.ui_layer.setLayout(layout)
+            new_window.ui_container.setLayout(layout)
 
         new_window.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         new_window.set_fullscreen()
