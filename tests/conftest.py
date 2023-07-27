@@ -150,6 +150,8 @@ def basic_cli_args():
 
 @pytest.fixture()
 def run_normcap(monkeypatch, qapp, basic_cli_args):
+    # TODO: yield and add tear down
+
     def _run_normcap(extra_cli_args: list[str] | None = None):
         extra_cli_args = extra_cli_args or []
         basic_cli_args.extend(extra_cli_args)
@@ -170,7 +172,7 @@ def test_signal():
     In many situation it's necessary to let the QT process until a certain condition is
     met. The of pytest-qt for such a use-case is to use `qtbot.waitUntil(<condition>)`.
 
-    Unfortunately, qtbot.waitUntil() is (sometimes?) unrealiable on macOS and may lead
+    Unfortunately, qtbot.waitUntil() is (sometimes?) unreliable on macOS and may lead
     to indefinite hangs. In such a case `qtbot.waitSignal(test_signal.on_event)` can be
     used in conjunction with monkeypatching `test_signal.on_event.emit(<data>)` at the
     desired call.
