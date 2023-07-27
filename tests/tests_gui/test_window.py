@@ -23,6 +23,8 @@ def test_move_active_window_to_position_raises_on_non_linux():
         window._move_active_window_to_position_on_kde(rect)
 
 
+# TODO: GWT comments
+@pytest.mark.gui()
 @pytest.mark.parametrize(
     ("img_size", "screen_size", "expected_factor"),
     [
@@ -47,6 +49,7 @@ def test_window_get_scale_factor(
     assert win._get_scale_factor() == expected_factor
 
 
+@pytest.mark.gui()
 def test_window_get_scale_factor_raises_if_missing(qtbot, temp_settings):
     image = QtGui.QImage(600, 400, QtGui.QImage.Format.Format_RGB32)
     screen = models.Screen(
@@ -63,6 +66,7 @@ def test_window_get_scale_factor_raises_if_missing(qtbot, temp_settings):
         _ = win._get_scale_factor()
 
 
+@pytest.mark.gui()
 def test_window_esc_key_pressed(qtbot, temp_settings):
     image = QtGui.QImage(600, 400, QtGui.QImage.Format.Format_RGB32)
     screen = models.Screen(

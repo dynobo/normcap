@@ -11,7 +11,7 @@ class LoadingIndicator(QtWidgets.QWidget):
         super().__init__(parent=parent)
         self.setVisible(False)
 
-        self.dots = 9
+        self.dot_count = 9
         self.dot_size_factor = 1.6
         self.dot_color: tuple[int, int, int] = (255, 46, 136)
         self.max_opacity = 200
@@ -32,12 +32,14 @@ class LoadingIndicator(QtWidgets.QWidget):
     @property
     def radius(self) -> int:
         """Radius of a single dot."""
-        return int(self.height() / self.dots * self.dot_size_factor / 2)
+        return int(self.height() / self.dot_count * self.dot_size_factor / 2)
 
     @property
     def opacities(self) -> list[int]:
         """List of opacities, decreasing for each dot."""
-        return [int((self.max_opacity / self.dots) * i) for i in range(self.dots)][::-1]
+        return [
+            int((self.max_opacity / self.dot_count) * i) for i in range(self.dot_count)
+        ][::-1]
 
     def _center_on_parent(self) -> None:
         parent = cast(QtWidgets.QWidget, self.parent())
@@ -54,20 +56,20 @@ class LoadingIndicator(QtWidgets.QWidget):
         painter.begin(self)
         painter.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
         painter.setPen(QtGui.QPen(QtCore.Qt.PenStyle.NoPen))
-        for i in range(self.dots):
-            opacity = self.opacities[(self.counter + i) % self.dots]
+        for i in range(self.dot_count):
+            opacity = self.opacities[(self.counter + i) % self.dot_count]
             painter.setBrush(QtGui.QBrush(QtGui.QColor(*self.dot_color, opacity)))
             painter.drawEllipse(
                 int(
                     self.width() / 2
                     + (self.width() / 2 - self.radius * 2)
-                    * math.cos(2 * math.pi * i / self.dots)
+                    * math.cos(2 * math.pi * i / self.dot_count)
                     - self.radius
                 ),
                 int(
                     self.height() / 2
                     + (self.width() / 2 - self.radius * 2)
-                    * math.sin(2 * math.pi * i / self.dots)
+                    * math.sin(2 * math.pi * i / self.dot_count)
                     - self.radius
                 ),
                 self.radius * 2,
@@ -84,5 +86,5 @@ class LoadingIndicator(QtWidgets.QWidget):
             self.timer = None
 
     def timerEvent(self, _: QtCore.QEvent) -> None:  # noqa: N802
-        self.counter = self.counter + 1 if self.counter < self.dots - 1 else 0
+        self.counter = self.counter + 1 if self.counter < self.dot_count - 1 else 0
         self.update()
