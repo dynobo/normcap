@@ -24,48 +24,45 @@ macOS and Windows._**
 
 [![Screencast](https://user-images.githubusercontent.com/11071876/189767585-8bc45c18-8392-411d-84dc-cef1cb5dbc47.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
-## Installation
+## Quickstart
 
-Pick **_one_** of the option below to install a prebuilt release. If you experience
-issues please look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
-[open an issue](https://github.com/dynobo/normcap/issues).
+Choose **_one_** of the options for a prebuilt release. If you encounter any issue
+please take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
+[report](https://github.com/dynobo/normcap/issues) it.
 
-### Windows
+#### Windows
 
-- Download
-  [NormCap-0.4.4-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.4.4/NormCap-0.4.4-x86_64-Windows.msi)
-  installer.
-- Install from
-  [Microsoft Store](https://apps.microsoft.com/store/detail/normcap/XPDLJNB4B6C2ZR).
+- [NormCap-0.4.4-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.4.4/NormCap-0.4.4-x86_64-Windows.msi)
+  (Installer)
+- [Normcap @ Microsoft Store](https://apps.microsoft.com/store/detail/normcap/XPDLJNB4B6C2ZR)
 
-### Linux
+#### Linux
 
-- Download
-  [NormCap-0.4.4-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.4.4/NormCap-0.4.4-x86_64.AppImage).
-- Install [`normcap`](https://aur.archlinux.org/packages/normcap) from AUR
-  (Arch/Manjaro).
-- Install
-  [com.github.dynobo.normcap](https://flathub.org/apps/details/com.github.dynobo.normcap)
-  from FlatHub.
+- [NormCap-0.4.4-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.4.4/NormCap-0.4.4-x86_64.AppImage)
+  (Binary)
+- [`normcap` @ AUR](https://aur.archlinux.org/packages/normcap) (Arch/Manjaro)
+- [com.github.dynobo.normcap @ FlatHub](https://flathub.org/apps/details/com.github.dynobo.normcap)
+  (FlatPak)
 
-### macOS
+#### macOS
 
-You have to allow the unsigned application on first start: "System Preferences" →
+Note: You have to allow the unsigned application on first start: "System Preferences" →
 "Security & Privacy" → "General" → "Open anyway". You also have to allow NormCap to take
 screenshots. ([#135](https://github.com/dynobo/normcap/issues/135))
 
-- Download
-  [NormCap-0.4.4-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.4.4/NormCap-0.4.4-x86_64-macOS.dmg)
-  for x86/64.
-- Download
-  [NormCap-0.4.4-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.4.4/NormCap-0.4.4-arm64-macOS.dmg)
-  for M1. <small>Might be available delayed, as it is currently build manually. (Thx,
-  [@Takrin](https://github.com/Takrin)!)</small>
+- [NormCap-0.4.4-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.4.4/NormCap-0.4.4-x86_64-macOS.dmg)
+  (Installer for x86/64)
+- [NormCap-0.4.4-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.4.4/NormCap-0.4.4-arm64-macOS.dmg)
+  (Installer for M1)\*
+
+<small>\* Might be available delayed, as it is currently build manually. (Thx,
+[@Takrin](https://github.com/Takrin)!)</small>
 
 ## Install Python package
 
-As an _alternative_ to a prebuilt package you can install the
-[NormCap Python package](https://pypi.org/project/normcap/) for **Python >=3.9**:
+As an _alternative_ to a prebuilt package from above you can install the
+[NormCap Python package](https://pypi.org/project/normcap/) for **Python >=3.9**, but it
+is a bit more complicated:
 
 #### On Linux
 
