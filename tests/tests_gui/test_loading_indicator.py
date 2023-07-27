@@ -1,5 +1,6 @@
 import math
 
+import pytest
 from PySide6 import QtGui, QtWidgets
 
 from normcap.gui.loading_indicator import LoadingIndicator
@@ -14,6 +15,7 @@ def _convert_to_pixels(image):
     return [c[2::-1] for c in color_values]
 
 
+@pytest.mark.gui()
 def test_radius(qtbot):
     # GIVEN an indicator instance with a certain size
     window = QtWidgets.QMainWindow()
@@ -28,6 +30,7 @@ def test_radius(qtbot):
     assert 1 <= indicator.radius < widget_size / 2
 
 
+@pytest.mark.gui()
 def test_opacities(qtbot):
     # GIVEN an indicator instance
     window = QtWidgets.QMainWindow()
@@ -39,10 +42,11 @@ def test_opacities(qtbot):
     # THEN the number of opacities should be equal to the number of dots
     #    and each opacity should be below the preceding opacity
     opacities = indicator.opacities
-    assert len(opacities) == indicator.dots
+    assert len(opacities) == indicator.dot_count
     assert all(opacities[i] < opacities[i - 1] for i in range(1, len(opacities)))
 
 
+@pytest.mark.gui()
 def test_show_starts_timer(qtbot):
     # GIVEN an indicator instance
     window = QtWidgets.QMainWindow()
@@ -57,6 +61,7 @@ def test_show_starts_timer(qtbot):
     assert indicator.timer
 
 
+@pytest.mark.gui()
 def test_hide_stops_timer(qtbot):
     # GIVEN a visible indicator
     window = QtWidgets.QMainWindow()
@@ -73,6 +78,7 @@ def test_hide_stops_timer(qtbot):
     assert indicator.timer is None
 
 
+@pytest.mark.gui()
 def test_frame_count_progresses(monkeypatch, qtbot):
     # GIVEN a indicator with a mocked paintEvent method for to capture counter values
     counter_values = []
@@ -85,18 +91,19 @@ def test_frame_count_progresses(monkeypatch, qtbot):
     indicator = LoadingIndicator(parent=window)
     qtbot.addWidget(window)
 
-    # WHEN showing the indicator with a 10 fps framerate
+    # WHEN showing the indicator with a 20 fps framerate and waiting second
     assert indicator.counter == 0
-    indicator.framerate = 10
+    indicator.framerate = 30
     window.show()
     indicator.show()
+    qtbot.wait(1000)
 
-    # THEN the counter should be somewhere between 4 and 6 after 0.5s
-    qtbot.wait(500)
+    # THEN the counter should have reached the last frame at least once
     assert counter_values
-    assert 4 <= max(counter_values) <= 6
+    assert max(counter_values) == indicator.dot_count - 1
 
 
+@pytest.mark.gui()
 def test_circles_are_rendered(qtbot):
     # GIVEN a indicator instance with a red dots are rendered on a black window
     window = QtWidgets.QMainWindow()
