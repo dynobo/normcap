@@ -24,7 +24,7 @@ class Worker(QtCore.QRunnable):
     @staticmethod
     def _raise_on_non_safe_urls(url: str) -> None:
         if not url.startswith("http"):
-            raise ValueError(f"Downloading from {url[:9]}... is not allowed.")
+            raise ValueError(f"Download from unsafe url {url[:9]}... is not allowed.")
 
     @QtCore.Slot()
     def run(self) -> None:
@@ -44,8 +44,8 @@ class Worker(QtCore.QRunnable):
                 self.url, context=context, timeout=self.timeout
             ) as response:
                 raw_data = response.read()
-        except Exception:
-            msg = f"Exception during download of '{self.url}'"
+        except Exception as exc:
+            msg = f"Exception during download of '{self.url}': {exc}"
             logger.exception(msg)
             self.com.on_download_failed.emit(msg, self.url)
         else:
