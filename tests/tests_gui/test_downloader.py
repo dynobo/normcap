@@ -1,4 +1,5 @@
 import os
+from contextlib import nullcontext as does_not_raise
 
 import pytest
 from pytestqt.qtbot import QtBot
@@ -41,7 +42,7 @@ def test_downloader_not_existing_url_does_not_trigger_finished(caplog, qtbot: Qt
     assert "Exception" in caplog.text
 
 
-def test_downloader_not_existing_url_triggers_failed(caplog, qtbot: QtBot):
+def test_downloader_not_existing_url_triggers_failed(qtbot: QtBot):
     # GIVEN a Downloader instance
     downloader = Downloader()
 
@@ -57,6 +58,26 @@ def test_downloader_not_existing_url_triggers_failed(caplog, qtbot: QtBot):
     assert result.args
     assert wrong_url in result.args[0]
     assert "Exception" in result.args[0]
+    assert "service not known" in result.args[0]
+
+
+def test_downloader_unsafe_url_raises(qtbot: QtBot):
+    # GIVEN a Downloader instance
+    downloader = Downloader()
+
+    # WHEN downloading from an non-http(s) url
+    wrong_url = "ftp://secret.txt"
+
+    # THEN the download failed signal should be triggered
+    #   and receive the exception and source url
+    with qtbot.wait_signal(downloader.com.on_download_failed) as result:
+        downloader.get(wrong_url)
+
+    assert result.signal_triggered
+    assert result.args
+    assert wrong_url in result.args[0]
+    assert "Exception" in result.args[0]
+    assert "Download from unsafe url" in result.args[0]
 
 
 def test_worker_existing_url(qtbot):
@@ -87,3 +108,21 @@ def test_worker_not_existing_url(qtbot):
     #   and pass the exception and source url as arguments
     assert signal.args[0].startswith("Exception")
     assert signal.args[1] == wrong_url
+
+
+@pytest.mark.parametrize(
+    ("url", "expected"),
+    [
+        ("http://dynobo.github.io", does_not_raise()),
+        ("https://dynobo.github.io", does_not_raise()),
+        ("https://dynobo.github.io/not_existing", does_not_raise()),
+        ("ftp://dynobo.github.io", pytest.raises(ValueError, match="unsafe")),
+        ("file://secret.txt", pytest.raises(ValueError, match="unsafe")),
+    ],
+)
+def test_raise_on_non_safe_urls_check(url, expected):
+    # GIVEN an URL which is considered safe (starting with http) or not
+    # WHEN calling the check method
+    # THEN an exception should be raised if the url is not considered safe
+    with expected:
+        Worker._raise_on_non_safe_urls(url)
