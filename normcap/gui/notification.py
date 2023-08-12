@@ -113,7 +113,6 @@ class Notifier(QtCore.QObject):
         """
         logger.debug("Send notification via QT")
 
-        # Need to load icon from path, as icon from resources.py won't show up:
         parent = self.parent()
 
         if not isinstance(parent, QtWidgets.QSystemTrayIcon):
