@@ -30,7 +30,7 @@ def test_downloader_not_existing_url_does_not_trigger_finished(caplog, qtbot: Qt
     downloader = Downloader()
 
     # WHEN downloading a not existing url
-    wrong_url = "https://not_existing_url.normcap"
+    wrong_url = "https://dynobo.github.io/normcap/not_existing"
 
     # THEN the download finished signal should not be triggered
     #   and the exception messages should be logged
@@ -47,7 +47,7 @@ def test_downloader_not_existing_url_triggers_failed(qtbot: QtBot):
     downloader = Downloader()
 
     # WHEN downloading a not existing url
-    wrong_url = "https://not_existing_url.normcap"
+    wrong_url = "https://dynobo.github.io/normcap/not_existing"
 
     # THEN the download failed signal should be triggered
     #   and receive the exception and source url
@@ -58,7 +58,6 @@ def test_downloader_not_existing_url_triggers_failed(qtbot: QtBot):
     assert result.args
     assert wrong_url in result.args[0]
     assert "Exception" in result.args[0]
-    assert "service not known" in result.args[0]
 
 
 def test_downloader_unsafe_url_raises(qtbot: QtBot):
@@ -97,7 +96,7 @@ def test_worker_existing_url(qtbot):
 
 def test_worker_not_existing_url(qtbot):
     # GIVEN a downloader Worker instance is initialized with a non existing url
-    wrong_url = "https://not_existing_url.normcap"
+    wrong_url = "https://dynobo.github.io/normcap/not_existing"
     worker = Worker(wrong_url)
 
     # WHEN the work is run
