@@ -105,6 +105,21 @@ def test_send_via_qt_tray(qtbot):
     # THEN we expect no exception (it's hard to test, if the notification is shown)
 
 
+@pytest.mark.gui()
+def test_send_via_qt_tray_with_non_systemtray_parent_raises(qtbot):
+    """Only tests if no exception occurs."""
+    # GIVEN a Notification object
+    #    without a QSystemTrayIcon as parent
+    tray = QtWidgets.QMainWindow()
+    notifier = notification.Notifier(tray)
+
+    # WHEN a notification is sent via QT (QSystemTrayIcon)
+    with pytest.raises(TypeError, match="QSystemTrayIcon"):
+        notifier._send_via_qt_tray("Title", "Message")
+
+    # THEN we expect an exception, as the parent has to be a QSystemTrayIcon
+
+
 def test_send_notification(monkeypatch):
     """Test which method is used to send notification under certain conditions."""
 
