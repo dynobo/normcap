@@ -106,7 +106,7 @@ def test_send_via_qt_tray(qtbot):
 
 
 @pytest.mark.gui()
-def test_send_via_qt_tray_with_non_systemtray_parent_raises(qtbot):
+def test_send_via_qt_tray_without_qsystemtrayicon_parent_raises(qtbot):
     """Only tests if no exception occurs."""
     # GIVEN a Notification object
     #    without a QSystemTrayIcon as parent
