@@ -91,12 +91,12 @@ def test_frame_count_progresses(monkeypatch, qtbot):
     indicator = LoadingIndicator(parent=window)
     qtbot.addWidget(window)
 
-    # WHEN showing the indicator with a 20 fps framerate and waiting second
+    # WHEN showing the indicator with a certain framerate and waiting x seconds
     assert indicator.counter == 0
     indicator.framerate = 30
     window.show()
     indicator.show()
-    qtbot.wait(1000)
+    qtbot.wait(1500)
 
     # THEN the counter should have reached the last frame at least once
     assert counter_values

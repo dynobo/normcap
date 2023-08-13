@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 class CaptureFunc(Protocol):
     def __call__(self) -> list[QtGui.QImage]:
-        ...
+        ...  # pragma: no cover
 
 
 def get_capture_func() -> CaptureFunc:

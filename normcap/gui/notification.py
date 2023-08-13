@@ -23,7 +23,7 @@ class Communicate(QtCore.QObject):
 class Notifier(QtCore.QObject):
     """Send notifications."""
 
-    def __init__(self, parent: QtCore.QObject) -> None:
+    def __init__(self, parent: QtCore.QObject | None) -> None:
         super().__init__(parent=parent)
         self.com = Communicate(parent=self)
         self.com.send_notification.connect(self._send_notification)
