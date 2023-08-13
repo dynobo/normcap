@@ -30,7 +30,7 @@ class CheckedCall:
     def __call__(self, *args: Any) -> Any:  # noqa: ANN401
         ret = self.f(*args)
         if not ret and get_errno():
-            raise RuntimeError(f"Error calling {self.f.__name__}")
+            raise RuntimeError(f"Error calling {self.f.__name__}")  # pragma: no cover
         return ret
 
     def __setattr__(self, key: str, value: Any) -> None:  # noqa: ANN401
