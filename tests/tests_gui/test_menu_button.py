@@ -1,5 +1,7 @@
 from PySide6 import QtGui, QtWidgets
 
+from normcap.gui import menu_button
+
 
 def test_enable_language_manager(qtbot, menu_btn):
     menu_btn.menu().aboutToShow.emit()
@@ -107,3 +109,28 @@ def test_settings_group(menu_btn):
         action.trigger()
         setting_value = menu_btn.settings.value(action.objectName())
         assert str(setting_value).lower() == str(action.isChecked()).lower()
+
+
+def test_show_message_box(qapp, monkeypatch, menu_btn):
+    # GIVEN a menu button and a mocked QMessegeBox.exec_() method
+    execs = []
+
+    def mocked_exec(cls):
+        execs.append(True)
+
+    monkeypatch.setattr(menu_button.QtWidgets.QMessageBox, "exec_", mocked_exec)
+
+    # WHEN the message box method is called
+    test_message = "Some message box text"
+    menu_btn._show_message_box(text=test_message)
+
+    # THEN the message box's exec method should be called
+    #   and the message box text should be set to the text provided as argument
+    #   and a valid icon pixmap (with dimensions) should be set
+    assert execs == [True]
+    assert menu_btn.message_box.text() == test_message
+    assert menu_btn.message_box.iconPixmap().width() > 0
+    assert menu_btn.message_box.iconPixmap().height() > 0
+
+
+# TODO: Add test if message box is shown on python package when triggered by logic
