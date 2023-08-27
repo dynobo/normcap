@@ -14,7 +14,23 @@ from normcap.screengrab.utils import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)
 
-TIMEOUT_SECONDS = 7
+
+# Note on Request Timeout:
+#
+# Unfortunately, the dbus portal does not return any error message, in case the
+# screenshot could not be taken (e.g. missing permission). It just doesn't return any
+# response. Therefore, we need to rely on a timeout between the screenshot request and
+# its (potential) response to not keep waiting indefinitely.
+#
+# The value set below is somewhat arbitrary and a trade-off between enabling edge cases
+# with high delays (e.g. in high resolution multi monitor setups) and a short delay
+# between action and error message, which is desired from a UX perspective.
+#
+# We started with a 7 seconds timeout, but this turned out to be too low for at least
+# one user, therefore it got increased.
+#
+# ONHOLD: Check in 2024 if the portal was updated to always return a response message.
+TIMEOUT_SECONDS = 10
 
 
 class OrgFreedesktopPortalRequestInterface(QtDBus.QDBusAbstractInterface):
