@@ -6,10 +6,24 @@ import re
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__
-from normcap.gui.constants import INFO_UPDATE_GITHUB, INFO_UPDATE_PIP, URLS
+from normcap.gui.constants import URLS
 from normcap.gui.downloader import Downloader
+from normcap.gui.localization import _
 
 logger = logging.getLogger(__name__)
+
+
+# L10N: Message box shown when new version available (Prebuilt package)
+INFO_UPDATE_GITHUB = _(
+    "You can download the new version for your operating system from GitHub.\n\n"
+    "Do you want to visit the release website now?"
+)
+
+# L10N: Message box shown when new version available (Python package)
+INFO_UPDATE_PIP = _(
+    "You should upgrade from command line with 'pip install normcap --upgrade'.\n\n"
+    "Do you want to view the changelog on github?"
+)
 
 
 class Communicate(QtCore.QObject):
@@ -74,8 +88,13 @@ class UpdateChecker(QtWidgets.QWidget):
 
     def _show_update_message(self, version: str) -> None:
         """Show dialog informing about available update."""
-        text = f"<b>NormCap v{version} is available.</b> (You have v{__version__})"
-        self.message_box.setText(text)
+        # L10N: Update available dialog box.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        new_text = _("NormCap v{version} is available.").format(version=version)
+        # L10N: Update available dialog box.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        current_text = _("You have v{version}").format(version=__version__)
+        self.message_box.setText(f"<b>{new_text}</b> ({current_text})")
 
         info_text = INFO_UPDATE_GITHUB if self.packaged else INFO_UPDATE_PIP
         self.message_box.setInformativeText(info_text)

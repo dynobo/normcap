@@ -5,7 +5,15 @@ from typing import Any
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import __version__
-from normcap.gui.constants import MESSAGE_LANGUAGES, URLS
+from normcap.gui.constants import URLS
+from normcap.gui.localization import _
+
+# L10N: Message box shown in Python package only when trying to install a language
+MESSAGE_LANGUAGES = _(
+    "You are not using the prebuilt package version of NormCap. "
+    "Please refer to the documentation of Tesseract for your "
+    "operating system on how to install additional languages."
+)
 
 _MENU_STYLE = """
 QMenu {
@@ -58,8 +66,7 @@ QToolButton::hover {
 QToolButton::menu-indicator { image: none; }
 """
 
-# TODO: Add translations
-# https://doc.qt.io/qtforpython-6/tutorials/basictutorial/translations.html
+# TODO: Add tooltips for menu entries
 
 
 class Communicate(QtCore.QObject):
@@ -174,17 +181,20 @@ class MenuButton(QtWidgets.QToolButton):
     def populate_menu_entries(self) -> None:
         menu = self.menu()
         menu.clear()
-
-        self._add_title(menu, "Settings")
+        # L10N: Section title in Main Menu
+        self._add_title(menu, _("Settings"))
         self._add_settings_section(menu)
         menu.addSeparator()
-        self._add_title(menu, "Capture mode")
+        # L10N: Section title in Main Menu
+        self._add_title(menu, _("Capture mode"))
         self._add_mode_section(menu)
         menu.addSeparator()
-        self._add_title(menu, "Languages")
+        # L10N: Section title in Main Menu
+        self._add_title(menu, _("Languages"))
         self._add_languages_section(menu)
         menu.addSeparator()
-        self._add_title(menu, "Application")
+        # L10N: Section title in Main Menu
+        self._add_title(menu, _("Application"))
         self._add_application_section(menu)
 
     def _add_title(
@@ -203,19 +213,22 @@ class MenuButton(QtWidgets.QToolButton):
         settings_group.setObjectName("settings_group")
         settings_group.setExclusive(False)
 
-        action = QtGui.QAction("Show notification", settings_group)
+        # L10N: Entry in main menu's 'setting' section
+        action = QtGui.QAction(_("Show notification"), settings_group)
         action.setObjectName("notification")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("notification", type=bool)))
         menu.addAction(action)
 
-        action = QtGui.QAction("Keep in system tray", settings_group)
+        # L10N: Entry in main menu's 'setting' section
+        action = QtGui.QAction(_("Keep in system tray"), settings_group)
         action.setObjectName("tray")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("tray", type=bool)))
         menu.addAction(action)
 
-        action = QtGui.QAction("Check for update", settings_group)
+        # L10N: Entry in main menu's 'setting' section
+        action = QtGui.QAction(_("Check for update"), settings_group)
         action.setObjectName("update")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("update", type=bool)))
@@ -226,13 +239,15 @@ class MenuButton(QtWidgets.QToolButton):
         mode_group.setObjectName("mode_group")
         mode_group.setExclusive(True)
 
-        action = QtGui.QAction("parse", mode_group)
+        # L10N: Entry in main menu's 'Capture mode' section
+        action = QtGui.QAction(_("parse"), mode_group)
         action.setObjectName("parse")
         action.setCheckable(True)
         action.setChecked(self.settings.value("mode") == "parse")
         menu.addAction(action)
 
-        action = QtGui.QAction("raw", mode_group)
+        # L10N: Entry in main menu's 'Capture mode' section
+        action = QtGui.QAction(_("raw"), mode_group)
         action.setObjectName("raw")
         action.setCheckable(True)
         action.setChecked(self.settings.value("mode") == "raw")
@@ -259,10 +274,12 @@ class MenuButton(QtWidgets.QToolButton):
             language_menu.addAction(action)
 
         if self.has_language_manager:
-            action = QtGui.QAction("add/remove...", menu)
+            # L10N: Entry in main menu's 'Languages' section. Shown in prebuild package.
+            action = QtGui.QAction(_("add/remove..."), menu)
             action.setObjectName("manage_languages")
         else:
-            action = QtGui.QAction("... need more?", menu)
+            # L10N: Entry in main menu's 'Languages' section. Shown in Python package.
+            action = QtGui.QAction(_("... need more?"), menu)
             action.setObjectName("show_help_languages")
 
         menu.addAction(action)
@@ -270,39 +287,47 @@ class MenuButton(QtWidgets.QToolButton):
     def _add_application_section(self, menu: QtWidgets.QMenu) -> None:
         submenu = QtWidgets.QMenu(menu)
         submenu.setObjectName("settings_menu_website")
-        submenu.setTitle("About")
+        # L10N: Entry in main menu's 'Application' section.
+        submenu.setTitle(_("About"))
 
         about_group = QtGui.QActionGroup(menu)
         about_group.setObjectName("website_group")
 
         self._add_title(submenu, f"Normcap v{__version__}", about_group)
 
-        action = QtGui.QAction("Website", about_group)
+        # L10N: Entry in main menu's 'Application' section.
+        action = QtGui.QAction(_("Website"), about_group)
         action.setObjectName(URLS.website)
         submenu.addAction(action)
 
-        action = QtGui.QAction("FAQs", about_group)
+        # L10N: Entry in main menu's 'Application' section.
+        action = QtGui.QAction(_("FAQs"), about_group)
         action.setObjectName(URLS.faqs)
         submenu.addAction(action)
 
-        action = QtGui.QAction("Source code", about_group)
+        # L10N: Entry in main menu's 'Application' section.
+        action = QtGui.QAction(_("Source code"), about_group)
         action.setObjectName(URLS.github)
         submenu.addAction(action)
 
-        action = QtGui.QAction("Releases", about_group)
+        # L10N: Entry in main menu's 'Application' section.
+        action = QtGui.QAction(_("Releases"), about_group)
         action.setObjectName(URLS.releases)
         submenu.addAction(action)
 
-        action = QtGui.QAction("Report a problem", about_group)
+        # L10N: Entry in main menu's 'Application' section.
+        action = QtGui.QAction(_("Report a problem"), about_group)
         action.setObjectName(URLS.issues)
         submenu.addAction(action)
 
-        action = QtGui.QAction("Buy me a coffee", about_group)
+        # L10N: Entry in main menu's 'Application' section.
+        action = QtGui.QAction(_("Donate a coffee"), about_group)
         action.setObjectName(URLS.buymeacoffee)
         submenu.addAction(action)
 
         menu.addMenu(submenu)
 
-        action = QtGui.QAction("Close", menu)
+        # L10N: Entry in main menu's 'Application' section.
+        action = QtGui.QAction(_("Close"), menu)
         action.setObjectName("close")
         menu.addAction(action)

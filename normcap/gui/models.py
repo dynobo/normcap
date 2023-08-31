@@ -2,15 +2,24 @@
 
 import enum
 import logging
-from collections import namedtuple
+from collections.abc import Iterable
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Any, Callable, NamedTuple, Optional
 
 from PySide6 import QtGui
 
 logger = logging.getLogger(__name__)
 
-Setting = namedtuple("Setting", "key flag type_ value choices help cli_arg nargs")
+
+class Setting(NamedTuple):
+    key: str
+    flag: str
+    type_: type | Callable
+    value: Any
+    choices: Iterable | None
+    help_: str
+    cli_arg: bool
+    nargs: int | str
 
 
 @enum.unique

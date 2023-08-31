@@ -2,22 +2,6 @@
 
 from normcap.gui.models import Urls
 
-INFO_UPDATE_GITHUB = (
-    "You can download the new version for your operating system from GitHub.\n\n"
-    "Do you want to visit the release website now?"
-)
-
-INFO_UPDATE_PIP = (
-    "You should upgrade from command line with 'pip install normcap --upgrade'.\n\n"
-    "Do you want to view the changelog on github?"
-)
-
-MESSAGE_LANGUAGES = (
-    "You are not using the prebuilt package version of NormCap. "
-    "Please refer to the documentation of Tesseract for your "
-    "operating system on how to install additional languages."
-)
-
 URLS = Urls(
     releases="https://github.com/dynobo/normcap/releases",
     changelog="https://github.com/dynobo/normcap/blob/main/CHANGELOG",

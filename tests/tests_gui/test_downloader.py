@@ -39,7 +39,7 @@ def test_downloader_not_existing_url_does_not_trigger_finished(caplog, qtbot: Qt
 
     assert "ERROR" in caplog.text
     assert wrong_url in caplog.text
-    assert "Exception" in caplog.text
+    assert "could not download" in caplog.text.lower()
 
 
 def test_downloader_not_existing_url_triggers_failed(qtbot: QtBot):
@@ -57,7 +57,7 @@ def test_downloader_not_existing_url_triggers_failed(qtbot: QtBot):
     assert result.signal_triggered
     assert result.args
     assert wrong_url in result.args[0]
-    assert "Exception" in result.args[0]
+    assert "download error" in result.args[0].lower()
 
 
 def test_downloader_unsafe_url_raises(qtbot: QtBot):
@@ -75,8 +75,8 @@ def test_downloader_unsafe_url_raises(qtbot: QtBot):
     assert result.signal_triggered
     assert result.args
     assert wrong_url in result.args[0]
-    assert "Exception" in result.args[0]
-    assert "Download from unsafe url" in result.args[0]
+    assert "download error" in result.args[0].lower()
+    assert "from unsafe url" in result.args[0].lower()
 
 
 def test_worker_existing_url(qtbot):
@@ -90,7 +90,7 @@ def test_worker_existing_url(qtbot):
 
     # THEN it should trigger the download finished signal
     #   and pass the raw data and source url as arguments
-    assert type(signal.args[0]) is bytes
+    assert isinstance(signal.args[0], bytes)
     assert signal.args[1] == test_url
 
 
@@ -105,7 +105,7 @@ def test_worker_not_existing_url(qtbot):
 
     # THEN it should trigger the download failed signal
     #   and pass the exception and source url as arguments
-    assert signal.args[0].startswith("Exception")
+    assert "download error" in signal.args[0].lower()
     assert signal.args[1] == wrong_url
 
 
