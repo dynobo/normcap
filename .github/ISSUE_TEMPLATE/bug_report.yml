@@ -35,12 +35,12 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: Debug log output?
+      label: Debug log output?*
       render: shell
   - type: markdown
     attributes:
       value: |
-        Don't know, how to generate debug log output?
+        \* How to generate debug log output:
         1. Open a terminal/command prompt.
         2. Run the command according to your NormCap installation method:
            - Python package: `normcap -v debug`
@@ -50,5 +50,5 @@ body:
            - Flatpak: `flatpak run --command=normcap com.github.dynobo.normcap -v debug`
            - AUR: `normcap -v debug`
         3. Reproduce the bug and exit NormCap.
-        4. Select all the text that was printed to the terminal and copy it to your clipboard
-        5. Paste the text in the field above.
+        4. Copy all the text that was printed to the terminal and paste it into the form
+           above.
