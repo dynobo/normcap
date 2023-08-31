@@ -26,15 +26,15 @@ macOS and Windows._**
 
 ## Quickstart
 
-Choose **_one_** of the options for a prebuilt release. If you encounter any issue
-please take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
+Choose **_one_** of the options for a prebuilt release. If you encounter an issue please
+take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
 [report](https://github.com/dynobo/normcap/issues) it.
 
 #### Windows
 
 - [NormCap-0.4.4-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.4.4/NormCap-0.4.4-x86_64-Windows.msi)
   (Installer)
-- [Normcap @ Microsoft Store](https://apps.microsoft.com/store/detail/normcap/XPDLJNB4B6C2ZR)
+- [Normcap @ Microsoft Store](https://apps.microsoft.com/store/detail/normcap/XPDLJNB4B6C2ZR)\*
 
 #### Linux
 
@@ -55,7 +55,7 @@ screenshots. ([#135](https://github.com/dynobo/normcap/issues/135))
 - [NormCap-0.4.4-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.4.4/NormCap-0.4.4-arm64-macOS.dmg)
   (Installer for M1)\*
 
-<small>\* Might be available delayed, as it is currently build manually. (Thx,
+<small>\* Might be available delayed, as it is currently build/uploaded manually. (Thx,
 [@Takrin](https://github.com/Takrin)!)</small>
 
 ## Install Python package
