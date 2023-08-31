@@ -1,11 +1,25 @@
 # Localization of NormCap
 
-For localization, I basically followed
-[this tutorial by Matt Layman](https://www.mattlayman.com/blog/2015/i18n/) which uses
-the [babel](https://babel.pocoo.org/en/latest/)-package and Python's buildin module
-[`gettext`](https://docs.python.org/3/library/gettext.html).
+## Status
 
-## Add support for a new language
+| Locale | Progress | Translated |
+| :----- | -------: | ---------: |
+| de_DE  |      65% |   29 of 44 |
+
+## Improve existing locale
+
+1. Navigate to the folder
+   [`./normcap/resources/locales/`](https://github.com/dynobo/normcap/tree/main/normcap/resources/locales)
+2. Drill down into the folder of the target locale (e.g. `de_DE`) and edit its language
+   file `/LC_MESSAGES/messages.po`. If you like, use the
+   [Free PO-Editor](https://pofile.net/free-po-editor) for easier editing. \
+   **Important:** Never translate any variables which are written in curly brackets, e.g.
+   `{count}`!
+3. Propose the change file in a new Pull Request. \
+   (In case you are not familiar with git, you can also always propose a correction/change
+   via a [new issue](https://github.com/dynobo/normcap/issues/new/choose).)
+
+## Add new locale
 
 _Prerequisite:_ Follow the general
 [setup of the development environment](../../../README.md#Development) and activate the
@@ -27,6 +41,9 @@ virtual Python environment via `poetry shell`.
 1. Edit the file `./normcap/resources/locales/<LOCALE_NAME>/LC_MESSAGES/messages.po`
    which was created in step 2. Add your translations as the respective `msgstr`. If you
    like, use the [Free PO-Editor](https://pofile.net/free-po-editor) for easier editing.
+   \
+   **Important:** Never translate any variables which are written in curly brackets, e.g.
+   `{count}`!
 1. Compile the new `.po` file to the machine-readable `.mo` file:
    ```sh
    pybabel compile --directory ./normcap/resources/locales --locale=<LOCALE_NAME>
