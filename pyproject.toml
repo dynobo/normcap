@@ -45,15 +45,16 @@ normcap = "normcap.app:main"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-PySide6-Essentials = "6.5.1.1"
+PySide6-Essentials = "6.5.2"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=23.1.0"
-briefcase = "0.3.14"
+briefcase = "0.3.15"
 coverage = { extras = ["toml"], version = ">=6.4.2" }
 coveralls = ">=3.3.1"
 mdformat-gfm = ">=0.3.5"
 mypy = ">=1.3.0"
+pip-audit = ">=2.5.5"
 pre-commit = ">=3.0.2"
 pydeps = ">=1.11.0"
 pytest = ">=7.2.1"
@@ -66,16 +67,15 @@ tbump = ">=6.9.0"
 toml = ">=0.10.2"
 types-toml = ">=0.10.8.1"
 typing-extensions = ">=4.4.0"
-pip-audit = ">=2.5.5"
 
 [tool.poetry.group.analysis]
 optional = true
 
 [tool.poetry.group.analysis.dependencies]
+code2flow = "^2.5.1"
 radon = ">=5.1.0"
 viztracer = ">=0.15.3"
 vulture = ">=2.4"
-code2flow = "^2.5.1"
 
 [tool.black]
 line-length = 88
@@ -94,7 +94,7 @@ exclude = '''
 [tool.ruff]
 target-version = "py39"
 line-length = 88
-exclude = [".vscode", ".venv", "linux"]
+exclude = [".venv"]
 select = [
   "F",   # Pyflakes
   "E",   # pycodestyle
@@ -157,9 +157,9 @@ markers = ["gui: tests which require a graphical interface to run"]
 source = ["normcap"]
 
 [tool.pydeps]
+no_show = true
 cluster = true
 max_cluster_size = 1
-no_show = true
 
 [tool.briefcase]
 project_name = "NormCap"
@@ -177,7 +177,7 @@ sources = ["normcap"]
 icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
-requires = ["PySide6-Essentials==6.5.1.1"]
+requires = ["PySide6-Essentials==6.5.2"]
 cleanup_paths = [
   # Globs
   "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",

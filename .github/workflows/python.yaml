@@ -40,7 +40,7 @@ jobs:
         with:
           ref: ${{ inputs.refToBuild }}
       - name: Install poetry
-        run: pipx install poetry==1.4.2
+        run: pipx install poetry==1.6.1
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
@@ -118,10 +118,6 @@ jobs:
           --with=dev)"
       # - name: Setup upterm session
       #   if: matrix.os  == 'ubuntu-22.04'
-      #   uses: lhotari/action-upterm@v1
-      # TODO: Fix pytest segfault on first run but passes on second run
-      # Probably caused by a leaky implementation of Qt. See:
-      # https://web.archive.org/web/20220619231122/http://enki-editor.org/2014/08/23/Pyqt_mem_mgmt.html
       - name: Pytest
         run: poetry run pytest -vv --cov --cov-report=xml
       - name: Coverage
@@ -189,7 +185,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pipx install poetry==1.4.2
+        run: pipx install poetry==1.6.1
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
@@ -237,7 +233,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pipx install poetry==1.4.2
+        run: pipx install poetry==1.6.1
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"

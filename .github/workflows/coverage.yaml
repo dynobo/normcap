@@ -18,7 +18,7 @@ jobs:
       # SETUP ENVIRONMENT
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pipx install poetry==1.4.2
+        run: pipx install poetry==1.6.1
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
