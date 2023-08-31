@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 import argparse
+import contextlib
+import io
+import re
 from pathlib import Path
 
 from babel.messages.frontend import CommandLineInterface
@@ -15,10 +18,49 @@ def _get_version() -> str:
     return pyproject_toml["tool"]["poetry"]["version"]
 
 
-def compile_locales() -> None:
-    CommandLineInterface().run(
-        ["pybabel", "compile", "--directory", "normcap/resources/locales"]
+def _update_coverage(lines: list[str]) -> None:
+    # Parse stats
+    locales_stats = [line for line in lines if line.endswith(".po")]
+    coverage_table = (
+        "| Locale | Progress | Translated |\n| :----- | -------: | ---------: |\n"
     )
+    for stat in locales_stats:
+        if m := re.search(
+            r"""(\d+\ of\ \d+).*            # message counts
+                \((\d+\%)\).*               # message percentage
+                locales\/(.*)\/LC_MESSAGES  # locale name""",
+            stat,
+            re.VERBOSE,
+        ):
+            coverage_table += f"| {m[3]:<6} | {m[2]:>8} | {m[1]:>10} |\n"
+
+    # Render stats to markdown file
+    md_file = Path(__file__).parent / "normcap" / "resources" / "locales" / "README.md"
+    md_text = md_file.read_text("utf-8")
+    md_text = re.sub(
+        r"(.*## Status\n).*?(##.*)",
+        rf"\1\n{coverage_table}\n\2",
+        md_text,
+        flags=re.DOTALL,
+    )
+    md_file.write_text(md_text, "utf-8")
+
+
+def compile_locales() -> None:
+    f = io.StringIO()
+    with contextlib.redirect_stderr(f):
+        CommandLineInterface().run(
+            [
+                "pybabel",
+                "compile",
+                "--directory",
+                "normcap/resources/locales",
+                "--statistics",
+            ]
+        )
+    output = f.getvalue()
+    print(output)  # noqa: T201
+    _update_coverage(lines=output.splitlines())
 
 
 def extract_strings() -> None:

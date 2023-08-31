@@ -20,6 +20,14 @@ repos:
       - id: mixed-line-ending
   - repo: local
     hooks:
+      - id: compile_locales
+        name: compile locales
+        stages: [commit]
+        language: system
+        entry: poetry run python l10n.py
+        types: [pofile]
+        pass_filenames: false
+
       - id: mdformat
         name: mdformat
         stages: [commit]
@@ -66,10 +74,12 @@ repos:
         entry:
           bash -c "poetry run pip-audit --strict -r <(poetry export -f requirements.txt
           --with=dev)"
+        # TODO: Remove pip-audit ignores above!
         # First `sed` removes potential "[<extra>]" after package names
         # Second `sed` removes "\n" in front of "--hash" to get one line per package
         # Final `uniq` is the used to de-duplicated those lines
         pass_filenames: false
+        types: [toml]
 
       - id: pydeps
         name: pydeps

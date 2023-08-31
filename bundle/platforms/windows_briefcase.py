@@ -13,12 +13,10 @@ class WindowsBriefcase(BuilderBase):
     """Create prebuilt package for Windows using Briefcase."""
 
     binary_suffix = ""
+    binary_extension = "msi"
+    binary_platform = "x86_64-Windows"
 
-    def bundle_tesseract(self) -> None:
-        """Download tesseract binaries including dependencies into resource path."""
-        bundle_tesseract_windows_ub_mannheim(self)
-
-    def download_openssl(self) -> None:
+    def _download_openssl(self) -> None:
         """Download openssl needed for QNetwork https connections."""
         # For mirrors see: https://wiki.openssl.org/index.php/Binaries
         # OPENSSL_URL = "http://mirror.firedaemon.com/OpenSSL/openssl-1.1.1q.zip"
@@ -32,7 +30,7 @@ class WindowsBriefcase(BuilderBase):
 
         zip_path.unlink()
 
-    def patch_main_cpp(self) -> None:
+    def _patch_main_cpp(self) -> None:
         main_cpp = (
             self.PROJECT_PATH
             / "build"
@@ -92,7 +90,7 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
             delete_to="PyStatus status;",
         )
 
-    def patch_windows_installer(self) -> None:
+    def _patch_windows_installer(self) -> None:
         """Customize wix-installer."""
         wxs_file = (
             self.PROJECT_PATH
@@ -187,28 +185,20 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
             f.seek(0)
             f.writelines(header_lines + lines)
 
-    def rename_package_file(self) -> None:
-        source = next(Path(self.PROJECT_PATH / "dist").glob("*.msi"))
-        target = (
-            self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-x86_64-Windows{self.binary_suffix}.msi"
-        )
-        target.unlink(missing_ok=True)
-        shutil.move(source, target)
+    def bundle_tesseract(self) -> None:
+        """Download tesseract binaries including dependencies into resource path."""
+        bundle_tesseract_windows_ub_mannheim(self)
 
     def run_framework(self) -> None:
         self.run(cmd="briefcase create windows VisualStudio", cwd=self.PROJECT_PATH)
-        self.patch_main_cpp()
+        self._patch_main_cpp()
         self.run(cmd="briefcase build windows VisualStudio", cwd=self.PROJECT_PATH)
-        self.patch_windows_installer()
+        self._patch_windows_installer()
         self.run(cmd="briefcase package windows VisualStudio", cwd=self.PROJECT_PATH)
 
     def install_system_deps(self) -> None:
         pass
 
-    def create(self) -> None:
-        self.download_tessdata()
-        self.download_openssl()
+    def pre_framework(self) -> None:
         self.bundle_tesseract()
-        self.run_framework()
-        self.rename_package_file()
+        self._download_openssl()

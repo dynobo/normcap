@@ -13,8 +13,25 @@ class LinuxBriefcase(BuilderBase):
     """Create prebuilt package for Linux using Briefcase."""
 
     binary_suffix = ""
+    binary_extension = "AppImage"
+    binary_platform = "x86_64"
 
-    def patch_briefcase_appimage_to_include_tesseract_and_wlcopy(self) -> None:
+    def _add_metainfo_to_appimage(self) -> None:
+        """Copy metainfo file with info for appimage hub."""
+        metainfo = self.BUILD_PATH / "metainfo"
+        target_path = (
+            self.PROJECT_PATH
+            / "build"
+            / "normcap"
+            / "linux"
+            / "appimage"
+            / "NormCap.AppDir"
+            / "usr"
+            / "share"
+        )
+        shutil.copy(metainfo, target_path / "metainfo")
+
+    def _patch_briefcase_appimage_to_include_tesseract_and_wlcopy(self) -> None:
         """Insert code into briefcase appimage code to remove unnecessary libs."""
         file_path = (
             Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
@@ -42,40 +59,14 @@ class LinuxBriefcase(BuilderBase):
             cmd="briefcase create linux appimage --no-input", cwd=self.PROJECT_PATH
         )
         self.run(cmd="briefcase build linux appimage", cwd=self.PROJECT_PATH)
-        self.add_metainfo_to_appimage()
+        self._add_metainfo_to_appimage()
         self.run(cmd="briefcase package linux appimage", cwd=self.PROJECT_PATH)
-
-    def rename_package_file(self) -> None:
-        source = next(Path(self.PROJECT_PATH / "dist").glob("*.AppImage"))
-        target = (
-            self.BUILD_PATH
-            / f"NormCap-{self.get_version()}-x86_64{self.binary_suffix}.AppImage"
-        )
-        target.unlink(missing_ok=True)
-        shutil.move(source, target)
-
-    def add_metainfo_to_appimage(self) -> None:
-        """Copy metainfo file with info for appimage hub."""
-        metainfo = self.BUILD_PATH / "metainfo"
-        target_path = (
-            self.PROJECT_PATH
-            / "build"
-            / "normcap"
-            / "linux"
-            / "appimage"
-            / "NormCap.AppDir"
-            / "usr"
-            / "share"
-        )
-        shutil.copy(metainfo, target_path / "metainfo")
 
     def bundle_tesseract(self) -> None:
         ...
 
-    def create(self) -> None:
-        self.download_tessdata()
+    def download_tessdata(self) -> None:
+        ...
 
-        self.patch_briefcase_appimage_to_include_tesseract_and_wlcopy()
-
-        self.run_framework()
-        self.rename_package_file()
+    def pre_framework(self) -> None:
+        self._patch_briefcase_appimage_to_include_tesseract_and_wlcopy()
