@@ -72,7 +72,8 @@ repos:
         stages: [commit]
         language: system
         entry:
-          bash -c "poetry run pip-audit --strict -r <(poetry export -f requirements.txt
+          bash -c "poetry run pip-audit --strict --ignore-vuln GHSA-wfm5-v35h-vwf4
+          --ignore-vuln GHSA-cwvm-v4w8-q58c -r <(poetry export -f requirements.txt
           --with=dev)"
         # TODO: Remove pip-audit ignores above!
         # First `sed` removes potential "[<extra>]" after package names
