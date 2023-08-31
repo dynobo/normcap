@@ -11,6 +11,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as pyside_version
 
 from normcap import __version__
+from normcap.gui.localization import translate
 from normcap.gui.models import DesktopEnvironment, Rect, Screen
 
 logger = logging.getLogger(__name__)
@@ -160,15 +161,18 @@ def screens() -> list[Screen]:
 def to_dict() -> dict:
     """Cast all system infos to string for logging."""
     return {
+        "normcap_version": __version__,
         "cli_args": " ".join(sys.argv),
         "is_briefcase_package": is_briefcase_package(),
         "is_flatpak_package": is_flatpak_package(),
         "platform": sys.platform,
+        "desktop_environment": desktop_environment(),
+        "display_manager_is_wayland": display_manager_is_wayland(),
         "pyside6_version": pyside_version,
         "qt_version": QtCore.qVersion(),
         "qt_library_path": ", ".join(QtCore.QCoreApplication.libraryPaths()),
+        "locale": translate.info().get("language", "DEFAULT"),
         "config_directory": config_directory(),
-        "normcap_version": __version__,
         "resources_path": get_resources_path(),
         "tesseract_path": get_tesseract_path(),
         "tessdata_path": get_tessdata_path(),
@@ -176,7 +180,5 @@ def to_dict() -> dict:
             "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX", None),
             "LD_LIBRARY_PATH": os.environ.get("LD_LIBRARY_PATH", None),
         },
-        "desktop_environment": desktop_environment(),
-        "display_manager_is_wayland": display_manager_is_wayland(),
         "screens": screens(),
     }

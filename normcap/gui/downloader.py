@@ -4,6 +4,8 @@ import logging
 
 from PySide6 import QtCore
 
+from normcap.gui.localization import _
+
 logger = logging.getLogger(__name__)
 
 
@@ -24,7 +26,7 @@ class Worker(QtCore.QRunnable):
     @staticmethod
     def _raise_on_non_safe_urls(url: str) -> None:
         if not url.startswith("http"):
-            raise ValueError(f"Download from unsafe url {url[:9]}... is not allowed.")
+            raise ValueError("Downloading from unsafe url is not allowed.")
 
     @QtCore.Slot()
     def run(self) -> None:
@@ -45,8 +47,10 @@ class Worker(QtCore.QRunnable):
             ) as response:
                 raw_data = response.read()
         except Exception as exc:
-            msg = f"Exception during download of '{self.url}': {exc}"
-            logger.exception(msg)
+            logger.exception(f"Could not download '{self.url}'")
+            # L10N: Generic error message when any download failed.
+            msg = _("Download error.")
+            msg += f"\n[URL: {self.url}, EXC: {exc}]"
             self.com.on_download_failed.emit(msg, self.url)
         else:
             self.com.on_download_finished.emit(raw_data, self.url)

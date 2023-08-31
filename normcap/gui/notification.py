@@ -8,6 +8,7 @@ import textwrap
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.gui import system_info
+from normcap.gui.localization import _, translate
 from normcap.gui.models import Capture, CaptureMode
 
 logger = logging.getLogger(__name__)
@@ -33,8 +34,10 @@ class Notifier(QtCore.QObject):
         """Extract message text out of captures object and include icon."""
         # Compose message text
         if not capture.ocr_text or len(capture.ocr_text.strip()) < 1:
-            title = "Nothing captured!"
-            text = "Please try again."
+            # L10N: Notification title
+            title = _("Nothing captured!")
+            # L10N: Notification text
+            text = _("Please try again.")
             return title, text
 
         text = capture.ocr_text.strip().replace(os.linesep, " ")
@@ -43,29 +46,50 @@ class Notifier(QtCore.QObject):
         # Compose message title
         if capture.ocr_applied_magic == "ParagraphMagic":
             count = capture.ocr_text.count(os.linesep * 2) + 1
-            title = f"{count} paragraph"
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 paragraph captured", "{count} paragraphs captured", count
+            ).format(count=count)
         elif capture.ocr_applied_magic == "EmailMagic":
             count = capture.ocr_text.count("@")
-            title = f"{count} email"
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 email captured", "{count} emails captured", count
+            ).format(count=count)
         elif capture.ocr_applied_magic == "SingleLineMagic":
             count = capture.ocr_text.count(" ") + 1
-            title = f"{count} word"
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 word captured", "{count} words captured", count
+            ).format(count=count)
         elif capture.ocr_applied_magic == "MultiLineMagic":
             count = capture.ocr_text.count(os.linesep) + 1
-            title = f"{count} line"
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 line captured", "{count} lines captured", count
+            ).format(count=count)
         elif capture.ocr_applied_magic == "UrlMagic":
             count = capture.ocr_text.count(os.linesep) + 1
-            title = f"{count} URL"
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 URL captured", "{count} URLs captured", count
+            ).format(count=count)
         elif capture.mode == CaptureMode.RAW:
             count = len(capture.ocr_text)
             # Count linesep only as single char:
             count -= (len(os.linesep) - 1) * capture.ocr_text.count(os.linesep)
-            title = f"{count} char"
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 character captured", "{count} characters captured", count
+            ).format(count=count)
         else:
-            count = 0
             title = ""
-
-        title += f"{'s' if count > 1 else ''} captured"
 
         return title, text
 

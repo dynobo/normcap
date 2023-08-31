@@ -17,6 +17,7 @@ from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import resources, system_info, utils  # noqa: F401 (loads resources!)
 from normcap.gui.language_manager import LanguageManager
+from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.notification import Notifier
@@ -375,12 +376,15 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             app = "NormCap" if system_info.is_prebuilt_package() else "Terminal"
             QtWidgets.QMessageBox.critical(
                 None,
-                "Error!",
-                (
-                    f"{app} is missing permissions for 'Screen Recording'.\n\n"
-                    "Grant the permissions via 'Privacy & Security' settings "
-                    "and restart NormCap.\n\nClick OK to exit."
-                ),
+                _("Error"),
+                # L10N: Error message box on macOS only.
+                # Do NOT translate the variables in curly brackets "{some_variable}"!
+                _(
+                    "'{application}' is missing permissions for 'Screen Recording'.\n\n"
+                    "Grant the permissions via 'Privacy & Security' settings and "
+                    "restart NormCap.\n\n"
+                    "Click OK to exit."
+                ).format(application=app),
                 buttons=QtWidgets.QMessageBox.StandardButton.Ok,
             )
             self.com.exit_application.emit(False)
@@ -440,13 +444,15 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Create menu for system tray."""
         self.tray_menu.clear()
 
-        action = QtGui.QAction("Capture", self.tray_menu)
+        # L10N: Tray menu entry
+        action = QtGui.QAction(_("Capture"), self.tray_menu)
         action.setObjectName("capture")
         action.triggered.connect(lambda: self._show_windows(delay_screenshot=True))
         action.setVisible(bool(self.settings.value("tray", False, type=bool)))
         self.tray_menu.addAction(action)
 
-        action = QtGui.QAction("Exit", self.tray_menu)
+        # L10N: Tray menu entry for exiting NormCap completely.
+        action = QtGui.QAction(_("Exit"), self.tray_menu)
         action.setObjectName("exit")
         action.triggered.connect(lambda: self.com.exit_application.emit(False))
         self.tray_menu.addAction(action)

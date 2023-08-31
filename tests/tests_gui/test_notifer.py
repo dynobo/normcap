@@ -40,7 +40,7 @@ from normcap.gui.models import Capture, CaptureMode, Rect
             "www.aaa.de www.bbb.de",
         ),
         ("UnknownMagic", "W1 W2 W3", "", "W1 W2 W3"),
-        ("RAW", f"W1 W2{os.linesep}W3", "8 chars", "W1 W2 W3"),
+        ("RAW", f"W1 W2{os.linesep}W3", "8 characters", "W1 W2 W3"),
     ],
 )
 def test_compose_notification(ocr_applied_magic, ocr_text, output_title, output_text):

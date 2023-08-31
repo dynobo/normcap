@@ -8,6 +8,7 @@ from PySide6 import QtCore, QtWidgets
 from normcap.gui import constants
 from normcap.gui.downloader import Downloader
 from normcap.gui.loading_indicator import LoadingIndicator
+from normcap.gui.localization import _
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +27,8 @@ class LanguageManager(QtWidgets.QDialog):
         super().__init__(parent=parent)
 
         self.setModal(True)
-        self.setWindowTitle("Manage Languages")
+        # L10N: Title of Language Manager
+        self.setWindowTitle(_("Manage Languages"))
         self.setMinimumSize(800, 600)
 
         self.tessdata_path = tessdata_path
@@ -38,17 +40,21 @@ class LanguageManager(QtWidgets.QDialog):
 
         self.installed_layout = LanguageLayout(
             label_icon="SP_DialogApplyButton",
-            label_text="Installed:",
+            # L10N: Language Manager section
+            label_text=_("Installed:"),
             button_icon="SP_DialogDiscardButton",
-            button_text="Delete",
+            # L10N: Language Manager button
+            button_text=_("Delete"),
         )
         self.installed_layout.button.pressed.connect(self._on_delete_btn_clicked)
 
         self.available_layout = LanguageLayout(
             label_icon="SP_ArrowDown",
-            label_text="Available:",
+            # L10N: Language Manager section
+            label_text=_("Available:"),
             button_icon="SP_ArrowDown",
-            button_text="Download",
+            # L10N: Language Manager button
+            button_text=_("Download"),
         )
         self.available_layout.button.pressed.connect(self._on_download_btn_clicked)
 
@@ -56,12 +62,15 @@ class LanguageManager(QtWidgets.QDialog):
         h_layout.addLayout(self.installed_layout)
         h_layout.addLayout(self.available_layout)
 
-        close_button = QtWidgets.QPushButton("&Close")
+        # L10N: Language Manager button
+        close_button = QtWidgets.QPushButton(_("Close"))
         close_button.pressed.connect(self.close)
 
         self.tessdata_label = QtWidgets.QLabel(
             f"<a href='file:///{self.tessdata_path.resolve()}'>"
-            "Close and view tessdata folder in file manager...</a>"
+            # L10N: Language Manager link to directory on file system
+            + _("Close and view tessdata folder in file manager...")
+            + "</a>"
         )
         self.tessdata_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
         self.tessdata_label.linkActivated.connect(self.com.on_open_url)
@@ -84,8 +93,10 @@ class LanguageManager(QtWidgets.QDialog):
         self._set_in_progress(False)
         QtWidgets.QMessageBox.critical(
             parent=self,
-            title="Error",
-            text=f"<b>Language download failed!</b><br><br>{reason}",
+            # L10N: Language Manager error message box title
+            title=_("Error"),
+            # L10N: Language Manager error message box text
+            text=("<b>" + _("Language download failed!") + f"</b><br><br>{reason}"),
         )
 
     @QtCore.Slot(bytes, str)
@@ -114,8 +125,10 @@ class LanguageManager(QtWidgets.QDialog):
         if len(self.installed_layout.model.languages) <= 1:
             QtWidgets.QMessageBox.information(
                 parent=self,
-                title="Information",
-                text=(
+                # L10N: Language Manager information message box title
+                title=_("Information"),
+                # L10N: Language Manager information message box text
+                text=_(
                     "It is not possible to delete all languages. "
                     "NormCap needs at least one to function correctly."
                 ),
