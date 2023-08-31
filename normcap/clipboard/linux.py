@@ -21,7 +21,7 @@ def _wl_copy(text: str) -> None:
         # It seems like wl-copy works more reliable when output is piped to
         # somewhere. This is e.g. the case when NormCap got started via a shortcut
         # on KDE (#422).
-        stdout=Path("/dev/null").open("w"),
+        stdout=Path("/dev/null").open("w"),  # noqa: SIM115
         timeout=30,
     )
 

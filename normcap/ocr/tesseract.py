@@ -24,7 +24,11 @@ def _run_command(cmd_args: list[str]) -> str:
         creationflags = getattr(subprocess, "CREATE_NO_WINDOW", None)
         kwargs = {"creationflags": creationflags} if creationflags else {}
         proc = subprocess.run(
-            cmd_args, capture_output=True, text=True, **kwargs  # noqa: S603
+            cmd_args,  # noqa: S603
+            capture_output=True,
+            text=True,
+            check=False,
+            **kwargs,
         )
         _raise_on_error(proc)
         out_str = proc.stdout

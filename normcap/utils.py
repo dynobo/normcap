@@ -42,7 +42,7 @@ def create_argparser() -> argparse.ArgumentParser:
             f"-{setting.flag}",
             f"--{setting.key}",
             type=setting.type_,
-            help=setting.help,
+            help=setting.help_,
             choices=setting.choices,
             nargs=setting.nargs,
         )
