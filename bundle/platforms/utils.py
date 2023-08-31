@@ -24,24 +24,58 @@ class BuilderBase(ABC):
     TESSERACT_PATH = RESOURCE_PATH / "tesseract"
     PYPROJECT_PATH = PROJECT_PATH / "pyproject.toml"
     VENV_PATH = Path(os.environ["VIRTUAL_ENV"])
-    binary_suffix = "_legacy"
     TESSDATA_PATH = RESOURCE_PATH / "tessdata"
-
-    @abstractmethod
-    def run_framework(self) -> None:
-        """Run compiler and rename resulting package."""
-
-    @abstractmethod
-    def bundle_tesseract(self) -> None:
-        """Include tesseract binary and its dependencies."""
+    binary_suffix = "_legacy"
+    binary_extension: str | None = None
+    binary_platform: str | None = None
 
     @abstractmethod
     def install_system_deps(self) -> None:
         """Install system dependencies required for building."""
 
     @abstractmethod
+    def bundle_tesseract(self) -> None:
+        """Include tesseract binary and its dependencies."""
+
+    @abstractmethod
+    def pre_framework(self) -> None:
+        """Steps to execute before running the bundling framework."""
+
+    @abstractmethod
+    def run_framework(self) -> None:
+        """Run compiler and rename resulting package."""
+
+    def rename_package_file(self) -> None:
+        """Rename final binary package/installer file."""
+        if not self.binary_platform or not self.binary_extension:
+            raise AttributeError("bundle_platform and bundle_extension must be set.")
+
+        source = next(
+            Path(self.PROJECT_PATH / "dist").glob(f"*.{self.binary_extension}")
+        )
+        target = self.BUILD_PATH / (
+            f"NormCap-{self.get_version()}-{self.binary_platform}{self.binary_suffix}"
+            f".{self.binary_extension}"
+        )
+        target.unlink(missing_ok=True)
+        shutil.move(source, target)
+
+    def compile_locales(self) -> None:
+        """Create .mo files for all locales."""
+        print("Compiling locales...")  # noqa: T201
+        self.run(
+            cmd="python l10n.py",
+            cwd=self.PROJECT_PATH,
+        )
+
     def create(self) -> None:
         """Run all steps to build prebuilt packages."""
+        self.download_tessdata()
+        self.install_system_deps()
+        self.compile_locales()
+        self.pre_framework()
+        self.run_framework()
+        self.rename_package_file()
 
     def get_system_requires(self) -> list[str]:
         """Get versions string from pyproject.toml."""
@@ -69,7 +103,11 @@ class BuilderBase(ABC):
         cmd_str = re.sub(r"\s+", " ", cmd)
 
         completed_proc = subprocess.run(
-            cmd_str, shell=True, cwd=cwd, capture_output=False  # noqa: S602
+            cmd_str,
+            shell=True,  # noqa: S602
+            cwd=cwd,
+            capture_output=False,
+            check=False,
         )
 
         if completed_proc.returncode != 0:
