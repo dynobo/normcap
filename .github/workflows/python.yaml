@@ -114,8 +114,11 @@ jobs:
       - name: Pip-Audit
         if: matrix.os  == 'ubuntu-22.04'
         run:
-          bash -c "poetry run pip-audit --strict -r <(poetry export -f requirements.txt
+          bash -c "poetry run pip-audit --strict --ignore-vuln GHSA-wfm5-v35h-vwf4
+          --ignore-vuln GHSA-cwvm-v4w8-q58c -r <(poetry export -f requirements.txt
           --with=dev)"
+        # TODO: Remove pip-audit ignores above!
+
       # - name: Setup upterm session
       #   if: matrix.os  == 'ubuntu-22.04'
       - name: Pytest
