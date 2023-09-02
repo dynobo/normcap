@@ -380,12 +380,12 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
                 # L10N: Error message box on macOS only.
                 # Do NOT translate the variables in curly brackets "{some_variable}"!
                 _(
-                    "'{application}' is missing permissions for 'Screen Recording'.\n\n"
-                    "Grant the permissions via 'Privacy & Security' settings and "
-                    "restart NormCap.\n\n"
-                    "Click OK to exit."
+                    "'{application}' is missing the permission for 'Screen Recording'."
+                    "\n\n"
+                    "Grant the permission via 'System Settings' > 'Privacy & Security' "
+                    "and run NormCap again."
                 ).format(application=app),
-                buttons=QtWidgets.QMessageBox.StandardButton.Ok,
+                buttons=QtWidgets.QMessageBox.StandardButton.Close,
             )
             self.com.exit_application.emit(False)
 

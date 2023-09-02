@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NormCap 0.4.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
-"POT-Creation-Date: 2023-09-02 15:40+0200\n"
-"PO-Revision-Date: 2023-09-02 15:27+0200\n"
+"POT-Creation-Date: 2023-09-02 20:38+0200\n"
+"PO-Revision-Date: 2023-09-02 20:47+0200\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
 "Language: de_DE\n"
 "Language-Team: de_DE <LL@li.org>\n"
@@ -17,262 +17,270 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.12.1\n"
+"X-Generator: PO File Editor https://pofile.net/free-po-editor\n"
 
-#. Generic error message when any download failed.
 #: normcap/gui/downloader.py:52
+#. Generic error message when any download failed.
 msgid "Download error."
 msgstr "Download Fehler."
 
-#. Title of Language Manager
 #: normcap/gui/language_manager.py:31
+#. Title of Language Manager
 msgid "Manage Languages"
 msgstr "Sprachen verwalten"
 
-#. Language Manager section
 #: normcap/gui/language_manager.py:44
+#. Language Manager section
 msgid "Installed:"
 msgstr "Installiert:"
 
-#. Language Manager button
 #: normcap/gui/language_manager.py:47
+#. Language Manager button
 msgid "Delete"
 msgstr "Löschen"
 
-#. Language Manager section
 #: normcap/gui/language_manager.py:54
+#. Language Manager section
 msgid "Available:"
-msgstr ""
+msgstr "Verfügbar:"
 
-#. Language Manager button
 #: normcap/gui/language_manager.py:57
-#, fuzzy
+#. Language Manager button
 msgid "Download"
-msgstr "Download Fehler."
+msgstr "Herunterladen"
 
+#: normcap/gui/language_manager.py:66 normcap/gui/menu_button.py:331
 #. Language Manager button
 #. Entry in main menu's 'Application' section.
-#: normcap/gui/language_manager.py:66 normcap/gui/menu_button.py:331
 msgid "Close"
 msgstr "Schließen"
 
-#. Language Manager link to directory on file system
 #: normcap/gui/language_manager.py:72
+#. Language Manager link to directory on file system
 msgid "Close and view tessdata folder in file manager..."
-msgstr "Fenster schließen und tessdata-Verzeichnis im Dateimanager öffnen..."
+msgstr "NormCap schließen und tessdata-Verzeichnis öffnen..."
 
-#. Language Manager error message box title
 #: normcap/gui/language_manager.py:97 normcap/gui/tray.py:379
+#. Language Manager error message box title
 msgid "Error"
 msgstr "Fehler"
 
-#. Language Manager error message box text
 #: normcap/gui/language_manager.py:99
+#. Language Manager error message box text
 msgid "Language download failed!"
 msgstr "Download der Sprache fehlgeschlagen!"
 
-#. Language Manager information message box title
 #: normcap/gui/language_manager.py:129
+#. Language Manager information message box title
 msgid "Information"
 msgstr "Information"
 
-#. Language Manager information message box text
 #: normcap/gui/language_manager.py:131
+#. Language Manager information message box text
 msgid ""
-"It is not possible to delete all languages. NormCap needs at least one to"
-" function correctly."
+"It is not possible to delete all languages. NormCap needs at least one to "
+"function correctly."
 msgstr ""
-"Es können nicht alle Sprachen gelöscht werden. NormCap benötigt "
-"mindestens eine Sprache um zu funktionieren."
+"Es können nicht alle Sprachen gelöscht werden. NormCap benötigt mindestens "
+"eine Sprache um zu funktionieren."
 
-#. Message box shown in Python package only when trying to install a language
-#: normcap/gui/menu_button.py:12
-#, fuzzy
+#: normcap/gui/menu_button.py:146
 msgid ""
-"You are not using the prebuilt package version of NormCap. Please refer "
-"to the documentation of Tesseract for your operating system on how to "
-"install additional languages."
+"This installation of NormCap uses the Tesseract binary installed on your "
+"system. To install additional languages, please refer to the documentation "
+"of that Tesseract installation."
 msgstr ""
-"Du nutzt keine , das bedeutet die Sprachen für Tesseract werden von "
-"deinem Betriebssystem verwaltet."
+"Diese NormCap-Installation benutzt die Tesseract Software, die unabhängig "
+"von NormCap auf dem System installiert wurde. Bitte ließ in der "
+"Dokumentation dieser Tesseract-Installation nach, wie Du zusätzliche "
+"Sprachen installieren kannst."
 
-#. Section title in Main Menu
 #: normcap/gui/menu_button.py:185
+#. Section title in Main Menu
 msgid "Settings"
 msgstr "Einstellungen"
 
-#. Section title in Main Menu
 #: normcap/gui/menu_button.py:189
+#. Section title in Main Menu
 msgid "Capture mode"
 msgstr "Erkennungsmodus"
 
-#. Section title in Main Menu
 #: normcap/gui/menu_button.py:193
+#. Section title in Main Menu
 msgid "Languages"
 msgstr "Sprachen"
 
-#. Section title in Main Menu
 #: normcap/gui/menu_button.py:197
+#. Section title in Main Menu
 msgid "Application"
 msgstr "Anwendung"
 
-#. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:217
+#. Entry in main menu's 'setting' section
 msgid "Show notification"
 msgstr "Benachrichtigung anzeigen"
 
-#. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:224
+#. Entry in main menu's 'setting' section
 msgid "Keep in system tray"
 msgstr "Im Infobereich behalten"
 
-#. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:231
+#. Entry in main menu's 'setting' section
 msgid "Check for update"
 msgstr "Nach Aktualisierung suchen"
 
-#. Entry in main menu's 'Capture mode' section
 #: normcap/gui/menu_button.py:243
+#. Entry in main menu's 'Capture mode' section
 msgid "parse"
 msgstr "intelligent"
 
-#. Entry in main menu's 'Capture mode' section
 #: normcap/gui/menu_button.py:250
+#. Entry in main menu's 'Capture mode' section
 msgid "raw"
 msgstr "einfach"
 
-#. Entry in main menu's 'Languages' section. Shown in prebuild package.
 #: normcap/gui/menu_button.py:278
+#. Entry in main menu's 'Languages' section. Shown in prebuild package.
 msgid "add/remove..."
 msgstr "Hinzufügen/Entfernen..."
 
-#. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:282
+#. Entry in main menu's 'Languages' section. Shown in Python package.
 msgid "... need more?"
 msgstr "... andere?"
 
-#. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:291
+#. Entry in main menu's 'Application' section.
 msgid "About"
 msgstr "Über"
 
-#. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:299
+#. Entry in main menu's 'Application' section.
 msgid "Website"
 msgstr "Webseite"
 
-#. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:304
+#. Entry in main menu's 'Application' section.
 msgid "FAQs"
 msgstr "Häufige Fragen"
 
-#. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:309
+#. Entry in main menu's 'Application' section.
 msgid "Source code"
 msgstr "Quellcode"
 
-#. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:314
+#. Entry in main menu's 'Application' section.
 msgid "Releases"
 msgstr "Versionen"
 
-#. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:319
+#. Entry in main menu's 'Application' section.
 msgid "Report a problem"
 msgstr "Problem melden"
 
-#. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:324
+#. Entry in main menu's 'Application' section.
 msgid "Donate a coffee"
 msgstr "Einen Kaffee spenden"
 
-#. Notification title
 #: normcap/gui/notification.py:38
+#. Notification title
 msgid "Nothing captured!"
 msgstr "Nichts erkannt!"
 
-#. Notification text
 #: normcap/gui/notification.py:40
+#. Notification text
 msgid "Please try again."
 msgstr "Bitte versuche es nochmal."
 
+#: normcap/gui/notification.py:51
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/notification.py:51
 msgid "1 paragraph captured"
 msgid_plural "{count} paragraphs captured"
 msgstr[0] "1 Absatz erkannt"
 msgstr[1] "{count} Absätze erkannt"
 
+#: normcap/gui/notification.py:58
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/notification.py:58
 msgid "1 email captured"
 msgid_plural "{count} emails captured"
 msgstr[0] "1 E-Mail Adresse erkannt"
 msgstr[1] "{count} E-Mail Adressen erkannt"
 
+#: normcap/gui/notification.py:65
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/notification.py:65
 msgid "1 word captured"
 msgid_plural "{count} words captured"
 msgstr[0] "1 Wort erkannt"
 msgstr[1] "{count} Wörter erkannt"
 
+#: normcap/gui/notification.py:72
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/notification.py:72
 msgid "1 line captured"
 msgid_plural "{count} lines captured"
 msgstr[0] "1 Zeile erkannt"
 msgstr[1] "{count} Zeilen erkannt"
 
+#: normcap/gui/notification.py:79
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/notification.py:79
 msgid "1 URL captured"
 msgid_plural "{count} URLs captured"
 msgstr[0] "1 URL erkannt"
 msgstr[1] "{count} URLs erkannt"
 
+#: normcap/gui/notification.py:88
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/notification.py:88
 msgid "1 character captured"
 msgid_plural "{count} characters captured"
 msgstr[0] "1 Buchstabe erkannt"
 msgstr[1] "{count} Buchstaben erkannt"
 
+#: normcap/gui/tray.py:382
 #. Error message box on macOS only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/tray.py:382
 msgid ""
-"'{application}' is missing permissions for 'Screen Recording'.\n"
+"'{application}' is missing the permission for 'Screen Recording'.\n"
 "\n"
-"Grant the permissions via 'Privacy & Security' settings and restart "
-"NormCap.\n"
-"\n"
-"Click OK to exit."
+"Grant the permission via 'System Settings' > 'Privacy & Security' and run "
+"NormCap again."
 msgstr ""
-"'{application}' fehlt die Berechtigung für 'Bildschirmaufnahme'.\n"
+"'{application}' fehlt die Berechtigung zur 'Bildschirmaufnahme'.\n"
 "\n"
-"Ergänze die Berechtigung über 'Systemeinstellungen' und  'Datenschutz & "
-"Sicherheit' und starte NormCap erneut.\n"
-"\n"
-"Klicke auf OK zum Beenden."
+"Ergänze die Berechtigung über 'Systemeinstellungen' >  'Datenschutz & "
+"Sicherheit' und starte NormCap erneut."
 
-#. Tray menu entry
 #: normcap/gui/tray.py:448
+#. Tray menu entry
 msgid "Capture"
 msgstr "Erkennen"
 
-#. Tray menu entry for exiting NormCap completely.
 #: normcap/gui/tray.py:455
+#. Tray menu entry for exiting NormCap completely.
 msgid "Exit"
 msgstr "Beenden"
 
+#: normcap/gui/update_check.py:80
+#. Update available dialog box.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+msgid "NormCap v{version} is available."
+msgstr "NormCap v{version} ist verfügbar."
+
+#: normcap/gui/update_check.py:83
+#. Update available dialog box.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+msgid "You have v{version}"
+msgstr "Du hast v{version}"
+
+#: normcap/gui/update_check.py:87
 #. Message box shown when new version available (Prebuilt package)
-#: normcap/gui/update_check.py:17
 msgid ""
 "You can download the new version for your operating system from GitHub.\n"
 "\n"
@@ -283,28 +291,22 @@ msgstr ""
 "\n"
 "Möchtest Du jetzt die Webseite mit den Veröffentlichungen besuchen?"
 
+#: normcap/gui/update_check.py:93
 #. Message box shown when new version available (Python package)
-#: normcap/gui/update_check.py:23
 msgid ""
-"You should upgrade from command line with 'pip install normcap "
-"--upgrade'.\n"
+"You can upgrade via command line, e.g. by 'pip install normcap --upgrade'.\n"
 "\n"
-"Do you want to view the changelog on github?"
+"Do you want to view the changelog on GitHub now?"
 msgstr ""
-"Du solltest NormCap über die Kommandozeile aktualisieren, z.B. per 'pip "
+"Du kannst NormCap über die Kommandozeile aktualisieren, z.B. per 'pip "
 "install normcap --upgrade'.\n"
 "\n"
 "Möchtest Du die Liste der Neuerungen auf GitHub ansehen?"
 
-#. Update available dialog box.
-#. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/update_check.py:93
-msgid "NormCap v{version} is available."
-msgstr "NormCap v{version} ist verfügbar."
-
-#. Update available dialog box.
-#. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/update_check.py:96
-msgid "You have v{version}"
-msgstr "Du hast v{version}"
-
+#~ msgid ""
+#~ "You are not using the prebuilt package version of NormCap. Please refer to "
+#~ "the documentation of Tesseract for your operating system on how to install "
+#~ "additional languages."
+#~ msgstr ""
+#~ "Du nutzt keine , das bedeutet die Sprachen für Tesseract werden von deinem "
+#~ "Betriebssystem verwaltet."

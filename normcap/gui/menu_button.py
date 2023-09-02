@@ -8,13 +8,6 @@ from normcap import __version__
 from normcap.gui.constants import URLS
 from normcap.gui.localization import _
 
-# L10N: Message box shown in Python package only when trying to install a language
-MESSAGE_LANGUAGES = _(
-    "You are not using the prebuilt package version of NormCap. "
-    "Please refer to the documentation of Tesseract for your "
-    "operating system on how to install additional languages."
-)
-
 _MENU_STYLE = """
 QMenu {
     background-color: rgba(0,0,0,0.8);
@@ -148,7 +141,14 @@ class MenuButton(QtWidgets.QToolButton):
             return
 
         if action_name == "show_help_languages":
-            self._show_message_box(text=MESSAGE_LANGUAGES)
+            # L10N: Message box shown in Python package when trying to install language
+            self._show_message_box(
+                text=_(
+                    "This installation of NormCap uses the Tesseract binary installed "
+                    "on your system. To install additional languages, please refer to "
+                    "the documentation of that Tesseract installation."
+                )
+            )
             return
 
         if action_name == "manage_languages":

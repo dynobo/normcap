@@ -1,9 +1,14 @@
 # Changelog
 
-## v0.5.0 (work in progress)
+## v0.5.0beta1 (work in progress)
 
-- Linux: Fix NormCap to work with Sway DE. ([#485](https://github.com/dynobo/normcap/issues/485))
-- Linux: Fix multi monitor setups with Wayland causing unnecessary timeouts. ([#494](https://github.com/dynobo/normcap/issues/494))
+- All: Add [support for localization](./normcap/resources/locales/README.md) of the
+  NormCap UI. Available translations so far:
+  - German
+- Linux: Fix NormCap to work with Sway DE.
+  ([#485](https://github.com/dynobo/normcap/issues/485))
+- Linux: Fix multi monitor setups with Wayland causing unnecessary timeouts.
+  ([#494](https://github.com/dynobo/normcap/issues/494))
 
 ## v0.4.4 (2023-06-04)
 
