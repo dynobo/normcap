@@ -38,6 +38,7 @@ def _update_coverage(lines: list[str]) -> None:
     coverage_table = (
         "| Locale | Progress | Translated |\n| :----- | -------: | ---------: |\n"
         + "\n".join(locales_rows)
+        + "\n"
     )
 
     # Render stats to markdown file
@@ -53,20 +54,15 @@ def _update_coverage(lines: list[str]) -> None:
 
 
 def compile_locales() -> None:
-    f = io.StringIO()
-    with contextlib.redirect_stderr(f):
-        CommandLineInterface().run(
-            [
-                "pybabel",
-                "compile",
-                "--directory",
-                "normcap/resources/locales",
-                "--statistics",
-            ]
-        )
-    output = f.getvalue()
-    print(output)  # noqa: T201
-    _update_coverage(lines=output.splitlines())
+    CommandLineInterface().run(
+        [
+            "pybabel",
+            "compile",
+            "--directory",
+            "normcap/resources/locales",
+            "--statistics",
+        ]
+    )
 
 
 def extract_strings() -> None:
@@ -110,8 +106,20 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if args.update_all:
-        extract_strings()
-        update_locales()
-
-    compile_locales()
+    try:
+        # Run commands while capturing output to generate stats.
+        f = io.StringIO()
+        with contextlib.redirect_stderr(f), contextlib.redirect_stdout(f):
+            if args.update_all:
+                extract_strings()
+                update_locales()
+            compile_locales()
+        output = f.getvalue()
+        print(output)  # noqa: T201
+        _update_coverage(lines=output.splitlines())
+    except Exception:
+        # In case of error, run again without output capturing
+        if args.update_all:
+            extract_strings()
+            update_locales()
+        compile_locales()
