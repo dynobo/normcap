@@ -4,20 +4,28 @@
 
 | Locale | Progress | Translated |
 | :----- | -------: | ---------: |
-| de_DE  |      65% |   29 of 44 |
+| de_DE  |      97% |   45 of 46 |
+| es_ES  |      13% |    6 of 46 |
+| fr_FR  |      13% |    6 of 46 |
+| hi_IN  |      13% |    6 of 46 |
+| pt_PT  |      13% |    6 of 46 |
+| ru_RU  |      13% |    6 of 46 |
+| zh_CN  |      13% |    6 of 46 |
 
 ## Improve existing locale
 
 1. Navigate to the folder
    [`./normcap/resources/locales/`](https://github.com/dynobo/normcap/tree/main/normcap/resources/locales)
-2. Drill down into the folder of the target locale (e.g. `de_DE`) and edit its language
+1. Drill down into the folder of the target locale (e.g. `de_DE`) and edit its language
    file `/LC_MESSAGES/messages.po`. If you like, use the
-   [Free PO-Editor](https://pofile.net/free-po-editor) for easier editing. \
-   **Important:** Never translate any variables which are written in curly brackets, e.g.
-   `{count}`!
-3. Propose the change file in a new Pull Request. \
-   (In case you are not familiar with git, you can also always propose a correction/change
-   via a [new issue](https://github.com/dynobo/normcap/issues/new/choose).)
+   [Free PO-Editor](https://pofile.net/free-po-editor) for easier editing.
+   \
+   **Important:** Never translate any variables which are written in curly brackets,
+   e.g. `{count}`!
+1. Propose the change file in a new Pull Request. \
+   (In case you are not familiar with
+   git, you can also always propose a correction/change via a
+   [new issue](https://github.com/dynobo/normcap/issues/new/choose).)
 
 ## Add new locale
 
@@ -42,8 +50,8 @@ virtual Python environment via `poetry shell`.
    which was created in step 2. Add your translations as the respective `msgstr`. If you
    like, use the [Free PO-Editor](https://pofile.net/free-po-editor) for easier editing.
    \
-   **Important:** Never translate any variables which are written in curly brackets, e.g.
-   `{count}`!
+   **Important:** Never translate any variables which are written in curly brackets,
+   e.g. `{count}`!
 1. Compile the new `.po` file to the machine-readable `.mo` file:
    ```sh
    pybabel compile --directory ./normcap/resources/locales --locale=<LOCALE_NAME>

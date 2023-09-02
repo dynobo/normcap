@@ -21,9 +21,8 @@ def _get_version() -> str:
 def _update_coverage(lines: list[str]) -> None:
     # Parse stats
     locales_stats = [line for line in lines if line.endswith(".po")]
-    coverage_table = (
-        "| Locale | Progress | Translated |\n| :----- | -------: | ---------: |\n"
-    )
+
+    locales_rows = []
     for stat in locales_stats:
         if m := re.search(
             r"""(\d+\ of\ \d+).*            # message counts
@@ -32,7 +31,14 @@ def _update_coverage(lines: list[str]) -> None:
             stat,
             re.VERBOSE,
         ):
-            coverage_table += f"| {m[3]:<6} | {m[2]:>8} | {m[1]:>10} |\n"
+            locales_rows.append(f"| {m[3]:<6} | {m[2]:>8} | {m[1]:>10} |")
+    locales_rows.sort()
+
+    # Generate markdown table
+    coverage_table = (
+        "| Locale | Progress | Translated |\n| :----- | -------: | ---------: |\n"
+        + "\n".join(locales_rows)
+    )
 
     # Render stats to markdown file
     md_file = Path(__file__).parent / "normcap" / "resources" / "locales" / "README.md"
