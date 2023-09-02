@@ -4,7 +4,7 @@
 
 | Locale | Progress | Translated |
 | :----- | -------: | ---------: |
-| de_DE  |      97% |   45 of 46 |
+| de_DE  |     100% |   46 of 46 |
 | es_ES  |      13% |    6 of 46 |
 | fr_FR  |      13% |    6 of 46 |
 | hi_IN  |      13% |    6 of 46 |

@@ -28,7 +28,7 @@ def test_disable_language_manager(monkeypatch, menu_btn_without_lang_man):
     assert "need more" in language_action.text()
 
     language_action.trigger()
-    assert "you are not using the prebuilt" in messages_shown[0].lower()
+    assert "please refer to the documentation" in messages_shown[0].lower()
 
 
 def test_languages_section_does_overflow(qtbot, menu_btn):

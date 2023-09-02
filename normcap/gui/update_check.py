@@ -13,19 +13,6 @@ from normcap.gui.localization import _
 logger = logging.getLogger(__name__)
 
 
-# L10N: Message box shown when new version available (Prebuilt package)
-INFO_UPDATE_GITHUB = _(
-    "You can download the new version for your operating system from GitHub.\n\n"
-    "Do you want to visit the release website now?"
-)
-
-# L10N: Message box shown when new version available (Python package)
-INFO_UPDATE_PIP = _(
-    "You should upgrade from command line with 'pip install normcap --upgrade'.\n\n"
-    "Do you want to view the changelog on github?"
-)
-
-
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
@@ -83,7 +70,7 @@ class UpdateChecker(QtWidgets.QWidget):
 
         logger.debug("Newest version: %s (installed: %s)", fetched_version, __version__)
         self.com.on_version_checked.emit(fetched_version)
-        if self._is_new_version(current=__version__, other=fetched_version):
+        if self._is_new_version(current=str(__version__), other=fetched_version):
             self._show_update_message(version=fetched_version)
 
     def _show_update_message(self, version: str) -> None:
@@ -96,8 +83,19 @@ class UpdateChecker(QtWidgets.QWidget):
         current_text = _("You have v{version}").format(version=__version__)
         self.message_box.setText(f"<b>{new_text}</b> ({current_text})")
 
-        info_text = INFO_UPDATE_GITHUB if self.packaged else INFO_UPDATE_PIP
-        self.message_box.setInformativeText(info_text)
+        # L10N: Message box shown when new version available (Prebuilt package)
+        via_github = _(
+            "You can download the new version for your operating system from GitHub."
+            "\n\n"
+            "Do you want to visit the release website now?"
+        )
+        # L10N: Message box shown when new version available (Python package)
+        via_pip = _(
+            "You can upgrade via command line, e.g. by 'pip install normcap --upgrade'."
+            "\n\n"
+            "Do you want to view the changelog on GitHub now?"
+        )
+        self.message_box.setInformativeText(via_github if self.packaged else via_pip)
         self.message_box.setCursor(QtCore.Qt.CursorShape.ArrowCursor)
 
         choice = self.message_box.exec_()

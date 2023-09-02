@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NormCap 0.4.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
-"POT-Creation-Date: 2023-09-02 15:40+0200\n"
+"POT-Creation-Date: 2023-09-02 20:38+0200\n"
 "PO-Revision-Date: 2023-09-02 14:23+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -81,12 +81,11 @@ msgid ""
 " function correctly."
 msgstr ""
 
-#. Message box shown in Python package only when trying to install a language
-#: normcap/gui/menu_button.py:12
+#: normcap/gui/menu_button.py:146
 msgid ""
-"You are not using the prebuilt package version of NormCap. Please refer "
-"to the documentation of Tesseract for your operating system on how to "
-"install additional languages."
+"This installation of NormCap uses the Tesseract binary installed on your "
+"system. To install additional languages, please refer to the "
+"documentation of that Tesseract installation."
 msgstr ""
 
 #. Section title in Main Menu
@@ -241,12 +240,10 @@ msgstr[1] ""
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/tray.py:382
 msgid ""
-"'{application}' is missing permissions for 'Screen Recording'.\n"
+"'{application}' is missing the permission for 'Screen Recording'.\n"
 "\n"
-"Grant the permissions via 'Privacy & Security' settings and restart "
-"NormCap.\n"
-"\n"
-"Click OK to exit."
+"Grant the permission via 'System Settings' > 'Privacy & Security' and run"
+" NormCap again."
 msgstr ""
 
 #. Tray menu entry
@@ -259,8 +256,20 @@ msgstr ""
 msgid "Exit"
 msgstr ""
 
+#. Update available dialog box.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/update_check.py:80
+msgid "NormCap v{version} is available."
+msgstr ""
+
+#. Update available dialog box.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/update_check.py:83
+msgid "You have v{version}"
+msgstr ""
+
 #. Message box shown when new version available (Prebuilt package)
-#: normcap/gui/update_check.py:17
+#: normcap/gui/update_check.py:87
 msgid ""
 "You can download the new version for your operating system from GitHub.\n"
 "\n"
@@ -268,23 +277,35 @@ msgid ""
 msgstr ""
 
 #. Message box shown when new version available (Python package)
-#: normcap/gui/update_check.py:23
+#: normcap/gui/update_check.py:93
 msgid ""
-"You should upgrade from command line with 'pip install normcap "
+"You can upgrade via command line, e.g. by 'pip install normcap "
 "--upgrade'.\n"
 "\n"
-"Do you want to view the changelog on github?"
+"Do you want to view the changelog on GitHub now?"
 msgstr ""
 
-#. Update available dialog box.
-#. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/update_check.py:93
-msgid "NormCap v{version} is available."
-msgstr ""
+#~ msgid ""
+#~ "You are not using the prebuilt "
+#~ "package version of NormCap. Please refer"
+#~ " to the documentation of Tesseract "
+#~ "for your operating system on how "
+#~ "to install additional languages."
+#~ msgstr ""
 
-#. Update available dialog box.
-#. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/update_check.py:96
-msgid "You have v{version}"
-msgstr ""
+#~ msgid ""
+#~ "'{application}' is missing permissions for 'Screen Recording'.\n"
+#~ "\n"
+#~ "Grant the permissions via 'Privacy & "
+#~ "Security' settings and restart NormCap.\n"
+#~ ""
+#~ "\n"
+#~ "Click OK to exit."
+#~ msgstr ""
 
+#~ msgid ""
+#~ "You should upgrade from command line "
+#~ "with 'pip install normcap --upgrade'.\n"
+#~ "\n"
+#~ "Do you want to view the changelog on github?"
+#~ msgstr ""
