@@ -655,6 +655,30 @@
             description together with debug information.
           </p>
         </details>
+        <details id="faqs-windows-upgrade-failed">
+          <summary>[Windows] Upgrading NormCap failed</summary>
+          <p>
+            Did you run the msi-installer to upgrade from an older NormCap version, but
+            the installer stated an error or the NormCap can't be started anymore?
+          </p>
+          <p>
+            You did nothing wrong, this is the recommended way to upgrade NormCap. But
+            in rare cases, this does not work, because of incompatible changes in the
+            installer between certain versions.
+          </p>
+          <p>
+            In that case, please try to uninstall all existing NormCap versions from
+            your system before trying a clean installation. (In the process, your
+            settings
+            <i>might</i> get reset, and you <i>might</i> have to re-download languages.)
+          </p>
+          <p>
+            If you still experience any problems after such a clean installation, please
+            <a href="https://github.com/dynobo/normcap/issues/new/choose"
+              >report that issue</a
+            >.
+          </p>
+        </details>
         <details id="faqs-doesnt-show-system-tray">
           <summary>[Linux] Normcap does not show up in system tray</summary>
           <p>
@@ -970,8 +994,8 @@ C:\Users\USERNAME\AppData\Local\Programs\Tesseract-OCR</code></pre>
               <li>
                 Create an environment variable <code>TESSDATA_PREFIX</code> and set it
                 to <em>your</em> Tesseract base folder, e.g.:<br />"System Properties" →
-                Tab "Advanced" → "Environment Variables..." →
-                "New..." → Variable: <code>TESSDATA_PREFIX</code>, Value:
+                Tab "Advanced" → "Environment Variables..." → "New..." → Variable:
+                <code>TESSDATA_PREFIX</code>, Value:
                 <code>"C:\Program Files\Tesseract-OCR"</code>
               </li>
               <li>
