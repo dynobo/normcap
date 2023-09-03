@@ -223,6 +223,9 @@ cleanup_paths = [
   # Files
   "**/PySide6/lrelease",
   "**/PySide6/lupdate",
+  # Windows specific files
+  "**/NormCap.exe.metagen",
+  "**/NormCap.pdb",
 ]
 [tool.briefcase.app.normcap.macOS]
 requires = ["std-nslog==1.0.0"]
@@ -260,6 +263,7 @@ template = "https://github.com/dynobo/briefcase-linux-appimage-template"
 template_branch = "main"
 
 [tool.briefcase.app.normcap.windows]
+use_full_install_path = false
 
 [tool.tbump]
 
