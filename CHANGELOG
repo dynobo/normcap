@@ -16,6 +16,7 @@
   ([#485](https://github.com/dynobo/normcap/issues/485))
 - Linux: Fix multi monitor setups with Wayland causing unnecessary timeouts.
   ([#494](https://github.com/dynobo/normcap/issues/494))
+- Windows: Simplify installation path from `..\dynobo\NormCap` to just `..\NormCap`
 
 ## v0.4.4 (2023-06-04)
 
