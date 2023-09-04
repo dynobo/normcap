@@ -3,7 +3,9 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 import textwrap
+from pathlib import Path
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -98,9 +100,14 @@ class Notifier(QtCore.QObject):
         """Show tray icon then send notification."""
         title, message = self._compose_notification(capture)
         if sys.platform == "linux" and shutil.which("notify-send"):
-            self._send_via_libnotify(title, message)
+            self._send_via_libnotify(title=title, message=message)
         else:
-            self._send_via_qt_tray(title, message)
+            self._send_via_qt_tray(
+                title=title,
+                message=message,
+                ocr_text=capture.ocr_text,
+                ocr_applied_magic=capture.ocr_applied_magic,
+            )
         self.com.on_notification_sent.emit()
 
     def _send_via_libnotify(self, title: str, message: str) -> None:
@@ -108,6 +115,17 @@ class Notifier(QtCore.QObject):
 
         Seems to work more reliable on Linux + Gnome, but requires libnotify.
         Running in detached mode to avoid freezing KDE bar in some distributions.
+
+        A drawback is, that it's difficult to receive clicks on the notification
+        like it's done with the Qt method. `notify-send` _is_ able to support this,
+        but it would require leaving the suprocess running and monitoring its output,
+        which doesn't feel very solid.
+
+        ONHOLD: Switch from notify-send to org.freedesktop.Notifications.
+        A cleaner way would be to use DBUS org.freedesktop.Notifications instead of
+        notify-send, but this seems to be quite difficult to implement with QtDbus,
+        where the types seem not to be correctly casted to DBUS-Types. A future PySide
+        version might improve the situation.
         """
         logger.debug("Send notification via notify-send")
         icon_path = system_info.get_resources_path() / "icons" / "notification.png"
@@ -127,13 +145,25 @@ class Notifier(QtCore.QObject):
         # Left detached on purpose!
         subprocess.Popen(cmds, start_new_session=True)  # noqa: S603
 
-    def _send_via_qt_tray(self, title: str, message: str) -> None:
+    def _send_via_qt_tray(
+        self,
+        title: str,
+        message: str,
+        ocr_text: str | None,
+        ocr_applied_magic: str | None,
+    ) -> None:
         """Send via QSystemTrayIcon.
 
         Used for:
             - Windows
             - macOS
             - Linux (Fallback in case no notify-send)
+
+        On Linux, this method has draw backs (probably Qt Bugs):
+            - The custom icon is ignored. Instead the default icon
+              `QtWidgets.QSystemTrayIcon.MessageIcon.Information` is shown.
+            - Notifications clicks are not received. It _does_ work, if
+              `QtWidgets.QSystemTrayIcon.MessageIcon.Critical` is used as icon.
         """
         logger.debug("Send notification via QT")
 
@@ -142,5 +172,42 @@ class Notifier(QtCore.QObject):
         if not isinstance(parent, QtWidgets.QSystemTrayIcon):
             raise TypeError("Parent is expected to be of type QSystemTrayIcon.")
 
+        # Because clicks on different notifications can not be distinguished in Qt,
+        # only the last notification is associated with an action/signal. All previous
+        # get removed.
+        if parent.isSignalConnected(
+            QtCore.QMetaMethod.fromSignal(parent.messageClicked)
+        ):
+            parent.messageClicked.disconnect()
+
+        # It only makes sense to act on notification clicks, if we have a result.
+        if ocr_text and ocr_applied_magic and len(ocr_text.strip()) >= 1:
+            parent.messageClicked.connect(
+                lambda: self._open_ocr_result(
+                    ocr_text=ocr_text, applied_magic=ocr_applied_magic
+                )
+            )
+
         parent.show()
         parent.showMessage(title, message, QtGui.QIcon(":notification"))
+
+    @staticmethod
+    def _open_ocr_result(ocr_text: str, applied_magic: str) -> None:
+        logger.debug("Notification clicked.")
+
+        urls = []
+        if applied_magic == "UrlMagic":
+            urls = ocr_text.split()
+        elif applied_magic == "EmailMagic":
+            urls = [f'mailto:{ocr_text.replace(",", ";").replace(" ", "")}']
+        else:
+            temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.txt"
+            temp_file.write_text(ocr_text)
+            urls = [temp_file.as_uri()]
+
+        for url in urls:
+            logger.debug(f"Opening URI {url}...")
+            result = QtGui.QDesktopServices.openUrl(
+                QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
+            )
+            logger.debug(f"Opened URI with result={result}")

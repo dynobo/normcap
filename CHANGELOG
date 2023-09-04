@@ -5,6 +5,11 @@
 - All: Add [support for localization](./normcap/resources/locales/README.md) of the
   NormCap UI. Available translations so far:
   - German
+- Windows, macOS: Add click action to desktop notifications. If a notification is
+  clicked, the (last) result is opened in an appropriate application. E.g. if a URL was
+  detected, it is opened in the default browser. If plain text was detected, it is saved
+  as temporary text file, which is opened in the default text editor.
+  ([#438](https://github.com/dynobo/normcap/issues/438))
 - Linux: Fix NormCap to work with Sway DE.
   ([#485](https://github.com/dynobo/normcap/issues/485))
 - Linux: Fix multi monitor setups with Wayland causing unnecessary timeouts.
