@@ -1,5 +1,6 @@
 import os
 import subprocess
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -100,7 +101,9 @@ def test_send_via_qt_tray(qtbot):
     notifier = notification.Notifier(tray)
 
     # WHEN a notification is sent via QT (QSystemTrayIcon)
-    notifier._send_via_qt_tray("Title", "Message")
+    notifier._send_via_qt_tray(
+        title="Title", message="Message", ocr_text=None, ocr_applied_magic=None
+    )
 
     # THEN we expect no exception (it's hard to test, if the notification is shown)
 
@@ -115,7 +118,9 @@ def test_send_via_qt_tray_without_qsystemtrayicon_parent_raises(qtbot):
 
     # WHEN a notification is sent via QT (QSystemTrayIcon)
     with pytest.raises(TypeError, match="QSystemTrayIcon"):
-        notifier._send_via_qt_tray("Title", "Message")
+        notifier._send_via_qt_tray(
+            title="Title", message="Message", ocr_text=None, ocr_applied_magic=None
+        )
 
     # THEN we expect an exception, as the parent has to be a QSystemTrayIcon
 
@@ -131,8 +136,16 @@ def test_send_notification(monkeypatch):
     def mocked_libnotify(cls, title, message):
         result.append({"title": title, "message": message, "method": "libnotify"})
 
-    def mocked_qt_tray(cls, title, message):
-        result.append({"title": title, "message": message, "method": "qt_tray"})
+    def mocked_qt_tray(cls, title, message, ocr_text, ocr_applied_magic):
+        result.append(
+            {
+                "title": title,
+                "message": message,
+                "method": "qt_tray",
+                "ocr_text": ocr_text,
+                "ocr_applied_magic": ocr_applied_magic,
+            }
+        )
 
     monkeypatch.setattr(notification.Notifier, "_send_via_libnotify", mocked_libnotify)
     monkeypatch.setattr(notification.Notifier, "_send_via_qt_tray", mocked_qt_tray)
@@ -157,6 +170,8 @@ def test_send_notification(monkeypatch):
     assert result[-1]["method"] == "qt_tray"
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
+    assert result[-1]["ocr_text"] == capture.ocr_text
+    assert result[-1]["ocr_applied_magic"] == capture.ocr_applied_magic
 
     # WHEN a notification signal is emitted on a system _with_ libnotify
     monkeypatch.setattr(notification.sys, "platform", "linux")
@@ -180,3 +195,59 @@ def test_send_notification(monkeypatch):
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
     assert result[-1]["method"] == "qt_tray"
+
+
+@pytest.mark.parametrize(
+    ("ocr_text", "applied_magic", "expected_urls"),
+    [
+        ("1@test.tld", "EmailMagic", ["mailto:1@test.tld"]),
+        ("1@test.tld, 2@test.tld", "EmailMagic", ["mailto:1@test.tld;2@test.tld"]),
+        ("http://1.test.ltd", "UrlMagic", ["http://1.test.ltd"]),
+        (
+            "http://1.test.ltd \n http://2.test.ltd",
+            "UrlMagic",
+            ["http://1.test.ltd", "http://2.test.ltd"],
+        ),
+        (
+            "test test\ntest",
+            "ParagraphMagic",
+            [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
+        ),
+        (
+            "test",
+            "SingleLineMagic",
+            [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
+        ),
+        (
+            "test\ntest",
+            "MultiLineMagic",
+            [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
+        ),
+        (
+            "raw test",
+            None,
+            [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
+        ),
+    ],
+)
+def test_open_ocr_result(monkeypatch, ocr_text, applied_magic, expected_urls):
+    # GIVEN a mocken Qt openUrl method
+    urls = []
+
+    def mocked_openurl(url):
+        return urls.append(url)
+
+    monkeypatch.setattr(notification.QtGui.QDesktopServices, "openUrl", mocked_openurl)
+
+    # WHEN the function is called with certain text and magic
+    notification.Notifier._open_ocr_result(
+        ocr_text=ocr_text, applied_magic=applied_magic
+    )
+
+    # THEN the expected urls should be in the format so openUrl would result in the
+    #   correct action
+    #   and in case of a text file was generated, it should contain the detected text.
+    assert urls == expected_urls
+    if urls[0].toString().startswith("file://"):
+        tempfile_text = Path(urls[0].toLocalFile()).read_text()
+        assert tempfile_text == ocr_text

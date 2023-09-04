@@ -5,6 +5,7 @@ the application is closed. Potential windows or other components are started fro
 here.
 """
 
+# FIXME: Different tray icons are used somewhere! (From system vs. packaged, libnotify)
 import logging
 import os
 import sys
@@ -403,6 +404,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_languages_changed.connect(self._sanitize_language_setting)
         self.com.on_languages_changed.connect(self._update_installed_languages)
         self.com.exit_application.connect(self._exit_application)
+        self.messageClicked.connect(self._open_language_manager)
 
     def _add_update_checker(self) -> None:
         if not self.settings.value("update", type=bool):
