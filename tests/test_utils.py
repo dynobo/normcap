@@ -34,6 +34,7 @@ def test_argparser_defaults_are_complete():
         "update",
         "verbosity",
         "version",
+        "show_introduction",
     }
     args_keys = set(vars(parsed_args).keys())
     assert args_keys == expected_options
@@ -89,7 +90,7 @@ def test_argparser_attributes_in_settings():
             "background_mode",
         ):
             continue
-        assert arg in settings.allKeys()
+        assert arg.replace("_", "-") in settings.allKeys()
 
 
 def test_settings_in_argparser_attributes():
@@ -98,7 +99,7 @@ def test_settings_in_argparser_attributes():
     for key in settings.allKeys():
         if key in ("version", "last-update-check"):
             continue
-        assert key in argparser_defaults
+        assert key.replace("-", "_") in argparser_defaults
 
 
 def test_argparser_defaults_are_correct():

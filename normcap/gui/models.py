@@ -19,7 +19,7 @@ class Setting(NamedTuple):
     choices: Iterable | None
     help_: str
     cli_arg: bool
-    nargs: int | str
+    nargs: int | str | None
 
 
 @enum.unique

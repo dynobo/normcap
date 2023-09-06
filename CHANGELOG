@@ -5,6 +5,8 @@
 - All: Add [support for localization](./normcap/resources/locales/README.md) of the
   NormCap UI. Available translations so far:
   - German
+- All: Add introduction on startup.
+  ([#443](https://github.com/dynobo/normcap/issues/443))
 - Windows, macOS: Add click action to desktop notifications. If a notification is
   clicked, the (last) result is opened in an appropriate application. E.g. if a URL was
   detected, it is opened in the default browser. If plain text was detected, it is saved
