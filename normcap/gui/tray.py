@@ -16,7 +16,12 @@ from typing import Any, NoReturn, cast
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
 from normcap import __version__, clipboard, ocr, screengrab
-from normcap.gui import resources, system_info, utils  # noqa: F401 (loads resources!)
+from normcap.gui import (  # noqa: F401 (loads resources!)
+    introduction,
+    resources,
+    system_info,
+    utils,
+)
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
@@ -32,7 +37,6 @@ logger = logging.getLogger(__name__)
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
-    close_windows = QtCore.Signal()
     exit_application = QtCore.Signal(bool)
     on_copied_to_clipboard = QtCore.Signal()
     on_image_cropped = QtCore.Signal()
@@ -91,6 +95,12 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.setContextMenu(self.tray_menu)
         self._populate_context_menu_entries()
 
+        if (
+            args.get("show_introduction") is None
+            and self.settings.value("show-introduction", type=bool)
+        ) or args.get("show_introduction") is True:
+            self.show_introduction()
+
         self.reset_tray_icon_timer = QtCore.QTimer(parent=self)
         self.reset_tray_icon_timer.setSingleShot(True)
         self.reset_tray_icon_timer.timeout.connect(self._set_tray_icon)
@@ -117,6 +127,15 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.com.exit_application.emit(False)
         else:
             self._create_socket_server()
+
+    @QtCore.Slot()
+    def show_introduction(self) -> None:
+        show_intro = bool(self.settings.value("show-introduction", type=bool))
+        result = introduction.Dialog(show_on_startup=show_intro).exec_()
+        if result == introduction.Choice.SHOW:
+            self.settings.setValue("show-introduction", True)
+        if result == introduction.Choice.DONT_SHOW:
+            self.settings.setValue("show-introduction", False)
 
     @QtCore.Slot()
     def _color_tray_icon(self) -> None:
@@ -280,7 +299,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
         )
         logger.debug(f"Opened uri with result={result}")
-        self.com.close_windows.emit()
+        self._minimize_or_exit_application(delayed=False)
 
     @QtCore.Slot()
     def _open_language_manager(self) -> None:
@@ -499,6 +518,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         settings_menu.com.on_open_url.connect(self._open_url_and_hide)
         settings_menu.com.on_manage_languages.connect(self._open_language_manager)
         settings_menu.com.on_setting_change.connect(self._apply_setting_change)
+        settings_menu.com.on_show_introduction.connect(self.show_introduction)
         settings_menu.com.on_close_in_settings.connect(
             lambda: self._minimize_or_exit_application(delayed=False)
         )

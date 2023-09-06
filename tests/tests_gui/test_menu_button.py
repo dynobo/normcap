@@ -3,12 +3,31 @@ from PySide6 import QtGui, QtWidgets
 from normcap.gui import menu_button
 
 
+def test_show_introduction(qtbot, menu_btn):
+    # GIVEN a button with a generated menu
+    #   and a certain menu item
+    menu_btn.menu().aboutToShow.emit()
+
+    show_introduction_action = menu_btn.findChild(QtGui.QAction, "show_introduction")
+    assert "introduction" in show_introduction_action.text().lower()
+
+    # WHEN the menu item entry is clicked
+    # THEN the corresponding signal is emitted
+    with qtbot.waitSignal(menu_btn.com.on_show_introduction, timeout=1000) as result:
+        show_introduction_action.trigger()
+    assert result.signal_triggered
+
+
 def test_enable_language_manager(qtbot, menu_btn):
+    # GIVEN a button with a generated menu
+    #   and a certain menu item
     menu_btn.menu().aboutToShow.emit()
 
     language_action = menu_btn.findChild(QtGui.QAction, "manage_languages")
     assert "add/remove" in language_action.text()
 
+    # WHEN the menu item entry is clicked
+    # THEN the corresponding signal is emitted
     with qtbot.wait_signal(menu_btn.com.on_manage_languages, timeout=5000) as result:
         language_action.trigger()
     assert result.signal_triggered

@@ -69,6 +69,7 @@ class Communicate(QtCore.QObject):
     on_close_in_settings = QtCore.Signal(str)
     on_manage_languages = QtCore.Signal()
     on_setting_change = QtCore.Signal(str)
+    on_show_introduction = QtCore.Signal()
 
 
 class MenuButton(QtWidgets.QToolButton):
@@ -136,6 +137,8 @@ class MenuButton(QtWidgets.QToolButton):
         value: Any | None = None
         setting = None
 
+        # Menu items which triffer actions
+
         if action_name == "close":
             self.com.on_close_in_settings.emit("Clicked close in settings")
             return
@@ -155,9 +158,15 @@ class MenuButton(QtWidgets.QToolButton):
             self.com.on_manage_languages.emit()
             return
 
-        if group_name == "website_group" or action_name.startswith("file:/"):
+        if action_name == "show_introduction":
+            self.com.on_show_introduction.emit()
+            return
+
+        if action_name.startswith(("file:/", "https:/")):
             self.com.on_open_url.emit(action_name)
             return
+
+        # Menu items which change settings
 
         if group_name == "settings_group":
             setting = action_name
@@ -173,9 +182,8 @@ class MenuButton(QtWidgets.QToolButton):
                 action.setChecked(True)
             value = languages
 
-        if None not in (setting, value):
-            self.settings.setValue(str(setting), value)
-            self.com.on_setting_change.emit(str(setting))
+        self.settings.setValue(str(setting), value)
+        self.com.on_setting_change.emit(str(setting))
 
     @QtCore.Slot()
     def populate_menu_entries(self) -> None:
@@ -294,6 +302,11 @@ class MenuButton(QtWidgets.QToolButton):
         about_group.setObjectName("website_group")
 
         self._add_title(submenu, f"Normcap v{__version__}", about_group)
+
+        # L10N: Entry in main menu's 'Application' section.
+        action = QtGui.QAction(_("Introduction"), menu)
+        action.setObjectName("show_introduction")
+        submenu.addAction(action)
 
         # L10N: Entry in main menu's 'Application' section.
         action = QtGui.QAction(_("Website"), about_group)

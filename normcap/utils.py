@@ -44,7 +44,7 @@ def create_argparser() -> argparse.ArgumentParser:
             type=setting.type_,
             help=setting.help_,
             choices=setting.choices,
-            nargs=setting.nargs,
+            nargs=setting.nargs,  # type: ignore # False positive, nargs is typed | None
         )
     parser.add_argument(
         "-r",

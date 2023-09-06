@@ -145,6 +145,7 @@ def basic_cli_args():
         "--verbosity=debug",
         "--update=False",
         "--tray=False",
+        "--show-introduction=False",
     ]
 
 

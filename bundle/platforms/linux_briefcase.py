@@ -9,6 +9,8 @@ import briefcase
 from platforms.utils import BuilderBase
 
 
+# TODO: Add libxcb1 and libxcb-cursor0 to AppImage
+# see https://github.com/Electron-Cash/Electron-Cash/pull/2197/files
 class LinuxBriefcase(BuilderBase):
     """Create prebuilt package for Linux using Briefcase."""
 
