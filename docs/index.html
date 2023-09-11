@@ -126,19 +126,14 @@
             >
           </p>
         </div>
-        <div>
-          <div style="text-align: center; height: 100%">
-            <a class="gif-link" href="img/normcap.gif" target="_blank"></a>
-            <a href="https://www.buymeacoffee.com/dynobo" target="_blank"
-              ><img
-                src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
-                alt="Buy Me A Coffee"
-                style="
-                  height: 40px !important;
-                  filter: grayscale() brightness(0.9);
-                  margin-top: 5px;
-                "
-            /></a>
+        <div style="text-align: center; display: flex; align-items: center">
+          <div>
+            <a href="img/normcap.gif" target="_blank">
+              <img src="img/normcap.gif" />
+            </a>
+            <a href="https://www.buymeacoffee.com/dynobo" target="_blank">
+              <img class="coffee" src="img/coffee.png" alt="Buy Me A Coffee" />
+            </a>
           </div>
         </div>
       </article>
@@ -188,9 +183,12 @@
         <h4>Quickstart</h4>
         <ol>
           <li>Start NormCap and wait until a pink border appears.</li>
-          <li>Select a region on screen with your mouse.</li>
-          <li>Wait for notification or pink tray icon.</li>
-          <li>Paste the recognized text from the clipboard anywhere you like.</li>
+          <li>Select a region on the screen with your mouse.</li>
+          <li>Wait for a notification or a pink tray icon to appear.</li>
+          <li>
+            The detected text gets copied into your system clipboard, paste it into any
+            application.
+          </li>
         </ol>
         <h4>Example use-cases</h4>
         <ul>
@@ -206,7 +204,7 @@
             the top right.
           </li>
           <li>
-            In the settings you can adjust the language(s) you are trying to recognize,
+            In the settings, you can adjust the language(s) you are trying to recognize,
             which is important for a good accuracy.
           </li>
           <li>
@@ -225,9 +223,9 @@
           <li>
             <p><strong>"Raw"-Mode </strong></p>
             <p>
-              Marked by the <span class="primary">☰</span> symbol, it outputs the
-              detected text just as detected by the OCR software. Keeps the text as
-              recognized, e.g. doesn't remove line-breaks.
+              Marked by the <span class="primary">☰</span> symbol, it returns text just
+              as detected by the OCR software. For example, all line-breaks are
+              preserved.
             </p>
           </li>
           <li>
@@ -235,12 +233,12 @@
             <p>
               Indicated by the <span class="primary">★</span> symbol, it performs some
               formatting of the output based on certain implemented rules, which can
-              take additional information like text position into account. In a first
-              step, every rule calculates a "score" to determine the likelihood of being
-              responsible for this type of text. In a second step, the rule which
-              achieved the highest "score" takes the necessary actions to "transform"
-              the input text according to its type. Those rules are currently
-              implemented:
+              take additional information like text position and content into account.
+              In a first step, every rule calculates a "score" to determine the
+              likelihood of being responsible for this type of text. In a second step,
+              the rule which achieved the highest "score" takes the necessary actions to
+              "transform" the input text according to its type. The following rules are
+              currently implemented:
             </p>
             <table>
               <caption>
@@ -285,7 +283,10 @@
                 <tr>
                   <td><strong>URL</strong></td>
                   <td>Number of chars in URLs vs. overall chars</td>
-                  <td>Transform to line-break separated URLs</td>
+                  <td>
+                    Transform to line-break separated URLs, discard all other
+                    characters.
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -336,11 +337,8 @@
           </li>
           <li>
             <a href="https://www.buymeacoffee.com/dynobo" target="_blank"
-              ><img
-                src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
-                alt="Buy Me A Coffee"
-                style="height: 40px !important"
-            /></a>
+              >Buy me a coffee.</a
+            >
           </li>
         </ul>
         <h5>Not at all satisfied with NormCap?</h5>
@@ -518,12 +516,12 @@
           <summary>How can I start NormCap in the background?</summary>
           <p>
             To launch NormCap minimized to system tray without triggering a capture, use
-            the `--background-mode` command line flag. This is e.g. useful, if you want
-            to autostart NormCap after system start.
+            the <code>background-mode</code> command line flag. This is e.g. useful, if
+            you want to autostart NormCap after system start.
           </p>
           <p>
-            Note that `--background-mode` automatically enables the setting "Keep in
-            system tray"!
+            Note that <code>--background-mode</code> automatically enables the setting
+            "Keep in system tray"!
           </p>
         </details>
         <details id="faqs-windows-file-size">
@@ -863,7 +861,8 @@ vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl
   /bin/bash
 $ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage</code></pre>
           <p>
-            If that results in a `No such file or directory` error, according to
+            If that results in a <code>No such file or directory</code> error, according
+            to
             <a
               href="https://github.com/AppImage/AppImageKit/issues/1027#issuecomment-641601097"
               target="_blank"
