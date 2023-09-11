@@ -86,10 +86,10 @@ small {
 
 #download div:nth-of-type(2) {
   display: block;
-  background-image: url("img/normcap.gif");
+  /*background-image: url("img/normcap.gif");
   background-position: center;
   background-size: contain;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat;*/
   height: calc(100vw * 0.6);
 }
 
@@ -206,6 +206,13 @@ footer {
   padding-top: 0px !important;
 }
 
+/* COFFEE */
+.coffee {
+  height: 40px !important; margin-top: 10px; opacity: 0.85;
+}
+.coffee:hover {
+  opacity: 1;
+}
 /* THEMES */
 /**********/
 [data-theme="light"],
