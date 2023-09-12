@@ -2,7 +2,7 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
-from PySide6 import QtGui
+from PySide6 import QtCore, QtGui
 
 from normcap.ocr import enhance
 
@@ -10,6 +10,16 @@ from normcap.ocr import enhance
 def test_identify_most_frequent_edge_color():
     image = QtGui.QImage(Path(__file__).parent / "testimages" / "color.png")
     color = enhance._identify_most_frequent_edge_color(image)
+    assert color == (0, 0, 255)
+
+
+def test_identify_most_frequent_edge_color_small_image():
+    # GIVEN an image with small dimensions (border < max_sample_size)
+    image = QtGui.QImage(Path(__file__).parent / "testimages" / "color.png")
+    image = image.scaled(QtCore.QSize(40, 40))
+    # WHEN the most frequent color is identified
+    color = enhance._identify_most_frequent_edge_color(image)
+    # THEN the result should be correct (blue)
     assert color == (0, 0, 255)
 
 

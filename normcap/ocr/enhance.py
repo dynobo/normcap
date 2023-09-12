@@ -35,7 +35,10 @@ def _identify_most_frequent_edge_color(img: QImage) -> tuple[int, ...]:
     points += [(0, x) for x in range(img.height())]  # left
     points += [(img.width() - 1, x) for x in range(img.height())]  # right
 
-    sample_size = 400
+    # cap points as trade-off between certainty and compute
+    max_sample_size = 400
+    sample_size = min(len(points), max_sample_size)
+
     points = random.sample(points, sample_size)
     edge_pixels = _get_pixels(image=img, points=points)
 
