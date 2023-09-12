@@ -7,6 +7,7 @@
   - German
 - All: Add introduction on startup.
   ([#443](https://github.com/dynobo/normcap/issues/443))
+- All: Fix wrong detection of some special characters.
 - Windows, macOS: Add click action to desktop notifications. If a notification is
   clicked, the (last) result is opened in an appropriate application. E.g. if a URL was
   detected, it is opened in the default browser. If plain text was detected, it is saved
