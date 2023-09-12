@@ -75,7 +75,7 @@ def _run_tesseract(cmd: PathLike, image: QImage, args: list[str]) -> list[list[s
             *args,
         ]
         _ = _run_command(cmd_args=cmd_args)
-        with Path(output_tsv_path).open() as fh:
+        with Path(output_tsv_path).open(encoding="utf-8") as fh:
             tsv_file = csv.reader(fh, delimiter="\t", quotechar=None)
             lines = list(tsv_file)
     finally:
