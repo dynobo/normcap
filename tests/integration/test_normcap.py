@@ -37,9 +37,12 @@ def test_normcap_ocr_testcases(
     capture = tray.capture
     assert capture
 
-    assert capture.ocr_applied_magic in testcase.ocr_magics, capture.ocr_text
+    assert capture.ocr_applied_magic in testcase.ocr_magics, (
+        testcase.name,
+        capture.ocr_text,
+    )
 
     similarity = SequenceMatcher(
         None, capture.ocr_text, testcase.ocr_transformed
     ).ratio()
-    assert similarity >= 0.98, f"{capture.ocr_text=}"
+    assert similarity >= 0.98, (testcase.name, f"{capture.ocr_text=}")

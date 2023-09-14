@@ -6,6 +6,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 @dataclass
 class TestCase:
+    name: str
     image_path: Path
     left_top: tuple[int, int]
     right_bottom: tuple[int, int]
@@ -67,6 +68,7 @@ image_dir = Path(__file__).parent
 testcases: tuple[TestCase, ...] = (
     # 0
     TestCase(
+        name="0: ParseUrls",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(46, 745),
         right_bottom=(500, 950),
@@ -83,6 +85,7 @@ testcases: tuple[TestCase, ...] = (
     ),
     # 1
     TestCase(
+        name="1: ParseColoredUrl",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(312, 548),
         right_bottom=(470, 568),
@@ -91,6 +94,7 @@ testcases: tuple[TestCase, ...] = (
     ),
     # 2
     TestCase(
+        name="2: WindowTitle",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(1115, 530),
         right_bottom=(1305, 570),
@@ -100,8 +104,9 @@ testcases: tuple[TestCase, ...] = (
     # 3
     TestCase(
         # First two rows of email addresses
+        name="3: DifficultMailAddresses",
         image_path=image_dir / "ocr_test_1.png",
-        left_top=(50, 300),
+        left_top=(50, 301),
         right_bottom=(700, 342),
         ocr_transformed="peter.parker@test.com, HArDToReAd@test.com, 0815@test.com",
         ocr_magics=["EmailMagic"],
@@ -109,8 +114,9 @@ testcases: tuple[TestCase, ...] = (
     # 4
     TestCase(
         # All three rows of email addresses, 3rd row contains invalids
+        name="4: MailAddressesWithInvalid",
         image_path=image_dir / "ocr_test_1.png",
-        left_top=(50, 300),
+        left_top=(50, 299),
         right_bottom=(700, 363),
         ocr_transformed=(
             "To: Peter Parker <peter.parker@test.com>; "
@@ -126,6 +132,7 @@ testcases: tuple[TestCase, ...] = (
     # 5
     TestCase(
         # Low contrast
+        name="5: TextWithLowContrast",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(1080, 720),
         right_bottom=(1570, 800),
