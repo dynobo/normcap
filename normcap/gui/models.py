@@ -67,7 +67,10 @@ class Urls:
 
 @dataclass()
 class Rect:
-    """Rectangular selection on screen."""
+    """Rectangular selection on screen.
+
+    All points are inclusive (are part of the rectangle).
+    """
 
     left: int = 0
     top: int = 0
@@ -86,19 +89,19 @@ class Rect:
         return self.left, self.top, self.width, self.height
 
     @property
-    def points(self) -> tuple[int, int, int, int]:
+    def coords(self) -> tuple[int, int, int, int]:
         """Expose rect as tuple of coordinates."""
         return self.left, self.top, self.right, self.bottom
 
     @property
     def width(self) -> int:
         """Width of rect."""
-        return self.right - self.left
+        return self.right - self.left + 1
 
     @property
     def height(self) -> int:
         """Height of rect."""
-        return self.bottom - self.top
+        return self.bottom - self.top + 1
 
     @property
     def size(self) -> tuple[int, int]:
@@ -135,6 +138,11 @@ class Screen:
     def height(self) -> int:
         """Get screen height."""
         return self.rect.height
+
+    @property
+    def size(self) -> tuple[int, int]:
+        """Get screen width and height."""
+        return (self.width, self.height)
 
 
 @dataclass()

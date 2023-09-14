@@ -149,8 +149,8 @@ def screens() -> list[Screen]:
             rect=Rect(
                 left=screen.geometry().left(),
                 top=screen.geometry().top(),
-                right=screen.geometry().left() + screen.geometry().width(),
-                bottom=screen.geometry().top() + screen.geometry().height(),
+                right=screen.geometry().right(),
+                bottom=screen.geometry().bottom(),
             ),
             index=idx,
         )

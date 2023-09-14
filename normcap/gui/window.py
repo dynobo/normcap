@@ -36,6 +36,7 @@ logger = logging.getLogger(__name__)
 
 class DebugInfo(NamedTuple):
     screen: Screen | None = None
+    window: QtWidgets.QMainWindow | None = None
     scale_factor: float = 1
 
 
@@ -182,7 +183,7 @@ class Window(QtWidgets.QMainWindow):
 
         if logger.getEffectiveLevel() is logging.DEBUG:
             self.ui_container.debug_info = DebugInfo(
-                scale_factor=self._get_scale_factor(), screen=self.screen_
+                scale_factor=self._get_scale_factor(), screen=self.screen_, window=self
             )
 
         self.ui_container.color = self.color
@@ -359,31 +360,46 @@ class UiContainerLabel(QtWidgets.QLabel):
 
     def _draw_debug_infos(self, painter: QtGui.QPainter, rect: QtCore.QRect) -> None:
         """Draw debug information to top left."""
-        if not self.debug_info or not self.debug_info.screen:
+        if (
+            not self.debug_info
+            or not self.debug_info.screen
+            or not self.debug_info.screen.screenshot
+            or not self.debug_info.window
+        ):
             return
 
-        normalized_coords = cast(tuple, rect.normalized().getCoords())
-        selection = Rect(*normalized_coords)
+        # TODO: Some values might be better properties of DebugInfo?
+        selection = Rect(*cast(tuple, rect.normalized().getCoords()))
         selection_scaled = selection.scaled(self.debug_info.scale_factor)
 
-        x = y = 25
-        screen_size = (self.debug_info.screen.width, self.debug_info.screen.height)
-        if self.debug_info.screen.screenshot:
-            screenshot_size = self.debug_info.screen.screenshot.size().toTuple()
-        else:
-            screenshot_size = (-1, -1)
+        lines = (
+            "[ Screen ]",
+            f"Size: {self.debug_info.screen.size}",
+            f"Position: {self.debug_info.screen.rect.coords}",
+            f"Selected region: {selection.geometry}",
+            f"Device pixel ratio: {self.debug_info.screen.device_pixel_ratio}",
+            "",
+            "[ Window ]",
+            f"Size: {self.debug_info.window.size().toTuple()}",
+            f"Position: {cast(tuple, self.debug_info.window.geometry().getCoords())}",
+            f"Device pixel ratio: {self.debug_info.window.devicePixelRatio()}",
+            "",
+            "[ Screenshot ]",
+            f"Size: {self.debug_info.screen.screenshot.size().toTuple()}",
+            f"Selected region (scaled): {selection_scaled.geometry}",
+            "",
+            "[ Scaling detected ]",
+            f"Factor: {self.debug_info.scale_factor:.2f}",
+        )
 
-        painter.setPen(QtGui.QPen(self.color))
-        painter.drawText(x, y * 1, "QScreen:")
-        painter.drawText(x, y * 2, f"     Size: {screen_size}")
-        painter.drawText(x, y * 3, f"     Selected region: {selection.geometry}")
-        painter.drawText(x, y * 4, "Image:")
-        painter.drawText(x, y * 5, f"     Size: {screenshot_size}")
-        painter.drawText(x, y * 6, f"     Selected region: {selection_scaled.geometry}")
-        painter.drawText(x, y * 7, "Scaling:")
-        painter.drawText(x, y * 8, f"     Factor: {self.debug_info.scale_factor:.2f}")
-        dpr = self.debug_info.screen.device_pixel_ratio
-        painter.drawText(x, y * 9, f"     Device pixel ratio: {dpr:.2f}")
+        painter.setPen(QtGui.QColor(0, 0, 0, 0))
+        painter.setBrush(QtGui.QColor(0, 0, 0, 80))
+        painter.drawRect(3, 3, 300, 20 * len(lines) + 5)
+
+        painter.setPen(self.color)
+        painter.setFont(QtGui.QFont(QtGui.QFont().family(), 10, 600))
+        for idx, line in enumerate(lines):
+            painter.drawText(10, 20 * (idx + 1), line)
 
     def paintEvent(self, event: QtGui.QPaintEvent) -> None:  # noqa: N802
         """Draw selection rectangle and mode indicator icon."""

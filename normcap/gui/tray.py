@@ -242,7 +242,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot(Rect)
     def _crop_image(self, grab_info: tuple[Rect, int]) -> None:
         """Crop image to selected region."""
-        logger.info("Crop image to region %s", grab_info[0].points)
+        logger.info("Crop image to region %s", grab_info[0].coords)
         rect, screen_idx = grab_info
 
         screenshot = self.screens[screen_idx].screenshot
