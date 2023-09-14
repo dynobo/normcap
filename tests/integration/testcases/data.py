@@ -24,7 +24,7 @@ class TestCase:
         raise TypeError("Could not detect QGuiApplication")
 
     @property
-    def _scale_factor(self):
+    def _scale_factor(self) -> float:
         if (
             self.screen_size.width() == self.image.width()
             and self.screen_size.height() == self.image.height()
@@ -84,7 +84,7 @@ testcases: tuple[TestCase, ...] = (
     # 1
     TestCase(
         image_path=image_dir / "ocr_test_1.png",
-        left_top=(312, 550),
+        left_top=(312, 548),
         right_bottom=(470, 568),
         ocr_transformed="https://regex101.com",
         ocr_magics=["UrlMagic"],

@@ -39,7 +39,7 @@ def test_window_get_scale_factor(
     image = QtGui.QImage(QtCore.QSize(*img_size), QtGui.QImage.Format.Format_RGB32)
     screen = models.Screen(
         device_pixel_ratio=1.0,
-        rect=models.Rect(0, 0, *screen_size),
+        rect=models.Rect(0, 0, screen_size[0] - 1, screen_size[1] - 1),
         index=0,
         screenshot=image,
     )
