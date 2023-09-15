@@ -78,11 +78,11 @@ class Dialog(QtWidgets.QDialog):
         return [
             Section(
                 # L10N: Introduction window step title
-                title=_("1. Select region"),
+                title=_("1. Select area"),
                 # L10N: Introduction window step description
                 text=_(
-                    "Wait for the pink border to appear, then use the mouse to select "
-                    "your desired capture region."
+                    "Wait until a pink border appears around your screen, then select "
+                    "the desired capture area."
                 ),
                 image=img_path / f"{prefix}-intro-1.png",
             ),
@@ -91,8 +91,8 @@ class Dialog(QtWidgets.QDialog):
                 title=_("2. Wait for detection"),
                 # L10N: Introduction window step description
                 text=_(
-                    "The processing takes time. Wait for a notification or color "
-                    "change of the tray icon."
+                    "Processing takes time. Wait for a notification or a color "
+                    "change of the system tray icon."
                 ),
                 image=img_path / f"{prefix}-intro-2.png",
             ),
@@ -101,7 +101,7 @@ class Dialog(QtWidgets.QDialog):
                 title=_("3. Paste from clipboard"),
                 # L10N: Introduction window step description
                 text=_(
-                    "The detection result is copied to your system's clipboard. "
+                    "The detection result will be copied to your system's clipboard. "
                     "Paste it into any application ({shortcut})."
                 ).format(
                     shortcut=paste_shortcut_darwin
@@ -115,8 +115,8 @@ class Dialog(QtWidgets.QDialog):
                 title=_("Settings & more"),
                 # L10N: Introduction window step description
                 text=_(
-                    "Open the menu via the cog-wheel icon in your monitor's top right "
-                    "corner."
+                    "Open the menu using the gear icon in the upper right corner of "
+                    "corner your screen."
                 ),
                 image=img_path / f"{prefix}-intro-4.png",
             ),
