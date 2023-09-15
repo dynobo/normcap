@@ -393,8 +393,9 @@ class UiContainerLabel(QtWidgets.QLabel):
         )
 
         painter.setPen(QtGui.QColor(0, 0, 0, 0))
-        painter.setBrush(QtGui.QColor(0, 0, 0, 80))
+        painter.setBrush(QtGui.QColor(0, 0, 0, 125))
         painter.drawRect(3, 3, 300, 20 * len(lines) + 5)
+        painter.setBrush(QtGui.QColor(0, 0, 0, 0))
 
         painter.setPen(self.color)
         painter.setFont(QtGui.QFont(QtGui.QFont().family(), 10, 600))
