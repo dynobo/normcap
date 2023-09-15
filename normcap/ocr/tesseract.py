@@ -3,7 +3,7 @@ import logging
 import re
 import subprocess
 import tempfile
-from os import PathLike
+from os import PathLike, linesep
 from pathlib import Path
 from typing import Optional
 
@@ -32,7 +32,9 @@ def _run_command(cmd_args: list[str]) -> str:
         )
         _raise_on_error(proc)
         out_str = proc.stdout
-        logger.debug("Tesseract command output:\n%s", out_str.strip())
+        logger.debug(
+            "Tesseract command output: %s", out_str.replace(linesep, " ¬ ").strip()
+        )
     except FileNotFoundError as e:
         raise FileNotFoundError("Could not find Tesseract binary") from e
     return out_str

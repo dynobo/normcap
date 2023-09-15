@@ -84,13 +84,15 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
             self,
         )
 
-        result = interface.call(
+        message = interface.call(
             "Screenshot", "", {"interactive": False, "handle_token": token}
         )
+        logger.debug("DBus request message: %s", str(message))
+
         if (
-            isinstance(result, QtDBus.QDBusMessage)
-            and result.arguments()
-            and isinstance(result.arguments()[0], QtDBus.QDBusObjectPath)
+            isinstance(message, QtDBus.QDBusMessage)
+            and message.arguments()
+            and isinstance(message.arguments()[0], QtDBus.QDBusObjectPath)
         ):
             logger.debug("Request accepted")
         else:
@@ -112,6 +114,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
 
     def got_signal(self, message: QtDBus.QDBusMessage) -> None:
         self.timeout_timer.stop()
+        logger.debug("DBus signal message: %s", str(message))
 
         code, _ = message.arguments()
         if code != 0:
