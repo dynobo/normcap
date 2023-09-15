@@ -46,7 +46,7 @@ def _move_active_window_to_position_on_gnome(screen_rect: Rect) -> None:
     This is a workaround for not being able to reposition windows on wayland.
     It only works on Gnome Shell.
     """
-    if not HAS_QTDBUS or sys.platform != "linux":
+    if not HAS_QTDBUS or sys.platform != "linux" or not QtDBus:
         raise TypeError("QtDBus should only be called on Linux systems!")
 
     js_code = f"""
@@ -88,7 +88,7 @@ def _move_active_window_to_position_on_kde(screen_rect: Rect) -> None:
     This is a workaround for not being able to reposition windows on wayland.
     It only works on KDE.
     """
-    if not HAS_QTDBUS or sys.platform != "linux":
+    if not HAS_QTDBUS or sys.platform != "linux" or not QtDBus:
         raise TypeError("QtDBus should only be called on Linux systems!")
 
     js_code = f"""
