@@ -85,13 +85,15 @@ class UpdateChecker(QtWidgets.QWidget):
 
         # L10N: Message box shown when new version available (Prebuilt package)
         via_github = _(
-            "You can download the new version for your operating system from GitHub."
+            "You can download the new version of NormCap for your operating system "
+            "from GitHub."
             "\n\n"
             "Do you want to visit the release website now?"
         )
         # L10N: Message box shown when new version available (Python package)
         via_pip = _(
-            "You can upgrade via command line, e.g. by 'pip install normcap --upgrade'."
+            "You can upgrade NormCap via the command line, e.g. by running "
+            "'pip install normcap --upgrade'."
             "\n\n"
             "Do you want to view the changelog on GitHub now?"
         )

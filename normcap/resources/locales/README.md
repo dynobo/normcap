@@ -1,37 +1,39 @@
 # Localization of NormCap
 
-## Status
+## Status <!-- Generated automatically -->
 
-| Locale | Progress | Translated |
-| :----- | -------: | ---------: |
-| de_DE  |     100% |   46 of 46 |
-| es_ES  |      13% |    6 of 46 |
-| fr_FR  |      13% |    6 of 46 |
-| hi_IN  |      13% |    6 of 46 |
-| pt_PT  |      13% |    6 of 46 |
-| ru_RU  |      13% |    6 of 46 |
-| zh_CN  |      13% |    6 of 46 |
+| Locale                                   | Progress | Translated |
+| :--------------------------------------- | -------: | ---------: |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   61 of 61 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
+| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
+| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
+| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
+| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
 
 ## Improve existing locale
 
-1. Navigate to the folder
-   [`./normcap/resources/locales/`](https://github.com/dynobo/normcap/tree/main/normcap/resources/locales)
-1. Drill down into the folder of the target locale (e.g. `de_DE`) and edit its language
-   file `/LC_MESSAGES/messages.po`. If you like, use the
+1. Identify the file that corresponds to the local you want to edit. You can click the
+   link in the table above, or you can navigate manually to the file at
+   `./normcap/resources/locales/<LOCALE_NAME>/LC_MESSAGES/messages.po`
+1. Open this `messages.po` file and edit the translations. If you like, use the
    [Free PO-Editor](https://pofile.net/free-po-editor) for easier editing.
    \
    **Important:** Never translate any variables which are written in curly brackets,
    e.g. `{count}`!
-1. Propose the change file in a new Pull Request. \
+1. Propose the changed file in a new Pull Request. \
    (In case you are not familiar with
    git, you can also always propose a correction/change via a
-   [new issue](https://github.com/dynobo/normcap/issues/new/choose).)
+   [new issue](https://github.com/dynobo/normcap/issues/new).)
 
 ## Add new locale
 
 _Prerequisite:_ Follow the general
 [setup of the development environment](../../../README.md#Development) and activate the
 virtual Python environment via `poetry shell`.
+
+_Note_: All commands should be run in the repository's root directory.
 
 1. Research the `LOCALE_NAME` (e.g. `en_EN` or `de_AT`) of the language which shall be
    added. `gettext`'s
@@ -54,7 +56,7 @@ virtual Python environment via `poetry shell`.
    e.g. `{count}`!
 1. Compile the new `.po` file to the machine-readable `.mo` file:
    ```sh
-   pybabel compile --directory ./normcap/resources/locales --locale=<LOCALE_NAME>
+   python l10n.py
    ```
 1. To test your translation, run NormCap with the `LANGUAGE` environment variable set:
    ```sh
@@ -69,5 +71,5 @@ deleted) in NormCap's source code.
 
 1. Generate `.pot` file and update all existing `.po` files:
    ```sh
-   ./l10n.py --update-all
+   python l10n.py --update-all
    ```

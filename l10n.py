@@ -31,7 +31,11 @@ def _update_coverage(lines: list[str]) -> None:
             stat,
             re.VERBOSE,
         ):
-            locales_rows.append(f"| {m[3]:<6} | {m[2]:>8} | {m[1]:>10} |")
+            locales_rows.append(
+                f"| [{m[3]}](./{m[3]}/LC_MESSAGES/messages.po) "
+                f"| {m[2]} "
+                f"| {m[1]} |"
+            )
     locales_rows.sort()
 
     # Generate markdown table
@@ -58,6 +62,7 @@ def compile_locales() -> None:
         [
             "pybabel",
             "compile",
+            "--use-fuzzy",
             "--directory",
             "normcap/resources/locales",
             "--statistics",
@@ -74,6 +79,7 @@ def extract_strings() -> None:
             "--project=NormCap",
             f"--version={_get_version()}",
             "--msgid-bugs-address=dynobo@mailbox.org",
+            "--width=79",
             "--add-comments=L10N:",
             "--strip-comment-tag",
             "--input-dirs=./normcap",
@@ -89,6 +95,9 @@ def update_locales() -> None:
             "update",
             "--input-file=./normcap/resources/locales/messages.pot",
             "--output-dir=./normcap/resources/locales",
+            "--width=79",
+            "--ignore-obsolete",
+            "--omit-header",
         ]
     )
 
