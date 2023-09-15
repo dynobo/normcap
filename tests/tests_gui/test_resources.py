@@ -33,7 +33,13 @@ def test_cleanup_resources():
 
 def test_resources_png_and_svg_exist_for_all_icons(qtbot):
     icons_path = Path(importlib_resources.files("normcap.resources")) / "icons"
-    icon_names_svg = [f.stem for f in icons_path.glob("*.svg")]
+    source_icons_path = (
+        Path(importlib_resources.files("normcap")).parent
+        / "assets"
+        / "resources"
+        / "icons"
+    )
+    icon_names_svg = [f.stem for f in source_icons_path.glob("*.svg")]
     icon_names_png = [f.stem for f in icons_path.glob("*.png")]
 
     assert set(icon_names_png) == set(icon_names_svg)
