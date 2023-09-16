@@ -40,12 +40,11 @@ class LinuxBriefcase(BuilderBase):
         )
         insert_after = '"appimage",'
         patch = """
-"--executable",
-"/usr/bin/tesseract",
-"--executable",
-"/usr/bin/wl-copy",
-"--library",
-"/usr/lib/x86_64-linux-gnu/libxcb-cursor.so.0"
+"--executable=/usr/bin/tesseract",
+"--executable=/usr/bin/wl-copy",
+"--library=/usr/lib/x86_64-linux-gnu/libxcb-cursor.so.0.0.0",
+"--library=/usr/lib/x86_64-linux-gnu/libxcb-cursor.so.0",
+"--library=/usr/lib/x86_64-linux-gnu/libxcb.so.1",
 """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
@@ -65,9 +64,6 @@ class LinuxBriefcase(BuilderBase):
         self.run(cmd="briefcase package linux appimage", cwd=self.PROJECT_PATH)
 
     def bundle_tesseract(self) -> None:
-        ...
-
-    def download_tessdata(self) -> None:
         ...
 
     def pre_framework(self) -> None:

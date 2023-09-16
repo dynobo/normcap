@@ -245,7 +245,7 @@ system_requires = [
   "wayland-protocols",
   "software-properties-common", # required for apt-add-repository
   "wl-clipboard",
-  "libxcb-cursor0",             # required for PySide 6.5
+  "libxcb-cursor0",             # TODO: test if required for PySide 6.5
 ]
 dockerfile_extra_content = """
 USER root

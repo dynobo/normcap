@@ -368,7 +368,6 @@ class UiContainerLabel(QtWidgets.QLabel):
         ):
             return
 
-        # TODO: Some values might be better properties of DebugInfo?
         selection = Rect(*cast(tuple, rect.normalized().getCoords()))
         selection_scaled = selection.scaled(self.debug_info.scale_factor)
 
