@@ -42,11 +42,9 @@ def _prepare_logging(log_level: str) -> None:
     Args:
         log_level: Valid Python log level (debug, warning, error)
     """
-    log_level = log_level.upper()
-    if log_level != "DEBUG":
-        sys.excepthook = utils.hook_exceptions
+    sys.excepthook = utils.hook_exceptions
 
-    utils.init_logger(log_level=log_level)
+    utils.init_logger(log_level=log_level.upper())
     logger = logging.getLogger("normcap")
     logger.info("Start NormCap v%s", __version__)
 

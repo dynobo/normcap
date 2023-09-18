@@ -163,7 +163,7 @@ def to_dict() -> dict:
     """Cast all system infos to string for logging."""
     return {
         "normcap_version": __version__,
-        "python_version": python_version,
+        "python_version": python_version(),
         "cli_args": " ".join(sys.argv),
         "is_briefcase_package": is_briefcase_package(),
         "is_flatpak_package": is_flatpak_package(),

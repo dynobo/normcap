@@ -5,13 +5,11 @@ from importlib import resources
 from pathlib import Path
 
 import pytest
-from PySide6 import QtCore, QtGui
+from PySide6 import QtCore
 
 from normcap import utils
 from normcap.gui import system_info
-from normcap.gui.models import Capture
 from normcap.gui.settings import Settings
-from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
 
 
 def test_argparser_defaults_are_complete():
@@ -314,54 +312,39 @@ def test_qt_log_wrapper_xcb_as_error(caplog):
     assert "error" in caplog.text.lower()
 
 
-def test_hook_exception(monkeypatch, caplog, capsys):
-    with monkeypatch.context() as m:
-        m.setattr(sys, "exit", lambda _: True)
+def test_hook_exception(monkeypatch, caplog):
+    # GIVEN a logger with level ERROR
+    #   and a mocked sys.exit
+    logger = logging.getLogger(__name__).root
+    logger.setLevel("ERROR")
+    exit_args = []
 
-        def raise_exception():
-            text = words = tsv_data = "secret"  # noqa: F841 (unused variable)
-            transformed = v = self = "secret"  # noqa: F841
-            other_variable = "should be printed"  # noqa: F841
-            capture = Capture(ocr_text="secret")  # noqa: F841
-            ocr_result = OcrResult(  # noqa: F841
-                tess_args=TessArgs(Path.cwd(), "eng", OEM.DEFAULT, PSM.AUTO),
-                image=QtGui.QImage(),
-                words=[{"secret": "value"}],
-                parsed="secret",
-            )
-            raise RuntimeError
+    def mocked_exit(code: int) -> None:
+        exit_args.append(code)
 
-        with pytest.raises(RuntimeError) as exc:
-            raise_exception()
+    monkeypatch.setattr(sys, "exit", mocked_exit)
 
-        utils.hook_exceptions(exc.type, exc.value, exc.tb)
+    # WHEN the exception hook is called
+    test_message = "some test exception message"
+    with pytest.raises(RuntimeError) as exc:
+        raise RuntimeError(test_message)
 
-    captured = capsys.readouterr()
+    utils.hook_exceptions(exc.type, exc.value, exc.tb)
 
-    assert "Uncaught exception! Quitting NormCap!" in caplog.text
-    assert "debug output limited" not in caplog.text
+    # THEN there should be certain information in the logs
+    #   and sys.exit should have been called with error code
+    caplog_lower = caplog.text.lower()
 
-    assert "System:" in captured.err
-    assert "Variables:" in captured.err
-    assert "Traceback:" in captured.err
-    assert "Exception:" in captured.err
-    assert "RuntimeError" in captured.err
+    # Traceback:
+    assert "uncaught exception!" in caplog_lower
+    assert "traceback" in caplog_lower
+    assert "exception" in caplog_lower
+    assert "runtimeerror" in caplog_lower
+    assert test_message in caplog_lower
+    # System info:
+    assert "system info" in caplog_lower
+    assert "python_version" in caplog_lower
+    # Issue request:
+    assert "reporting this error" in caplog_lower
 
-    assert "secret" not in captured.err
-    assert "Capture(" in captured.err
-    assert "OcrResult(" in captured.err
-    assert "should be printed" in captured.err
-
-
-def test_hook_exception_fails(monkeypatch, caplog):
-    with monkeypatch.context() as m:
-        m.setattr(sys, "exit", lambda _: True)
-        with pytest.raises(RuntimeError) as exc:
-            raise RuntimeError
-
-        # Cause exception _inside_ the exception hook
-        m.setattr(utils.pprint, "pformat", lambda _: 1 / 0)
-        utils.hook_exceptions(exc.type, exc.value, exc.tb)
-
-    assert "Uncaught exception! Quitting NormCap!" in caplog.text
-    assert "debug output limited" in caplog.text
+    assert exit_args == [1]
