@@ -1,4 +1,3 @@
-import sys
 from difflib import SequenceMatcher
 
 import pytest
@@ -10,8 +9,6 @@ from normcap.gui import system_info
 from .testcases import testcases
 
 
-# TODO: Check if we can install chi on Windows
-@pytest.mark.skipif(sys.platform == "win32", reason="Chi not available on Windows")
 @pytest.mark.parametrize("testcase", testcases)
 def test_remove_spaces_in_chi(testcase):
     image = QtGui.QImage(testcase.image_path)
