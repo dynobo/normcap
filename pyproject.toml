@@ -233,35 +233,44 @@ requires = ["std-nslog==1.0.0"]
 
 [tool.briefcase.app.normcap.linux]
 system_requires = [
-  "tesseract-ocr",
-  "libnotify-bin",
-  "pkg-config",
-  "build-essential",
-  "libtiff-dev",
-  "libpng-dev",
-  "libjpeg-dev",
-  "libfuse2",
-  "libwayland-dev",
-  "wayland-protocols",
-  "software-properties-common", # required for apt-add-repository
-  "wl-clipboard",
-  "libxcb-cursor0",             # required for PySide 6.5
+  "tesseract",
+  # wl-clipboard deps
+  "wayland-devel",
+  "wayland-protocols-devel",
+  "meson",
+  # xcb-utils-cursor deps
+  "libxcb-devel",
+  "libxkbcommon-x11",
+  "epel-release",     # for xcb-util-cursor
 ]
 dockerfile_extra_content = """
 USER root
 
-# Upgrade Tesseract 4 to 5
-RUN apt-add-repository ppa:alex-p/tesseract-ocr-devel \
-  && apt-get update -y \
-  && apt-get upgrade --with-new-pkgs -y \
-  && apt-get autoremove -y
+# Upgrade to Tesseract 5
+RUN dnf config-manager --add-repo https://download.opensuse.org/repositories/home:Alexander_Pozdnyakov:tesseract5/CentOS_8/home:Alexander_Pozdnyakov:tesseract5.repo
+RUN dnf config-manager --set-enabled home_Alexander_Pozdnyakov_tesseract5
+RUN dnf upgrade -y
+
+# Install xcb-utils-cursor
+RUN dnf install -y xcb-util-cursor xcb-util-wm xcb-util-keysyms
+RUN ls -la /usr/lib64/libxcb*
+
+# Build wl-clipboard
+RUN git clone https://github.com/bugaevc/wl-clipboard.git
+RUN cd wl-clipboard \
+  && git checkout tags/v2.2.1 -b v2.2.1-branch \
+  && meson setup build \
+  && cd build \
+  && ninja \
+  && meson install
 
 USER brutus
 """
 
 [tool.briefcase.app.normcap.linux.appimage]
-template = "https://github.com/dynobo/briefcase-linux-appimage-template"
+template = "https://github.com/beeware/briefcase-linux-appimage-template"
 template_branch = "main"
+manylinux = "manylinux_2_28"
 
 [tool.briefcase.app.normcap.windows]
 use_full_install_path = false

@@ -1,6 +1,5 @@
 """Run adjustments while packaging with briefcase during CI/CD."""
 
-import os
 import shutil
 from pathlib import Path
 
@@ -9,8 +8,6 @@ import briefcase
 from platforms.utils import BuilderBase
 
 
-# TODO: Add libxcb1 and libxcb-cursor0 to AppImage
-# see https://github.com/Electron-Cash/Electron-Cash/pull/2197/files
 class LinuxBriefcase(BuilderBase):
     """Create prebuilt package for Linux using Briefcase."""
 
@@ -40,21 +37,19 @@ class LinuxBriefcase(BuilderBase):
         )
         insert_after = '"appimage",'
         patch = """
-"--executable",
-"/usr/bin/tesseract",
-"--executable",
-"/usr/bin/wl-copy",
-"--library",
-"/usr/lib/x86_64-linux-gnu/libxcb-cursor.so.0"
-"""
+        "--executable=/usr/bin/tesseract",
+        "--executable=/usr/local/bin/wl-copy",
+        "--library=/usr/lib64/libxcb-cursor.so.0",
+        """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
     def install_system_deps(self) -> None:
-        if system_requires := self.get_system_requires():
-            github_actions_uid = 1001
-            if os.getuid() == github_actions_uid:  # type: ignore
-                self.run(cmd="sudo apt update")
-                self.run(cmd=f"sudo apt install {' '.join(system_requires)}")
+        ...
+        # if system_requires := self.get_system_requires():
+        #     github_actions_uid = 1001
+        #     if os.getuid() == github_actions_uid:  # type: ignore
+        #         self.run(cmd="sudo apt update")
+        #         self.run(cmd=f"sudo apt install {' '.join(system_requires)}")
 
     def run_framework(self) -> None:
         self.run(
@@ -65,9 +60,6 @@ class LinuxBriefcase(BuilderBase):
         self.run(cmd="briefcase package linux appimage", cwd=self.PROJECT_PATH)
 
     def bundle_tesseract(self) -> None:
-        ...
-
-    def download_tessdata(self) -> None:
         ...
 
     def pre_framework(self) -> None:
