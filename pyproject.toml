@@ -233,6 +233,7 @@ requires = ["std-nslog==1.0.0"]
 
 [tool.briefcase.app.normcap.linux]
 system_requires = [
+  "wget",
   "tesseract",
   # wl-clipboard deps
   "wayland-devel",
@@ -243,19 +244,21 @@ system_requires = [
   "libxkbcommon-x11",
   "epel-release",     # for xcb-util-cursor
 ]
+
 dockerfile_extra_content = """
 USER root
 
-# Upgrade to Tesseract 5
 RUN dnf config-manager --add-repo https://download.opensuse.org/repositories/home:Alexander_Pozdnyakov:tesseract5/CentOS_8/home:Alexander_Pozdnyakov:tesseract5.repo
 RUN dnf config-manager --set-enabled home_Alexander_Pozdnyakov_tesseract5
 RUN dnf upgrade -y
 
-# Install xcb-utils-cursor
-RUN dnf install -y xcb-util-cursor xcb-util-wm xcb-util-keysyms
-RUN ls -la /usr/lib64/libxcb*
+RUN wget "https://pkgs.dyn.su/el8/base/x86_64/raven-release.el8.noarch.rpm"
+RUN rpm -ivh raven-release*.rpm
+RUN dnf update -y
+RUN dnf install -y qt6-qtwayland
 
-# Build wl-clipboard
+RUN dnf install -y xcb-util-cursor xcb-util-wm xcb-util-keysyms
+
 RUN git clone https://github.com/bugaevc/wl-clipboard.git
 RUN cd wl-clipboard \
   && git checkout tags/v2.2.1 -b v2.2.1-branch \

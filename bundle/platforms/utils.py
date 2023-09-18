@@ -77,14 +77,6 @@ class BuilderBase(ABC):
         self.run_framework()
         self.rename_package_file()
 
-    def get_system_requires(self) -> list[str]:
-        """Get versions string from pyproject.toml."""
-        with Path(self.PYPROJECT_PATH).open(encoding="utf8") as toml_file:
-            pyproject_toml = toml.load(toml_file)
-        return pyproject_toml["tool"]["briefcase"]["app"]["normcap"][sys.platform][
-            "system_requires"
-        ]
-
     def get_version(self) -> str:
         """Get versions string from pyproject.toml."""
         if "--dev" in sys.argv:
