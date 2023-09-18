@@ -100,6 +100,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             and self.settings.value("show-introduction", type=bool)
         ) or args.get("show_introduction") is True:
             self.show_introduction()
+            delay_screenshot = True
+        else:
+            delay_screenshot = False
 
         self.reset_tray_icon_timer = QtCore.QTimer(parent=self)
         self.reset_tray_icon_timer.setSingleShot(True)
@@ -115,7 +118,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.delayed_init_timer.start(50)
 
         if not args.get("background_mode", False):
-            self._show_windows(delay_screenshot=False)
+            self._show_windows(delay_screenshot=delay_screenshot)
 
     def _ensure_single_instance(self) -> None:
         self._socket_out = QtNetwork.QLocalSocket(self)
