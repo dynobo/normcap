@@ -368,7 +368,6 @@ class UiContainerLabel(QtWidgets.QLabel):
         ):
             return
 
-        # TODO: Some values might be better properties of DebugInfo?
         selection = Rect(*cast(tuple, rect.normalized().getCoords()))
         selection_scaled = selection.scaled(self.debug_info.scale_factor)
 
@@ -393,7 +392,7 @@ class UiContainerLabel(QtWidgets.QLabel):
         )
 
         painter.setPen(QtGui.QColor(0, 0, 0, 0))
-        painter.setBrush(QtGui.QColor(0, 0, 0, 125))
+        painter.setBrush(QtGui.QColor(0, 0, 0, 175))
         painter.drawRect(3, 3, 300, 20 * len(lines) + 5)
         painter.setBrush(QtGui.QColor(0, 0, 0, 0))
 

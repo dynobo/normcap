@@ -17,6 +17,8 @@
   ([#485](https://github.com/dynobo/normcap/issues/485))
 - Linux: Fix multi monitor setups with Wayland causing unnecessary timeouts.
   ([#494](https://github.com/dynobo/normcap/issues/494))
+- Linux: Include `xcb-utils-cursor` in AppImage (seems to be missing on some systems).
+  ([#457](https://github.com/dynobo/normcap/issues/457))
 - Windows: Simplify installation path from `..\dynobo\NormCap` to just `..\NormCap`
 
 ## v0.4.4 (2023-06-04)
