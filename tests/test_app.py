@@ -49,22 +49,19 @@ def test_get_args_version(monkeypatch, capsys):
 
 
 @pytest.mark.parametrize(
-    ("level", "result"),
-    [
-        ("info", {"level": logging.INFO, "has_hook": True}),
-        ("debug", {"level": logging.DEBUG, "has_hook": False}),
-    ],
+    ("arg_value", "expected_level"),
+    [("info", logging.INFO), ("debug", logging.DEBUG)],
 )
-def test_prepare_logging(monkeypatch, level, result, caplog):
+def test_prepare_logging(monkeypatch, arg_value, expected_level, caplog):
     with monkeypatch.context() as m:
-        m.setattr(sys, "argv", [sys.argv[0], "--verbosity", level])
+        m.setattr(sys, "argv", [sys.argv[0], "--verbosity", arg_value])
         args = app._get_args()
 
     app._prepare_logging(getattr(args, "verbosity", "ERROR"))
     logger = logging.getLogger("normcap")
 
-    assert logger.level == result["level"]
-    assert (sys.excepthook == utils.hook_exceptions) is result["has_hook"]
+    assert logger.level == expected_level
+    assert sys.excepthook == utils.hook_exceptions
 
 
 def test_get_application():

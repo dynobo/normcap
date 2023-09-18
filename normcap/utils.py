@@ -1,11 +1,8 @@
 import argparse
 import logging
 import os
-import pprint
-import re
 import shutil
 import sys
-import traceback
 from pathlib import Path
 from types import TracebackType
 from typing import Optional
@@ -126,116 +123,22 @@ def init_logger(log_level: str = "WARNING") -> None:
     logger.setLevel(log_level)
 
 
-def _redact_by_key(local_vars: dict) -> dict:
-    """Redact sensitive information from the given local variables dictionary.
-
-    Args:
-        local_vars: A dictionary containing local variables.
-
-    Returns:
-        The input dictionary with redacted sensitive information.
-    """
-    sensitive_keys = [
-        "tsv_data",
-        "words",
-        "self",
-        "text",
-        "transformed",
-        "v",
-    ]
-    redacted_value = "REDACTED"
-
-    for func_vars in local_vars.values():
-        for key in sensitive_keys:
-            if key in func_vars:
-                func_vars[key] = redacted_value
-
-        for var_name, var_value in func_vars.items():
-            for attribute in ["ocr_text", "words", "parsed"]:
-                if hasattr(var_value, attribute):
-                    setattr(func_vars[var_name], attribute, redacted_value)
-
-    return local_vars
-
-
-def _get_local_vars(exc_traceback: TracebackType | None) -> dict:
-    """Retrieve the local variables of the current stack frame.
-
-    Potentially sensitive values are redacted.
-
-    Args:
-        exc_traceback: The traceback object representing the current stack frame.
-            If `exc_traceback` is `None`, the function will return an empty dict.
-
-    Returns:
-        A dict containing names and values of the local variables.
-    """
-    local_vars = {}
-
-    while exc_traceback:
-        name = exc_traceback.tb_frame.f_code.co_name
-        local_vars[name] = exc_traceback.tb_frame.f_locals
-        exc_traceback = exc_traceback.tb_next
-
-    return _redact_by_key(local_vars)
-
-
-def _format_dict(d: dict) -> str:
-    """Format a dictionary as a string representation.
-
-    Args:
-        d: The dictionary to be formatted.
-
-    Returns:
-        str: The string representation of the formatted dictionary.
-    """
-    return pprint.pformat(d, compact=True, depth=2, indent=2)
-
-
 def hook_exceptions(
     exc_type: type[BaseException],
     exc_value: BaseException,
     exc_traceback: Optional[TracebackType],
 ) -> None:
-    """Print traceback and quit application.
-
-    ONHOLD: Think about removing/simplifying exception hook after switch to Python 3.11
-    """
-    try:
-        logger.critical("Uncaught exception! Quitting NormCap!")
-
-        formatted_exc = "".join(
-            f"  {e}" for e in traceback.format_exception_only(exc_type, exc_value)
-        )
-        formatted_tb = "".join(traceback.format_tb(exc_traceback))
-        local_vars = _get_local_vars(exc_traceback)
-
-        message = (
-            "\n### System:\n"
-            f"```\n{_format_dict(system_info.to_dict())}\n```\n"
-            "\n### Variables:\n"
-            f"```\n{_format_dict(local_vars)}\n```\n"
-            "\n### Exception:\n"
-            f"```\n{formatted_exc}```\n"
-            "\n### Traceback:\n"
-            f"```\n{formatted_tb}```\n"
-        )
-
-        message = re.sub(
-            r"((?:home|users)[/\\])(\w+)([/\\])",
-            r"\1REDACTED\3",
-            message,
-            flags=re.IGNORECASE,
-        )
-        print(message, file=sys.stderr, flush=True)  # noqa: T201
-
-    except Exception:
-        logger.critical(
-            "Uncaught exception! Quitting NormCap! (debug output limited)",
-            exc_info=(exc_type, exc_value, exc_traceback),
-        )
-
-    logger.critical("Please open an issue with the output above on %s", _ISSUES_URLS)
+    """Print traceback and quit application."""
+    logger.critical(
+        "Uncaught exception!", exc_info=(exc_type, exc_value, exc_traceback)
+    )
+    logger.critical("System info: %s", system_info.to_dict())
+    logger.critical(
+        "Unfortunately, NormCap has to be terminated due to an unknown problem.\n"
+        "Please help improve NormCap by reporting this error, including the output "
+        "above, on\n%s\nThanks!",
+        _ISSUES_URLS,
+    )
     sys.exit(1)
 
 
