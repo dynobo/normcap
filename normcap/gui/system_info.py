@@ -5,6 +5,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
+from platform import python_version
 from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -162,6 +163,7 @@ def to_dict() -> dict:
     """Cast all system infos to string for logging."""
     return {
         "normcap_version": __version__,
+        "python_version": python_version,
         "cli_args": " ".join(sys.argv),
         "is_briefcase_package": is_briefcase_package(),
         "is_flatpak_package": is_flatpak_package(),
