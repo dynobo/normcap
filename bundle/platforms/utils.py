@@ -207,7 +207,7 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
     # TODO: Update tesseract version. Also in FlatPak etc.
     url = (
         "https://digi.bib.uni-mannheim.de/tesseract/"
-        "tesseract-ocr-w64-setup-v5.2.0.20220712.exe"
+        "tesseract-ocr-w64-setup-v5.3.0.20221214.exe"
     )
     urllib.request.urlretrieve(url, installer_path)  # noqa: S310
 
