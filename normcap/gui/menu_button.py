@@ -11,7 +11,6 @@ from normcap.gui.localization import _
 _MENU_STYLE = """
 QMenu {
     background-color: rgba(0,0,0,0.8);
-    color: white;
 }
 QMenu::separator {
     background-color: rgba(255,255,255,0.2);
@@ -30,6 +29,7 @@ QMenu::item {
     padding: 3px 16px 3px 16px;
     background-color: transparent;
     right: 10px;
+    color: white;
 }
 QMenu::item:disabled {
     color: $COLOR;
@@ -43,6 +43,10 @@ QMenu::indicator {
 QMenu::left-arrow,
 QMenu::right-arrow  {
     right: 15px;
+}
+QToolTip {
+    background-color: rgba(50,50,50,1);
+    color: white;
 }
 """
 
@@ -189,6 +193,8 @@ class MenuButton(QtWidgets.QToolButton):
     def populate_menu_entries(self) -> None:
         menu = self.menu()
         menu.clear()
+        menu.setToolTipsVisible(True)
+
         # L10N: Section title in Main Menu
         self._add_title(menu, _("Settings"))
         self._add_settings_section(menu)
@@ -252,6 +258,15 @@ class MenuButton(QtWidgets.QToolButton):
         action.setObjectName("parse")
         action.setCheckable(True)
         action.setChecked(self.settings.value("mode") == "parse")
+        # L10N: Tooltip of main menu's 'parse' entry
+        action.setToolTip(
+            _(
+                "Tries to determine the text's type (e.g. line,\n"
+                "paragraph, URL, email) and formats the output\n"
+                "accordingly.\n"
+                "If the result is unexpected, try 'raw' mode instead."
+            )
+        )
         menu.addAction(action)
 
         # L10N: Entry in main menu's 'Capture mode' section
