@@ -91,7 +91,7 @@ jobs:
 
           $chi_sim_url = "https://github.com/tesseract-ocr/tessdata_fast/raw/main/chi_sim.traineddata"
           Invoke-WebRequest -Uri $chi_sim_url -OutFile "C:\Program Files\Tesseract-OCR\tessdata\chi_sim.traineddata"
-          $jpn_url = "https://github.com/tesseract-ocr/tessdata_fast/raw/main/chi_sim.traineddata"
+          $jpn_url = "https://github.com/tesseract-ocr/tessdata_fast/raw/main/jpn.traineddata"
           Invoke-WebRequest -Uri $jpn_url -OutFile "C:\Program Files\Tesseract-OCR\tessdata\jpn.traineddata"
 
           $tesseract = "C:\Program Files\Tesseract-OCR\"
