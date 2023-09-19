@@ -33,7 +33,7 @@ def test_introduction_checkbox_sets_return_code(
         dialog.ok_button.click()
 
     QtCore.QTimer.singleShot(0, close_dialog)
-    return_code = dialog.exec_()
+    return_code = dialog.exec()
 
     # THEN the return code should be set accordingly
     assert return_code == expected_return_code
@@ -59,7 +59,7 @@ def test_introduction_toggle_checkbox_changes_return_code(
         dialog.ok_button.click()
 
     QtCore.QTimer.singleShot(0, close_dialog)
-    return_code = dialog.exec_()
+    return_code = dialog.exec()
 
     # THEN the return code should be set accordingly
     assert return_code == expected_return_code

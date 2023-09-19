@@ -85,7 +85,7 @@ def test_show_update_message(qtbot, monkeypatch):
     # GIVEN a UpdateChecker
     checker = update_check.UpdateChecker(None)
     monkeypatch.setattr(
-        checker.message_box, "exec_", lambda: QtWidgets.QMessageBox.StandardButton.Ok
+        checker.message_box, "exec", lambda: QtWidgets.QMessageBox.StandardButton.Ok
     )
 
     # WHEN the method to show "New version available" message is called

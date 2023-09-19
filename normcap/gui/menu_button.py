@@ -127,7 +127,7 @@ class MenuButton(QtWidgets.QToolButton):
         # Necessary on wayland for main window to regain focus:
         self.message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
         self.message_box.setText(text)
-        self.message_box.exec_()
+        self.message_box.exec()
 
     @QtCore.Slot(QtGui.QAction)
     def on_item_click(self, action: QtGui.QAction) -> None:

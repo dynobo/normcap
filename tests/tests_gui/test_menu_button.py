@@ -131,13 +131,13 @@ def test_settings_group(menu_btn):
 
 
 def test_show_message_box(qapp, monkeypatch, menu_btn):
-    # GIVEN a menu button and a mocked QMessegeBox.exec_() method
+    # GIVEN a menu button and a mocked QMessegeBox.exec() method
     execs = []
 
     def mocked_exec(cls):
         execs.append(True)
 
-    monkeypatch.setattr(menu_button.QtWidgets.QMessageBox, "exec_", mocked_exec)
+    monkeypatch.setattr(menu_button.QtWidgets.QMessageBox, "exec", mocked_exec)
 
     # WHEN the message box method is called
     test_message = "Some message box text"

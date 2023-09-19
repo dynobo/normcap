@@ -134,7 +134,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot()
     def show_introduction(self) -> None:
         show_intro = bool(self.settings.value("show-introduction", type=bool))
-        result = introduction.Dialog(show_on_startup=show_intro).exec_()
+        result = introduction.Dialog(show_on_startup=show_intro).exec()
         if result == introduction.Choice.SHOW:
             self.settings.setValue("show-introduction", True)
         if result == introduction.Choice.DONT_SHOW:
@@ -316,7 +316,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.language_window.com.on_languages_changed.connect(
             self.com.on_languages_changed
         )
-        self.language_window.exec_()
+        self.language_window.exec()
 
     @QtCore.Slot()
     def _copy_to_clipboard(self) -> None:

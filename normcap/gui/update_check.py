@@ -100,7 +100,7 @@ class UpdateChecker(QtWidgets.QWidget):
         self.message_box.setInformativeText(via_github if self.packaged else via_pip)
         self.message_box.setCursor(QtCore.Qt.CursorShape.ArrowCursor)
 
-        choice = self.message_box.exec_()
+        choice = self.message_box.exec()
 
         if choice == QtWidgets.QMessageBox.StandardButton.Ok:
             update_url = URLS.releases if self.packaged else URLS.changelog
