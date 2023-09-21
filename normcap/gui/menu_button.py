@@ -1,5 +1,6 @@
 """Create the settings button and its menu."""
 
+import sys
 from typing import Any
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -62,8 +63,6 @@ QToolButton::hover {
 }
 QToolButton::menu-indicator { image: none; }
 """
-
-# TODO: Add tooltips for menu entries
 
 
 class Communicate(QtCore.QObject):
@@ -232,6 +231,16 @@ class MenuButton(QtWidgets.QToolButton):
         action.setObjectName("notification")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("notification", type=bool)))
+        # L10N: Tooltip of main menu's "Show notification" entry. Use <56 chars p. line.
+        notification_tooltip = _(
+            "Show status information via your system's desktop\nnotification center."
+        )
+        if sys.platform in ("darwin", "win32"):
+            notification_tooltip += (
+                # L10N: Extension "Show notification"-Tooltip on macOS and Windows.
+                f"\n({_('Click on the notification to open the result')})"
+            )
+        action.setToolTip(notification_tooltip)
         menu.addAction(action)
 
         # L10N: Entry in main menu's 'setting' section
@@ -239,6 +248,13 @@ class MenuButton(QtWidgets.QToolButton):
         action.setObjectName("tray")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("tray", type=bool)))
+        # L10N: Tooltip of main menu's "Keep in tray" entry. Use <56 chars p. line.
+        action.setToolTip(
+            _(
+                "Keep NormCap running in the background. Another\n"
+                "capture can be triggered via the tray icon."
+            )
+        )
         menu.addAction(action)
 
         # L10N: Entry in main menu's 'setting' section
@@ -246,6 +262,13 @@ class MenuButton(QtWidgets.QToolButton):
         action.setObjectName("update")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("update", type=bool)))
+        # L10N: Tooltip of main menu's "Update" entry. Use <56 chars p. line.
+        action.setToolTip(
+            _(
+                "Frequently fetch NormCap's releases online and display\n"
+                "a message if a new version is available."
+            )
+        )
         menu.addAction(action)
 
     def _add_mode_section(self, menu: QtWidgets.QMenu) -> None:
@@ -258,7 +281,7 @@ class MenuButton(QtWidgets.QToolButton):
         action.setObjectName("parse")
         action.setCheckable(True)
         action.setChecked(self.settings.value("mode") == "parse")
-        # L10N: Tooltip of main menu's 'parse' entry
+        # L10N: Tooltip of main menu's 'parse' entry. Use <56 chars p. line.
         action.setToolTip(
             _(
                 "Tries to determine the text's type (e.g. line,\n"
@@ -274,6 +297,13 @@ class MenuButton(QtWidgets.QToolButton):
         action.setObjectName("raw")
         action.setCheckable(True)
         action.setChecked(self.settings.value("mode") == "raw")
+        # L10N: Tooltip of main menu's 'raw' entry. Use <56 chars p. line.
+        action.setToolTip(
+            _(
+                "Returns the text exactly as detected by the Optical\n"
+                "Character Recognition Software."
+            )
+        )
         menu.addAction(action)
 
     def _add_languages_section(self, menu: QtWidgets.QMenu) -> None:
@@ -297,7 +327,7 @@ class MenuButton(QtWidgets.QToolButton):
             language_menu.addAction(action)
 
         if self.has_language_manager:
-            # L10N: Entry in main menu's 'Languages' section. Shown in prebuild package.
+            # L10N: Entry in main menu's 'Languages' section. Shown in prebuilt package.
             action = QtGui.QAction(_("add/remove..."), menu)
             action.setObjectName("manage_languages")
         else:
@@ -358,4 +388,6 @@ class MenuButton(QtWidgets.QToolButton):
         # L10N: Entry in main menu's 'Application' section.
         action = QtGui.QAction(_("Close"), menu)
         action.setObjectName("close")
+        # L10N: Tooltip of main menu's 'close' entry. Use <56 chars p. line.
+        action.setToolTip(_("Exit NormCap, or minimize to system tray (if enabled)."))
         menu.addAction(action)
