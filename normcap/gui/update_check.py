@@ -112,8 +112,9 @@ class UpdateChecker(QtWidgets.QWidget):
             parent = None
 
         message_box = QtWidgets.QMessageBox(parent=parent)
-        # Necessary on wayland for main window to regain focus:
-        # TODO: Test if still necessary after transformation to QWidget!
+        # Necessary at least on Wayland:
+        # - Makes the message box close when the window is clicked
+        # - Avoids the state where the message box has focus but is behind the window
         message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
 
         message_box.setIconPixmap(QtGui.QIcon(":normcap").pixmap(48, 48))
