@@ -436,10 +436,14 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if str(self.settings.value("last-update-check", type=str)) > now_sub_interval:
             return
 
-        checker = UpdateChecker(parent=None, packaged=system_info.is_prebuilt_package())
-        checker.com.on_version_checked.connect(self._update_time_of_last_update_check)
-        checker.com.on_click_get_new_version.connect(self._open_url_and_hide)
-        QtCore.QTimer.singleShot(500, checker.com.check.emit)
+        self.checker = UpdateChecker(
+            parent=None, packaged=system_info.is_prebuilt_package()
+        )
+        self.checker.com.on_version_checked.connect(
+            self._update_time_of_last_update_check
+        )
+        self.checker.com.on_click_get_new_version.connect(self._open_url_and_hide)
+        QtCore.QTimer.singleShot(500, self.checker.com.check.emit)
 
     def _update_time_of_last_update_check(self, newest_version: str) -> None:
         if newest_version is not None:
