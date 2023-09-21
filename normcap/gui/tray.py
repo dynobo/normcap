@@ -5,12 +5,12 @@ the application is closed. Potential windows or other components are started fro
 here.
 """
 
-# FIXME: Different tray icons are used somewhere! (From system vs. packaged, libnotify)
 import logging
 import os
 import sys
 import time
 from collections.abc import Iterable
+from enum import Enum
 from typing import Any, NoReturn, cast
 
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
@@ -32,6 +32,11 @@ from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
 
 logger = logging.getLogger(__name__)
+
+
+class TrayIcon(Enum):
+    NORMAL = ":tray"
+    DONE = ":tray_done"
 
 
 class Communicate(QtCore.QObject):
@@ -106,7 +111,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.reset_tray_icon_timer = QtCore.QTimer(parent=self)
         self.reset_tray_icon_timer.setSingleShot(True)
-        self.reset_tray_icon_timer.timeout.connect(self._set_tray_icon)
+        self.reset_tray_icon_timer.timeout.connect(self._set_tray_icon_normal)
 
         self.delayed_exit_timer = QtCore.QTimer(parent=self)
         self.delayed_exit_timer.setSingleShot(True)
@@ -141,17 +146,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.settings.setValue("show-introduction", False)
 
     @QtCore.Slot()
-    def _color_tray_icon(self) -> None:
-        if sizes := self.icon().availableSizes():
-            pixmap = self.icon().pixmap(sizes[-1])
-            mask = pixmap.createMaskFromColor(
-                QtGui.QColor("transparent"), QtCore.Qt.MaskMode.MaskInColor
-            )
-            pixmap.fill(QtGui.QColor(str(self.settings.value("color"))))
-            pixmap.setMask(mask)
-            self.setIcon(QtGui.QIcon(pixmap))
-
-            self.reset_tray_icon_timer.start(5000)
+    def _set_tray_icon_done(self) -> None:
+        self.setIcon(QtGui.QIcon(TrayIcon.DONE.value))
+        self.reset_tray_icon_timer.start(5000)
 
     @QtCore.Slot()
     def _on_new_connection(self) -> None:
@@ -364,10 +361,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         self.com.on_languages_changed.emit(self.installed_languages)
         self._add_update_checker()
-        self._set_tray_icon()
+        self._set_tray_icon_normal()
 
-    def _set_tray_icon(self) -> None:
-        self.setIcon(QtGui.QIcon.fromTheme("tool-magic-symbolic", QtGui.QIcon(":tray")))
+    def _set_tray_icon_normal(self) -> None:
+        self.setIcon(QtGui.QIcon(TrayIcon.NORMAL.value))
 
     def _create_socket_server(self) -> None:
         """Open socket server to listen for other NormCap instances."""
@@ -422,7 +419,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_copied_to_clipboard.connect(
             lambda: self._minimize_or_exit_application(delayed=True)
         )
-        self.com.on_copied_to_clipboard.connect(self._color_tray_icon)
+        self.com.on_copied_to_clipboard.connect(self._set_tray_icon_done)
         self.com.on_languages_changed.connect(self._sanitize_language_setting)
         self.com.on_languages_changed.connect(self._update_installed_languages)
         self.com.exit_application.connect(self._exit_application)
