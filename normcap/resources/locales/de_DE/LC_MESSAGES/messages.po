@@ -36,8 +36,8 @@ msgstr "1. Bereich auswählen"
 #. Introduction window step description
 #: normcap/gui/introduction.py:83
 msgid ""
-"Wait until a pink border appears around your screen, then select the desired"
-" capture area."
+"Wait until a pink border appears around your screen, then select the "
+"desired capture area."
 msgstr ""
 "Warte, bis ein rosa Rand um den Bildschirm erscheint, und wähle dann den "
 "gewünschten Bereich aus."
@@ -67,8 +67,8 @@ msgid ""
 "The detection result will be copied to your system's clipboard. Paste it "
 "into any application ({shortcut})."
 msgstr ""
-"Der erkannte Text wird in die Zwischenablage Deines Systems kopiert. Füge es"
-" in eine beliebige Anwendung ein ({shortcut})."
+"Der erkannte Text wird in die Zwischenablage Deines Systems kopiert. Füge "
+"es in eine beliebige Anwendung ein ({shortcut})."
 
 #. Introduction window step title
 #: normcap/gui/introduction.py:115
@@ -116,7 +116,7 @@ msgstr "Herunterladen"
 
 #. Language Manager button
 #. Entry in main menu's 'Application' section.
-#: normcap/gui/language_manager.py:66 normcap/gui/menu_button.py:344
+#: normcap/gui/language_manager.py:66 normcap/gui/menu_button.py:389
 msgid "Close"
 msgstr "Schließen"
 
@@ -149,7 +149,7 @@ msgstr ""
 "Es ist nicht möglich, alle Sprachen zu löschen. NormCap benötigt mindestens "
 "eine, um korrekt zu funktionieren."
 
-#: normcap/gui/menu_button.py:149
+#: normcap/gui/menu_button.py:152
 msgid ""
 "This installation of NormCap uses the Tesseract binary installed on your "
 "system. To install additional languages, please refer to the documentation "
@@ -160,99 +160,153 @@ msgstr ""
 "Installation nach, wie Du zusätzliche Sprachen installieren kannst."
 
 #. Section title in Main Menu
-#: normcap/gui/menu_button.py:193
+#: normcap/gui/menu_button.py:198
 msgid "Settings"
 msgstr "Einstellungen"
 
 #. Section title in Main Menu
-#: normcap/gui/menu_button.py:197
+#: normcap/gui/menu_button.py:202
 msgid "Capture mode"
 msgstr "Erkennungsmodus"
 
 #. Section title in Main Menu
-#: normcap/gui/menu_button.py:201
+#: normcap/gui/menu_button.py:206
 msgid "Languages"
 msgstr "Sprachen"
 
 #. Section title in Main Menu
-#: normcap/gui/menu_button.py:205
+#: normcap/gui/menu_button.py:210
 msgid "Application"
 msgstr "Anwendung"
 
 #. Entry in main menu's 'setting' section
-#: normcap/gui/menu_button.py:225
+#: normcap/gui/menu_button.py:230
 msgid "Show notification"
 msgstr "Benachrichtigung anzeigen"
 
+#. Tooltip of main menu's "Show notification" entry. Use <56 chars p. line.
+#: normcap/gui/menu_button.py:235
+msgid ""
+"Show status information via your system's desktop\n"
+"notification center."
+msgstr ""
+"Zeige Status-Informationen über die Desktop-\n"
+"Benachrichtigungen von deinem System."
+
+#. Extension "Show notification"-Tooltip on macOS and Windows.
 #. Entry in main menu's 'setting' section
-#: normcap/gui/menu_button.py:232
+#: normcap/gui/menu_button.py:247
 msgid "Keep in system tray"
 msgstr "Im Infobereich behalten"
 
+#: normcap/gui/menu_button.py:253
+msgid ""
+"Keep NormCap running in the background. Another\n"
+"capture can be triggered via the tray icon."
+msgstr ""
+"Lasse NormCap im Hintergrund laufen. Weitere Erkennungen\n"
+"können über das Symbol im Infobereich gestartet werden."
+
 #. Entry in main menu's 'setting' section
-#: normcap/gui/menu_button.py:239
+#: normcap/gui/menu_button.py:261
 msgid "Check for update"
 msgstr "Nach Aktualisierung suchen"
 
+#: normcap/gui/menu_button.py:267
+msgid ""
+"Frequently fetch NormCap's releases online and display\n"
+"a message if a new version is available."
+msgstr ""
+"Suche regelmäßig online nach neuen NormCap-Versionen und\n"
+"zeige eine Nachricht, falls eine Aktualisierung verfügbar ist."
+
 #. Entry in main menu's 'Capture mode' section
-#: normcap/gui/menu_button.py:251
+#: normcap/gui/menu_button.py:280
 msgid "parse"
 msgstr "intelligent"
 
+#: normcap/gui/menu_button.py:286
+msgid ""
+"Tries to determine the text's type (e.g. line,\n"
+"paragraph, URL, email) and formats the output\n"
+"accordingly.\n"
+"If the result is unexpected, try 'raw' mode instead."
+msgstr ""
+"Versucht den Text-Typ zu erraten (z.B. Zeile,\n"
+"Absatz, URL, E-Mail) und formatiert die Ausgabe\n"
+"entsprechend.\n"
+"Wenn das Ergebnis merkwürdig ist, versuche\n"
+"stattdessen den 'einfach'-Modus."
+
 #. Entry in main menu's 'Capture mode' section
-#: normcap/gui/menu_button.py:258
+#: normcap/gui/menu_button.py:296
 msgid "raw"
 msgstr "einfach"
 
-#. Entry in main menu's 'Languages' section. Shown in prebuild package.
-#: normcap/gui/menu_button.py:286
+#: normcap/gui/menu_button.py:302
+msgid ""
+"Returns the text exactly as detected by the Optical\n"
+"Character Recognition Software."
+msgstr ""
+"Der Text wird genau so wiedergegben, wie ihn\n"
+"die Texterkennungs-Software detektiert hat."
+
+#. Entry in main menu's 'Languages' section. Shown in prebuilt package.
+#: normcap/gui/menu_button.py:331
 msgid "add/remove..."
 msgstr "Hinzufügen/Entfernen..."
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
-#: normcap/gui/menu_button.py:290
+#: normcap/gui/menu_button.py:335
 msgid "... need more?"
 msgstr "... andere?"
 
 #. Entry in main menu's 'Application' section.
-#: normcap/gui/menu_button.py:299
+#: normcap/gui/menu_button.py:344
 msgid "About"
 msgstr "Über"
 
 #. Entry in main menu's 'Application' section.
-#: normcap/gui/menu_button.py:307
+#: normcap/gui/menu_button.py:352
 msgid "Introduction"
 msgstr "Einführung"
 
 #. Entry in main menu's 'Application' section.
-#: normcap/gui/menu_button.py:312
+#: normcap/gui/menu_button.py:357
 msgid "Website"
 msgstr "Webseite (eng)"
 
 #. Entry in main menu's 'Application' section.
-#: normcap/gui/menu_button.py:317
+#: normcap/gui/menu_button.py:362
 msgid "FAQs"
 msgstr "Häufige Fragen (eng)"
 
 #. Entry in main menu's 'Application' section.
-#: normcap/gui/menu_button.py:322
+#: normcap/gui/menu_button.py:367
 msgid "Source code"
 msgstr "Quellcode"
 
 #. Entry in main menu's 'Application' section.
-#: normcap/gui/menu_button.py:327
+#: normcap/gui/menu_button.py:372
 msgid "Releases"
 msgstr "Versionen"
 
 #. Entry in main menu's 'Application' section.
-#: normcap/gui/menu_button.py:332
+#: normcap/gui/menu_button.py:377
 msgid "Report a problem"
 msgstr "Problem melden"
 
 #. Entry in main menu's 'Application' section.
-#: normcap/gui/menu_button.py:337
+#: normcap/gui/menu_button.py:382
 msgid "Donate a coffee"
 msgstr "Einen Kaffee spenden"
+
+#. Tooltip of main menu's 'close' entry. Use <56 chars p. line.
+#: normcap/gui/menu_button.py:392
+msgid "Exit NormCap, or minimize to system tray (if enabled)."
+msgstr ""
+"Beende NormCap, oder minimiere es in den\n"
+"Infobereich (sofern aktiviert)."
 
 #. Notification title
 #: normcap/gui/notification.py:40
@@ -327,12 +381,12 @@ msgstr ""
 "Sicherheit' und starte NormCap neu."
 
 #. Tray menu entry
-#: normcap/gui/tray.py:469
+#: normcap/gui/tray.py:473
 msgid "Capture"
 msgstr "Erkennen"
 
 #. Tray menu entry for exiting NormCap completely.
-#: normcap/gui/tray.py:476
+#: normcap/gui/tray.py:480
 msgid "Exit"
 msgstr "Beenden"
 
