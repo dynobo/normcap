@@ -1,16 +1,18 @@
 # Localization of NormCap
 
-## Status <!-- Generated automatically -->
+## Status
+
+<!-- Generated automatically! -->
 
 | Locale                                   | Progress | Translated |
 | :--------------------------------------- | -------: | ---------: |
-| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   61 of 61 |
-| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
-| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
-| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
-| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
-| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
-| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       9% |    6 of 61 |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   67 of 67 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
 
 ## Improve existing locale
 
@@ -63,6 +65,56 @@ _Note_: All commands should be run in the repository's root directory.
    LANGUAGE=<LOCALE_NAME> python normcap/app.py
    ```
 1. Propose the inclusion of your new `.po`-file via a pull request to `main`.
+
+| Locale                                   | Progress | Translated |
+| :--------------------------------------- | -------: | ---------: |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   67 of 67 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+
+| Locale                                   | Progress | Translated |
+| :--------------------------------------- | -------: | ---------: |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   67 of 67 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+
+| Locale                                   | Progress | Translated |
+| :--------------------------------------- | -------: | ---------: |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   67 of 67 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+
+| Locale                                   | Progress | Translated |
+| :--------------------------------------- | -------: | ---------: |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   67 of 67 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+
+| Locale                                   | Progress | Translated |
+| :--------------------------------------- | -------: | ---------: |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   67 of 67 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
 
 ## Update template and languages files
 

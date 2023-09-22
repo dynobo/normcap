@@ -4,6 +4,7 @@ import argparse
 import contextlib
 import io
 import re
+import subprocess
 from pathlib import Path
 
 from babel.messages.frontend import CommandLineInterface
@@ -22,24 +23,24 @@ def _update_coverage(lines: list[str]) -> None:
     # Parse stats
     locales_stats = [line for line in lines if line.endswith(".po")]
 
-    locales_rows = []
-    for stat in locales_stats:
-        if m := re.search(
-            r"""(\d+\ of\ \d+).*            # message counts
+    locales_rows = sorted(
+        f"| [{m[3]}](./{m[3]}/LC_MESSAGES/messages.po) | {m[2]} | {m[1]} |"
+        for stat in locales_stats
+        if (
+            m := re.search(
+                r"""(\d+\ of\ \d+).*        # message counts
                 \((\d+\%)\).*               # message percentage
                 locales\/(.*)\/LC_MESSAGES  # locale name""",
-            stat,
-            re.VERBOSE,
-        ):
-            locales_rows.append(
-                f"| [{m[3]}](./{m[3]}/LC_MESSAGES/messages.po) "
-                f"| {m[2]} "
-                f"| {m[1]} |"
+                stat,
+                re.VERBOSE,
             )
+        )
+    )
     locales_rows.sort()
 
     # Generate markdown table
     coverage_table = (
+        "<!-- Generated automatically! -->\n\n"
         "| Locale | Progress | Translated |\n| :----- | -------: | ---------: |\n"
         + "\n".join(locales_rows)
         + "\n"
@@ -55,6 +56,14 @@ def _update_coverage(lines: list[str]) -> None:
         flags=re.DOTALL,
     )
     md_file.write_text(md_text, "utf-8")
+
+    subprocess.run(
+        f"mdformat {md_file.resolve()}",
+        shell=True,  # noqa: S602
+        check=True,
+        capture_output=True,
+        encoding="utf-8",
+    )
 
 
 def compile_locales() -> None:
