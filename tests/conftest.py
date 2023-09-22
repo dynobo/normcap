@@ -151,7 +151,7 @@ def basic_cli_args():
 
 @pytest.fixture()
 def run_normcap(monkeypatch, qapp, basic_cli_args):
-    # TODO: yield and add tear down
+    trays = []
 
     def _run_normcap(extra_cli_args: list[str] | None = None):
         extra_cli_args = extra_cli_args or []
@@ -159,11 +159,16 @@ def run_normcap(monkeypatch, qapp, basic_cli_args):
         monkeypatch.setattr(sys, "argv", basic_cli_args)
 
         monkeypatch.setattr(app, "_get_application", lambda: qapp)
-        _, tray_ = app._prepare()
-        tray_._EXIT_DELAY_MILLISECONDS = 100
-        return tray_
+        _, tray = app._prepare()
+        tray._EXIT_DELAY_MILLISECONDS = 100
+        trays.append(tray)
+        return tray
 
-    return _run_normcap
+    yield _run_normcap
+
+    for tray in trays:
+        tray._exit_application(delayed=False)
+        tray.deleteLater()
 
 
 @pytest.fixture()

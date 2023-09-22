@@ -45,6 +45,8 @@ class MacBriefcase(BuilderBase):
         self.run(cmd="briefcase create", cwd=self.PROJECT_PATH)
         self.bundle_tesseract()
         self.run(cmd="briefcase build", cwd=self.PROJECT_PATH)
+        # TODO: Test if going fullscreen directly solve the animation, see comment on SO
+        # https://stackoverflow.com/q/73941230
         # TODO: Re-enable if we have a solution for unfocusing on macOS
         # patch_info_plist_for_proper_fullscreen()
         self.run(cmd="briefcase package macos app --adhoc-sign", cwd=self.PROJECT_PATH)

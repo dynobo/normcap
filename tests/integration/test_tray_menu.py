@@ -27,9 +27,6 @@ def test_tray_menu_exit(monkeypatch, qtbot, run_normcap):
     qtbot.waitUntil(lambda: len(exit_calls) > 0)
     assert exit_calls == [0]
 
-    tray._exit_application(delayed=False)
-    tray.deleteLater()
-
 
 @pytest.mark.gui()
 def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
@@ -72,7 +69,3 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     assert similarity >= 0.98, f"{capture.ocr_text=}"
 
     assert not exit_calls
-
-    # Cleanup
-    tray._exit_application(delayed=False)
-    tray.deleteLater()

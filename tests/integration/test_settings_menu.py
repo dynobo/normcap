@@ -34,10 +34,6 @@ def test_settings_menu_creates_actions(monkeypatch, qtbot, run_normcap, test_sig
     assert "about" in texts
     assert "close" in texts
 
-    # Cleanup
-    tray._exit_application(delayed=False)
-    tray.deleteLater()
-
 
 @pytest.mark.gui()
 def test_settings_menu_close_action_exits(monkeypatch, qtbot, run_normcap, test_signal):
@@ -63,10 +59,6 @@ def test_settings_menu_close_action_exits(monkeypatch, qtbot, run_normcap, test_
 
     # THEN normcap should exit with code 0
     assert blocker.args == [0]
-
-    # Cleanup
-    tray._exit_application(delayed=False)
-    tray.deleteLater()
 
 
 @pytest.mark.gui()
@@ -96,7 +88,3 @@ def test_settings_menu_close_action_minimizes(
     #   and all windows should be deleted
     qtbot.assertNotEmitted(test_signal.on_event, wait=200)
     assert tray.windows == {}
-
-    # Cleanup
-    tray._exit_application(delayed=False)
-    tray.deleteLater()
