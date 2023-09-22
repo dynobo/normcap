@@ -7,19 +7,21 @@
   - German
 - All: Add introduction on startup.
   ([#443](https://github.com/dynobo/normcap/issues/443))
+- All: Add explanatory tooltips to many menu entries.
 - All: Fix wrong detection of some special characters.
-- Windows, macOS: Add click action to desktop notifications. If a notification is
+- All: Fix crash caused by update checker.
+- Windows & macOS: Add click action to desktop notifications. If a notification is
   clicked, the (last) result is opened in an appropriate application. E.g. if a URL was
   detected, it is opened in the default browser. If plain text was detected, it is saved
   as temporary text file, which is opened in the default text editor.
   ([#438](https://github.com/dynobo/normcap/issues/438))
+- Windows: Change installation path from `..\dynobo\NormCap` to simpler `..\NormCap`
 - Linux: Fix NormCap to work with Sway DE.
   ([#485](https://github.com/dynobo/normcap/issues/485))
 - Linux: Fix multi monitor setups with Wayland causing unnecessary timeouts.
   ([#494](https://github.com/dynobo/normcap/issues/494))
-- Linux: Include `xcb-utils-cursor` in AppImage (seems to be missing on some systems).
+- Linux: Fix crash due to missing `xcb-utils-cursor` in AppImage, by including it.
   ([#457](https://github.com/dynobo/normcap/issues/457))
-- Windows: Simplify installation path from `..\dynobo\NormCap` to just `..\NormCap`
 
 ## v0.4.4 (2023-06-04)
 
