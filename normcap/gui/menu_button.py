@@ -124,13 +124,14 @@ class MenuButton(QtWidgets.QToolButton):
         self.languages = installed_languages
 
     def _show_message_box(self, text: str) -> None:
-        self.message_box = QtWidgets.QMessageBox(self)
-        self.message_box.setParent(self)
-        self.message_box.setIconPixmap(QtGui.QIcon(":normcap").pixmap(48, 48))
-        # Necessary on wayland for main window to regain focus:
-        self.message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
-        self.message_box.setText(text)
-        self.message_box.exec()
+        message_box = QtWidgets.QMessageBox(parent=self)
+        message_box.setIconPixmap(QtGui.QIcon(":normcap").pixmap(48, 48))
+        # Necessary at least on Wayland:
+        # - Makes the message box close when the window is clicked
+        # - Avoids the state where the message box has focus but is behind the window
+        message_box.setWindowFlags(QtCore.Qt.WindowType.Popup)
+        message_box.setText(text)
+        message_box.exec()
 
     @QtCore.Slot(QtGui.QAction)
     def on_item_click(self, action: QtGui.QAction) -> None:
@@ -140,7 +141,7 @@ class MenuButton(QtWidgets.QToolButton):
         value: Any | None = None
         setting = None
 
-        # Menu items which triffer actions
+        # Menu items which trigger actions
 
         if action_name == "close":
             self.com.on_close_in_settings.emit("Clicked close in settings")
