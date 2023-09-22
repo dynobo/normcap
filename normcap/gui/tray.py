@@ -298,7 +298,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         result = QtGui.QDesktopServices.openUrl(
             QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
         )
-        logger.debug(f"Opened uri with result={result}")
+        logger.debug("Opened uri with result=%s", result)
         self._minimize_or_exit_application(delayed=False)
 
     @QtCore.Slot()

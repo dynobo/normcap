@@ -245,7 +245,7 @@ class Window(QtWidgets.QMainWindow):
         try:
             mode = CaptureMode[mode_setting.upper()]
         except ValueError:
-            logger.warning(f"Unknown capture mode: {mode_setting}. Fallback to PARSE.")
+            logger.warning("Unknown capture mode: %s. Fallback to PARSE.", mode_setting)
             mode = CaptureMode.PARSE
         return mode
 

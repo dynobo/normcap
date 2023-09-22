@@ -47,7 +47,7 @@ class Worker(QtCore.QRunnable):
             ) as response:
                 raw_data = response.read()
         except Exception as exc:
-            logger.exception(f"Could not download '{self.url}'")
+            logger.exception("Could not download '%s'", self.url)
             # L10N: Generic error message when any download failed.
             msg = _("Download error.")
             msg += f"\n[URL: {self.url}, EXC: {exc}]"
