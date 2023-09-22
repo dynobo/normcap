@@ -102,32 +102,34 @@ target-version = "py39"
 line-length = 88
 exclude = [".venv"]
 select = [
-  "F",   # Pyflakes
-  "E",   # pycodestyle
-  "I",   # Isort
-  "D",   # pydocstyle
-  "W",   # warning
-  "UP",  # pyupgrad
-  "N",   # pep8-naming
-  "C90", # mccabe
-  "TRY", # tryceratops (exception handling)
-  "ANN", # flake8-annotations
-  "S",   # flake8-bandits
-  "C4",  # flake8-comprehensions
-  "B",   # flake8-bugbear
-  "A",   # flake8-builtins
-  "ISC", # flake8-implicit-str-concat
-  "ICN", # flake8-import-conventions
-  "T20", # flake8-print
-  "PYI", # flake8-pyi
-  "PT",  # flake8-pytest-style
-  "Q",   # flake8-quotes
-  "RET", # flake8-return
-  "SIM", # flake8-simplify
-  "PTH", # flake8-use-pathlib
-  "PL",  # pylint
-  "RUF", # meta rules (unused noqa)
-  "PL",  # meta rules (unused noqa)
+  "F",    # Pyflakes
+  "E",    # pycodestyle
+  "I",    # Isort
+  "D",    # pydocstyle
+  "W",    # warning
+  "UP",   # pyupgrad
+  "N",    # pep8-naming
+  "C90",  # mccabe
+  "TRY",  # tryceratops (exception handling)
+  "ANN",  # flake8-annotations
+  "S",    # flake8-bandits
+  "C4",   # flake8-comprehensions
+  "B",    # flake8-bugbear
+  "A",    # flake8-builtins
+  "ISC",  # flake8-implicit-str-concat
+  "ICN",  # flake8-import-conventions
+  "T20",  # flake8-print
+  "PYI",  # flake8-pyi
+  "PT",   # flake8-pytest-style
+  "Q",    # flake8-quotes
+  "RET",  # flake8-return
+  "SIM",  # flake8-simplify
+  "PTH",  # flake8-use-pathlib
+  "G",    # flake8-logging-format
+  "PL",   # pylint
+  "RUF",  # meta rules (unused noqa)
+  "PL",   # meta rules (unused noqa)
+  "PERF", # perflint
 ]
 ignore = [
   "D100",   # Missing docstring in public module
@@ -138,7 +140,6 @@ ignore = [
   "D105",   # Missing docstring in magic method
   "D107",   # Missing docstring in __init__
   "ANN101", # Missing type annotation for `self` in method
-  "UP007",  # Use X | Y for type annotations
   "TRY003", # Avoid specifying long messages outside the exception class
 ]
 per-file-ignores = { "tests*" = ["S101", "ANN", "D", "PLR2004", "PLR0913"] }

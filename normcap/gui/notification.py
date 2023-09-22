@@ -206,8 +206,8 @@ class Notifier(QtCore.QObject):
             urls = [temp_file.as_uri()]
 
         for url in urls:
-            logger.debug(f"Opening URI {url}...")
+            logger.debug("Opening URI %s...", url)
             result = QtGui.QDesktopServices.openUrl(
                 QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
             )
-            logger.debug(f"Opened URI with result={result}")
+            logger.debug("Opened URI with result=%s", result)
