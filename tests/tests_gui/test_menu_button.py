@@ -131,11 +131,11 @@ def test_settings_group(menu_btn):
 
 
 def test_show_message_box(qapp, monkeypatch, menu_btn):
-    # GIVEN a menu button and a mocked QMessegeBox.exec() method
-    execs = []
+    # GIVEN a menu button and a mocked QMessageBox.exec() method
+    exec_args = []
 
     def mocked_exec(cls):
-        execs.append(True)
+        exec_args.append(cls)
 
     monkeypatch.setattr(menu_button.QtWidgets.QMessageBox, "exec", mocked_exec)
 
@@ -146,10 +146,34 @@ def test_show_message_box(qapp, monkeypatch, menu_btn):
     # THEN the message box's exec method should be called
     #   and the message box text should be set to the text provided as argument
     #   and a valid icon pixmap (with dimensions) should be set
-    assert execs == [True]
-    assert menu_btn.message_box.text() == test_message
-    assert menu_btn.message_box.iconPixmap().width() > 0
-    assert menu_btn.message_box.iconPixmap().height() > 0
+    message_box = exec_args[0]
+    assert isinstance(message_box, QtWidgets.QMessageBox)
+    assert message_box.text() == test_message
+    assert message_box.iconPixmap().width() > 0
+    assert message_box.iconPixmap().height() > 0
 
 
-# TODO: Add test if message box is shown on python package when triggered by logic
+def test_need_more_languages_triggers_messagebox(
+    qapp, monkeypatch, menu_btn_without_lang_man
+):
+    # GIVEN a menu_btn
+    menu_btn = menu_btn_without_lang_man
+    exec_args = []
+
+    def mocked_exec(cls):
+        exec_args.append(cls)
+
+    monkeypatch.setattr(menu_button.QtWidgets.QMessageBox, "exec", mocked_exec)
+
+    # WHEN this menu is shown
+    #   and it has a 'Need more?'-languages entry
+    #   and that entry is clicked
+    menu_btn.menu().aboutToShow.emit()
+    language_action = menu_btn.findChild(QtGui.QAction, "show_help_languages")
+    assert "need more" in language_action.text()
+    language_action.trigger()
+
+    # THEN a message box should be shown
+    message_box = exec_args[0]
+    assert isinstance(message_box, QtWidgets.QMessageBox)
+    assert "please refer to the documentation" in message_box.text()
