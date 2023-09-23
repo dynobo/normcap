@@ -10,8 +10,8 @@ class TestCase:
     image_path: Path
     left_top: tuple[int, int]
     right_bottom: tuple[int, int]
-    ocr_transformed: str
-    ocr_magics: list[str]
+    expected_ocr_text: str
+    expected_ocr_magics: list[str]
 
     @property
     def image(self) -> QtGui.QImage:
@@ -72,7 +72,7 @@ testcases: tuple[TestCase, ...] = (
         image_path=image_dir / "ocr_test_1.png",
         left_top=(46, 745),
         right_bottom=(500, 950),
-        ocr_transformed="\n".join(
+        expected_ocr_text="\n".join(
             [
                 "https://github.com/dynobo/normcap",
                 "https://wikipedia.de",
@@ -81,7 +81,7 @@ testcases: tuple[TestCase, ...] = (
                 "https://pypi.org/project/lmdiag/",
             ]
         ),
-        ocr_magics=["UrlMagic"],
+        expected_ocr_magics=["UrlMagic"],
     ),
     # 1
     TestCase(
@@ -89,8 +89,8 @@ testcases: tuple[TestCase, ...] = (
         image_path=image_dir / "ocr_test_1.png",
         left_top=(312, 548),
         right_bottom=(470, 568),
-        ocr_transformed="https://regex101.com",
-        ocr_magics=["UrlMagic"],
+        expected_ocr_text="https://regex101.com",
+        expected_ocr_magics=["UrlMagic"],
     ),
     # 2
     TestCase(
@@ -98,8 +98,8 @@ testcases: tuple[TestCase, ...] = (
         image_path=image_dir / "ocr_test_1.png",
         left_top=(1115, 530),
         right_bottom=(1305, 570),
-        ocr_transformed="*Untitled Document 1",
-        ocr_magics=["SingleLineMagic"],
+        expected_ocr_text="*Untitled Document 1",
+        expected_ocr_magics=["SingleLineMagic"],
     ),
     # 3
     TestCase(
@@ -108,8 +108,8 @@ testcases: tuple[TestCase, ...] = (
         image_path=image_dir / "ocr_test_1.png",
         left_top=(50, 301),
         right_bottom=(700, 342),
-        ocr_transformed="peter.parker@test.com, HArDToReAd@test.com, 0815@test.com",
-        ocr_magics=["EmailMagic"],
+        expected_ocr_text="peter.parker@test.com, HArDToReAd@test.com, 0815@test.com",
+        expected_ocr_magics=["EmailMagic"],
     ),
     # 4
     TestCase(
@@ -118,7 +118,7 @@ testcases: tuple[TestCase, ...] = (
         image_path=image_dir / "ocr_test_1.png",
         left_top=(50, 299),
         right_bottom=(700, 363),
-        ocr_transformed=(
+        expected_ocr_text=(
             "To: Peter Parker <peter.parker@test.com>; "
             "HArD To ReAd\n"
             "<HArDToReAd@test.com>; "
@@ -127,7 +127,7 @@ testcases: tuple[TestCase, ...] = (
             "Invalid_two <also/not/valid/@test.com>; "
             "Invalid_three <@test.com>"
         ),
-        ocr_magics=["ParagraphMagic", "MultiLineMagic"],
+        expected_ocr_magics=["ParagraphMagic", "MultiLineMagic"],
     ),
     # 5
     TestCase(
@@ -136,7 +136,20 @@ testcases: tuple[TestCase, ...] = (
         image_path=image_dir / "ocr_test_1.png",
         left_top=(1080, 720),
         right_bottom=(1570, 800),
-        ocr_transformed="Orange, the new black!",
-        ocr_magics=["SingleLineMagic"],
+        expected_ocr_text="Orange, the new black!",
+        expected_ocr_magics=["SingleLineMagic"],
+    ),
+    # 6
+    TestCase(
+        # Includes special characters to test encoding issues
+        name="6: TextWithSpecialChars",
+        image_path=image_dir / "ocr_test_1.png",
+        left_top=(1080, 870),
+        right_bottom=(1610, 1030),
+        expected_ocr_text=(
+            "‘One small step for Man’\n“Live long and prosper!”\n"  # noqa: RUF001
+            '«Open the shuttlebay doors»\n"May the Schwartz™ be with you!"'
+        ),
+        expected_ocr_magics=["ParagraphMagic"],
     ),
 )
