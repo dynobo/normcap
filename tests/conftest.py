@@ -71,7 +71,7 @@ def capture() -> Capture:
         mode=CaptureMode.PARSE,
         rect=Rect(20, 30, 220, 330),
         ocr_text="one two three",
-        ocr_applied_magic="",
+        ocr_magic="",
         image=image,
     )
 
