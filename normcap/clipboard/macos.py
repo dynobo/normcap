@@ -12,10 +12,10 @@ def pbcopy(text: str) -> None:
     subprocess.run(
         ["pbcopy", "w"],  # noqa: S607
         shell=False,  # noqa: S603
-        input=text,
-        encoding="utf-8",
+        input=text.encode("utf-8"),
         check=True,
         timeout=30,
+        env={"LC_CTYPE":"UTF-8"}
     )
 
 
