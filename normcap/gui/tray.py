@@ -88,7 +88,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         self.screens: list[Screen] = system_info.screens()
 
-        self._ensure_screenshot_permission()
+        if not self._has_screenshot_permission():
+            logger.error("Missing screenshot permission!")
+            self.hide()
+            return 
+        
         self._set_signals()
 
         # Needs to be after set signals, cause it might emit self.com.exit_application:
@@ -377,9 +381,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self._socket_server.listen(self._socket_name)
         logger.debug("Listen on local socket %s.", self._socket_server.serverName())
 
-    def _ensure_screenshot_permission(self) -> None:
+    def _has_screenshot_permission(self) -> bool:
         if screengrab.has_screenshot_permission():
-            return
+            return True
 
         if sys.platform == "darwin":
             # Reset privacy permission in case of new NormCap version. This is necessary
@@ -407,7 +411,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
                 ).format(application=app),
                 buttons=QtWidgets.QMessageBox.StandardButton.Close,
             )
-            self.com.exit_application.emit(False)
+            return False
 
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
@@ -550,6 +554,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if self._socket_server:
             self._socket_server.close()
             self._socket_server.removeServer(self._socket_name)
+            self._socket_server = None
 
         if delayed:
             self.delayed_exit_timer.start(self._EXIT_DELAY_MILLISECONDS)
@@ -557,6 +562,12 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.hide()
 
     def hide(self) -> NoReturn | None:
+        # Unregister the singleton server
+        if self._socket_server:
+            self._socket_server.close()
+            self._socket_server.removeServer(self._socket_name)
+            self._socket_server = None
+
         # First call QSystemTrayIcon's method
         super().hide()
 
