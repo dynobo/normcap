@@ -11,7 +11,7 @@ from normcap.gui.models import Capture, CaptureMode, Rect
 
 
 @pytest.mark.parametrize(
-    ("ocr_applied_magic", "ocr_text", "output_title", "output_text"),
+    ("ocr_magic", "ocr_text", "output_title", "output_text"),
     [
         ("SingleLineMagic", "", "Nothing captured", "Please try again"),
         (
@@ -44,14 +44,14 @@ from normcap.gui.models import Capture, CaptureMode, Rect
         ("RAW", f"W1 W2{os.linesep}W3", "8 characters", "W1 W2 W3"),
     ],
 )
-def test_compose_notification(ocr_applied_magic, ocr_text, output_title, output_text):
+def test_compose_notification(ocr_magic, ocr_text, output_title, output_text):
     # GIVEN a Notifier
     #   and an OCR capture with a certain results
     notifier = notification.Notifier(None)
     capture = Capture(
         ocr_text=ocr_text,
-        ocr_applied_magic=ocr_applied_magic,
-        mode=CaptureMode.PARSE if ocr_applied_magic != "RAW" else CaptureMode.RAW,
+        ocr_magic=ocr_magic,
+        mode=CaptureMode.PARSE if ocr_magic != "RAW" else CaptureMode.RAW,
         image=QtGui.QImage(),
         screen=None,
         scale_factor=1,
@@ -102,7 +102,7 @@ def test_send_via_qt_tray(qtbot):
 
     # WHEN a notification is sent via QT (QSystemTrayIcon)
     notifier._send_via_qt_tray(
-        title="Title", message="Message", ocr_text=None, ocr_applied_magic=None
+        title="Title", message="Message", ocr_text=None, ocr_magic=None
     )
 
     # THEN we expect no exception (it's hard to test, if the notification is shown)
@@ -119,7 +119,7 @@ def test_send_via_qt_tray_without_qsystemtrayicon_parent_raises(qtbot):
     # WHEN a notification is sent via QT (QSystemTrayIcon)
     with pytest.raises(TypeError, match="QSystemTrayIcon"):
         notifier._send_via_qt_tray(
-            title="Title", message="Message", ocr_text=None, ocr_applied_magic=None
+            title="Title", message="Message", ocr_text=None, ocr_magic=None
         )
 
     # THEN we expect an exception, as the parent has to be a QSystemTrayIcon
@@ -136,14 +136,14 @@ def test_send_notification(monkeypatch):
     def mocked_libnotify(cls, title, message):
         result.append({"title": title, "message": message, "method": "libnotify"})
 
-    def mocked_qt_tray(cls, title, message, ocr_text, ocr_applied_magic):
+    def mocked_qt_tray(cls, title, message, ocr_text, ocr_magic):
         result.append(
             {
                 "title": title,
                 "message": message,
                 "method": "qt_tray",
                 "ocr_text": ocr_text,
-                "ocr_applied_magic": ocr_applied_magic,
+                "ocr_magic": ocr_magic,
             }
         )
 
@@ -152,7 +152,7 @@ def test_send_notification(monkeypatch):
 
     capture = Capture(
         ocr_text="text",
-        ocr_applied_magic="SingleLineMagic",
+        ocr_magic="SingleLineMagic",
         mode=CaptureMode.PARSE,
         image=QtGui.QImage(),
         screen=None,
@@ -171,7 +171,7 @@ def test_send_notification(monkeypatch):
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
     assert result[-1]["ocr_text"] == capture.ocr_text
-    assert result[-1]["ocr_applied_magic"] == capture.ocr_applied_magic
+    assert result[-1]["ocr_magic"] == capture.ocr_magic
 
     # WHEN a notification signal is emitted on a system _with_ libnotify
     monkeypatch.setattr(notification.sys, "platform", "linux")

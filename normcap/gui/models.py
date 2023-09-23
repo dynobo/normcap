@@ -158,7 +158,7 @@ class Capture:
     rect: Rect = field(default_factory=Rect)
 
     ocr_text: Optional[str] = None
-    ocr_applied_magic: Optional[str] = None
+    ocr_magic: Optional[str] = None
 
     @property
     def image_area(self) -> int:

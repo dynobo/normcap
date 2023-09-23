@@ -46,35 +46,35 @@ class Notifier(QtCore.QObject):
         text = textwrap.shorten(text, width=45)
 
         # Compose message title
-        if capture.ocr_applied_magic == "ParagraphMagic":
+        if capture.ocr_magic == "ParagraphMagic":
             count = capture.ocr_text.count(os.linesep * 2) + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 paragraph captured", "{count} paragraphs captured", count
             ).format(count=count)
-        elif capture.ocr_applied_magic == "EmailMagic":
+        elif capture.ocr_magic == "EmailMagic":
             count = capture.ocr_text.count("@")
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 email captured", "{count} emails captured", count
             ).format(count=count)
-        elif capture.ocr_applied_magic == "SingleLineMagic":
+        elif capture.ocr_magic == "SingleLineMagic":
             count = capture.ocr_text.count(" ") + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 word captured", "{count} words captured", count
             ).format(count=count)
-        elif capture.ocr_applied_magic == "MultiLineMagic":
+        elif capture.ocr_magic == "MultiLineMagic":
             count = capture.ocr_text.count(os.linesep) + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 line captured", "{count} lines captured", count
             ).format(count=count)
-        elif capture.ocr_applied_magic == "UrlMagic":
+        elif capture.ocr_magic == "UrlMagic":
             count = capture.ocr_text.count(os.linesep) + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -106,7 +106,7 @@ class Notifier(QtCore.QObject):
                 title=title,
                 message=message,
                 ocr_text=capture.ocr_text,
-                ocr_applied_magic=capture.ocr_applied_magic,
+                ocr_magic=capture.ocr_magic,
             )
         self.com.on_notification_sent.emit()
 
@@ -150,7 +150,7 @@ class Notifier(QtCore.QObject):
         title: str,
         message: str,
         ocr_text: str | None,
-        ocr_applied_magic: str | None,
+        ocr_magic: str | None,
     ) -> None:
         """Send via QSystemTrayIcon.
 
@@ -181,10 +181,10 @@ class Notifier(QtCore.QObject):
             parent.messageClicked.disconnect()
 
         # It only makes sense to act on notification clicks, if we have a result.
-        if ocr_text and ocr_applied_magic and len(ocr_text.strip()) >= 1:
+        if ocr_text and ocr_magic and len(ocr_text.strip()) >= 1:
             parent.messageClicked.connect(
                 lambda: self._open_ocr_result(
-                    ocr_text=ocr_text, applied_magic=ocr_applied_magic
+                    ocr_text=ocr_text, applied_magic=ocr_magic
                 )
             )
 
