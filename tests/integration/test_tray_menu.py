@@ -64,7 +64,7 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     assert capture
 
     similarity = SequenceMatcher(
-        None, capture.ocr_text, testcase.ocr_transformed
+        None, capture.ocr_text, testcase.expected_ocr_text
     ).ratio()
     assert similarity >= 0.98, f"{capture.ocr_text=}"
 
