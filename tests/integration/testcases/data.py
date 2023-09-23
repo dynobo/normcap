@@ -66,9 +66,8 @@ class TestCase:
 image_dir = Path(__file__).parent
 
 testcases: tuple[TestCase, ...] = (
-    # 0
     TestCase(
-        name="0: ParseUrls",
+        name="0: Parse URLs",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(46, 745),
         right_bottom=(500, 950),
@@ -83,18 +82,16 @@ testcases: tuple[TestCase, ...] = (
         ),
         expected_ocr_magics=["UrlMagic"],
     ),
-    # 1
     TestCase(
-        name="1: ParseColoredUrl",
+        name="1: Parse colored URL",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(312, 548),
         right_bottom=(470, 568),
         expected_ocr_text="https://regex101.com",
         expected_ocr_magics=["UrlMagic"],
     ),
-    # 2
     TestCase(
-        name="2: WindowTitle",
+        name="2: Detect window title",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(1115, 530),
         right_bottom=(1305, 570),
@@ -103,8 +100,7 @@ testcases: tuple[TestCase, ...] = (
     ),
     # 3
     TestCase(
-        # First two rows of email addresses
-        name="3: DifficultMailAddresses",
+        name="3: Parse mail addresses",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(50, 301),
         right_bottom=(700, 342),
@@ -113,8 +109,7 @@ testcases: tuple[TestCase, ...] = (
     ),
     # 4
     TestCase(
-        # All three rows of email addresses, 3rd row contains invalids
-        name="4: MailAddressesWithInvalid",
+        name="4: Parse mail addresses skip invalids",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(50, 299),
         right_bottom=(700, 363),
@@ -131,8 +126,7 @@ testcases: tuple[TestCase, ...] = (
     ),
     # 5
     TestCase(
-        # Low contrast
-        name="5: TextWithLowContrast",
+        name="5: Detect text with low contrast",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(1080, 720),
         right_bottom=(1570, 800),
@@ -141,14 +135,31 @@ testcases: tuple[TestCase, ...] = (
     ),
     # 6
     TestCase(
-        # Includes special characters to test encoding issues
-        name="6: TextWithSpecialChars",
+        name="6: Detect special characters",
         image_path=image_dir / "ocr_test_1.png",
         left_top=(1080, 870),
         right_bottom=(1610, 1030),
         expected_ocr_text=(
             "‘One small step for Man’\n“Live long and prosper!”\n"  # noqa: RUF001
             '«Open the shuttlebay doors»\n"May the Schwartz™ be with you!"'
+        ),
+        expected_ocr_magics=["ParagraphMagic"],
+    ),
+    # 7
+    TestCase(
+        name="7: Parse paragraphs of text",
+        image_path=image_dir / "ocr_test_1.png",
+        left_top=(1060, 232),
+        right_bottom=(1755, 390),
+        expected_ocr_text=(
+            "You rent a hotel room. You put a book in the top drawer of the bedside "
+            'table and go to sleep. You check out the next morning, but "forget" to '
+            "give back your key. You steal the key!\n"
+            "A week later, you return to the hotel, do not check in, sneak into your "
+            "old room with your stolen key, and look in the drawer. Your book is still "
+            "there. Astonishing!\n"
+            "How can that be? Aren't the contents of a hotel room drawer inaccessible "
+            "if you haven't rented the room?"
         ),
         expected_ocr_magics=["ParagraphMagic"],
     ),
