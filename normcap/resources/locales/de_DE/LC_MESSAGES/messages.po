@@ -126,7 +126,7 @@ msgid "Close and view tessdata folder in file manager..."
 msgstr "NormCap schließen und das tessdata-Verzeichnis öffnen..."
 
 #. Language Manager error message box title
-#: normcap/gui/language_manager.py:97 normcap/gui/tray.py:399
+#: normcap/gui/language_manager.py:97 normcap/gui/tray.py:413
 msgid "Error"
 msgstr "Fehler"
 
@@ -368,25 +368,31 @@ msgstr[1] "{count} Buchstaben erkannt"
 
 #. Error message box on macOS only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/tray.py:402
+#: normcap/gui/tray.py:416
+#, fuzzy
 msgid ""
 "'{application}' is missing the permission for 'Screen Recording'.\n"
 "\n"
-"Grant the permission via 'System Settings' > 'Privacy & Security' and "
-"restart NormCap."
+"Grant it via the dialog that will appear after you clicked 'Ok' or via "
+"'System Settings' > 'Privacy & Security'.\n"
+"\n"
+"Then restart NormCap."
 msgstr ""
 "'{application}' fehlt die Berechtigung zur 'Bildschirmaufnahme'.\n"
 "\n"
-"Erteile die Berechtigung über 'Systemeinstellungen' > 'Datenschutz & "
-"Sicherheit' und starte NormCap neu."
+"Erteile die Berechtigung über das Dialogfenster, das nach dem Klick auf "
+"'Okay' erscheint, oder über 'Systemeinstellungen' > 'Datenschutz & "
+"Sicherheit'.\n"
+"\n"
+"Dann starte NormCap neu."
 
 #. Tray menu entry
-#: normcap/gui/tray.py:473
+#: normcap/gui/tray.py:493
 msgid "Capture"
 msgstr "Erkennen"
 
 #. Tray menu entry for exiting NormCap completely.
-#: normcap/gui/tray.py:480
+#: normcap/gui/tray.py:500
 msgid "Exit"
 msgstr "Beenden"
 

@@ -95,17 +95,20 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.cli_mode = args.get("cli_mode", False)
 
         # Check/get prerequisites for running
-        # Needs to be after set signals, cause it might emit self.com.exit_application:
         if not self._ensure_single_instance():
             self.com.exit_application.emit(0)
             return
 
         if not self._ensure_screenshot_permission():
             logger.error("Missing screenshot permission!")
-            self.com.exit_application.emit(10_000)
+            # When NormCaps exits, the macOS dialog to grant "Screen Recording
+            # permission will also disappear immediately. That's why we give the user
+            # some seconds to click on the dialog, before we exit the application.
+            self.com.exit_application.emit(8)
             return
 
         # Setup timers
+        # TODO: Handle timers less verbose and init in separate method
         self.reset_tray_icon_timer = QtCore.QTimer(parent=self)
         self.reset_tray_icon_timer.setSingleShot(True)
         self.reset_tray_icon_timer.timeout.connect(self._set_tray_icon_normal)
@@ -413,8 +416,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
                 _(
                     "'{application}' is missing the permission for 'Screen Recording'."
                     "\n\n"
-                    "Grant the permission via 'System Settings' > 'Privacy & Security' "
-                    "and restart NormCap."
+                    "Grant it via the dialog that will appear after you clicked 'Ok' "
+                    "or via 'System Settings' > 'Privacy & Security'."
+                    "\n\n"
+                    "Then restart NormCap."
                 ).format(application=app),
                 buttons=QtWidgets.QMessageBox.StandardButton.Ok,
             )
@@ -573,12 +578,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.hide()
 
     def hide(self) -> NoReturn | None:
-        # Unregister the singleton server
-        if self._socket_server:
-            self._socket_server.close()
-            self._socket_server.removeServer(self._socket_name)
-            self._socket_server = None
+        """Perform last cleanups before quitting application.
 
+        Note: Don't call directly! Instead do `self.com.exit_application.emit(0)`!
+        """
         # First call QSystemTrayIcon's method
         super().hide()
 

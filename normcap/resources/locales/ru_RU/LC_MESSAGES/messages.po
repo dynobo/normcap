@@ -118,7 +118,7 @@ msgid "Close and view tessdata folder in file manager..."
 msgstr ""
 
 #. Language Manager error message box title
-#: normcap/gui/language_manager.py:97 normcap/gui/tray.py:399
+#: normcap/gui/language_manager.py:97 normcap/gui/tray.py:413
 msgid "Error"
 msgstr ""
 
@@ -346,21 +346,23 @@ msgstr[2] ""
 
 #. Error message box on macOS only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: normcap/gui/tray.py:402
+#: normcap/gui/tray.py:416
 msgid ""
 "'{application}' is missing the permission for 'Screen Recording'.\n"
 "\n"
-"Grant the permission via 'System Settings' > 'Privacy & Security' and "
-"restart NormCap."
+"Grant it via the dialog that will appear after you clicked 'Ok' or via "
+"'System Settings' > 'Privacy & Security'.\n"
+"\n"
+"Then restart NormCap."
 msgstr ""
 
 #. Tray menu entry
-#: normcap/gui/tray.py:473
+#: normcap/gui/tray.py:493
 msgid "Capture"
 msgstr ""
 
 #. Tray menu entry for exiting NormCap completely.
-#: normcap/gui/tray.py:480
+#: normcap/gui/tray.py:500
 msgid "Exit"
 msgstr ""
 
