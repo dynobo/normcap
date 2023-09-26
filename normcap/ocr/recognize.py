@@ -30,7 +30,7 @@ def get_text_from_image(  # noqa: PLR0913
         tessdata_path=tessdata_path,
         lang=languages if isinstance(languages, str) else "+".join(languages),
         oem=OEM.DEFAULT,
-        psm=PSM.AUTO_OSD,
+        psm=PSM.AUTO,
     )
     logger.debug(
         "Run Tesseract on image of size %s with args:\n%s",

@@ -84,7 +84,7 @@ def ocr_result() -> OcrResult:
             tessdata_path=Path(),
             lang="eng",
             oem=OEM.TESSERACT_LSTM_COMBINED,
-            psm=PSM.AUTO_ONLY,
+            psm=PSM.AUTO,
         ),
         image=QtGui.QImage(),
         magic_scores={},
