@@ -15,7 +15,7 @@ def pbcopy(text: str) -> None:
         input=text.encode("utf-8"),
         check=True,
         timeout=30,
-        env={"LC_CTYPE":"UTF-8"}
+        env={"LC_CTYPE": "UTF-8"},
     )
 
 

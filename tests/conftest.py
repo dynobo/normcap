@@ -141,6 +141,7 @@ def basic_cli_args():
     """NormCap configuration used by most tests."""
     return [
         sys.argv[0],
+        "--mode=parse",
         "--notification=False",
         "--verbosity=debug",
         "--update=False",
@@ -160,14 +161,14 @@ def run_normcap(monkeypatch, qapp, basic_cli_args):
 
         monkeypatch.setattr(app, "_get_application", lambda: qapp)
         _, tray = app._prepare()
-        tray._EXIT_DELAY_MILLISECONDS = 100
+        tray._EXIT_DELAY = 0.1
         trays.append(tray)
         return tray
 
     yield _run_normcap
 
     for tray in trays:
-        tray._exit_application(delayed=False)
+        tray._exit_application(delay=0)
         tray.deleteLater()
 
 
