@@ -23,6 +23,7 @@
   ([#494](https://github.com/dynobo/normcap/issues/494))
 - Linux: Fix crash due to missing `xcb-utils-cursor` in AppImage, by including it.
   ([#457](https://github.com/dynobo/normcap/issues/457))
+- macOS: Improve UX in case of missing screenshot permission.
 
 ## v0.4.4 (2023-06-04)
 

@@ -3,6 +3,9 @@ from pathlib import Path
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
+# TODO: Create images on the fly from single image per test case.
+# TODO: Remove unnecessary "annotate.py", once single images are used
+
 
 @dataclass
 class TestCase:
