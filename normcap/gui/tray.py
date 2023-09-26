@@ -25,7 +25,15 @@ from normcap.gui import (  # noqa: F401 (loads resources!)
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
-from normcap.gui.models import Capture, CaptureMode, DesktopEnvironment, Rect, Screen
+from normcap.gui.models import (
+    Capture,
+    CaptureMode,
+    Days,
+    DesktopEnvironment,
+    Rect,
+    Screen,
+    Seconds,
+)
 from normcap.gui.notification import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
@@ -42,7 +50,7 @@ class TrayIcon(Enum):
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
-    exit_application = QtCore.Signal(bool)
+    exit_application = QtCore.Signal(float)
     on_copied_to_clipboard = QtCore.Signal()
     on_image_cropped = QtCore.Signal()
     on_region_selected = QtCore.Signal(Rect)
@@ -53,8 +61,8 @@ class Communicate(QtCore.QObject):
 class SystemTray(QtWidgets.QSystemTrayIcon):
     """System tray icon with menu."""
 
-    _EXIT_DELAY_MILLISECONDS: int = 5_000
-    _UPDATE_CHECK_INTERVAL_DAYS: int = 7
+    _EXIT_DELAY: Seconds = 5
+    _UPDATE_CHECK_INTERVAL: Days = 7
 
     # Only for testing purposes: forcefully enables language manager in settings menu
     # (Normally language manager is only available in pre-build version)
@@ -70,34 +78,48 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         logger.debug("System info:\n%s", system_info.to_dict())
         super().__init__(parent)
 
+        # Prepare and connect signals
         self.com = Communicate(parent=self)
-        self.windows: dict[int, Window] = {}
-        self.capture = Capture()
-        self.installed_languages: list[str] = []
-
-        self.settings = Settings(init_settings=args)
-
-        if args.get("reset", False):
-            self.settings.reset()
-
-        self.cli_mode = args.get("cli_mode", False)
-        self.capture.mode = (
-            CaptureMode.PARSE
-            if self.settings.value("mode") == "parse"
-            else CaptureMode.RAW
-        )
-        self.screens: list[Screen] = system_info.screens()
-
-        if not self._has_screenshot_permission():
-            logger.error("Missing screenshot permission!")
-            self.hide()
-            return 
-        
         self._set_signals()
 
-        # Needs to be after set signals, cause it might emit self.com.exit_application:
-        self._ensure_single_instance()
+        # Prepare instance attributes
+        self.windows: dict[int, Window] = {}
+        self.screens: list[Screen] = system_info.screens()
+        self.capture = Capture()
+        self.installed_languages: list[str] = []
+        self.settings = Settings(init_settings=args)
 
+        # Handle special cli args
+        if args.get("reset", False):
+            self.settings.reset()
+        self.cli_mode = args.get("cli_mode", False)
+
+        # Check/get prerequisites for running
+        # Needs to be after set signals, cause it might emit self.com.exit_application:
+        if not self._ensure_single_instance():
+            self.com.exit_application.emit(0)
+            return
+
+        if not self._ensure_screenshot_permission():
+            logger.error("Missing screenshot permission!")
+            self.com.exit_application.emit(10_000)
+            return
+
+        # Setup timers
+        self.reset_tray_icon_timer = QtCore.QTimer(parent=self)
+        self.reset_tray_icon_timer.setSingleShot(True)
+        self.reset_tray_icon_timer.timeout.connect(self._set_tray_icon_normal)
+
+        self.delayed_exit_timer = QtCore.QTimer(parent=self)
+        self.delayed_exit_timer.setSingleShot(True)
+        self.delayed_exit_timer.timeout.connect(self.hide)
+
+        self.delayed_init_timer = QtCore.QTimer(parent=self)
+        self.delayed_init_timer.setSingleShot(True)
+        self.delayed_init_timer.timeout.connect(self._delayed_init)
+        self.delayed_init_timer.start(50)
+
+        # Prepare UI
         self.tray_menu = QtWidgets.QMenu(None)
         self.tray_menu.aboutToShow.connect(self._populate_context_menu_entries)
 
@@ -113,32 +135,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         else:
             delay_screenshot = False
 
-        self.reset_tray_icon_timer = QtCore.QTimer(parent=self)
-        self.reset_tray_icon_timer.setSingleShot(True)
-        self.reset_tray_icon_timer.timeout.connect(self._set_tray_icon_normal)
-
-        self.delayed_exit_timer = QtCore.QTimer(parent=self)
-        self.delayed_exit_timer.setSingleShot(True)
-        self.delayed_exit_timer.timeout.connect(self.hide)
-
-        self.delayed_init_timer = QtCore.QTimer(parent=self)
-        self.delayed_init_timer.setSingleShot(True)
-        self.delayed_init_timer.timeout.connect(self._delayed_init)
-        self.delayed_init_timer.start(50)
-
         if not args.get("background_mode", False):
             self._show_windows(delay_screenshot=delay_screenshot)
-
-    def _ensure_single_instance(self) -> None:
-        self._socket_out = QtNetwork.QLocalSocket(self)
-        self._socket_out.connectToServer(self._socket_name)
-        if self._socket_out.waitForConnected():
-            logger.debug("Another instance is already running. Sending capture signal.")
-            self._socket_out.write(b"capture")
-            self._socket_out.waitForBytesWritten(1000)
-            self.com.exit_application.emit(False)
-        else:
-            self._create_socket_server()
 
     @QtCore.Slot()
     def show_introduction(self) -> None:
@@ -268,7 +266,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         minimum_image_area = 25
         if self.capture.image_area < minimum_image_area:
             logger.warning("Area of %s too small. Skip OCR.", self.capture.image_area)
-            self._minimize_or_exit_application(delayed=False)
+            self._minimize_or_exit_application(delay=0)
             return
 
         logger.debug("Start OCR")
@@ -303,7 +301,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
         )
         logger.debug("Opened uri with result=%s", result)
-        self._minimize_or_exit_application(delayed=False)
+        self._minimize_or_exit_application(delay=0)
 
     @QtCore.Slot()
     def _open_language_manager(self) -> None:
@@ -332,7 +330,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Print results to stdout ."""
         logger.debug("Print text to stdout and exit.")
         print(self.capture.ocr_text, file=sys.stdout)  # noqa: T201
-        self.com.exit_application.emit(False)
+        self.com.exit_application.emit(0)
 
     @QtCore.Slot()
     def _notify(self) -> None:
@@ -381,7 +379,19 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self._socket_server.listen(self._socket_name)
         logger.debug("Listen on local socket %s.", self._socket_server.serverName())
 
-    def _has_screenshot_permission(self) -> bool:
+    def _ensure_single_instance(self) -> bool:
+        self._socket_out = QtNetwork.QLocalSocket(self)
+        self._socket_out.connectToServer(self._socket_name)
+        if self._socket_out.waitForConnected():
+            logger.debug("Another instance is already running. Sending capture signal.")
+            self._socket_out.write(b"capture")
+            self._socket_out.waitForBytesWritten(1000)
+            return False
+
+        self._create_socket_server()
+        return True
+
+    def _ensure_screenshot_permission(self) -> bool:
         if screengrab.has_screenshot_permission():
             return True
 
@@ -392,9 +402,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             if self.settings.value("version") != __version__:
                 self.settings.setValue("version", __version__)
                 screengrab.macos_reset_screenshot_permission()
-
-            # Trigger permission request to make the NormCap entry available in settings
-            screengrab.macos_request_screenshot_permission()
 
             # Message box to explain what's happening and open the preferences
             app = "NormCap" if system_info.is_prebuilt_package() else "Terminal"
@@ -409,9 +416,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
                     "Grant the permission via 'System Settings' > 'Privacy & Security' "
                     "and restart NormCap."
                 ).format(application=app),
-                buttons=QtWidgets.QMessageBox.StandardButton.Close,
+                buttons=QtWidgets.QMessageBox.StandardButton.Ok,
             )
-            return False
+
+            # Trigger permission request to make the NormCap entry available in settings
+            screengrab.macos_request_screenshot_permission()
+
+        return False
 
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
@@ -421,7 +432,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_image_cropped.connect(self._capture_to_ocr)
         self.com.on_copied_to_clipboard.connect(self._notify)
         self.com.on_copied_to_clipboard.connect(
-            lambda: self._minimize_or_exit_application(delayed=True)
+            lambda: self._minimize_or_exit_application(delay=self._EXIT_DELAY)
         )
         self.com.on_copied_to_clipboard.connect(self._set_tray_icon_done)
         self.com.on_languages_changed.connect(self._sanitize_language_setting)
@@ -434,7 +445,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             return
 
         now_sub_interval_sec = time.time() - (
-            60 * 60 * 24 * self._UPDATE_CHECK_INTERVAL_DAYS
+            60 * 60 * 24 * self._UPDATE_CHECK_INTERVAL
         )
         now_sub_interval = time.strftime("%Y-%m-%d", time.gmtime(now_sub_interval_sec))
         if str(self.settings.value("last-update-check", type=str)) > now_sub_interval:
@@ -483,7 +494,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         # L10N: Tray menu entry for exiting NormCap completely.
         action = QtGui.QAction(_("Exit"), self.tray_menu)
         action.setObjectName("exit")
-        action.triggered.connect(lambda: self.com.exit_application.emit(False))
+        action.triggered.connect(lambda: self.com.exit_application.emit(0))
         self.tray_menu.addAction(action)
 
     def _create_next_window(self) -> None:
@@ -498,10 +509,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             screen=self.screens[index], settings=self.settings, parent=None
         )
         new_window.com.on_esc_key_pressed.connect(
-            lambda: self._minimize_or_exit_application(delayed=False)
+            lambda: self._minimize_or_exit_application(delay=0)
         )
         new_window.com.on_esc_key_pressed.connect(
-            lambda: self._minimize_or_exit_application(delayed=False)
+            lambda: self._minimize_or_exit_application(delay=0)
         )
         new_window.com.on_region_selected.connect(self.com.on_region_selected)
         new_window.com.on_window_positioned.connect(self.com.on_window_positioned)
@@ -528,7 +539,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         settings_menu.com.on_setting_change.connect(self._apply_setting_change)
         settings_menu.com.on_show_introduction.connect(self.show_introduction)
         settings_menu.com.on_close_in_settings.connect(
-            lambda: self._minimize_or_exit_application(delayed=False)
+            lambda: self._minimize_or_exit_application(delay=0)
         )
         self.com.on_languages_changed.connect(settings_menu.on_languages_changed)
         return settings_menu
@@ -541,23 +552,23 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         return layout
 
     @QtCore.Slot()
-    def _minimize_or_exit_application(self, delayed: bool) -> None:
+    def _minimize_or_exit_application(self, delay: Seconds) -> None:
         self._close_windows()
         if self.settings.value("tray", type=bool):
             return
 
-        self.com.exit_application.emit(delayed)
+        self.com.exit_application.emit(delay)
 
     @QtCore.Slot(bool)
-    def _exit_application(self, delayed: bool) -> None:
+    def _exit_application(self, delay: Seconds) -> None:
         # Unregister the singleton server
         if self._socket_server:
             self._socket_server.close()
             self._socket_server.removeServer(self._socket_name)
             self._socket_server = None
 
-        if delayed:
-            self.delayed_exit_timer.start(self._EXIT_DELAY_MILLISECONDS)
+        if delay:
+            self.delayed_exit_timer.start(int(delay * 1000))
         else:
             self.hide()
 

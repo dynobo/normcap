@@ -10,6 +10,10 @@ from PySide6 import QtGui
 
 logger = logging.getLogger(__name__)
 
+# Type aliases
+Seconds = float
+Days = int
+
 
 class Setting(NamedTuple):
     key: str
