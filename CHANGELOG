@@ -10,6 +10,7 @@
 - All: Add explanatory tooltips to many menu entries.
 - All: Fix wrong detection of some special characters.
 - All: Fix crash caused by update checker.
+- All: Improve startup and recognition speed slightly.
 - Windows & macOS: Add click action to desktop notifications. If a notification is
   clicked, the (last) result is opened in an appropriate application. E.g. if a URL was
   detected, it is opened in the default browser. If plain text was detected, it is saved

@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 def save_image_in_temp_folder(image: QImage, postfix: str = "") -> None:
     """For debugging it can be useful to store the cropped image."""
+    if logger.getEffectiveLevel() != logging.DEBUG:
+        return
+
     temp_dir = Path(tempfile.gettempdir()) / "normcap"
     temp_dir.mkdir(exist_ok=True)
 
