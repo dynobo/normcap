@@ -40,7 +40,7 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
 
     testcase = testcases[0]
     monkeypatch.setattr(
-        screengrab, "get_capture_func", lambda: lambda: [testcase.image_scaled]
+        screengrab, "get_capture_func", lambda: lambda: [testcase.screenshot]
     )
 
     exit_calls = []
@@ -53,7 +53,7 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     capture_action = tray.tray_menu.findChild(QtGui.QAction, "capture")
     capture_action.trigger()
 
-    select_region(on=tray.windows[0], pos=testcase.coords_scaled)
+    select_region(on=tray.windows[0], pos=testcase.coords)
 
     # THEN text should be captured
     #      and close to the ground truth
