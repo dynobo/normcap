@@ -12,7 +12,7 @@ from .testcases import testcases
 def test_settings_menu_creates_actions(monkeypatch, qtbot, run_normcap, test_signal):
     """Test if capture mode can be started through tray icon."""
     # GIVEN NormCap is started with any image as screenshot
-    some_image = testcases[0].image_scaled
+    some_image = testcases[0].screenshot
     monkeypatch.setattr(screengrab, "get_capture_func", lambda: lambda: [some_image])
     monkeypatch.setattr(sys, "exit", lambda x: test_signal.on_event.emit(x))
     tray = run_normcap(extra_cli_args=[])
@@ -40,7 +40,7 @@ def test_settings_menu_close_action_exits(monkeypatch, qtbot, run_normcap, test_
     """Tests complete OCR workflow."""
     # GIVEN NormCap is started with any image as screenshot
     #   and tray icon is disabled
-    some_image = testcases[0].image_scaled
+    some_image = testcases[0].screenshot
     monkeypatch.setattr(screengrab, "get_capture_func", lambda: lambda: [some_image])
     monkeypatch.setattr(sys, "exit", lambda x: test_signal.on_event.emit(x))
     tray = run_normcap(extra_cli_args=["--tray=False"])
@@ -68,7 +68,7 @@ def test_settings_menu_close_action_minimizes(
     """Tests complete OCR workflow."""
     # GIVEN NormCap is started with any image as screenshot
     #   and tray icon is enabled
-    some_image = testcases[0].image_scaled
+    some_image = testcases[0].screenshot
     monkeypatch.setattr(screengrab, "get_capture_func", lambda: lambda: [some_image])
     monkeypatch.setattr(sys, "exit", lambda x: test_signal.on_event.emit(x))
     tray = run_normcap(extra_cli_args=["--tray=True"])

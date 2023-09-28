@@ -18,7 +18,7 @@ def test_normcap_ocr_testcases(
     #        and "parse"-mode
     #        and a certain test image as screenshot
     def mocked_capture_func():
-        return lambda: [testcase.image_scaled]
+        return lambda: [testcase.screenshot]
 
     monkeypatch.setattr(screengrab, "get_capture_func", mocked_capture_func)
     monkeypatch.setattr(sys, "exit", lambda x: test_signal.on_event.emit(x))
@@ -26,7 +26,7 @@ def test_normcap_ocr_testcases(
 
     # WHEN a certain test region is selected on the screen
     with qtbot.waitSignal(test_signal.on_event) as blocker:
-        select_region(on=tray.windows[0], pos=testcase.coords_scaled)
+        select_region(on=tray.windows[0], pos=testcase.coords)
 
     # THEN normcap should exit with code 0
     #    and text should be captured
@@ -37,11 +37,17 @@ def test_normcap_ocr_testcases(
     capture = tray.capture
     assert capture
 
-    assert (
-        capture.ocr_magic in testcase.expected_ocr_magics
-    ), f"{testcase.name=} {capture.ocr_text=}"
+    assert capture.ocr_magic in testcase.expected_ocr_magics, (
+        f"{testcase.image_path.name=}",
+        f"{capture.ocr_text=}",
+        f"{testcase.expected_ocr_text=}",
+    )
 
     similarity = SequenceMatcher(
         None, capture.ocr_text, testcase.expected_ocr_text
     ).ratio()
-    assert similarity >= 0.98, (testcase.name, f"{capture.ocr_text=}")
+    assert similarity >= 0.98, (
+        f"{testcase.image_path.name=}",
+        f"{capture.ocr_text=}",
+        f"{testcase.expected_ocr_text=}",
+    )
