@@ -62,8 +62,7 @@ repos:
         name: pytest
         stages: [commit]
         language: system
-        entry:
-          poetry run pytest tests/ -vv --cov --cov-report xml:cov.xml --cov-report html
+        entry: poetry run pytest tests/
         types: [python]
         pass_filenames: false
 
