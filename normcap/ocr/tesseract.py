@@ -3,6 +3,7 @@ import logging
 import re
 import subprocess
 import tempfile
+import time
 from os import PathLike, linesep
 from pathlib import Path
 from typing import Optional
@@ -41,7 +42,7 @@ def _run_command(cmd_args: list[str]) -> str:
 
 
 def get_languages(
-    tesseract_cmd: PathLike, tessdata_path: Optional[PathLike]
+    tesseract_cmd: PathLike | str, tessdata_path: Optional[PathLike | str]
 ) -> list[str]:
     cmd_args = [str(tesseract_cmd), "--list-langs"]
     if tessdata_path:
@@ -59,15 +60,27 @@ def get_languages(
     )
 
 
-def _run_tesseract(cmd: PathLike, image: QImage, args: list[str]) -> list[list[str]]:
-    with tempfile.NamedTemporaryFile(
-        prefix="normcap_", suffix=".png", delete=False
-    ) as input_image_fh:
-        image.save(input_image_fh.name)
-        input_image_path = input_image_fh.name
-    output_tsv_path = f"{input_image_path}.tsv"
+def _move_to_normcap_temp_dir(input_file: Path, postfix: str) -> None:
+    """Move file to NormCap's debug image tempdir."""
+    normcap_temp_dir = Path(tempfile.gettempdir()) / "normcap"
+    normcap_temp_dir.mkdir(exist_ok=True)
+    now_str = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 
-    try:
+    input_file.rename(normcap_temp_dir / f"{now_str}{postfix}{input_file.suffix}")
+
+
+def _run_tesseract(
+    cmd: PathLike | str, image: QImage, args: list[str]
+) -> list[list[str]]:
+    input_image_filename = "normcap_tesseract_input.png"
+
+    if logger.getEffectiveLevel() == logging.DEBUG:
+        args.extend(["-c", "tessedit_write_images=true"])
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        input_image_path = str((Path(temp_dir) / input_image_filename).resolve())
+        image.save(input_image_path)
+
         cmd_args = [
             str(cmd),
             input_image_path,
@@ -77,12 +90,16 @@ def _run_tesseract(cmd: PathLike, image: QImage, args: list[str]) -> list[list[s
             *args,
         ]
         _ = _run_command(cmd_args=cmd_args)
-        with Path(output_tsv_path).open(encoding="utf-8") as fh:
+
+        if logger.getEffectiveLevel() == logging.DEBUG:
+            _move_to_normcap_temp_dir(
+                input_file=Path(f"{input_image_path}.processed.tif"),
+                postfix="_processed_by_tesseract",
+            )
+
+        with Path(f"{input_image_path}.tsv").open(encoding="utf-8") as fh:
             tsv_file = csv.reader(fh, delimiter="\t", quotechar=None)
             lines = list(tsv_file)
-    finally:
-        Path(input_image_path).unlink(missing_ok=True)
-        Path(output_tsv_path).unlink(missing_ok=True)
 
     return lines
 
@@ -104,6 +121,6 @@ def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
     return [w for w in words if w["text"].strip()]
 
 
-def perform_ocr(cmd: PathLike, image: QImage, args: list[str]) -> list[dict]:
+def perform_ocr(cmd: PathLike | str, image: QImage, args: list[str]) -> list[dict]:
     lines = _run_tesseract(cmd=cmd, image=image, args=args)
     return _tsv_to_list_of_dict(lines)
