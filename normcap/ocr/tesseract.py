@@ -63,11 +63,19 @@ def get_languages(
 
 def _move_to_normcap_temp_dir(input_file: Path, postfix: str) -> None:
     """Move file to NormCap's debug image tempdir."""
+    if not input_file.exists():
+        logger.debug(
+            "Skip moving file to temp dir, it does not exist: %s", input_file.resolve()
+        )
+        return
+
     normcap_temp_dir = Path(tempfile.gettempdir()) / "normcap"
     normcap_temp_dir.mkdir(exist_ok=True)
     now_str = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
+    target_file = normcap_temp_dir / f"{now_str}{postfix}{input_file.suffix}"
+    target_file.unlink(missing_ok=True)
 
-    input_file.rename(normcap_temp_dir / f"{now_str}{postfix}{input_file.suffix}")
+    input_file.rename(target_file)
 
 
 def _run_tesseract(
