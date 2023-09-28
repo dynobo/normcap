@@ -30,6 +30,7 @@ class Worker(QtCore.QRunnable):
 
     @QtCore.Slot()
     def run(self) -> None:
+        logger.debug("Run download worker")
         try:
             import ssl
             from urllib.request import urlopen
@@ -42,9 +43,14 @@ class Worker(QtCore.QRunnable):
 
             self._raise_on_non_safe_urls(url=self.url)
 
+            logger.debug("Request data from %s", self.url)
             with urlopen(  # noqa: S310
                 self.url, context=context, timeout=self.timeout
             ) as response:
+                logger.debug(
+                    "Received response with status %s",
+                    getattr(response, "status", None),
+                )
                 raw_data = response.read()
         except Exception as exc:
             logger.exception("Could not download '%s'", self.url)

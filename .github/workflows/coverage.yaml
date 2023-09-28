@@ -80,7 +80,7 @@ jobs:
       # PERFORM TESTS
       - name: Pytest
         run: |
-          poetry run pytest -vv --cov --cov-report=xml
+          poetry run pytest
           poetry run coverage lcov
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
