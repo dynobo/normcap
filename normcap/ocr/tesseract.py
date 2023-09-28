@@ -21,6 +21,7 @@ def _raise_on_error(proc: subprocess.CompletedProcess) -> None:
 
 
 def _run_command(cmd_args: list[str]) -> str:
+    logger.debug("Executing '%s'", " ".join(cmd_args))
     try:
         creationflags = getattr(subprocess, "CREATE_NO_WINDOW", None)
         kwargs = {"creationflags": creationflags} if creationflags else {}
@@ -75,7 +76,7 @@ def _run_tesseract(
     input_image_filename = "normcap_tesseract_input.png"
 
     if logger.getEffectiveLevel() == logging.DEBUG:
-        args.extend(["-c", "tessedit_write_images=true"])
+        args.extend(["-c", "tessedit_write_images=1"])
 
     with tempfile.TemporaryDirectory() as temp_dir:
         input_image_path = str((Path(temp_dir) / input_image_filename).resolve())
@@ -89,9 +90,12 @@ def _run_tesseract(
             "tessedit_create_tsv=1",
             *args,
         ]
+
         _ = _run_command(cmd_args=cmd_args)
 
         if logger.getEffectiveLevel() == logging.DEBUG:
+            files = Path(f"{input_image_path}.processed.tif").parent.glob("*.*")
+            logger.debug("Files: %s", list(files))
             _move_to_normcap_temp_dir(
                 input_file=Path(f"{input_image_path}.processed.tif"),
                 postfix="_processed_by_tesseract",

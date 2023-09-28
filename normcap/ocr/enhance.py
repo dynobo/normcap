@@ -86,31 +86,6 @@ def resize_image(image: QImage, factor: float = 3.2) -> QImage:
     )
 
 
-def invert_image(image: QImage) -> QImage:
-    """Invert image.
-
-    Improves detection in case of bright text on dark background.
-    """
-    logger.debug("Invert image")
-    image.invertPixels()
-    return image
-
-
-def is_dark(image: QImage) -> bool:
-    """Detect if mean pixel brightness is below 125."""
-    i = 400  # points to sample
-    x = tuple(random.randint(0, image.width() - 1) for _ in range(i))  # noqa: S311
-    y = tuple(random.randint(0, image.height() - 1) for _ in range(i))  # noqa: S311
-    points = tuple(zip(x, y))
-
-    pixels = _get_pixels(image=image, points=points)
-
-    mean_color_value = sum(sum(p) for p in pixels) / 3 / len(points)
-    middle_grey = 125
-
-    return mean_color_value < middle_grey
-
-
 def preprocess(
     image: QImage, resize_factor: Optional[float], padding: Optional[int]
 ) -> QImage:
@@ -119,6 +94,4 @@ def preprocess(
         image = resize_image(image, factor=resize_factor)
     if padding:
         image = add_padding(image, padding=padding)
-    if is_dark(image):
-        image = invert_image(image)
     return image
