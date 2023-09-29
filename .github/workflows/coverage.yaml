@@ -61,12 +61,18 @@ jobs:
       - name: Prepare Windows
         if: matrix.os  == 'windows-2022'
         run: |
-          $url = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.1.20220118.exe"
+          $url = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.3.0.20221214.exe"
           Invoke-WebRequest -Uri $url -OutFile "tesseract_installer.exe"
           7z x tesseract_installer.exe -O"C:\Program Files\Tesseract-OCR"
+
+          $chi_sim_url = "https://github.com/tesseract-ocr/tessdata_fast/raw/main/chi_sim.traineddata"
+          Invoke-WebRequest -Uri $chi_sim_url -OutFile "C:\Program Files\Tesseract-OCR\tessdata\chi_sim.traineddata"
+          $jpn_url = "https://github.com/tesseract-ocr/tessdata_fast/raw/main/jpn.traineddata"
+          Invoke-WebRequest -Uri $jpn_url -OutFile "C:\Program Files\Tesseract-OCR\tessdata\jpn.traineddata"
+
           $tesseract = "C:\Program Files\Tesseract-OCR\"
           echo "$tesseract" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          echo "TESSDATA_PREFIX=$tesseract" >> $env:GITHUB_ENV
+          echo "TESSDATA_PREFIX=$tesseract\tessdata" >> $env:GITHUB_ENV
           Set-DisplayResolution -Width 1920 -Height 1080 -Force
 
       - name: Test tesseract
