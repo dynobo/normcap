@@ -292,23 +292,25 @@ def test_qt_log_wrapper_no_platform_as_error(caplog):
     logger.setLevel("DEBUG")
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
-    QtCore.qDebug("could not load the qt platform")  # type: ignore # Wrong in PySide?
+    QtCore.qDebug("could not load the qt platform")
 
     assert "could not load the qt platform" in caplog.text
     assert "[qt]" in caplog.text.lower()
     assert "error" in caplog.text.lower()
 
 
-def test_qt_log_wrapper_xcb_as_error(caplog):
+def test_qt_log_wrapper_platform_plugin_error_with_message(caplog):
     logger = logging.getLogger(__name__).root
     logger.setLevel("DEBUG")
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
-    QtCore.qDebug("xcb it was found")  # type: ignore # Wrong in PySide?
+    QtCore.qDebug(
+        "this application failed to start because no qt platform plugin could be "
+        "initialized. reinstalling the application may fix this problem."
+    )
 
     assert "[qt]" in caplog.text.lower()
-    assert "xcb it was found" in caplog.text.lower()
-    assert "installing additional dep" in caplog.text.lower()
+    assert "make sure your system has the following packages" in caplog.text.lower()
     assert "error" in caplog.text.lower()
 
 
