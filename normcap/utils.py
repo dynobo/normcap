@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -17,6 +18,12 @@ logger = logging.getLogger("normcap")
 
 _ISSUES_URLS = "https://github.com/dynobo/normcap/issues"
 _XCB_ERROR_URL = "https://dynobo.github.io/normcap/#faqs-couldnt-load-platform-plugin"
+
+
+def _is_wayland_display_manager() -> bool:
+    wayland_display = os.environ.get("WAYLAND_DISPLAY", "")
+    xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "")
+    return "wayland" in wayland_display.lower() or "wayland" in xdg_session_type.lower()
 
 
 def create_argparser() -> argparse.ArgumentParser:
@@ -158,7 +165,7 @@ def qt_log_wrapper(
     level = mode.name.lower()
     msg = message.lower()
 
-    if "opentype support missing for" in msg:
+    if re.search("opentype support missing for", msg, re.IGNORECASE):
         return
 
     if (level == "qtfatalmsg") or ("could not load the qt platform" in msg):
@@ -166,12 +173,31 @@ def qt_log_wrapper(
     else:
         logger.debug("[QT] %s - %s", level, msg)
 
-    if ("xcb" in msg) and ("it was found" in msg):
-        logger.error(
-            "Please check if installing additional dependencies might help, see: %s",
-            _XCB_ERROR_URL,
+    if re.search("no qt platform plugin could be initialized", msg, re.IGNORECASE):
+        if _is_wayland_display_manager():
+            packages = (
+                "- Arch/Manjaro: qt6-wayland\n"
+                "- Debian/Ubuntu/Mint: qt6-wayland\n"
+                "- Fedora/CentOS: qt6-qtwayland\n"
+                "- OpenSuse: qt6-wayland\n"
+            )
+        else:
+            packages = (
+                "- Arch/Manjaro: libxcb xcb-util-cursor\n"
+                "- Debian/Ubuntu/Mint: libxcb1 libxcb-cursor0\n"
+                "- Fedora/CentOS: libxcb xcb-util-cursor\n"
+                "- OpenSuse: libxcb libxcb-cursor0\n"
+            )
+        message = (
+            "NormCap crashed!\n\n"
+            "NormCap could not be started, probably because of missing system "
+            "dependencies!\n\n"
+            "Please make sure your system has the following packages installed:\n\n"
+            f"{packages}"
+            "(They might have different names on other Linux distributions)\n\n"
+            f"If that doesn't solve it, please open an issue: {_ISSUES_URLS}"
         )
-        logger.error("If that doesn't solve it, please open an issue: %s", _ISSUES_URLS)
+        logger.error(message)
 
 
 def copy_traineddata_files(target_dir: os.PathLike | None) -> None:
