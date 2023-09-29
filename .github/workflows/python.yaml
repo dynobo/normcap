@@ -85,7 +85,7 @@ jobs:
       - name: Prepare Windows
         if: matrix.os  == 'windows-2022'
         run: |
-          $url = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.0.1.20220118.exe"
+          $url = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.3.0.20221214.exe"
           Invoke-WebRequest -Uri $url -OutFile "tesseract_installer.exe"
           7z x tesseract_installer.exe -O"C:\Program Files\Tesseract-OCR"
 
