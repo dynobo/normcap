@@ -114,10 +114,9 @@ def get_tessdata_path() -> Optional[os.PathLike]:
 
 @functools.cache
 def display_manager_is_wayland() -> bool:
-    """Identify relevant display managers (Linux)."""
     xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
-    wayland_display = os.environ.get("WAYLAND_DISPLAY", "").lower()
-    return "wayland" in wayland_display or "wayland" in xdg_session_type
+    has_wayland_display_env = os.environ.get("WAYLAND_DISPLAY", "") != ""
+    return "wayland" in xdg_session_type or has_wayland_display_env
 
 
 @functools.cache

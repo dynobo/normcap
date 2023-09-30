@@ -25,7 +25,7 @@ def test_display_manager_is_not_wayland(monkeypatch):
     system_info.display_manager_is_wayland.cache_clear()
     assert not system_info.display_manager_is_wayland()
 
-    monkeypatch.setenv("WAYLAND_DISPLAY", "something")
+    monkeypatch.setenv("WAYLAND_DISPLAY", "")
     monkeypatch.setenv("XDG_SESSION_TYPE", "something")
     system_info.display_manager_is_wayland.cache_clear()
     assert not system_info.display_manager_is_wayland()
