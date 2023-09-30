@@ -27,9 +27,9 @@ def _wl_copy(text: str) -> None:
 
 
 def _is_wayland_display_manager() -> bool:
-    wayland_display = os.environ.get("WAYLAND_DISPLAY", "")
-    xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "")
-    return "wayland" in wayland_display.lower() or "wayland" in xdg_session_type.lower()
+    xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
+    has_wayland_display_env = os.environ.get("WAYLAND_DISPLAY", "") != ""
+    return "wayland" in xdg_session_type or has_wayland_display_env
 
 
 def get_copy_func() -> Callable:

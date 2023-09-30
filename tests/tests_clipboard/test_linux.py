@@ -15,8 +15,8 @@ from normcap import clipboard
         ("Wayland", "", True),
         ("", "Gnome Wayland", True),
         ("Wayland", "Gnome Wayland", True),
-        ("X11", "Gnome Wayland", True),
-        ("X11", "Gnome Shell", False),
+        ("", "Gnome Shell", False),
+        ("", "", False),
     ],
 )
 def test_is_wayland_display_manager(
