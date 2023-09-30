@@ -102,8 +102,6 @@ def _run_tesseract(
         _ = _run_command(cmd_args=cmd_args)
 
         if logger.getEffectiveLevel() == logging.DEBUG:
-            files = Path(f"{input_image_path}.processed.tif").parent.glob("*.*")
-            logger.debug("Files: %s", list(files))
             _move_to_normcap_temp_dir(
                 input_file=Path(f"{input_image_path}.processed.tif"),
                 postfix="_processed_by_tesseract",
