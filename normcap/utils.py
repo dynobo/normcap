@@ -16,9 +16,7 @@ from normcap.gui.settings import DEFAULT_SETTINGS
 logger = logging.getLogger("normcap")
 
 
-_ISSUES_URLS = "https://github.com/dynobo/normcap/issues"
-_XCB_ERROR_URL = "https://dynobo.github.io/normcap/#faqs-couldnt-load-platform-plugin"
-
+_ISSUES_URLS = "https://github.com/dynobo/normcap/issues/new"
 
 def _is_wayland_display_manager() -> bool:
     wayland_display = os.environ.get("WAYLAND_DISPLAY", "")
@@ -176,26 +174,41 @@ def qt_log_wrapper(
     if re.search("no qt platform plugin could be initialized", msg, re.IGNORECASE):
         if _is_wayland_display_manager():
             packages = (
-                "- Arch/Manjaro: qt6-wayland\n"
+                "- Arch/Manjaro: \n"
                 "- Debian/Ubuntu/Mint: qt6-wayland\n"
-                "- Fedora/CentOS: qt6-qtwayland\n"
+                "- Fedora/CentOS: \n"
                 "- OpenSuse: qt6-wayland\n"
             )
+            packages = (\
+                "================================================\n"
+                "DISTRO               | REQUIRED PACKAGES\n"
+                "================================================\n"
+                "Arch/Manjaro         | qt6-wayland\n"
+                "Debian/Ubuntu/Mint   |\n"
+                "OpenSuse             |\n"
+                "------------------------------------------------\n"
+                "Fedora/CentOS        | qt6-qtwayland\n"
+                "------------------------------------------------\n"
+            )
         else:
-            packages = (
-                "- Arch/Manjaro: libxcb xcb-util-cursor\n"
-                "- Debian/Ubuntu/Mint: libxcb1 libxcb-cursor0\n"
-                "- Fedora/CentOS: libxcb xcb-util-cursor\n"
-                "- OpenSuse: libxcb libxcb-cursor0\n"
+            packages = (\
+                "================================================\n"
+                "DISTRO               | REQUIRED PACKAGES\n"
+                "================================================\n"
+                "Arch/Manjaro         | libxcb xcb-util-cursor\n"
+                "Fedora/CentOS        |\n"
+                "------------------------------------------------\n"
+                "Debian/Ubuntu/Mint   | libxcb1 libxcb-cursor0\n"
+                "OpenSuse             |\n"
+                "------------------------------------------------\n"
             )
         message = (
             "NormCap crashed!\n\n"
             "NormCap could not be started, probably because of missing system "
-            "dependencies!\n\n"
-            "Please make sure your system has the following packages installed:\n\n"
-            f"{packages}"
-            "(They might have different names on other Linux distributions)\n\n"
-            f"If that doesn't solve it, please open an issue: {_ISSUES_URLS}"
+            "dependencies!\n"
+            "Please make sure you have the following system packages installed:\n\n"
+            f"{packages}\n"
+            f"If that doesn't solve the problem, please report it via GitHub:\n{_ISSUES_URLS}"
         )
         logger.error(message)
 
