@@ -206,11 +206,11 @@ class Window(QtWidgets.QMainWindow):
         client itself can't do this. However, there are DE dependent workarounds.
         """
         self.setFocus()
-        logger.debug("Move window %s to %s", self.screen_.index, self.screen_.rect)
+        logger.debug("Move window %s to %s", self.screen_.index, self.screen_)
         if system_info.desktop_environment() == DesktopEnvironment.GNOME:
-            _move_active_window_to_position_on_gnome(self.screen_.rect)
+            _move_active_window_to_position_on_gnome(self.screen_)
         elif system_info.desktop_environment() == DesktopEnvironment.KDE:
-            _move_active_window_to_position_on_kde(self.screen_.rect)
+            _move_active_window_to_position_on_kde(self.screen_)
         self.is_positioned = True
 
     def set_fullscreen(self) -> None:
@@ -240,7 +240,7 @@ class Window(QtWidgets.QMainWindow):
         ):
             self.setGeometry(*self.screen_.scale_geometry())
         else:
-            self.setGeometry(*self.screen_.rect.geometry)
+            self.setGeometry(*self.screen_.geometry)
 
         # On unity, setting min/max window size breaks fullscreen.
         if system_info.desktop_environment() != DesktopEnvironment.UNITY:
@@ -314,7 +314,9 @@ class Window(QtWidgets.QMainWindow):
         self.selection_rect.setBottomRight(event.position().toPoint())
 
         selection_coords = cast(tuple, self.selection_rect.normalized().getCoords())
-        scaled_selection_rect = Rect(*selection_coords).scaled(self._get_scale_factor())
+        scaled_selection_rect = Rect(*selection_coords).scale_coords(
+            self._get_scale_factor()
+        )
 
         self.clear_selection()
 
@@ -384,12 +386,12 @@ class UiContainerLabel(QtWidgets.QLabel):
             return
 
         selection = Rect(*cast(tuple, rect.normalized().getCoords()))
-        selection_scaled = selection.scaled(self.debug_info.scale_factor)
+        selection_scaled = selection.scale_coords(self.debug_info.scale_factor)
 
         lines = (
             "[ Screen ]",
             f"Size: {self.debug_info.screen.size}",
-            f"Position: {self.debug_info.screen.rect.coords}",
+            f"Position: {self.debug_info.screen.coords}",
             f"Selected region: {selection.geometry}",
             f"Device pixel ratio: {self.debug_info.screen.device_pixel_ratio}",
             "",

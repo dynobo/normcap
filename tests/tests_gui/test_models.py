@@ -34,7 +34,7 @@ def test_rect_scaled(coords, factor, expected_scaled_coords):
     rect = Rect(*coords)
 
     # WHEN it gets scaled through its method
-    rect_scaled = rect.scaled(factor)
+    rect_scaled = rect.scale_coords(factor)
 
     # THEN it should result in certain scaled coords
     assert rect_scaled.coords == expected_scaled_coords
@@ -54,7 +54,9 @@ def test_capture_image_area(capture: Capture, width, height, expected_area):
 
 def test_screen_properties():
     # GIVEN a Screen is instantiated with certain rect information
-    screen = Screen(device_pixel_ratio=2, rect=Rect(0, 0, 1920, 1080), index=1)
+    screen = Screen(
+        device_pixel_ratio=2, left=0, top=0, right=1920, bottom=1080, index=1
+    )
 
     # WHEN properties are accessed
     # THEN they should return correct values

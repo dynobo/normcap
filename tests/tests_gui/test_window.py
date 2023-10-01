@@ -14,7 +14,7 @@ def test_move_active_window_to_position_raises_on_non_linux():
 
     # THEN an exception should be raised, because those functions are not supposed to
     #   work on a non-Linux system
-    rect = models.Rect()
+    rect = models.Rect(left=0, top=0, right=0, bottom=0)
 
     with pytest.raises(TypeError, match="should only be called on Linux"):
         window._move_active_window_to_position_on_gnome(rect)
@@ -40,7 +40,10 @@ def test_window_get_scale_factor(
     image = QtGui.QImage(QtCore.QSize(*img_size), QtGui.QImage.Format.Format_RGB32)
     screen = models.Screen(
         device_pixel_ratio=1.0,
-        rect=models.Rect(0, 0, screen_size[0] - 1, screen_size[1] - 1),
+        left=0,
+        top=0,
+        right=screen_size[0] - 1,
+        bottom=screen_size[1] - 1,
         index=0,
         screenshot=image,
     )
@@ -59,7 +62,10 @@ def test_window_get_scale_factor_raises_if_missing(qtbot, temp_settings):
     image = QtGui.QImage(QtCore.QSize(640, 480), QtGui.QImage.Format.Format_RGB32)
     screen = models.Screen(
         device_pixel_ratio=1.0,
-        rect=models.Rect(0, 0, 600, 400),
+        left=0,
+        top=0,
+        right=600,
+        bottom=400,
         index=0,
         screenshot=image,
     )
@@ -83,7 +89,10 @@ def test_window_esc_key_pressed(qtbot, temp_settings):
     image = QtGui.QImage(600, 400, QtGui.QImage.Format.Format_RGB32)
     screen = models.Screen(
         device_pixel_ratio=1.0,
-        rect=models.Rect(0, 0, 600, 400),
+        left=0,
+        top=0,
+        right=600,
+        bottom=400,
         index=0,
         screenshot=image,
     )
@@ -104,7 +113,10 @@ def test_window_esc_key_pressed_while_selecting(qtbot, temp_settings):
     image = QtGui.QImage(600, 400, QtGui.QImage.Format.Format_RGB32)
     screen = models.Screen(
         device_pixel_ratio=1.0,
-        rect=models.Rect(0, 0, 600, 400),
+        left=0,
+        top=0,
+        right=600,
+        bottom=400,
         index=0,
         screenshot=image,
     )
