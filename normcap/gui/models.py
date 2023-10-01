@@ -148,6 +148,10 @@ class Screen:
         """Get screen width and height."""
         return (self.width, self.height)
 
+    def scale_geometry(self, factor: float | None = None) -> tuple[int, int, int, int]:
+        factor = factor or 1 / self.device_pixel_ratio
+        return self.rect.scaled(factor).geometry
+
 
 @dataclass()
 class Capture:
