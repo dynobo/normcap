@@ -217,6 +217,9 @@ class Window(QtWidgets.QMainWindow):
         """Set window to full screen using platform specific methods."""
         logger.debug("Set window of screen %s to fullscreen", self.screen_.index)
 
+        if not self.screen_.screenshot:
+            raise ValueError("Screenshot is missing on screen %s", self.screen_)
+
         self.setWindowFlags(
             QtGui.Qt.WindowType.FramelessWindowHint
             | QtGui.Qt.WindowType.CustomizeWindowHint
@@ -225,7 +228,19 @@ class Window(QtWidgets.QMainWindow):
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 
         # Moving window to corresponding monitor
-        self.setGeometry(*self.screen_.rect.geometry)
+        # Using scaled window dims to fit sizing with dpr in case scaling is enabled
+        # See: https://github.com/dynobo/normcap/issues/397
+        # TODO: Test in Multi Display setups with different scalings
+        # TODO: Test in Multi Display setups with differen position
+        # TODO: Position in Multi Display probably problematic!
+        if (
+            system_info.display_manager_is_wayland()
+            and self.screen_.size == self.screen_.screenshot.size().toTuple()
+            and self.screen_.device_pixel_ratio != 1
+        ):
+            self.setGeometry(*self.screen_.scale_geometry())
+        else:
+            self.setGeometry(*self.screen_.rect.geometry)
 
         # On unity, setting min/max window size breaks fullscreen.
         if system_info.desktop_environment() != DesktopEnvironment.UNITY:

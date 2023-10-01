@@ -18,6 +18,7 @@ logger = logging.getLogger("normcap")
 
 _ISSUES_URLS = "https://github.com/dynobo/normcap/issues/new"
 
+
 def _is_wayland_display_manager() -> bool:
     xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
     has_wayland_display_env = os.environ.get("WAYLAND_DISPLAY", "") != ""
@@ -179,7 +180,7 @@ def qt_log_wrapper(
                 "- Fedora/CentOS: \n"
                 "- OpenSuse: qt6-wayland\n"
             )
-            packages = (\
+            packages = (
                 "================================================\n"
                 "DISTRO               | REQUIRED PACKAGES\n"
                 "================================================\n"
@@ -191,7 +192,7 @@ def qt_log_wrapper(
                 "------------------------------------------------\n"
             )
         else:
-            packages = (\
+            packages = (
                 "================================================\n"
                 "DISTRO               | REQUIRED PACKAGES\n"
                 "================================================\n"
@@ -208,7 +209,8 @@ def qt_log_wrapper(
             "dependencies!\n"
             "Please make sure you have the following system packages installed:\n\n"
             f"{packages}\n"
-            f"If that doesn't solve the problem, please report it via GitHub:\n{_ISSUES_URLS}"
+            "If that doesn't solve the problem, please report it via GitHub:\n"
+            f"{_ISSUES_URLS}\n"
         )
         logger.error(message)
 

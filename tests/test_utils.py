@@ -310,7 +310,7 @@ def test_qt_log_wrapper_platform_plugin_error_with_message(caplog):
     )
 
     assert "[qt]" in caplog.text.lower()
-    assert "make sure your system has the following packages" in caplog.text.lower()
+    assert "make sure you have the following system packages" in caplog.text.lower()
     assert "error" in caplog.text.lower()
 
 
