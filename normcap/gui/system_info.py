@@ -13,7 +13,7 @@ from PySide6 import __version__ as pyside_version
 
 from normcap import __version__
 from normcap.gui.localization import translate
-from normcap.gui.models import DesktopEnvironment, Rect, Screen
+from normcap.gui.models import DesktopEnvironment, Screen
 
 logger = logging.getLogger(__name__)
 
@@ -146,12 +146,10 @@ def screens() -> list[Screen]:
     return [
         Screen(
             device_pixel_ratio=QtGui.QScreen.devicePixelRatio(screen),
-            rect=Rect(
-                left=screen.geometry().left(),
-                top=screen.geometry().top(),
-                right=screen.geometry().right(),
-                bottom=screen.geometry().bottom(),
-            ),
+            left=screen.geometry().left(),
+            top=screen.geometry().top(),
+            right=screen.geometry().right(),
+            bottom=screen.geometry().bottom(),
             index=idx,
         )
         for idx, screen in enumerate(QtWidgets.QApplication.screens())

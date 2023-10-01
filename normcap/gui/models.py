@@ -76,10 +76,10 @@ class Rect:
     All points are inclusive (are part of the rectangle).
     """
 
-    left: int = 0
-    top: int = 0
-    right: int = 0
-    bottom: int = 0
+    left: int
+    top: int
+    right: int
+    bottom: int
 
     def __str__(self) -> str:
         return (
@@ -89,12 +89,12 @@ class Rect:
 
     @property
     def geometry(self) -> tuple[int, int, int, int]:
-        """Expose rect for usage with QT."""
+        """Expose rect for usage with QT as (left, top, width, height)."""
         return self.left, self.top, self.width, self.height
 
     @property
     def coords(self) -> tuple[int, int, int, int]:
-        """Expose rect as tuple of coordinates."""
+        """Expose rect as tuple of coordinates as (left, top, right, bottom)."""
         return self.left, self.top, self.right, self.bottom
 
     @property
@@ -113,7 +113,7 @@ class Rect:
         return (self.width, self.height)
 
     # ONHOLD: Annotate as Self with Python 3.11
-    def scaled(self, scale_factor: float):  # noqa: ANN201
+    def scale_coords(self, scale_factor: float):  # noqa: ANN201
         """Create an integer-scaled copy of the Rect."""
         return Rect(
             top=int(self.top * scale_factor),
@@ -124,33 +124,26 @@ class Rect:
 
 
 @dataclass()
-class Screen:
-    """About an attached display."""
+class Screen(Rect):
+    """Extends Rect with screen specific properties."""
 
     device_pixel_ratio: float
-    rect: Rect
     index: int
-
     screenshot: Optional[QtGui.QImage] = None
-
-    @property
-    def width(self) -> int:
-        """Get screen width."""
-        return self.rect.width
-
-    @property
-    def height(self) -> int:
-        """Get screen height."""
-        return self.rect.height
-
-    @property
-    def size(self) -> tuple[int, int]:
-        """Get screen width and height."""
-        return (self.width, self.height)
 
     def scale_geometry(self, factor: float | None = None) -> tuple[int, int, int, int]:
         factor = factor or 1 / self.device_pixel_ratio
-        return self.rect.scaled(factor).geometry
+        return self.scale_coords(factor).geometry
+
+    def scale_coords(self, factor: float | None):  # noqa: ANN201
+        """Create an integer-scaled copy of the Rect."""
+        factor = factor or 1 / self.device_pixel_ratio
+        return Rect(
+            top=int(self.top * factor),
+            bottom=int(self.bottom * factor),
+            left=int(self.left * factor),
+            right=int(self.right * factor),
+        )
 
 
 @dataclass()
@@ -163,7 +156,7 @@ class Capture:
     image: QtGui.QImage = field(default_factory=QtGui.QImage)
     screen: Optional[Screen] = None
     scale_factor: float = 1
-    rect: Rect = field(default_factory=Rect)
+    rect: Rect = field(default_factory=lambda: Rect(left=0, top=0, right=0, bottom=0))
 
     ocr_text: Optional[str] = None
     ocr_magic: Optional[str] = None
