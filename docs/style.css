@@ -148,8 +148,7 @@ small {
   background-repeat: no-repeat;
   background-size: cover;
   box-shadow: rgba(0, 0, 0, 0.06) 0px 1.125px 8px 0px,
-    rgba(0, 0, 0, 0.12) 0px 1.125px 16px 0px,
-    rgba(0, 0, 0, 0.035) 0px 0px 0px 1.0625px;
+    rgba(0, 0, 0, 0.12) 0px 1.125px 16px 0px, rgba(0, 0, 0, 0.035) 0px 0px 0px 1.0625px;
   margin-top: calc(var(--spacing) * 0.5);
   margin-bottom: calc(var(--spacing) * 1.5);
   color: #e1e6ea;
@@ -180,8 +179,22 @@ small {
   background-image: url("img/offline.png");
 }
 
-/* ACCORDEONS */
+/* ACCORDIONS */
 /**************/
+details {
+  padding-top: calc(var(--spacing) * 0.6);
+  padding-bottom: calc(var(--spacing) * 0.6);
+  margin: 0px;
+}
+
+details:first-child {
+  margin-top: calc(var(--spacing) * -1.6);
+}
+
+details:last-child {
+  margin-bottom: calc(var(--spacing) * 1.6);
+}
+
 details[open] > summary {
   margin-bottom: calc(var(--spacing) * 1.6);
   text-decoration: underline;
@@ -191,6 +204,10 @@ details summary:focus,
 details[open] > summary:focus,
 details[open] > summary:not(:focus) {
   color: var(--color);
+}
+
+details summary {
+  line-height: 1.2;
 }
 
 /* PYTHON PACKAGES */
@@ -208,7 +225,9 @@ footer {
 
 /* COFFEE */
 .coffee {
-  height: 40px !important; margin-top: 10px; opacity: 0.85;
+  height: 40px !important;
+  margin-top: 10px;
+  opacity: 0.85;
 }
 .coffee:hover {
   opacity: 1;
