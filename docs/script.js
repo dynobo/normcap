@@ -30,34 +30,41 @@ themeSwitcher.init();
 
 
 const detailsToggler = {
-  onMutation(mutationList, observer) {
-    mutationList.forEach(function(mutation) {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'open') {
-        let id = mutation.target.getAttribute("id");
-        if (id) {
-          history.pushState({},"", window.location.href.split('#')[0] + "#" + id);
-        }
-      }
-    })
+  openDetailFromHash() {
+    let hash = window.location.hash;
+    if (hash.startsWith("#faqs-") || hash.startsWith("#python-package-")) {
+      const detail = document.getElementById(hash.slice(1));
+      detail.setAttribute("open", "");
+    }
+  },
+
+  onDetailClick(event) {
+    let detail = event.target.parentNode;
+    let isDetail = detail.nodeName == "DETAILS";
+    let isOpened = !!(detail.getAttribute("open") != "");
+    if (isDetail && isOpened) {
+      history.replaceState(undefined, undefined, "#"+detail.id)
+    }
+  },
+
+  addDetailStateChangeListeners(){
+    self = this;
+    document.querySelectorAll("details").forEach(function(detail) {
+      detail.addEventListener("click", self.onDetailClick)
+    });
+  },
+
+  addHashChangeListener(){
+    self = this;
+    window.addEventListener('hashchange', function () {
+      self.openDetailFromHash()
+    });
   },
 
   init() {
-    // Open details if hash, adjust scroll a bit
-    const hash = document.location.hash
-    if (hash.startsWith("#faqs-") || hash.startsWith("#python-package-")) {
-      const id = hash.slice(1);
-      const detail = document.getElementById(id);
-      detail.setAttribute("open", "");
-      window.setTimeout(function(){
-        window.scrollTo(window.scrollX, window.scrollY - 100);
-      }, 10);
-    }
-
-    // Adjust hash on details open
-    const observer = new MutationObserver(this.onMutation);
-    document.querySelectorAll("details").forEach(function(detail) {
-      observer.observe(detail, {attributes: true});
-    });
+    this.openDetailFromHash();
+    this.addHashChangeListener();
+    this.addDetailStateChangeListeners();
   }
 }
 
