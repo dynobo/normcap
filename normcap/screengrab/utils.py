@@ -7,6 +7,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -84,6 +85,40 @@ def get_gnome_version() -> Optional[str]:
 def has_dbus_portal_support() -> bool:
     gnome_version = get_gnome_version()
     return not gnome_version or gnome_version >= "41"
+
+
+def has_grim_support() -> bool:
+    if not shutil.which("grim"):
+        return False
+    with tempfile.TemporaryDirectory() as temp_dir:
+        try:
+            completed_proc = subprocess.run(
+                [  # noqa: S607
+                    "grim",
+                    "-g",
+                    "0,0 5x5",
+                    "-l",
+                    "0",
+                    f"{temp_dir}{os.pathsep}normcap_test.png",
+                ],
+                shell=False,  # noqa: S603
+                check=False,
+                timeout=3,
+                text=True,
+                capture_output=True,
+            )
+            grim_supported = completed_proc.returncode == 0
+            logger.debug(
+                "grim output: stdout=%s, stderr=%s",
+                completed_proc.stdout,
+                completed_proc.stderr,
+            )
+        except Exception:
+            logger.exception("Couldn't determine grim support.")
+            grim_supported = False
+
+    logger.debug("Support for grim is%s available.", "" if grim_supported else " not")
+    return grim_supported
 
 
 def macos_reset_screenshot_permission() -> None:

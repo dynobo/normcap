@@ -126,6 +126,8 @@ def desktop_environment() -> DesktopEnvironment:
     xdg_current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
     desktop_session = os.environ.get("DESKTOP_SESSION", "").lower()
     gnome_desktop_session_id = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
+    hyprland_instance_signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE", "")
+
     if gnome_desktop_session_id == "this-is-deprecated":
         gnome_desktop_session_id = ""
 
@@ -137,6 +139,8 @@ def desktop_environment() -> DesktopEnvironment:
         return DesktopEnvironment.SWAY
     if "unity" in xdg_current_desktop:
         return DesktopEnvironment.UNITY
+    if hyprland_instance_signature:
+        return DesktopEnvironment.HYPRLAND
 
     return DesktopEnvironment.OTHER
 
