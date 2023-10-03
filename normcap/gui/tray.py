@@ -205,6 +205,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             DesktopEnvironment.GNOME,
             DesktopEnvironment.KDE,
             DesktopEnvironment.SWAY,
+            DesktopEnvironment.HYPRLAND,
         ):
             self.com.on_window_positioned.connect(self._create_next_window)
             self._create_next_window()

@@ -135,6 +135,7 @@ class MenuButton(QtWidgets.QToolButton):
 
     @QtCore.Slot(QtGui.QAction)
     def on_item_click(self, action: QtGui.QAction) -> None:
+        # TODO: Reduce Cyclomatic Complexity
         action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None

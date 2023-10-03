@@ -40,6 +40,11 @@ def get_capture_func() -> CaptureFunc:
         from normcap.screengrab import qt
         return qt.capture
 
+    if utils.has_grim_support():
+        logger.debug("Select capture method grim")
+        from normcap.screengrab import grim
+        return grim.capture
+
     if utils.has_dbus_portal_support():
         logger.debug("Select capture method DBUS portal")
         from normcap.screengrab import dbus_portal
