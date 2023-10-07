@@ -1,16 +1,19 @@
 """Capture screenshots for all screens using org.freedesktop.portal.Desktop."""
 
 import logging
-import os
 import random
 import re
-import time
 from typing import Optional
 from urllib.parse import urlparse
 
-from PySide6 import QtCore, QtDBus, QtGui, QtWidgets
+from PySide6 import QtCore, QtDBus, QtGui
 
-from normcap.screengrab import ScreenshotRequestError, ScreenshotResponseError
+from normcap.screengrab.exceptions import (
+    ScreenshotPermissionError,
+    ScreenshotRequestError,
+    ScreenshotResponseError,
+    ScreenshotTimeoutError,
+)
 from normcap.screengrab.utils import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)
@@ -118,7 +121,16 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         logger.debug("DBus signal message: %s", str(message))
 
         code, _ = message.arguments()
-        if code != 0:
+        all_okay_code = 0
+        permission_denied_code = 2
+
+        if code == permission_denied_code:
+            msg = f"Permission denied for Screenshot via xdg-portal! Message: {message}"
+            logger.error(msg)
+            self.on_exception.emit(ScreenshotPermissionError(msg))
+            return
+
+        if code != all_okay_code:
             msg = f"Error code {code} received from xdg-portal!"
             logger.error(msg)
             self.on_exception.emit(ScreenshotResponseError(msg))
@@ -192,28 +204,6 @@ def _synchronized_capture(interactive: bool) -> list[QtGui.QImage]:
     return split_full_desktop_to_screens(full_image)
 
 
-class PermissionWindow(QtWidgets.QMainWindow):
-    def __init__(
-        self,
-        parent: Optional[QtWidgets.QWidget] = None,
-    ) -> None:
-        super().__init__(parent)
-        self.setWindowTitle("NormCap")
-
-        label = QtWidgets.QLabel(
-            "<b>Timeout when taking a screenshot!</b>"
-            "<br><br>"
-            "Retrying with different settings..."
-            "<br><br>"
-            "Please grant NormCap permission to take<br>"
-            "screenshots, if you get asked for it in a pop-up!"
-            "<br><br>"
-            "(You should not see this Window on the next start!)"
-        )
-        self.setCentralWidget(label)
-        self.setContentsMargins(20, 10, 20, 10)
-
-
 def capture() -> list[QtGui.QImage]:
     """Capture screenshots for all screens using org.freedesktop.portal.Desktop.
 
@@ -225,35 +215,13 @@ def capture() -> list[QtGui.QImage]:
 
     As there is no way to query for that permission, we try both:
     1. Try none-interactive mode
-    2. If timeout triggers, retry interactive mode
+    2. If timeout triggers, retry in interactive mode with a helper window
     """
-    result = []
+    result: list[QtGui.QImage] = []
+
     try:
-        logger.debug("Request screenshot with interactive=False")
         result = _synchronized_capture(interactive=False)
-    except TimeoutError:
-        logger.warning("Timeout when taking screenshot!")
+    except TimeoutError as exc:
+        raise ScreenshotTimeoutError("Timeout when taking screenshot!") from exc
     else:
         return result
-
-    if not os.getenv("FLATPAK_ID"):
-        logger.warning(
-            "Didn't receive screenshot! Are permissions missing or did you "
-            "cancel the intermediate dialog?"
-        )
-        return result
-
-    logger.debug("Retry requesting screenshot with interactive=True")
-    window = PermissionWindow()
-    window.show()
-    while not window.isActiveWindow():
-        QtWidgets.QApplication.processEvents()
-        time.sleep(0.3)
-    try:
-        logger.debug("Request screenshot with interactive=True")
-        result = _synchronized_capture(interactive=True)
-        window.hide()
-    except TimeoutError:
-        logger.warning("Timeout when taking screenshot!")
-
-    return result

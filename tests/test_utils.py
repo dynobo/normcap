@@ -95,7 +95,7 @@ def test_settings_in_argparser_attributes():
     argparser_defaults = vars(utils.create_argparser().parse_args([]))
     settings = Settings(organization="normcap_TEST")
     for key in settings.allKeys():
-        if key in ("version", "last-update-check"):
+        if key in ("version", "last-update-check", "has-screenshot-permission"):
             continue
         assert key.replace("-", "_") in argparser_defaults
 
