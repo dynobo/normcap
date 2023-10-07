@@ -4,16 +4,15 @@ import logging
 import os
 import tempfile
 from pathlib import Path
-from typing import Union
+from typing import Any, Union, cast
 
 from PySide6 import QtGui
 
 try:
     from PySide6 import QtDBus
 
-    HAS_QTDBUS = True
 except ImportError:
-    HAS_QTDBUS = False
+    QtDBus = cast(Any, None)
 
 from normcap.screengrab.utils import split_full_desktop_to_screens
 
@@ -21,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 def _get_screenshot_interface():  # noqa: ANN202
-    if not HAS_QTDBUS:
+    if not QtDBus:
         raise ModuleNotFoundError("QtDBUS not available.")
 
     item = "org.gnome.Shell.Screenshot"
@@ -36,7 +35,7 @@ def _get_screenshot_interface():  # noqa: ANN202
 
 def _fullscreen_to_file(filename: Union[os.PathLike, str]) -> None:
     """Capture full screen and store it in file."""
-    if not HAS_QTDBUS:
+    if not QtDBus:
         raise ModuleNotFoundError("QtDBUS not available.")
 
     screenshot_interface = _get_screenshot_interface()

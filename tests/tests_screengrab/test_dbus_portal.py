@@ -4,32 +4,21 @@ import time
 
 import pytest
 
-from normcap.screengrab import ScreenshotRequestError, ScreenshotResponseError
-
-# ONHOLD: Remove skip_on_gh's once gh-runners support portal.Screenshot w/o dialog
-#       which is probably with Ubuntu 22.10+
-
-
-@pytest.mark.gui()
-@pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
-def test_synchronized_capture_triggers_timeout(monkeypatch, dbus_portal):
-    # This test needs to be executed first or it will hang for unknown reason!
-    timeout = 1
-    monkeypatch.setattr(dbus_portal, "TIMEOUT_SECONDS", timeout)
-    monkeypatch.setattr(
-        dbus_portal.OrgFreedesktopPortalScreenshot,
-        "grab_full_desktop",
-        lambda _: time.sleep(timeout + 0.1),
-    )
-
-    with pytest.raises(TimeoutError):
-        _ = dbus_portal._synchronized_capture(interactive=False)
+from normcap.screengrab.exceptions import (
+    ScreenshotRequestError,
+    ScreenshotResponseError,
+)
+from normcap.screengrab.permissions import has_screenshot_permission
 
 
 @pytest.mark.gui()
 @pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
 @pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
-def test_synchronized_capture(dbus_portal):
+def test_synchronized_capture(dbus_portal, qapp):
+    if not has_screenshot_permission():
+        pytest.xfail(
+            "Root UI application which started this test has no screenshot permission!"
+        )
     result = dbus_portal._synchronized_capture(interactive=False)
     assert result
 
@@ -66,4 +55,19 @@ def test_synchronized_capture_triggers_response_error(monkeypatch, dbus_portal):
         _decorated_got_signal(dbus_portal.OrgFreedesktopPortalScreenshot.got_signal),
     )
     with pytest.raises(ScreenshotResponseError):
+        _ = dbus_portal._synchronized_capture(interactive=False)
+
+
+@pytest.mark.gui()
+@pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
+def test_synchronized_capture_triggers_timeout(monkeypatch, dbus_portal):
+    timeout = 1
+    monkeypatch.setattr(dbus_portal, "TIMEOUT_SECONDS", timeout)
+    monkeypatch.setattr(
+        dbus_portal.OrgFreedesktopPortalScreenshot,
+        "grab_full_desktop",
+        lambda _: time.sleep(timeout + 0.1),
+    )
+
+    with pytest.raises(TimeoutError):
         _ = dbus_portal._synchronized_capture(interactive=False)

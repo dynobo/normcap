@@ -17,6 +17,7 @@ from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
 from normcap import __version__, clipboard, ocr, screengrab
 from normcap.gui import (  # noqa: F401 (loads resources!)
+    constants,
     introduction,
     resources,
     system_info,
@@ -94,19 +95,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.settings.reset()
         self.cli_mode = args.get("cli_mode", False)
 
-        # Check/get prerequisites for running
-        if not self._ensure_single_instance():
-            self.com.exit_application.emit(0)
-            return
-
-        if not self._ensure_screenshot_permission():
-            logger.error("Missing screenshot permission!")
-            # When NormCaps exits, the macOS dialog to grant "Screen Recording
-            # permission will also disappear immediately. That's why we give the user
-            # some seconds to click on the dialog, before we exit the application.
-            self.com.exit_application.emit(8)
-            return
-
         # Setup timers
         # TODO: Handle timers less verbose and init in separate method
         self.reset_tray_icon_timer = QtCore.QTimer(parent=self)
@@ -121,6 +109,22 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.delayed_init_timer.setSingleShot(True)
         self.delayed_init_timer.timeout.connect(self._delayed_init)
         self.delayed_init_timer.start(50)
+
+        # Check/get prerequisites for running
+        if not self._ensure_single_instance():
+            self.com.exit_application.emit(0)
+            return
+
+        if not self._ensure_screenshot_permission():
+            logger.error("Missing screenshot permission!")
+            delay = 0
+            if sys.platform == "darwin":
+                # When NormCaps exits, the macOS dialog to grant "Screen Recording
+                # permission will also disappear immediately. That's why the user gets
+                # some seconds to click on the dialog, before we exit the application.
+                delay = 8
+            self.com.exit_application.emit(delay)
+            return
 
         # Prepare UI
         self.tray_menu = QtWidgets.QMenu(None)
@@ -189,10 +193,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _show_windows(self, delay_screenshot: bool) -> None:
         """Initialize child windows with method depending on system."""
         screenshots = self._take_screenshots(delay=delay_screenshot)
-
-        if not screenshots:
-            logger.error("Could not grab screenshot!")
-            return
 
         for idx, screenshot in enumerate(screenshots):
             self.screens[idx].screenshot = screenshot
@@ -396,38 +396,52 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         return True
 
     def _ensure_screenshot_permission(self) -> bool:
-        if screengrab.has_screenshot_permission():
+        if self.settings.value("has-screenshot-permission", type=bool):
             return True
 
-        if sys.platform == "darwin":
+        if screengrab.has_screenshot_permission():
+            self.settings.setValue("has-screenshot-permission", True)
+            return True
+
+        dialog_title = _("Error")
+
+        is_prebuilt = system_info.is_prebuilt_package()
+        # L10N: Error message box on macOS only.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        macos_text = _(
+            "'{application}' is missing the permission for 'Screen Recording'."
+            "\n\n"
+            "Grant it via the dialog that will appear after you clicked 'Ok' "
+            "or via 'System Settings' > 'Privacy & Security'."
+            "\n\n"
+            "Then restart NormCap."
+        ).format(application="NormCap" if is_prebuilt else "Terminal")
+
+        # L10N: Error message box on Linux with Wayland only.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        linux_text = _(
+            "<b>NormCap is missing the permission for screen capture.</b><br>"
+            "<br>"
+            "Grant it via the dialog that will appear after you clicked 'Ok'.<br>"
+            "Then start NormCap again.<br>"
+            "<br>"
+            "<small>Sometimes, this might not work. If that is the case for you then"
+            "then please<br>"
+            "<a href='{issues_url}'>report this as bug</a> on GitHub.</small>"
+        ).format(issues_url=constants.URLS.issues)
+
+        if sys.platform == "darwin" and self.settings.value("version") != __version__:
             # Reset privacy permission in case of new NormCap version. This is necessary
             # because somehow the setting is associated with the binary and won't work
             # after it got updated.
-            if self.settings.value("version") != __version__:
-                self.settings.setValue("version", __version__)
-                screengrab.macos_reset_screenshot_permission()
+            self.settings.setValue("version", __version__)
+            screengrab.macos_reset_screenshot_permission()
 
-            # Message box to explain what's happening and open the preferences
-            app = "NormCap" if system_info.is_prebuilt_package() else "Terminal"
-            QtWidgets.QMessageBox.critical(
-                None,
-                _("Error"),
-                # L10N: Error message box on macOS only.
-                # Do NOT translate the variables in curly brackets "{some_variable}"!
-                _(
-                    "'{application}' is missing the permission for 'Screen Recording'."
-                    "\n\n"
-                    "Grant it via the dialog that will appear after you clicked 'Ok' "
-                    "or via 'System Settings' > 'Privacy & Security'."
-                    "\n\n"
-                    "Then restart NormCap."
-                ).format(application=app),
-                buttons=QtWidgets.QMessageBox.StandardButton.Ok,
-            )
-
-            # Trigger permission request to make the NormCap entry available in settings
-            screengrab.macos_request_screenshot_permission()
-
+        screengrab.request_screenshot_permission(
+            dialog_title=dialog_title,
+            macos_dialog_text=macos_text,
+            linux_dialog_text=linux_text,
+        )
         return False
 
     def _set_signals(self) -> None:
@@ -479,6 +493,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         capture = screengrab.get_capture_func()
         screens = capture()
+
+        if not screens:
+            raise RuntimeError("No screenshot taken!")
 
         for idx, screenshot in enumerate(screens):
             utils.save_image_in_temp_folder(screenshot, postfix=f"_raw_screen{idx}")

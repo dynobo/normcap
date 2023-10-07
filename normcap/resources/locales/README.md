@@ -6,13 +6,13 @@
 
 | Locale                                   | Progress | Translated |
 | :--------------------------------------- | -------: | ---------: |
-| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   67 of 67 |
-| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
-| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
-| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
-| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
-| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
-| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       8% |    6 of 67 |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
+| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
+| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
+| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
+| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
 
 ## Improve existing locale
 

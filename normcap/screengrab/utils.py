@@ -1,5 +1,3 @@
-import ctypes
-import ctypes.util
 import functools
 import logging
 import os
@@ -43,7 +41,7 @@ def split_full_desktop_to_screens(full_image: QtGui.QImage) -> list[QtGui.QImage
     return images
 
 
-def has_wayland_display_manager() -> bool:
+def is_wayland_display_manager() -> bool:
     """Identify relevant display managers (Linux)."""
     if sys.platform != "linux":
         return False
@@ -119,87 +117,3 @@ def has_grim_support() -> bool:
 
     logger.debug("Support for grim is%s available.", "" if grim_supported else " not")
     return grim_supported
-
-
-def macos_reset_screenshot_permission() -> None:
-    """Use tccutil to reset permissions for current application."""
-    logger.info("Reset screen recording permissions for eu.dynobo.normcap")
-    cmd = ["tccutil", "reset", "ScreenCapture", "eu.dynobo.normcap"]
-    try:
-        completed_proc = subprocess.run(
-            cmd,
-            shell=False,  # noqa: S603
-            encoding="utf-8",
-            check=False,
-            timeout=10,
-        )
-        if completed_proc.returncode != 0:
-            logger.error(
-                "Failed resetting screen recording permissions: %s %s",
-                completed_proc.stdout,
-                completed_proc.stderr,
-            )
-    except Exception:
-        logger.exception("Couldn't reset screen recording permissions.")
-
-
-def has_screenshot_permission() -> bool:
-    if sys.platform == "darwin":
-        return _macos_has_screenshot_permission()
-    if sys.platform == "linux":
-        return True
-    if sys.platform == "win32":
-        return True
-    raise RuntimeError("Unknown platform")
-
-
-def _load_core_graphics() -> ctypes.CDLL:
-    if core_graphics := ctypes.util.find_library("CoreGraphics"):
-        return ctypes.cdll.LoadLibrary(core_graphics)
-    raise RuntimeError("Couldn't load CoreGraphics")
-
-
-def _macos_has_screenshot_permission() -> bool:
-    """Use CoreGraphics to check if application has screen recording permissions.
-
-    Returns:
-        True if permissions are available or can't be detected.
-    """
-    try:
-        cg = _load_core_graphics()
-        has_permission = bool(cg.CGPreflightScreenCaptureAccess())
-    except Exception as e:
-        has_permission = True
-        logger.warning("Couldn't detect screen recording permission: %s", e)
-        logger.warning("Assuming screen recording permission is %s", has_permission)
-    return has_permission
-
-
-def macos_request_screenshot_permission() -> None:
-    """Use CoreGraphics to request screen recording permissions."""
-    try:
-        cg = _load_core_graphics()
-        logger.debug("Request screen recording access")
-        cg.CGRequestScreenCaptureAccess()
-    except Exception as e:
-        logger.warning("Couldn't request screen recording permission: %s", e)
-
-
-def macos_open_privacy_settings() -> None:
-    link_to_preferences = (
-        "x-apple.systempreferences:com.apple.preference.security"
-        "?Privacy_ScreenCapture"
-    )
-    try:
-        if sys.platform != "darwin":
-            logger.error("Couldn't open macOS privacy settings on non macOS platform.")
-            return
-
-        subprocess.run(
-            ["open", link_to_preferences],  # noqa: S607
-            shell=False,  # noqa: S603
-            check=True,
-            timeout=30,
-        )
-    except Exception:
-        logger.exception("Couldn't open macOS privacy settings.")

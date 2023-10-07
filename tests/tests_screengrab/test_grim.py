@@ -9,6 +9,25 @@ from normcap.screengrab.grim import capture
 
 @pytest.mark.gui()
 @pytest.mark.skipif(
+    not utils.has_grim_support(), reason="Grim compatible platform test"
+)
+def test_capture_on_wayland(qapp):
+    # GIVEN a linux system with grim support (Linux with compatible Wayland Compositor)
+    assert utils.has_grim_support()
+    assert utils.is_wayland_display_manager()
+
+    # WHEN screenshot is taking using QT
+    images = capture()
+
+    # THEN there should be at least one image
+    #   and the size should not be (0, 0)
+    assert images
+    assert all(isinstance(i, QtGui.QImage) for i in images)
+    assert all(i.size().toTuple() != (0, 0) for i in images)
+
+
+@pytest.mark.gui()
+@pytest.mark.skipif(
     utils.has_grim_support(), reason="Non-grim compatible platform test"
 )
 def test_capture_with_grim_not_supported_raises():
@@ -19,25 +38,6 @@ def test_capture_with_grim_not_supported_raises():
     # THEN an exception should be raised
     with pytest.raises((subprocess.CalledProcessError, OSError)):
         _ = capture()
-
-
-@pytest.mark.gui()
-@pytest.mark.skipif(
-    not utils.has_grim_support(), reason="Grim compatible platform test"
-)
-def test_capture_on_wayland(qapp):
-    # GIVEN a linux system with grim support (Linux with compatible Wayland Compositor)
-    assert utils.has_grim_support()
-    assert utils.has_wayland_display_manager()
-
-    # WHEN screenshot is taking using QT
-    images = capture()
-
-    # THEN there should be at least one image
-    #   and the size should not be (0, 0)
-    assert images
-    assert all(isinstance(i, QtGui.QImage) for i in images)
-    assert all(i.size().toTuple() != (0, 0) for i in images)
 
 
 @pytest.mark.gui()

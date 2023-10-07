@@ -15,7 +15,7 @@ import logging
 import sys
 import tempfile
 from pathlib import Path
-from typing import Callable, NamedTuple, cast
+from typing import Any, Callable, NamedTuple, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -26,9 +26,8 @@ from normcap.gui.settings import Settings
 try:
     from PySide6 import QtDBus
 
-    HAS_QTDBUS = True
 except ImportError:
-    HAS_QTDBUS = False
+    QtDBus = cast(Any, None)
 
 
 logger = logging.getLogger(__name__)
@@ -46,7 +45,7 @@ def _move_active_window_to_position_on_gnome(screen_rect: Rect) -> None:
     This is a workaround for not being able to reposition windows on wayland.
     It only works on Gnome Shell.
     """
-    if not HAS_QTDBUS or sys.platform != "linux" or not QtDBus:
+    if sys.platform != "linux" or not QtDBus:
         raise TypeError("QtDBus should only be called on Linux systems!")
 
     js_code = f"""
@@ -88,7 +87,7 @@ def _move_active_window_to_position_on_kde(screen_rect: Rect) -> None:
     This is a workaround for not being able to reposition windows on wayland.
     It only works on KDE.
     """
-    if not HAS_QTDBUS or sys.platform != "linux" or not QtDBus:
+    if sys.platform != "linux" or not QtDBus:
         raise TypeError("QtDBus should only be called on Linux systems!")
 
     js_code = f"""
