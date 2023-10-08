@@ -44,7 +44,7 @@ body:
         1. Open a terminal/command prompt.
         2. Run the command according to your NormCap installation method:
            - Python package: `normcap -v debug`
-           - MSI installer: `%LOCALAPPDATA%\Programs\NormCap\NormCap.exe -v debug`
+           - MSI installer: `%LOCALAPPDATA%\Programs\dynobo\NormCap\NormCap.exe -v debug`
            - DMG installer: `/Applications/NormCap.app/Contents/MacOS/NormCap -v debug`
            - AppImage: `./NormCap-{version}-x86_64.AppImage -v debug`
            - Flatpak: `flatpak run --command=normcap com.github.dynobo.normcap -v debug`
