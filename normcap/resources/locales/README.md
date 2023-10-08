@@ -28,13 +28,12 @@
 
 ## Proofread existing translations
 
-1. Open one of the translations (`.po`-file) linked in the "Status" table above.
-2. In the file, each string is represented by its English text ("`msgid`"-field), its
-   translation into the target language ("`msgstr`"-field) and maybe a translator
-   comment ("`#`" lines above). \
-   Read the `msgstr`'s one by one and check for wording,
-   spelling and punctuation.
-3. Propose any changes preferably right away as Pull Request, or if you don't feel
+1. Open one of the translations (`.po`-files) linked in the "Status" table above.
+2. In the file, each string is represented by its English text (`msgid`-field), its
+   translation into the target language (`msgstr`-field) and maybe a translator comment
+   (`#` lines above).
+3. Read the `msgstr`'s one by one and check them for wording, spelling and punctuation.
+4. Propose any changes preferably right away as Pull Request, or if you don't feel
    comfortable in doing that, report your finding as
    [new issue](https://github.com/dynobo/normcap/issues/new).
 
@@ -49,12 +48,34 @@ if needed.
    language to the target language or by starting NormCap with an environment variable
    set:
    - on Linux:
-     - Python package: `LANGUAGE=<LOCALE_NAME> normcap`
-     - AppImage: `LANGUAGE=<LOCALE_NAME> normcap`
+     - Python package:
+       ```
+       LANGUAGE=<LOCALE_NAME> normcap`
+       ```
+     - AppImage:
+       ```
+       LANGUAGE=<LOCALE_NAME> NormCap-[...].AppImage
+       ```
+     - FlatPak:
+       ```
+       LANGUAGE=<LOCALE_NAME> flatpak run --command=normcap com.github.dynobo.normcap
+       ```
    - on macOS:
-     - DMG: `LANG=<LOCALE_NAME> /Applications/NormCap.app/Contents/MacOS/NormCap`
+     - DMG:
+       ```
+       LANG=<LOCALE_NAME> /Applications/NormCap.app/Contents/MacOS/NormCap
+       ```
    - on Windows:
-     - Unknown
+     - Python package:
+       ```
+       set LANG=<LOCALE_NAME>
+       normcap
+       ```
+     - MSI installed:
+       ```
+       set LANG=<LOCALE_NAME>
+       %LOCALAPPDATA%\Programs\NormCap\NormCap.exe
+       ```
 3. Navigate through the user interface and proofread any text. Pay special attention to
    whether the presentation of the text looks good. (E.g. strings are too long/short,
    wrong line breaks, ...)
