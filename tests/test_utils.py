@@ -299,19 +299,35 @@ def test_qt_log_wrapper_no_platform_as_error(caplog):
     assert "error" in caplog.text.lower()
 
 
-def test_qt_log_wrapper_platform_plugin_error_with_message(caplog):
+@pytest.mark.parametrize(
+    ("is_wayland", "expected_package"),
+    [(True, "qt6-wayland"), (False, "libxcb-cursor0")],
+)
+def test_qt_log_wrapper_platform_plugin_error_on_x(
+    monkeypatch, caplog, is_wayland, expected_package
+):
+    # GIVEN the Qt-logger get's wrapped on a given desktop environment
+    monkeypatch.setattr(utils, "_is_wayland_display_manager", lambda: is_wayland)
     logger = logging.getLogger(__name__).root
     logger.setLevel("DEBUG")
     QtCore.qInstallMessageHandler(utils.qt_log_wrapper)
 
+    # WHEN the error caused by missing dependencies is logged
     QtCore.qDebug(
         "this application failed to start because no qt platform plugin could be "
         "initialized. reinstalling the application may fix this problem."
     )
 
+    # THEN the log should contain the original qt log entry
+    #    and a helpful message
+    #    and it should mention the missing dependencies
     assert "[qt]" in caplog.text.lower()
-    assert "make sure you have the following system packages" in caplog.text.lower()
+    assert "no qt platform plugin could be initialized" in caplog.text
+
     assert "error" in caplog.text.lower()
+    assert "make sure you have the following system packages" in caplog.text.lower()
+
+    assert expected_package in caplog.text
 
 
 def test_hook_exception(monkeypatch, caplog):

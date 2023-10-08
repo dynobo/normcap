@@ -4,7 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from normcap.gui import models, system_info
+from normcap.gui import system_info
+from normcap.gui.models import DesktopEnvironment, Screen
 
 
 def test_display_manager_is_wayland(monkeypatch):
@@ -32,66 +33,44 @@ def test_display_manager_is_not_wayland(monkeypatch):
 
 
 def test_desktop_environment():
-    assert system_info.desktop_environment() in models.DesktopEnvironment
+    assert system_info.desktop_environment() in DesktopEnvironment
 
 
-def test_desktop_environment_gnome(monkeypatch):
-    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "1")
-    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "")
+@pytest.mark.parametrize(
+    ("envs", "expected_environment"),
+    [
+        (
+            {"GNOME_DESKTOP_SESSION_ID": "deprecated", "XDG_CURRENT_DESKTOP": "gnome"},
+            DesktopEnvironment.GNOME,
+        ),
+        ({"GNOME_DESKTOP_SESSION_ID": "1"}, DesktopEnvironment.GNOME),
+        ({"XDG_CURRENT_DESKTOP": "gnome"}, DesktopEnvironment.GNOME),
+        ({"KDE_FULL_SESSION": "1"}, DesktopEnvironment.KDE),
+        ({"DESKTOP_SESSION": "kde-plasma"}, DesktopEnvironment.KDE),
+        ({"XDG_CURRENT_DESKTOP": "sway"}, DesktopEnvironment.SWAY),
+        ({"XDG_CURRENT_DESKTOP": "unity"}, DesktopEnvironment.UNITY),
+        ({"HYPRLAND_INSTANCE_SIGNATURE": "something"}, DesktopEnvironment.HYPRLAND),
+        ({}, DesktopEnvironment.OTHER),
+    ],
+)
+def test_desktop_environment_gnome(monkeypatch, envs, expected_environment):
+    # GIVEN a certain set of environment variables have certain values
     system_info.desktop_environment.cache_clear()
-    assert system_info.desktop_environment() == models.DesktopEnvironment.GNOME
+    env_vars = [
+        "GNOME_DESKTOP_SESSION_ID",
+        "KDE_FULL_SESSION",
+        "DESKTOP_SESSION",
+        "XDG_CURRENT_DESKTOP",
+        "HYPRLAND_INSTANCE_SIGNATURE",
+    ]
+    for var in env_vars:
+        monkeypatch.setenv(var, envs.get(var, ""))
 
-    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "this-is-deprecated")
-    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
-    system_info.desktop_environment.cache_clear()
-    assert system_info.desktop_environment() == models.DesktopEnvironment.GNOME
+    # WHEN we try to identify the desktop environment
+    environment = system_info.desktop_environment()
 
-    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
-    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
-    system_info.desktop_environment.cache_clear()
-    assert system_info.desktop_environment() == models.DesktopEnvironment.GNOME
-
-
-def test_desktop_environment_kde(monkeypatch):
-    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
-    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "")
-
-    monkeypatch.setenv("KDE_FULL_SESSION", "1")
-    monkeypatch.setenv("DESKTOP_SESSION", "")
-    system_info.desktop_environment.cache_clear()
-    assert system_info.desktop_environment() == models.DesktopEnvironment.KDE
-
-    monkeypatch.setenv("KDE_FULL_SESSION", "")
-    monkeypatch.setenv("DESKTOP_SESSION", "kde-plasma")
-    system_info.desktop_environment.cache_clear()
-    assert system_info.desktop_environment() == models.DesktopEnvironment.KDE
-
-
-def test_desktop_environment_sway(monkeypatch):
-    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
-    monkeypatch.setenv("KDE_FULL_SESSION", "")
-    monkeypatch.setenv("DESKTOP_SESSION", "")
-
-    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "sway")
-    assert system_info.desktop_environment() == models.DesktopEnvironment.SWAY
-
-
-def test_desktop_environment_unity(monkeypatch):
-    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
-    monkeypatch.setenv("KDE_FULL_SESSION", "")
-    monkeypatch.setenv("DESKTOP_SESSION", "")
-
-    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
-    assert system_info.desktop_environment() == models.DesktopEnvironment.UNITY
-
-
-def test_desktop_environment_other(monkeypatch):
-    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
-    monkeypatch.setenv("KDE_FULL_SESSION", "")
-    monkeypatch.setenv("DESKTOP_SESSION", "")
-    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "")
-
-    assert system_info.desktop_environment() == models.DesktopEnvironment.OTHER
+    # THEN it should be the one matching the environment variable
+    assert environment == expected_environment
 
 
 def test_is_briefcase_package():
@@ -119,8 +98,8 @@ def test_is_flatpak_package(monkeypatch):
 def test_screens(qtbot):
     screens = system_info.screens()
     assert len(screens) >= 1
-    assert all(isinstance(s, models.Screen) for s in screens)
-    assert isinstance(screens[0], models.Screen)
+    assert all(isinstance(s, Screen) for s in screens)
+    assert isinstance(screens[0], Screen)
     assert isinstance(screens[0].width, int)
     assert isinstance(screens[0].height, int)
 
