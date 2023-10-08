@@ -106,15 +106,44 @@ def update_locales() -> None:
             "--output-dir=./normcap/resources/locales",
             "--width=79",
             "--ignore-obsolete",
-            "--omit-header",
         ]
     )
+
+
+def create_new(locales: list[str]) -> None:
+    for locale in locales:
+        CommandLineInterface().run(
+            [
+                "pybabel",
+                "init",
+                "--input-file=./normcap/resources/locales/messages.pot",
+                "--output-dir=./normcap/resources/locales",
+                f"--locale={locale}",
+            ]
+        )
+
+
+def main(args: argparse.Namespace) -> None:
+    if args.update_all:
+        extract_strings()
+        update_locales()
+    if args.create_new:
+        create_new(locales=args.create_new)
+    compile_locales()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="l10n",
         description=("Compile NormCap localizations to .mo-files."),
+    )
+    parser.add_argument(
+        "--create-new",
+        action="store",
+        type=str,
+        default=False,
+        help="Create locales (.po) for one or more new locales (e.g. de_DE).",
+        nargs="+",
     )
     parser.add_argument(
         "--update-all",
@@ -128,16 +157,10 @@ if __name__ == "__main__":
         # Run commands while capturing output to generate stats.
         f = io.StringIO()
         with contextlib.redirect_stderr(f), contextlib.redirect_stdout(f):
-            if args.update_all:
-                extract_strings()
-                update_locales()
-            compile_locales()
+            main(args)
         output = f.getvalue()
-        print(output)  # noqa: T201
+        print(output, flush=True)  # noqa: T201
         _update_coverage(lines=output.splitlines())
     except Exception:
         # In case of error, run again without output capturing
-        if args.update_all:
-            extract_strings()
-            update_locales()
-        compile_locales()
+        main(args)

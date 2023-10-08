@@ -1,19 +1,19 @@
-# Chinese (Simplified, China) translations for PROJECT.
-# Copyright (C) 2023 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# Ukrainian (Ukraine) translations for NormCap.
+# Copyright (C) 2023 dynobo
+# This file is distributed under the same license as the NormCap project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"Project-Id-Version: NormCap 0.4.4\n"
+"Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2023-10-08 12:47+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2023-10-08 12:16+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: zh_CN\n"
-"Language-Team: zh_CN <LL@li.org>\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: uk_UA\n"
+"Language-Team: uk_UA <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -317,6 +317,8 @@ msgstr ""
 msgid "1 paragraph captured"
 msgid_plural "{count} paragraphs captured"
 msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -324,6 +326,8 @@ msgstr[0] ""
 msgid "1 email captured"
 msgid_plural "{count} emails captured"
 msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -331,6 +335,8 @@ msgstr[0] ""
 msgid "1 word captured"
 msgid_plural "{count} words captured"
 msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -338,6 +344,8 @@ msgstr[0] ""
 msgid "1 line captured"
 msgid_plural "{count} lines captured"
 msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -345,6 +353,8 @@ msgstr[0] ""
 msgid "1 URL captured"
 msgid_plural "{count} URLs captured"
 msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -352,6 +362,8 @@ msgstr[0] ""
 msgid "1 character captured"
 msgid_plural "{count} characters captured"
 msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #. Error message box on macOS only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!

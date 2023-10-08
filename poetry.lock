@@ -912,6 +912,25 @@ mdformat-tables = ">=0.4.0"
 mdit-py-plugins = ">=0.2.0,<0.4.0"
 
 [[package]]
+name = "mdformat-pyproject"
+version = "0.0.1"
+description = "An mdformat plugin for..."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "mdformat_pyproject-0.0.1-py3-none-any.whl", hash = "sha256:35fe74984ca86c3c5219280be7ea8a161fdc0d0a27bd0a788dcec5d9e322a871"},
+    {file = "mdformat_pyproject-0.0.1.tar.gz", hash = "sha256:a2a03b8f77ec43a60060ab5da4402f613c7d83eca51ff9f19373d590ecdba3aa"},
+]
+
+[package.dependencies]
+mdformat = ">=0.7,<1.0"
+tomli = {version = ">=2.0,<3.0", markers = "python_version < \"3.11\""}
+
+[package.extras]
+dev = ["pre-commit"]
+test = ["coverage", "pytest (>=6.0,<7.0)", "pytest-cov"]
+
+[[package]]
 name = "mdformat-tables"
 version = "0.4.1"
 description = "An mdformat plugin for rendering tables."
@@ -2052,4 +2071,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "f216f086f6ded29bee55ab6caa48da4a4ae1491df3df2118e782f0c3b4e8b203"
+content-hash = "c436407e3b48c7e143f7633d455b80f6bed34374d3757913f890f8bbfb002c4a"
