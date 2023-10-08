@@ -6,6 +6,8 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree
 
+from retry import retry
+
 from platforms.utils import BuilderBase, bundle_tesseract_windows_ub_mannheim
 
 
@@ -16,6 +18,7 @@ class WindowsBriefcase(BuilderBase):
     binary_extension = "msi"
     binary_platform = "x86_64-Windows"
 
+    @retry(tries=5, delay=1, backoff=2)
     def _download_openssl(self) -> None:
         """Download openssl needed for QNetwork https connections."""
         # For mirrors see: https://wiki.openssl.org/index.php/Binaries
