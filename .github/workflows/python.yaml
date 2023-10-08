@@ -120,8 +120,9 @@ jobs:
       - name: Pip-Audit
         if: matrix.os  == 'ubuntu-22.04'
         run:
-          bash -c "poetry run pip-audit -r <(poetry export -f requirements.txt
-          --with=dev)"
+          bash -c "poetry run pip-audit --ignore-vuln PYSEC-2022-42969 -r <(poetry
+          export -f requirements.txt --with=dev)"
+          # ONHOLD: Remove once fix for PYSEC-2022-42969 got published
       # - name: Setup upterm session
       #   if: matrix.os  == 'ubuntu-22.04'
       - name: Pytest

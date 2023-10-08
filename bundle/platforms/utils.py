@@ -12,6 +12,9 @@ from pathlib import Path
 from typing import Optional, Union
 
 import toml
+from retry import retry
+
+# TODO: Add retries to all downloads
 
 
 class BuilderBase(ABC):
@@ -116,6 +119,7 @@ class BuilderBase(ABC):
             else None
         )
 
+    @retry(tries=5, delay=1, backoff=2)
     def download_tessdata(self) -> None:
         """Download trained data for tesseract to include in packages."""
         target_path = self.TESSDATA_PATH
@@ -197,6 +201,7 @@ class BuilderBase(ABC):
             f.writelines(lines)
 
 
+@retry(tries=5, delay=1, backoff=2)
 def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
     """Download tesseract binaries including dependencies into resource path."""
     tesseract_path = builder.BUILD_PATH / "tesseract"
@@ -204,7 +209,6 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
     builder.TESSERACT_PATH.mkdir(exist_ok=True)
 
     installer_path = tesseract_path / "tesseract-setup.exe"
-    # TODO: Update tesseract version. Also in FlatPak etc.
     url = (
         "https://digi.bib.uni-mannheim.de/tesseract/"
         "tesseract-ocr-w64-setup-v5.3.0.20221214.exe"
@@ -244,6 +248,7 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
     shutil.rmtree(tesseract_path)
 
 
+@retry(tries=5, delay=1, backoff=2)
 def bundle_tesseract_windows_appveyor(builder: BuilderBase) -> None:
     """Download tesseract binaries including dependencies into resource path."""
     zip_path = builder.BUILD_PATH / "tesseract.zip"
