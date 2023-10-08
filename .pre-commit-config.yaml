@@ -25,14 +25,13 @@ repos:
         stages: [commit]
         language: system
         entry: poetry run python l10n.py
-        types: [pofile]
         pass_filenames: false
 
       - id: mdformat
         name: mdformat
         stages: [commit]
         language: system
-        entry: poetry run mdformat --wrap 88
+        entry: poetry run mdformat
         types: [markdown]
 
       - id: black

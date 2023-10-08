@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.5.0beta1 (work in progress)
+## v0.5.0beta1 (2023-10-08)
 
 - All: Add [support for localization](./normcap/resources/locales/README.md) of the
   NormCap UI. Available translations so far:
@@ -23,6 +23,10 @@
   ([#494](https://github.com/dynobo/normcap/issues/494))
 - Linux: Fix crash due to missing `xcb-utils-cursor` in AppImage, by including it.
   ([#457](https://github.com/dynobo/normcap/issues/457))
+- Linux: Add support for hyprland display manager. Currently, requires `grim` for taking
+  screenshots. ([#375](https://github.com/dynobo/normcap/issues/357))
+- Linux: On Wayland, improve handling of missing screenshot permission.
+  ([#533](https://github.com/dynobo/normcap/issues/533))
 - macOS: Improve UX in case of missing screenshot permission.
 
 ## v0.4.4 (2023-06-04)
