@@ -84,6 +84,7 @@ class OcrResult:
     tess_args: TessArgs
     words: list[dict]  # Words+metadata detected by OCR
     image: QImage
+    # TODO: Use Enum instead str for identifying magics
     magic_scores: dict[str, float] = field(default_factory=dict)  # magics with scores
     parsed: str = ""  # Transformed result
 
