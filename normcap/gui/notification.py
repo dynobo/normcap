@@ -181,7 +181,7 @@ class Notifier(QtCore.QObject):
             parent.messageClicked.disconnect()
 
         # It only makes sense to act on notification clicks, if we have a result.
-        if ocr_text and ocr_magic and len(ocr_text.strip()) >= 1:
+        if ocr_text and len(ocr_text.strip()) >= 1:
             parent.messageClicked.connect(
                 lambda: self._open_ocr_result(
                     ocr_text=ocr_text, applied_magic=ocr_magic
@@ -192,7 +192,7 @@ class Notifier(QtCore.QObject):
         parent.showMessage(title, message, QtGui.QIcon(":notification"))
 
     @staticmethod
-    def _open_ocr_result(ocr_text: str, applied_magic: str) -> None:
+    def _open_ocr_result(ocr_text: str, applied_magic: str | None) -> None:
         logger.debug("Notification clicked.")
 
         urls = []
