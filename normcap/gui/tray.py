@@ -489,7 +489,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _take_screenshots(self, delay: bool) -> list[QtGui.QImage]:
         """Get new screenshots and cache them."""
         if delay:
-            time.sleep(0.15)
+            # Timeout should be high enough for visible windows to completely hide and
+            # short enough to not annoy the users to much. (FTR: 0.15 was too short.)
+            time.sleep(0.5)
 
         capture = screengrab.get_capture_func()
         screens = capture()
