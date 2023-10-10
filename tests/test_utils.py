@@ -12,6 +12,29 @@ from normcap.gui import system_info
 from normcap.gui.settings import Settings
 
 
+@pytest.mark.parametrize(
+    ("xdg_session_type", "wayland_display", "expected_result"),
+    [
+        ("wayland", "", True),
+        ("", "1", True),
+        ("gnome", "", False),
+        ("", "", False),
+    ],
+)
+def test_is_wayland_display_manager(
+    monkeypatch, xdg_session_type, wayland_display, expected_result
+):
+    # GIVEN the system has relevant env vars configured
+    monkeypatch.setenv("XDG_SESSION_TYPE", xdg_session_type)
+    monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
+
+    # WHEN it is checked for wayland
+    result = utils._is_wayland_display_manager()
+
+    # THEN is should return the corresponding result.
+    assert result == expected_result
+
+
 def test_argparser_defaults_are_complete():
     # GIVEN the argparser parses empty cli args
     parser = utils.create_argparser()

@@ -40,7 +40,10 @@ def test_desktop_environment():
     ("envs", "expected_environment"),
     [
         (
-            {"GNOME_DESKTOP_SESSION_ID": "deprecated", "XDG_CURRENT_DESKTOP": "gnome"},
+            {
+                "GNOME_DESKTOP_SESSION_ID": "this-is-deprecated",
+                "XDG_CURRENT_DESKTOP": "gnome",
+            },
             DesktopEnvironment.GNOME,
         ),
         ({"GNOME_DESKTOP_SESSION_ID": "1"}, DesktopEnvironment.GNOME),
