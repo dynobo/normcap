@@ -114,7 +114,7 @@ class Rect:
         return (self.width, self.height)
 
     # ONHOLD: Annotate as Self with Python 3.11
-    def scale_coords(self, scale_factor: float):  # noqa: ANN201
+    def scale(self, scale_factor: float):  # noqa: ANN201
         """Create an integer-scaled copy of the Rect."""
         return Rect(
             top=int(self.top * scale_factor),
@@ -132,14 +132,14 @@ class Screen(Rect):
     index: int
     screenshot: Optional[QtGui.QImage] = None
 
-    def scale_geometry(self, factor: float | None = None) -> tuple[int, int, int, int]:
-        factor = factor or 1 / self.device_pixel_ratio
-        return self.scale_coords(factor).geometry
-
-    def scale_coords(self, factor: float | None):  # noqa: ANN201
+    # ONHOLD: Annotate as Self with Python 3.11
+    def scale(self, factor: float | None = None):  # noqa: ANN201
         """Create an integer-scaled copy of the Rect."""
         factor = factor or 1 / self.device_pixel_ratio
-        return Rect(
+        return Screen(
+            device_pixel_ratio=1,
+            index=self.index,
+            screenshot=self.screenshot,
             top=int(self.top * factor),
             bottom=int(self.bottom * factor),
             left=int(self.left * factor),

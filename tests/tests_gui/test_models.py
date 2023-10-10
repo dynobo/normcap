@@ -29,12 +29,12 @@ def test_rect_properties():
         ((10, 20, 110, 220), 2, (20, 40, 220, 440)),
     ],
 )
-def test_rect_scaled(coords, factor, expected_scaled_coords):
+def test_rect_scaled_coords(coords, factor, expected_scaled_coords):
     # GIVEN a Rect is instantiated with certain coords
     rect = Rect(*coords)
 
     # WHEN it gets scaled through its method
-    rect_scaled = rect.scale_coords(factor)
+    rect_scaled = rect.scale(factor)
 
     # THEN it should result in certain scaled coords
     assert rect_scaled.coords == expected_scaled_coords
@@ -63,3 +63,33 @@ def test_screen_properties():
     assert screen.width == 1921
     assert screen.height == 1081
     assert screen.size == (1921, 1081)
+
+
+@pytest.mark.parametrize(
+    ("coords", "device_pixel_ratio", "factor", "expected_scaled_coords"),
+    [
+        ((0, 0, 1920, 1080), 2, 1.5, (0, 0, 2880, 1620)),
+        ((0, 0, 1920, 1080), 2, None, (0, 0, 960, 540)),
+        ((10, 20, 110, 220), 1, 2, (20, 40, 220, 440)),
+        ((1920, 1080, 2520, 1480), 2, 1, (1920, 1080, 2520, 1480)),
+        ((1920, 1080, 2520, 1480), 2, None, (960, 540, 1260, 740)),
+    ],
+)
+def test_screen_scale_coords(
+    coords, device_pixel_ratio, factor, expected_scaled_coords
+):
+    # GIVEN a Screen is instantiated with certain coords and DPR
+    screen = Screen(
+        device_pixel_ratio=device_pixel_ratio,
+        left=coords[0],
+        top=coords[1],
+        right=coords[2],
+        bottom=coords[3],
+        index=1,
+    )
+
+    # WHEN it gets scaled through its method
+    screen_scaled = screen.scale(factor)
+
+    # THEN it should result in certain scaled coords
+    assert screen_scaled.coords == expected_scaled_coords

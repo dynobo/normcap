@@ -237,7 +237,7 @@ class Window(QtWidgets.QMainWindow):
             and self.screen_.size == self.screen_.screenshot.size().toTuple()
             and self.screen_.device_pixel_ratio != 1
         ):
-            self.setGeometry(*self.screen_.scale_geometry())
+            self.setGeometry(*self.screen_.scale().geometry)
         else:
             self.setGeometry(*self.screen_.geometry)
 
@@ -313,9 +313,7 @@ class Window(QtWidgets.QMainWindow):
         self.selection_rect.setBottomRight(event.position().toPoint())
 
         selection_coords = cast(tuple, self.selection_rect.normalized().getCoords())
-        scaled_selection_rect = Rect(*selection_coords).scale_coords(
-            self._get_scale_factor()
-        )
+        scaled_selection_rect = Rect(*selection_coords).scale(self._get_scale_factor())
 
         self.clear_selection()
 
@@ -385,7 +383,7 @@ class UiContainerLabel(QtWidgets.QLabel):
             return
 
         selection = Rect(*cast(tuple, rect.normalized().getCoords()))
-        selection_scaled = selection.scale_coords(self.debug_info.scale_factor)
+        selection_scaled = selection.scale(self.debug_info.scale_factor)
 
         lines = (
             "[ Screen ]",
