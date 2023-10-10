@@ -70,9 +70,8 @@ repos:
         stages: [commit]
         language: system
         entry:
-          bash -c "poetry run pip-audit --strict --ignore-vuln PYSEC-2022-42969 -r
-          <(poetry export -f requirements.txt --with=dev)"
-        # ONHOLD: Remove once fix for PYSEC-2022-42969 got published
+          bash -c "poetry run pip-audit --strict -r <(poetry export -f requirements.txt
+          --with=dev)"
         pass_filenames: false
         types: [toml]
 
