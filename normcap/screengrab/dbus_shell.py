@@ -1,4 +1,5 @@
 """Capture screenshot of all screens using DBUS org.gnome.Shell.Screenshot."""
+# ONHOLD: Remove dbus_shell in 2025 (Superseded by dbus_portal, Ubuntu 20.04 needs it)
 
 import logging
 import os

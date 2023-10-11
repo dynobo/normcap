@@ -241,10 +241,14 @@ cleanup_paths = [
   "**/NormCap.exe.metagen",
   "**/NormCap.pdb",
 ]
+
 [tool.briefcase.app.normcap.macOS]
 requires = ["std-nslog==1.0.0"]
 
-[tool.briefcase.app.normcap.linux]
+[tool.briefcase.app.normcap.linux.appimage]
+template = "https://github.com/beeware/briefcase-linux-appimage-template"
+template_branch = "v0.3.15"
+manylinux = "manylinux_2_28"
 system_requires = [
   "wget",
   "tesseract",
@@ -282,11 +286,6 @@ RUN cd wl-clipboard \
 
 USER brutus
 """
-
-[tool.briefcase.app.normcap.linux.appimage]
-template = "https://github.com/beeware/briefcase-linux-appimage-template"
-template_branch = "main"
-manylinux = "manylinux_2_28"
 
 [tool.briefcase.app.normcap.windows]
 use_full_install_path = false
