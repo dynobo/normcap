@@ -6,7 +6,8 @@ from pathlib import Path
 import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.screengrab import dbus_shell, get_capture_func, qt, utils
+from normcap.screengrab import dbus_shell, qt, utils
+from normcap.screengrab.main import get_capture_func
 
 
 def test_display_manager_is_wayland_on_windows(monkeypatch):

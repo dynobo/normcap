@@ -36,3 +36,8 @@ def get_capture_func() -> CaptureFunc:
     from normcap.screengrab import dbus_shell
     return dbus_shell.capture
     # fmt: on
+
+
+def capture() -> list[QtGui.QImage]:
+    capture_func = get_capture_func()
+    return capture_func()
