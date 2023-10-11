@@ -17,10 +17,7 @@ def test_normcap_ocr_testcases(
     # GIVEN NormCap is started with "language" set to english
     #        and "parse"-mode
     #        and a certain test image as screenshot
-    def mocked_capture_func():
-        return lambda: [testcase.screenshot]
-
-    monkeypatch.setattr(screengrab, "get_capture_func", mocked_capture_func)
+    monkeypatch.setattr(screengrab, "capture", lambda: [testcase.screenshot])
     monkeypatch.setattr(sys, "exit", lambda x: test_signal.on_event.emit(x))
     tray = run_normcap()
 

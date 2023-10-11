@@ -39,9 +39,7 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     assert not tray.windows
 
     testcase = testcases[0]
-    monkeypatch.setattr(
-        screengrab, "get_capture_func", lambda: lambda: [testcase.screenshot]
-    )
+    monkeypatch.setattr(screengrab, "capture", lambda: [testcase.screenshot])
 
     exit_calls = []
     monkeypatch.setattr(sys, "exit", lambda code: exit_calls.append(code))

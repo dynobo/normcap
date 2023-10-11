@@ -493,8 +493,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             # short enough to not annoy the users to much. (FTR: 0.15 was too short.)
             time.sleep(0.5)
 
-        capture = screengrab.get_capture_func()
-        screens = capture()
+        screens = screengrab.capture()
 
         if not screens:
             raise RuntimeError("No screenshot taken!")
