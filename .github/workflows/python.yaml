@@ -77,10 +77,15 @@ jobs:
 
       - name: Prepare macOS
         if: matrix.os  == 'macos-12'
-        run: |
-          brew install pkg-config tesseract tesseract-lang dylibbundler
-          brew info tesseract
-          "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
+        uses: nick-fields/retry@v2 # brew install sometimes fails on macOS
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          retry_on: error
+          command: |
+            brew install pkg-config tesseract tesseract-lang dylibbundler
+            brew info tesseract
+            "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
 
       - name: Prepare Windows
         if: matrix.os  == 'windows-2022'
