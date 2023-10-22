@@ -50,7 +50,7 @@ generate-setup-file = false
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-PySide6-Essentials = "6.5.3"
+PySide6-Essentials = "6.6.0"
 retry2 = "^0.9.5"
 
 [tool.poetry.group.dev.dependencies]
@@ -197,7 +197,7 @@ sources = ["normcap"]
 icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
-requires = ["PySide6-Essentials==6.5.3"]
+requires = ["PySide6-Essentials==6.6.0"]
 cleanup_paths = [
   # Globs
   "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",
