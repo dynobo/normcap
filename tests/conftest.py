@@ -1,14 +1,17 @@
+import builtins
+import importlib
 import sys
 from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
+from types import ModuleType
 from typing import Callable
 from urllib import request
 
 import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import app
+from normcap import app, clipboard
 from normcap.gui import menu_button, system_info
 from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.magics import email_magic, url_magic
@@ -25,6 +28,7 @@ def _clear_caches():
     system_info.display_manager_is_wayland.cache_clear()
     system_info.get_tesseract_path.cache_clear()
     system_info.config_directory.cache_clear()
+    clipboard.get_compatible_handlers.cache_clear()
 
 
 @pytest.fixture()
@@ -234,3 +238,32 @@ def select_region(qtbot):
         qtbot.mouseRelease(on, QtCore.Qt.MouseButton.LeftButton, pos=bottom_right)
 
     return _select_region
+
+
+@pytest.fixture()
+def mock_import(monkeypatch):
+    def _mock_import(
+        parent_module: ModuleType,
+        import_name: str,
+        throw_exc: type[Exception],
+    ):
+        real_import = builtins.__import__
+
+        def _mocked_import(
+            name,
+            globals=None,  # noqa: A002  # intentional
+            locals=None,  # noqa: A002 # intentional
+            fromlist=(),
+            level=0,
+        ):
+            if name == import_name or fromlist and import_name in fromlist:
+                raise throw_exc(f"Mocked import error {import_name}")
+            return real_import(
+                name, globals=globals, locals=locals, fromlist=fromlist, level=level
+            )
+
+        monkeypatch.delattr(parent_module, import_name, raising=False)
+        monkeypatch.setattr(builtins, "__import__", _mocked_import)
+        importlib.reload(parent_module)
+
+    return _mock_import

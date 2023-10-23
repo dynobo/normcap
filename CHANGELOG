@@ -2,6 +2,16 @@
 
 # Changelog
 
+## v0.5.0beta2 (not yet released)
+
+- All: Fix issue where introduction window was still visible on the screen capture UI.
+  ([#536 comment](https://github.com/dynobo/normcap/issues/536#issuecomment-1752110232))
+- Windows, macOS: Fix notifications not clickable in "raw"-Mode.
+  ([#438 comment](https://github.com/dynobo/normcap/issues/438#issuecomment-1752175090))
+- Linux: Add support for using `xclip` to copy result to clipboard. This seems more
+  stable on Wayland systems than `wl-clipboard`, at least until compatibility with
+  latest Gnome updates is restored.
+
 ## v0.5.0beta1 (2023-10-08)
 
 - All: Add [support for localization](./normcap/resources/locales/README.md) of the
