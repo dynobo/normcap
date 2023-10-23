@@ -54,7 +54,8 @@ jobs:
             tesseract-ocr \
             tesseract-ocr-eng \
             tesseract-ocr-jpn \
-            tesseract-ocr-chi-sim
+            tesseract-ocr-chi-sim \
+            xclip
           sudo apt-get install \
             xvfb \
             libxkbcommon-x11-0 \
@@ -77,15 +78,9 @@ jobs:
 
       - name: Prepare macOS
         if: matrix.os  == 'macos-12'
-        uses: nick-fields/retry@v2 # brew install sometimes fails on macOS
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          retry_on: error
-          command: |
-            brew install pkg-config tesseract tesseract-lang dylibbundler
-            brew info tesseract
-            "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
+        run: |
+          brew install pkg-config tesseract tesseract-lang dylibbundler
+          brew info tesseract
 
       - name: Prepare Windows
         if: matrix.os  == 'windows-2022'

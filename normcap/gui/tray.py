@@ -324,9 +324,11 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot()
     def _copy_to_clipboard(self) -> None:
         """Copy results to clipboard."""
-        copy_to_clipboard = clipboard.get_copy_func()
-        logger.debug("Copy text to clipboard")
-        copy_to_clipboard(self.capture.ocr_text)
+        if not self.capture.ocr_text:
+            logger.debug("Nothing there to be copied to clipboard!")
+        else:
+            logger.debug("Copy text to clipboard")
+            clipboard.copy(text=self.capture.ocr_text)
         self.com.on_copied_to_clipboard.emit()
 
     @QtCore.Slot()
