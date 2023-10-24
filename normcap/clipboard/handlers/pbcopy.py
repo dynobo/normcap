@@ -21,12 +21,12 @@ class PbCopyHandler(ClipboardHandlerBase):
 
     def _is_compatible(self) -> bool:
         if sys.platform != "darwin":
-            logger.debug("%s is incompatible on non-macOS systems.", self.name)
+            logger.debug("%s is incompatible on non-macOS systems", self.name)
             return False
 
-        if not shutil.which("pbcopy"):
-            logger.debug("%s is incompatible: pbcopy seems missing.", self.name)
+        if not (pbcopy_bin := shutil.which("pbcopy")):
+            logger.debug("%s is incompatible: pbcopy seems missing", self.name)
             return False
 
-        logger.debug("%s is compatible.", self.name)
+        logger.debug("%s is compatible (%s)", self.name, pbcopy_bin)
         return True

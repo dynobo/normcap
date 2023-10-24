@@ -27,8 +27,8 @@ class QtCopyHandler(ClipboardHandlerBase):
             return False
 
         if self._os_has_wayland_display_manager():
-            logger.debug("%s is not compatible with Wayland.", self.name)
+            logger.debug("%s is not compatible with Wayland", self.name)
             return False
 
-        logger.debug("%s is compatible.", self.name)
+        logger.debug("%s is compatible", self.name)
         return True
