@@ -48,6 +48,7 @@ class Dialog(QtWidgets.QDialog):
 
         # L10N: Introduction window title
         self.setWindowTitle(_("Introduction to NormCap"))
+        self.setWindowIcon(QtGui.QIcon(":normcap"))
         self.setMinimumSize(1024, 650)
         self.setModal(True)
 
