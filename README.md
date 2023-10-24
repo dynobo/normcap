@@ -183,6 +183,7 @@ And it depends on external software:
 - [tesseract](https://github.com/tesseract-ocr/tesseract) - _OCR engine_
 - [wl-clipboard](https://github.com/bugaevc/wl-clipboard) - _Wayland clipboard
   utilities_
+- [xclip](https://github.com/astrand/xclip) - _CLI to the X11 clipboard_
 
 Packaging is done with:
 
