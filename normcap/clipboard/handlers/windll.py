@@ -183,8 +183,8 @@ class WindllHandler(ClipboardHandlerBase):
 
     def _is_compatible(self) -> bool:
         if sys.platform != "win32":
-            logger.debug("%s is incompatible on non-Windows systems.", self.name)
+            logger.debug("%s is incompatible on non-Windows systems", self.name)
             return False
 
-        logger.debug("%s is compatible.", self.name)
+        logger.debug("%s is compatible", self.name)
         return True

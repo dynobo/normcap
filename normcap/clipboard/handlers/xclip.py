@@ -27,17 +27,17 @@ class XclipCopyHandler(ClipboardHandlerBase):
 
     def _is_compatible(self) -> bool:
         if sys.platform != "linux":
-            logger.debug("%s is not compatible on non-Linux systems.", self.name)
+            logger.debug("%s is not compatible on non-Linux systems", self.name)
             return False
 
-        if not shutil.which("xclip"):
-            logger.debug("%s is not compatible: xclip was not found.", self.name)
+        if not (xclip_bin := shutil.which("xclip")):
+            logger.debug("%s is not compatible: xclip was not found", self.name)
             logger.warning(
                 "Your Linux runs with Wayland. Please install the system "
                 "package 'xclip' to ensure that text can be copied to "
-                "the clipboard correctly."
+                "the clipboard correctly"
             )
             return False
 
-        logger.debug("%s is compatible.", self.name)
+        logger.debug("%s is compatible (%s)", self.name, xclip_bin)
         return True

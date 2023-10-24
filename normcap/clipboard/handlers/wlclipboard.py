@@ -32,14 +32,14 @@ class WlCopyHandler(ClipboardHandlerBase):
             )
             return False
 
-        if not shutil.which("wl-copy"):
-            logger.debug("%s is not compatible: wl-copy was not found.", self.name)
+        if not (wl_copy_bin := shutil.which("wl-copy")):
+            logger.debug("%s is not compatible: wl-copy was not found", self.name)
             logger.warning(
                 "Your Linux runs with Wayland. Please install the system "
                 "package 'wl-clipboard' to ensure that text can be copied to "
-                "the clipboard correctly."
+                "the clipboard correctly"
             )
             return False
 
-        logger.debug("%s is compatible.", self.name)
+        logger.debug("%s is compatible (%s)", self.name, wl_copy_bin)
         return True
