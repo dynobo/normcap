@@ -21,7 +21,7 @@ class WlCopyHandler(ClipboardHandlerBase):
             # somewhere. This is e.g. the case when NormCap got started via a shortcut
             # on KDE (#422).
             stdout=Path("/dev/null").open("w"),  # noqa: SIM115
-            timeout=30,
+            timeout=5,
         )
 
     def _is_compatible(self) -> bool:

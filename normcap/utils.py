@@ -96,13 +96,11 @@ def set_environ_for_wayland() -> None:
 
 def set_environ_for_appimage() -> None:
     # Append path to shipped binaries to PATH
-    binary_path = str((Path(__file__).parent.parent.parent / "bin").resolve())
-    logger.debug("Append path to wl-copy/xclip to PATH+=%s", binary_path)
-    path = os.environ.get("PATH", "")
-    if not path.endswith(os.pathsep):
-        path += os.pathsep
-    path += binary_path
-    os.environ["PATH"] = path
+    bin_path = str((Path(__file__).parent.parent.parent / "bin").resolve())
+    logger.debug("Append %s to AppImage internal PATH", bin_path)
+    os.environ["PATH"] = (
+        os.environ.get("PATH", "").rstrip(os.pathsep) + os.pathsep + bin_path
+    )
 
 
 def set_environ_for_flatpak() -> None:
