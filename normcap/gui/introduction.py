@@ -38,7 +38,7 @@ class Choice(IntEnum):
     DONT_SHOW = 11
 
 
-class Dialog(QtWidgets.QDialog):
+class IntroductionDialog(QtWidgets.QDialog):
     def __init__(
         self,
         show_on_startup: bool,
