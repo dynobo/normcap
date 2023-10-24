@@ -56,7 +56,7 @@ retry2 = "^0.9.5"
 [tool.poetry.group.dev.dependencies]
 babel = ">=2.12.1"
 black = ">=23.1.0"
-briefcase = "0.3.15"
+briefcase = "0.3.16"                                  # pinned because building relies on it!
 coverage = { extras = ["toml"], version = ">=6.4.2" }
 coveralls = ">=3.3.1"
 mdformat-gfm = ">=0.3.5"
@@ -247,7 +247,7 @@ requires = ["std-nslog==1.0.0"]
 
 [tool.briefcase.app.normcap.linux.appimage]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
-template_branch = "v0.3.15"
+template_branch = "v0.3.16"
 manylinux = "manylinux_2_28"
 system_requires = [
   "wget",
