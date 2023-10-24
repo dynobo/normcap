@@ -9,6 +9,7 @@ import urllib.request
 import zipfile
 from abc import ABC, abstractmethod
 from pathlib import Path
+from textwrap import dedent
 from typing import Optional, Union
 
 import toml
@@ -143,6 +144,8 @@ class BuilderBase(ABC):
 
         Indents the patch like the line after which it is inserted.
         """
+        patch = dedent(patch.strip("\n"))
+
         patch_hash = hashlib.md5(patch.encode()).hexdigest()  # noqa: S324
 
         with Path(file_path).open(encoding="utf8") as f:
@@ -151,7 +154,7 @@ class BuilderBase(ABC):
 
         if comment_prefix:
             patch = (
-                f"{comment_prefix} dynobo: {patch_hash} >>>>>>>>>>>>>>"
+                f"{comment_prefix} dynobo: {patch_hash} >>>>>>>>>>>>>>\n"
                 + patch
                 + f"{comment_prefix} dynobo: {patch_hash} <<<<<<<<<<<<<<\n"
             )

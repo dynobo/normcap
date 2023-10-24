@@ -64,6 +64,8 @@ def _prepare_envs() -> None:
         utils.set_environ_for_wayland()
     if system_info.is_flatpak_package():
         utils.set_environ_for_flatpak()
+    if system_info.is_appimage_package():
+        utils.set_environ_for_appimage()
 
 
 def _get_application() -> QtWidgets.QApplication:

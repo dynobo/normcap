@@ -152,18 +152,13 @@ def test_set_environ_for_wayland(monkeypatch):
         os.environ["QT_QPA_PLATFORM"] = qt_qpa_platform
 
 
-def test_set_environ_for_wayland_use_wlcopy(monkeypatch):
-    path = os.environ.get("PATH", "")
-    try:
-        with monkeypatch.context() as m:
-            m.setattr(utils.system_info, "is_briefcase_package", lambda: True)
-            m.setattr(utils.shutil, "which", lambda *args: False)
-            m.delenv("PATH", raising=False)
-            utils.set_environ_for_wayland()
-            new_path = os.environ.get("PATH", "")
-            assert new_path.endswith(f"{os.sep}bin{os.pathsep}")
-    finally:
-        os.environ["PATH"] = path
+def test_set_environ_for_appimage(monkeypatch):
+    binary_path = str((Path(__file__).parent.parent.parent / "bin").resolve())
+    with monkeypatch.context() as m:
+        m.setenv("PATH", "/normcap/test")
+        utils.set_environ_for_appimage()
+        path = os.environ.get("PATH", "")
+    assert path.endswith(os.pathsep + binary_path)
 
 
 def test_set_environ_for_flatpak(monkeypatch):

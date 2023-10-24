@@ -47,6 +47,10 @@ def is_briefcase_package() -> bool:
     return app_path.is_dir() and (app_path.parent / "app_packages").is_dir()
 
 
+def is_appimage_package() -> bool:
+    return os.getenv("APPIMAGE") is not None
+
+
 def is_flatpak_package() -> bool:
     return os.getenv("FLATPAK_ID") is not None
 
@@ -168,6 +172,7 @@ def to_dict() -> dict:
         "cli_args": " ".join(sys.argv),
         "is_briefcase_package": is_briefcase_package(),
         "is_flatpak_package": is_flatpak_package(),
+        "is_appimage_package": is_appimage_package(),
         "platform": sys.platform,
         "desktop_environment": desktop_environment(),
         "display_manager_is_wayland": display_manager_is_wayland(),

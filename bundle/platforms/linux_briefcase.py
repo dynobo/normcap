@@ -51,6 +51,22 @@ class LinuxBriefcase(BuilderBase):
         """
         self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
 
+    def _patch_briefcase_appimage_to_run_cmd(self) -> None:
+        """Execute _before_ linuxdeploy."""
+        file_path = (
+            Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
+        )
+        insert_after = "# Build the AppImage."
+        patch = """
+        self.tools[app].app_context.run(
+            ["env"],
+            env=env,
+            check=True,
+            cwd=self.bundle_path(app),
+        )
+        """
+        self.patch_file(file_path=file_path, insert_after=insert_after, patch=patch)
+
     def run_framework(self) -> None:
         self.run(
             cmd="briefcase create linux appimage --no-input", cwd=self.PROJECT_PATH
@@ -66,4 +82,5 @@ class LinuxBriefcase(BuilderBase):
         ...
 
     def pre_framework(self) -> None:
+        self._patch_briefcase_appimage_to_run_cmd()
         self._patch_briefcase_appimage_to_include_deps()
