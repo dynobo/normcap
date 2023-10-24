@@ -30,14 +30,22 @@ class LinuxBriefcase(BuilderBase):
         )
         shutil.copy(metainfo, target_path / "metainfo")
 
-    def _patch_briefcase_appimage_to_include_tesseract_and_wlcopy(self) -> None:
-        """Insert code into briefcase appimage code to remove unnecessary libs."""
+    def _patch_briefcase_appimage_to_include_deps(self) -> None:
+        """Insert code into briefcase appimage code to add additional deps.
+
+        Currently adds:
+        - tesseract
+        - libxcb-cursor
+        - wl-copy
+        - xclip
+        """
         file_path = (
             Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
         )
         insert_after = '"appimage",'
         patch = """
         "--executable=/usr/bin/tesseract",
+        "--executable=/usr/bin/xclip",
         "--executable=/usr/local/bin/wl-copy",
         "--library=/usr/lib64/libxcb-cursor.so.0",
         """
@@ -58,4 +66,4 @@ class LinuxBriefcase(BuilderBase):
         ...
 
     def pre_framework(self) -> None:
-        self._patch_briefcase_appimage_to_include_tesseract_and_wlcopy()
+        self._patch_briefcase_appimage_to_include_deps()
