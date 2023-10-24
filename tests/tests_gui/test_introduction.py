@@ -8,7 +8,7 @@ from normcap.gui import introduction
 def test_introduction_initialize_checkbox_state(show_on_startup):
     # GIVEN the introduction dialog
     # WHEN the dialog is instantiated with a certain argument
-    dialog = introduction.Dialog(show_on_startup=show_on_startup)
+    dialog = introduction.IntroductionDialog(show_on_startup=show_on_startup)
 
     # THEN the checkbox should be set accordingly
     assert dialog.show_on_startup_checkbox.isChecked() is show_on_startup
@@ -23,7 +23,7 @@ def test_introduction_checkbox_sets_return_code(
     qtbot, show_on_startup, expected_return_code
 ):
     # GIVEN the dialog is initialized with a certain argument value
-    dialog = introduction.Dialog(show_on_startup=show_on_startup)
+    dialog = introduction.IntroductionDialog(show_on_startup=show_on_startup)
     qtbot.addWidget(dialog)
 
     # WHEN the dialog is shown and the close button is clicked
@@ -48,7 +48,7 @@ def test_introduction_toggle_checkbox_changes_return_code(
     qtbot, show_on_startup, expected_return_code
 ):
     # GIVEN the dialog is initialized with a certain argument value
-    dialog = introduction.Dialog(show_on_startup=show_on_startup)
+    dialog = introduction.IntroductionDialog(show_on_startup=show_on_startup)
     qtbot.addWidget(dialog)
 
     # WHEN the dialog is shown and the close button is clicked
