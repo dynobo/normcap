@@ -252,6 +252,7 @@ manylinux = "manylinux_2_28"
 system_requires = [
   "wget",
   "tesseract",
+  "xclip",
   # wl-clipboard deps
   "wayland-devel",
   "wayland-protocols-devel",
