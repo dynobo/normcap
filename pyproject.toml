@@ -50,6 +50,7 @@ generate-setup-file = false
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
+shiboken6 = "6.6.0"
 PySide6-Essentials = "6.6.0"
 retry2 = "^0.9.5"
 
@@ -197,7 +198,7 @@ sources = ["normcap"]
 icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
-requires = ["PySide6-Essentials==6.6.0"]
+requires = ["PySide6-Essentials==6.6.0", "shiboken6==6.6.0"]
 cleanup_paths = [
   # Globs
   "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",
@@ -286,6 +287,8 @@ RUN cd wl-clipboard \
   && cd build \
   && ninja \
   && meson install
+
+ENV LD_LIBRARY_PATH "$LD_LIBRARY_PATH:/app/NormCap.AppDir/usr/app_packages/shiboken6"
 
 USER brutus
 """

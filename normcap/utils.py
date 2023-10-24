@@ -93,15 +93,16 @@ def set_environ_for_wayland() -> None:
         logger.debug("Set QT_QPA_PLATFORM=wayland")
         os.environ["QT_QPA_PLATFORM"] = "wayland"
 
-    # Adopt PATH to find shipped binaries
-    if system_info.is_briefcase_package():
-        binary_path = str((Path(__file__).parent.parent.parent / "bin").resolve())
-        logger.debug("Append path to wl-copy/xclip to PATH+=%s", binary_path)
-        path = os.environ.get("PATH", "")
-        if not path.endswith(os.pathsep):
-            path += os.pathsep
-        path += binary_path + os.pathsep
-        os.environ["PATH"] = path
+
+def set_environ_for_appimage() -> None:
+    # Append path to shipped binaries to PATH
+    binary_path = str((Path(__file__).parent.parent.parent / "bin").resolve())
+    logger.debug("Append path to wl-copy/xclip to PATH+=%s", binary_path)
+    path = os.environ.get("PATH", "")
+    if not path.endswith(os.pathsep):
+        path += os.pathsep
+    path += binary_path
+    os.environ["PATH"] = path
 
 
 def set_environ_for_flatpak() -> None:
