@@ -170,6 +170,7 @@ jobs:
           tag: "internal"
 
   coveralls-upload:
+    name: Upload to coveralls
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -179,8 +180,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
 
-  build-packages:
-    name: Build prebuilt packages & draft release
+  publish-briefcase:
+    name: Briefcase build & draft release
     needs: test
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ${{ matrix.os }}
@@ -231,11 +232,17 @@ jobs:
             **/*.wxs
             **/metainfo
 
-  build-python:
-    name: Build Python package & publish release
-    needs: build-packages
+  publish-pypi:
+    name: Build & publish to PyPi
+    needs: publish-briefcase
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-22.04
+    permissions:
+      # Used to authenticate to PyPI via OIDC.
+      # Used to sign the release's artifacts with sigstore-python.
+      id-token: write
+      # Used to attach signing artifacts to the published release.
+      contents: write
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
@@ -243,13 +250,22 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-      - name: Poetry publish
-        run: |
-          poetry publish --build --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+      - name: Build Python package
+        run: poetry build
+      - name: Publish to PyPi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
+          print-hash: true
+      - name: Sign published artifacts
+        uses: sigstore/gh-action-sigstore-python@v2.1.0
+        with:
+          inputs: ./dist/*.tar.gz ./dist/*.whl
+          release-signing-artifacts: true
 
   deploy-pages:
     name: Deploy github pages
-    needs: build-packages
+    needs: publish-briefcase
     if: startsWith(github.ref, 'refs/tags/v') && github.repository == 'dynobo/normcap'
     runs-on: ubuntu-22.04
     steps:
