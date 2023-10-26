@@ -9,14 +9,12 @@ from pathlib import Path
 
 from babel.messages.frontend import CommandLineInterface
 
+import normcap
+
 
 def _get_version() -> str:
-    """Get versions string from pyproject.toml."""
-    import toml
-
-    with (Path(__file__).parent / "pyproject.toml").open(encoding="utf8") as toml_file:
-        pyproject_toml = toml.load(toml_file)
-    return pyproject_toml["tool"]["poetry"]["version"]
+    """Get normcap versions string."""
+    return normcap.__version__
 
 
 def _update_coverage(lines: list[str]) -> None:

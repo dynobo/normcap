@@ -89,16 +89,14 @@ if needed.
    link in the table above, or you can navigate manually to the file at
    `./normcap/resources/locales/<LOCALE_NAME>/LC_MESSAGES/messages.po`
 2. Open this `messages.po` file and edit the translations. If you like, use the
-   [Free PO-Editor](https://pofile.net/free-po-editor) for easier editing.
-   \
+   [Free PO-Editor](https://pofile.net/free-po-editor) for easier editing. \
    **Important:**
    - Never translate any variables which are written in curly brackets, e.g. `{count}`!
    - Don't bother with updating the header section at the top, it will get overwritten
      automatically.
 3. Propose the changed file in a new Pull Request. \
-   (In case you are not familiar with
-   git, you can also always propose a correction or change via a
-   [new issue](https://github.com/dynobo/normcap/issues/new).)
+   (In case you are not familiar with git, you can also always propose a correction or change
+   via a [new issue](https://github.com/dynobo/normcap/issues/new).)
 
 ## Add new translation
 
@@ -108,7 +106,7 @@ via [opening a new issue](https://github.com/dynobo/normcap/issues/new)!
 
 _Prerequisite:_ Follow the general
 [setup of the development environment](../../../README.md#Development) and activate the
-virtual Python environment via `poetry shell`.
+virtual Python environment via `hatch shell`.
 
 _Note_: All commands should be run in the repository's root directory.
 

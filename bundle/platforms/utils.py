@@ -88,7 +88,7 @@ class BuilderBase(ABC):
 
         with Path(self.PYPROJECT_PATH).open(encoding="utf8") as toml_file:
             pyproject_toml = toml.load(toml_file)
-        return pyproject_toml["tool"]["poetry"]["version"]
+        return pyproject_toml["tool"]["briefcase"]["version"]
 
     @staticmethod
     def run(cmd: Union[str, list], cwd: Optional[Path] = None) -> Optional[str]:

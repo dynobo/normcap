@@ -39,12 +39,11 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           ref: ${{ inputs.refToBuild }}
-      - name: Install poetry
-        run: pipx install poetry==1.6.1
+      - name: Install hatch
+        run: pipx install hatch
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-          cache: "poetry"
       - name: Prepare Linux
         if: matrix.os  == 'ubuntu-22.04'
         run: |
@@ -104,30 +103,12 @@ jobs:
           tesseract --version
           tesseract --list-langs
 
-      - name: Poetry install
-        run: poetry install
+      - name: Hatch env create
+        run: hatch env create
 
-      # Perform tests
-      - name: Ruff
-        if: always()
-        run: poetry run ruff .
-      - name: Mypy
-        if: always()
-        run: poetry run mypy
-      - name: Black
-        if: always()
-        run: poetry run black --check --diff .
-      - name: Pip-Audit
-        if: matrix.os  == 'ubuntu-22.04'
-        run:
-          bash -c "poetry run pip-audit -r <(poetry export -f requirements.txt
-          --with=dev)"
-      # - name: Setup upterm session
-      #   if: matrix.os  == 'ubuntu-22.04'
-      - name: Pytest
-        run: poetry run pytest
-      - name: Coverage
-        run: poetry run coverage lcov
+      - name: Run project checks
+        run: hatch run check
+
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:
@@ -139,7 +120,7 @@ jobs:
       # Build test packages
       - name: Test build briefcase package
         shell: bash -l {0}
-        run: poetry run python bundle/build.py --framework=briefcase --dev
+        run: hatch run python bundle/build.py --framework=briefcase --dev
       - name: Print briefcase log in case of error
         if: failure()
         shell: bash -l {0}
@@ -149,7 +130,7 @@ jobs:
 
       # Build
       - name: Test build python package
-        run: poetry build
+        run: hatch build
 
       # Release test package
       - name: Set current date as env variable
@@ -191,18 +172,17 @@ jobs:
         os: [ubuntu-22.04, macos-12, windows-2022]
     steps:
       - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry==1.6.1
+      - name: Install hatch
+        run: pipx install hatch
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-          cache: "poetry"
       - name: Install dependencies
         shell: bash -l {0}
-        run: poetry install
+        run: hatch env create
       - name: Build package briefcase
         shell: bash -l {0}
-        run: poetry run python bundle/build.py --framework=briefcase
+        run: hatch run python bundle/build.py --framework=briefcase
       - name: Draft release
         if: github.repository == 'dynobo/normcap'
         uses: ncipollo/release-action@v1
@@ -245,13 +225,13 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry==1.6.1
+      - name: Install hatch
+        run: pipx install hatch
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
       - name: Build Python package
-        run: poetry build
+        run: hatch build
       - name: Publish to PyPi
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

@@ -152,8 +152,11 @@ See [XKCD](https://xkcd.com):
 
 ## Development
 
-Prerequisites for setting up a development environment are: **Python >=3.9**,
-**Poetry>=1.3.2** and **Tesseract** (incl. **language data**).
+Prerequisites for setting up a development environment are:
+[**Python >=3.9**](https://www.python.org/downloads/),
+[**hatch**](https://hatch.pypa.io/latest/install/) and
+[**Tesseract >=5.0**](https://tesseract-ocr.github.io/tessdoc/#5xx) (incl. **language
+data**).
 
 ```sh
 # Clone repository
@@ -163,13 +166,13 @@ git clone https://github.com/dynobo/normcap.git
 cd normcap
 
 # Create virtual env and install dependencies
-poetry install
+hatch env create
 
 # Register pre-commit hook
-poetry run pre-commit install
+hatch run pre-commit install
 
 # Run NormCap in virtual env
-poetry run python -m normcap
+hatch run python -m normcap
 ```
 
 ## Credits

@@ -1,20 +1,24 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "normcap"
-version = "0.5.0-beta1"
-description = "OCR-powered screen-capture tool to capture information instead of images."
+dynamic = ["version"]
+description = 'OCR-powered screen-capture tool to capture information instead of images.'
 keywords = ["screenshot", "ocr", "capture", "clipboard"]
-license = "GPLv3"
-authors = ["dynobo <dynobo@mailbox.org>"]
 readme = "README.md"
-homepage = "https://dynobo.github.io/normcap/"
-repository = "https://github.com/dynobo/normcap"
+requires-python = ">=3.9,<3.12"
+license = "GPL-3.0-or-later"
+authors = [{ name = "dynobo", email = "dynobo@mailbox.org" }]
 classifiers = [
   "Development Status :: 4 - Beta",
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-  "Programming Language :: Python :: 3",
+  "Programming Language :: Python",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
   "Topic :: Utilities",
   "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
   "Intended Audience :: End Users/Desktop",
@@ -22,83 +26,76 @@ classifiers = [
   "Operating System :: POSIX :: Linux",
   "Operating System :: MacOS",
 ]
-include = [
-  "README.md",
-  "CHANGELOG",
-  "LICENSE",
-  "normcap/**/*.icns",
-  "normcap/**/*.ico",
-  "normcap/**/*.png",
-  "normcap/**/*.svg",
-  "normcap/**/*.mo",
+dependencies = ["shiboken6==6.6.0", "PySide6-Essentials==6.6.0"]
+
+[project.urls]
+Homepage = "https://dynobo.github.io/normcap/"
+Issues = "https://github.com/dynobo/normcap/issues"
+"Source Code" = "https://github.com/dynobo/normcap"
+FAQs = "https://dynobo.github.io/normcap/#faqs"
+Changelog = "https://github.com/dynobo/normcap/blob/main/CHANGELOG"
+
+[tool.hatch.version]
+path = "normcap/__init__.py"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "briefcase==0.3.16",         # pinned because building relies on it!
+  "coverage[toml]>=6.5",
+  "babel>=2.12.1",
+  "black>=23.1.0",
+  "coveralls>=3.3.1",
+  "mdformat-gfm>=0.3.5",
+  "mypy>=1.3.0",
+  "pip-audit>=2.5.5",
+  "pre-commit>=3.0.2",
+  "pydeps>=1.11.0",
+  "pytest>=7.2.1",
+  "pytest-cov>=4.0.0",
+  "pytest-qt>=4.2.0",
+  "pytest-xvfb>=3.0.0",
+  "retry2>=0.9.5",
+  "types-retry>=0.9.9.4",
+  "rope>=1.7.0",
+  "ruff>=0.0.239",
+  "tbump>=6.9.0",
+  "toml>=0.10.2",
+  "types-toml>=0.10.8.1",
+  "typing-extensions>=4.4.0",
+  "mdformat-pyproject>=0.0.1",
 ]
 
-[tool.poetry.urls]
-"FAQs" = "https://dynobo.github.io/normcap/#faqs"
-"Issues" = "https://github.com/dynobo/normcap/issues"
+[tool.hatch.envs.default.scripts]
+# TODO: Generate mo files
+locales = "python l10n.py"
+style = [
+  "ruff {args:.}",
+  "black --check --diff {args:.}",
+  "mdformat --check --end-of-line keep {args:.}",
+]
+typing = "mypy"
+test = ["pytest {args:tests}", "coverage lcov"]
+security = "pip-audit"
+fmt = [
+  "ruff --fix {args:.}",
+  "black {args:.}",
+  "mdformat --end-of-line keep {args:.}",
+]
+charts = [
+  "pydeps normcap --max-bacon=2 -o=pydeps.png -T=png",
+  "pydeps normcap --max-bacon=1 -o=pydeps_internal.png -T=png",
+]
+# Main tasks:
+check = ["locales", "style", "typing", "test", "security"]
+pre-commit = ["fmt", "check", "charts"]
 
-[tool.poetry.scripts]
-normcap = "normcap.app:main"
+[[tool.hatch.envs.all.matrix]]
+python = ["3.9", "3.10", "3.11"]
 
-[build-system]
-requires = ["babel>=2.12.1", "poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.hatch.envs.analysis]
+dependencies = ["radon>=5.1.0", "viztracer>=0.15.3", "vulture>=2.4"]
 
-[tool.poetry.build]
-script = "l10n.py"
-generate-setup-file = false
-
-[tool.poetry.dependencies]
-python = ">=3.9,<3.12"
-shiboken6 = "6.6.0"
-PySide6-Essentials = "6.6.0"
-retry2 = "^0.9.5"
-
-[tool.poetry.group.dev.dependencies]
-babel = ">=2.12.1"
-black = ">=23.1.0"
-briefcase = "0.3.16"                                  # pinned because building relies on it!
-coverage = { extras = ["toml"], version = ">=6.4.2" }
-coveralls = ">=3.3.1"
-mdformat-gfm = ">=0.3.5"
-mypy = ">=1.3.0"
-pip-audit = ">=2.5.5"
-pre-commit = ">=3.0.2"
-pydeps = ">=1.11.0"
-pytest = ">=7.2.1"
-pytest-cov = ">=4.0.0"
-pytest-qt = ">=4.2.0"
-pytest-xvfb = ">=3.0.0"
-rope = ">=1.7.0"
-ruff = ">=0.0.239"
-tbump = ">=6.9.0"
-toml = ">=0.10.2"
-types-toml = ">=0.10.8.1"
-typing-extensions = ">=4.4.0"
-mdformat-pyproject = ">=0.0.1"
-types-retry = ">=0.9.9.4"
-
-[tool.poetry.group.analysis]
-optional = true
-
-[tool.poetry.group.analysis.dependencies]
-radon = ">=5.1.0"
-viztracer = ">=0.15.3"
-vulture = ">=2.4"
-
-[tool.black]
-line-length = 88
-include = '''
-(
-    ^/tests/.*py
-  | ^/normcap/.*py
-)
-'''
-exclude = '''
-(
-    __pycache__
-)
-'''
+[tool.hatch.envs.analysis.scripts]
 
 [tool.ruff]
 target-version = "py39"
@@ -145,10 +142,30 @@ ignore = [
   "ANN101", # Missing type annotation for `self` in method
   "TRY003", # Avoid specifying long messages outside the exception class
 ]
-per-file-ignores = { "tests*" = ["S101", "ANN", "D", "PLR2004", "PLR0913"] }
+
+[tool.ruff.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**/*" = ["PLR2004", "PLR0913", "S101", "TID252", "ANN", "D"]
 
 [tool.ruff.pydocstyle]
 convention = "google"
+
+[tool.ruff.isort]
+known-first-party = ["normcap"]
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.black]
+line-length = 88
+exclude = '''
+(
+    \.virtualenvs 
+    | \.hatch
+    | __pycache__
+    | build
+)
+'''
 
 [tool.mypy]
 files = ["normcap/**/*.py", "tests/**/*.py", "bundle/**/*.py"]
@@ -170,12 +187,15 @@ addopts = [
 markers = ["gui: tests which require a graphical interface to run"]
 
 [tool.coverage.run]
-source = ["normcap"]
+source = ["normcap", "tests"]
+branch = true
+parallel = true
+omit = []
 
 [tool.mdformat]
 wrap = 88
 number = true
-end_of_line = "lf"
+end_of_line = "keep"
 
 [tool.pydeps]
 no_show = true
@@ -295,46 +315,3 @@ USER brutus
 
 [tool.briefcase.app.normcap.windows]
 use_full_install_path = false
-
-[tool.tbump]
-
-[tool.tbump.version]
-current = "0.5.0-beta1"
-regex = '''
-  (?P<major>\d+)
-  \.
-  (?P<minor>\d+)
-  \.
-  (?P<patch>\d+)
-  (\-
-    (?P<extra>.+)
-  )?
-  '''
-
-[tool.tbump.git]
-message_template = "build(release): bump to {new_version}"
-tag_template = "v{new_version}"
-
-[[tool.tbump.file]]
-# Poetry version and Briefcase version
-src = "pyproject.toml"
-search = 'version = "{current_version}"'
-
-[[tool.tbump.file]]
-src = "normcap/__init__.py"
-search = '__version__ = "{current_version}"'
-
-[[tool.tbump.file]]
-src = "docs/index.html"
-
-[[tool.tbump.file]]
-src = "README.md"
-search = 'NormCap-{current_version}-'
-
-[[tool.tbump.file]]
-src = "README.md"
-search = 'download/v{current_version}/'
-
-[[tool.tbump.before_commit]]
-name = "check changelog"
-cmd = "grep -q {new_version} CHANGELOG"

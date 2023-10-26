@@ -17,12 +17,11 @@ jobs:
     steps:
       # SETUP ENVIRONMENT
       - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry==1.6.1
+      - name: Install hatch
+        run: pipx install hatch
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-          cache: "poetry"
       - name: Prepare Linux
         if: matrix.os  == 'ubuntu-22.04'
         run: |
@@ -80,14 +79,12 @@ jobs:
           tesseract --version
           tesseract --list-langs
 
-      - name: Poetry install
-        run: poetry install
+      - name: Hatch env create
+        run: hatch env create
 
-      # PERFORM TESTS
-      - name: Pytest
-        run: |
-          poetry run pytest
-          poetry run coverage lcov
+      - name: Run pytest
+        run: hatch run test
+
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:
