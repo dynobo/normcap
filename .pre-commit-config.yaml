@@ -20,73 +20,9 @@ repos:
       - id: mixed-line-ending
   - repo: local
     hooks:
-      - id: compile_locales
-        name: compile locales
+      - id: check
+        name: run project checks
         stages: [commit]
         language: system
-        entry: poetry run python l10n.py
-        pass_filenames: false
-
-      - id: mdformat
-        name: mdformat
-        stages: [commit]
-        language: system
-        entry: poetry run mdformat
-        types: [markdown]
-
-      - id: black
-        name: black
-        stages: [commit]
-        language: system
-        entry: poetry run black normcap tests/ bundle/
-        types: [python]
-
-      - id: ruff
-        name: ruff
-        stages: [commit]
-        language: system
-        entry: poetry run ruff --fix .
-        types: [python]
-        pass_filenames: false
-
-      - id: mypy
-        name: mypy
-        stages: [commit]
-        language: system
-        entry: poetry run mypy
-        types: [python]
-        pass_filenames: false
-
-      - id: pytest
-        name: pytest
-        stages: [commit]
-        language: system
-        entry: poetry run pytest tests/
-        types: [python]
-        pass_filenames: false
-
-      - id: pip-audit
-        name: pip-audit
-        stages: [commit]
-        language: system
-        entry:
-          bash -c "poetry run pip-audit --strict -r <(poetry export -f requirements.txt
-          --with=dev)"
-        pass_filenames: false
-        types: [toml]
-
-      - id: pydeps
-        name: pydeps
-        stages: [commit]
-        language: system
-        entry: poetry run pydeps normcap --max-bacon=2 -o=pydeps.png -T=png
-        types: [python]
-        pass_filenames: false
-
-      - id: pydeps-internal
-        name: pydeps-internal
-        stages: [commit]
-        language: system
-        entry: poetry run pydeps normcap --max-bacon=1 -o=pydeps_internal.png -T=png
-        types: [python]
+        entry: hatch run pre-commit
         pass_filenames: false

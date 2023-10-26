@@ -2,7 +2,7 @@
 # Edit at https://www.gitignore.io/?templates=python
 
 # Own
-.venv/
+.virtualenvs/
 .vscode/
 .ruff_cache/
 normcap/resources/tessdata/*.traineddata
@@ -29,7 +29,9 @@ result.html
 cov.xml
 coverage
 .coverage
+coverage.lcov
 .coveralls.yml
+.envrc
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
