@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "normcap"
 dynamic = ["version"]
-description = 'OCR-powered screen-capture tool to capture information instead of images.'
+description = "OCR-powered screen-capture tool to capture information instead of images."
 keywords = ["screenshot", "ocr", "capture", "clipboard"]
 readme = "README.md"
 requires-python = ">=3.9,<3.12"
@@ -38,6 +38,13 @@ Changelog = "https://github.com/dynobo/normcap/blob/main/CHANGELOG"
 [tool.hatch.version]
 path = "normcap/__init__.py"
 
+[tool.hatch.build]
+exclude = ["assets", "*.po"]
+artifacts = ["*.mo"]
+
+[tool.hatch.build.hooks.custom]
+dependencies = ["babel", "toml"]
+
 [tool.hatch.envs.default]
 dependencies = [
   "briefcase==0.3.16",         # pinned because building relies on it!
@@ -66,8 +73,6 @@ dependencies = [
 ]
 
 [tool.hatch.envs.default.scripts]
-# TODO: Generate mo files
-locales = "python l10n.py"
 style = [
   "ruff {args:.}",
   "black --check --diff {args:.}",
@@ -86,8 +91,11 @@ charts = [
   "pydeps normcap --max-bacon=1 -o=pydeps_internal.png -T=png",
 ]
 # Main tasks:
-check = ["locales", "style", "typing", "test", "security"]
+check = ["locales-compile", "style", "typing", "test", "security"]
 pre-commit = ["fmt", "check", "charts"]
+locales-compile = "python bundle/l10n.py"
+locales-update = "python bundle/l10n.py --update-all"
+create-locale = "python bundle/l10n.py --create-new"
 
 [[tool.hatch.envs.all.matrix]]
 python = ["3.9", "3.10", "3.11"]
@@ -161,9 +169,8 @@ line-length = 88
 exclude = '''
 (
     \.virtualenvs 
-    | \.hatch
-    | __pycache__
     | build
+    | __pycache__
 )
 '''
 

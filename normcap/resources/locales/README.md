@@ -121,7 +121,7 @@ _Note_: All commands should be run in the repository's root directory.
 2. Run the following command to create an initial `messages.po`-file for the language.
    Make sure to replace `<LOCALE_NAME>` by the string identified in step 1.
    ```sh
-   python l10n.py --create-new <LOCALE_NAME>
+   hatch run create-locale <LOCALE_NAME>
    ```
 3. Edit the file `./normcap/resources/locales/<LOCALE_NAME>/LC_MESSAGES/messages.po`
    which was created in step 2. Add your translations as the respective `msgstr`. If you
@@ -133,7 +133,7 @@ _Note_: All commands should be run in the repository's root directory.
      automatically.
 4. Compile the new `.po` file to the machine-readable `.mo` file:
    ```sh
-   python l10n.py
+   hatch run locales-compile
    ```
 5. To test your translation, run NormCap with the `LANGUAGE` environment variable set:
    ```sh
@@ -148,5 +148,5 @@ This is only necessary, when translatable strings in NormCap's source code got c
 
 1. Generate `.pot` file and update all existing `.po` files:
    ```sh
-   python l10n.py --update-all
+   hatch run locales-update
    ```

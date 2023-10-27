@@ -30,6 +30,7 @@ cov.xml
 coverage
 .coverage
 coverage.lcov
+coverage.xml
 .coveralls.yml
 .envrc
 
