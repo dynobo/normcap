@@ -30,7 +30,8 @@ def test_pbcopy_copy():
     result = pbcopy.PbCopyHandler().copy(text=text)
 
     with subprocess.Popen(
-        ["pbpaste", "r"], stdout=subprocess.PIPE  # noqa: S603, S607
+        ["pbpaste", "r"],  # noqa: S603, S607
+        stdout=subprocess.PIPE,
     ) as p:
         stdout = p.communicate()[0]
     clipped = stdout.decode("utf-8")
