@@ -166,13 +166,6 @@ ban-relative-imports = "all"
 
 [tool.black]
 line-length = 88
-exclude = '''
-(
-    \.virtualenvs 
-    | build
-    | __pycache__
-)
-'''
 
 [tool.mypy]
 files = ["normcap/**/*.py", "tests/**/*.py", "bundle/**/*.py"]
