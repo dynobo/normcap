@@ -152,7 +152,6 @@ ignore = [
 ]
 
 [tool.ruff.per-file-ignores]
-# Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "PLR0913", "S101", "TID252", "ANN", "D"]
 
 [tool.ruff.pydocstyle]
