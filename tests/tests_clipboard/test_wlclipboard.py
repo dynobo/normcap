@@ -43,7 +43,8 @@ def test_wlcopy_copy():
     result = wlclipboard.WlCopyHandler().copy(text=text)
 
     with subprocess.Popen(
-        ["wl-paste"], stdout=subprocess.PIPE  # noqa: S603, S607
+        ["wl-paste"],  # noqa: S603, S607
+        stdout=subprocess.PIPE,
     ) as p:
         stdout = p.communicate()[0]
     clipped = stdout.decode("utf-8").strip()
