@@ -237,7 +237,7 @@ class MenuButton(QtWidgets.QToolButton):
         notification_tooltip = _(
             "Show status information via your system's desktop\nnotification center."
         )
-        if sys.platform in ("darwin", "win32"):
+        if sys.platform in {"darwin", "win32"}:
             notification_tooltip += (
                 # L10N: Extension "Show notification"-Tooltip on macOS and Windows.
                 f"\n({_('Click on the notification to open the result')})"

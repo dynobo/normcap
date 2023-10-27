@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class WlCopyHandler(ClipboardHandlerBase):
-    def _copy(self, text: str) -> None:
+    @staticmethod
+    def _copy(text: str) -> None:
         """Use wl-clipboard package to copy text to system clipboard."""
         subprocess.run(
             args=["wl-copy"],

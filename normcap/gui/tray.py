@@ -204,12 +204,12 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             for index in range(len(system_info.screens())):
                 self._create_window(index)
 
-        elif system_info.desktop_environment() in (
+        elif system_info.desktop_environment() in {
             DesktopEnvironment.GNOME,
             DesktopEnvironment.KDE,
             DesktopEnvironment.SWAY,
             DesktopEnvironment.HYPRLAND,
-        ):
+        }:
             self.com.on_window_positioned.connect(self._create_next_window)
             self._create_next_window()
         else:
@@ -573,7 +573,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_languages_changed.connect(settings_menu.on_languages_changed)
         return settings_menu
 
-    def _create_layout(self) -> QtWidgets.QGridLayout:
+    @staticmethod
+    def _create_layout() -> QtWidgets.QGridLayout:
         layout = QtWidgets.QGridLayout()
         layout.setContentsMargins(26, 26, 26, 26)
         layout.setRowStretch(1, 1)

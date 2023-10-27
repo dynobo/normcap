@@ -40,13 +40,14 @@ class ClipboardHandlerBase(abc.ABC):
             return False
 
         xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
-        has_wayland_display_env = os.environ.get("WAYLAND_DISPLAY", "") != ""
+        has_wayland_display_env = bool(os.environ.get("WAYLAND_DISPLAY", ""))
         return "wayland" in xdg_session_type or has_wayland_display_env
 
     @abc.abstractmethod
     def _is_compatible(self) -> bool:
         ...  # pragma: no cover
 
+    @staticmethod
     @abc.abstractmethod
-    def _copy(self, text: str) -> None:
+    def _copy(text: str) -> None:
         ...  # pragma: no cover

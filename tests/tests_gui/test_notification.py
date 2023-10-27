@@ -16,7 +16,7 @@ from normcap.gui.models import Capture, CaptureMode, Rect
         ("SingleLineMagic", "", "Nothing captured", "Please try again"),
         (
             "ParagraphMagic",
-            f"P1{os.linesep*2}P2{os.linesep*2}P3",
+            f"P1{os.linesep * 2}P2{os.linesep * 2}P3",
             "3 paragraphs",
             "P1 P2 P3",
         ),
@@ -24,9 +24,9 @@ from normcap.gui.models import Capture, CaptureMode, Rect
         ("EmailMagic", "a@aa.de, b@bb.de", "2 emails", "a@aa.de, b@bb.de"),
         (
             "SingleLineMagic",
-            f"{'a'*15} {'b'*15} {'c'*15}",
+            f"{'a' * 15} {'b' * 15} {'c' * 15}",
             "3 words ",
-            f"{'a'*15} {'b'*15} [...]",
+            f"{'a' * 15} {'b' * 15} [...]",
         ),
         (
             "MultiLineMagic",

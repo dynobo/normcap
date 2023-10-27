@@ -21,7 +21,7 @@ _ISSUES_URLS = "https://github.com/dynobo/normcap/issues/new"
 
 def _is_wayland_display_manager() -> bool:
     xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
-    has_wayland_display_env = os.environ.get("WAYLAND_DISPLAY", "") != ""
+    has_wayland_display_env = bool(os.environ.get("WAYLAND_DISPLAY", ""))
     return "wayland" in xdg_session_type or has_wayland_display_env
 
 

@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 def _get_pixels(
     image: QImage, points: Iterable[tuple[int, int]]
 ) -> list[tuple[int, ...]]:
-    pixel_size = 4  ## One pixel consists of 4 values: R,G,B,A
+    pixel_size = 4  # One pixel consists of 4 values: R,G,B,A
     ptr = image.bits()
     width = image.width()
 

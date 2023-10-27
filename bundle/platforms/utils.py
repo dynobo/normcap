@@ -239,7 +239,7 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
 
     for each_file in Path(tesseract_path).glob("*.*"):
         if (
-            (each_file.suffix not in (".exe", ".dll"))
+            (each_file.suffix not in {".exe", ".dll"})
             or (each_file.name in excluded)
             or (each_file.suffix == ".exe" and each_file.name != "tesseract.exe")
         ):

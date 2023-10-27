@@ -110,7 +110,8 @@ class Notifier(QtCore.QObject):
             )
         self.com.on_notification_sent.emit()
 
-    def _send_via_libnotify(self, title: str, message: str) -> None:
+    @staticmethod
+    def _send_via_libnotify(title: str, message: str) -> None:
         """Send via notify-send.
 
         Seems to work more reliable on Linux + Gnome, but requires libnotify.
