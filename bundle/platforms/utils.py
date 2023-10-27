@@ -68,7 +68,7 @@ class BuilderBase(ABC):
         """Create .mo files for all locales."""
         print("Compiling locales...")  # noqa: T201
         self.run(
-            cmd="python l10n.py",
+            cmd="python bundle/l10n.py",
             cwd=self.PROJECT_PATH,
         )
 

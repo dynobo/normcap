@@ -7,14 +7,27 @@ import re
 import subprocess
 from pathlib import Path
 
+import toml
 from babel.messages.frontend import CommandLineInterface
 
-import normcap
+LOCALES_PATH = Path(__file__).parent.parent / "normcap" / "resources" / "locales"
 
 
 def _get_version() -> str:
     """Get normcap versions string."""
-    return normcap.__version__
+    try:
+        from normcap import __version__
+
+        version = __version__
+    except Exception:
+        print("Could not import __version__. Fallback to pyproject.toml.")  # noqa: T201
+        with (Path(__file__).parent.parent / "pyproject.toml").open(
+            encoding="utf8"
+        ) as toml_file:
+            pyproject_toml = toml.load(toml_file)
+        version = pyproject_toml["tool"]["briefcase"]["version"]
+
+    return version
 
 
 def _update_coverage(lines: list[str]) -> None:
@@ -45,7 +58,7 @@ def _update_coverage(lines: list[str]) -> None:
     )
 
     # Render stats to markdown file
-    md_file = Path(__file__).parent / "normcap" / "resources" / "locales" / "README.md"
+    md_file = LOCALES_PATH / "README.md"
     md_text = md_file.read_text("utf-8")
     md_text = re.sub(
         r"(.*## Status\n).*?(##.*)",
@@ -71,7 +84,7 @@ def compile_locales() -> None:
             "compile",
             "--use-fuzzy",
             "--directory",
-            "normcap/resources/locales",
+            f"{LOCALES_PATH.resolve()}",
             "--statistics",
         ]
     )
@@ -89,8 +102,8 @@ def extract_strings() -> None:
             "--width=79",
             "--add-comments=L10N:",
             "--strip-comment-tag",
-            "--input-dirs=./normcap",
-            "--output-file=./normcap/resources/locales/messages.pot",
+            f"--input-dir={Path('__file__').parent.parent.resolve()}",
+            f"--output-file={(LOCALES_PATH / 'messages.pot').resolve()}",
         ]
     )
 
@@ -100,8 +113,8 @@ def update_locales() -> None:
         [
             "pybabel",
             "update",
-            "--input-file=./normcap/resources/locales/messages.pot",
-            "--output-dir=./normcap/resources/locales",
+            f"--input-file={(LOCALES_PATH / 'messages.pot').resolve()}",
+            f"--output-dir={LOCALES_PATH.resolve()}",
             "--width=79",
             "--ignore-obsolete",
         ]
@@ -114,8 +127,8 @@ def create_new(locales: list[str]) -> None:
             [
                 "pybabel",
                 "init",
-                "--input-file=./normcap/resources/locales/messages.pot",
-                "--output-dir=./normcap/resources/locales",
+                f"--input-file={(LOCALES_PATH / 'messages.pot').resolve()}",
+                f"--output-dir={LOCALES_PATH.resolve()}",
                 f"--locale={locale}",
             ]
         )
