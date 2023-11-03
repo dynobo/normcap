@@ -10,7 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class XclipCopyHandler(ClipboardHandlerBase):
-    def _copy(self, text: str) -> None:
+    @staticmethod
+    def _copy(text: str) -> None:
         """Use xclip package to copy text to system clipboard."""
         subprocess.run(
             args=["xclip", "-selection", "clipboard", "-in"],

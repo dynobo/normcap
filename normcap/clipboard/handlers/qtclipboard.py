@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 
 
 class QtCopyHandler(ClipboardHandlerBase):
-    def _copy(self, text: str) -> None:
+    @staticmethod
+    def _copy(text: str) -> None:
         """Use QtWidgets.QApplication.clipboard to copy text to system clipboard."""
         app = QtGui.QGuiApplication.instance() or QtGui.QGuiApplication()
 

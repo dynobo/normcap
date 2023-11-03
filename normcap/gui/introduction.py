@@ -123,7 +123,8 @@ class IntroductionDialog(QtWidgets.QDialog):
             ),
         ]
 
-    def _create_header(self) -> QtWidgets.QLabel:
+    @staticmethod
+    def _create_header() -> QtWidgets.QLabel:
         # L10N: Introduction window headline
         header = QtWidgets.QLabel(_("Basic Usage"))
         header_font = QtGui.QFont(QtGui.QFont().family(), pointSize=18, weight=300)
@@ -150,8 +151,9 @@ class IntroductionDialog(QtWidgets.QDialog):
         scroll.setFixedHeight(sections_container.height())
         return scroll
 
+    @staticmethod
     def _create_content_section(
-        self, title: str, text: str, image: Path
+        title: str, text: str, image: Path
     ) -> QtWidgets.QLayout:
         vbox = QtWidgets.QVBoxLayout()
 

@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class PbCopyHandler(ClipboardHandlerBase):
-    def _copy(self, text: str) -> None:
+    @staticmethod
+    def _copy(text: str) -> None:
         subprocess.run(
             ["pbcopy", "w"],  # noqa: S607
             shell=False,  # noqa: S603
