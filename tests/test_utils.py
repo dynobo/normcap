@@ -104,12 +104,7 @@ def test_argparser_attributes_in_settings():
     settings = Settings(organization="normcap_TEST")
 
     for arg in argparser_defaults:
-        if arg in (
-            "verbosity",
-            "reset",
-            "cli_mode",
-            "background_mode",
-        ):
+        if arg in {"verbosity", "reset", "cli_mode", "background_mode"}:
             continue
         assert arg.replace("_", "-") in settings.allKeys()
 
@@ -118,7 +113,7 @@ def test_settings_in_argparser_attributes():
     argparser_defaults = vars(utils.create_argparser().parse_args([]))
     settings = Settings(organization="normcap_TEST")
     for key in settings.allKeys():
-        if key in ("version", "last-update-check", "has-screenshot-permission"):
+        if key in {"version", "last-update-check", "has-screenshot-permission"}:
             continue
         assert key.replace("-", "_") in argparser_defaults
 
