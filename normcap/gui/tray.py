@@ -573,7 +573,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_languages_changed.connect(settings_menu.on_languages_changed)
         return settings_menu
 
-    def _create_layout(self) -> QtWidgets.QGridLayout:
+    @staticmethod
+    def _create_layout() -> QtWidgets.QGridLayout:
         layout = QtWidgets.QGridLayout()
         layout.setContentsMargins(26, 26, 26, 26)
         layout.setRowStretch(1, 1)

@@ -16,7 +16,7 @@ def test_tray_menu_exit(monkeypatch, qtbot, run_normcap):
     tray = run_normcap(extra_cli_args=["--background-mode"])
 
     exit_calls = []
-    monkeypatch.setattr(sys, "exit", lambda code: exit_calls.append(code))
+    monkeypatch.setattr(sys, "exit", exit_calls.append)
 
     # WHEN "exit" is clicked in system tray menu
     tray.tray_menu.show()
@@ -42,7 +42,7 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     monkeypatch.setattr(screengrab, "capture", lambda: [testcase.screenshot])
 
     exit_calls = []
-    monkeypatch.setattr(sys, "exit", lambda code: exit_calls.append(code))
+    monkeypatch.setattr(sys, "exit", exit_calls.append)
 
     # WHEN "capture" is clicked in system tray menu
     #      and a region on the screen is selected

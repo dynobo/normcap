@@ -47,6 +47,7 @@ class ClipboardHandlerBase(abc.ABC):
     def _is_compatible(self) -> bool:
         ...  # pragma: no cover
 
+    @staticmethod
     @abc.abstractmethod
-    def _copy(self, text: str) -> None:
+    def _copy(text: str) -> None:
         ...  # pragma: no cover

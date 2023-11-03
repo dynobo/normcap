@@ -40,7 +40,8 @@ class CheckedCall:
 
 
 class WindllHandler(ClipboardHandlerBase):
-    def _copy(self, text: str) -> None:  # noqa: PLR0915
+    @staticmethod
+    def _copy(text: str) -> None:  # noqa: PLR0915
         from ctypes.wintypes import (
             BOOL,
             DWORD,

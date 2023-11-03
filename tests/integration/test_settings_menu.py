@@ -14,7 +14,7 @@ def test_settings_menu_creates_actions(monkeypatch, qtbot, run_normcap, test_sig
     # GIVEN NormCap is started with any image as screenshot
     some_image = testcases[0].screenshot
     monkeypatch.setattr(screengrab, "capture", lambda: [some_image])
-    monkeypatch.setattr(sys, "exit", lambda x: test_signal.on_event.emit(x))
+    monkeypatch.setattr(sys, "exit", test_signal.on_event.emit)
     tray = run_normcap(extra_cli_args=[])
 
     # WHEN the menu button is clicked (mocked here via aboutToShow, because menus are
@@ -42,7 +42,7 @@ def test_settings_menu_close_action_exits(monkeypatch, qtbot, run_normcap, test_
     #   and tray icon is disabled
     some_image = testcases[0].screenshot
     monkeypatch.setattr(screengrab, "capture", lambda: [some_image])
-    monkeypatch.setattr(sys, "exit", lambda x: test_signal.on_event.emit(x))
+    monkeypatch.setattr(sys, "exit", test_signal.on_event.emit)
     tray = run_normcap(extra_cli_args=["--tray=False"])
 
     # WHEN the menu button is clicked (mocked here via aboutToShow, because menus are
@@ -70,7 +70,7 @@ def test_settings_menu_close_action_minimizes(
     #   and tray icon is enabled
     some_image = testcases[0].screenshot
     monkeypatch.setattr(screengrab, "capture", lambda: [some_image])
-    monkeypatch.setattr(sys, "exit", lambda x: test_signal.on_event.emit(x))
+    monkeypatch.setattr(sys, "exit", test_signal.on_event.emit)
     tray = run_normcap(extra_cli_args=["--tray=True"])
 
     # WHEN the menu button is clicked (mocked here via aboutToShow, because menus are

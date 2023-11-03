@@ -18,7 +18,7 @@ def test_normcap_ocr_testcases(
     #        and "parse"-mode
     #        and a certain test image as screenshot
     monkeypatch.setattr(screengrab, "capture", lambda: [testcase.screenshot])
-    monkeypatch.setattr(sys, "exit", lambda x: test_signal.on_event.emit(x))
+    monkeypatch.setattr(sys, "exit", test_signal.on_event.emit)
     tray = run_normcap()
 
     # WHEN a certain test region is selected on the screen
