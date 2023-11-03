@@ -8,7 +8,7 @@ from .testcases import testcases
 
 
 @pytest.mark.gui()
-@pytest.mark.parametrize("testcase", testcases)
+@pytest.mark.parametrize("testcase", [t for t in testcases if not t.skip])
 def test_normcap_ocr_testcases(
     monkeypatch, qtbot, testcase, run_normcap, select_region, test_signal
 ):
@@ -43,7 +43,8 @@ def test_normcap_ocr_testcases(
     similarity = SequenceMatcher(
         None, capture.ocr_text, testcase.expected_ocr_text
     ).ratio()
-    assert similarity >= 0.98, (
+
+    assert similarity >= testcase.expected_similarity, (
         f"{testcase.image_path.name=}",
         f"{capture.ocr_text=}",
         f"{testcase.expected_ocr_text=}",
