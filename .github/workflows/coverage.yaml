@@ -79,9 +79,6 @@ jobs:
           tesseract --version
           tesseract --list-langs
 
-      - name: Hatch env create
-        run: hatch env create
-
       - name: Run pytest
         run: hatch run test
 

@@ -103,9 +103,6 @@ jobs:
           tesseract --version
           tesseract --list-langs
 
-      - name: Hatch env create
-        run: hatch env create
-
       - name: Run project checks
         run: hatch run check
 
@@ -177,9 +174,6 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-      - name: Install dependencies
-        shell: bash -l {0}
-        run: hatch env create
       - name: Build package briefcase
         shell: bash -l {0}
         run: hatch run python bundle/build.py --framework=briefcase
