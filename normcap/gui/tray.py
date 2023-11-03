@@ -286,7 +286,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             image=self.capture.image,
             tessdata_path=system_info.get_tessdata_path(),
             parse=self.capture.mode is CaptureMode.PARSE,
-            resize_factor=3.2,
+            resize_factor=2,
             padding_size=80,
         )
         utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")

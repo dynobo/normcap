@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 def _get_pixels(
     image: QImage, points: Iterable[tuple[int, int]]
 ) -> list[tuple[int, ...]]:
-    pixel_size = 4  ## One pixel consists of 4 values: R,G,B,A
+    pixel_size = 4  # One pixel consists of 4 values: R,G,B,A
     ptr = image.bits()
     width = image.width()
 
@@ -71,10 +71,15 @@ def add_padding(img: QImage, padding: int = 80) -> QImage:
     return padded_img
 
 
-def resize_image(image: QImage, factor: float = 3.2) -> QImage:
+def resize_image(image: QImage, factor: float) -> QImage:
     """Resize image to get equivalent of 300dpi.
 
-    Useful because most displays are around ~100dpi, while Tesseract works best ~300dpi.
+    According to various sources, it seems like tesseract performs best when with
+    capital letter of height 20px-50px. => A resize factor of 2 seems reasonable.
+
+    References:
+    https://groups.google.com/g/tesseract-ocr/c/Wdh_JJwnw94/m/24JHDYQbBQAJ
+    https://willus.com/blog.shtml?tesseract_accuracy
     """
     logger.debug("Scale image x%s", factor)
 
