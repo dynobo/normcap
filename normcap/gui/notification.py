@@ -184,26 +184,24 @@ class Notifier(QtCore.QObject):
         # It only makes sense to act on notification clicks, if we have a result.
         if ocr_text and len(ocr_text.strip()) >= 1:
             parent.messageClicked.connect(
-                lambda: self._open_ocr_result(
-                    ocr_text=ocr_text, applied_magic=ocr_magic
-                )
+                lambda: self._open_ocr_result(text=ocr_text, applied_magic=ocr_magic)
             )
 
         parent.show()
         parent.showMessage(title, message, QtGui.QIcon(":notification"))
 
     @staticmethod
-    def _open_ocr_result(ocr_text: str, applied_magic: str | None) -> None:
+    def _open_ocr_result(text: str, applied_magic: str | None) -> None:
         logger.debug("Notification clicked.")
 
         urls = []
         if applied_magic == "UrlMagic":
-            urls = ocr_text.split()
+            urls = text.split()
         elif applied_magic == "EmailMagic":
-            urls = [f'mailto:{ocr_text.replace(",", ";").replace(" ", "")}']
+            urls = [f'mailto:{text.replace(",", ";").replace(" ", "")}']
         else:
             temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.txt"
-            temp_file.write_text(ocr_text)
+            temp_file.write_text(text)
             urls = [temp_file.as_uri()]
 
         for url in urls:

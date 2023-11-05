@@ -125,6 +125,87 @@ def test_send_via_qt_tray_without_qsystemtrayicon_parent_raises(qtbot):
     # THEN we expect an exception, as the parent has to be a QSystemTrayIcon
 
 
+@pytest.mark.gui()
+def test_send_via_qt_tray_handles_message_click(monkeypatch, qtbot):
+    """Test if the click-on-notification signal get's reconnect."""
+
+    # GIVEN a Notification object
+    #    with a QSystemTrayIcon as parent
+    #    and a mocked on message clicked handler
+    tray = QtWidgets.QSystemTrayIcon()
+
+    open_ocr_result_calls = []
+
+    def mocked_open_ocr_result(cls, **kwargs):
+        open_ocr_result_calls.append(kwargs)
+
+    monkeypatch.setattr(
+        notification.Notifier, "_open_ocr_result", mocked_open_ocr_result
+    )
+
+    notifier = notification.Notifier(tray)
+
+    # WHEN a notification is send via QT
+    #   and it is clicked
+    notification_data = {
+        "title": "Title",
+        "message": "Message",
+        "ocr_text": "text_1",
+        "ocr_magic": "magic_1",
+    }
+    notifier._send_via_qt_tray(**notification_data)
+    notifier.parent().messageClicked.emit()
+
+    # THEN the mocked click handler function should get called exactly once
+    #    and with the expected kwargs
+    assert len(open_ocr_result_calls) == 1
+    assert open_ocr_result_calls[0]["text"] == notification_data["ocr_text"]
+    assert open_ocr_result_calls[0]["applied_magic"] == notification_data["ocr_magic"]
+
+
+@pytest.mark.gui()
+def test_send_via_qt_tray_reconnects_signal(monkeypatch, qtbot):
+    """Test if the click-on-notification signal get's reconnect."""
+
+    # GIVEN a Notification object
+    #    with a QSystemTrayIcon as parent
+    #    and a mocked on message clicked handler
+    #    and a first notification sent via QT
+    tray = QtWidgets.QSystemTrayIcon()
+
+    open_ocr_result_calls = []
+
+    def mocked_open_ocr_result(cls, **kwargs):
+        open_ocr_result_calls.append(kwargs)
+
+    monkeypatch.setattr(
+        notification.Notifier, "_open_ocr_result", mocked_open_ocr_result
+    )
+
+    notifier = notification.Notifier(tray)
+    notifier._send_via_qt_tray(
+        title="Title", message="Message", ocr_text="text_1", ocr_magic="magic_1"
+    )
+
+    # WHEN a subsequent notification is sent via QT
+    #   and it is clicked
+    notification_data = {
+        "title": "Title",
+        "message": "Message",
+        "ocr_text": "text_2",
+        "ocr_magic": "magic_2",
+    }
+    notifier._send_via_qt_tray(**notification_data)
+    notifier.parent().messageClicked.emit()
+
+    # THEN the mocked onclick handler function should be called exactly once
+    #   and only contain the kwargs from the second notification.
+    #   because the first messageClick handler got cleared
+    assert len(open_ocr_result_calls) == 1
+    assert open_ocr_result_calls[0]["text"] == notification_data["ocr_text"]
+    assert open_ocr_result_calls[0]["applied_magic"] == notification_data["ocr_magic"]
+
+
 def test_send_notification(monkeypatch):
     """Test which method is used to send notification under certain conditions."""
 
@@ -231,7 +312,7 @@ def test_send_notification(monkeypatch):
     ],
 )
 def test_open_ocr_result(monkeypatch, ocr_text, applied_magic, expected_urls):
-    # GIVEN a mocken Qt openUrl method
+    # GIVEN a mocked Qt openUrl method
     urls = []
 
     def mocked_openurl(url):
@@ -240,9 +321,7 @@ def test_open_ocr_result(monkeypatch, ocr_text, applied_magic, expected_urls):
     monkeypatch.setattr(notification.QtGui.QDesktopServices, "openUrl", mocked_openurl)
 
     # WHEN the function is called with certain text and magic
-    notification.Notifier._open_ocr_result(
-        ocr_text=ocr_text, applied_magic=applied_magic
-    )
+    notification.Notifier._open_ocr_result(text=ocr_text, applied_magic=applied_magic)
 
     # THEN the expected urls should be in the format so openUrl would result in the
     #   correct action
