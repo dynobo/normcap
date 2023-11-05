@@ -134,9 +134,6 @@ class OcrResult:
         text = ""
 
         for word in self.words:
-            if not word["text"]:
-                continue
-
             block_num = word.get("block_num", None)
             par_num = word.get("par_num", None)
             line_num = word.get("line_num", None)
