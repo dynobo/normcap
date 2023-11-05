@@ -5,6 +5,7 @@ import logging
 import os
 import re
 
+from normcap.ocr.magics import url_utils
 from normcap.ocr.magics.base_magic import BaseMagic
 from normcap.ocr.models import OcrResult
 
@@ -39,7 +40,8 @@ class UrlMagic(BaseMagic):
             r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*"
             r"(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])"
         )
-        return re.findall(reg_url, text, flags=re.IGNORECASE)
+        all_urls = re.findall(reg_url, text, flags=re.IGNORECASE)
+        return [url for url in all_urls if url_utils.has_valid_tld(url=url)]
 
     def score(self, ocr_result: OcrResult) -> float:
         """Calculate score based on chars in URLs vs overall chars.
