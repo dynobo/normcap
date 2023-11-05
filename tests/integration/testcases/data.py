@@ -24,8 +24,15 @@ class TestCase:
     @property
     def screenshot(self) -> QtGui.QImage:
         """Provides image drawn on colored canvas with the size of the screen."""
+        if self.image.size().toTuple() > self.screen_size.toTuple():
+            raise ValueError(
+                f"{self.image_path.name} is too large "
+                f"for screen size {self.screen_size.toTuple}!"
+            )
+
         pixmap = QtGui.QPixmap(self.screen_size)
         pixmap.fill(QtCore.Qt.GlobalColor.darkCyan)
+
         with QtGui.QPainter(pixmap) as painter:
             painter.drawImage(0, 0, self.image)
         return pixmap.toImage()
