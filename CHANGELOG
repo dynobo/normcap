@@ -10,6 +10,8 @@
   ([#502 comment](https://github.com/dynobo/normcap/issues/502#issuecomment-1726291608))
 - All: Improve line breaks for paragraphs detected in "parse"-mode
   ([#502](https://github.com/dynobo/normcap/issues/502))
+- All: Add verification of top level domains to reduce false positive URL detections in
+  "parse"-mode.
 - All: Add cleansing of some UTF-8 chars in "parse"-mode, e.g. `„` and `“` will be
   replaced by `"`. (You can still use "raw"-mode to leave them intact.)
 - Windows, macOS: Fix notifications not clickable in "raw"-Mode.

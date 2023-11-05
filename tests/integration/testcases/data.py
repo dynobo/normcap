@@ -194,4 +194,10 @@ testcases: tuple[TestCase, ...] = (
         ),
         expected_ocr_magics=["ParagraphMagic"],
     ),
+    TestCase(
+        image_path=image_dir / "12_not_a_url.png",
+        expected_ocr_text="www.normcap.gui",
+        expected_ocr_magics=["SingleLineMagic"],
+        expected_similarity=0.95,
+    ),
 )
