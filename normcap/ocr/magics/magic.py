@@ -1,6 +1,7 @@
 """Handle loading of available magics, get scores for every magic & apply top scored."""
 
 import logging
+import re
 from typing import ClassVar
 
 from normcap.ocr.magics.base_magic import BaseMagic
@@ -49,15 +50,24 @@ class Magic:
         ocr_result.parsed = self._post_process(ocr_result)
         return ocr_result
 
-    @staticmethod
-    def _post_process(ocr_result: OcrResult) -> str:
+    def _post_process(self, ocr_result: OcrResult) -> str:
         """Apply postprocessing to transformed output."""
-        transformed = ocr_result.parsed
+        text = ocr_result.parsed
+        text = self.clean(text)
         # ONHOLD: Check tesseract issue if whitespace workaround still necessary:
         # https://github.com/tesseract-ocr/tesseract/issues/2702
         if ocr_result.tess_args.is_language_without_spaces():
-            transformed = transformed.replace(" ", "")
-        return transformed
+            text = text.replace(" ", "")
+        return text
+
+    @staticmethod
+    def clean(text: str) -> str:
+        """Replace commonly used some utf-8 chars by simplified ones."""
+        # Double quotations marks and primes
+        text = re.sub(r"[„”“‟″‶ʺ]", '"', text)
+        # Singe quotation marks
+        text = re.sub(r"[‚‘’‛]", "'", text)  # noqa: RUF001  # ambiguous string
+        return text  # noqa: RET504  # unnecessary return for clarity
 
     def _calc_scores(self, ocr_result: OcrResult) -> dict[str, float]:
         """Calculate score for every loaded magic.

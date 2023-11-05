@@ -6,6 +6,12 @@
 
 - All: Fix issue where introduction window was still visible on the screen capture UI.
   ([#536 comment](https://github.com/dynobo/normcap/issues/536#issuecomment-1752110232))
+- All: Fix missing line breaks in "raw"-mode
+  ([#502 comment](https://github.com/dynobo/normcap/issues/502#issuecomment-1726291608))
+- All: Improve line breaks for paragraphs detected in "parse"-mode
+  ([#502](https://github.com/dynobo/normcap/issues/502))
+- All: Add cleansing of some UTF-8 chars in "parse"-mode, e.g. `„` and `“` will be
+  replaced by `"`. (You can still use "raw"-mode to leave them intact.)
 - Windows, macOS: Fix notifications not clickable in "raw"-Mode.
   ([#438 comment](https://github.com/dynobo/normcap/issues/438#issuecomment-1752175090))
 - Linux: Add support for using `xclip` to copy result to clipboard. This seems more
