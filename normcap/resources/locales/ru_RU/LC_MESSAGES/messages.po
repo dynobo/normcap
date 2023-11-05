@@ -430,4 +430,3 @@ msgid ""
 "\n"
 "Do you want to view the changelog on GitHub now?"
 msgstr ""
-

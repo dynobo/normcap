@@ -34,5 +34,5 @@ class MultiLineMagic(BaseMagic):
         Returns:
             Lines of text.
         """
-        # Just return concatenated text
-        return ocr_result.lines
+        # keep all line breaks as detected:
+        return ocr_result.add_linebreaks()

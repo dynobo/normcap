@@ -471,4 +471,3 @@ msgstr ""
 "install normcap --upgrade'.\n"
 "\n"
 "Möchtest Du die Liste der Neuerungen auf GitHub ansehen?"
-

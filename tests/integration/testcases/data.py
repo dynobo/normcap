@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -49,7 +50,7 @@ image_dir = Path(__file__).parent
 testcases: tuple[TestCase, ...] = (
     TestCase(
         image_path=image_dir / "00_parse_urls.png",
-        expected_ocr_text="\n".join(
+        expected_ocr_text=f"{os.linesep}".join(
             [
                 "https://github.com/dynobo/normcap",
                 "https://wikipedia.de",
@@ -79,10 +80,10 @@ testcases: tuple[TestCase, ...] = (
         image_path=image_dir / "04_parse_email_skip_invalid.png",
         expected_ocr_text=(
             "To: Peter Parker <peter.parker@test.com>; "
-            "HArD To ReAd\n"
+            f"HArD To ReAd{os.linesep}"
             "<HArDToReAd@test.com>; "
             "0815 <0815@test.com>; "
-            "Invalid_one <notvalid@test>;\n"
+            f"Invalid_one <notvalid@test>;{os.linesep}"
             "Invalid_two <also/not/valid/@test.com>; "
             "Invalid_three <@test.com>"
         ),
@@ -96,9 +97,9 @@ testcases: tuple[TestCase, ...] = (
     TestCase(
         image_path=image_dir / "06_detect_special_characters.png",
         expected_ocr_text=(
-            "'One small step for Man'\n"
-            '"Live long and prosper!"\n'
-            "«Open the shuttlebay doors»\n"
+            f"'One small step for Man'{os.linesep}"
+            f'"Live long and prosper!"{os.linesep}'
+            f"«Open the shuttlebay doors»{os.linesep}"
             '"May the Schwartz™ be with you!"'
         ),
         expected_ocr_magics=["ParagraphMagic"],
@@ -108,10 +109,10 @@ testcases: tuple[TestCase, ...] = (
         expected_ocr_text=(
             "You rent a hotel room. You put a book in the top drawer of the bedside "
             'table and go to sleep. You check out the next morning, but "forget" to '
-            "give back your key. You steal the key!\n"
+            f"give back your key. You steal the key!{os.linesep}"
             "A week later, you return to the hotel, do not check in, sneak into your "
             "old room with your stolen key, and look in the drawer. Your book is still "
-            "there. Astonishing!\n"
+            f"there. Astonishing!{os.linesep}"
             "How can that be? Aren't the contents of a hotel room drawer inaccessible "
             "if you haven't rented the room?"
         ),
@@ -121,15 +122,15 @@ testcases: tuple[TestCase, ...] = (
         # https://www.gutenberg.org/cache/epub/1321/pg1321-images.html
         image_path=image_dir / "08_paragraphs.png",
         expected_ocr_text=(
-            "Chapter 17\n\n"
+            f"Chapter 17{os.linesep}"
             "The being finished speaking and fixed his looks upon me in the "
             "expectation of a reply. But I was bewildered, perplexed, and "
             "unable to arrange my ideas sufficiently to understand the full extent of "
-            "his proposition. He continued,\n\n"
+            f"his proposition. He continued,{os.linesep}"
             '"You must create a female for me with whom I can live in the interchange '
             "of those sympathies necessary for my being. This you "
             "alone can do, and I demand it of you as a right which you must not refuse "
-            'to concede."\n\n'
+            f'to concede."{os.linesep}'
             "The latter part of his tale had kindled anew in me the anger that had "
             "died away while he narrated his peaceful life among the "
             "cottagers, and as he said this I could no longer suppress the rage that "
@@ -146,7 +147,7 @@ testcases: tuple[TestCase, ...] = (
             "printed text into machine-encoded text, whether from a scanned document, "
             "a photo of a document, a scene photo (for example the text on signs and "
             "billboards in a landscape photo) or from subtitle text superimposed on an "
-            "image (for example: from a television broadcast).\n\n"
+            f"image (for example: from a television broadcast).{os.linesep}"
             "Widely used as a form of data entry from printed paper data records — "
             "whether passport documents, invoices, bank statements, computerized "
             "receipts, business cards, mail, printed data, or any suitable "
@@ -155,7 +156,7 @@ testcases: tuple[TestCase, ...] = (
             "displayed online, and used in machine processes such as cognitive "
             "computing, machine translation, (extracted) text-to-speech, key data and "
             "text mining. OCR is a field of research in pattern recognition, "
-            "artificial intelligence and computer vision.\n\n"
+            f"artificial intelligence and computer vision.{os.linesep}"
             "Early versions needed to be trained with images of each character, and "
             "worked on one font at a time. Advanced systems capable of producing a "
             "high degree of accuracy for most fonts are now common, and with support "
@@ -169,13 +170,13 @@ testcases: tuple[TestCase, ...] = (
         image_path=image_dir / "10_font_sizes.png",
         expected_ocr_text=(
             "Arial, 8 pt - You only live once, but if you do it right, once is enough."
-            "\n\n"
+            f"{os.linesep}"
             "Arial, 11 pt - You only live once, but if you do it right, once is enough."
-            "\n\n"
+            f"{os.linesep}"
             "Arial, 14 pt - You only live once, but if you do it right, once is enough."
-            "\n\n"
+            f"{os.linesep}"
             "Arial, 16 pt - You only live once, but if you do it right, once is enough."
-            "\n\n"
+            f"{os.linesep}"
             "Arial, 22 pt - You only live once, but if you do it right, once is enough."
         ),
         expected_ocr_magics=["ParagraphMagic"],
@@ -183,11 +184,11 @@ testcases: tuple[TestCase, ...] = (
     TestCase(
         image_path=image_dir / "11_paragraph_with_bullet_points.png",
         expected_ocr_text=(
-            "The desired solution: (to be implemented)\n"
+            f"The desired solution: (to be implemented){os.linesep}"
             'The "Paragraph" heuristic should be improved by taking the dimensions '
-            "of the detection boxes into account:\n\n"
+            f"of the detection boxes into account:{os.linesep}"
             '- Lines of similar length should indicate "Paragraphs", different length '
-            'indicate "Multilines"\n\n'
+            f'indicate "Multilines"{os.linesep}'
             '- Relatively small gaps between lines should indicate "Paragraphs", '
             'larger gaps between lines indicate "Multilines"'
         ),
