@@ -109,24 +109,52 @@ class OcrResult:
 
     @property
     def text(self) -> str:
-        """OCR text as single line string."""
-        raw_text = " ".join(w["text"].strip() for w in self.words).strip()
-        return self.parsed or raw_text
+        """Provides the resulting text of the OCR.
 
-    @property
-    def lines(self) -> str:
-        """OCR text as multi line string."""
-        current_line_num = 0
-        all_lines = []
+        If parsed text (compiled by a Magic) is available, return that one, otherwise
+        fallback to "raw".
+        """
+        return self.parsed or self.add_linebreaks()
+
+    def add_linebreaks(
+        self,
+        block_sep: str = os.linesep * 2,
+        par_sep: str = os.linesep,
+        line_sep: str = os.linesep,
+        word_sep: str = " ",
+    ) -> str:
+        """OCR text as string with linebreaks.
+
+        When default separators are used, the output should be equal to the output
+        by Tesseract when run in CLI.
+        """
+        last_block_num = None
+        last_par_num = None
+        last_line_num = None
+        text = ""
+
         for word in self.words:
-            if word["line_num"] != current_line_num:
-                current_line_num = word["line_num"]
-                all_lines.append(word["text"])
-            else:
-                all_lines[-1] += f' {word["text"]}'
+            if not word["text"]:
+                continue
 
-        all_lines = list(filter(None, all_lines))  # Remove empty
-        return os.linesep.join(all_lines)
+            block_num = word.get("block_num", None)
+            par_num = word.get("par_num", None)
+            line_num = word.get("line_num", None)
+
+            if block_num != last_block_num:
+                text += block_sep + word["text"]
+            elif par_num != last_par_num:
+                text += par_sep + word["text"]
+            elif line_num != last_line_num:
+                text += line_sep + word["text"]
+            else:
+                text += word_sep + word["text"]
+
+            last_block_num = block_num
+            last_par_num = par_num
+            last_line_num = line_num
+
+        return text.strip()
 
     @property
     def num_chars(self) -> int:

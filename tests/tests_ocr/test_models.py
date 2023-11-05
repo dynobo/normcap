@@ -1,17 +1,11 @@
+import os
+
 from normcap.ocr.models import OEM, PSM, TessArgs
 
 
 def test_ocr_result(ocr_result):
-    """Check if calulated properties are working correctely."""
-    assert isinstance(ocr_result.text, str)
-    assert ocr_result.text.count("\n") == 0
-    assert ocr_result.text.count(" ") >= 2
-    assert ocr_result.text.startswith("one")
-
-    assert isinstance(ocr_result.lines, str)
-    lines = ocr_result.lines.splitlines()
-    assert len(lines) == 2
-    assert lines[0] == "one two"
+    """Check if calculated properties are working correctly."""
+    assert ocr_result.text == f"one{os.linesep}two{os.linesep * 2}three"
 
     assert ocr_result.num_chars == 11
     assert ocr_result.num_blocks == 2

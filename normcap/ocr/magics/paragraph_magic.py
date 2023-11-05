@@ -30,23 +30,5 @@ class ParagraphMagic(BaseMagic):
         Returns:
             Transformed text.
         """
-        result = ""
-        current_par_num = 1
-        current_block_num = 1
-        for word in ocr_result.words:
-            breaks = 0
-            if word["par_num"] != current_par_num:
-                current_par_num = word["par_num"]
-                breaks = 1
-            if word["block_num"] != current_block_num:
-                current_block_num = word["block_num"]
-                breaks = 1
-
-            if breaks > 0:
-                # New line
-                result += os.linesep * breaks + word["text"]
-            else:
-                # No new line
-                result += " " + word["text"]
-
-        return result.strip()
+        # ignore linebreaks within paragraphs:
+        return ocr_result.add_linebreaks(block_sep=os.linesep, line_sep=" ")
