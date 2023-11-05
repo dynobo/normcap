@@ -132,3 +132,30 @@ def test_window_esc_key_pressed_while_selecting(qtbot, temp_settings):
 
     # THEN the selection should be cleared
     assert not win.selection_rect
+
+
+def test_window_get_capture_mode_fallback_to_parse(temp_settings, caplog):
+    # GIVEN a window with an invalid mode setting
+    image = QtGui.QImage(600, 400, QtGui.QImage.Format.Format_RGB32)
+    screen = models.Screen(
+        device_pixel_ratio=1.0,
+        left=0,
+        top=0,
+        right=600,
+        bottom=400,
+        index=0,
+        screenshot=image,
+    )
+    invalid_mode = "some_deprecated_mode"
+    temp_settings.setValue("mode", invalid_mode)
+    win = window.Window(screen=screen, settings=temp_settings, parent=None)
+
+    # WHEN the capture mode is read
+    mode = win.get_capture_mode()
+
+    # THEN a warning should be logged
+    #    and "parse" mode should be returned as fallback
+    assert "warning" in caplog.text.lower()
+    assert "unknown capture mode" in caplog.text.lower()
+    assert invalid_mode in caplog.text.lower()
+    assert mode == models.CaptureMode.PARSE
