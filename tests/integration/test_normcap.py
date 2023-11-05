@@ -19,7 +19,7 @@ def test_normcap_ocr_testcases(
     #        and a certain test image as screenshot
     monkeypatch.setattr(screengrab, "capture", lambda: [testcase.screenshot])
     monkeypatch.setattr(sys, "exit", test_signal.on_event.emit)
-    tray = run_normcap()
+    tray = run_normcap(extra_cli_args=["--language", "eng"])
 
     # WHEN a certain test region is selected on the screen
     with qtbot.waitSignal(test_signal.on_event) as blocker:
