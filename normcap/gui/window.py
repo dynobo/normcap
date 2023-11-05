@@ -191,9 +191,6 @@ class Window(QtWidgets.QMainWindow):
 
     def _draw_background_image(self) -> None:
         """Draw screenshot as background image."""
-        if not self.screen_.screenshot:
-            raise ValueError("Screenshot image is missing!")
-
         pixmap = QtGui.QPixmap()
         pixmap.convertFromImage(self.screen_.screenshot)
         self.image_container.setPixmap(pixmap)
