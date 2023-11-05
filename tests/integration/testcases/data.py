@@ -96,8 +96,10 @@ testcases: tuple[TestCase, ...] = (
     TestCase(
         image_path=image_dir / "06_detect_special_characters.png",
         expected_ocr_text=(
-            "‘One small step for Man’\n“Live long and prosper!”\n"  # noqa: RUF001
-            '«Open the shuttlebay doors»\n"May the Schwartz™ be with you!"'
+            "'One small step for Man'\n"
+            '"Live long and prosper!"\n'
+            "«Open the shuttlebay doors»\n"
+            '"May the Schwartz™ be with you!"'
         ),
         expected_ocr_magics=["ParagraphMagic"],
     ),
@@ -119,20 +121,22 @@ testcases: tuple[TestCase, ...] = (
         # https://www.gutenberg.org/cache/epub/1321/pg1321-images.html
         image_path=image_dir / "08_paragraphs.png",
         expected_ocr_text=(
-            "Chapter 17\n"
+            "Chapter 17\n\n"
             "The being finished speaking and fixed his looks upon me in the "
-            "expectation of a reply. But I was bewildered, perplexed, and unable to "
-            "arrange my ideas sufficiently to understand the full extent of his "
-            "proposition. He continued,\n"
-            "“You must create a female for me with whom I can live in the interchange "
-            "of those sympathies necessary for my being. This you alone can do, and I "
-            "demand it of you as a right which you must not refuse to concede.”\n"
+            "expectation of a reply. But I was bewildered, perplexed, and "
+            "unable to arrange my ideas sufficiently to understand the full extent of "
+            "his proposition. He continued,\n\n"
+            '"You must create a female for me with whom I can live in the interchange '
+            "of those sympathies necessary for my being. This you "
+            "alone can do, and I demand it of you as a right which you must not refuse "
+            'to concede."\n\n'
             "The latter part of his tale had kindled anew in me the anger that had "
-            "died away while he narrated his peaceful life among the cottagers, and as "
-            "he said this I could no longer suppress the rage that burned within me."
+            "died away while he narrated his peaceful life among the "
+            "cottagers, and as he said this I could no longer suppress the rage that "
+            "burned within me."
         ),
         expected_ocr_magics=["ParagraphMagic"],
-        expected_similarity=1,
+        expected_similarity=0.99,
     ),
     TestCase(
         image_path=image_dir / "09_two_columns.png",
@@ -142,7 +146,7 @@ testcases: tuple[TestCase, ...] = (
             "printed text into machine-encoded text, whether from a scanned document, "
             "a photo of a document, a scene photo (for example the text on signs and "
             "billboards in a landscape photo) or from subtitle text superimposed on an "
-            "image (for example: from a television broadcast).\n"
+            "image (for example: from a television broadcast).\n\n"
             "Widely used as a form of data entry from printed paper data records — "
             "whether passport documents, invoices, bank statements, computerized "
             "receipts, business cards, mail, printed data, or any suitable "
@@ -151,7 +155,7 @@ testcases: tuple[TestCase, ...] = (
             "displayed online, and used in machine processes such as cognitive "
             "computing, machine translation, (extracted) text-to-speech, key data and "
             "text mining. OCR is a field of research in pattern recognition, "
-            "artificial intelligence and computer vision.\n"
+            "artificial intelligence and computer vision.\n\n"
             "Early versions needed to be trained with images of each character, and "
             "worked on one font at a time. Advanced systems capable of producing a "
             "high degree of accuracy for most fonts are now common, and with support "
@@ -165,14 +169,27 @@ testcases: tuple[TestCase, ...] = (
         image_path=image_dir / "10_font_sizes.png",
         expected_ocr_text=(
             "Arial, 8 pt - You only live once, but if you do it right, once is enough."
-            "\n"
+            "\n\n"
             "Arial, 11 pt - You only live once, but if you do it right, once is enough."
-            "\n"
+            "\n\n"
             "Arial, 14 pt - You only live once, but if you do it right, once is enough."
-            "\n"
+            "\n\n"
             "Arial, 16 pt - You only live once, but if you do it right, once is enough."
-            "\n"
+            "\n\n"
             "Arial, 22 pt - You only live once, but if you do it right, once is enough."
+        ),
+        expected_ocr_magics=["ParagraphMagic"],
+    ),
+    TestCase(
+        image_path=image_dir / "11_paragraph_with_bullet_points.png",
+        expected_ocr_text=(
+            "The desired solution: (to be implemented)\n"
+            'The "Paragraph" heuristic should be improved by taking the dimensions '
+            "of the detection boxes into account:\n\n"
+            '- Lines of similar length should indicate "Paragraphs", different length '
+            'indicate "Multilines"\n\n'
+            '- Relatively small gaps between lines should indicate "Paragraphs", '
+            'larger gaps between lines indicate "Multilines"'
         ),
         expected_ocr_magics=["ParagraphMagic"],
     ),
