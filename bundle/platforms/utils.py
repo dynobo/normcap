@@ -70,8 +70,15 @@ class BuilderBase(ABC):
             cwd=self.PROJECT_PATH,
         )
 
+    def clean(self) -> None:
+        build_dir = self.PROJECT_PATH / "build"
+        if build_dir.exists():
+            print(f"Removing old build directory {build_dir.resolve()}")  # noqa: T201
+            shutil.rmtree(build_dir, ignore_errors=True)
+
     def create(self) -> None:
         """Run all steps to build prebuilt packages."""
+        self.clean()
         self.download_tessdata()
         self.install_system_deps()
         self.compile_locales()
