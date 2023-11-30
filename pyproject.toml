@@ -94,6 +94,7 @@ locales-compile = "python bundle/l10n.py"
 locales-update = "python bundle/l10n.py --update-all"
 create-locale = "python bundle/l10n.py --create-new"
 version = "tbump {args:current-version}"
+bundle = ["locales-compile", "python bundle/build.py --framework=briefcase {args}"]
 
 [[tool.hatch.envs.all.matrix]]
 python = ["3.9", "3.10", "3.11"]
@@ -275,7 +276,7 @@ requires = ["std-nslog==1.0.0"]
 [tool.briefcase.app.normcap.linux.appimage]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
 template_branch = "v0.3.16"
-manylinux = "manylinux_2_28"
+manylinux = "manylinux2014_x86_64"
 system_requires = [
   "wget",
   "tesseract",
