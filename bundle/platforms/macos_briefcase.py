@@ -4,6 +4,8 @@ import platform
 import shutil
 from pathlib import Path
 
+from retry import retry
+
 from platforms.utils import BuilderBase
 
 
@@ -82,6 +84,7 @@ class MacBriefcase(BuilderBase):
         )
         shutil.copy(tesseract_source, tesseract_target)
 
+    @retry(tries=5, delay=1, backoff=2)
     def install_system_deps(self) -> None:
         self.run(cmd="brew install tesseract")
         self.run(cmd="brew install dylibbundler")
