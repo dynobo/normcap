@@ -276,7 +276,7 @@ requires = ["std-nslog==1.0.0"]
 [tool.briefcase.app.normcap.linux.appimage]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
 template_branch = "v0.3.16"
-manylinux = "manylinux_2_28"
+manylinux = "manylinux2014_x86_64"
 system_requires = [
   "wget",
   "tesseract",
