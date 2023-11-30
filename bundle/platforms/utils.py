@@ -15,8 +15,6 @@ from typing import Optional, Union
 import toml
 from retry import retry
 
-# TODO: Add retries to all downloads
-
 
 class BuilderBase(ABC):
     """Create a prebuilt package."""
