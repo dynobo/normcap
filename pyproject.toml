@@ -277,6 +277,7 @@ requires = ["std-nslog==1.0.0"]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
 template_branch = "v0.3.16"
 manylinux = "manylinux_2_28"
+manylinux_image_tag="2023-09-16-066b049"
 system_requires = [
   "wget",
   "tesseract",
