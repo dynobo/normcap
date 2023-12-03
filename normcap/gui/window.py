@@ -14,8 +14,9 @@ nevertheless display potentially multiple windows in fullscreen on multiple disp
 import logging
 import sys
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, NamedTuple, cast
+from typing import Any, Callable, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -33,7 +34,8 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-class DebugInfo(NamedTuple):
+@dataclass
+class DebugInfo:
     screen: Screen | None = None
     window: QtWidgets.QMainWindow | None = None
     scale_factor: float = 1
@@ -166,7 +168,7 @@ class Window(QtWidgets.QMainWindow):
         """Calculate scale factor from image and screen dimensions."""
         if not self.screen_.screenshot:
             raise ValueError("Screenshot image is missing!")
-        return self.screen_.screenshot.width() / self.screen_.width
+        return self.screen_.screenshot.width() / self.width()
 
     def _add_image_container(self) -> None:
         """Add widget showing screenshot."""
@@ -338,6 +340,8 @@ class Window(QtWidgets.QMainWindow):
         """Adjust child widget on resize."""
         super().resizeEvent(event)
         self.ui_container.resize(self.size())
+        if self.ui_container.debug_info:
+            self.ui_container.debug_info.scale_factor = self._get_scale_factor()
 
     def showEvent(self, event: QtGui.QShowEvent) -> None:  # noqa: N802
         """Update background image on show/reshow."""
@@ -386,17 +390,17 @@ class UiContainerLabel(QtWidgets.QLabel):
             "[ Screen ]",
             f"Size: {self.debug_info.screen.size}",
             f"Position: {self.debug_info.screen.coords}",
-            f"Selected region: {selection.geometry}",
             f"Device pixel ratio: {self.debug_info.screen.device_pixel_ratio}",
             "",
             "[ Window ]",
             f"Size: {self.debug_info.window.size().toTuple()}",
             f"Position: {cast(tuple, self.debug_info.window.geometry().getCoords())}",
             f"Device pixel ratio: {self.debug_info.window.devicePixelRatio()}",
+            f"Selected region: {selection.coords}",
             "",
             "[ Screenshot ]",
             f"Size: {self.debug_info.screen.screenshot.size().toTuple()}",
-            f"Selected region (scaled): {selection_scaled.geometry}",
+            f"Selected region (scaled): {selection_scaled.coords}",
             "",
             "[ Scaling detected ]",
             f"Factor: {self.debug_info.scale_factor:.2f}",
