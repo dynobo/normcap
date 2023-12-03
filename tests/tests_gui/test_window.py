@@ -25,7 +25,7 @@ def test_move_active_window_to_position_raises_on_non_linux():
 
 @pytest.mark.gui()
 @pytest.mark.parametrize(
-    ("img_size", "screen_size", "expected_factor"),
+    ("img_size", "window_size", "expected_factor"),
     [
         ((600, 400), (600, 400), 1.0),
         ((300, 200), (600, 400), 0.5),
@@ -33,7 +33,7 @@ def test_move_active_window_to_position_raises_on_non_linux():
     ],
 )
 def test_window_get_scale_factor(
-    qtbot, temp_settings, img_size, screen_size, expected_factor
+    qtbot, temp_settings, img_size, window_size, expected_factor
 ):
     # GIVEN a screenshot of a certain size
     #   and a certain (Qt) screen size
@@ -42,14 +42,15 @@ def test_window_get_scale_factor(
         device_pixel_ratio=1.0,
         left=0,
         top=0,
-        right=screen_size[0] - 1,
-        bottom=screen_size[1] - 1,
+        right=window_size[0] - 1,
+        bottom=window_size[1] - 1,
         index=0,
         screenshot=image,
     )
 
     # WHEN the window is shown
     win = window.Window(screen=screen, settings=temp_settings, parent=None)
+    win.resize(QtCore.QSize(*window_size))
     qtbot.addWidget(win)
 
     # THEN the expected scaling factor should be calculated

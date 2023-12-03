@@ -2,7 +2,7 @@
 
 # Changelog
 
-## v0.5.0beta2 (not yet released)
+## v0.5.0 (not yet released)
 
 - All: Fix issue where introduction window was still visible on the screen capture UI.
   ([#536 comment](https://github.com/dynobo/normcap/issues/536#issuecomment-1752110232))
@@ -16,6 +16,10 @@
   replaced by `"`. (You can still use "raw"-mode to leave them intact.)
 - Windows, macOS: Fix notifications not clickable in "raw"-Mode.
   ([#438 comment](https://github.com/dynobo/normcap/issues/438#issuecomment-1752175090))
+- Linux: Fig segfault in AppImage.
+  ([#543](https://github.com/dynobo/normcap/issues/534))
+- Linux: Fix incorrect selection when display scaling is active.
+  ([#397](https://github.com/dynobo/normcap/issues/397))
 - Linux: Add support for using `xclip` to copy result to clipboard. This seems more
   stable on Wayland systems than `wl-clipboard`, at least until compatibility with
   latest Gnome updates is restored.
