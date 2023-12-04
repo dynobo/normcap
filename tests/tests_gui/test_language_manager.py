@@ -83,7 +83,7 @@ def test_delete_without_selection_does_nothing(monkeypatch, tmp_path, qtbot: QtB
     #      without selecting any entries
     window.installed_layout.view.clearSelection()
     with qtbot.wait_signal(
-        window.com.on_languages_changed, timeout=1000, raising=False
+        window.com.on_languages_changed, timeout=100, raising=False
     ) as result:
         window.installed_layout.button.click()
 
