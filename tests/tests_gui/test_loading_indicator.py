@@ -93,7 +93,7 @@ def test_frame_count_progresses(monkeypatch, qtbot):
 
     # WHEN showing the indicator with a certain framerate and waiting x seconds
     assert indicator.counter == 0
-    indicator.framerate = 30
+    indicator.framerate = 120
     window.show()
     indicator.show()
     qtbot.wait(1500)

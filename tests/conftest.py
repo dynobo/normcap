@@ -172,8 +172,11 @@ def run_normcap(monkeypatch, qapp, basic_cli_args):
     yield _run_normcap
 
     for tray in trays:
+        tray._close_windows()
         tray._exit_application(delay=0)
         tray.deleteLater()
+
+    QtCore.QTimer.singleShot(0, QtCore.QCoreApplication.processEvents)
 
 
 @pytest.fixture()

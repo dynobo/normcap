@@ -48,10 +48,9 @@ def test_window_get_scale_factor(
         screenshot=image,
     )
 
-    # WHEN the window is shown
+    # WHEN the window is created
     win = window.Window(screen=screen, settings=temp_settings, parent=None)
     win.resize(QtCore.QSize(*window_size))
-    qtbot.addWidget(win)
 
     # THEN the expected scaling factor should be calculated
     assert win._get_scale_factor() == expected_factor
@@ -71,10 +70,9 @@ def test_window_get_scale_factor_raises_if_missing(qtbot, temp_settings):
         screenshot=image,
     )
 
-    # WHEN the window is shown
+    # WHEN the window is created
     #   and the screenshot is not available (anymore)
     win = window.Window(screen=screen, settings=temp_settings, parent=None)
-    qtbot.addWidget(win)
     win.screen_.screenshot = None
 
     # THEN an exception should be raised when trying to calculate the scale factor
