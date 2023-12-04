@@ -71,12 +71,19 @@ def test_update_checker_is_new_version(current, other, is_new):
 )
 @pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_update_checker_cant_parse(qtbot, caplog, packaged, text):
+    # GIVEN an update checker is instantiated for
+    #    either bundled NormCap or plain Python NormCap
     checker = update_check.UpdateChecker(None, packaged=packaged)
+
+    # WHEN the download finished receives the (mocked) download response
+    #    with unexpected/broken data
     with qtbot.waitSignal(
-        checker.com.on_version_checked, raising=False, timeout=2000
+        checker.com.on_version_checked, raising=False, timeout=200
     ) as result:
         checker._on_download_finished(text, "some url")
 
+    # THEN version checked event should not be triggered
+    #    and error information should be logged
     assert not result.signal_triggered
     assert "ERROR" in caplog.text
 
