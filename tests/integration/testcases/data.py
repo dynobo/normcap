@@ -16,6 +16,20 @@ class TestCase:
     _image: QtGui.QImage | None = None
 
     @property
+    def _screen_size(self) -> QtCore.QSize:
+        app = QtWidgets.QApplication.instance()
+        if isinstance(app, QtGui.QGuiApplication):
+            return app.primaryScreen().size() * self._device_pixel_ratio
+        raise TypeError("Could not detect QGuiApplication")
+
+    @property
+    def _device_pixel_ratio(self) -> float:
+        app = QtWidgets.QApplication.instance()
+        if isinstance(app, QtGui.QGuiApplication):
+            return app.primaryScreen().devicePixelRatio()
+        raise TypeError("Could not detect QGuiApplication")
+
+    @property
     def image(self) -> QtGui.QImage:
         if not self._image:
             self._image = QtGui.QImage(self.image_path)
@@ -24,13 +38,13 @@ class TestCase:
     @property
     def screenshot(self) -> QtGui.QImage:
         """Provides image drawn on colored canvas with the size of the screen."""
-        if self.image.size().toTuple() > self.screen_size.toTuple():
+        if self.image.size().toTuple() > self._screen_size.toTuple():
             raise ValueError(
                 f"{self.image_path.name} is too large "
-                f"for screen size {self.screen_size.toTuple}!"
+                f"for screen size {self._screen_size.toTuple}!"
             )
 
-        pixmap = QtGui.QPixmap(self.screen_size)
+        pixmap = QtGui.QPixmap(self._screen_size)
         pixmap.fill(QtCore.Qt.GlobalColor.darkCyan)
 
         with QtGui.QPainter(pixmap) as painter:
@@ -38,17 +52,11 @@ class TestCase:
         return pixmap.toImage()
 
     @property
-    def screen_size(self) -> QtCore.QSize:
-        app = QtWidgets.QApplication.instance()
-        if isinstance(app, QtGui.QGuiApplication):
-            return app.primaryScreen().size()
-        raise TypeError("Could not detect QGuiApplication")
-
-    @property
     def coords(self) -> tuple[QtCore.QPoint, QtCore.QPoint]:
+        size = self.image.size() / self._device_pixel_ratio
         return (
             QtCore.QPoint(1, 1),
-            QtCore.QPoint(self.image.width() - 1, self.image.height() - 1),
+            QtCore.QPoint(size.width() - 1, size.height() - 1),
         )
 
 
