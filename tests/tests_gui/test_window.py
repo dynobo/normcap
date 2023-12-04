@@ -100,7 +100,7 @@ def test_window_esc_key_pressed(qtbot, temp_settings):
 
     # WHEN nothing is selected and  the ESC key is pressed
     # THEN the appropriate signal should be triggered
-    with qtbot.waitSignal(win.com.on_esc_key_pressed, timeout=2000):
+    with qtbot.waitSignal(win.com.on_esc_key_pressed, timeout=1000):
         qtbot.keyPress(win, QtCore.Qt.Key.Key_Escape)
 
 

@@ -53,7 +53,7 @@ def test_delete_language(tmp_path, qtbot: QtBot):
     # WHEN selecting the first available language
     #      and clicking the delete button
     window.installed_layout.view.selectRow(0)
-    with qtbot.wait_signal(window.com.on_languages_changed, timeout=100) as result:
+    with qtbot.wait_signal(window.com.on_languages_changed, timeout=1000) as result:
         window.installed_layout.button.click()
 
     # THEN the first language gets deleted
@@ -83,7 +83,7 @@ def test_delete_without_selection_does_nothing(monkeypatch, tmp_path, qtbot: QtB
     #      without selecting any entries
     window.installed_layout.view.clearSelection()
     with qtbot.wait_signal(
-        window.com.on_languages_changed, timeout=100, raising=False
+        window.com.on_languages_changed, timeout=1000, raising=False
     ) as result:
         window.installed_layout.button.click()
 

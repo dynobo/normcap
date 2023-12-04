@@ -96,7 +96,7 @@ def test_frame_count_progresses(monkeypatch, qtbot):
     indicator.framerate = 120
     window.show()
     indicator.show()
-    qtbot.wait(1500)
+    qtbot.wait(500)
 
     # THEN the counter should have reached the last frame at least once
     assert counter_values

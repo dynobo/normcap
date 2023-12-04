@@ -28,7 +28,7 @@ def test_enable_language_manager(qtbot, menu_btn):
 
     # WHEN the menu item entry is clicked
     # THEN the corresponding signal is emitted
-    with qtbot.wait_signal(menu_btn.com.on_manage_languages, timeout=5000) as result:
+    with qtbot.wait_signal(menu_btn.com.on_manage_languages, timeout=1000) as result:
         language_action.trigger()
     assert result.signal_triggered
 
