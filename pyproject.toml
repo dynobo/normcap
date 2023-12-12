@@ -94,10 +94,7 @@ locales-compile = "python bundle/l10n.py"
 locales-update = "python bundle/l10n.py --update-all"
 create-locale = "python bundle/l10n.py --create-new"
 version = "tbump {args:current-version}"
-bundle = [
-  "locales-compile",
-  "python bundle/build.py --framework=briefcase {args}",
-]
+bundle = ["locales-compile", "python bundle/build.py {args}"]
 
 [[tool.hatch.envs.all.matrix]]
 python = ["3.9", "3.10", "3.11"]
