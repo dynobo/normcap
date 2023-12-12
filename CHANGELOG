@@ -2,6 +2,10 @@
 
 # Changelog
 
+## v0.5.1 (2023-12-12)
+
+- All: Fix accidentally removed `normcap` entry point for Python package.
+
 ## v0.5.0 (2023-12-12)
 
 - All: Add Swedish [localization](./normcap/resources/locales/README.md). Thanks,
