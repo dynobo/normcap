@@ -16,7 +16,7 @@ import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, cast
+from typing import Any, Callable, Optional, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -36,8 +36,8 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class DebugInfo:
-    screen: Screen | None = None
-    window: QtWidgets.QMainWindow | None = None
+    screen: Optional[Screen] = None
+    window: Optional[QtWidgets.QMainWindow] = None
     scale_factor: float = 1
 
 
@@ -141,7 +141,7 @@ class Window(QtWidgets.QMainWindow):
         self,
         screen: Screen,
         settings: Settings,
-        parent: QtWidgets.QWidget | None = None,
+        parent: Optional[QtWidgets.QWidget] = None,
     ) -> None:
         """Initialize window."""
         super().__init__(parent=parent)
@@ -362,7 +362,7 @@ class UiContainerLabel(QtWidgets.QLabel):
 
         self.color: QtGui.QColor = color
 
-        self.debug_info: DebugInfo | None = None
+        self.debug_info: Optional[DebugInfo] = None
 
         self.rect: QtCore.QRect = QtCore.QRect()
         self.rect_pen = QtGui.QPen(self.color, 2, QtCore.Qt.PenStyle.DashLine)

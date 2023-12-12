@@ -6,6 +6,7 @@ import sys
 import tempfile
 import textwrap
 from pathlib import Path
+from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -26,7 +27,7 @@ class Communicate(QtCore.QObject):
 class Notifier(QtCore.QObject):
     """Send notifications."""
 
-    def __init__(self, parent: QtCore.QObject | None) -> None:
+    def __init__(self, parent: Optional[QtCore.QObject]) -> None:
         super().__init__(parent=parent)
         self.com = Communicate(parent=self)
         self.com.send_notification.connect(self._send_notification)
@@ -150,8 +151,8 @@ class Notifier(QtCore.QObject):
         self,
         title: str,
         message: str,
-        ocr_text: str | None,
-        ocr_magic: str | None,
+        ocr_text: Optional[str],
+        ocr_magic: Optional[str],
     ) -> None:
         """Send via QSystemTrayIcon.
 
@@ -191,7 +192,7 @@ class Notifier(QtCore.QObject):
         parent.showMessage(title, message, QtGui.QIcon(":notification"))
 
     @staticmethod
-    def _open_ocr_result(text: str, applied_magic: str | None) -> None:
+    def _open_ocr_result(text: str, applied_magic: Optional[str]) -> None:
         logger.debug("Notification clicked.")
 
         urls = []

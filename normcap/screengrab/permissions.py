@@ -3,7 +3,7 @@ import ctypes.util
 import logging
 import subprocess
 import sys
-from typing import Any, cast
+from typing import Any, Optional, cast
 
 from PySide6 import QtGui, QtWidgets
 
@@ -132,7 +132,7 @@ class DbusPortalPermissionDialog(QtWidgets.QDialog):
         self,
         title: str,
         text: str,
-        parent: QtWidgets.QWidget | None = None,
+        parent: Optional[QtWidgets.QWidget] = None,
     ) -> None:
         super().__init__(parent)
         self.capture: list[QtGui.QImage] = []

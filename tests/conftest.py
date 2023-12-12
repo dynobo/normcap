@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
 from types import ModuleType
-from typing import Callable
+from typing import Callable, Optional
 from urllib import request
 
 import pytest
@@ -158,7 +158,7 @@ def basic_cli_args():
 def run_normcap(monkeypatch, qapp, basic_cli_args):
     trays = []
 
-    def _run_normcap(extra_cli_args: list[str] | None = None):
+    def _run_normcap(extra_cli_args: Optional[list[str]] = None):
         extra_cli_args = extra_cli_args or []
         basic_cli_args.extend(extra_cli_args)
         monkeypatch.setattr(sys, "argv", basic_cli_args)
@@ -212,7 +212,7 @@ def mock_urlopen(monkeypatch) -> Callable:
     """
 
     class _MockedResponse:
-        def __init__(self, response: bytes | None):
+        def __init__(self, response: Optional[bytes]):
             self._response = response
 
         def read(self) -> bytes:
@@ -221,10 +221,10 @@ def mock_urlopen(monkeypatch) -> Callable:
             return self._response
 
     @contextmanager
-    def _mocked_urlopen(*_, response: bytes | None, **__):
+    def _mocked_urlopen(*_, response: Optional[bytes], **__):
         yield _MockedResponse(response=response)
 
-    def _monkeypatch_urlopen(response: bytes | None):
+    def _monkeypatch_urlopen(response: Optional[bytes]):
         monkeypatch.setattr(
             request, "urlopen", partial(_mocked_urlopen, response=response)
         )

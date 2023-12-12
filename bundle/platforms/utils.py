@@ -28,8 +28,8 @@ class BuilderBase(ABC):
     VENV_PATH = Path(os.environ["VIRTUAL_ENV"])
     TESSDATA_PATH = RESOURCE_PATH / "tessdata"
     binary_suffix = "_legacy"
-    binary_extension: str | None = None
-    binary_platform: str | None = None
+    binary_extension: Optional[str] = None
+    binary_platform: Optional[str] = None
 
     @abstractmethod
     def install_system_deps(self) -> None:
