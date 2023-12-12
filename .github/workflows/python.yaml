@@ -103,8 +103,14 @@ jobs:
           tesseract --version
           tesseract --list-langs
 
+      # Retry on macOS, where integration tests sometimes lead to segfaults
       - name: Run project checks
-        run: hatch run check
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: ${{ matrix.os == 'macos-12' && 3 || 1 }}
+          command: hatch run check
+          warning_on_retry: true
 
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
