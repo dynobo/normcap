@@ -1,0 +1,465 @@
+# Swedish (Sweden) translations for NormCap.
+# Copyright (C) 2023 ORGANIZATION
+# This file is distributed under the same license as the NormCap project.
+# Åke Engelbrektson <eson@svenskasprakfiler.se>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-10-27 04:37+0200\n"
+"PO-Revision-Date: 2023-12-05 09:58+0100\n"
+"Last-Translator: Åke Engelbrektson <eson@svenskasprakfiler.se>\n"
+"Language-Team: Svenska Språkfiler <contactform@svenskasprakfiler.se\n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.13.1\n"
+"X-Generator: Poedit 3.4\n"
+
+#. Generic error message when any download failed.
+#: normcap/gui/downloader.py:58
+msgid "Download error."
+msgstr "Nerladdningsfel."
+
+#. Introduction window title
+#: normcap/gui/introduction.py:50
+msgid "Introduction to NormCap"
+msgstr "Introduktion till NormCap"
+
+#. Introduction window checkbox
+#: normcap/gui/introduction.py:55
+msgid "Show on startup"
+msgstr "Visa vid programstart"
+
+#. Introduction window button
+#: normcap/gui/introduction.py:58
+msgid "Ok"
+msgstr "OK"
+
+#. Introduction window shortcut for pasting on Linux and Windows
+#: normcap/gui/introduction.py:75
+msgid "Ctrl + v"
+msgstr "Ctrl + v"
+
+#. Introduction window shortcut for pasting on macOS
+#: normcap/gui/introduction.py:77
+msgid "Cmd + v"
+msgstr "Cmd + v"
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:81
+msgid "1. Select area"
+msgstr "1. Välj område"
+
+#. Introduction window step description
+#: normcap/gui/introduction.py:83
+msgid ""
+"Wait until a pink border appears around your screen, then select the "
+"desired capture area."
+msgstr ""
+"Vänta tills en rosa ram visas runt din skärm, markera sedan önskat "
+"klippområde."
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:91
+msgid "2. Wait for detection"
+msgstr "2. Vänta på identifiering"
+
+#. Introduction window step description
+#: normcap/gui/introduction.py:93
+msgid ""
+"Processing takes time. Wait for a notification or a color change of the "
+"system tray icon."
+msgstr ""
+"Bearbetningen tar tid. Vänta på en avisering eller en färgändring av "
+"systemfältsikonen."
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:101
+msgid "3. Paste from clipboard"
+msgstr "3. Klistra in från urklipp"
+
+#. Introduction window step description
+#: normcap/gui/introduction.py:103
+msgid ""
+"The detection result will be copied to your system's clipboard. Paste it "
+"into any application ({shortcut})."
+msgstr ""
+"Det identifierade resultatet kopieras till ditt systems urklipp. Klistra in "
+"det i valfritt textprogram ({shortcut})."
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:115
+msgid "Settings & more"
+msgstr "Inställningar & mer"
+
+#. Introduction window step description
+#: normcap/gui/introduction.py:117
+msgid ""
+"Open the menu using the gear icon in the upper right corner of corner your "
+"screen."
+msgstr "Öppna menyn med kugghjulsikonen i det övre högra hörnet av skärmen."
+
+#. Introduction window headline
+#: normcap/gui/introduction.py:127
+msgid "Basic Usage"
+msgstr "Grundläggande användning"
+
+#. Title of Language Manager
+#: normcap/gui/language_manager.py:31
+msgid "Manage Languages"
+msgstr "Hantera språk"
+
+#. Language Manager section
+#: normcap/gui/language_manager.py:44
+msgid "Installed:"
+msgstr "Installerat:"
+
+#. Language Manager button
+#: normcap/gui/language_manager.py:47
+msgid "Delete"
+msgstr "Ta bort"
+
+#. Language Manager section
+#: normcap/gui/language_manager.py:54
+msgid "Available:"
+msgstr "Tillgängligt:"
+
+#. Language Manager button
+#: normcap/gui/language_manager.py:57
+msgid "Download"
+msgstr "Ladda ner"
+
+#. Language Manager button
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/language_manager.py:66 normcap/gui/menu_button.py:391
+msgid "Close"
+msgstr "Stäng"
+
+#. Language Manager link to directory on file system
+#: normcap/gui/language_manager.py:72
+msgid "Close and view tessdata folder in file manager..."
+msgstr "Stäng och visa tessdatamappen i filhanteraren..."
+
+#. Language Manager error message box title
+#: normcap/gui/language_manager.py:97 normcap/gui/tray.py:406
+msgid "Error"
+msgstr "Fel"
+
+#. Language Manager error message box text
+#: normcap/gui/language_manager.py:99
+msgid "Language download failed!"
+msgstr "Språknerladdning misslyckades!"
+
+#. Language Manager information message box title
+#: normcap/gui/language_manager.py:129
+msgid "Information"
+msgstr "Information"
+
+#. Language Manager information message box text
+#: normcap/gui/language_manager.py:131
+msgid ""
+"It is not possible to delete all languages. NormCap needs at least one to "
+"function correctly."
+msgstr ""
+"Det är inte möjligt att ta bort alla språk. NormCap behöver minst ett, för "
+"att fungera korrekt."
+
+#: normcap/gui/menu_button.py:154
+msgid ""
+"This installation of NormCap uses the Tesseract binary installed on your "
+"system. To install additional languages, please refer to the documentation "
+"of that Tesseract installation."
+msgstr ""
+"Den här installationen av NormCap använder Tesseract-binären som är "
+"installerad på ditt system. För att installera ytterligare språk, se "
+"dokumentationen för den Tesseract-installationen."
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:200
+msgid "Settings"
+msgstr "Inställningar"
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:204
+msgid "Capture mode"
+msgstr "Klippläge"
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:208
+msgid "Languages"
+msgstr "Språk"
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:212
+msgid "Application"
+msgstr "Program"
+
+#. Entry in main menu's 'setting' section
+#: normcap/gui/menu_button.py:232
+msgid "Show notification"
+msgstr "Visa avisering"
+
+#. Tooltip of main menu's "Show notification" entry. Use <56 chars p. line.
+#: normcap/gui/menu_button.py:237
+msgid ""
+"Show status information via your system's desktop\n"
+"notification center."
+msgstr ""
+"Visar statusinformation via ditt systemskrivbords\n"
+"aviseringscenter."
+
+#. Extension "Show notification"-Tooltip on macOS and Windows.
+#. Entry in main menu's 'setting' section
+#: normcap/gui/menu_button.py:249
+msgid "Keep in system tray"
+msgstr "Behåll i aktivitetsfältet"
+
+#: normcap/gui/menu_button.py:255
+msgid ""
+"Keep NormCap running in the background. Another\n"
+"capture can be triggered via the tray icon."
+msgstr ""
+"Håll NormCap igång i bakgrunden. \n"
+"Fler klipp kan utlösas via ikonen i aktivitetsfältet."
+
+#. Entry in main menu's 'setting' section
+#: normcap/gui/menu_button.py:263
+msgid "Check for update"
+msgstr "Sök efter uppdatering"
+
+#: normcap/gui/menu_button.py:269
+msgid ""
+"Frequently fetch NormCap's releases online and display\n"
+"a message if a new version is available."
+msgstr ""
+"Hämta NormCaps-utgåvor online och visa ett\n"
+"meddelande om en ny version är tillgänglig."
+
+#. Entry in main menu's 'Capture mode' section
+#: normcap/gui/menu_button.py:282
+msgid "parse"
+msgstr "analysera"
+
+#: normcap/gui/menu_button.py:288
+msgid ""
+"Tries to determine the text's type (e.g. line,\n"
+"paragraph, URL, email) and formats the output\n"
+"accordingly.\n"
+"If the result is unexpected, try 'raw' mode instead."
+msgstr ""
+"Försöker bestämma textens typ (t.ex. rad,\n"
+"stycke, URL, e-post) och formaterar utdata \n"
+"därefter.\n"
+"Om resultatet är oväntat, prova raw-läge istället."
+
+#. Entry in main menu's 'Capture mode' section
+#: normcap/gui/menu_button.py:298
+msgid "raw"
+msgstr "raw"
+
+#: normcap/gui/menu_button.py:304
+msgid ""
+"Returns the text exactly as detected by the Optical\n"
+"Character Recognition Software."
+msgstr ""
+"Returnerar texten exakt så som den identifieras av den\n"
+"optiska programvaran för teckenigenkänning."
+
+#. Entry in main menu's 'Languages' section. Shown in prebuilt package.
+#: normcap/gui/menu_button.py:333
+msgid "add/remove..."
+msgstr "lägg till/ta bort..."
+
+#. Entry in main menu's 'Languages' section. Shown in Python package.
+#: normcap/gui/menu_button.py:337
+msgid "... need more?"
+msgstr "...behöver du mer?"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:346
+msgid "About"
+msgstr "Om"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:354
+msgid "Introduction"
+msgstr "Introduktion"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:359
+msgid "Website"
+msgstr "Webbplats"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:364
+msgid "FAQs"
+msgstr "FAQ"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:369
+msgid "Source code"
+msgstr "Källkod"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:374
+msgid "Releases"
+msgstr "Utgåvor"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:379
+msgid "Report a problem"
+msgstr "Rapportera ett problem"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:384
+msgid "Donate a coffee"
+msgstr "Donera en kopp kaffe"
+
+#. Tooltip of main menu's 'close' entry. Use <56 chars p. line.
+#: normcap/gui/menu_button.py:394
+msgid "Exit NormCap, or minimize to system tray (if enabled)."
+msgstr "Avsluta NormCap, eller minimera till systemfältet (om aktiverat)."
+
+#. Notification title
+#: normcap/gui/notification.py:40
+msgid "Nothing captured!"
+msgstr "Inget skärmklipp!"
+
+#. Notification text
+#: normcap/gui/notification.py:42
+msgid "Please try again."
+msgstr "Försök igen."
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:53
+msgid "1 paragraph captured"
+msgid_plural "{count} paragraphs captured"
+msgstr[0] "1 stycke identifierat"
+msgstr[1] "{count} stycken identifierade"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:60
+msgid "1 email captured"
+msgid_plural "{count} emails captured"
+msgstr[0] "1 e-postadress inläst"
+msgstr[1] "{count} e-postadresser identifierade"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:67
+msgid "1 word captured"
+msgid_plural "{count} words captured"
+msgstr[0] "1 ord inläst"
+msgstr[1] "{count} ord identifierade"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:74
+msgid "1 line captured"
+msgid_plural "{count} lines captured"
+msgstr[0] "1 rad inläst"
+msgstr[1] "{count} rader identifierade"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:81
+msgid "1 URL captured"
+msgid_plural "{count} URLs captured"
+msgstr[0] "1 URL inläst"
+msgstr[1] "{count} URL:er identifierade"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:90
+msgid "1 character captured"
+msgid_plural "{count} characters captured"
+msgstr[0] "1 tecken inläst"
+msgstr[1] "{count} tecken identifierade"
+
+#. Error message box on macOS only.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/tray.py:411
+msgid ""
+"'{application}' is missing the permission for 'Screen Recording'.\n"
+"\n"
+"Grant it via the dialog that will appear after you clicked 'Ok' or via "
+"'System Settings' > 'Privacy & Security'.\n"
+"\n"
+"Then restart NormCap."
+msgstr ""
+"\"{application}\" saknar behörighet för \"skärminspelning\".\n"
+"\n"
+"Bevilja det via dialogrutan som visas efter att du klickat på \"OK\" eller "
+"via \"Systeminställningar\" > \"Sekretess och säkerhet\".\n"
+"\n"
+"Starta sedan om NormCap."
+
+#. Error message box on Linux with Wayland only.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/tray.py:422
+msgid ""
+"<b>NormCap is missing the permission for screen capture.</b><br><br>Grant "
+"it via the dialog that will appear after you clicked 'Ok'.<br>Then start "
+"NormCap again.<br><br><small>Sometimes, this might not work. If that is the "
+"case for you thenthen please<br><a href='{issues_url}'>report this as bug</"
+"a> on GitHub.</small>"
+msgstr ""
+"<b>NormCap saknar behörighet för skärmklipp.</b><br><br>Bevilja det via "
+"dialogrutan som visas efter att du klickat på \"OK\".<br>Starta sedan om "
+"NormCap.<br><br><small>Ibland kanske detta inte fungerar. Om så är fallet "
+"för dig, så vänligen<br><a href='{issues_url}'>rapportera det som ett fel</"
+"a> på GitHub.</small>"
+
+#. Tray menu entry
+#: normcap/gui/tray.py:511
+msgid "Capture"
+msgstr "Klipp"
+
+#. Tray menu entry for exiting NormCap completely.
+#: normcap/gui/tray.py:518
+msgid "Exit"
+msgstr "Avsluta"
+
+#. Update available dialog box.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/update_check.py:80
+msgid "NormCap v{version} is available."
+msgstr "NormCap v.{version} finns tillgänglig."
+
+#. Update available dialog box.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/update_check.py:83
+msgid "You have v{version}"
+msgstr "Du har v.{version}"
+
+#. Message box shown when new version available (Prebuilt package)
+#: normcap/gui/update_check.py:87
+msgid ""
+"You can download the new version of NormCap for your operating system from "
+"GitHub.\n"
+"\n"
+"Do you want to visit the release website now?"
+msgstr ""
+"Du kan ladda ned den nya versionen av NormCap för ditt operativsystem från "
+"GitHub.\n"
+"\n"
+"Vill du besöka webbplatsen nu?"
+
+#. Message box shown when new version available (Python package)
+#: normcap/gui/update_check.py:94
+msgid ""
+"You can upgrade NormCap via the command line, e.g. by running 'pip install "
+"normcap --upgrade'.\n"
+"\n"
+"Do you want to view the changelog on GitHub now?"
+msgstr ""
+"Du kan uppgradera NormCap via kommandorad, t.ex. genom att köra \"pip "
+"install normcap --upgrade\".\n"
+"\n"
+"Vill du se ändringsloggen på GitHub nu?"
