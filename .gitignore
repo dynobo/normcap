@@ -1,0 +1,19 @@
+# Own
+.temp
+.venv/
+.mypy_cache/
+.pytest_cache/
+.vscode/
+.coverage
+.coveralls.yml
+htmlcov/
+normcap/
+tests/
+linux/
+windows/
+windows/
+assets/
+dist/
+cov.xml
+MANIFEST.in
+README.md
