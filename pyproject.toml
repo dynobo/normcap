@@ -35,6 +35,8 @@ Issues = "https://github.com/dynobo/normcap/issues"
 FAQs = "https://dynobo.github.io/normcap/#faqs"
 Changelog = "https://github.com/dynobo/normcap/blob/main/CHANGELOG"
 
+[project.scripts]
+normcap = "normcap.app:main"
 
 [tool.hatch.build]
 exclude = ["assets", "*.po"]
