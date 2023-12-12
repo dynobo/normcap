@@ -6,7 +6,7 @@ import tempfile
 import time
 from os import PathLike, linesep
 from pathlib import Path
-from typing import Optional
+from typing import Union
 
 from PySide6.QtGui import QImage
 
@@ -43,7 +43,7 @@ def _run_command(cmd_args: list[str]) -> str:
 
 
 def get_languages(
-    tesseract_cmd: PathLike | str, tessdata_path: Optional[PathLike | str]
+    tesseract_cmd: Union[PathLike, str], tessdata_path: Union[PathLike, str, None]
 ) -> list[str]:
     cmd_args = [str(tesseract_cmd), "--list-langs"]
     if tessdata_path:
@@ -79,7 +79,7 @@ def _move_to_normcap_temp_dir(input_file: Path, postfix: str) -> None:
 
 
 def _run_tesseract(
-    cmd: PathLike | str, image: QImage, args: list[str]
+    cmd: Union[PathLike, str], image: QImage, args: list[str]
 ) -> list[list[str]]:
     input_image_filename = "normcap_tesseract_input.png"
 
@@ -137,6 +137,8 @@ def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
     return [w for w in words if w["text"].strip()]
 
 
-def perform_ocr(cmd: PathLike | str, image: QImage, args: list[str]) -> list[dict]:
+def perform_ocr(
+    cmd: Union[PathLike, str], image: QImage, args: list[str]
+) -> list[dict]:
     lines = _run_tesseract(cmd=cmd, image=image, args=args)
     return _tsv_to_list_of_dict(lines)

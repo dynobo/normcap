@@ -11,7 +11,7 @@ import sys
 import time
 from collections.abc import Iterable
 from enum import Enum
-from typing import Any, NoReturn, cast
+from typing import Any, NoReturn, Optional, cast
 
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
@@ -71,9 +71,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     # Used for singleton:
     _socket_name = f"v{__version__}-normcap"
-    _socket_out: QtNetwork.QLocalSocket | None = None
-    _socket_in: QtNetwork.QLocalSocket | None = None
-    _socket_server: QtNetwork.QLocalServer | None = None
+    _socket_out: Optional[QtNetwork.QLocalSocket] = None
+    _socket_in: Optional[QtNetwork.QLocalSocket] = None
+    _socket_server: Optional[QtNetwork.QLocalServer] = None
 
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("System info:\n%s", system_info.to_dict())
@@ -602,7 +602,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         else:
             self.hide()
 
-    def hide(self) -> NoReturn | None:
+    def hide(self) -> NoReturn:
         """Perform last cleanups before quitting application.
 
         Note: Don't call directly! Instead do `self.com.exit_application.emit(0)`!

@@ -2,6 +2,7 @@
 
 import logging
 import re
+from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -25,7 +26,7 @@ class UpdateChecker(QtWidgets.QWidget):
     """Check for a new normcap version."""
 
     def __init__(
-        self, parent: QtCore.QObject | None = None, packaged: bool = False
+        self, parent: Optional[QtCore.QObject] = None, packaged: bool = False
     ) -> None:
         super().__init__(
             parent=parent if isinstance(parent, QtWidgets.QWidget) else None

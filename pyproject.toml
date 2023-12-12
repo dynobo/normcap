@@ -26,7 +26,7 @@ classifiers = [
   "Operating System :: POSIX :: Linux",
   "Operating System :: MacOS",
 ]
-dependencies = ["shiboken6==6.6.0", "PySide6-Essentials==6.6.0"]
+dependencies = ["shiboken6==6.6.1", "PySide6-Essentials==6.6.1"]
 
 [project.urls]
 Homepage = "https://dynobo.github.io/normcap/"
@@ -94,7 +94,7 @@ locales-compile = "python bundle/l10n.py"
 locales-update = "python bundle/l10n.py --update-all"
 create-locale = "python bundle/l10n.py --create-new"
 version = "tbump {args:current-version}"
-bundle = ["locales-compile", "python bundle/build.py --framework=briefcase {args}"]
+bundle = ["locales-compile", "python bundle/build.py {args}"]
 
 [[tool.hatch.envs.all.matrix]]
 python = ["3.9", "3.10", "3.11"]
@@ -159,7 +159,7 @@ ignore = [
   "D107",   # Missing docstring in __init__
   "ANN101", # Missing type annotation for `self` in method
   "TRY003", # Avoid specifying long messages outside the exception class
-  "ISC001", # Rule conflicts with ruff's formaatter
+  "ISC001", # Rule conflicts with ruff's formatter
 ]
 
 [tool.ruff.per-file-ignores]
@@ -225,7 +225,7 @@ sources = ["normcap"]
 icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
-requires = ["PySide6-Essentials==6.6.0", "shiboken6==6.6.0"]
+requires = ["PySide6-Essentials==6.6.1", "shiboken6==6.6.1"]
 cleanup_paths = [
   # Globs
   "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",
@@ -277,7 +277,7 @@ requires = ["std-nslog==1.0.0"]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
 template_branch = "v0.3.16"
 manylinux = "manylinux_2_28"
-manylinux_image_tag="2023-09-16-066b049"
+manylinux_image_tag = "2023-09-16-066b049"
 system_requires = [
   "wget",
   "tesseract",
