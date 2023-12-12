@@ -47,7 +47,7 @@ def create_argparser() -> argparse.ArgumentParser:
             type=setting.type_,
             help=setting.help_,
             choices=setting.choices,
-            nargs=setting.nargs,  # type: ignore # False positive, nargs is typed | None
+            nargs=setting.nargs,
         )
     parser.add_argument(
         "-r",
@@ -218,7 +218,7 @@ def qt_log_wrapper(
         logger.error(message)
 
 
-def copy_traineddata_files(target_dir: os.PathLike | None) -> None:
+def copy_traineddata_files(target_dir: Optional[os.PathLike]) -> None:
     """Copy Tesseract traineddata files to the target path if they don't already exist.
 
     Args:

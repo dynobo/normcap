@@ -162,7 +162,7 @@ ignore = [
   "D107",   # Missing docstring in __init__
   "ANN101", # Missing type annotation for `self` in method
   "TRY003", # Avoid specifying long messages outside the exception class
-  "ISC001", # Rule conflicts with ruff's formaatter
+  "ISC001", # Rule conflicts with ruff's formatter
 ]
 
 [tool.ruff.per-file-ignores]

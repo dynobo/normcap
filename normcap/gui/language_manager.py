@@ -2,6 +2,7 @@
 
 import logging
 from pathlib import Path
+from typing import Optional, Union
 
 from PySide6 import QtCore, QtWidgets
 
@@ -22,7 +23,7 @@ class Communicate(QtCore.QObject):
 
 class LanguageManager(QtWidgets.QDialog):
     def __init__(
-        self, tessdata_path: Path, parent: QtWidgets.QWidget | None = None
+        self, tessdata_path: Path, parent: Optional[QtWidgets.QWidget] = None
     ) -> None:
         super().__init__(parent=parent)
 
@@ -236,14 +237,14 @@ class LanguageLayout(QtWidgets.QVBoxLayout):
 
 class LanguageModel(QtCore.QAbstractTableModel):
     def __init__(
-        self, parent: QtCore.QObject | None = None, languages: list | None = None
+        self, parent: Optional[QtCore.QObject] = None, languages: Optional[list] = None
     ) -> None:
         super().__init__(parent=parent)
         self.languages: list = languages or []
 
     def data(
         self, index: QtCore.QModelIndex, role: QtCore.Qt.ItemDataRole
-    ) -> str | QtCore.QSize | None:
+    ) -> Union[str, QtCore.QSize, None]:
         if role == QtCore.Qt.ItemDataRole.DisplayRole:
             return self.languages[index.row()][index.column()]
         return None
