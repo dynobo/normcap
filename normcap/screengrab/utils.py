@@ -90,15 +90,14 @@ def has_dbus_portal_support() -> bool:
 def has_grim_support() -> bool:
     if not shutil.which("grim"):
         return False
+
     with tempfile.TemporaryDirectory() as temp_dir:
         try:
             completed_proc = subprocess.run(
                 [  # noqa: S607
                     "grim",
-                    "-g",
-                    "0,0 5x5",
-                    "-l",
-                    "0",
+                    "-s",
+                    "0.01",
                     f"{temp_dir}{os.pathsep}normcap_test.png",
                 ],
                 shell=False,  # noqa: S603
