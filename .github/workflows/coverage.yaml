@@ -9,6 +9,7 @@ on:
 jobs:
   pytest:
     name: Run pytest
+    if: github.repository_owner == 'dynobo'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
