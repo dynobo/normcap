@@ -36,12 +36,12 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           ref: ${{ inputs.refToBuild }}
-      - name: Install hatch
-        run: pipx install hatch
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: "pip"
+      - name: Install hatch
+        run: pip install hatch
       - name: Prepare Linux
         if: matrix.os  == 'ubuntu-22.04'
         run: |
@@ -106,7 +106,7 @@ jobs:
         uses: nick-fields/retry@v2
         with:
           timeout_minutes: 10
-          max_attempts: ${{ matrix.os == 'macos-12' && 5 || 1 }}
+          max_attempts: ${{ matrix.os == 'macos-12' && 9 || 1 }}
           command: hatch run check
           warning_on_retry: true
 
@@ -127,12 +127,12 @@ jobs:
         os: [macos-12, windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v4
-      - name: Install hatch
-        run: pipx install hatch
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: "pip"
+      - name: Install hatch
+        run: pip install hatch
       - name: Test build python package
         run: hatch build
 
@@ -145,12 +145,12 @@ jobs:
         os: [macos-12, windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v4
-      - name: Install hatch
-        run: pipx install hatch
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: "pip"
+      - name: Install hatch
+        run: pip install hatch
       - name: Test build briefcase package
         shell: bash -l {0}
         run: hatch run bundle --dev
@@ -177,7 +177,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: "internal"
 
-  coveralls-upload:
+  coveralls:
     name: Upload coverage
     needs: test
     if: github.repository_owner == 'dynobo'
