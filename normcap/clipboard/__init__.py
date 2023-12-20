@@ -1,13 +1,7 @@
-from normcap.clipboard import handlers
-from normcap.clipboard.main import (
-    copy,
-    get_compatible_handlers,
-    has_compatible_handler,
-)
+from normcap.clipboard.main import ClipboardHandlers, copy, copy_with_handler
 
 __all__ = [
     "copy",
-    "get_compatible_handlers",
-    "has_compatible_handler",
-    "handlers",
+    "copy_with_handler",
+    "ClipboardHandlers",
 ]

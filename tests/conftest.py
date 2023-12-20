@@ -11,7 +11,7 @@ from urllib import request
 import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import app, clipboard
+from normcap import app
 from normcap.gui import menu_button, system_info
 from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.magics import email_magic, url_magic
@@ -28,7 +28,6 @@ def _clear_caches():
     system_info.display_manager_is_wayland.cache_clear()
     system_info.get_tesseract_path.cache_clear()
     system_info.config_directory.cache_clear()
-    clipboard.get_compatible_handlers.cache_clear()
 
 
 @pytest.fixture()
