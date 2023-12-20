@@ -20,7 +20,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Run tests on all pull requests or when triggered via [test] tag
   test:
     name: Lint & Test
     runs-on: ${{ matrix.os }}
@@ -103,6 +102,8 @@ jobs:
 
       - name: Run project checks
         run: hatch run check
+        env:
+          QT_DEBUG_PLUGINS: 1
 
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@release/v2
