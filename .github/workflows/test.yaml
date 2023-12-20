@@ -1,11 +1,13 @@
 # Infos on current github runners:
 # https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#about-github-hosted-runners
 
-name: Build
+name: Test
 
 on:
   pull_request:
   push:
+    branches: ["main"]
+    tags: ["v*"]
   workflow_dispatch:
     inputs:
       refToBuild:
@@ -20,30 +22,26 @@ concurrency:
 jobs:
   # Run tests on all pull requests or when triggered via [test] tag
   test:
-    name: Test & build
+    name: Lint & Test
     runs-on: ${{ matrix.os }}
-    if: |
-      github.event_name == 'pull_request'
-      || contains(github.event.head_commit.message, '[test]')
-      || startsWith(github.ref, 'refs/tags/v')
-      || startsWith(github.ref, 'refs/heads/main')
     strategy:
       fail-fast: false
       matrix:
         os: [macos-12, windows-2022, ubuntu-22.04]
     steps:
       # Setup environment
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: ${{ github.event_name != 'workflow_dispatch' }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           ref: ${{ inputs.refToBuild }}
       - name: Install hatch
         run: pipx install hatch
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+          cache: "pip"
       - name: Prepare Linux
         if: matrix.os  == 'ubuntu-22.04'
         run: |
@@ -113,14 +111,46 @@ jobs:
           warning_on_retry: true
 
       - name: Coveralls Parallel
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@release/v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: ${{ matrix.os }}
           path-to-lcov: coverage.lcov
           parallel: true
 
-      # Build test packages
+  python-package:
+    name: Python package
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-12, windows-2022, ubuntu-22.04]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install hatch
+        run: pipx install hatch
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Test build python package
+        run: hatch build
+
+  briefcase-build:
+    name: Briefcase build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-12, windows-2022, ubuntu-22.04]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install hatch
+        run: pipx install hatch
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
       - name: Test build briefcase package
         shell: bash -l {0}
         run: hatch run bundle --dev
@@ -130,12 +160,6 @@ jobs:
         run: |
           (cat logs/briefcase*) || true
           find build/normcap || true
-
-      # Build
-      - name: Test build python package
-        run: hatch build
-
-      # Release test package
       - name: Set current date as env variable
         shell: bash -l {0}
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
@@ -154,105 +178,37 @@ jobs:
           tag: "internal"
 
   coveralls-upload:
-    name: Upload to coveralls
+    name: Upload coverage
     needs: test
     if: github.repository_owner == 'dynobo'
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@release/v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
 
-  publish-briefcase:
-    name: Briefcase build & draft release
-    needs: test
-    if: startsWith(github.ref, 'refs/tags/v') && github.repository_owner == 'dynobo'
-    runs-on: ${{ matrix.os }}
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-12, windows-2022]
+        language: ["javascript", "python"]
     steps:
-      - uses: actions/checkout@v3
-      - name: Install hatch
-        run: pipx install hatch
-      - uses: actions/setup-python@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
-          python-version: "3.10"
-      - name: Build package briefcase
-        shell: bash -l {0}
-        run: hatch run bundle
-      - name: Draft release
-        if: github.repository == 'dynobo/normcap'
-        uses: ncipollo/release-action@v1
-        with:
-          body:
-            See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG) for
-            details.
-          artifacts: "*/*.+(dmg|AppImage|msi|zip)"
-          artifactErrorsFailBuild: false
-          allowUpdates: true
-          draft: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: FTP upload windows package
-        if: matrix.os  == 'windows-2022' && github.repository == 'dynobo/normcap'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.WEBGO_FTP_HOST }}
-          username: ${{ secrets.WEBGO_FTP_USER }}
-          password: ${{ secrets.WEBGO_FTP_PASS }}
-          protocol: ftps
-          local-dir: ./bundle/
-          exclude: |
-            **/platforms/**
-            **/imgs/**
-            **/*.py
-            **/*.wxs
-            **/*.wxs
-            **/metainfo
-
-  publish-pypi:
-    name: Build & publish to PyPi
-    needs: publish-briefcase
-    if: startsWith(github.ref, 'refs/tags/v') && github.repository_owner == 'dynobo'
-    runs-on: ubuntu-22.04
-    permissions:
-      # Used to authenticate to PyPI via OIDC.
-      # Used to sign the release's artifacts with sigstore-python.
-      id-token: write
-      # Used to attach signing artifacts to the published release.
-      contents: write
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install hatch
-        run: pipx install hatch
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-      - name: Build Python package
-        run: hatch build
-      - name: Publish to PyPi
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          verbose: true
-          print-hash: true
-      - name: Sign published artifacts
-        uses: sigstore/gh-action-sigstore-python@v2.1.0
-        with:
-          inputs: ./dist/*.tar.gz ./dist/*.whl
-          release-signing-artifacts: true
-
-  deploy-pages:
-    name: Deploy github pages
-    needs: publish-briefcase
-    if: startsWith(github.ref, 'refs/tags/v') && github.repository_owner == 'dynobo'
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          languages: ${{ matrix.language }}
+          queries: security-extended
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3

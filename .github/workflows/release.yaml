@@ -1,0 +1,110 @@
+# Infos on current github runners:
+# https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#about-github-hosted-runners
+
+name: Release
+
+on:
+  workflow_run:
+    workflows: ["Test"]
+    branches: [main]
+    types:
+      - completed
+
+concurrency:
+  group: cicd-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  briefcase:
+    name: Briefcase build & draft release
+    if: |
+      startsWith(github.ref, 'refs/tags/v')
+      && github.repository_owner == 'dynobo'
+      && github.event.workflow_run.conclusion == 'success'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-12, windows-2022]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install hatch
+        run: pipx install hatch
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Build package briefcase
+        shell: bash -l {0}
+        run: hatch run bundle
+      - name: Draft release
+        if: github.repository == 'dynobo/normcap'
+        uses: ncipollo/release-action@v1
+        with:
+          body:
+            See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG) for
+            details.
+          artifacts: "*/*.+(dmg|AppImage|msi|zip)"
+          artifactErrorsFailBuild: false
+          allowUpdates: true
+          draft: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: FTP upload windows package
+        if: matrix.os  == 'windows-2022' && github.repository == 'dynobo/normcap'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.WEBGO_FTP_HOST }}
+          username: ${{ secrets.WEBGO_FTP_USER }}
+          password: ${{ secrets.WEBGO_FTP_PASS }}
+          protocol: ftps
+          local-dir: ./bundle/
+          exclude: |
+            **/platforms/**
+            **/imgs/**
+            **/*.py
+            **/*.wxs
+            **/*.wxs
+            **/metainfo
+
+  pypi:
+    name: Publish to PyPi
+    needs: briefcase
+    runs-on: ubuntu-22.04
+    permissions:
+      # Used to authenticate to PyPI via OIDC.
+      # Used to sign the release's artifacts with sigstore-python.
+      id-token: write
+      # Used to attach signing artifacts to the published release.
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install hatch
+        run: pipx install hatch
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Build Python package
+        run: hatch build
+      - name: Publish to PyPi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
+          print-hash: true
+      - name: Sign published artifacts
+        uses: sigstore/gh-action-sigstore-python@v2.1.1
+        with:
+          inputs: ./dist/*.tar.gz ./dist/*.whl
+          release-signing-artifacts: true
+
+  documentation:
+    name: Deploy github pages
+    needs: briefcase
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
