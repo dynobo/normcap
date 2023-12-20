@@ -28,12 +28,12 @@ jobs:
         os: [ubuntu-22.04, macos-12, windows-2022]
     steps:
       - uses: actions/checkout@v4
-      - name: Install hatch
-        run: pipx install hatch
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: "pip"
+      - name: Install hatch
+        run: pip install hatch
       - name: Build package briefcase
         shell: bash -l {0}
         run: hatch run bundle
