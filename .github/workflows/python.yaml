@@ -108,7 +108,7 @@ jobs:
         uses: nick-fields/retry@v2
         with:
           timeout_minutes: 10
-          max_attempts: ${{ matrix.os == 'macos-12' && 3 || 1 }}
+          max_attempts: ${{ matrix.os == 'macos-12' && 5 || 1 }}
           command: hatch run check
           warning_on_retry: true
 
