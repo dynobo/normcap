@@ -10,7 +10,7 @@ macOS and Windows._**
 [![Coverage Status](https://img.shields.io/coverallsCoverage/github/dynobo/normcap?label=Coverage&branch=main)](https://coveralls.io/github/dynobo/normcap)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/test.yaml?label=CodeQL&branch=main)](https://github.com/dynobo/normcap/security/code-scanning/tools/CodeQL/status/)
 
-[![GitHub](https://img.shields.io/github/downloads/dynobo/normcap/total?label=Github%20downloads&color=blue)](https://github.com/dynobo/normcap/releases)
+[![GitHub](https://img.shields.io/github/downloads/dynobo/normcap/total?label=Github%20downloads&color=blue)](https://hanadigital.github.io/grev/?user=dynobo&repo=normcap)
 [![PyPi](https://img.shields.io/pypi/dm/normcap?label=PyPi%20downloads&color=blue)](https://pypi.org/project/normcap)
 [![Flathub](https://img.shields.io/flathub/downloads/com.github.dynobo.normcap?label=Flathub%20downloads&color=blue)](https://flathub.org/apps/details/com.github.dynobo.normcap)
 [![AUR](https://img.shields.io/aur/votes/normcap?label=AUR%20votes&color=blue)](https://aur.archlinux.org/packages/normcap)
