@@ -56,6 +56,7 @@ def test_argparser_defaults_are_complete():
         "verbosity",
         "version",
         "show_introduction",
+        "clipboard_handler",
     }
     args_keys = set(vars(parsed_args).keys())
     assert args_keys == expected_options
@@ -104,7 +105,13 @@ def test_argparser_attributes_in_settings():
     settings = Settings(organization="normcap_TEST")
 
     for arg in argparser_defaults:
-        if arg in {"verbosity", "reset", "cli_mode", "background_mode"}:
+        if arg in {
+            "verbosity",
+            "reset",
+            "cli_mode",
+            "background_mode",
+            "clipboard_handler",
+        }:
             continue
         assert arg.replace("_", "-") in settings.allKeys()
 

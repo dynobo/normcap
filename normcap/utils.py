@@ -10,6 +10,7 @@ from typing import Optional
 
 from PySide6 import QtCore
 
+from normcap.clipboard import ClipboardHandlers
 from normcap.gui import system_info
 from normcap.gui.settings import DEFAULT_SETTINGS
 
@@ -78,6 +79,12 @@ def create_argparser() -> argparse.ArgumentParser:
         "--background-mode",
         action="store_true",
         help="Start minimized to tray, without capturing",
+    )
+    parser.add_argument(
+        "--clipboard-handler",
+        action="store",
+        choices=[handler.name for handler in ClipboardHandlers],
+        help="Force using specific clipboard handler instead of auto-selecting",
     )
     return parser
 
