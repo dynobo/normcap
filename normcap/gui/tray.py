@@ -89,6 +89,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.capture = Capture()
         self.installed_languages: list[str] = []
         self.settings = Settings(init_settings=args)
+        self.clipboard_handler_name = args.get("clipboard_handler", None)
 
         # Handle special cli args
         if args.get("reset", False):
@@ -329,6 +330,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Copy results to clipboard."""
         if not self.capture.ocr_text:
             logger.debug("Nothing there to be copied to clipboard!")
+        elif self.clipboard_handler_name:
+            logger.debug(
+                "Copy text to clipboard with '%s'", self.clipboard_handler_name
+            )
+            clipboard.copy_with_handler(
+                text=self.capture.ocr_text, handler_name=self.clipboard_handler_name
+            )
         else:
             logger.debug("Copy text to clipboard")
             clipboard.copy(text=self.capture.ocr_text)

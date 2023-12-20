@@ -2,6 +2,10 @@
 
 # Changelog
 
+## v0.5.3 (upcoming)
+
+- All: Add CLI argument for selecting clipboard handler (mainly intended for debugging).
+
 ## v0.5.2 (2023-12-12)
 
 - All: Fix `normcap` entry point to non-existing function.
