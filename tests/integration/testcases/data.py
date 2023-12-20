@@ -41,8 +41,8 @@ class TestCase:
         """Provides image drawn on colored canvas with the size of the screen."""
         if self.image.size().toTuple() > self._screen_size.toTuple():
             raise ValueError(
-                f"{self.image_path.name} is too large "
-                f"for screen size {self._screen_size.toTuple}!"
+                f"{self.image_path.name} with size {self.image.size().toTuple()} "
+                f"is too large for screen size {self._screen_size.toTuple()}!"
             )
 
         pixmap = QtGui.QPixmap(self._screen_size)
