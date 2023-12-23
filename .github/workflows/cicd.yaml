@@ -172,6 +172,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: "internal"
 
+  test-documentation:
+    name:  Test documentation build
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Install hatch
+        run: pip install hatch
+      - name: Build documentation
+        run: hatch run build-docs
+
   coveralls:
     name: Upload coverage
     needs: test
@@ -299,8 +313,16 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Install hatch
+        run: pip install hatch
+      - name: Build documentation
+        run: hatch run build-docs
       - name: Deploy pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./site
