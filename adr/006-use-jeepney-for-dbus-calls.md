@@ -62,11 +62,11 @@
   topics, few tutorials)
 - Bad, as relatively cumbersome to develop with, due to its lower level nature.
 - Bad, because it has significant number of flaws/bugs, e.g.:
-  - Can't send `u` (int32) datatype, as required for the window ID when using
-    `org.gnome.Shell.Extensions.Window`. See
-    [#PYSIDE-1904](https://bugreports.qt.io/browse/PYSIDE-1904).
-  - Can't reliably
-    [decode arguments](https://github.com/dynobo/normcap/blob/d79ef9c1c9ca022066944563c65290ccaadf6a45/normcap/screengrab/dbus_portal.py#L140-L161).
+    - Can't send `u` (int32) datatype, as required for the window ID when using
+      `org.gnome.Shell.Extensions.Window`. See
+      [#PYSIDE-1904](https://bugreports.qt.io/browse/PYSIDE-1904).
+    - Can't reliably
+      [decode arguments](https://github.com/dynobo/normcap/blob/d79ef9c1c9ca022066944563c65290ccaadf6a45/normcap/screengrab/dbus_portal.py#L140-L161).
 
 ### (B) Switch back to jeepney
 

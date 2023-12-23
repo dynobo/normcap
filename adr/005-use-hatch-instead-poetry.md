@@ -12,11 +12,12 @@ this works quite well, there are some reoccurring pain points:
 
 - The scripting capabilities
   [are limited](https://python-poetry.org/docs/pyproject#scripts).
-  - This led to duplicate implementations of tasks like formatting, linting, testing and
-    l10n for pre-commit hooks and for the GitHub actions.
-  - There are currently multiple entry points for various different tasks, e.g. Python
-    package (`poetry build`), Briefcase package (`/bundle/build.py`, babel (`l10n.py`),
-    running normcap (script `normcap`), which increases cognitive overhead.
+    - This led to duplicate implementations of tasks like formatting, linting, testing and
+      l10n for pre-commit hooks and for the GitHub actions.
+    - There are currently multiple entry points for various different tasks, e.g. Python
+      package (`poetry build`), Briefcase package (`/bundle/build.py`, babel
+      (`l10n.py`), running normcap (script `normcap`), which increases cognitive
+      overhead.
 - Dependency resolution can be quite slow
 - Poetry does not follow PEP standards (however, no problem so far)
 
@@ -48,9 +49,9 @@ management, otherwise complexity would not be reduced.
 ### Positive Consequences
 
 - Reduced complexity:
-  - Use `hatch` as _one_ tool for most tasks `poetry` supported _as well as_ simple task
-    runner.
-  - Single entrypoint to tasks (`hatch run ...`)
+    - Use `hatch` as _one_ tool for most tasks `poetry` supported _as well as_ simple task
+      runner.
+    - Single entrypoint to tasks (`hatch run ...`)
 - Less maintenance effort because of less duplicated code for tasks.
 - `hatch` was adopted by PyPA and therefore is future-proof and well-supported.
 - Testing a new tool (learning opportunity).
@@ -59,27 +60,28 @@ management, otherwise complexity would not be reduced.
 
 - Implementation effort for transition.
 - Some integration efforts (e.g. venv activation via
-  [direnv](https://github.com/direnv/direnv) with 3rd party `layout hatch` to be used in
-  `zsh` and VSCode). Hopefully, this situation will improve over the time!
+  [direnv](https://github.com/direnv/direnv) with 3rd party `layout hatch` to be used
+  in `zsh` and VSCode). Hopefully, this situation will improve over the time!
 - New tool (learning efforts).
 
 ### Neutral
 
 - `hatch` does not yet support dependency locking. This is a minor issue, because:
-  - A locking feature might be added to `hatch` in midterm (needs some PEP-work, which
-    already started).
-  - Freezing is supported via 3rd party plugin
-    [hatch-pip-deepfreeze](https://github.com/sbidoul/hatch-pip-deepfreeze).
-  - In NormCap, currently the only dependencies are `PySide6` & `shiboken6`. They are
-    pinned to specific versions anyway and don't have any child-dependencies themselves.
-  - For development dependencies this is an issue, but the impact of potential problems
-    is minor.
+    - A locking feature might be added to `hatch` in midterm (needs some PEP-work, which
+      already started).
+    - Freezing is supported via 3rd party plugin
+      [hatch-pip-deepfreeze](https://github.com/sbidoul/hatch-pip-deepfreeze).
+    - In NormCap, currently the only dependencies are `PySide6` & `shiboken6`. They are
+      pinned to specific versions anyway and don't have any child-dependencies
+      themselves.
+    - For development dependencies this is an issue, but the impact of potential problems
+      is minor.
 - It's unclear, if the scripting support is good enough to ease all required tasks.
-  - If this _is_ the case, it would be a positive consequence, as more powerful tools
-    like `nox` would bring in more complexity and onboarding efforts.
-  - If this is _not_ the case, then it would have negative consequences, because the
-    complexity would again grow because of workarounds or bringing in a task runner as
-    additional tool.
+    - If this _is_ the case, it would be a positive consequence, as more powerful tools
+      like `nox` would bring in more complexity and onboarding efforts.
+    - If this is _not_ the case, then it would have negative consequences, because the
+      complexity would again grow because of workarounds or bringing in a task runner as
+      additional tool.
 
 ## Pros and Cons of the Options
 
@@ -130,17 +132,18 @@ individual developer. (For building, this is probably not a good idea.)
 - Neutral, as dependency locking is currently not PEP compliant and therefore not
   integrate into `hatch` core. However, this is subject to change, and until it is
   change the 3rd party plugin
-  [hatch-pip-deepfreeze](https://github.com/sbidoul/hatch-pip-deepfreeze) could be used.
+  [hatch-pip-deepfreeze](https://github.com/sbidoul/hatch-pip-deepfreeze) could be
+  used.
 - Neutral, as it has better scripting capabilities than `poetry`, but is way less
-  flexible than task runners like `nox`. Currently, it is unclear, if those capabilities
-  are really needed.
+  flexible than task runners like `nox`. Currently, it is unclear, if those
+  capabilities are really needed.
 - Bad, because of implementation efforts during the transition.
 - Bad, because it is (not yet) as widely adopted and therefore less well integrated.
   E.g. it takes more effort to get the following things to work:
-  - Auto-activation of environment in `zsh`.
-  - Auto-activation of environment in VSCode.
-  - Caching of environments in GitHub actions. (Caching with `poetry` is integrated in
-    the official `actions/setup-python`.)
+    - Auto-activation of environment in `zsh`.
+    - Auto-activation of environment in VSCode.
+    - Caching of environments in GitHub actions. (Caching with `poetry` is integrated in
+      the official `actions/setup-python`.)
 
 ## References
 

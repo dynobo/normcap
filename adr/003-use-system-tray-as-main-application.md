@@ -34,8 +34,8 @@ in full-screen.
 
 - Enables showing real full-screens on macOS
 - Better code maintenance
-  - Get rid of main_window + base_window in favor of a single type of window
-  - Better separation between application logic (in tray) and GUI
+    - Get rid of main_window + base_window in favor of a single type of window
+    - Better separation between application logic (in tray) and GUI
 
 ### Negative Consequences
 
@@ -57,8 +57,8 @@ in full-screen.
 
 - Good, because using the system tray as the main application, solves the black
   full-screen of the status quo on macOS: _create_ windows for selection, then _close_
-  (destroy) them immediately. Stay in tray either until the processing finished or until
-  the user closes the system tray (in case of "show in tray" is active).
+  (destroy) them immediately. Stay in tray either until the processing finished or
+  until the user closes the system tray (in case of "show in tray" is active).
 - Bad, because the system tray is necessary, even if "stay in tray" is not active. In
   that case, the system tray just get's closed again immediately after processing the
   OCR.

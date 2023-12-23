@@ -1,0 +1,105 @@
+:root {
+  --md-header-fg-color: rgba(0, 0, 0, 1);
+  --md-header-bg-color: rgba(240, 240, 240, 1);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: RGBA(44, 48, 49, 1);
+  --md-default-bg-color--light: RGBA(19, 23, 24, 1);
+  --md-default-bg-color--lighter: RGBA(39, 43, 44, 0.3);
+  --md-default-bg-color--lightest: RGBA(39, 43, 44, 0.12);
+  --md-code-bg-color: RGBA(36, 40, 41, 1);
+  --md-header-fg-color: rgba(255, 255, 255, 1);
+  --md-header-bg-color: rgba(39, 43, 44, 1);
+}
+
+.md-typeset h1,
+.md-typeset h3,
+.md-typeset h4,
+.md-header,
+.md-tabs {
+  color: var(--md-header-fg-color);
+}
+
+.md-header,
+.md-tabs,
+.md-main {
+  background: var(--md-header-bg-color);
+}
+
+.md-main__inner {
+  background: var(--md-default-bg-color);
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2.5px 20px 0px,
+    rgba(0, 0, 0, 0.12) 0px 2.5px 40px 0px, rgba(0, 0, 0, 0.036) 0px 0px 0px 1.25px;
+  padding: 0.6em 2.4em;
+  margin-top: 0.5rem;
+}
+
+.md-header {
+  position: static;
+  box-shadow: none;
+}
+
+.md-header__button.md-logo {
+  margin: 0 0 0 .4rem;
+  padding: 0;
+}
+
+.md-header__button.md-logo img {
+  height: 1.8rem;
+}
+
+[dir="ltr"] .md-header__title {
+  margin-left: 0.6rem;
+}
+
+.md-header__option > input {
+  bottom: inherit;
+}
+
+.md-subtitle {
+  opacity: 0.7;
+  line-height: 1.2;
+  font-size: 125%;
+  font-weight: 300;
+  margin-top: -38px;
+  margin-bottom: 32px;
+}
+
+.md-typeset h1.md-title {
+  font-weight: bold;
+}
+
+.md-top {
+  top: 40px !important;
+}
+
+.md-pink {
+  color: var(--md-primary-fg-color);
+}
+
+.md-typeset details.question {
+  border-color: rgba(125, 125,125,0.5);
+  border-width: 1px;
+  font-size: 0.8rem;
+  margin: 0.64rem 0;
+}
+
+.md-typeset details.question:focus-within {
+    box-shadow: None;
+}
+
+.md-typeset details.question > summary {
+  background-color: rgba(125, 125,125, 0.1);
+  font-size: 0.74rem;
+  font-weight: normal;
+}
+
+.md-typeset details.question > summary::before,
+.md-typeset details.question > summary::after {
+  background-color: var(--md-typeset-a-color)
+}
+
+.md-typeset details.question .admonition {
+  font-size: 0.8rem;
+}

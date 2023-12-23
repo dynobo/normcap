@@ -110,8 +110,8 @@ of the other options A, B and C.
 - Bad, because changing system settings from within NormCap is risky: it can have
   unwanted side effects or cause issues if done wrong.
 - Bad, because the implementation effort is high, as NormCap has to implement it for all
-  platforms. On Linux, often the desktop environment is responsible for the hotkeys, so
-  at least supporting KDE and GNOME would be required, others would be desirable as
+  platforms. On Linux, often the desktop environment is responsible for the hotkeys,
+  so at least supporting KDE and GNOME would be required, others would be desirable as
   well.
 - Bad, because it increases maintenance efforts. Especially the Linux DEs are subject of
   changes, which might require adjusting the implementation in NormCap, with all the

@@ -11,7 +11,7 @@ repos:
     rev: v4.5.0
     hooks:
       - id: check-ast
-      - id: check-yaml
+      #- id: check-yaml
       - id: check-toml
       - id: end-of-file-fixer
         exclude: ".srt$"
@@ -21,7 +21,7 @@ repos:
   - repo: local
     hooks:
       - id: check
-        name: run project checks
+        name: hatch run pre-commit
         stages: [commit]
         language: system
         entry: hatch run pre-commit

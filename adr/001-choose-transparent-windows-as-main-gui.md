@@ -42,8 +42,8 @@ switching to PySide6.
 
 - "Live-view" of the desktop (e.g. videos keep playing), which provides a better UX.
 - No need for acquiring the screenshots _before_ region selection.
-  - Slightly faster startup
-  - Better UX on Gnome 41+, where the screenshot has to be confirmed.
+    - Slightly faster startup
+    - Better UX on Gnome 41+, where the screenshot has to be confirmed.
 
 ### Negative Consequences
 

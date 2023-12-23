@@ -125,14 +125,14 @@ C:\Users\<USERNAME>\AppData\Local\Programs\Tesseract-OCR
   "New..." → Variable: `TESSDATA_PREFIX`, Value: `"C:\Program Files\Tesseract-OCR"`
 
 - Append Tesseract's base folder to the environment variable `PATH`, e.g.: "System
-  Properties" → Tab "Advanced" → "Environment Variables..." → Section "User variables" →
-  Select `PATH` → "Edit..." → Add a new entry `"C:\Program Files\Tesseract-OCR"`
+  Properties" → Tab "Advanced" → "Environment Variables..." → Section "User variables"
+  → Select `PATH` → "Edit..." → Add a new entry `"C:\Program Files\Tesseract-OCR"`
 
 - To test your setup, open a new `cmd`-terminal and run:
 
-  ```cmd
-  tesseract --list-langs
-  ```
+    ```cmd
+    tesseract --list-langs
+    ```
 
 4\. Install and run NormCap:
 
@@ -214,3 +214,11 @@ If NormCap doesn't fit your needs, try those alternatives (no particular order):
 ## Certification
 
 ![WOMM](https://raw.githubusercontent.com/dynobo/lmdiag/master/badge.png)
+
+## Contributors
+
+<a href="https://github.com/dynobo/normcap/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=dynobo/normcap" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).

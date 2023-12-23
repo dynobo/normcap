@@ -1,0 +1,87 @@
+site_name: NormCap
+repo_url: https://github.com/dynobo/normcap
+repo_name: dynobo/normcap
+edit_uri: edit/main/docs/
+theme:
+  name: material
+  language: en
+  logo: assets/normcap.svg
+  favicon: assets/favicon.ico
+  icon:
+    repo: fontawesome/brands/github
+    annotation: material/alert-circle
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  features:
+    # - header.autohide
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.prune
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.action.edit
+    - content.tooltips
+    - toc.follow
+
+nav:
+  - index.md
+  - usage.md
+  - faqs.md
+  - support.md
+  - contribute.md
+
+plugins:
+  - glightbox
+  - search:
+      lang: en
+
+extra:
+  generator: false
+
+extra_css:
+  - assets/style.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - toc:
+      permalink: "¶"
+      toc_depth: 2
