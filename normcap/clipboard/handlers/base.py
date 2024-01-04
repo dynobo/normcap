@@ -43,6 +43,13 @@ class ClipboardHandlerBase(abc.ABC):
         has_wayland_display_env = bool(os.environ.get("WAYLAND_DISPLAY", ""))
         return "wayland" in xdg_session_type or has_wayland_display_env
 
+    @staticmethod
+    def _os_has_awesome_wm() -> bool:
+        if sys.platform != "linux":
+            return False
+
+        return "awesome" in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+
     @abc.abstractmethod
     def _is_compatible(self) -> bool:
         ...  # pragma: no cover

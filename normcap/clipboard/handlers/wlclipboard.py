@@ -33,6 +33,10 @@ class WlCopyHandler(ClipboardHandlerBase):
             )
             return False
 
+        if self._os_has_awesome_wm():
+            logger.debug("%s is not compatible with Awesome WM", self.name)
+            return False
+
         if not (wl_copy_bin := shutil.which("wl-copy")):
             logger.debug("%s is not compatible: wl-copy was not found", self.name)
             logger.warning(
