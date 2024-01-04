@@ -1,7 +1,7 @@
 # Infos on current github runners:
 # https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#about-github-hosted-runners
 
-name: Test
+name: CI/CD
 
 on:
   pull_request:
