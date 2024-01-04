@@ -15,6 +15,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  debug:
+    name: Debug workflow
+    runs-on: ubuntu-22.04
+    steps:
+      - run: echo "Workflow ${{ github.workflow }} is running on ${{ github.ref }} with ${{ github.event_name }} event"
+      - run: echo "Repo owner is ${{ github.repository_owner }}"
+      - run: echo "Event workflow conclusion was ${{ github.event.workflow_run.conclusion }}"
   briefcase:
     name: Briefcase build & draft release
     if: |
