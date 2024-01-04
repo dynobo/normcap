@@ -34,9 +34,8 @@ class XclipCopyHandler(ClipboardHandlerBase):
         if not (xclip_bin := shutil.which("xclip")):
             logger.debug("%s is not compatible: xclip was not found", self.name)
             logger.warning(
-                "Your Linux runs with Wayland. Please install the system "
-                "package 'xclip' to ensure that text can be copied to "
-                "the clipboard correctly"
+                "Please install the system package 'xclip' to ensure that text can be"
+                "copied to the clipboard correctly"
             )
             return False
 

@@ -2,9 +2,11 @@
 
 # Changelog
 
-## v0.5.3 (upcoming)
+## v0.5.3 (2024-01-04)
 
 - All: Add CLI argument for selecting clipboard handler (mainly intended for debugging).
+- Linux: Revert clipboard handling to use Qt on Xorg, wl-clipboard on Wayland, and xclip
+  only on AwesomeWM and Gnome 45. ([#581](https://github.com/dynobo/normcap/issues/581))
 
 ## v0.5.2 (2023-12-12)
 

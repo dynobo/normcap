@@ -7,11 +7,31 @@ logger = logging.getLogger(__name__)
 
 
 class ClipboardHandlers(Enum):
-    windll = windll.WindllHandler()  # win32
-    pbcopy = pbcopy.PbCopyHandler()  # darwin
-    xclip = xclip.XclipCopyHandler()  # linux, xorg and wayland
-    wlclipboard = wlclipboard.WlCopyHandler()  # linux, wayland, broken in Gnome 45 atm
-    qt = qtclipboard.QtCopyHandler()  # cross platform
+    """All supported clipboard handlers.
+
+    The handlers are ordered by preference: copy() tries them from top to bottom
+    and uses the first one that is detected as compatible.
+    """
+
+    # For win32
+    windll = windll.WindllHandler()
+
+    # For darwin
+    pbcopy = pbcopy.PbCopyHandler()
+
+    # Cross platform
+    # - Not working on linux with wayland
+    qt = qtclipboard.QtCopyHandler()
+
+    # For linux with wayland
+    # - Not working with Awesome WM
+    # - Problems with Gnome 45: https://github.com/bugaevc/wl-clipboard/issues/168
+    wlclipboard = wlclipboard.WlCopyHandler()
+
+    # For linux with xorg and wayland
+    # - Seems not very robust on wayland
+    # - Works with Awesome WM
+    xclip = xclip.XclipCopyHandler()
 
 
 # TODO: Think about implementing a _real_ success check

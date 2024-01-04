@@ -37,6 +37,10 @@ class WlCopyHandler(ClipboardHandlerBase):
             logger.debug("%s is not compatible with Awesome WM", self.name)
             return False
 
+        if self._get_gnome_version().startswith("45."):
+            logger.debug("%s is not compatible with Gnome 45", self.name)
+            return False
+
         if not (wl_copy_bin := shutil.which("wl-copy")):
             logger.debug("%s is not compatible: wl-copy was not found", self.name)
             logger.warning(
