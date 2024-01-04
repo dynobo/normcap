@@ -124,7 +124,7 @@ def display_manager_is_wayland() -> bool:
 
 
 @functools.cache
-def desktop_environment() -> DesktopEnvironment:
+def desktop_environment() -> DesktopEnvironment:  # noqa: PLR0911 # too many returns
     """Detect used desktop environment (Linux)."""
     kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()
     xdg_current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
@@ -145,6 +145,8 @@ def desktop_environment() -> DesktopEnvironment:
         return DesktopEnvironment.UNITY
     if hyprland_instance_signature:
         return DesktopEnvironment.HYPRLAND
+    if "awesome" in xdg_current_desktop:
+        return DesktopEnvironment.AWESOME
 
     return DesktopEnvironment.OTHER
 
