@@ -9,10 +9,6 @@ on:
     types:
       - completed
 
-concurrency:
-  group: cicd-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   debug:
     name: Workflow debug info
