@@ -6,7 +6,6 @@ name: Release
 on:
   workflow_run:
     workflows: ["Test"]
-    branches: [main]
     types:
       - completed
 
@@ -16,7 +15,7 @@ concurrency:
 
 jobs:
   debug:
-    name: Debug workflow
+    name: Workflow debug info
     runs-on: ubuntu-22.04
     steps:
       - run: echo "Workflow ${{ github.workflow }} is running on ${{ github.ref }} with ${{ github.event_name }} event"
