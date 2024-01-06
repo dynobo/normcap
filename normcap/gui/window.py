@@ -15,7 +15,6 @@ import logging
 import sys
 import tempfile
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Callable, Optional, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -41,97 +40,11 @@ class DebugInfo:
     scale_factor: float = 1
 
 
-def _move_active_window_to_position_on_gnome(screen_rect: Rect) -> None:
-    """Move currently active window to a certain position.
-
-    This is a workaround for not being able to reposition windows on wayland.
-    It only works on Gnome Shell.
-    """
-    if sys.platform != "linux" or not QtDBus:
-        raise TypeError("QtDBus should only be called on Linux systems!")
-
-    js_code = f"""
-    const GLib = imports.gi.GLib;
-    global.get_window_actors().forEach(function (w) {{
-        var mw = w.meta_window;
-        if (mw.has_focus()) {{
-            mw.move_resize_frame(
-                0,
-                {screen_rect.left},
-                {screen_rect.top},
-                {screen_rect.width},
-                {screen_rect.height}
-            );
-        }}
-    }});
-    """
-    item = "org.gnome.Shell"
-    interface = "org.gnome.Shell"
-    path = "/org/gnome/Shell"
-
-    bus = QtDBus.QDBusConnection.sessionBus()
-    if not bus.isConnected():
-        logger.error("Not connected to dbus!")
-
-    shell_interface = QtDBus.QDBusInterface(item, path, interface, bus)
-    if shell_interface.isValid():
-        x = shell_interface.call("Eval", js_code)
-        if x.errorName():
-            logger.error("Failed move Window!")
-            logger.error(x.errorMessage())
-    else:
-        logger.warning("Invalid dbus interface on Gnome")
-
-
-def _move_active_window_to_position_on_kde(screen_rect: Rect) -> None:
-    """Move currently active window to a certain position.
-
-    This is a workaround for not being able to reposition windows on wayland.
-    It only works on KDE.
-    """
-    if sys.platform != "linux" or not QtDBus:
-        raise TypeError("QtDBus should only be called on Linux systems!")
-
-    js_code = f"""
-    client = workspace.activeClient;
-    client.geometry = {{
-        "x": {screen_rect.left},
-        "y": {screen_rect.top},
-        "width": {screen_rect.width},
-        "height": {screen_rect.height}
-    }};
-    """
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".js") as script_file:
-        script_file.write(js_code.encode())
-
-    bus = QtDBus.QDBusConnection.sessionBus()
-    if not bus.isConnected():
-        logger.error("Not connected to dbus!")
-
-    item = "org.kde.KWin"
-    interface = "org.kde.kwin.Scripting"
-    path = "/Scripting"
-    shell_interface = QtDBus.QDBusInterface(item, path, interface, bus)
-
-    # FIXME: shell_interface is not valid on latest KDE in Fedora 36.
-    if shell_interface.isValid():
-        x = shell_interface.call("loadScript", script_file.name)
-        y = shell_interface.call("start")
-        if x.errorName() or y.errorName():
-            logger.error("Failed move Window!")
-            logger.error(x.errorMessage(), y.errorMessage())
-    else:
-        logger.warning("Invalid dbus interface on KDE")
-
-    Path(script_file.name).unlink()
-
-
 class Communicate(QtCore.QObject):
     """Window's communication bus."""
 
     on_esc_key_pressed = QtCore.Signal()
     on_region_selected = QtCore.Signal(Rect)
-    on_window_positioned = QtCore.Signal()
 
 
 class Window(QtWidgets.QMainWindow):
@@ -152,9 +65,8 @@ class Window(QtWidgets.QMainWindow):
 
         self.com = Communicate(parent=self)
         self.color: QtGui.QColor = QtGui.QColor(str(settings.value("color")))
-        self.is_positioned: bool = False
 
-        self.setWindowTitle("NormCap")
+        self.setWindowTitle(f"NormCap [{screen.index}]")
         self.setWindowIcon(QtGui.QIcon(":normcap"))
         self.setAnimated(False)
         self.setEnabled(True)
@@ -197,19 +109,130 @@ class Window(QtWidgets.QMainWindow):
         pixmap.convertFromImage(self.screen_.screenshot)
         self.image_container.setPixmap(pixmap)
 
-    def _position_windows_on_wayland(self) -> None:
+    def _move_to_position_on_wayland(self) -> None:
         """Move window to respective monitor on Wayland.
 
         In Wayland, the compositor has the responsibility for positioning windows, the
         client itself can't do this. However, there are DE dependent workarounds.
         """
-        self.setFocus()
-        logger.debug("Move window %s to %s", self.screen_.index, self.screen_)
         if system_info.desktop_environment() == DesktopEnvironment.GNOME:
-            _move_active_window_to_position_on_gnome(self.screen_)
+            self._move_to_position_via_gnome_shell_eval()
         elif system_info.desktop_environment() == DesktopEnvironment.KDE:
-            _move_active_window_to_position_on_kde(self.screen_)
-        self.is_positioned = True
+            self._move_to_position_via_kde_kwin_scripting()
+        else:
+            logger.warning(
+                "No window move method for %s", system_info.desktop_environment()
+            )
+
+        # TODO: Implement move method via window calls instead of Eval
+        # https://github.com/ickyicky/window-calls
+
+    def _move_to_position_via_gnome_shell_eval(self) -> bool:
+        """Move currently active window to a certain position.
+
+        This is a workaround for not being able to reposition windows on wayland.
+        It only works on Gnome Shell.
+        """
+        if sys.platform != "linux" or not QtDBus:
+            raise TypeError("QtDBus should only be called on Linux systems!")
+
+        logger.debug(
+            "Move window '%s' to %s via org.gnome.Shell.Eval",
+            self.windowTitle(),
+            self.screen_,
+        )
+        js_code = f"""
+        const GLib = imports.gi.GLib;
+        global.get_window_actors().forEach(function (w) {{
+            var mw = w.meta_window;
+            if (mw.get_title() == "{self.windowTitle()}") {{
+                mw.move_resize_frame(
+                    0,
+                    {self.screen_.left},
+                    {self.screen_.top},
+                    {self.screen_.width},
+                    {self.screen_.height}
+                );
+            }}
+        }});
+        """
+        item = "org.gnome.Shell"
+        interface = "org.gnome.Shell"
+        path = "/org/gnome/Shell"
+
+        bus = QtDBus.QDBusConnection.sessionBus()
+        if not bus.isConnected():
+            logger.error("Not connected to dbus!")
+
+        shell_interface = QtDBus.QDBusInterface(item, path, interface, bus)
+        if not shell_interface.isValid():
+            logger.warning("Invalid dbus interface on Gnome")
+            return False
+
+        response = shell_interface.call("Eval", js_code)
+        success = response.arguments()[0] if response.arguments() else False
+        if response.errorName() or not success:
+            logger.error("Failed to move Window via org.gnome.Shell.Eval!")
+            logger.error("Error: %s", response.errorMessage())
+            logger.error("Response arguments: %s", response.arguments())
+            return False
+
+        return True
+
+    def _move_to_position_via_kde_kwin_scripting(self) -> bool:
+        """Move currently active window to a certain position.
+
+        This is a workaround for not being able to reposition windows on wayland.
+        It only works on KDE.
+        """
+        if sys.platform != "linux" or not QtDBus:
+            raise TypeError("QtDBus should only be called on Linux systems!")
+
+        logger.debug(
+            "Move window '%s' to %s via org.kde.kwin.Scripting",
+            self.windowTitle(),
+            self.screen_,
+        )
+        js_code = f"""
+        const clients = workspace.clientList();
+        for (var i = 0; i < clients.length; i++) {{
+            if (clients[i].caption() == "{self.windowTitle()}" ) {{
+                clients[i].geometry = {{
+                    "x": {self.screen_.left},
+                    "y": {self.screen_.top},
+                    "width": {self.screen_.width},
+                    "height": {self.screen_.height}
+                }};
+            }}
+        }}
+        """
+        with tempfile.NamedTemporaryFile(delete=True, suffix=".js") as script_file:
+            script_file.write(js_code.encode())
+
+            bus = QtDBus.QDBusConnection.sessionBus()
+            if not bus.isConnected():
+                logger.error("Not connected to dbus!")
+                return False
+
+            item = "org.kde.KWin"
+            interface = "org.kde.kwin.Scripting"
+            path = "/Scripting"
+            shell_interface = QtDBus.QDBusInterface(item, path, interface, bus)
+
+            # FIXME: shell_interface is not valid on latest KDE in Fedora 36.
+            if not shell_interface.isValid():
+                logger.warning("Invalid dbus interface on KDE")
+                return False
+
+            x = shell_interface.call("loadScript", script_file.name)
+            y = shell_interface.call("start")
+            logger.debug("KWin loadScript response: %s", x.arguments())
+            logger.debug("KWin start response: %s", y.arguments())
+            if x.errorName() or y.errorName():
+                logger.error("Failed to move Window via org.kde.kwin.Scripting!")
+                logger.error(x.errorMessage(), y.errorMessage())
+
+        return True
 
     def set_fullscreen(self) -> None:
         """Set window to full screen using platform specific methods."""
@@ -246,6 +269,11 @@ class Window(QtWidgets.QMainWindow):
             self.setMaximumSize(self.geometry().size())
 
         self.showFullScreen()
+
+        if system_info.display_manager_is_wayland():
+            self._move_to_position_on_wayland()
+
+        self.setFocus()
 
     def clear_selection(self) -> None:
         self.selection_rect = QtCore.QRect()
@@ -318,23 +346,6 @@ class Window(QtWidgets.QMainWindow):
 
         # Emit as last action, cause self might get destroyed by the slots
         self.com.on_region_selected.emit((scaled_selection_rect, self.screen_.index))
-
-    def changeEvent(self, event: QtCore.QEvent) -> None:  # noqa: N802
-        """Update position on Wayland.
-
-        This is a workaround to move windows to different displays in multi monitor
-        setups on Wayland. Necessary, because under Wayland the application is not
-        supposed to control the position of its windows.
-        """
-        super().changeEvent(event)
-        if (
-            event.type() == QtCore.QEvent.Type.ActivationChange
-            and system_info.display_manager_is_wayland()
-            and self.isActiveWindow()
-            and not self.is_positioned
-        ):
-            self._position_windows_on_wayland()
-            self.com.on_window_positioned.emit()
 
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802
         """Adjust child widget on resize."""

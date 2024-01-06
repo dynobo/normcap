@@ -1,26 +1,7 @@
-import sys
-
 import pytest
 from PySide6 import QtCore, QtGui
 
 from normcap.gui import models, window
-
-
-@pytest.mark.skipif(sys.platform == "linux", reason="non-Linux specific test")
-def test_move_active_window_to_position_raises_on_non_linux():
-    # GIVEN a non-Linux system
-
-    # WHEN a function to move the active window is called
-
-    # THEN an exception should be raised, because those functions are not supposed to
-    #   work on a non-Linux system
-    rect = models.Rect(left=0, top=0, right=0, bottom=0)
-
-    with pytest.raises(TypeError, match="should only be called on Linux"):
-        window._move_active_window_to_position_on_gnome(rect)
-
-    with pytest.raises(TypeError, match="should only be called on Linux"):
-        window._move_active_window_to_position_on_kde(rect)
 
 
 @pytest.mark.gui()

@@ -30,7 +30,6 @@ from normcap.gui.models import (
     Capture,
     CaptureMode,
     Days,
-    DesktopEnvironment,
     Rect,
     Screen,
     Seconds,
@@ -55,7 +54,6 @@ class Communicate(QtCore.QObject):
     on_copied_to_clipboard = QtCore.Signal()
     on_image_cropped = QtCore.Signal()
     on_region_selected = QtCore.Signal(Rect)
-    on_window_positioned = QtCore.Signal()
     on_languages_changed = QtCore.Signal(list)
 
 
@@ -201,20 +199,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         for idx, screenshot in enumerate(screenshots):
             self.screens[idx].screenshot = screenshot
 
-        if not system_info.display_manager_is_wayland():
-            for index in range(len(system_info.screens())):
-                self._create_window(index)
-
-        elif system_info.desktop_environment() in {
-            DesktopEnvironment.GNOME,
-            DesktopEnvironment.KDE,
-            DesktopEnvironment.SWAY,
-            DesktopEnvironment.HYPRLAND,
-        }:
-            self.com.on_window_positioned.connect(self._create_next_window)
-            self._create_next_window()
-        else:
-            raise RuntimeError("Method for creating window is unspecified!")
+        for index in range(len(system_info.screens())):
+            self._create_window(index)
 
     @QtCore.Slot(str)
     def _apply_setting_change(self, setting: str) -> None:
@@ -534,12 +520,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         action.triggered.connect(lambda: self.com.exit_application.emit(0))
         self.tray_menu.addAction(action)
 
-    def _create_next_window(self) -> None:
-        """Open child window only for next display."""
-        if len(system_info.screens()) > len(self.windows):
-            index = len(self.windows.keys())
-            self._create_window(index)
-
     def _create_window(self, index: int) -> None:
         """Open a child window for the specified screen."""
         new_window = Window(
@@ -552,7 +532,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             lambda: self._minimize_or_exit_application(delay=0)
         )
         new_window.com.on_region_selected.connect(self.com.on_region_selected)
-        new_window.com.on_window_positioned.connect(self.com.on_window_positioned)
         if index == 0:
             menu_button = self._create_menu_button()
             layout = self._create_layout()
