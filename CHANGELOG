@@ -2,6 +2,10 @@
 
 # Changelog
 
+## v0.5.4 (upcoming)
+
+- Linux: Improve robustness of window positioning on Wayland.
+
 ## v0.5.3 (2024-01-04)
 
 - All: Add CLI argument for selecting clipboard handler (mainly intended for debugging).
