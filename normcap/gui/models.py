@@ -73,7 +73,7 @@ class Urls:
 
 @dataclass()
 class Rect:
-    """Rectangular selection on screen.
+    """Rectangle to represent section of screen.
 
     All points are inclusive (are part of the rectangle).
     """
