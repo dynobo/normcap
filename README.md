@@ -5,10 +5,9 @@
 **_OCR powered screen-capture tool to capture information instead of images. For Linux,
 macOS and Windows._**
 
-[![Test](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/test.yaml?label=Test&branch=main)](https://github.com/dynobo/normcap/actions/workflows/test.yaml)
-[![Build](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/release.yaml?label=Build&branch=main)](https://github.com/dynobo/normcap/releases)
+[![Test](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/cicd.yaml?label=CI/CD&branch=main)](https://github.com/dynobo/normcap/actions/workflows/cicd.yaml)
 [![Coverage Status](https://img.shields.io/coverallsCoverage/github/dynobo/normcap?label=Coverage&branch=main)](https://coveralls.io/github/dynobo/normcap)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/test.yaml?label=CodeQL&branch=main)](https://github.com/dynobo/normcap/security/code-scanning/tools/CodeQL/status/)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/dynobo/normcap/cicd.yaml?label=CodeQL&branch=main)](https://github.com/dynobo/normcap/security/code-scanning/tools/CodeQL/status/)
 
 [![GitHub](https://img.shields.io/github/downloads/dynobo/normcap/total?label=Github%20downloads&color=blue)](https://hanadigital.github.io/grev/?user=dynobo&repo=normcap)
 [![PyPi](https://img.shields.io/pypi/dm/normcap?label=PyPi%20downloads&color=blue)](https://pypi.org/project/normcap)
