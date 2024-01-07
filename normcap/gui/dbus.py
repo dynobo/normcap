@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 import tempfile
+import traceback
 from typing import Any, cast
 
 from jeepney.io.blocking import Proxy, open_dbus_connection
@@ -30,6 +31,23 @@ class DBusShell(MessageGenerator):
 
     def eval_(self, script: str) -> Message:
         return new_method_call(self, "Eval", "s", (script,))
+
+
+class DBusKwinScripting(MessageGenerator):
+    interface = "org.kde.kwin.Scripting"
+
+    def __init__(
+        self,
+        object_path: str = "/Scripting",
+        bus_name: str = "org.kde.KWin",
+    ) -> None:
+        super().__init__(object_path=object_path, bus_name=bus_name)
+
+    def load_script(self, script_file: str) -> Message:
+        return new_method_call(self, "loadScript", "s", (script_file,))
+
+    def start(self) -> Message:
+        return new_method_call(self, "start")
 
 
 class DBusWindowCalls(MessageGenerator):
@@ -93,8 +111,9 @@ def move_window_via_gnome_shell_eval(title_id: str, position: Rect) -> bool:
             response = proxy.eval_(script=js_code)
         if not response[0]:
             raise RuntimeError("DBus response was not OK!")  # noqa: TRY301
-    except Exception:
+    except Exception as exc:
         logger.warning("Failed to move window via org.gnome.Shell.Eval!")
+        logger.debug("".join(traceback.format_exception(exc)).strip())
         return False
     else:
         return True
@@ -160,10 +179,59 @@ def move_window_via_gnome_shell_eval_qtdbus(title_id: str, position: Rect) -> bo
     return True
 
 
+def move_window_via_kde_kwin_scripting(title_id: str, position: Rect) -> bool:
+    """Move currently active window to a certain position.
+
+    This is a workaround for not being able to reposition windows on wayland.
+    It only works on KDE.
+
+    Args:
+        title_id: Window title (has to be unique)
+        position: Target geometry
+
+    Returns:
+        If call was successful
+    """
+    logger.debug(
+        "Moving window '%s' to %s via org.kde.kwin.Scripting", title_id, position
+    )
+    js_code = f"""
+    const clients = workspace.clientList();
+    for (var i = 0; i < clients.length; i++) {{
+        if (clients[i].caption() == "{title_id}" ) {{
+            clients[i].geometry = {{
+                "x": {position.left},
+                "y": {position.top},
+                "width": {position.width},
+                "height": {position.height}
+            }};
+        }}
+    }}
+    """
+    with tempfile.NamedTemporaryFile(delete=True, suffix=".js") as script_file:
+        script_file.write(js_code.encode())
+
+        try:
+            with open_dbus_connection() as router:
+                proxy = Proxy(DBusKwinScripting(), router)
+                response = proxy.load_script(script_file=script_file.name)
+                if response[0] != 0:
+                    raise RuntimeError(  # noqa: TRY301
+                        "org.kde.kwin.Scripting.loadScript response: %s", response
+                    )
+                response = proxy.start()
+
+        except Exception as exc:
+            logger.warning("Failed to move window via org.kde.kwin.Scripting!")
+            logger.debug("".join(traceback.format_exception(exc)).strip())
+            return False
+        else:
+            return True
+
+
 def move_window_via_kde_kwin_scripting_qtdbus(title_id: str, position: Rect) -> bool:
     """Move currently active window to a certain position.
 
-    TODO: Migrate to Jeepney.
     TODO: Deprecated. Remove, once jeepney is confirmed working!
 
     This is a workaround for not being able to reposition windows on wayland.
@@ -265,8 +333,9 @@ def move_windows_via_window_calls_extension(title_id: str, position: Rect) -> bo
                 position.width,
                 position.height,
             )
-    except Exception:
+    except Exception as exc:
         logger.warning("Failed to move window via org.gnome.Shell.extensions.windows!")
+        logger.debug("".join(traceback.format_exception(exc)).strip())
         logger.warning(
             "If you experience issues with NormCap's in a multi monitor setting, "
             "try installing the Gnome Shell Extension 'Window Calls' "
