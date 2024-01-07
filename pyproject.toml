@@ -26,7 +26,11 @@ classifiers = [
   "Operating System :: POSIX :: Linux",
   "Operating System :: MacOS",
 ]
-dependencies = ["shiboken6==6.6.1", "PySide6-Essentials==6.6.1"]
+dependencies = [
+  "shiboken6==6.6.1",
+  "PySide6-Essentials==6.6.1",
+  "jeepney==0.8.0",
+]
 
 [project.urls]
 Homepage = "https://dynobo.github.io/normcap/"
@@ -100,7 +104,7 @@ version = "tbump {args:current-version}"
 bundle = ["locales-compile", "python bundle/build.py {args}"]
 
 [[tool.hatch.envs.all.matrix]]
-python = ["3.9", "3.10", "3.11"]
+python = ["3.9", "3.10", "3.11", "3.12"]
 
 [tool.hatch.envs.analysis]
 template = "analysis"
@@ -230,7 +234,7 @@ sources = ["normcap"]
 icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
-requires = ["PySide6-Essentials==6.6.1", "shiboken6==6.6.1"]
+requires = ["PySide6-Essentials==6.6.1", "shiboken6==6.6.1", "jeepney==0.8.0"]
 cleanup_paths = [
   # Globs
   "**/[pP]y[sS]ide6/*[qQ]t*[oO]pen[gG][lL]*",
