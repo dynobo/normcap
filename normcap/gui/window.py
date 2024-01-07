@@ -115,7 +115,7 @@ class Window(QtWidgets.QMainWindow):
                     title_id=self.windowTitle(), position=self.screen_
                 )
         elif system_info.desktop_environment() == DesktopEnvironment.KDE:
-            dbus.move_window_via_kde_kwin_scripting_qtdbus(
+            dbus.move_window_via_kde_kwin_scripting(
                 title_id=self.windowTitle(), position=self.screen_
             )
         else:
