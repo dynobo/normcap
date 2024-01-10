@@ -1,5 +1,4 @@
 import logging
-import shutil
 import subprocess
 import sys
 
@@ -20,14 +19,14 @@ class PbCopyHandler(ClipboardHandlerBase):
             env={"LC_CTYPE": "UTF-8"},
         )
 
-    def _is_compatible(self) -> bool:
+    def is_compatible(self) -> bool:
         if sys.platform != "darwin":
             logger.debug("%s is incompatible on non-macOS systems", self.name)
             return False
 
-        if not (pbcopy_bin := shutil.which("pbcopy")):
-            logger.debug("%s is incompatible: pbcopy seems missing", self.name)
-            return False
+        logger.debug("%s is compatible", self.name)
+        return True
 
-        logger.debug("%s is compatible (%s)", self.name, pbcopy_bin)
+    def is_installed(self) -> bool:
+        logger.debug("%s requires no dependencies", self.name)
         return True

@@ -16,7 +16,7 @@ from normcap.clipboard.handlers import base, xclip
         ("linux", "Wayland", "Gnome Wayland", True, True),
         ("linux", "", "Gnome Shell", True, True),
         ("linux", "", "", True, True),
-        ("linux", "Wayland", "Gnome Wayland", False, False),
+        ("linux", "Wayland", "Gnome Wayland", False, True),
         ("win32", "Wayland", "Gnome Shell", False, False),
         ("win32", "Wayland", "Gnome Wayland", True, False),
         ("darwin", "Wayland", "Gnome Wayland", True, False),
@@ -33,7 +33,7 @@ def test_xclip_is_compatible(
         xclip.shutil, "which", lambda *args: "xclip" in args and has_xclip
     )
 
-    assert xclip.XclipCopyHandler().is_compatible == result
+    assert xclip.XclipCopyHandler().is_compatible() == result
 
 
 @pytest.mark.skipif(not shutil.which("xclip"), reason="Needs xclip")

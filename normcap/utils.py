@@ -83,7 +83,7 @@ def create_argparser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--clipboard-handler",
         action="store",
-        choices=[handler.name for handler in ClipboardHandlers],
+        choices=[h.name for h in ClipboardHandlers],
         help="Force using specific clipboard handler instead of auto-selecting",
     )
     return parser

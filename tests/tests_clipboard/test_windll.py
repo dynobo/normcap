@@ -33,7 +33,7 @@ def clipboard_blocked():
 )
 def test_windll_is_compatible(monkeypatch, platform, result):
     monkeypatch.setattr(windll.sys, "platform", platform)
-    assert windll.WindllHandler().is_compatible == result
+    assert windll.WindllHandler().is_compatible() == result
 
 
 @pytest.mark.skipif(sys.platform != "win32", reason="Windows specific test")

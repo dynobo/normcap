@@ -9,30 +9,45 @@ from normcap.clipboard.handlers import base, wlclipboard
 
 
 @pytest.mark.parametrize(
-    ("platform", "wayland_display", "xdg_session_type", "has_wlcopy", "result"),
+    ("platform", "wayland_display", "xdg_session_type", "gnome_version", "result"),
     [
-        ("linux", "Wayland", "", True, True),
-        ("linux", "", "Gnome Wayland", True, True),
-        ("linux", "Wayland", "Gnome Wayland", True, True),
-        ("linux", "", "Gnome Shell", True, False),
-        ("linux", "", "", True, False),
-        ("linux", "Wayland", "Gnome Wayland", False, False),
-        ("win32", "Wayland", "Gnome Wayland", True, False),
-        ("darwin", "Wayland", "Gnome Wayland", True, False),
+        ("linux", "Wayland", "", "44", True),
+        ("linux", "", "Gnome Wayland", "44", True),
+        ("linux", "Wayland", "Gnome Wayland", "44", True),
+        ("linux", "Wayland", "Gnome Wayland", "45.1", False),
+        ("linux", "", "Gnome Shell", "44", False),
+        ("linux", "", "", "44", False),
+        ("win32", "Wayland", "Gnome Wayland", "", False),
+        ("darwin", "Wayland", "Gnome Wayland", "", False),
     ],
 )
 def test_wlcopy_is_compatible(
-    platform, wayland_display, xdg_session_type, has_wlcopy, result, monkeypatch
+    platform, wayland_display, xdg_session_type, gnome_version, result, monkeypatch
 ):
     monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
     monkeypatch.setenv("XDG_SESSION_TYPE", xdg_session_type)
+    monkeypatch.setattr(base.sys, "platform", platform)
+    monkeypatch.setattr(
+        base.ClipboardHandlerBase, "_get_gnome_version", lambda *_: gnome_version
+    )
 
+    assert wlclipboard.WlCopyHandler().is_compatible() == result
+
+
+@pytest.mark.parametrize(
+    ("platform", "has_wlcopy", "result"),
+    [
+        ("linux", True, True),
+        ("linux", False, False),
+    ],
+)
+def test_wlcopy_is_installed(platform, has_wlcopy, result, monkeypatch):
     monkeypatch.setattr(base.sys, "platform", platform)
     monkeypatch.setattr(
         wlclipboard.shutil, "which", lambda *args: "wl-copy" in args and has_wlcopy
     )
 
-    assert wlclipboard.WlCopyHandler().is_compatible == result
+    assert wlclipboard.WlCopyHandler().is_installed() == result
 
 
 # ONHOLD: Check if wl-copy works on Gnome 45 without the need to click on notification.

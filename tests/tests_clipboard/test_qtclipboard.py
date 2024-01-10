@@ -24,14 +24,14 @@ def test_qtclipboard_is_compatible(monkeypatch, platform, wayland_display, resul
     monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
     monkeypatch.setenv("XDG_SESSION_TYPE", "")
     monkeypatch.setattr(base.sys, "platform", platform)
-    assert qtclipboard.QtCopyHandler().is_compatible == result
+    assert qtclipboard.QtCopyHandler().is_compatible() == result
 
 
 def test_qtclipboard_is_compatible_without_pyside6(monkeypatch, mock_import):
     mock_import(parent_module=qtclipboard, import_name="QtGui", throw_exc=ImportError)
     monkeypatch.setenv("WAYLAND_DISPLAY", "")
     monkeypatch.setenv("XDG_SESSION_TYPE", "")
-    assert qtclipboard.QtCopyHandler().is_compatible is False
+    assert qtclipboard.QtCopyHandler().is_compatible() is False
 
 
 @pytest.mark.skipif(
@@ -58,8 +58,8 @@ def test_qtclipboard_copy_on_wayland_fails(qapp):
     result = qtclipboard.QtCopyHandler().copy(text=text)
     clipped = qapp.clipboard().text()
 
-    assert clipped is not text
-    assert result is False
+    assert result  # Command succeeded
+    assert clipped is not text  # But text is not copied
 
 
 def test_qtclipboard_copy_fails_on_missing_pyside6(qapp, mock_import):
