@@ -26,6 +26,8 @@ def get_capture_func() -> CaptureFunc:
         from normcap.screengrab import grim
         return grim.capture
 
+    # TODO: implement gnome-screenshot method
+
     if utils.has_dbus_portal_support():
         logger.debug("Select capture method DBUS portal")
         from normcap.screengrab import dbus_portal

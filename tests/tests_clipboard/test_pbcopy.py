@@ -8,20 +8,16 @@ from normcap.clipboard.handlers import pbcopy
 
 
 @pytest.mark.parametrize(
-    ("platform", "has_pbcopy", "result"),
+    ("platform", "result"),
     [
-        ("darwin", True, True),
-        ("darwin", False, False),
-        ("win32", True, False),
-        ("linux", True, False),
+        ("darwin", True),
+        ("win32", False),
+        ("linux", False),
     ],
 )
-def test_pbcopy_is_compatible(monkeypatch, platform, has_pbcopy, result):
-    monkeypatch.setattr(
-        pbcopy.shutil, "which", lambda *args: "pbcopy" in args and has_pbcopy
-    )
+def test_pbcopy_is_compatible(monkeypatch, platform, result):
     monkeypatch.setattr(pbcopy.sys, "platform", platform)
-    assert pbcopy.PbCopyHandler().is_compatible == result
+    assert pbcopy.PbCopyHandler().is_compatible() == result
 
 
 @pytest.mark.skipif(sys.platform != "darwin", reason="macOS specific test")

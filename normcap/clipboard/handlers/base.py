@@ -5,25 +5,24 @@ import re
 import shutil
 import subprocess
 import sys
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
 
 class ClipboardHandlerBase(abc.ABC):
-    def __init__(self) -> None:
-        self.is_compatible = self._is_compatible()
+    install_instructions: Optional[str] = None
 
     def copy(self, text: str) -> bool:
         """Wraps the method actually copying the text to the system clipboard.
 
         Should not be overridden. Overriding  _copy() should be enough.
         """
-        if not self.is_compatible:
-            logger.error(
+        if not self.is_compatible():
+            logger.warning(
                 "%s.copy() called on incompatible system!",
                 getattr(self, "__name__", ""),
             )
-            return False
 
         try:
             self._copy(text)
@@ -84,14 +83,27 @@ class ClipboardHandlerBase(abc.ABC):
             logger.warning("Exception when trying to get gnome version from cli %s", e)
             return ""
         else:
-            logger.debug("Detected Gnome Version: %s", gnome_version)
             return gnome_version
-
-    @abc.abstractmethod
-    def _is_compatible(self) -> bool:
-        ...  # pragma: no cover
 
     @staticmethod
     @abc.abstractmethod
     def _copy(text: str) -> None:
+        ...  # pragma: no cover
+
+    @abc.abstractmethod
+    def is_compatible(self) -> bool:
+        """Check if the system theoretically could to use this method.
+
+        Returns:
+            System could be capable of using this method
+        """
+        ...  # pragma: no cover
+
+    @abc.abstractmethod
+    def is_installed(self) -> bool:
+        """Check if the dependencies (binaries) for this method are available.
+
+        Returns:
+            System has all necessary dependencies
+        """
         ...  # pragma: no cover

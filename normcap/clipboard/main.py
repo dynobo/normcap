@@ -67,15 +67,46 @@ def copy(text: str) -> bool:
         text: Text to be copied.
 
     Returns:
-        If an error has occurred and the text likely was not copied correctly.
+        False, if an error has occurred and the text likely was not copied correctly.
+        True, if no error occurred. Note that this is no guarantee that the text was
+        actually copied, as it still depends on system capabilities.
     """
-    for handler in ClipboardHandlers:
-        if not handler.value.is_compatible:
-            logger.debug("Skipping incompatible clipboard handler '%s'", handler.name)
-            continue
-
-        if copy_with_handler(text=text, handler_name=handler.name):
+    for handler in get_available_handlers():
+        if copy_with_handler(text=text, handler_name=handler):
             return True
 
     logger.error("Unable to copy text to clipboard! (Increase log-level for details)")
     return False
+
+
+def get_available_handlers() -> list[str]:
+    compatible_handlers = [h.name for h in ClipboardHandlers if h.value.is_compatible()]
+    logger.debug("Compatible clipboard handlers: %s", compatible_handlers)
+
+    available_handlers = [
+        n for n in compatible_handlers if ClipboardHandlers[n].value.is_installed()
+    ]
+    logger.debug("Available clipboard handlers: %s", available_handlers)
+
+    if not compatible_handlers:
+        logger.error(
+            "None of the implemented clipboard handlers is compatible with this system!"
+        )
+    elif not available_handlers:
+        logger.error(
+            "No working clipboard handler found for your system. "
+            "The preferred clipboard handler on your system would be '%s' but can't be "
+            "used due to missing dependencies. %s",
+            compatible_handlers[0],
+            ClipboardHandlers[compatible_handlers[0]].value.install_instructions,
+        )
+    elif compatible_handlers[0] != available_handlers[0]:
+        logger.warning(
+            "The preferred clipboard handler on your system would be '%s' but can't be "
+            "used due to missing dependencies. "
+            "If you experience any problems with the clipboard handling: %s",
+            compatible_handlers[0],
+            ClipboardHandlers[compatible_handlers[0]].value.install_instructions,
+        )
+
+    return available_handlers

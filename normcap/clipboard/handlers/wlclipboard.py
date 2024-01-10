@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 
 class WlCopyHandler(ClipboardHandlerBase):
+    install_instructions = (
+        "Please install the package 'wl-clipboard' with your system's package manager."
+    )
+
     @staticmethod
     def _copy(text: str) -> None:
         """Use wl-clipboard package to copy text to system clipboard."""
@@ -25,7 +29,7 @@ class WlCopyHandler(ClipboardHandlerBase):
             timeout=5,
         )
 
-    def _is_compatible(self) -> bool:
+    def is_compatible(self) -> bool:
         if not self._os_has_wayland_display_manager():
             logger.debug(
                 "%s is not compatible on non-Linux systems and on Linux w/o Wayland",
@@ -37,18 +41,18 @@ class WlCopyHandler(ClipboardHandlerBase):
             logger.debug("%s is not compatible with Awesome WM", self.name)
             return False
 
-        if self._get_gnome_version().startswith("45."):
-            logger.debug("%s is not compatible with Gnome 45", self.name)
+        gnome_version = self._get_gnome_version()
+        if gnome_version.startswith("45."):
+            logger.debug("%s is not compatible with Gnome %s", self.name, gnome_version)
             return False
 
+        logger.debug("%s is compatible", self.name)
+        return True
+
+    def is_installed(self) -> bool:
         if not (wl_copy_bin := shutil.which("wl-copy")):
-            logger.debug("%s is not compatible: wl-copy was not found", self.name)
-            logger.warning(
-                "Your Linux runs with Wayland. Please install the system "
-                "package 'wl-clipboard' to ensure that text can be copied to "
-                "the clipboard correctly"
-            )
+            logger.debug("%s is not installed: wl-copy was not found", self.name)
             return False
 
-        logger.debug("%s is compatible (%s)", self.name, wl_copy_bin)
+        logger.debug("%s dependencies are installed (%s)", self.name, wl_copy_bin)
         return True

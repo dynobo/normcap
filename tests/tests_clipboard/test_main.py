@@ -16,7 +16,7 @@ def test_copy_without_compatible_handler_fails(monkeypatch):
         monkeypatch.setattr(
             clipboard.ClipboardHandlers[handler.name].value,
             "is_compatible",
-            False,
+            lambda: False,
         )
 
     # WHEN text is copied to the clipboard

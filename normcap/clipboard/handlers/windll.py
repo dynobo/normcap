@@ -182,10 +182,14 @@ class WindllHandler(ClipboardHandlerBase):
 
         copy_windows(text)
 
-    def _is_compatible(self) -> bool:
+    def is_compatible(self) -> bool:
         if sys.platform != "win32":
             logger.debug("%s is incompatible on non-Windows systems", self.name)
             return False
 
         logger.debug("%s is compatible", self.name)
+        return True
+
+    def is_installed(self) -> bool:
+        logger.debug("%s requires no dependencies", self.name)
         return True

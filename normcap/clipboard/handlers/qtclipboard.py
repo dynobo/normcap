@@ -22,7 +22,7 @@ class QtCopyHandler(ClipboardHandlerBase):
         cb.setText(text)
         app.processEvents()
 
-    def _is_compatible(self) -> bool:
+    def is_compatible(self) -> bool:
         if not QtGui:
             logger.debug("%s is not compatible on systems w/o PySide6", self.name)
             return False
@@ -32,4 +32,8 @@ class QtCopyHandler(ClipboardHandlerBase):
             return False
 
         logger.debug("%s is compatible", self.name)
+        return True
+
+    def is_installed(self) -> bool:
+        logger.debug("%s requires no dependencies", self.name)
         return True
