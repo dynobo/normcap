@@ -2,9 +2,13 @@
 
 # Changelog
 
-## v0.5.4 (upcoming)
+## v0.5.4 (2024-01-15)
 
+- All: Fix duplicate capture window if started twice
+  ([#580](https://github.com/dynobo/normcap/issues/580))
 - Linux: Improve robustness of window positioning on Wayland.
+- Linux: Improve debug output regarding clipboard methods.
+  ([#581](https://github.com/dynobo/normcap/issues/581))
 
 ## v0.5.3 (2024-01-04)
 
