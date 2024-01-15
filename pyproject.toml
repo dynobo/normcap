@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "normcap"
-version = "0.5.3"
+version = "0.5.4"
 description = "OCR-powered screen-capture tool to capture information instead of images."
 keywords = ["screenshot", "ocr", "capture", "clipboard"]
 readme = "README.md"
@@ -221,7 +221,7 @@ max_cluster_size = 1
 [tool.briefcase]
 project_name = "NormCap"
 bundle = "eu.dynobo"
-version = "0.5.3"
+version = "0.5.4"
 url = "https://github.com/dynobo/normcap"
 license = "GPLv3"
 author = 'dynobo'
@@ -335,7 +335,7 @@ use_full_install_path = false
 
 
 [tool.tbump.version]
-current = "0.5.3"
+current = "0.5.4"
 regex = '''
   (?P<major>\d+)
   \.
