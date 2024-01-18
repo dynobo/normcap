@@ -177,14 +177,16 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if not self._socket_in:
             return
 
-        message = self._socket_in.readAll()
-        # TODO: Test if `is message` check is necessary
-        if message and message.data().decode("utf-8", errors="ignore") == "capture":
-            logger.info("Received socket signal to capture.")
-            if self.windows:
-                logger.debug("Capture window(s) already open. Doing nothing.")
-                return
-            self._show_windows(delay_screenshot=True)
+        message = self._socket_in.readAll().data().decode("utf-8", errors="ignore")
+        if message != "capture":
+            return
+
+        logger.info("Received socket signal to capture.")
+        if self.windows:
+            logger.debug("Capture window(s) already open. Doing nothing.")
+            return
+
+        self._show_windows(delay_screenshot=True)
 
     @QtCore.Slot(QtWidgets.QSystemTrayIcon.ActivationReason)
     def _handle_tray_click(

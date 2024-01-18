@@ -8,34 +8,35 @@ from PySide6 import QtGui, QtWidgets
 
 from normcap.gui import notification
 from normcap.gui.models import Capture, CaptureMode, Rect
+from normcap.ocr.models import Magic
 
 
 @pytest.mark.parametrize(
     ("ocr_magic", "ocr_text", "output_title", "output_text"),
     [
-        ("SingleLineMagic", "", "Nothing captured", "Please try again"),
+        (Magic.SINGLE_LINE, "", "Nothing captured", "Please try again"),
         (
-            "ParagraphMagic",
+            Magic.PARAGRAPH,
             f"P1{os.linesep * 2}P2{os.linesep * 2}P3",
             "3 paragraphs",
             "P1 P2 P3",
         ),
-        ("ParagraphMagic", "P1", "1 paragraph ", "P1"),
-        ("EmailMagic", "a@aa.de, b@bb.de", "2 emails", "a@aa.de, b@bb.de"),
+        (Magic.PARAGRAPH, "P1", "1 paragraph ", "P1"),
+        (Magic.MAIL, "a@aa.de, b@bb.de", "2 emails", "a@aa.de, b@bb.de"),
         (
-            "SingleLineMagic",
+            Magic.SINGLE_LINE,
             f"{'a' * 15} {'b' * 15} {'c' * 15}",
             "3 words ",
             f"{'a' * 15} {'b' * 15} [...]",
         ),
         (
-            "MultiLineMagic",
+            Magic.MULTI_LINE,
             f"L1{os.linesep}L2{os.linesep}L3{os.linesep}L4",
             "4 lines",
             "L1 L2 L3 L4",
         ),
         (
-            "UrlMagic",
+            Magic.URL,
             f"www.aaa.de{os.linesep}www.bbb.de",
             "2 URLs",
             "www.aaa.de www.bbb.de",
@@ -233,7 +234,7 @@ def test_send_notification(monkeypatch):
 
     capture = Capture(
         ocr_text="text",
-        ocr_magic="SingleLineMagic",
+        ocr_magic=Magic.SINGLE_LINE,
         mode=CaptureMode.PARSE,
         image=QtGui.QImage(),
         screen=None,
@@ -281,27 +282,27 @@ def test_send_notification(monkeypatch):
 @pytest.mark.parametrize(
     ("ocr_text", "applied_magic", "expected_urls"),
     [
-        ("1@test.tld", "EmailMagic", ["mailto:1@test.tld"]),
-        ("1@test.tld, 2@test.tld", "EmailMagic", ["mailto:1@test.tld;2@test.tld"]),
-        ("http://1.test.ltd", "UrlMagic", ["http://1.test.ltd"]),
+        ("1@test.tld", Magic.MAIL, ["mailto:1@test.tld"]),
+        ("1@test.tld, 2@test.tld", Magic.MAIL, ["mailto:1@test.tld;2@test.tld"]),
+        ("http://1.test.ltd", Magic.URL, ["http://1.test.ltd"]),
         (
             "http://1.test.ltd \n http://2.test.ltd",
-            "UrlMagic",
+            Magic.URL,
             ["http://1.test.ltd", "http://2.test.ltd"],
         ),
         (
             "test test\ntest",
-            "ParagraphMagic",
+            Magic.PARAGRAPH,
             [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
         ),
         (
             "test",
-            "SingleLineMagic",
+            Magic.SINGLE_LINE,
             [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
         ),
         (
             "test\ntest",
-            "MultiLineMagic",
+            Magic.MULTI_LINE,
             [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
         ),
         (

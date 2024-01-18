@@ -8,6 +8,8 @@ from typing import Any, Callable, NamedTuple, Optional, Union
 
 from PySide6 import QtGui
 
+from normcap.ocr.models import Magic
+
 logger = logging.getLogger(__name__)
 
 # Type aliases
@@ -26,25 +28,23 @@ class Setting(NamedTuple):
     nargs: Union[int, str, None]
 
 
-@enum.unique
 class DesktopEnvironment(enum.IntEnum):
     """Desktop environments that need to be handled."""
 
-    OTHER = 0
-    GNOME = 1
-    KDE = 2
-    SWAY = 3
-    UNITY = 4
-    HYPRLAND = 5
-    AWESOME = 6
+    OTHER = enum.auto()
+    GNOME = enum.auto()
+    KDE = enum.auto()
+    SWAY = enum.auto()
+    UNITY = enum.auto()
+    HYPRLAND = enum.auto()
+    AWESOME = enum.auto()
 
 
-@enum.unique
 class CaptureMode(enum.IntEnum):
     """Available modes of magic."""
 
-    RAW = 0
-    PARSE = 1
+    RAW = enum.auto()
+    PARSE = enum.auto()
 
 
 @dataclass
@@ -161,7 +161,7 @@ class Capture:
     rect: Rect = field(default_factory=lambda: Rect(left=0, top=0, right=0, bottom=0))
 
     ocr_text: Optional[str] = None
-    ocr_magic: Optional[str] = None
+    ocr_magic: Optional[Magic] = None
 
     @property
     def image_area(self) -> int:

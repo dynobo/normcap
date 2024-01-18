@@ -10,24 +10,24 @@ from normcap.ocr.magics.multi_line_magic import MultiLineMagic
 from normcap.ocr.magics.paragraph_magic import ParagraphMagic
 from normcap.ocr.magics.single_line_magic import SingleLineMagic
 from normcap.ocr.magics.url_magic import UrlMagic
-from normcap.ocr.models import OcrResult
+from normcap.ocr.models import Magic, OcrResult
 
 logger = logging.getLogger(__name__)
 
 
-class Magic:
+class Parser:
     """Load available magics, scores, and trigger magic with highest score.
 
     Arguments:
         AbstractHandler {[type]} -- [description]
     """
 
-    _magics: ClassVar[dict[str, BaseMagic]] = {
-        "SingleLineMagic": SingleLineMagic(),
-        "MultiLineMagic": MultiLineMagic(),
-        "ParagraphMagic": ParagraphMagic(),
-        "EmailMagic": EmailMagic(),
-        "UrlMagic": UrlMagic(),
+    _magics: ClassVar[dict[Magic, BaseMagic]] = {
+        Magic.SINGLE_LINE: SingleLineMagic(),
+        Magic.MULTI_LINE: MultiLineMagic(),
+        Magic.PARAGRAPH: ParagraphMagic(),
+        Magic.MAIL: EmailMagic(),
+        Magic.URL: UrlMagic(),
     }
 
     def apply(self, ocr_result: OcrResult) -> OcrResult:
@@ -69,7 +69,7 @@ class Magic:
         text = re.sub(r"[‚‘’‛]", "'", text)  # noqa: RUF001  # ambiguous string
         return text  # noqa: RET504  # unnecessary return for clarity
 
-    def _calc_scores(self, ocr_result: OcrResult) -> dict[str, float]:
+    def _calc_scores(self, ocr_result: OcrResult) -> dict[Magic, float]:
         """Calculate score for every loaded magic.
 
         Arguments:

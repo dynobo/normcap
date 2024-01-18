@@ -1,13 +1,14 @@
+import enum
 import os
 from dataclasses import dataclass, field
-from enum import IntEnum
 from os import PathLike
 from typing import Optional
 
 from PySide6.QtGui import QImage
 
 
-class PSM(IntEnum):
+@enum.unique
+class PSM(enum.IntEnum):
     """Available tesseract mode options."""
 
     OSD_ONLY = 0  # Orientation and script detection (OSD) only.
@@ -27,7 +28,8 @@ class PSM(IntEnum):
     COUNT = 14  # Number of enum entries.
 
 
-class OEM(IntEnum):
+@enum.unique
+class OEM(enum.IntEnum):
     """Available tesseract model options."""
 
     TESSERACT_ONLY = 0  # Run Tesseract only - fastest
@@ -35,6 +37,14 @@ class OEM(IntEnum):
     TESSERACT_LSTM_COMBINED = 2  # Run the LSTM recognizer, but allow fallback
     # to Tesseract when things get difficult. (>=v4.00)
     DEFAULT = 3  # Run both and combine results - best accuracy.
+
+
+class Magic(enum.IntEnum):
+    SINGLE_LINE = enum.auto()
+    MULTI_LINE = enum.auto()
+    PARAGRAPH = enum.auto()
+    MAIL = enum.auto()
+    URL = enum.auto()
 
 
 @dataclass
@@ -84,8 +94,7 @@ class OcrResult:
     tess_args: TessArgs
     words: list[dict]  # Words+metadata detected by OCR
     image: QImage
-    # TODO: Use Enum instead str for identifying magics
-    magic_scores: dict[str, float] = field(default_factory=dict)  # magics with scores
+    magic_scores: dict[Magic, float] = field(default_factory=dict)  # magics with scores
     parsed: str = ""  # Transformed result
 
     def _count_unique_sections(self, level: str) -> int:
@@ -94,7 +103,7 @@ class OcrResult:
         return len(unique_sections)
 
     @property
-    def best_scored_magic(self) -> Optional[str]:
+    def best_scored_magic(self) -> Optional[Magic]:
         """Magic with highest score."""
         if self.magic_scores:
             return max(self.magic_scores, key=lambda k: self.magic_scores[k])
