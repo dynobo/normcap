@@ -159,10 +159,12 @@ class Window(QtWidgets.QMainWindow):
 
         self.showFullScreen()
 
-        if system_info.display_manager_is_wayland():
-            self._move_to_position_on_wayland()
-
         self.setFocus()
+
+        if system_info.display_manager_is_wayland():
+            # Movement is delayed to ensure the window is fully active and
+            # registered within the window manager
+            QtCore.QTimer.singleShot(20, lambda: self._move_to_position_on_wayland())
 
     def clear_selection(self) -> None:
         self.selection_rect = QtCore.QRect()

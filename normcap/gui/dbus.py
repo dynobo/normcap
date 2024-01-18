@@ -193,6 +193,7 @@ def move_windows_via_window_calls_extension(title_id: str, position: Rect) -> bo
                 window_title = response[0]
                 if window_title == title_id:
                     window_id = window["id"]
+                    break
 
             response = proxy.move_resize(
                 window_id,
