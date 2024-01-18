@@ -7,9 +7,9 @@ basic features.
 By toggling a checkbox, the user can opt out of showing the screen on startup.
 """
 
+import enum
 import sys
 from dataclasses import dataclass
-from enum import IntEnum
 from pathlib import Path
 from typing import Optional
 
@@ -25,7 +25,7 @@ class Section:
     image: Path
 
 
-class Choice(IntEnum):
+class Choice(enum.IntEnum):
     """Return codes of the Dialog.
 
     As 0 is default for closing the Dialog (through X or shortcut), we use different

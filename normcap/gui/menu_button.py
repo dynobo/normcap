@@ -140,7 +140,6 @@ class MenuButton(QtWidgets.QToolButton):
         group = action.actionGroup()
         group_name = group.objectName() if group else None
         value: Optional[Any] = None
-        setting = None
 
         # Menu items which trigger actions
 

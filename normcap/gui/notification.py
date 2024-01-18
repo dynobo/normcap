@@ -13,6 +13,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from normcap.gui import system_info
 from normcap.gui.localization import _, translate
 from normcap.gui.models import Capture, CaptureMode
+from normcap.ocr.models import Magic
 
 logger = logging.getLogger(__name__)
 
@@ -47,35 +48,35 @@ class Notifier(QtCore.QObject):
         text = textwrap.shorten(text, width=45)
 
         # Compose message title
-        if capture.ocr_magic == "ParagraphMagic":
+        if capture.ocr_magic == Magic.PARAGRAPH:
             count = capture.ocr_text.count(os.linesep * 2) + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 paragraph captured", "{count} paragraphs captured", count
             ).format(count=count)
-        elif capture.ocr_magic == "EmailMagic":
+        elif capture.ocr_magic == Magic.MAIL:
             count = capture.ocr_text.count("@")
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 email captured", "{count} emails captured", count
             ).format(count=count)
-        elif capture.ocr_magic == "SingleLineMagic":
+        elif capture.ocr_magic == Magic.SINGLE_LINE:
             count = capture.ocr_text.count(" ") + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 word captured", "{count} words captured", count
             ).format(count=count)
-        elif capture.ocr_magic == "MultiLineMagic":
+        elif capture.ocr_magic == Magic.MULTI_LINE:
             count = capture.ocr_text.count(os.linesep) + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 line captured", "{count} lines captured", count
             ).format(count=count)
-        elif capture.ocr_magic == "UrlMagic":
+        elif capture.ocr_magic == Magic.URL:
             count = capture.ocr_text.count(os.linesep) + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -152,7 +153,7 @@ class Notifier(QtCore.QObject):
         title: str,
         message: str,
         ocr_text: Optional[str],
-        ocr_magic: Optional[str],
+        ocr_magic: Optional[Magic],
     ) -> None:
         """Send via QSystemTrayIcon.
 
@@ -192,13 +193,13 @@ class Notifier(QtCore.QObject):
         parent.showMessage(title, message, QtGui.QIcon(":notification"))
 
     @staticmethod
-    def _open_ocr_result(text: str, applied_magic: Optional[str]) -> None:
+    def _open_ocr_result(text: str, applied_magic: Optional[Magic]) -> None:
         logger.debug("Notification clicked.")
 
         urls = []
-        if applied_magic == "UrlMagic":
+        if applied_magic == Magic.URL:
             urls = text.split()
-        elif applied_magic == "EmailMagic":
+        elif applied_magic == Magic.MAIL:
             urls = [f'mailto:{text.replace(",", ";").replace(" ", "")}']
         else:
             temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.txt"

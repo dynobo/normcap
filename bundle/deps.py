@@ -15,16 +15,15 @@ import sys
 from pathlib import Path
 
 
-@enum.unique
 class System(enum.IntEnum):
-    WINDOWS = 0
-    MACOS = 1
-    UBUNTU_XORG = 2
-    UBUNTU_WAYLAND = 3
-    FEDORA_XORG = 4
-    FEDORA_WAYLAND = 5
-    MANJARO_XORG = 6
-    MANJARO_WAYLAND = 7
+    WINDOWS = enum.auto()
+    MACOS = enum.auto()
+    UBUNTU_XORG = enum.auto()
+    UBUNTU_WAYLAND = enum.auto()
+    FEDORA_XORG = enum.auto()
+    FEDORA_WAYLAND = enum.auto()
+    MANJARO_XORG = enum.auto()
+    MANJARO_WAYLAND = enum.auto()
 
 
 def run(cmd: str, check: bool = True) -> str:

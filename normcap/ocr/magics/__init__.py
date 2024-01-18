@@ -1,3 +1,3 @@
-from ..magic import Magic
+from ..parser import Parser
 
-__all__ = ["Magic"]
+__all__ = ["Parser"]

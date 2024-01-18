@@ -1,12 +1,12 @@
+import enum
 import logging
-from enum import Enum
 
 from .handlers import pbcopy, qtclipboard, windll, wlclipboard, xclip
 
 logger = logging.getLogger(__name__)
 
 
-class ClipboardHandlers(Enum):
+class ClipboardHandlers(enum.Enum):
     """All supported clipboard handlers.
 
     The handlers are ordered by preference: copy() tries them from top to bottom
