@@ -5,7 +5,8 @@ import uuid
 
 import pytest
 
-from normcap.clipboard.handlers import base, wlclipboard
+from normcap.clipboard import system_info
+from normcap.clipboard.handlers import wlclipboard
 
 
 @pytest.mark.parametrize(
@@ -26,12 +27,10 @@ def test_wlcopy_is_compatible(
 ):
     monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
     monkeypatch.setenv("XDG_SESSION_TYPE", xdg_session_type)
-    monkeypatch.setattr(base.sys, "platform", platform)
-    monkeypatch.setattr(
-        base.ClipboardHandlerBase, "_get_gnome_version", lambda *_: gnome_version
-    )
+    monkeypatch.setattr(system_info.sys, "platform", platform)
+    monkeypatch.setattr(system_info, "get_gnome_version", lambda *_: gnome_version)
 
-    assert wlclipboard.WlCopyHandler().is_compatible() == result
+    assert wlclipboard.is_compatible() == result
 
 
 @pytest.mark.parametrize(
@@ -42,12 +41,12 @@ def test_wlcopy_is_compatible(
     ],
 )
 def test_wlcopy_is_installed(platform, has_wlcopy, result, monkeypatch):
-    monkeypatch.setattr(base.sys, "platform", platform)
+    monkeypatch.setattr(system_info.sys, "platform", platform)
     monkeypatch.setattr(
         wlclipboard.shutil, "which", lambda *args: "wl-copy" in args and has_wlcopy
     )
 
-    assert wlclipboard.WlCopyHandler().is_installed() == result
+    assert wlclipboard.is_installed() == result
 
 
 # ONHOLD: Check if wl-copy works on Gnome 45 without the need to click on notification.
@@ -58,7 +57,7 @@ def test_wlcopy_is_installed(platform, has_wlcopy, result, monkeypatch):
 def test_wlcopy_copy():
     text = f"this is a unique test {uuid.uuid4()}"
 
-    result = wlclipboard.WlCopyHandler().copy(text=text)
+    wlclipboard.copy(text=text)
 
     with subprocess.Popen(
         ["wl-paste"],  # noqa: S603, S607
@@ -67,12 +66,11 @@ def test_wlcopy_copy():
         stdout = p.communicate()[0]
     clipped = stdout.decode("utf-8").strip()
 
-    assert result is True
     assert text == clipped
 
 
 @pytest.mark.skipif(True, reason="Buggy in Gnome 45")
 @pytest.mark.skipif(sys.platform == "linux", reason="Non-Linux specific test")
 def test_wlcopy_copy_on_non_linux():
-    result = wlclipboard.WlCopyHandler().copy(text="this is a test")
-    assert result is False
+    with pytest.raises((FileNotFoundError, OSError)):
+        wlclipboard.copy(text="this is a test")

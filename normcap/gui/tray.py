@@ -325,7 +325,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             logger.debug("Nothing there to be copied to clipboard!")
         elif self.clipboard_handler_name:
             logger.debug(
-                "Copy text to clipboard with '%s'", self.clipboard_handler_name
+                "Copy text to clipboard with %s", self.clipboard_handler_name.upper()
             )
             clipboard.copy_with_handler(
                 text=self.capture.ocr_text, handler_name=self.clipboard_handler_name

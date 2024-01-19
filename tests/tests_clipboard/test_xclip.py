@@ -5,7 +5,8 @@ import uuid
 
 import pytest
 
-from normcap.clipboard.handlers import base, xclip
+from normcap.clipboard import system_info
+from normcap.clipboard.handlers import xclip
 
 
 @pytest.mark.parametrize(
@@ -28,12 +29,12 @@ def test_xclip_is_compatible(
     monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
     monkeypatch.setenv("XDG_SESSION_TYPE", xdg_session_type)
 
-    monkeypatch.setattr(base.sys, "platform", platform)
+    monkeypatch.setattr(system_info.sys, "platform", platform)
     monkeypatch.setattr(
         xclip.shutil, "which", lambda *args: "xclip" in args and has_xclip
     )
 
-    assert xclip.XclipCopyHandler().is_compatible() == result
+    assert xclip.is_compatible() == result
 
 
 @pytest.mark.skipif(not shutil.which("xclip"), reason="Needs xclip")
@@ -41,7 +42,7 @@ def test_xclip_is_compatible(
 def test_xclip_copy():
     text = f"this is a unique test {uuid.uuid4()}"
 
-    result = xclip.XclipCopyHandler().copy(text=text)
+    xclip.copy(text=text)
 
     with subprocess.Popen(
         ["xclip", "-selection", "clipboard", "-out"],  # noqa: S603, S607
@@ -50,11 +51,10 @@ def test_xclip_copy():
         stdout = p.communicate()[0]
     clipped = stdout.decode("utf-8").strip()
 
-    assert result is True
     assert text == clipped
 
 
 @pytest.mark.skipif(sys.platform == "linux", reason="Non-Linux specific test")
 def test_xclip_copy_on_non_linux():
-    result = xclip.XclipCopyHandler().copy(text="this is a test")
-    assert result is False
+    with pytest.raises((FileNotFoundError, OSError)):
+        xclip.copy(text="this is a test")

@@ -33,13 +33,13 @@ def clipboard_blocked():
 )
 def test_windll_is_compatible(monkeypatch, platform, result):
     monkeypatch.setattr(windll.sys, "platform", platform)
-    assert windll.WindllHandler().is_compatible() == result
+    assert windll.is_compatible() == result
 
 
 @pytest.mark.skipif(sys.platform != "win32", reason="Windows specific test")
 def test_windll_copy():
     text = "test"
-    result = windll.WindllHandler().copy(text=text)
+    windll.copy(text=text)
 
     with subprocess.Popen(
         ["powershell", "-command", "Get-Clipboard"],  # noqa: S603, S607
@@ -48,24 +48,16 @@ def test_windll_copy():
         stdout = p.communicate()[0]
     clipped = stdout.decode("utf-8").strip()
 
-    assert result is True
     assert text == clipped
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Non-Windows specific test")
 def test_windll_copy_on_non_win32():
-    result = windll.WindllHandler().copy(text="this is a test")
-    assert result is False
-
-
-@pytest.mark.skipif(sys.platform == "win32", reason="non-Windows specific test")
-def test_windll_copy_on_unsupported_platform_fails():
-    result = windll.WindllHandler().copy(text="test")
-    assert result is False
+    with pytest.raises(AttributeError):
+        windll.copy(text="this is a test")
 
 
 @pytest.mark.skipif(sys.platform != "win32", reason="Windows specific test")
 def test_windll_copy_with_blocked_clipboard_fails():
-    with clipboard_blocked():
-        result = windll.WindllHandler().copy(text="test")
-    assert result is False
+    with clipboard_blocked(), pytest.raises(RuntimeError):
+        windll.copy(text="test")

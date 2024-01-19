@@ -72,7 +72,7 @@ def get_gnome_version() -> Optional[str]:
             shell=False,  # noqa: S603
             text=True,
         )
-        if result := re.search(r"\s+([\d.]+)", output.strip()):
+        if result := re.search(r"\s+([\d\.]+)", output.strip()):
             gnome_version = result.groups()[0]
     except Exception as e:
         logger.warning("Exception when trying to get gnome version from cli %s", e)
