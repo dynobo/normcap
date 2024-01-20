@@ -7,10 +7,10 @@ from typing import Any, Optional, cast
 
 from PySide6 import QtGui, QtWidgets
 
-from normcap.screengrab import exceptions, utils
+from normcap.screengrab import structures, system_info
 
 try:
-    from normcap.screengrab import dbus_portal
+    from normcap.screengrab.handlers import dbus_portal
 
 except ImportError:
     dbus_portal = cast(Any, None)
@@ -199,8 +199,8 @@ def _dbus_portal_has_screenshot_permission() -> bool:
     try:
         result = dbus_portal.capture()
     except (
-        exceptions.ScreenshotPermissionError,
-        exceptions.ScreenshotTimeoutError,
+        structures.ScreenshotPermissionError,
+        structures.ScreenshotTimeoutError,
     ) as exc:
         logger.warning("Screenshot permissions on Wayland seem missing.", exc_info=exc)
     return len(result) > 0
@@ -225,9 +225,9 @@ def has_screenshot_permission() -> bool:
     logger.debug("Checking screenshot permission")
     if sys.platform == "darwin":
         return _macos_has_screenshot_permission()
-    if sys.platform == "linux" and not utils.is_wayland_display_manager():
+    if sys.platform == "linux" and not system_info.os_has_wayland_display_manager():
         return True
-    if sys.platform == "linux" and utils.is_wayland_display_manager():
+    if sys.platform == "linux" and system_info.os_has_wayland_display_manager():
         return _dbus_portal_has_screenshot_permission()
     if sys.platform == "win32":
         return True
@@ -245,14 +245,14 @@ def request_screenshot_permission(
         )
         return
 
-    if sys.platform == "linux" and not utils.is_wayland_display_manager():
+    if sys.platform == "linux" and not system_info.os_has_wayland_display_manager():
         logger.debug(
             "Not necessary to request screenshot permission on Linux, if the "
             "display manager is not Wayland. Skipping."
         )
         return
 
-    if sys.platform == "linux" and utils.is_wayland_display_manager():
+    if sys.platform == "linux" and system_info.os_has_wayland_display_manager():
         logger.debug("Show request permission dialog.")
         dbus_portal_show_request_permission_dialog(
             title=dialog_title, text=linux_dialog_text

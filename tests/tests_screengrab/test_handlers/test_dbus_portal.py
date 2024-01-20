@@ -4,11 +4,11 @@ import time
 
 import pytest
 
-from normcap.screengrab.exceptions import (
+from normcap.screengrab.permissions import has_screenshot_permission
+from normcap.screengrab.structures import (
     ScreenshotRequestError,
     ScreenshotResponseError,
 )
-from normcap.screengrab.permissions import has_screenshot_permission
 
 
 @pytest.mark.gui()

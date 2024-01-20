@@ -15,9 +15,11 @@ try:
 except ImportError:
     QtDBus = cast(Any, None)
 
-from normcap.screengrab.utils import split_full_desktop_to_screens
+from normcap.screengrab.post_processing import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)
+
+install_instructions = ""
 
 
 def _get_screenshot_interface():  # noqa: ANN202
@@ -47,6 +49,14 @@ def _fullscreen_to_file(filename: Union[os.PathLike, str]) -> None:
             logger.error(result.errorMessage())
     else:
         logger.error("Invalid dbus interface")
+
+
+def is_compatible() -> bool:
+    return True
+
+
+def is_installed() -> bool:
+    return True
 
 
 def capture() -> list[QtGui.QImage]:

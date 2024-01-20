@@ -10,19 +10,13 @@ logger = logging.getLogger(__name__)
 
 
 def os_has_wayland_display_manager() -> bool:
+    """Identify relevant display managers (Linux)."""
     if sys.platform != "linux":
         return False
 
     xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
     has_wayland_display_env = bool(os.environ.get("WAYLAND_DISPLAY", ""))
     return "wayland" in xdg_session_type or has_wayland_display_env
-
-
-def os_has_awesome_wm() -> bool:
-    if sys.platform != "linux":
-        return False
-
-    return "awesome" in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
 
 
 @functools.cache

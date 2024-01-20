@@ -12,16 +12,18 @@ import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import app
+from normcap.clipboard import system_info as clipboard_system_info
 from normcap.gui import menu_button, system_info
 from normcap.gui.models import Capture, CaptureMode, Rect
 from normcap.ocr.magics import email_magic, url_magic
 from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
-from normcap.screengrab import utils as screengrab_utils
+from normcap.screengrab import system_info as screengrab_system_info
 
 
 @pytest.fixture(autouse=True)
 def _clear_caches():
-    screengrab_utils.get_gnome_version.cache_clear()
+    screengrab_system_info.get_gnome_version.cache_clear()
+    clipboard_system_info.get_gnome_version.cache_clear()
     url_magic.UrlMagic._extract_urls.cache_clear()
     email_magic.EmailMagic._extract_emails.cache_clear()
     system_info.desktop_environment.cache_clear()
@@ -54,7 +56,7 @@ def menu_btn_without_lang_man(temp_settings):
 @pytest.fixture()
 def dbus_portal(qapp):
     try:
-        from normcap.screengrab import dbus_portal
+        from normcap.screengrab.handlers import dbus_portal
 
     except ImportError as e:
         raise RuntimeError(

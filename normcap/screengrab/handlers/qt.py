@@ -1,8 +1,21 @@
 import logging
+import sys
 
 from PySide6 import QtGui, QtWidgets
 
+from normcap.screengrab import system_info
+
 logger = logging.getLogger(__name__)
+
+install_instructions = ""
+
+
+def is_compatible() -> bool:
+    return sys.platform != "linux" or not system_info.os_has_wayland_display_manager()
+
+
+def is_installed() -> bool:
+    return True
 
 
 def capture() -> list[QtGui.QImage]:
