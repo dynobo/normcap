@@ -1,13 +1,13 @@
 import pytest
 from PySide6 import QtGui
 
-from normcap.screengrab import utils
-from normcap.screengrab.qt import capture
+from normcap.screengrab import system_info
+from normcap.screengrab.handlers.qt import capture
 
 
 @pytest.mark.gui()
 @pytest.mark.skipif(
-    utils.is_wayland_display_manager(), reason="Non-Wayland specific test"
+    system_info.os_has_wayland_display_manager(), reason="Non-Wayland specific test"
 )
 def test_capture_on_non_wayland(qapp):
     # GIVEN any operating system
@@ -22,7 +22,7 @@ def test_capture_on_non_wayland(qapp):
 
 @pytest.mark.gui()
 @pytest.mark.skipif(
-    not utils.is_wayland_display_manager(), reason="Wayland specific test"
+    not system_info.os_has_wayland_display_manager(), reason="Wayland specific test"
 )
 def test_capture_on_wayland(qapp):
     # GIVEN any operating system

@@ -1,5 +1,4 @@
-from normcap.screengrab import main
-from normcap.screengrab.main import capture
+from normcap.screengrab.main import Handler, capture, get_available_handlers
 from normcap.screengrab.permissions import (
     dbus_portal_show_request_permission_dialog,
     has_screenshot_permission,
@@ -9,11 +8,12 @@ from normcap.screengrab.permissions import (
 )
 
 __all__ = [
-    "dbus_portal_show_request_permission_dialog",
-    "request_screenshot_permission",
     "capture",
-    "main",
+    "dbus_portal_show_request_permission_dialog",
+    "get_available_handlers",
+    "Handler",
     "has_screenshot_permission",
-    "macos_show_request_permission_dialog",
     "macos_reset_screenshot_permission",
+    "macos_show_request_permission_dialog",
+    "request_screenshot_permission",
 ]

@@ -3,21 +3,24 @@
 import logging
 import random
 import re
+import sys
 from typing import Optional
 from urllib.parse import urlparse
 
 from PySide6 import QtCore, QtDBus, QtGui
 
-from normcap.screengrab.exceptions import (
+from normcap.screengrab import system_info
+from normcap.screengrab.post_processing import split_full_desktop_to_screens
+from normcap.screengrab.structures import (
     ScreenshotPermissionError,
     ScreenshotRequestError,
     ScreenshotResponseError,
     ScreenshotTimeoutError,
 )
-from normcap.screengrab.utils import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)
 
+install_instructions = ""
 
 # Note on Request Timeout:
 #
@@ -170,7 +173,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         self.on_result.emit(uri)
 
 
-def _synchronized_capture(interactive: bool) -> list[QtGui.QImage]:
+def _synchronized_capture(interactive: bool) -> QtGui.QImage:
     loop = QtCore.QEventLoop()
     result = []
     exceptions = []
@@ -200,8 +203,16 @@ def _synchronized_capture(interactive: bool) -> list[QtGui.QImage]:
         raise error
 
     uri = result[0]
-    full_image = QtGui.QImage(urlparse(uri).path)
-    return split_full_desktop_to_screens(full_image)
+    return QtGui.QImage(urlparse(uri).path)
+
+
+def is_compatible() -> bool:
+    return sys.platform == "linux"
+
+
+def is_installed() -> bool:
+    gnome_version = system_info.get_gnome_version()
+    return not gnome_version or gnome_version >= "41"
 
 
 def capture() -> list[QtGui.QImage]:
@@ -217,11 +228,9 @@ def capture() -> list[QtGui.QImage]:
     1. Try none-interactive mode
     2. If timeout triggers, retry in interactive mode with a helper window
     """
-    result: list[QtGui.QImage] = []
-
     try:
-        result = _synchronized_capture(interactive=False)
+        image = _synchronized_capture(interactive=False)
     except TimeoutError as exc:
         raise ScreenshotTimeoutError("Timeout when taking screenshot!") from exc
     else:
-        return result
+        return split_full_desktop_to_screens(image)
