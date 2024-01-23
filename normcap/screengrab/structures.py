@@ -50,23 +50,3 @@ class Handler(enum.IntEnum):
 
     # For linux with wayland, old variant, e.g. for Ubuntu 20.04
     DBUS_SHELL = enum.auto()
-
-
-class ScreenshotError(Exception):
-    ...
-
-
-class ScreenshotResponseError(ScreenshotError):
-    ...
-
-
-class ScreenshotRequestError(ScreenshotError):
-    ...
-
-
-class ScreenshotPermissionError(ScreenshotError):
-    ...
-
-
-class ScreenshotTimeoutError(ScreenshotError):
-    ...

@@ -7,7 +7,7 @@ from typing import Any, Optional, cast
 
 from PySide6 import QtGui, QtWidgets
 
-from normcap.screengrab import structures, system_info
+from normcap.screengrab import system_info
 
 try:
     from normcap.screengrab.handlers import dbus_portal
@@ -198,10 +198,7 @@ def _dbus_portal_has_screenshot_permission() -> bool:
     result = []
     try:
         result = dbus_portal.capture()
-    except (
-        structures.ScreenshotPermissionError,
-        structures.ScreenshotTimeoutError,
-    ) as exc:
+    except (PermissionError, TimeoutError) as exc:
         logger.warning("Screenshot permissions on Wayland seem missing.", exc_info=exc)
     return len(result) > 0
 
