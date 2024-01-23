@@ -7,7 +7,7 @@ from normcap.screengrab.handlers import grim
 from normcap.screengrab.structures import Handler
 
 
-def test_capture():
+def test_capture(qapp):
     # GIVEN any system (with display server)
     # WHEN screenshots are taken
     images = screengrab.capture()

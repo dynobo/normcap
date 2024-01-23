@@ -208,7 +208,8 @@ If NormCap doesn't fit your needs, try those alternatives (no particular order):
 - [Textinator](https://github.com/RhetTbull/textinator) (macOS)
 - [Text-Grab](https://github.com/TheJoeFin/Text-Grab) (Windows)
 - [dpScreenOCR](https://danpla.github.io/dpscreenocr/) (Linux, Windows)
-- [PowerToys Text Extractor](https://learn.microsoft.com/en-us/windows/powertoys/text-extractor) (Windows)
+- [PowerToys Text Extractor](https://learn.microsoft.com/en-us/windows/powertoys/text-extractor)
+  (Windows)
 
 ## Certification
 

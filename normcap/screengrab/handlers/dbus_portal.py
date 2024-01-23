@@ -11,12 +11,6 @@ from PySide6 import QtCore, QtDBus, QtGui
 
 from normcap.screengrab import system_info
 from normcap.screengrab.post_processing import split_full_desktop_to_screens
-from normcap.screengrab.structures import (
-    ScreenshotPermissionError,
-    ScreenshotRequestError,
-    ScreenshotResponseError,
-    ScreenshotTimeoutError,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -105,7 +99,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         else:
             msg = "No object path received from xdg-portal!"
             logger.error(msg)
-            self.on_exception.emit(ScreenshotRequestError(msg))
+            self.on_exception.emit(RuntimeError(msg))
 
     def _get_timeout_timer(self, timeout_sec: int) -> QtCore.QTimer:
         def _timeout_triggered() -> None:
@@ -130,13 +124,13 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         if code == permission_denied_code:
             msg = f"Permission denied for Screenshot via xdg-portal! Message: {message}"
             logger.error(msg)
-            self.on_exception.emit(ScreenshotPermissionError(msg))
+            self.on_exception.emit(PermissionError(msg))
             return
 
         if code != all_okay_code:
             msg = f"Error code {code} received from xdg-portal!"
             logger.error(msg)
-            self.on_exception.emit(ScreenshotResponseError(msg))
+            self.on_exception.emit(RuntimeError(msg))
             return
 
         logger.debug("Parse response")
@@ -166,7 +160,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         if not result:
             msg = f"Couldn't parse URI from message: {message}"
             logger.error(msg)
-            self.on_exception.emit(ScreenshotResponseError(message))
+            self.on_exception.emit(RuntimeError(message))
             return
 
         uri = result.group(1)
@@ -231,6 +225,6 @@ def capture() -> list[QtGui.QImage]:
     try:
         image = _synchronized_capture(interactive=False)
     except TimeoutError as exc:
-        raise ScreenshotTimeoutError("Timeout when taking screenshot!") from exc
+        raise TimeoutError("Timeout when taking screenshot!") from exc
     else:
         return split_full_desktop_to_screens(image)

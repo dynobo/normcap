@@ -5,10 +5,6 @@ import time
 import pytest
 
 from normcap.screengrab.permissions import has_screenshot_permission
-from normcap.screengrab.structures import (
-    ScreenshotRequestError,
-    ScreenshotResponseError,
-)
 
 
 @pytest.mark.gui()
@@ -32,7 +28,7 @@ def test_synchronized_capture_triggers_request_error(monkeypatch, dbus_portal):
     monkeypatch.setattr(
         dbus_portal.QtDBus.QDBusInterface, "call", _mocked_interface_call
     )
-    with pytest.raises(ScreenshotRequestError):
+    with pytest.raises(RuntimeError, match=r"[Nn]o object path"):
         _ = dbus_portal._synchronized_capture(interactive=False)
 
 
@@ -54,7 +50,7 @@ def test_synchronized_capture_triggers_response_error(monkeypatch, dbus_portal):
         "got_signal",
         _decorated_got_signal(dbus_portal.OrgFreedesktopPortalScreenshot.got_signal),
     )
-    with pytest.raises(ScreenshotResponseError):
+    with pytest.raises(RuntimeError, match=r"[Ee]rror code 1 received .* xdg-portal"):
         _ = dbus_portal._synchronized_capture(interactive=False)
 
 
