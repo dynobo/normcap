@@ -1,3 +1,3 @@
-from normcap.ocr import enhance, models, recognize, tesseract
+from normcap.ocr import recognize, structures, tesseract
 
-__all__ = ["recognize", "tesseract", "models", "enhance"]
+__all__ = ["recognize", "tesseract", "structures"]

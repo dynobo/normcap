@@ -1,6 +1,6 @@
 import pytest
 
-from normcap.ocr.magics.email_magic import EmailMagic
+from normcap.ocr.transformers import email
 
 
 @pytest.mark.parametrize(
@@ -14,11 +14,10 @@ from normcap.ocr.magics.email_magic import EmailMagic
         (("dyn@dyno",), ""),
     ],
 )
-def test_email_magic_transform(ocr_result, words, transformed_expected):
+def test_email_transformer_transform(ocr_result, words, transformed_expected):
     """Check some transformations from raw to url."""
     ocr_result.words = [{"text": w} for w in words]
-    magic = EmailMagic()
-    transformed = magic.transform(ocr_result)
+    transformed = email.transform(ocr_result)
 
     assert transformed == transformed_expected
 
@@ -34,9 +33,8 @@ def test_email_magic_transform(ocr_result, words, transformed_expected):
         (("dyn@dyno",), 0),
     ],
 )
-def test_email_magic_score(ocr_result, words, score_expected):
+def test_email_transformer_score(ocr_result, words, score_expected):
     ocr_result.words = [{"text": w} for w in words]
-    magic = EmailMagic()
-    score = magic.score(ocr_result)
+    score = email.score(ocr_result)
 
     assert score == score_expected

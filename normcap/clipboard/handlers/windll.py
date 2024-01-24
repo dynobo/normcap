@@ -35,7 +35,7 @@ class CheckedCall:
             raise RuntimeError(f"Error calling {self.f.__name__}")  # pragma: no cover
         return ret
 
-    def __setattr__(self, key: str, value: Any) -> None:  # noqa: ANN401
+    def __setattr__(self, key: str, value: Any) -> None:  # noqa: ANN401, D105
         setattr(self.f, key, value)
 
 

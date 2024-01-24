@@ -15,8 +15,8 @@ from normcap import app
 from normcap.clipboard import system_info as clipboard_system_info
 from normcap.gui import menu_button, system_info
 from normcap.gui.models import Capture, CaptureMode, Rect
-from normcap.ocr.magics import email_magic, url_magic
-from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
+from normcap.ocr.structures import OEM, PSM, OcrResult, TessArgs
+from normcap.ocr.transformers import email, url
 from normcap.screengrab import system_info as screengrab_system_info
 
 
@@ -24,8 +24,8 @@ from normcap.screengrab import system_info as screengrab_system_info
 def _clear_caches():
     screengrab_system_info.get_gnome_version.cache_clear()
     clipboard_system_info.get_gnome_version.cache_clear()
-    url_magic.UrlMagic._extract_urls.cache_clear()
-    email_magic.EmailMagic._extract_emails.cache_clear()
+    url._extract_urls.cache_clear()
+    email._extract_emails.cache_clear()
     system_info.desktop_environment.cache_clear()
     system_info.display_manager_is_wayland.cache_clear()
     system_info.get_tesseract_path.cache_clear()
@@ -76,7 +76,7 @@ def capture() -> Capture:
         mode=CaptureMode.PARSE,
         rect=Rect(20, 30, 220, 330),
         ocr_text="one two three",
-        ocr_magic=None,
+        ocr_transformer=None,
         image=image,
     )
 
@@ -92,7 +92,7 @@ def ocr_result() -> OcrResult:
             psm=PSM.AUTO,
         ),
         image=QtGui.QImage(),
-        magic_scores={},
+        transformer_scores={},
         parsed="",
         words=[
             {

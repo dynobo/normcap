@@ -1,6 +1,6 @@
 import os
 
-from normcap.ocr.models import OEM, PSM, TessArgs
+from normcap.ocr.structures import OEM, PSM, TessArgs
 
 
 def test_ocr_result(ocr_result):
@@ -16,9 +16,9 @@ def test_ocr_result(ocr_result):
     ocr_result.words = []
     assert ocr_result.mean_conf == 0
 
-    assert ocr_result.best_scored_magic is None
-    ocr_result.magic_scores = {"email": 1.0, "url": 0.7, "paragraph": 0}
-    assert ocr_result.best_scored_magic == "email"
+    assert ocr_result.best_scored_transformer is None
+    ocr_result.transformer_scores = {"email": 1.0, "url": 0.7, "paragraph": 0}
+    assert ocr_result.best_scored_transformer == "email"
 
 
 def test_tess_args_jpn():

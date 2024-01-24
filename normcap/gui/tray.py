@@ -87,6 +87,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.capture = Capture()
         self.installed_languages: list[str] = []
         self.settings = Settings(init_settings=args)
+
         self.clipboard_handler_name = args.get("clipboard_handler", None)
 
         # Handle special cli args
@@ -286,7 +287,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")
 
         self.capture.ocr_text = ocr_result.text
-        self.capture.ocr_magic = ocr_result.best_scored_magic
+        self.capture.ocr_transformer = ocr_result.best_scored_transformer
 
         logger.info("Text from OCR:\n%s", self.capture.ocr_text)
         if self.cli_mode:
