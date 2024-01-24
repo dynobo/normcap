@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from normcap.ocr.magics.paragraph_magic import ParagraphMagic
+from normcap.ocr.transformers import paragraph
 
 
 @pytest.mark.parametrize(
@@ -35,8 +35,7 @@ from normcap.ocr.magics.paragraph_magic import ParagraphMagic
 def test_url_paragraph_transforms(ocr_result, words, transformed_expected):
     """Check some transformations from raw to url."""
     ocr_result.words = words
-    magic = ParagraphMagic()
-    magic.score(ocr_result)
-    transformed = magic.transform(ocr_result)
+    paragraph.score(ocr_result)
+    transformed = paragraph.transform(ocr_result)
 
     assert transformed == transformed_expected

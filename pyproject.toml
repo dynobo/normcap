@@ -162,7 +162,6 @@ ignore = [
   "D102",   # Missing docstring in public method
   "D103",   # Missing docstring in public function
   "D104",   # Missing docstring in public package
-  "D105",   # Missing docstring in magic method
   "D107",   # Missing docstring in __init__
   "ANN101", # Missing type annotation for `self` in method
   "TRY003", # Avoid specifying long messages outside the exception class

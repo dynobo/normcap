@@ -8,7 +8,7 @@ from typing import Any, Callable, NamedTuple, Optional, Union
 
 from PySide6 import QtGui
 
-from normcap.ocr.models import Magic
+from normcap import ocr
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ class DesktopEnvironment(enum.IntEnum):
 
 
 class CaptureMode(enum.IntEnum):
-    """Available modes of magic."""
+    """Available transformation modes."""
 
     RAW = enum.auto()
     PARSE = enum.auto()
@@ -84,6 +84,7 @@ class Rect:
     bottom: int
 
     def __str__(self) -> str:
+        """Stringy to tuple of all four coordinates."""
         return (
             f"(left={self.left}, top={self.top}, "
             f"right={self.right}, bottom={self.bottom})"
@@ -161,7 +162,7 @@ class Capture:
     rect: Rect = field(default_factory=lambda: Rect(left=0, top=0, right=0, bottom=0))
 
     ocr_text: Optional[str] = None
-    ocr_magic: Optional[Magic] = None
+    ocr_transformer: Optional[ocr.structures.Transformer] = None
 
     @property
     def image_area(self) -> int:

@@ -1,5 +1,3 @@
-import re
-
 # Version 2023110500, Last Updated Sun Nov  5 07:07:02 2023 UTC
 # Source: https://data.iana.org/TLD/tlds-alpha-by-domain.txt
 TLDS = set(
@@ -1464,10 +1462,3 @@ ZUERICH
 ZW
 """.strip().splitlines()
 )
-
-
-def has_valid_tld(url: str) -> bool:
-    """Check if hostname ends with a valid TLD."""
-    match = re.search(r"(?:\.)([a-zA-Z]+)(?:\/|$)", url, re.IGNORECASE)
-    tld = match.group(1) if match else ""
-    return tld.upper() in TLDS

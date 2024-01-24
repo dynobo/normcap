@@ -7,9 +7,8 @@ from typing import Optional, Union
 
 from PySide6.QtGui import QImage
 
-from normcap.ocr import enhance, tesseract
-from normcap.ocr.magics import Parser
-from normcap.ocr.models import OEM, PSM, OcrResult, TessArgs
+from normcap.ocr import enhance, tesseract, transformer
+from normcap.ocr.structures import OEM, PSM, OcrResult, TessArgs
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +43,7 @@ def get_text_from_image(  # noqa: PLR0913
     logger.debug("OCR result:\n%s", result)
 
     if parse:
-        result = Parser().apply(result)
+        result = transformer.apply(result)
         logger.debug("Parsed text:\n%s", result.parsed)
 
     return result

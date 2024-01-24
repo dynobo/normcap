@@ -1,7 +1,7 @@
 import pytest
 
-from normcap.ocr.magics import Parser
-from normcap.ocr.models import Magic
+from normcap.ocr import transformer
+from normcap.ocr.structures import Transformer
 
 
 @pytest.mark.parametrize(
@@ -13,11 +13,11 @@ from normcap.ocr.models import Magic
                 {"text": "second", "block_num": 2, "par_num": 1, "line_num": 0},
             ),
             {
-                Magic.SINGLE_LINE: 50,
-                Magic.MULTI_LINE: 0,
-                Magic.PARAGRAPH: 50,
-                Magic.MAIL: 0,
-                Magic.URL: 0,
+                Transformer.SINGLE_LINE: 50,
+                Transformer.MULTI_LINE: 0,
+                Transformer.PARAGRAPH: 50,
+                Transformer.MAIL: 0,
+                Transformer.URL: 0,
             },
         ),
         (
@@ -32,22 +32,22 @@ from normcap.ocr.models import Magic
                 },
             ),
             {
-                Magic.SINGLE_LINE: 50,
-                Magic.MULTI_LINE: 0,
-                Magic.PARAGRAPH: 0,
-                Magic.MAIL: 0,
-                Magic.URL: 78,
+                Transformer.SINGLE_LINE: 50,
+                Transformer.MULTI_LINE: 0,
+                Transformer.PARAGRAPH: 0,
+                Transformer.MAIL: 0,
+                Transformer.URL: 78,
             },
         ),
     ],
 )
-def test_magic_apply_scores(ocr_result, words, scores_expected):
+def test_transformer_apply_scores(ocr_result, words, scores_expected):
     """Check some transformations from raw to url."""
     ocr_result.words = words
-    result = Parser().apply(ocr_result)
-    scores = result.magic_scores
+    result = transformer.apply(ocr_result)
+    scores = result.transformer_scores
 
-    for magic_name in scores:
-        assert scores[magic_name] == pytest.approx(
-            scores_expected[magic_name], abs=3
-        ), magic_name
+    for transformer_name in scores:
+        assert scores[transformer_name] == pytest.approx(
+            scores_expected[transformer_name], abs=3
+        ), transformer_name

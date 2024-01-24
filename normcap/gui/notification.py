@@ -10,12 +10,14 @@ from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
+from normcap import ocr
 from normcap.gui import system_info
 from normcap.gui.localization import _, translate
 from normcap.gui.models import Capture, CaptureMode
-from normcap.ocr.models import Magic
 
 logger = logging.getLogger(__name__)
+
+Transformer = ocr.structures.Transformer
 
 
 class Communicate(QtCore.QObject):
@@ -48,35 +50,35 @@ class Notifier(QtCore.QObject):
         text = textwrap.shorten(text, width=45)
 
         # Compose message title
-        if capture.ocr_magic == Magic.PARAGRAPH:
+        if capture.ocr_transformer == Transformer.PARAGRAPH:
             count = capture.ocr_text.count(os.linesep * 2) + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 paragraph captured", "{count} paragraphs captured", count
             ).format(count=count)
-        elif capture.ocr_magic == Magic.MAIL:
+        elif capture.ocr_transformer == Transformer.MAIL:
             count = capture.ocr_text.count("@")
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 email captured", "{count} emails captured", count
             ).format(count=count)
-        elif capture.ocr_magic == Magic.SINGLE_LINE:
+        elif capture.ocr_transformer == Transformer.SINGLE_LINE:
             count = capture.ocr_text.count(" ") + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 word captured", "{count} words captured", count
             ).format(count=count)
-        elif capture.ocr_magic == Magic.MULTI_LINE:
+        elif capture.ocr_transformer == Transformer.MULTI_LINE:
             count = capture.ocr_text.count(os.linesep) + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
             title = translate.ngettext(
                 "1 line captured", "{count} lines captured", count
             ).format(count=count)
-        elif capture.ocr_magic == Magic.URL:
+        elif capture.ocr_transformer == Transformer.URL:
             count = capture.ocr_text.count(os.linesep) + 1
             # L10N: Notification title.
             # Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -108,7 +110,7 @@ class Notifier(QtCore.QObject):
                 title=title,
                 message=message,
                 ocr_text=capture.ocr_text,
-                ocr_magic=capture.ocr_magic,
+                ocr_transformer=capture.ocr_transformer,
             )
         self.com.on_notification_sent.emit()
 
@@ -121,7 +123,7 @@ class Notifier(QtCore.QObject):
 
         A drawback is, that it's difficult to receive clicks on the notification
         like it's done with the Qt method. `notify-send` _is_ able to support this,
-        but it would require leaving the suprocess running and monitoring its output,
+        but it would require leaving the subprocess running and monitoring its output,
         which doesn't feel very solid.
 
         ONHOLD: Switch from notify-send to org.freedesktop.Notifications.
@@ -153,7 +155,7 @@ class Notifier(QtCore.QObject):
         title: str,
         message: str,
         ocr_text: Optional[str],
-        ocr_magic: Optional[Magic],
+        ocr_transformer: Optional[Transformer],
     ) -> None:
         """Send via QSystemTrayIcon.
 
@@ -186,20 +188,22 @@ class Notifier(QtCore.QObject):
         # It only makes sense to act on notification clicks, if we have a result.
         if ocr_text and len(ocr_text.strip()) >= 1:
             parent.messageClicked.connect(
-                lambda: self._open_ocr_result(text=ocr_text, applied_magic=ocr_magic)
+                lambda: self._open_ocr_result(
+                    text=ocr_text, applied_transformer=ocr_transformer
+                )
             )
 
         parent.show()
         parent.showMessage(title, message, QtGui.QIcon(":notification"))
 
     @staticmethod
-    def _open_ocr_result(text: str, applied_magic: Optional[Magic]) -> None:
+    def _open_ocr_result(text: str, applied_transformer: Optional[Transformer]) -> None:
         logger.debug("Notification clicked.")
 
         urls = []
-        if applied_magic == Magic.URL:
+        if applied_transformer == Transformer.URL:
             urls = text.split()
-        elif applied_magic == Magic.MAIL:
+        elif applied_transformer == Transformer.MAIL:
             urls = [f'mailto:{text.replace(",", ";").replace(" ", "")}']
         else:
             temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.txt"

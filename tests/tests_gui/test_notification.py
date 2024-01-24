@@ -8,51 +8,51 @@ from PySide6 import QtGui, QtWidgets
 
 from normcap.gui import notification
 from normcap.gui.models import Capture, CaptureMode, Rect
-from normcap.ocr.models import Magic
+from normcap.ocr.structures import Transformer
 
 
 @pytest.mark.parametrize(
-    ("ocr_magic", "ocr_text", "output_title", "output_text"),
+    ("ocr_transform", "ocr_text", "output_title", "output_text"),
     [
-        (Magic.SINGLE_LINE, "", "Nothing captured", "Please try again"),
+        (Transformer.SINGLE_LINE, "", "Nothing captured", "Please try again"),
         (
-            Magic.PARAGRAPH,
+            Transformer.PARAGRAPH,
             f"P1{os.linesep * 2}P2{os.linesep * 2}P3",
             "3 paragraphs",
             "P1 P2 P3",
         ),
-        (Magic.PARAGRAPH, "P1", "1 paragraph ", "P1"),
-        (Magic.MAIL, "a@aa.de, b@bb.de", "2 emails", "a@aa.de, b@bb.de"),
+        (Transformer.PARAGRAPH, "P1", "1 paragraph ", "P1"),
+        (Transformer.MAIL, "a@aa.de, b@bb.de", "2 emails", "a@aa.de, b@bb.de"),
         (
-            Magic.SINGLE_LINE,
+            Transformer.SINGLE_LINE,
             f"{'a' * 15} {'b' * 15} {'c' * 15}",
             "3 words ",
             f"{'a' * 15} {'b' * 15} [...]",
         ),
         (
-            Magic.MULTI_LINE,
+            Transformer.MULTI_LINE,
             f"L1{os.linesep}L2{os.linesep}L3{os.linesep}L4",
             "4 lines",
             "L1 L2 L3 L4",
         ),
         (
-            Magic.URL,
+            Transformer.URL,
             f"www.aaa.de{os.linesep}www.bbb.de",
             "2 URLs",
             "www.aaa.de www.bbb.de",
         ),
-        ("UnknownMagic", "W1 W2 W3", "", "W1 W2 W3"),
+        ("UnknownTransformer", "W1 W2 W3", "", "W1 W2 W3"),
         ("RAW", f"W1 W2{os.linesep}W3", "8 characters", "W1 W2 W3"),
     ],
 )
-def test_compose_notification(ocr_magic, ocr_text, output_title, output_text):
+def test_compose_notification(ocr_transform, ocr_text, output_title, output_text):
     # GIVEN a Notifier
     #   and an OCR capture with a certain results
     notifier = notification.Notifier(None)
     capture = Capture(
         ocr_text=ocr_text,
-        ocr_magic=ocr_magic,
-        mode=CaptureMode.PARSE if ocr_magic != "RAW" else CaptureMode.RAW,
+        ocr_transformer=ocr_transform,
+        mode=CaptureMode.PARSE if ocr_transform != "RAW" else CaptureMode.RAW,
         image=QtGui.QImage(),
         screen=None,
         scale_factor=1,
@@ -103,7 +103,7 @@ def test_send_via_qt_tray(qtbot):
 
     # WHEN a notification is sent via QT (QSystemTrayIcon)
     notifier._send_via_qt_tray(
-        title="Title", message="Message", ocr_text=None, ocr_magic=None
+        title="Title", message="Message", ocr_text=None, ocr_transformer=None
     )
 
     # THEN we expect no exception (it's hard to test, if the notification is shown)
@@ -120,7 +120,7 @@ def test_send_via_qt_tray_without_qsystemtrayicon_parent_raises(qtbot):
     # WHEN a notification is sent via QT (QSystemTrayIcon)
     with pytest.raises(TypeError, match="QSystemTrayIcon"):
         notifier._send_via_qt_tray(
-            title="Title", message="Message", ocr_text=None, ocr_magic=None
+            title="Title", message="Message", ocr_text=None, ocr_transformer=None
         )
 
     # THEN we expect an exception, as the parent has to be a QSystemTrayIcon
@@ -152,7 +152,7 @@ def test_send_via_qt_tray_handles_message_click(monkeypatch, qtbot):
         "title": "Title",
         "message": "Message",
         "ocr_text": "text_1",
-        "ocr_magic": "magic_1",
+        "ocr_transformer": "transformer_1",
     }
     notifier._send_via_qt_tray(**notification_data)
     notifier.parent().messageClicked.emit()
@@ -161,7 +161,10 @@ def test_send_via_qt_tray_handles_message_click(monkeypatch, qtbot):
     #    and with the expected kwargs
     assert len(open_ocr_result_calls) == 1
     assert open_ocr_result_calls[0]["text"] == notification_data["ocr_text"]
-    assert open_ocr_result_calls[0]["applied_magic"] == notification_data["ocr_magic"]
+    assert (
+        open_ocr_result_calls[0]["applied_transformer"]
+        == notification_data["ocr_transformer"]
+    )
 
 
 @pytest.mark.gui()
@@ -185,7 +188,10 @@ def test_send_via_qt_tray_reconnects_signal(monkeypatch, qtbot):
 
     notifier = notification.Notifier(tray)
     notifier._send_via_qt_tray(
-        title="Title", message="Message", ocr_text="text_1", ocr_magic="magic_1"
+        title="Title",
+        message="Message",
+        ocr_text="text_1",
+        ocr_transformer="transformer_1",
     )
 
     # WHEN a subsequent notification is sent via QT
@@ -194,7 +200,7 @@ def test_send_via_qt_tray_reconnects_signal(monkeypatch, qtbot):
         "title": "Title",
         "message": "Message",
         "ocr_text": "text_2",
-        "ocr_magic": "magic_2",
+        "ocr_transformer": "transformer_2",
     }
     notifier._send_via_qt_tray(**notification_data)
     notifier.parent().messageClicked.emit()
@@ -204,7 +210,10 @@ def test_send_via_qt_tray_reconnects_signal(monkeypatch, qtbot):
     #   because the first messageClick handler got cleared
     assert len(open_ocr_result_calls) == 1
     assert open_ocr_result_calls[0]["text"] == notification_data["ocr_text"]
-    assert open_ocr_result_calls[0]["applied_magic"] == notification_data["ocr_magic"]
+    assert (
+        open_ocr_result_calls[0]["applied_transformer"]
+        == notification_data["ocr_transformer"]
+    )
 
 
 def test_send_notification(monkeypatch):
@@ -218,14 +227,14 @@ def test_send_notification(monkeypatch):
     def mocked_libnotify(cls, title, message):
         result.append({"title": title, "message": message, "method": "libnotify"})
 
-    def mocked_qt_tray(cls, title, message, ocr_text, ocr_magic):
+    def mocked_qt_tray(cls, title, message, ocr_text, ocr_transformer):
         result.append(
             {
                 "title": title,
                 "message": message,
                 "method": "qt_tray",
                 "ocr_text": ocr_text,
-                "ocr_magic": ocr_magic,
+                "ocr_transformer": ocr_transformer,
             }
         )
 
@@ -234,7 +243,7 @@ def test_send_notification(monkeypatch):
 
     capture = Capture(
         ocr_text="text",
-        ocr_magic=Magic.SINGLE_LINE,
+        ocr_transformer=Transformer.SINGLE_LINE,
         mode=CaptureMode.PARSE,
         image=QtGui.QImage(),
         screen=None,
@@ -253,7 +262,7 @@ def test_send_notification(monkeypatch):
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
     assert result[-1]["ocr_text"] == capture.ocr_text
-    assert result[-1]["ocr_magic"] == capture.ocr_magic
+    assert result[-1]["ocr_transformer"] == capture.ocr_transformer
 
     # WHEN a notification signal is emitted on a system _with_ libnotify
     monkeypatch.setattr(notification.sys, "platform", "linux")
@@ -280,29 +289,29 @@ def test_send_notification(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    ("ocr_text", "applied_magic", "expected_urls"),
+    ("ocr_text", "applied_transformer", "expected_urls"),
     [
-        ("1@test.tld", Magic.MAIL, ["mailto:1@test.tld"]),
-        ("1@test.tld, 2@test.tld", Magic.MAIL, ["mailto:1@test.tld;2@test.tld"]),
-        ("http://1.test.ltd", Magic.URL, ["http://1.test.ltd"]),
+        ("1@test.tld", Transformer.MAIL, ["mailto:1@test.tld"]),
+        ("1@test.tld, 2@test.tld", Transformer.MAIL, ["mailto:1@test.tld;2@test.tld"]),
+        ("http://1.test.ltd", Transformer.URL, ["http://1.test.ltd"]),
         (
             "http://1.test.ltd \n http://2.test.ltd",
-            Magic.URL,
+            Transformer.URL,
             ["http://1.test.ltd", "http://2.test.ltd"],
         ),
         (
             "test test\ntest",
-            Magic.PARAGRAPH,
+            Transformer.PARAGRAPH,
             [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
         ),
         (
             "test",
-            Magic.SINGLE_LINE,
+            Transformer.SINGLE_LINE,
             [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
         ),
         (
             "test\ntest",
-            Magic.MULTI_LINE,
+            Transformer.MULTI_LINE,
             [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
         ),
         (
@@ -312,7 +321,7 @@ def test_send_notification(monkeypatch):
         ),
     ],
 )
-def test_open_ocr_result(monkeypatch, ocr_text, applied_magic, expected_urls):
+def test_open_ocr_result(monkeypatch, ocr_text, applied_transformer, expected_urls):
     # GIVEN a mocked Qt openUrl method
     urls = []
 
@@ -321,8 +330,10 @@ def test_open_ocr_result(monkeypatch, ocr_text, applied_magic, expected_urls):
 
     monkeypatch.setattr(notification.QtGui.QDesktopServices, "openUrl", mocked_openurl)
 
-    # WHEN the function is called with certain text and magic
-    notification.Notifier._open_ocr_result(text=ocr_text, applied_magic=applied_magic)
+    # WHEN the function is called with certain text and transformer
+    notification.Notifier._open_ocr_result(
+        text=ocr_text, applied_transformer=applied_transformer
+    )
 
     # THEN the expected urls should be in the format so openUrl would result in the
     #   correct action

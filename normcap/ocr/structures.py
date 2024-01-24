@@ -2,7 +2,7 @@ import enum
 import os
 from dataclasses import dataclass, field
 from os import PathLike
-from typing import Optional
+from typing import Optional, Protocol
 
 from PySide6.QtGui import QImage
 
@@ -39,7 +39,7 @@ class OEM(enum.IntEnum):
     DEFAULT = 3  # Run both and combine results - best accuracy.
 
 
-class Magic(enum.IntEnum):
+class Transformer(enum.IntEnum):
     SINGLE_LINE = enum.auto()
     MULTI_LINE = enum.auto()
     PARAGRAPH = enum.auto()
@@ -94,7 +94,7 @@ class OcrResult:
     tess_args: TessArgs
     words: list[dict]  # Words+metadata detected by OCR
     image: QImage
-    magic_scores: dict[Magic, float] = field(default_factory=dict)  # magics with scores
+    transformer_scores: dict[Transformer, float] = field(default_factory=dict)
     parsed: str = ""  # Transformed result
 
     def _count_unique_sections(self, level: str) -> int:
@@ -103,10 +103,12 @@ class OcrResult:
         return len(unique_sections)
 
     @property
-    def best_scored_magic(self) -> Optional[Magic]:
-        """Magic with highest score."""
-        if self.magic_scores:
-            return max(self.magic_scores, key=lambda k: self.magic_scores[k])
+    def best_scored_transformer(self) -> Optional[Transformer]:
+        """Transformer with highest score."""
+        if self.transformer_scores:
+            return max(
+                self.transformer_scores, key=lambda k: self.transformer_scores[k]
+            )
         return None
 
     @property
@@ -120,8 +122,8 @@ class OcrResult:
     def text(self) -> str:
         """Provides the resulting text of the OCR.
 
-        If parsed text (compiled by a Magic) is available, return that one, otherwise
-        fallback to "raw".
+        If parsed text (compiled by a transformer) is available, return that one,
+        otherwise fallback to "raw".
         """
         return self.parsed or self.add_linebreaks()
 
@@ -181,3 +183,29 @@ class OcrResult:
     def num_blocks(self) -> int:
         """Provide number of text blocks in OCR text."""
         return self._count_unique_sections("block")
+
+
+class TransformerProtocol(Protocol):
+    """Transformer protocol."""
+
+    def score(self, ocr_result: OcrResult) -> float:
+        """Determines the likelihood of the transformer to fit to the ocr result.
+
+        Arguments:
+            ocr_result: Recognized text and meta information.
+
+        Returns:
+            score between 0-100 (100 = more likely).
+            # TODO: Use a score 0-1 instead.
+        """
+        ...  # pragma: no cover
+
+    def transform(self, ocr_result: OcrResult) -> str:
+        """Apply a transformation to the detected text.
+
+        Arguments:
+            ocr_result: Recognized text and meta information.
+
+        Returns:
+            Transformed text.
+        """

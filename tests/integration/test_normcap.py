@@ -27,14 +27,14 @@ def test_normcap_ocr_testcases(
 
     # THEN normcap should exit with code 0
     #    and text should be captured
-    #    and transformed by an appropriate magic
+    #    and transformed by an appropriate transformer
     #    and result in a final text similar to the ground truth
     assert blocker.args == [0]
 
     capture = tray.capture
     assert capture
 
-    assert capture.ocr_magic in testcase.expected_ocr_magics, (
+    assert capture.ocr_transformer in testcase.expected_ocr_transformers, (
         f"{testcase.image_path.name=}",
         f"{capture.ocr_text=}",
         f"{testcase.expected_ocr_text=}",
