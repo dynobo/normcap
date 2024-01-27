@@ -309,7 +309,12 @@ jobs:
 
   release-documentation:
     name: Deploy github pages
-    needs: deploy-briefcase
+    needs:
+      - test
+      - test-documentation
+    if: |
+      (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
+      && github.repository_owner == 'dynobo'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
