@@ -195,6 +195,11 @@ def move_windows_via_window_calls_extension(title_id: str, position: Rect) -> bo
                     window_id = window["id"]
                     break
 
+            if not window_id:
+                raise RuntimeError(  # noqa: TRY301
+                    f"Could not retrieve window title: {response}"
+                )
+
             response = proxy.move_resize(
                 window_id,
                 position.left,
