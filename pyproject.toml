@@ -321,7 +321,8 @@ RUN dnf install -y \
   xclip \
   xcb-util-cursor \
   xcb-util-wm \
-  xcb-util-keysyms
+  xcb-util-keysyms \
+  xsel
 
 RUN git clone https://github.com/bugaevc/wl-clipboard.git
 RUN cd wl-clipboard \

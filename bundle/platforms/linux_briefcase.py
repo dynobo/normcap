@@ -46,6 +46,7 @@ class LinuxBriefcase(BuilderBase):
         patch = """
         "--executable=/usr/bin/tesseract",
         "--executable=/usr/bin/xclip",
+        "--executable=/usr/bin/xsel",
         "--executable=/usr/local/bin/wl-copy",
         "--library=/usr/lib64/libxcb-cursor.so.0",
         """
