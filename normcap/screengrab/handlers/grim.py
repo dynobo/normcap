@@ -11,7 +11,7 @@ from normcap.screengrab.post_processing import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)
 
-install_instructions = ""
+install_instructions = "Install the package `grim` using your system's package manager."
 
 
 def is_compatible() -> bool:
