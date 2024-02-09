@@ -38,6 +38,7 @@ class LinuxBriefcase(BuilderBase):
         - libxcb-cursor
         - wl-copy
         - xclip
+        - xsel
         """
         file_path = (
             Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
