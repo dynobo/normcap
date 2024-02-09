@@ -70,7 +70,7 @@ def _prepare_envs() -> None:
 
 def _get_application() -> QtWidgets.QApplication:
     """Get a QApplication instance that doesn't exit on window close."""
-    app = QtWidgets.QApplication([])
+    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
     app.setQuitOnLastWindowClosed(False)
     return app
 
