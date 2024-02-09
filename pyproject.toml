@@ -133,6 +133,8 @@ unused = "vulture {args:} normcap tests bundle"
 target-version = "py39"
 line-length = 88
 exclude = [".venv"]
+
+[tool.ruff.lint]
 select = [
   "F",    # Pyflakes
   "E",    # pycodestyle
@@ -175,16 +177,16 @@ ignore = [
   "ISC001", # Rule conflicts with ruff's formatter
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/**/*" = ["PLR2004", "PLR0913", "S101", "TID252", "ANN", "D"]
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["normcap"]
 
-[tool.ruff.flake8-tidy-imports]
+[tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
 [tool.mypy]
