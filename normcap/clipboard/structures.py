@@ -55,7 +55,12 @@ class Handler(enum.IntEnum):
     # - Problems with Gnome 45: https://github.com/bugaevc/wl-clipboard/issues/168
     WLCLIPBOARD = enum.auto()
 
-    # For linux with xorg and wayland
+    # For linux with xorg or wayland
+    # - Seems to work a bit more robust on wayland than xclip
+    XSEL = enum.auto()
+
+    # For linux with xorg or wayland
     # - Seems not very robust on wayland
+    # - Seems not to work from within Flatpak ("Display not found")
     # - Works with Awesome WM
     XCLIP = enum.auto()

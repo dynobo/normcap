@@ -2,6 +2,11 @@
 
 # Changelog
 
+## v0.5.5 (upcoming)
+
+- Linux: Add `xsel` as another clipboard handler. Try `--clipboard-handler xsel` if
+  Normcap's result isn't copied to the clipboard correctly.
+
 ## v0.5.4 (2024-01-15)
 
 - All: Fix duplicate capture window if started twice

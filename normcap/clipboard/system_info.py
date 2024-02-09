@@ -25,6 +25,10 @@ def os_has_awesome_wm() -> bool:
     return "awesome" in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
 
 
+def is_flatpak_package() -> bool:
+    return os.getenv("FLATPAK_ID") is not None
+
+
 @functools.cache
 def get_gnome_version() -> str:
     """Detect Gnome version of current session.
