@@ -88,7 +88,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.installed_languages: list[str] = []
         self.settings = Settings(init_settings=args)
 
-        self.clipboard_handler_name = args.get("clipboard_handler", None)
+        self.clipboard_handler_name = args.get("clipboard_handler")
 
         # Handle special cli args
         if args.get("reset", False):

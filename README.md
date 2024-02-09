@@ -221,4 +221,4 @@ If NormCap doesn't fit your needs, try those alternatives (no particular order):
   <img src="https://contrib.rocks/image?repo=dynobo/normcap" />
 </a>
 
-Made with [contrib.rocks](https://contrib.rocks).
+<small>Made with [contrib.rocks](https://contrib.rocks)</small>
