@@ -4,6 +4,7 @@ import logging
 import random
 import re
 import sys
+import os
 from typing import Optional
 from urllib.parse import urlparse
 
@@ -197,7 +198,13 @@ def _synchronized_capture(interactive: bool) -> QtGui.QImage:
         raise error
 
     uri = result[0]
-    return QtGui.QImage(urlparse(uri).path)
+    image_path = urlparse(uri).path
+    image = QtGui.QImage(urlparse(uri).path)
+    try:
+        os.remove(image_path)
+    except:
+        logger.warn(f"Failed to remove leftover screenshot file \"{image_path}\"!")
+    return image
 
 
 def is_compatible() -> bool:
