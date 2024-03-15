@@ -199,7 +199,7 @@ def _synchronized_capture(interactive: bool) -> QtGui.QImage:
 
     uri = result[0]
     image_path = urlparse(uri).path
-    image = QtGui.QImage(urlparse(uri).path)
+    image = QtGui.QImage(image_path)
     try:
         os.remove(image_path)
     except:
