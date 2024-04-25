@@ -16,24 +16,17 @@ from typing import Any, NoReturn, Optional, cast
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
 from normcap import __version__, clipboard, ocr, screengrab
-from normcap.gui import (  # noqa: F401 (loads resources!)
+from normcap.gui import (
     constants,
     introduction,
-    resources,
+    resources,  # noqa: F401 (loads resources!)
     system_info,
     utils,
 )
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
-from normcap.gui.models import (
-    Capture,
-    CaptureMode,
-    Days,
-    Rect,
-    Screen,
-    Seconds,
-)
+from normcap.gui.models import Capture, CaptureMode, Days, Rect, Screen, Seconds
 from normcap.gui.notification import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
@@ -432,7 +425,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             "Grant it via the dialog that will appear after you clicked 'Ok'.<br>"
             "Then start NormCap again.<br>"
             "<br>"
-            "<small>Sometimes, this might not work. If that is the case for you then"
+            "<small>Sometimes, this might not work. If that is the case for you "
             "then please<br>"
             "<a href='{issues_url}'>report this as bug</a> on GitHub.</small>"
         ).format(issues_url=constants.URLS.issues)
