@@ -1,4 +1,5 @@
 """Load translations dictionary for usage in GUI."""
+
 import gettext
 from pathlib import Path
 

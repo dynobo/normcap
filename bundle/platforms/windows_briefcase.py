@@ -200,8 +200,7 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
         self._patch_windows_installer()
         self.run(cmd="briefcase package windows VisualStudio", cwd=self.PROJECT_PATH)
 
-    def install_system_deps(self) -> None:
-        ...
+    def install_system_deps(self) -> None: ...
 
     def pre_framework(self) -> None:
         self.bundle_tesseract()

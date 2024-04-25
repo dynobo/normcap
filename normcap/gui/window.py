@@ -10,7 +10,6 @@ control the window's position, some platform specific workarounds are implemente
 nevertheless display potentially multiple windows in fullscreen on multiple displays.
 """
 
-
 import logging
 from dataclasses import dataclass
 from typing import Callable, Optional, cast
