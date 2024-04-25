@@ -9,7 +9,6 @@ class LoadingIndicator(QtWidgets.QWidget):
         self, parent: QtWidgets.QWidget, size: int = 128, center_on_parent: bool = True
     ) -> None:
         super().__init__(parent=parent)
-        self.setVisible(False)
 
         self.dot_count = 9
         self.dot_size_factor = 1.6
@@ -19,6 +18,8 @@ class LoadingIndicator(QtWidgets.QWidget):
 
         self.counter = 0
         self.timer = None
+
+        self.setVisible(False)
 
         if size:
             self.setMinimumSize(size, size)
