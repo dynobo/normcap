@@ -380,7 +380,7 @@ class MenuButton(QtWidgets.QToolButton):
         submenu.addAction(action)
 
         # L10N: Entry in main menu's 'Application' section.
-        action = QtGui.QAction(_("Donate a coffee"), about_group)
+        action = QtGui.QAction(_("Donate for coffee"), about_group)
         action.setObjectName(URLS.buymeacoffee)
         submenu.addAction(action)
 

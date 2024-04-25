@@ -321,7 +321,7 @@ msgstr "Problem melden"
 
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:384
-msgid "Donate a coffee"
+msgid "Donate for coffee"
 msgstr "Einen Kaffee spenden"
 
 #. Tooltip of main menu's 'close' entry. Use <56 chars p. line.
@@ -416,7 +416,7 @@ msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
 " via the dialog that will appear after you clicked 'Ok'.<br>Then start "
 "NormCap again.<br><br><small>Sometimes, this might not work. If that is the "
-"case for you thenthen please<br><a href='{issues_url}'>report this as "
+"case for you then please<br><a href='{issues_url}'>report this as "
 "bug</a> on GitHub.</small>"
 msgstr ""
 "<b>NormCap fehlt die Berechtigung für Screenshots.</b><br><br>Erteile diese "
