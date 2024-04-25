@@ -147,9 +147,12 @@ def test_on_download_finished(
     monkeypatch.setattr(downloader.Downloader, "get", _mocked_downloader_get)
 
     # WHEN the update check is triggered (with debug log level)
-    with caplog.at_level(logging.DEBUG), qtbot.wait_signal(
-        checker.com.on_version_checked, timeout=200, raising=False
-    ) as result:
+    with (
+        caplog.at_level(logging.DEBUG),
+        qtbot.wait_signal(
+            checker.com.on_version_checked, timeout=200, raising=False
+        ) as result,
+    ):
         checker.com.check.emit()
 
     # THEN the update message is (not) shown with certain text

@@ -89,5 +89,4 @@ class MacBriefcase(BuilderBase):
         self.run(cmd="brew install tesseract")
         self.run(cmd="brew install dylibbundler")
 
-    def pre_framework(self) -> None:
-        ...
+    def pre_framework(self) -> None: ...

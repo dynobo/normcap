@@ -77,11 +77,9 @@ class LinuxBriefcase(BuilderBase):
         self._add_metainfo_to_appimage()
         self.run(cmd="briefcase package linux appimage", cwd=self.PROJECT_PATH)
 
-    def bundle_tesseract(self) -> None:
-        ...
+    def bundle_tesseract(self) -> None: ...
 
-    def install_system_deps(self) -> None:
-        ...
+    def install_system_deps(self) -> None: ...
 
     def pre_framework(self) -> None:
         self._patch_briefcase_appimage_to_run_cmd()

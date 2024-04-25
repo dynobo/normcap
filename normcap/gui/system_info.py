@@ -1,4 +1,5 @@
 """Gather relevant system information."""
+
 import functools
 import logging
 import os

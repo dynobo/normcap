@@ -1,4 +1,5 @@
 """Start main application logic."""
+
 import logging
 import signal
 import sys
