@@ -6,6 +6,7 @@
 
 - Linux: Add `xsel` as another clipboard handler. Try `--clipboard-handler xsel` if
   Normcap's result isn't copied to the clipboard correctly.
+- Linux: Fix clipboard on Gnome 46 + Wayland. ([#620](https://github.com/dynobo/normcap/pull/620))
 
 ## v0.5.4 (2024-01-15)
 
