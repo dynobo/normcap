@@ -16,13 +16,13 @@
 | Locale                                   | Progress | Translated |
 | :--------------------------------------- | -------: | ---------: |
 | [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [es_ES](./es_ES/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
 | [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
 | [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
 | [it_IT](./it_IT/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
 | [pl_PL](./pl_PL/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
 | [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
-| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
 | [sv_SE](./sv_SE/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
 | [uk_UA](./uk_UA/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
 | [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |       8% |    6 of 68 |

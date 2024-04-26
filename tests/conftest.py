@@ -156,7 +156,7 @@ def basic_cli_args():
 
 
 @pytest.fixture()
-def run_normcap(monkeypatch, qapp, basic_cli_args):
+def run_normcap(monkeypatch, qapp, qtbot, basic_cli_args):
     trays = []
 
     def _run_normcap(extra_cli_args: Optional[list[str]] = None):
@@ -166,6 +166,10 @@ def run_normcap(monkeypatch, qapp, basic_cli_args):
 
         monkeypatch.setattr(app, "_get_application", lambda: qapp)
         _, tray = app._prepare()
+
+        # wait for windows to be created and moved on wayland
+        qtbot.wait(50)
+
         tray._EXIT_DELAY = 0.1
         trays.append(tray)
         return tray
@@ -240,6 +244,7 @@ def select_region(qtbot):
         qtbot.mousePress(on, QtCore.Qt.MouseButton.LeftButton, pos=top_left)
         qtbot.mouseMove(on, pos=bottom_right)
         qtbot.mouseRelease(on, QtCore.Qt.MouseButton.LeftButton, pos=bottom_right)
+        qtbot.wait(500)
 
     return _select_region
 
