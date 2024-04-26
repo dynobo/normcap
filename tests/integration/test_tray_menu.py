@@ -51,6 +51,9 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     capture_action = tray.tray_menu.findChild(QtGui.QAction, "capture")
     capture_action.trigger()
 
+    # wait for windows to be created and moved on wayland
+    qtbot.wait(50)
+
     select_region(on=tray.windows[0], pos=testcase.coords)
 
     # THEN text should be captured
