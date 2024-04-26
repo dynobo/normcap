@@ -4,11 +4,12 @@
 
 ## v0.5.5 (upcoming)
 
-- All: Add russian translation. Thanks, @ViktorOn! ([#611](https://github.com/dynobo/normcap/pull/611))
-- All: Update spanish translation. Thanks, @haggen88! ([#614](https://github.com/dynobo/normcap/pull/614))
+- All: Add russian translation. Thanks, [@ViktorOn](https://github.com/ViktorOn)! ([#611](https://github.com/dynobo/normcap/pull/611))
+- All: Update spanish translation. Thanks, [@haggen88](https://github.com/haggen88)! ([#614](https://github.com/dynobo/normcap/pull/614))
 - Linux: Add `xsel` as another clipboard handler. Try `--clipboard-handler xsel` if
   Normcap's result isn't copied to the clipboard correctly.
 - Linux: Fix clipboard on Gnome 46 + Wayland. ([#620](https://github.com/dynobo/normcap/pull/620))
+- Linux: Auto-remove screenshot file from pictures-directory on Wayland. Thanks, [@PavelDobCZ23](https://github.com/PavelDobCZ23)! ([#600](https://github.com/dynobo/normcap/issues/600))
 
 ## v0.5.4 (2024-01-15)
 
