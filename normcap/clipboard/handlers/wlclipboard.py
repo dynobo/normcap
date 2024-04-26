@@ -42,7 +42,9 @@ def is_compatible() -> bool:
         return False
 
     gnome_version = system_info.get_gnome_version()
-    if gnome_version.startswith("45."):
+    gnome_major = int(gnome_version.split(".")[0])
+    last_working_gnome_version = 44
+    if gnome_major > last_working_gnome_version:
         logger.debug("%s is not compatible with Gnome %s", __name__, gnome_version)
         return False
 
