@@ -4,7 +4,7 @@ import logging
 import random
 import re
 import sys
-import os
+from pathlib import Path
 from typing import Optional
 from urllib.parse import urlparse
 
@@ -198,12 +198,18 @@ def _synchronized_capture(interactive: bool) -> QtGui.QImage:
         raise error
 
     uri = result[0]
-    image_path = urlparse(uri).path
+    parsed_uri = urlparse(uri)
+
+    image_path = Path(parsed_uri.path)
     image = QtGui.QImage(image_path)
+
+    # XDG Portal save the image file to the users xdg-pictures directory. To not let
+    # them pile up, we try to remove it:
     try:
-        os.remove(image_path)
-    except:
-        logger.warn(f"Failed to remove leftover screenshot file \"{image_path}\"!")
+        image_path.unlink()
+    except PermissionError:
+        logger.warning("Missing permission to remove screenshot file '%s'!", image_path)
+
     return image
 
 
