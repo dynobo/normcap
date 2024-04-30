@@ -14,7 +14,7 @@ from normcap.screengrab.handlers import grim
 )
 def test_capture_on_wayland(qapp):
     # GIVEN a linux system with grim support (Linux with compatible Wayland Compositor)
-    assert system_info.os_has_wayland_display_manager()
+    assert system_info.has_wayland_display_manager()
 
     # WHEN screenshot is taking using QT
     images = grim.capture()
@@ -62,6 +62,8 @@ def test_capture_with_grim_mocked(monkeypatch, caplog, qapp):
     monkeypatch.setattr(grim.sys, "platform", "linux")
     monkeypatch.setattr(grim.shutil, "which", lambda *_: "/some/path")
     monkeypatch.setattr(grim.subprocess, "run", mocked_run)
+    monkeypatch.setattr(system_info, "has_wlroots_compositor", lambda: True)
+    monkeypatch.setenv("WAYLAND_DISPLAY", "wayland")
 
     assert grim.is_compatible()
     assert grim.is_installed()

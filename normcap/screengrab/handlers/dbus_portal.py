@@ -214,10 +214,12 @@ def _synchronized_capture(interactive: bool) -> QtGui.QImage:
 
 
 def is_compatible() -> bool:
+    # TODO: Specify closer!
     return sys.platform == "linux"
 
 
 def is_installed() -> bool:
+    # TODO: What's with KDE?
     gnome_version = system_info.get_gnome_version()
     return not gnome_version or gnome_version >= "41"
 
