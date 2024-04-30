@@ -7,6 +7,7 @@ from pathlib import Path
 
 from PySide6 import QtGui
 
+from normcap.screengrab import system_info
 from normcap.screengrab.post_processing import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)
@@ -15,7 +16,11 @@ install_instructions = "Install the package `grim` using your system's package m
 
 
 def is_compatible() -> bool:
-    return sys.platform == "linux"
+    return (
+        sys.platform == "linux"
+        and system_info.has_wayland_display_manager()
+        and system_info.has_wlroots_compositor()
+    )
 
 
 def is_installed() -> bool:

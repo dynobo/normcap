@@ -6,7 +6,7 @@ from normcap.screengrab import system_info
 # TODO: Parametrize tests?
 def test_display_manager_is_wayland_on_windows(monkeypatch):
     monkeypatch.setattr(system_info.sys, "platform", "win32")
-    is_wayland = system_info.os_has_wayland_display_manager()
+    is_wayland = system_info.has_wayland_display_manager()
     assert is_wayland is False
 
 
@@ -15,17 +15,17 @@ def test_display_manager_is_wayland_on_linux_xdg_session_type(monkeypatch):
 
     monkeypatch.setenv("XDG_SESSION_TYPE", "wayland")
     monkeypatch.setenv("WAYLAND_DISPLAY", "")
-    is_wayland = system_info.os_has_wayland_display_manager()
+    is_wayland = system_info.has_wayland_display_manager()
     assert is_wayland is True
 
     monkeypatch.setenv("XDG_SESSION_TYPE", "")
     monkeypatch.setenv("WAYLAND_DISPLAY", "wayland-0")
-    is_wayland = system_info.os_has_wayland_display_manager()
+    is_wayland = system_info.has_wayland_display_manager()
     assert is_wayland is True
 
     monkeypatch.setenv("XDG_SESSION_TYPE", "gnome-shell")
     monkeypatch.setenv("WAYLAND_DISPLAY", "")
-    is_wayland = system_info.os_has_wayland_display_manager()
+    is_wayland = system_info.has_wayland_display_manager()
     assert is_wayland is False
 
 

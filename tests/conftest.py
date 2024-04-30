@@ -34,7 +34,7 @@ def _clear_caches():
 
 @pytest.fixture()
 def temp_settings(qapp):
-    settings = QtCore.QSettings("dynobo", "normcap_tests")
+    settings = QtCore.QSettings("normcap_tests", "settings")
     yield settings
     settings.remove("")
 

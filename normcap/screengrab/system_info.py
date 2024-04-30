@@ -9,7 +9,35 @@ import sys
 logger = logging.getLogger(__name__)
 
 
-def os_has_wayland_display_manager() -> bool:
+def has_wlroots_compositor() -> bool:
+    """Check if wlroots compositor is running, as grim only supports wlroots.
+
+    Certainly not wlroots based are: KDE, GNOME and Unity.
+    Others are likely wlroots based.
+    """
+    if sys.platform != "linux":
+        return False
+
+    kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()
+    xdg_current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+    desktop_session = os.environ.get("DESKTOP_SESSION", "").lower()
+    gnome_desktop_session_id = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
+    if gnome_desktop_session_id == "this-is-deprecated":
+        gnome_desktop_session_id = ""
+
+    if (
+        gnome_desktop_session_id
+        or "gnome" in xdg_current_desktop
+        or kde_full_session
+        or "kde-plasma" in desktop_session
+        or "unity" in xdg_current_desktop
+    ):
+        return False
+
+    return True
+
+
+def has_wayland_display_manager() -> bool:
     """Identify relevant display managers (Linux)."""
     if sys.platform != "linux":
         return False

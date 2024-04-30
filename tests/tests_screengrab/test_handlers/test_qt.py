@@ -7,7 +7,7 @@ from normcap.screengrab.handlers.qt import capture
 
 @pytest.mark.gui()
 @pytest.mark.skipif(
-    system_info.os_has_wayland_display_manager(), reason="Non-Wayland specific test"
+    system_info.has_wayland_display_manager(), reason="Non-Wayland specific test"
 )
 def test_capture_on_non_wayland(qapp):
     # GIVEN any operating system
@@ -22,7 +22,7 @@ def test_capture_on_non_wayland(qapp):
 
 @pytest.mark.gui()
 @pytest.mark.skipif(
-    not system_info.os_has_wayland_display_manager(), reason="Wayland specific test"
+    not system_info.has_wayland_display_manager(), reason="Wayland specific test"
 )
 def test_capture_on_wayland(qapp):
     # GIVEN any operating system
