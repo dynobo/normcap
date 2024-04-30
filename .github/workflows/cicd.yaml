@@ -155,17 +155,23 @@ jobs:
         run: |
           (cat logs/briefcase*) || true
           find build/normcap || true
+      # For security reasons, github doesn't allow setting envvars using expressions
+      # directly. Therefore, we need an extra step:
       - name: Set current date as env variable
         shell: bash -l {0}
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
       - name: Draft internal release
         uses: ncipollo/release-action@v1
+        # It's possible, that the run lacks release permissions (e.g. on forks). In
+        # this is not crucial, so we just silence the error.
+        continue-on-error: true
         if: github.repository_owner == 'dynobo'
         with:
           name: Internal
           body: "Only for internal tests. Should not be published. [${{ env.NOW }}]"
+          repo: normcap
+          owner: dynobo
           artifacts: "*/*.+(dmg|AppImage|msi|zip)"
-          artifactErrorsFailBuild: false
           allowUpdates: true
           draft: true
           prerelease: true
@@ -173,7 +179,7 @@ jobs:
           tag: "internal"
 
   test-documentation:
-    name:  Test documentation build
+    name: Test documentation build
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
