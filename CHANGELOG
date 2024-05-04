@@ -2,8 +2,9 @@
 
 # Changelog
 
-## v0.5.5 (2024-04-30)
+## v0.5.5 (upcoming)
 
+- All: Add ukrainian translation. Thanks, [@thevllad](https://github.com/thevllad)! ([#625](https://github.com/dynobo/normcap/pull/625))
 - All: Add russian translation. Thanks, [@ViktorOn](https://github.com/ViktorOn)! ([#611](https://github.com/dynobo/normcap/pull/611))
 - All: Add italian translation. Thanks, [@albanobattistella](https://github.com/albanobattistella)! ([#622](https://github.com/dynobo/normcap/pull/622))
 - All: Add spanish translation. Thanks, [@haggen88](https://github.com/haggen88)! ([#614](https://github.com/dynobo/normcap/pull/614))
