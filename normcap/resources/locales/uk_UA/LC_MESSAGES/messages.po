@@ -446,7 +446,7 @@ msgstr "NormCap v{version} доступно."
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/update_check.py:83
 msgid "You have v{version}"
-msgstr "Ви маєте v{версія}"
+msgstr "Ви маєте v{version}"
 
 #. Message box shown when new version available (Prebuilt package)
 #: /home/holger/Code/normcap/normcap/gui/update_check.py:87
