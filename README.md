@@ -52,10 +52,7 @@ screenshots. ([#135](https://github.com/dynobo/normcap/issues/135))
 - [NormCap-0.5.4-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.4/NormCap-0.5.4-x86_64-macOS.dmg)
   (Installer for x86/64)
 - [NormCap-0.5.4-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.4/NormCap-0.5.4-arm64-macOS.dmg)
-  (Installer for M1)\*
-
-<small>\* _Might be available delayed, as it is currently build/uploaded manually. (Thx,
-[@Takrin](https://github.com/Takrin)!)_</small>
+  (Installer for M1)
 
 ## Install Python package
 
