@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: NormCap 0.4.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2024-05-06 21:18+0200\n"
-"PO-Revision-Date: 2024-04-27 18:15+0100\n"
-"Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
+"PO-Revision-Date: 2024-05-08 12:08+0000\n"
+"Last-Translator: dynobo <dynobo@mailbox.org>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/normcap/ui/it/>\n"
 "Language: it_IT\n"
-"Language-Team: it_IT <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.5.4-rc\n"
 "Generated-By: Babel 2.14.0\n"
 
 #. Generic error message when any download failed.
@@ -213,7 +214,7 @@ msgid ""
 "notification center."
 msgstr ""
 "Mostra informazioni sullo stato tramite il desktop del sistema\n"
-"centro notifiche\""
+"centro notifiche."
 
 #. Extension "Show notification"-Tooltip on macOS and Windows.
 #. Entry in main menu's 'setting' section
@@ -285,7 +286,7 @@ msgstr "... ti serve altro?"
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:345
 msgid "About"
-msgstr "Informazioni"
+msgstr "Info su NormCap"
 
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:353
