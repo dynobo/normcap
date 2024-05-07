@@ -371,7 +371,7 @@ src = "normcap/__init__.py"
 search = '__version__ = "{current_version}"'
 
 [[tool.tbump.file]]
-src = "docs/index.html"
+src = "docs/index.md"
 
 [[tool.tbump.file]]
 src = "README.md"
