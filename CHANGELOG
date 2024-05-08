@@ -2,6 +2,9 @@
 
 # Changelog
 
+## v0.5.6
+- Linux: Fix clipboard on Wayland desktops other than GNOME. ([#640](https://github.com/dynobo/normcap/pull/640))
+
 ## v0.5.5 (2024-05-07)
 
 - All: Add ukrainian translation. Thanks, [@thevllad](https://github.com/thevllad)! ([#625](https://github.com/dynobo/normcap/pull/625))
