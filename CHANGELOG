@@ -2,7 +2,9 @@
 
 # Changelog
 
-## v0.5.6 (upcoming)
+## v0.5.6 (2024-05-08)
+
+- All: Fix minor typos in translations. ([#641](https://github.com/dynobo/normcap/pull/641))
 - Linux: Fix clipboard on Wayland desktops other than GNOME. ([#640](https://github.com/dynobo/normcap/pull/640))
 
 ## v0.5.5 (2024-05-07)
