@@ -199,8 +199,9 @@ def _synchronized_capture(interactive: bool) -> QtGui.QImage:
 
     uri = result[0]
     parsed_uri = urlparse(uri)
+    parsed_path = unquote(parsed_uri.path)
 
-    image_path = Path(parsed_uri.path)
+    image_path = Path(parsed_path)
     image = QtGui.QImage(image_path)
 
     # XDG Portal save the image file to the users xdg-pictures directory. To not let
