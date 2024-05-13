@@ -2,6 +2,10 @@
 
 # Changelog
 
+## v0.5.7 (upcoming)
+
+- Linux: Fix crash on wayland in case of user's home directory contains special character. Thanks, [@supersonictw](https://github.com/supersonictw)! ([#643](https://github.com/dynobo/normcap/issues/643))
+
 ## v0.5.6 (2024-05-08)
 
 - All: Fix minor typos in translations. ([#641](https://github.com/dynobo/normcap/pull/641))
