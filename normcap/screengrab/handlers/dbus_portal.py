@@ -6,7 +6,7 @@ import re
 import sys
 from pathlib import Path
 from typing import Optional
-from urllib.parse import urlparse, unquote
+from urllib.parse import unquote, urlparse
 
 from PySide6 import QtCore, QtDBus, QtGui
 
