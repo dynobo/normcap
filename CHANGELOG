@@ -4,6 +4,7 @@
 
 ## v0.5.7 (upcoming)
 
+- All: Add french translation. Thanks, [@NathanBnm](https://github.com/NathanBnm)! ([#648](https://github.com/dynobo/normcap/pull/648))
 - Linux: Fix crash on wayland in case of user's home directory contains special character. Thanks, [@supersonictw](https://github.com/supersonictw)! ([#643](https://github.com/dynobo/normcap/issues/643))
 
 ## v0.5.6 (2024-05-08)
