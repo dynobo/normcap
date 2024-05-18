@@ -162,13 +162,20 @@ class Window(QtWidgets.QMainWindow):
             self.setMinimumSize(self.geometry().size())
             self.setMaximumSize(self.geometry().size())
 
+        if system_info.desktop_environment == DesktopEnvironment.UNITY:
+            # For unknown reason .showFullScreen() on Ubuntu 24.04 does not show the
+            # window. Showing the Window in normal state upfront seems to help.
+            # (It seems like .setWindowState(WindowFullScreen) should not be set before
+            # .setVisible(True) on that system. Might be a QT bug.)
+            self.show()
+
         self.showFullScreen()
         self.setFocus()
 
         # On Wayland, setting geometry doesn't move the window to the right screen, as
         # only the compositor is allowed to do this. In case of multi-display setups, we
         # need to use hacks to position the window:
-        if system_info.display_manager_is_wayland() and len(system_info.screens()) > 1:
+        if system_info.display_manager_is_wayland():
             self._move_to_screen_on_wayland()
 
     def clear_selection(self) -> None:
