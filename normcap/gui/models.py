@@ -116,13 +116,13 @@ class Rect:
         return (self.width, self.height)
 
     # ONHOLD: Annotate as Self with Python 3.11
-    def scale(self, scale_factor: float):  # noqa: ANN201
+    def scale(self, factor: float):  # noqa: ANN201
         """Create an integer-scaled copy of the Rect."""
         return Rect(
-            top=int(self.top * scale_factor),
-            bottom=int(self.bottom * scale_factor),
-            left=int(self.left * scale_factor),
-            right=int(self.right * scale_factor),
+            top=int(self.top * factor),
+            bottom=int(self.bottom * factor),
+            left=int(self.left * factor),
+            right=int(self.right * factor),
         )
 
 
