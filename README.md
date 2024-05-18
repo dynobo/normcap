@@ -32,12 +32,12 @@ take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
 
 #### Windows
 
-- [NormCap-0.5.6-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.5.6/NormCap-0.5.6-x86_64-Windows.msi)
+- [NormCap-0.5.7-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.5.7/NormCap-0.5.7-x86_64-Windows.msi)
   (Installer)
 
 #### Linux
 
-- [NormCap-0.5.6-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.5.6/NormCap-0.5.6-x86_64.AppImage)
+- [NormCap-0.5.7-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.5.7/NormCap-0.5.7-x86_64.AppImage)
   (Binary)
 - [`normcap` @ AUR](https://aur.archlinux.org/packages/normcap) (Arch/Manjaro)
 - [com.github.dynobo.normcap @ FlatHub](https://flathub.org/apps/details/com.github.dynobo.normcap)
@@ -49,9 +49,9 @@ Note: You have to allow the unsigned application on first start: "System Prefere
 "Security & Privacy" → "General" → "Open anyway". You also have to allow NormCap to take
 screenshots. ([#135](https://github.com/dynobo/normcap/issues/135))
 
-- [NormCap-0.5.6-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.6/NormCap-0.5.6-x86_64-macOS.dmg)
+- [NormCap-0.5.7-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.7/NormCap-0.5.7-x86_64-macOS.dmg)
   (Installer for x86/64)
-- [NormCap-0.5.6-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.6/NormCap-0.5.6-arm64-macOS.dmg)
+- [NormCap-0.5.7-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.7/NormCap-0.5.7-arm64-macOS.dmg)
   (Installer for M1)
 
 ## Install Python package
