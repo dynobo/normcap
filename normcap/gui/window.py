@@ -58,6 +58,12 @@ class Window(QtWidgets.QMainWindow):
 
         self.setWindowTitle(f"NormCap [{screen.index}]")
         self.setWindowIcon(QtGui.QIcon(":normcap"))
+        self.setWindowFlags(
+            QtGui.Qt.WindowType.FramelessWindowHint
+            | QtGui.Qt.WindowType.CustomizeWindowHint
+            | QtGui.Qt.WindowType.WindowStaysOnTopHint
+        )
+        self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
         self.setAnimated(False)
         self.setEnabled(True)
 
@@ -99,71 +105,71 @@ class Window(QtWidgets.QMainWindow):
         pixmap.convertFromImage(self.screen_.screenshot)
         self.image_container.setPixmap(pixmap)
 
-    def _move_to_position_on_wayland(self) -> None:
+    def _move_to_screen_on_wayland(self) -> None:
         """Move window to respective monitor on Wayland.
 
         In Wayland, the compositor has the responsibility for positioning windows, the
         client itself can't do this. However, there are DE dependent workarounds.
         """
-        if system_info.desktop_environment() == DesktopEnvironment.GNOME:
-            result = dbus.move_windows_via_window_calls_extension(
-                title_id=self.windowTitle(), position=self.screen_
-            )
-            if not result:
-                dbus.move_window_via_gnome_shell_eval(
-                    title_id=self.windowTitle(), position=self.screen_
+
+        def move_to_screen(win: Window) -> None:
+            if system_info.desktop_environment() == DesktopEnvironment.GNOME:
+                result = dbus.move_windows_via_window_calls_extension(
+                    title_id=win.windowTitle(), position=win.screen_
                 )
-        elif system_info.desktop_environment() == DesktopEnvironment.KDE:
-            dbus.move_window_via_kde_kwin_scripting(
-                title_id=self.windowTitle(), position=self.screen_
-            )
-        else:
-            logger.warning(
-                "No window move method for %s", system_info.desktop_environment()
-            )
+                if not result:
+                    dbus.move_window_via_gnome_shell_eval(
+                        title_id=win.windowTitle(), position=win.screen_
+                    )
+            elif system_info.desktop_environment() == DesktopEnvironment.KDE:
+                dbus.move_window_via_kde_kwin_scripting(
+                    title_id=win.windowTitle(), position=win.screen_
+                )
+            else:
+                logger.warning(
+                    "No window move method for %s", system_info.desktop_environment()
+                )
+
+        # Delay move to ensure window is active & registered in window manager.
+        QtCore.QTimer.singleShot(20, lambda: move_to_screen(win=self))
 
     def set_fullscreen(self) -> None:
         """Set window to full screen using platform specific methods."""
+        # TODO: Test in Multi Display setups with different scaling
+        # TODO: Test in Multi Display setups with different position
+        # TODO: Position in Multi Display probably problematic!
         logger.debug("Set window of screen %s to fullscreen", self.screen_.index)
 
         if not self.screen_.screenshot:
             raise ValueError("Screenshot is missing on screen %s", self.screen_)
 
-        self.setWindowFlags(
-            QtGui.Qt.WindowType.FramelessWindowHint
-            | QtGui.Qt.WindowType.CustomizeWindowHint
-            | QtGui.Qt.WindowType.WindowStaysOnTopHint
-        )
-        self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
-
-        # Moving window to corresponding monitor
         # Using scaled window dims to fit sizing with dpr in case scaling is enabled
         # See: https://github.com/dynobo/normcap/issues/397
-        # TODO: Test in Multi Display setups with different scalings
-        # TODO: Test in Multi Display setups with differen position
-        # TODO: Position in Multi Display probably problematic!
         if (
             system_info.display_manager_is_wayland()
             and self.screen_.size == self.screen_.screenshot.size().toTuple()
             and self.screen_.device_pixel_ratio != 1
         ):
+            # TODO: Check if still necessary on latest supported Ubuntu.
+            # If not, remove Screen.scale() and this condition.
             self.setGeometry(*self.screen_.scale().geometry)
         else:
             self.setGeometry(*self.screen_.geometry)
 
-        # On unity, setting min/max window size breaks fullscreen.
         if system_info.desktop_environment() != DesktopEnvironment.UNITY:
+            # On some DEs, setting a fixed window size can enforce the correct size.
+            # However, on Unity, it breaks the full screen view.
             self.setMinimumSize(self.geometry().size())
             self.setMaximumSize(self.geometry().size())
 
         self.showFullScreen()
-
         self.setFocus()
 
-        if system_info.display_manager_is_wayland():
-            # Movement is delayed to ensure the window is fully active and
-            # registered within the window manager
-            QtCore.QTimer.singleShot(20, lambda: self._move_to_position_on_wayland())
+        # On Wayland, setting geometry doesn't move the window to the right screen, as
+        # only the compositor is allowed to do this. In case of multi-display setups, we
+        # need to use hacks to position the window:
+        if system_info.display_manager_is_wayland() and len(system_info.screens()) > 1:
+            self._move_to_screen_on_wayland()
 
     def clear_selection(self) -> None:
         self.selection_rect = QtCore.QRect()
