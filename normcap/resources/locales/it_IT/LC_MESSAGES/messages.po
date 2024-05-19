@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2024-05-06 21:18+0200\n"
 "PO-Revision-Date: 2024-05-19 15:01+0000\n"
-"Last-Translator: dynobo <dynobo@mailbox.org>\n"
+"Last-Translator: albanobattistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/normcap/ui/it/>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
@@ -61,7 +61,7 @@ msgid ""
 " capture area."
 msgstr ""
 "Attendere fino a quando appare un bordo rosa intorno allo schermo, quindi "
-"selezionare l'opzione desideratadella zona di acquisizione."
+"selezionare l'opzione desiderata della zona di acquisizione."
 
 #. Introduction window step title
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:93
