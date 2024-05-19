@@ -162,7 +162,7 @@ class Window(QtWidgets.QMainWindow):
             self.setMinimumSize(self.geometry().size())
             self.setMaximumSize(self.geometry().size())
 
-        if system_info.desktop_environment == DesktopEnvironment.UNITY:
+        if system_info.display_manager_is_wayland():
             # For unknown reason .showFullScreen() on Ubuntu 24.04 does not show the
             # window. Showing the Window in normal state upfront seems to help.
             # (It seems like .setWindowState(WindowFullScreen) should not be set before
