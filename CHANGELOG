@@ -2,6 +2,10 @@
 
 # Changelog
 
+## v0.5.8 (2024-05-19)
+
+- Linux: Next try to fix issue on Ubuntu/Unity where the window doesn't show up. ([#651](https://github.com/dynobo/normcap/pull/651))
+
 ## v0.5.7 (2024-05-18)
 
 - All: Add french translation. Thanks, [@NathanBnm](https://github.com/NathanBnm)! ([#648](https://github.com/dynobo/normcap/pull/648))
