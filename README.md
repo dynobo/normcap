@@ -41,8 +41,6 @@ take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
   
   Note: On some systems, you may need to install additional packages, such as `libxcrypt-compat` or the `FUSE` library for the AppImage to run. See [FAQ](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-while-loading-shared-libraries-libcryptso1) for more details.
 
-</details>
-
 - [`normcap` @ AUR](https://aur.archlinux.org/packages/normcap) (Arch/Manjaro)
 - [com.github.dynobo.normcap @ FlatHub](https://flathub.org/apps/details/com.github.dynobo.normcap)
   (FlatPak)
