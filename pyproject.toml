@@ -100,9 +100,8 @@ charts = [
   "pydeps normcap --max-bacon=1 -o=pydeps_internal.png -T=png",
 ]
 # Main tasks:
-# ONHOLD: Re-add "typing" to check and pre-commit when PySide6 6.7.1 is released
-check = ["locales-compile", "fmt-check", "test", "security"]
-pre-commit = ["locales-compile", "fmt", "test", "security", "charts"]
+check = ["locales-compile", "fmt-check", "typing", "test", "security"]
+pre-commit = ["locales-compile", "fmt", "typing", "test", "security", "charts"]
 locales-compile = "python bundle/l10n.py"
 locales-update = "python bundle/l10n.py --update-all"
 create-locale = "python bundle/l10n.py --create-new"
