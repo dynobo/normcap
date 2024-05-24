@@ -36,13 +36,10 @@ take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
   (Installer)
 
 #### Linux
-<details>
-
-<summary> <a href="https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64.AppImage">NormCap-0.5.8-x86_64.AppImage</a> (Binary) </summary>
-
-| :warning: NOTE          |
-|:---------------------------|
-| On some systems, you may need to install additional packages, such as `libxcrypt-compat` or the `FUSE` library, to ensure proper functionality of the AppImage. For more information, please refer to our [FAQ](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-while-loading-shared-libraries-libcryptso1).|
+- [NormCap-0.5.8-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64.AppImage)
+  (Binary)
+  
+  Note: On some systems, you may need to install additional packages, such as `libxcrypt-compat` or the `FUSE` library for the AppImage to run. See [FAQ](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-while-loading-shared-libraries-libcryptso1) for more details.
 
 </details>
 
