@@ -12,6 +12,14 @@ from normcap.gui.models import Rect
 logger = logging.getLogger(__name__)
 
 
+class NormcapWindowNotFoundError(Exception):
+    """Raised when a NormCap window could not be queried from compositor."""
+
+
+class UnknownDBusMethodError(Exception):
+    """Raised if the dbus method does not exist."""
+
+
 class DBusShell(MessageGenerator):
     interface = "org.gnome.Shell"
 
@@ -56,6 +64,9 @@ class DBusWindowCalls(MessageGenerator):
 
     def get_title(self, win_id: int) -> Message:
         return new_method_call(self, "GetTitle", "u", (win_id,))
+
+    def activate(self, win_id: int) -> Message:
+        return new_method_call(self, "Activate", "u", (win_id,))
 
     def move_resize(  # noqa: PLR0913
         self, win_id: int, x: int, y: int, width: int, height: int
@@ -196,7 +207,7 @@ def move_windows_via_window_calls_extension(title_id: str, position: Rect) -> bo
                     break
 
             if not window_id:
-                raise RuntimeError(  # noqa: TRY301
+                raise NormcapWindowNotFoundError(  # noqa: TRY301
                     f"Could not retrieve window title: {response}"
                 )
 
@@ -207,14 +218,15 @@ def move_windows_via_window_calls_extension(title_id: str, position: Rect) -> bo
                 position.width,
                 position.height,
             )
+
+            response = proxy.activate(window_id)
+
+    except NormcapWindowNotFoundError:
+        raise
     except Exception as exc:
-        logger.warning("Failed to move window via org.gnome.Shell.extensions.windows!")
-        logger.debug("".join(traceback.format_exception(exc)).strip())
-        logger.warning(
-            "If you experience issues with NormCap's in a multi monitor setting, "
-            "try installing the Gnome Shell Extension 'Window Calls' "
-            "from https://extensions.gnome.org/extension/4724/window-calls/"
-        )
+        if "UnknownMethod" in getattr(exc, "name", ""):
+            raise UnknownDBusMethodError(exc) from exc
+
         return False
     else:
         return True

@@ -105,33 +105,54 @@ class Window(QtWidgets.QMainWindow):
         pixmap.convertFromImage(self.screen_.screenshot)
         self.image_container.setPixmap(pixmap)
 
-    def _move_to_screen_on_wayland(self) -> None:
+    def _move_to_screen_on_wayland(self, counter: int = 0) -> None:
         """Move window to respective monitor on Wayland.
 
         In Wayland, the compositor has the responsibility for positioning windows, the
         client itself can't do this. However, there are DE dependent workarounds.
         """
+        # TODO: Move function to own module
+        retry_ms = 50
+        max_retry_ms = 1500
+        max_retries = int(max_retry_ms / retry_ms)
 
-        def move_to_screen(win: Window) -> None:
-            if system_info.desktop_environment() == DesktopEnvironment.GNOME:
+        if counter > max_retries:
+            logger.error("Failed to move window on Wayland!")
+            return
+
+        if system_info.desktop_environment() == DesktopEnvironment.GNOME:
+            try:
                 result = dbus.move_windows_via_window_calls_extension(
-                    title_id=win.windowTitle(), position=win.screen_
+                    title_id=self.windowTitle(), position=self.screen_
                 )
                 if not result:
                     dbus.move_window_via_gnome_shell_eval(
-                        title_id=win.windowTitle(), position=win.screen_
+                        title_id=self.windowTitle(), position=self.screen_
                     )
-            elif system_info.desktop_environment() == DesktopEnvironment.KDE:
-                dbus.move_window_via_kde_kwin_scripting(
-                    title_id=win.windowTitle(), position=win.screen_
+            except dbus.NormcapWindowNotFoundError:
+                logger.warning("Window not yet available. Retrying.")
+                QtCore.QTimer.singleShot(
+                    retry_ms,
+                    lambda: self._move_to_screen_on_wayland(counter=counter + 1),
                 )
-            else:
+            except dbus.UnknownDBusMethodError:
                 logger.warning(
-                    "No window move method for %s", system_info.desktop_environment()
+                    "Can't move window: Gnome Shell extension 'Window Calls' missing!\n"
+                    "If you experience issues with NormCap's in a multi monitor "
+                    "setting, try installing the Gnome Shell Extension 'Window Calls' "
+                    "from https://extensions.gnome.org/extension/4724/window-calls/"
                 )
+            return
 
-        # Delay move to ensure window is active & registered in window manager.
-        QtCore.QTimer.singleShot(20, lambda: move_to_screen(win=self))
+        if system_info.desktop_environment() == DesktopEnvironment.KDE:
+            dbus.move_window_via_kde_kwin_scripting(
+                title_id=self.windowTitle(), position=self.screen_
+            )
+            return
+
+        logger.warning(
+            "No window move method for %s", system_info.desktop_environment()
+        )
 
     def set_fullscreen(self) -> None:
         """Set window to full screen using platform specific methods."""
@@ -169,7 +190,9 @@ class Window(QtWidgets.QMainWindow):
             # .setVisible(True) on that system. Might be a QT bug.)
             self.show()
 
-        self.showFullScreen()
+        # self.showFullScreen()
+
+        QtCore.QTimer.singleShot(1000, self.setFocus)
         self.setFocus()
 
         # On Wayland, setting geometry doesn't move the window to the right screen, as
