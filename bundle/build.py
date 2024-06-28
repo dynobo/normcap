@@ -4,6 +4,7 @@ import sys
 from platforms.linux_briefcase import LinuxBriefcase
 from platforms.macos_briefcase import MacBriefcase
 from platforms.windows_briefcase import WindowsBriefcase
+from platforms.windows_briefcase_zip import WindowsBriefcaseZip
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -16,16 +17,19 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    builders = []
     if sys.platform == "win32":
-        builder = WindowsBriefcase
+        builders.append(WindowsBriefcase)
+        builders.append(WindowsBriefcaseZip)
 
     elif sys.platform == "darwin":
-        builder = MacBriefcase
+        builders.append(MacBriefcase)
 
     elif sys.platform == "linux":
-        builder = LinuxBriefcase
+        builders.append(LinuxBriefcase)
 
     else:
         raise RuntimeError(f"Unknown platform '{sys.platform}'.")
 
-    builder().create()
+    for builder in builders:
+        builder().create()
