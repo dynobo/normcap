@@ -26,6 +26,10 @@ def config_directory() -> Path:
 
     # Windows
     if sys.platform == "win32":
+        if is_portable():
+            data_path = get_package_path() / "data"
+            data_path.mkdir(exist_ok=True)
+            return data_path
         if local_appdata := os.getenv("LOCALAPPDATA"):
             return Path(local_appdata) / postfix
         if appdata := os.getenv("APPDATA"):
@@ -41,6 +45,18 @@ def config_directory() -> Path:
 
 def get_resources_path() -> Path:
     return (Path(__file__).parent.parent / "resources").resolve()
+
+
+def get_package_path() -> Path:
+    return Path(__file__).parent.parent.parent.parent.resolve()
+
+
+@functools.cache
+def is_portable() -> bool:
+    if sys.platform != "win32":
+        return False
+    package_path = get_package_path()
+    return package_path.is_dir() and (package_path / "portable").is_file()
 
 
 def is_briefcase_package() -> bool:
