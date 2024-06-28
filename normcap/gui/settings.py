@@ -134,7 +134,17 @@ class Settings(QtCore.QSettings):
         parent: Optional[QtCore.QObject] = None,
         init_settings: Optional[dict] = None,
     ) -> None:
-        super().__init__(organization, application=application, parent=parent)
+        from normcap.gui.system_info import is_portable, config_directory
+        if is_portable():
+            ini_file_path = config_directory() / (application + ".ini")
+            ini_file_path = str(ini_file_path.resolve())
+            super().__init__(ini_file_path, QtCore.QSettings.IniFormat)
+        else:
+            super().__init__(
+                organization,
+                application=application,
+                parent=parent,
+            )
         self.setFallbacksEnabled(False)
         self.init_settings: dict = init_settings or {}
         self._prepare_and_sync()
