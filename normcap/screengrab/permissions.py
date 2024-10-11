@@ -10,10 +10,11 @@ from PySide6 import QtGui, QtWidgets
 from normcap.screengrab import system_info
 
 try:
-    from normcap.screengrab.handlers import dbus_portal
+    from normcap.screengrab.handlers import dbus_portal, grim
 
 except ImportError:
     dbus_portal = cast(Any, None)
+    grim = cast(Any, None)
 
 
 logger = logging.getLogger(__name__)
@@ -190,16 +191,19 @@ class DbusPortalPermissionDialog(QtWidgets.QDialog):
         self.hide()
 
 
-def _dbus_portal_has_screenshot_permission() -> bool:
-    if not dbus_portal:
-        raise ModuleNotFoundError(
-            "Portal permission requested, but dbus_portal could not been imported!"
-        )
+def _check_screenshot_permission() -> bool:
     result = []
-    try:
-        result = dbus_portal.capture()
-    except (PermissionError, TimeoutError) as exc:
-        logger.warning("Screenshot permissions on Wayland seem missing.", exc_info=exc)
+
+    if grim:
+        result = grim.capture()
+    elif dbus_portal:
+        try:
+            result = dbus_portal.capture()
+        except (PermissionError, TimeoutError) as exc:
+            logger.warning(
+                "Screenshot permissions on Wayland seem missing.", exc_info=exc
+            )
+
     return len(result) > 0
 
 
@@ -225,7 +229,7 @@ def has_screenshot_permission() -> bool:
     if sys.platform == "linux" and not system_info.has_wayland_display_manager():
         return True
     if sys.platform == "linux" and system_info.has_wayland_display_manager():
-        return _dbus_portal_has_screenshot_permission()
+        return _check_screenshot_permission()
     if sys.platform == "win32":
         return True
     raise NotImplementedError("Missing permission check for this platform.")
