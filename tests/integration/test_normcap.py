@@ -7,7 +7,7 @@ from normcap.gui.tray import screengrab, sys
 from .testcases import testcases
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.parametrize("testcase", [t for t in testcases if not t.skip])
 def test_normcap_ocr_testcases(
     monkeypatch, qtbot, testcase, run_normcap, select_region, test_signal

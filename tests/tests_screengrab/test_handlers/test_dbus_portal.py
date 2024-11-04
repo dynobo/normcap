@@ -7,7 +7,7 @@ import pytest
 from normcap.screengrab.permissions import has_screenshot_permission
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
 @pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_synchronized_capture(dbus_portal, qapp):
@@ -19,7 +19,7 @@ def test_synchronized_capture(dbus_portal, qapp):
     assert result
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
 def test_synchronized_capture_triggers_request_error(monkeypatch, dbus_portal):
     def _mocked_interface_call(*args):
@@ -32,7 +32,7 @@ def test_synchronized_capture_triggers_request_error(monkeypatch, dbus_portal):
         _ = dbus_portal._synchronized_capture(interactive=False)
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
 @pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_synchronized_capture_triggers_response_error(monkeypatch, dbus_portal):
@@ -54,7 +54,7 @@ def test_synchronized_capture_triggers_response_error(monkeypatch, dbus_portal):
         _ = dbus_portal._synchronized_capture(interactive=False)
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
 def test_synchronized_capture_triggers_timeout(monkeypatch, dbus_portal):
     timeout = 1

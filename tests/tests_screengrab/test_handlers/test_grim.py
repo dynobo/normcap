@@ -7,7 +7,7 @@ from normcap.screengrab import system_info
 from normcap.screengrab.handlers import grim
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.skipif(
     not grim.is_compatible() or not grim.is_installed(),
     reason="Grim compatible platform test",
@@ -26,7 +26,7 @@ def test_capture_on_wayland(qapp):
     assert all(i.size().toTuple() != (0, 0) for i in images)
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.skipif(
     grim.is_compatible() and grim.is_installed(),
     reason="Non-grim compatible platform test",
@@ -39,7 +39,7 @@ def test_capture_with_grim_not_supported_raises():
         _ = grim.capture()
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.skipif(
     grim.is_compatible() and grim.is_installed(),
     reason="Non-grim compatible platform test",

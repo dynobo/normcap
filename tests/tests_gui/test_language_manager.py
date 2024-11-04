@@ -7,7 +7,7 @@ from pytestqt.qtbot import QtBot
 from normcap.gui import language_manager
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_download_language(tmp_path, qtbot: QtBot, mock_urlopen):
     # GIVEN only one language is installed
     Path(tmp_path / "tessdata").mkdir()
@@ -37,7 +37,7 @@ def test_download_language(tmp_path, qtbot: QtBot, mock_urlopen):
     assert result.args[0] == ["afr", "eng"]
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_delete_language(tmp_path, qtbot: QtBot):
     # GIVEN two languages are installed
     Path(tmp_path / "tessdata").mkdir()
@@ -66,7 +66,7 @@ def test_delete_language(tmp_path, qtbot: QtBot):
     assert result.args[0] == ["eng"]
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_delete_without_selection_does_nothing(monkeypatch, tmp_path, qtbot: QtBot):
     # GIVEN two languages are installed
     Path(tmp_path / "tessdata").mkdir()
@@ -95,7 +95,7 @@ def test_delete_without_selection_does_nothing(monkeypatch, tmp_path, qtbot: QtB
     assert window.installed_layout.model.languages[0][0] == "deu"
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_delete_last_language_impossible(monkeypatch, tmp_path, qtbot: QtBot):
     # GIVEN only one language is installed
     messagebox_args = []

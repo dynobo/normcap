@@ -49,9 +49,9 @@ def get_gnome_version() -> str:
         return ""
 
     try:
-        output = subprocess.check_output(
+        output = subprocess.check_output(  # noqa: S603
             ["gnome-shell", "--version"],  # noqa: S607
-            shell=False,  # noqa: S603
+            shell=False,
             text=True,
         )
         if result := re.search(r"\s+([\d\.]+)", output.strip()):

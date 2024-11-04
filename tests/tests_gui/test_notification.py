@@ -93,7 +93,7 @@ def test_send_via_libnotify(monkeypatch):
     assert Path(icon).exists()
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_send_via_qt_tray(qtbot):
     """Only tests if no exception occurs."""
     # GIVEN a Notification object
@@ -109,7 +109,7 @@ def test_send_via_qt_tray(qtbot):
     # THEN we expect no exception (it's hard to test, if the notification is shown)
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_send_via_qt_tray_without_qsystemtrayicon_parent_raises(qtbot):
     """Only tests if no exception occurs."""
     # GIVEN a Notification object
@@ -126,7 +126,7 @@ def test_send_via_qt_tray_without_qsystemtrayicon_parent_raises(qtbot):
     # THEN we expect an exception, as the parent has to be a QSystemTrayIcon
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_send_via_qt_tray_handles_message_click(monkeypatch, qtbot):
     """Test if the click-on-notification signal get's reconnect."""
 
@@ -167,7 +167,7 @@ def test_send_via_qt_tray_handles_message_click(monkeypatch, qtbot):
     )
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_send_via_qt_tray_reconnects_signal(monkeypatch, qtbot):
     """Test if the click-on-notification signal get's reconnect."""
 

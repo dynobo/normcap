@@ -1,6 +1,6 @@
 from importlib import resources as importlib_resources
 from pathlib import Path
-from xml.etree import ElementTree
+from xml.etree import ElementTree as ET
 
 from PySide6 import QtGui
 
@@ -15,7 +15,7 @@ def test_resources_complete(qtbot):
     assert resources.qt_resource_name
     assert resources.qt_resource_struct
 
-    tree = ElementTree.parse(icons_path / "resources.qrc")  # noqa: S314
+    tree = ET.parse(icons_path / "resources.qrc")  # noqa: S314
     root = tree.getroot()
     icons_qrc = [el.text for el in root.find("qresource").findall("file")]
 

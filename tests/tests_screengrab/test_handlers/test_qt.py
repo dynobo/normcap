@@ -5,7 +5,7 @@ from normcap.screengrab import system_info
 from normcap.screengrab.handlers.qt import capture
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.skipif(
     system_info.has_wayland_display_manager(), reason="Non-Wayland specific test"
 )
@@ -20,7 +20,7 @@ def test_capture_on_non_wayland(qapp):
     assert all(i.size().toTuple() != (0, 0) for i in images)
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.skipif(
     not system_info.has_wayland_display_manager(), reason="Wayland specific test"
 )

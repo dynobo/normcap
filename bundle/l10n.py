@@ -68,9 +68,9 @@ def _update_coverage(lines: list[str]) -> None:
     )
     md_file.write_text(md_text, "utf-8")
 
-    subprocess.run(
+    subprocess.run(  # noqa: S602
         f"mdformat {md_file.resolve()}",
-        shell=True,  # noqa: S602
+        shell=True,
         check=True,
         capture_output=True,
         encoding="utf-8",

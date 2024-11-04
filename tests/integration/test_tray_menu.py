@@ -9,7 +9,7 @@ from normcap.gui.tray import screengrab
 from .testcases import testcases
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_tray_menu_exit(monkeypatch, qtbot, run_normcap):
     """Test if application can be exited through tray icon."""
     # GIVEN NormCap is started to tray via "background-mode"
@@ -28,7 +28,7 @@ def test_tray_menu_exit(monkeypatch, qtbot, run_normcap):
     assert exit_calls == [0]
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     """Test if capture mode can be started through tray icon."""
     # GIVEN NormCap is started to tray via "background-mode"

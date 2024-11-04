@@ -25,8 +25,8 @@ def test_pbcopy_copy():
     text = f"this is a unique test {uuid.uuid4()}"
     pbcopy.copy(text=text)
 
-    with subprocess.Popen(
-        ["pbpaste", "r"],  # noqa: S603, S607
+    with subprocess.Popen(  # noqa: S603
+        ["pbpaste", "r"],  # noqa: S607
         stdout=subprocess.PIPE,
     ) as p:
         stdout = p.communicate()[0]

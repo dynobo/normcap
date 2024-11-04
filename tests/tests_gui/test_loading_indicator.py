@@ -15,7 +15,7 @@ def _convert_to_pixels(image):
     return [c[2::-1] for c in color_values]
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_radius(qtbot):
     # GIVEN an indicator instance with a certain size
     window = QtWidgets.QMainWindow()
@@ -30,7 +30,7 @@ def test_radius(qtbot):
     assert 1 <= indicator.radius < widget_size / 2
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_opacities(qtbot):
     # GIVEN an indicator instance
     window = QtWidgets.QMainWindow()
@@ -46,7 +46,7 @@ def test_opacities(qtbot):
     assert all(opacities[i] < opacities[i - 1] for i in range(1, len(opacities)))
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_show_starts_timer(qtbot):
     # GIVEN an indicator instance
     window = QtWidgets.QMainWindow()
@@ -61,7 +61,7 @@ def test_show_starts_timer(qtbot):
     assert indicator.timer
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_hide_stops_timer(qtbot):
     # GIVEN a visible indicator
     window = QtWidgets.QMainWindow()
@@ -78,7 +78,7 @@ def test_hide_stops_timer(qtbot):
     assert indicator.timer is None
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_frame_count_progresses(monkeypatch, qtbot):
     # GIVEN a indicator with a mocked paintEvent method for to capture counter values
     counter_values = []
@@ -103,7 +103,7 @@ def test_frame_count_progresses(monkeypatch, qtbot):
     assert max(counter_values) == indicator.dot_count - 1
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_circles_are_rendered(qtbot):
     # GIVEN a indicator instance with a red dots are rendered on a black window
     window = QtWidgets.QMainWindow()

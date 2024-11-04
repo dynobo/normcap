@@ -103,9 +103,9 @@ class BuilderBase(ABC):
 
         cmd_str = re.sub(r"\s+", " ", cmd)
 
-        completed_proc = subprocess.run(
+        completed_proc = subprocess.run(  # noqa: S602
             cmd_str,
-            shell=True,  # noqa: S602
+            shell=True,
             cwd=cwd,
             capture_output=False,
             check=False,
@@ -165,13 +165,14 @@ class BuilderBase(ABC):
             )
 
         patch_applied = False
-        for line in fileinput.FileInput(file_path, inplace=True):
-            if insert_after in line:
-                pad = len(line) - len(line.lstrip(" "))
-                patch = patch.replace("\n", f"\n{pad * ' '}")
-                line = line + pad * " " + patch + "\n"  # noqa: PLW2901
-                patch_applied = True
-            print(line, end="")  # noqa: T201
+        with fileinput.FileInput(file_path, inplace=True) as fh:
+            for line in fh:
+                if insert_after in line:
+                    pad = len(line) - len(line.lstrip(" "))
+                    patch = patch.replace("\n", f"\n{pad * ' '}")
+                    line = line + pad * " " + patch + "\n"  # noqa: PLW2901
+                    patch_applied = True
+                print(line, end="")  # noqa: T201
 
         if not patch_applied:
             raise RuntimeError(
@@ -226,9 +227,9 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
     if not installer_path.exists():
         raise FileNotFoundError("Downloading of tesseract binaries might have failed!")
 
-    subprocess.run(
+    subprocess.run(  # noqa: S602
         "7z e tesseract-setup.exe",  # noqa: S607
-        shell=True,  # noqa: S602
+        shell=True,
         cwd=tesseract_path,
         check=True,
     )
@@ -280,7 +281,7 @@ def bundle_tesseract_windows_appveyor(builder: BuilderBase) -> None:
             if ".test." not in m and ".training." not in m
         ]
         subdir = members[0].split("/")[0]
-        artifact_zip.extractall(path=builder.RESOURCE_PATH, members=members)  #
+        artifact_zip.extractall(path=builder.RESOURCE_PATH, members=members)
     zip_path.unlink()
 
     for each_file in Path(builder.RESOURCE_PATH / subdir).glob("*.*"):

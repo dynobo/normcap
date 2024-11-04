@@ -25,16 +25,13 @@ def has_wlroots_compositor() -> bool:
     if gnome_desktop_session_id == "this-is-deprecated":
         gnome_desktop_session_id = ""
 
-    if (
+    return not (
         gnome_desktop_session_id
         or "gnome" in xdg_current_desktop
         or kde_full_session
         or "kde-plasma" in desktop_session
         or "unity" in xdg_current_desktop
-    ):
-        return False
-
-    return True
+    )
 
 
 def has_wayland_display_manager() -> bool:
@@ -67,9 +64,9 @@ def get_gnome_version() -> str:
         return ""
 
     try:
-        output = subprocess.check_output(
+        output = subprocess.check_output(  # noqa: S603
             ["gnome-shell", "--version"],  # noqa: S607
-            shell=False,  # noqa: S603
+            shell=False,
             text=True,
         )
         if result := re.search(r"\s+([\d\.]+)", output.strip()):
