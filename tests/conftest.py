@@ -32,28 +32,28 @@ def _clear_caches():
     system_info.config_directory.cache_clear()
 
 
-@pytest.fixture()
+@pytest.fixture
 def temp_settings(qapp):
     settings = QtCore.QSettings("normcap_tests", "settings")
     yield settings
     settings.remove("")
 
 
-@pytest.fixture()
+@pytest.fixture
 def menu_btn(temp_settings):
     return menu_button.MenuButton(
         settings=temp_settings, language_manager=True, installed_languages=["eng"]
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def menu_btn_without_lang_man(temp_settings):
     return menu_button.MenuButton(
         settings=temp_settings, language_manager=False, installed_languages=["eng"]
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def dbus_portal(qapp):
     try:
         from normcap.screengrab.handlers import dbus_portal
@@ -66,7 +66,7 @@ def dbus_portal(qapp):
         return dbus_portal
 
 
-@pytest.fixture()
+@pytest.fixture
 def capture() -> Capture:
     """Create argparser and provide its default values."""
     image = QtGui.QImage(200, 300, QtGui.QImage.Format.Format_RGB32)
@@ -81,7 +81,7 @@ def capture() -> Capture:
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def ocr_result() -> OcrResult:
     """Create argparser and provide its default values."""
     return OcrResult(
@@ -141,7 +141,7 @@ def ocr_result() -> OcrResult:
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def basic_cli_args():
     """NormCap configuration used by most tests."""
     return [
@@ -155,7 +155,7 @@ def basic_cli_args():
     ]
 
 
-@pytest.fixture()
+@pytest.fixture
 def run_normcap(monkeypatch, qapp, qtbot, basic_cli_args):
     trays = []
 
@@ -184,7 +184,7 @@ def run_normcap(monkeypatch, qapp, qtbot, basic_cli_args):
     QtCore.QTimer.singleShot(0, QtCore.QCoreApplication.processEvents)
 
 
-@pytest.fixture()
+@pytest.fixture
 def test_signal():
     """Create a QT signal for usage with qtbot.waitSignal().
 
@@ -205,7 +205,7 @@ def test_signal():
     return TestSignal()
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_urlopen(monkeypatch) -> Callable:
     """Provide a function to patch urllib.request.urlopen with a fake contextmanager.
 
@@ -237,7 +237,7 @@ def mock_urlopen(monkeypatch) -> Callable:
     return _monkeypatch_urlopen
 
 
-@pytest.fixture()
+@pytest.fixture
 def select_region(qtbot):
     def _select_region(on: QtWidgets.QWidget, pos: tuple[QtCore.QPoint, QtCore.QPoint]):
         top_left, bottom_right = pos
@@ -249,7 +249,7 @@ def select_region(qtbot):
     return _select_region
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_import(monkeypatch):
     def _mock_import(
         parent_module: ModuleType,

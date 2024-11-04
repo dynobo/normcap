@@ -44,8 +44,8 @@ def test_xclip_copy():
 
     xclip.copy(text=text)
 
-    with subprocess.Popen(
-        ["xclip", "-selection", "clipboard", "-out"],  # noqa: S603, S607
+    with subprocess.Popen(  # noqa: S603
+        ["xclip", "-selection", "clipboard", "-out"],  # noqa: S607
         stdout=subprocess.PIPE,
     ) as p:
         stdout = p.communicate()[0]

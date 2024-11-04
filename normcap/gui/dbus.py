@@ -57,7 +57,7 @@ class DBusWindowCalls(MessageGenerator):
     def get_title(self, win_id: int) -> Message:
         return new_method_call(self, "GetTitle", "u", (win_id,))
 
-    def move_resize(  # noqa: PLR0913
+    def move_resize(
         self, win_id: int, x: int, y: int, width: int, height: int
     ) -> Message:
         return new_method_call(
@@ -104,7 +104,11 @@ def move_window_via_gnome_shell_eval(title_id: str, position: Rect) -> bool:
             raise RuntimeError("DBus response was not OK!")  # noqa: TRY301
     except Exception as exc:
         logger.warning("Failed to move window via org.gnome.Shell.Eval!")
-        logger.debug("".join(traceback.format_exception(exc)).strip())
+        logger.debug(
+            "".join(
+                traceback.format_exception(type(exc), exc, exc.__traceback__)
+            ).strip()
+        )
         return False
     else:
         return True
@@ -154,7 +158,11 @@ def move_window_via_kde_kwin_scripting(title_id: str, position: Rect) -> bool:
 
         except Exception as exc:
             logger.warning("Failed to move window via org.kde.kwin.Scripting!")
-            logger.debug("".join(traceback.format_exception(exc)).strip())
+            logger.debug(
+                "".join(
+                    traceback.format_exception(type(exc), exc, exc.__traceback__)
+                ).strip()
+            )
             return False
         else:
             return True
@@ -209,7 +217,11 @@ def move_windows_via_window_calls_extension(title_id: str, position: Rect) -> bo
             )
     except Exception as exc:
         logger.warning("Failed to move window via org.gnome.Shell.extensions.windows!")
-        logger.debug("".join(traceback.format_exception(exc)).strip())
+        logger.debug(
+            "".join(
+                traceback.format_exception(type(exc), exc, exc.__traceback__)
+            ).strip()
+        )
         logger.warning(
             "If you experience issues with NormCap's in a multi monitor setting, "
             "try installing the Gnome Shell Extension 'Window Calls' "

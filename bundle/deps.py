@@ -27,9 +27,9 @@ class System(enum.IntEnum):
 
 
 def run(cmd: str, check: bool = True) -> str:
-    p = subprocess.run(
+    p = subprocess.run(  # noqa: S602
         cmd,
-        shell=True,  # noqa: S602
+        shell=True,
         check=check,
         capture_output=True,
         encoding="utf-8",

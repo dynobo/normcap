@@ -4,7 +4,7 @@ import shutil
 import urllib.request
 import zipfile
 from pathlib import Path
-from xml.etree import ElementTree
+from xml.etree import ElementTree as ET
 
 from retry import retry
 
@@ -110,9 +110,9 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
             header_lines = f.readlines()[:3]
 
         ns = "{http://schemas.microsoft.com/wix/2006/wi}"
-        ElementTree.register_namespace("", ns[1:-1])
+        ET.register_namespace("", ns[1:-1])
 
-        tree = ElementTree.parse(wxs_file)  # noqa: S314
+        tree = ET.parse(wxs_file)  # noqa: S314
         root = tree.getroot()
         product = root.find(f"{ns}Product")
         if not product:
@@ -135,20 +135,20 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
             shutil.copy(original, target)
 
         # Set installer images
-        ElementTree.SubElement(
+        ET.SubElement(
             product, "WixVariable", {"Id": "WixUIDialogBmp", "Value": f"{left}"}
         )
-        ElementTree.SubElement(
+        ET.SubElement(
             product, "WixVariable", {"Id": "WixUIBannerBmp", "Value": f"{top}"}
         )
 
         # Allow upgrades
-        major_upgrade = ElementTree.SubElement(product, "MajorUpgrade")
+        major_upgrade = ET.SubElement(product, "MajorUpgrade")
         major_upgrade.set("Schedule", "afterInstallInitialize")
         major_upgrade.set("DowngradeErrorMessage", "Can't downgrade. Uninstall first.")
 
         # Cleanup tessdata folder on uninstall
-        ElementTree.SubElement(
+        ET.SubElement(
             product,
             "CustomAction",
             {
@@ -167,7 +167,7 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
         sequence = product.find(f"{ns}InstallExecuteSequence")
         if not sequence:
             raise ValueError("InstallExecuteSequence section not found!")
-        ElementTree.SubElement(
+        ET.SubElement(
             sequence,
             "Custom",
             {"Action": "Cleanup_orphaned_files", "Before": "RemoveFiles"},

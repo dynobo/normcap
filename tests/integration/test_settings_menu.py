@@ -8,7 +8,7 @@ from normcap.gui.tray import screengrab
 from .testcases import testcases
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_settings_menu_creates_actions(monkeypatch, qtbot, run_normcap, test_signal):
     """Test if capture mode can be started through tray icon."""
     # GIVEN NormCap is started with any image as screenshot
@@ -35,7 +35,7 @@ def test_settings_menu_creates_actions(monkeypatch, qtbot, run_normcap, test_sig
     assert "close" in texts
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_settings_menu_close_action_exits(monkeypatch, qtbot, run_normcap, test_signal):
     """Tests complete OCR workflow."""
     # GIVEN NormCap is started with any image as screenshot
@@ -61,7 +61,7 @@ def test_settings_menu_close_action_exits(monkeypatch, qtbot, run_normcap, test_
     assert blocker.args == [0]
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 def test_settings_menu_close_action_minimizes(
     monkeypatch, qtbot, run_normcap, test_signal
 ):

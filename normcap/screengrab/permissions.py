@@ -80,9 +80,9 @@ def _macos_open_privacy_settings() -> None:
             logger.error("Couldn't open macOS privacy settings on non macOS platform.")
             return
 
-        subprocess.run(
+        subprocess.run(  # noqa: S603
             ["open", link_to_preferences],  # noqa: S607
-            shell=False,  # noqa: S603
+            shell=False,
             check=True,
             timeout=30,
         )
@@ -95,9 +95,9 @@ def macos_reset_screenshot_permission() -> None:
     logger.info("Reset screen recording permissions for eu.dynobo.normcap")
     cmd = ["tccutil", "reset", "ScreenCapture", "eu.dynobo.normcap"]
     try:
-        completed_proc = subprocess.run(
+        completed_proc = subprocess.run(  # noqa: S603
             cmd,
-            shell=False,  # noqa: S603
+            shell=False,
             encoding="utf-8",
             check=False,
             timeout=10,

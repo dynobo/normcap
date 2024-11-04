@@ -35,9 +35,9 @@ def capture() -> list[QtGui.QImage]:
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         image_path = Path(temp_dir) / "normcap_grim_screenshot.png"
-        subprocess.run(
+        subprocess.run(  # noqa: S603
             ["grim", str(image_path.resolve())],  # noqa: S607
-            shell=False,  # noqa: S603
+            shell=False,
             check=True,
             timeout=3,
             text=True,

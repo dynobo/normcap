@@ -14,7 +14,7 @@ def test_introduction_initialize_checkbox_state(show_on_startup):
     assert dialog.show_on_startup_checkbox.isChecked() is show_on_startup
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.parametrize(
     ("show_on_startup", "expected_return_code"),
     [(True, introduction.Choice.SHOW), (False, introduction.Choice.DONT_SHOW)],
@@ -39,7 +39,7 @@ def test_introduction_checkbox_sets_return_code(
     assert return_code == expected_return_code
 
 
-@pytest.mark.gui()
+@pytest.mark.gui
 @pytest.mark.parametrize(
     ("show_on_startup", "expected_return_code"),
     [(False, introduction.Choice.SHOW), (True, introduction.Choice.DONT_SHOW)],
