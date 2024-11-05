@@ -1,0 +1,19 @@
+name: Setup
+description: Checkout, install python and uv
+
+runs:
+  using: 'composite'
+  steps:
+
+    - name: install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: "0.4.30"
+        enable-cache: true
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+
+    - name: uv sync
+      run: uv sync
