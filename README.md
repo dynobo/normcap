@@ -150,7 +150,7 @@ See [XKCD](https://xkcd.com):
 
 Prerequisites for setting up a development environment are:
 [**Python >=3.9**](https://www.python.org/downloads/),
-[**hatch**](https://hatch.pypa.io/latest/install/) and
+[**uv**](https://docs.astral.sh/uv/getting-started/installation/) and
 [**Tesseract >=5.0**](https://tesseract-ocr.github.io/tessdoc/#5xx) (incl. **language
 data**).
 
@@ -162,13 +162,14 @@ git clone https://github.com/dynobo/normcap.git
 cd normcap
 
 # Create virtual env and install dependencies
-hatch env create
+uv venv
+uv sync
 
 # Register pre-commit hook
-hatch run pre-commit install
+uv run pre-commit install
 
 # Run NormCap in virtual env
-hatch run python -m normcap
+uv run python -m normcap
 ```
 
 ## Credits

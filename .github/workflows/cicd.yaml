@@ -35,12 +35,10 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           ref: ${{ inputs.refToBuild }}
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: "pip"
-      - name: Install hatch
-        run: pip install hatch
+
+      - name: Setup Python
+        uses: ./.github/actions/setup
+
       - name: Prepare Linux
         if: matrix.os  == 'ubuntu-22.04'
         run: |
@@ -101,7 +99,8 @@ jobs:
           tesseract --list-langs
 
       - name: Run project checks
-        run: hatch run check
+        run: |
+          uv run poe cicd-check
         env:
           QT_DEBUG_PLUGINS: 1
 
@@ -122,14 +121,12 @@ jobs:
         os: [macos-11, macos-14, windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: "pip"
-      - name: Install hatch
-        run: pip install hatch
+
+      - name: Setup Python
+        uses: ./.github/actions/setup
+
       - name: Test build python package
-        run: hatch build
+        run: uv build
 
   test-briefcase:
     name: Test Briefcase build
@@ -140,15 +137,13 @@ jobs:
         os: [macos-11, macos-14, windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: "pip"
-      - name: Install hatch
-        run: pip install hatch
+
+      - name: Setup Python
+        uses: ./.github/actions/setup
+        
       - name: Test build briefcase package
         shell: bash -l {0}
-        run: hatch run bundle --dev
+        run: uv run poe bundle-dev
       - name: Print briefcase log in case of error
         if: failure()
         shell: bash -l {0}
@@ -183,14 +178,12 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: "pip"
-      - name: Install hatch
-        run: pip install hatch
+
+      - name: Setup Python
+        uses: ./.github/actions/setup
+
       - name: Build documentation
-        run: hatch run build-docs
+        run: uv run poe docs-build
 
   coveralls:
     name: Upload coverage
@@ -244,15 +237,13 @@ jobs:
         os: [macos-11, macos-14, windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: "pip"
-      - name: Install hatch
-        run: pip install hatch
+
+      - name: Setup Python
+        uses: ./.github/actions/setup
+
       - name: Build package briefcase
         shell: bash -l {0}
-        run: hatch run bundle
+        run: uv run poe bundle
       - name: Draft release
         if: github.repository == 'dynobo/normcap'
         uses: ncipollo/release-action@v1
@@ -294,14 +285,12 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: "pip"
-      - name: Install hatch
-        run: pip install hatch
+
+      - name: Setup Python
+        uses: ./.github/actions/setup
+
       - name: Build Python package
-        run: hatch build
+        run: uv build
       - name: Publish to PyPi
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -324,14 +313,12 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: "pip"
-      - name: Install hatch
-        run: pip install hatch
+
+      - name: Setup Python
+        uses: ./.github/actions/setup
+
       - name: Build documentation
-        run: hatch run build-docs
+        run: uv run poe docs-build
       - name: Deploy pages
         uses: peaceiris/actions-gh-pages@v3
         with:
