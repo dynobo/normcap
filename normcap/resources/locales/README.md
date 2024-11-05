@@ -108,8 +108,7 @@ complicated for you, do not hesitate to request the creation of a new, empty `.p
 via [opening a new issue](https://github.com/dynobo/normcap/issues/new)!
 
 _Prerequisite:_ Follow the general
-[setup of the development environment](../../../README.md#Development) and activate the
-virtual Python environment via `hatch shell`.
+[setup of the development environment](../../../README.md#Development).
 
 _Note_: All commands should be run in the repository's root directory.
 
@@ -125,7 +124,7 @@ _Note_: All commands should be run in the repository's root directory.
 1. Run the following command to create an initial `messages.po`-file for the language.
     Make sure to replace `<LOCALE_NAME>` by the string identified in step 1.
     ```sh
-    hatch run create-locale <LOCALE_NAME>
+    uv run poe locales-create <LOCALE_NAME>
     ```
 1. Edit the file `./normcap/resources/locales/<LOCALE_NAME>/LC_MESSAGES/messages.po`
     which was created in step 2. Add your translations as the respective `msgstr`. If
@@ -137,7 +136,7 @@ _Note_: All commands should be run in the repository's root directory.
         automatically.
 1. Compile the new `.po` file to the machine-readable `.mo` file:
     ```sh
-    hatch run locales-compile
+    uv run poe locales-compile
     ```
 1. To test your translation, run NormCap with the `LANGUAGE` environment variable set:
     ```sh
@@ -152,5 +151,5 @@ This is only necessary, when translatable strings in NormCap's source code got c
 
 1. Generate `.pot` file and update all existing `.po` files:
     ```sh
-    hatch run locales-update
+    uv run poe locales-update
     ```

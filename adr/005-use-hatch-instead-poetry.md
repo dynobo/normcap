@@ -1,6 +1,6 @@
 # Use hatch instead poetry
 
-- Status: accepted
+- Status: ~~accepted~~ superseeded by [ADR-007](./007-use-uv-instead-hatch.md)
 - Deciders: @dynobo
 - Date: 2023-10-27
 

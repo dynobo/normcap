@@ -21,8 +21,8 @@ repos:
   - repo: local
     hooks:
       - id: check
-        name: hatch run pre-commit
-        stages: [commit]
+        name: poe pre-commit
+        stages: [pre-commit]
         language: system
-        entry: hatch run pre-commit
+        entry: uv run poe pre-commit
         pass_filenames: false
