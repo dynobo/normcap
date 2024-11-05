@@ -17,3 +17,4 @@ runs:
 
     - name: uv sync
       run: uv sync
+      shell: bash
