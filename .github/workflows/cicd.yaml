@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11, macos-14, windows-2022, ubuntu-22.04]
+        os: [macos-12, macos-14, windows-2022, ubuntu-22.04]
     steps:
       # Setup environment
       - uses: actions/checkout@v4
@@ -71,7 +71,7 @@ jobs:
           echo "QT_QPA_PLATFORM=xcb" >> $GITHUB_ENV
 
       - name: Prepare macOS
-        if: matrix.os  == 'macos-11' || matrix.os == 'macos-14'
+        if: matrix.os  == 'macos-12' || matrix.os == 'macos-14'
         run: |
           brew install pkg-config tesseract tesseract-lang dylibbundler
           brew info tesseract
@@ -118,7 +118,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11, macos-14, windows-2022, ubuntu-22.04]
+        os: [macos-12, macos-14, windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v4
 
@@ -134,13 +134,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11, macos-14, windows-2022, ubuntu-22.04]
+        os: [macos-12, macos-14, windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Python
         uses: ./.github/actions/setup
-        
+
       - name: Test build briefcase package
         shell: bash -l {0}
         run: uv run poe bundle-dev
@@ -234,7 +234,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11, macos-14, windows-2022, ubuntu-22.04]
+        os: [macos-12, macos-14, windows-2022, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v4
 
