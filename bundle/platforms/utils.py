@@ -218,10 +218,9 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
     builder.TESSERACT_PATH.mkdir(exist_ok=True)
 
     installer_path = tesseract_path / "tesseract-setup.exe"
-    url = (
-        "https://digi.bib.uni-mannheim.de/tesseract/"
-        "tesseract-ocr-w64-setup-v5.3.0.20221214.exe"
-    )
+    url = "https://picnico.de/tesseract-ocr-w64-setup-5.4.0.20240606.exe"
+    # which is my own mirror of:
+    # https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.4.0.20240606.exe
     urllib.request.urlretrieve(url, installer_path)  # noqa: S310
 
     if not installer_path.exists():
