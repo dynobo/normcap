@@ -5,6 +5,7 @@
 ## v0.5.9 (upcoming)
 
 - All: Add french translation. Thanks, [@mofazhe](https://github.com/mofazhe)! ([#648](https://github.com/dynobo/normcap/pull/661))
+- macOS: Drop support for macOS 12 (end of life).
 
 ## v0.5.8 (2024-05-19)
 
