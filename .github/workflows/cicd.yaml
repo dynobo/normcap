@@ -321,7 +321,7 @@ jobs:
       - name: Build documentation
         run: uv run poe docs-build
       - name: Deploy pages
-        uses: peaceiris/actions-gh-pages@4
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
