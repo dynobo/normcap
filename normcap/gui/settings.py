@@ -4,6 +4,7 @@ from typing import Optional
 from PySide6 import QtCore
 
 from normcap.gui.models import Setting
+from normcap.gui.system_info import config_directory, is_portable_windows_package
 
 logger = logging.getLogger(__name__)
 
@@ -134,17 +135,11 @@ class Settings(QtCore.QSettings):
         parent: Optional[QtCore.QObject] = None,
         init_settings: Optional[dict] = None,
     ) -> None:
-        from normcap.gui.system_info import is_portable, config_directory
-        if is_portable():
-            ini_file_path = config_directory() / (application + ".ini")
-            ini_file_path = str(ini_file_path.resolve())
-            super().__init__(ini_file_path, QtCore.QSettings.IniFormat)
+        if is_portable_windows_package():
+            ini_file = (config_directory() / f"{application}.ini").resolve()
+            super().__init__(str(ini_file), QtCore.QSettings.IniFormat)
         else:
-            super().__init__(
-                organization,
-                application=application,
-                parent=parent,
-            )
+            super().__init__(organization, application=application, parent=parent)
         self.setFallbacksEnabled(False)
         self.init_settings: dict = init_settings or {}
         self._prepare_and_sync()

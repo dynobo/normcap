@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from platforms.windows_briefcase  import WindowsBriefcase
+from platforms.windows_briefcase import WindowsBriefcase
 
 
 class WindowsBriefcaseZip(WindowsBriefcase):
@@ -28,4 +28,6 @@ class WindowsBriefcaseZip(WindowsBriefcase):
             / "portable"
         )
         Path(portable_flag_file).touch()
-        self.run(cmd="briefcase package windows VisualStudio -p zip", cwd=self.PROJECT_PATH)
+        self.run(
+            cmd="briefcase package windows VisualStudio -p zip", cwd=self.PROJECT_PATH
+        )
