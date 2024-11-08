@@ -17,19 +17,15 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    builders = []
     if sys.platform == "win32":
-        builders.append(WindowsBriefcase)
-        builders.append(WindowsBriefcaseZip)
+        WindowsBriefcase().create()
+        WindowsBriefcaseZip().create()
 
     elif sys.platform == "darwin":
-        builders.append(MacBriefcase)
+        MacBriefcase().create()
 
     elif sys.platform == "linux":
-        builders.append(LinuxBriefcase)
+        LinuxBriefcase().create()
 
     else:
         raise RuntimeError(f"Unknown platform '{sys.platform}'.")
-
-    for builder in builders:
-        builder().create()
