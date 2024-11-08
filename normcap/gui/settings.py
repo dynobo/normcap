@@ -4,6 +4,7 @@ from typing import Optional
 from PySide6 import QtCore
 
 from normcap.gui.models import Setting
+from normcap.gui.system_info import is_portable, config_directory
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +135,6 @@ class Settings(QtCore.QSettings):
         parent: Optional[QtCore.QObject] = None,
         init_settings: Optional[dict] = None,
     ) -> None:
-        from normcap.gui.system_info import is_portable, config_directory
         if is_portable():
             ini_file_path = config_directory() / (application + ".ini")
             ini_file_path = str(ini_file_path.resolve())
