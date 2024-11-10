@@ -17,7 +17,7 @@ Packages with the
 <div class="annotate" markdown>
 - [Download for **Windows**](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64-Windows.msi)
   <small>Installer, x86_64, ~120 MB</small>
-- [Download for **Windows**](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64-Windows.msi)
+- [Download for **Windows**](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64-Windows.zip)
   <small>Portable, x86_64, ~120 MB</small>
 - [Download for **Linux**](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64.AppImage)
   <small>x86_64, ~90 MB</small>
