@@ -38,9 +38,9 @@ take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
 #### Linux
 - [NormCap-0.5.8-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64.AppImage)
   (Binary, requires [fuse](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-appimages-require-fuse-to-run) & [libcrypt](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-while-loading-shared-libraries-libcryptso1))
-- [`normcap` @ AUR](https://aur.archlinux.org/packages/normcap) (Arch/Manjaro)
 - [com.github.dynobo.normcap @ FlatHub](https://flathub.org/apps/details/com.github.dynobo.normcap)
   (FlatPak)
+- [`normcap` @ AUR](https://aur.archlinux.org/packages/normcap) (Arch/Manjaro)
 
 #### macOS
 
