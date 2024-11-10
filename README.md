@@ -32,13 +32,13 @@ take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
 
 #### Windows
 
-- [NormCap-0.5.8-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64-Windows.msi)
+- [NormCap-0.5.9-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64-Windows.msi)
   (Installer)
-- [NormCap-0.5.8-x86_64-Windows.zip](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64-Windows.zip)
+- [NormCap-0.5.9-x86_64-Windows.zip](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64-Windows.zip)
   (Portable)
 
 #### Linux
-- [NormCap-0.5.8-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64.AppImage)
+- [NormCap-0.5.9-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64.AppImage)
   (Binary, requires [fuse](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-appimages-require-fuse-to-run) & [libcrypt](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-while-loading-shared-libraries-libcryptso1))
 - [com.github.dynobo.normcap @ FlatHub](https://flathub.org/apps/details/com.github.dynobo.normcap)
   (FlatPak)
@@ -50,9 +50,9 @@ Note: You have to allow the unsigned application on first start: "System Prefere
 "Security & Privacy" → "General" → "Open anyway". You also have to allow NormCap to take
 screenshots. ([#135](https://github.com/dynobo/normcap/issues/135))
 
-- [NormCap-0.5.8-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64-macOS.dmg)
+- [NormCap-0.5.9-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64-macOS.dmg)
   (Installer for x86/64)
-- [NormCap-0.5.8-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-arm64-macOS.dmg)
+- [NormCap-0.5.9-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-arm64-macOS.dmg)
   (Installer for M1)
 
 ## Install Python package
