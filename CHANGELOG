@@ -4,8 +4,9 @@
 
 ## v0.5.9 (upcoming)
 
-- All: Add french translation. Thanks, [@mofazhe](https://github.com/mofazhe)! ([#648](https://github.com/dynobo/normcap/pull/661))
+- All: Add Chinese translation. Thanks, [@mofazhe](https://github.com/mofazhe)! ([#661](https://github.com/dynobo/normcap/pull/661))
 - All: Add Portuguese translation. Thanks, ssantos!
+- Windows: Add portable package. Thanks, [@mofazhe](https://github.com/mofazhe)! ([#660](https://github.com/dynobo/normcap/pull/660), [#671](https://github.com/dynobo/normcap/pull/671))
 - macOS: Drop support for macOS 12 (end of life).
 
 ## v0.5.8 (2024-05-19)

@@ -34,6 +34,8 @@ take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
 
 - [NormCap-0.5.8-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64-Windows.msi)
   (Installer)
+- [NormCap-0.5.8-x86_64-Windows.zip](https://github.com/dynobo/normcap/releases/download/v0.5.8/NormCap-0.5.8-x86_64-Windows.zip)
+  (Portable)
 
 #### Linux
 
