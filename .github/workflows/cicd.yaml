@@ -73,7 +73,7 @@ jobs:
       - name: Prepare macOS
         if: matrix.os  == 'macos-13' || matrix.os == 'macos-14'
         run: |
-          brew install pkg-config tesseract tesseract-lang dylibbundler
+          brew install tesseract tesseract-lang dylibbundler
           brew info tesseract
 
       - name: Prepare Windows
