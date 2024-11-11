@@ -31,7 +31,7 @@ class LinuxBriefcase(BuilderBase):
         shutil.copy(metainfo, target_path / "metainfo")
 
     def _patch_briefcase_appimage_to_include_deps(self) -> None:
-        """Insert code into briefcase appimage code to add additional deps.
+        """Insert code into briefcase appimage to add additional deps.
 
         Currently adds:
         - tesseract
@@ -55,6 +55,7 @@ class LinuxBriefcase(BuilderBase):
 
     def _patch_briefcase_appimage_to_run_cmd(self) -> None:
         """Execute _before_ linuxdeploy."""
+        # TODO: check if still necessary
         file_path = (
             Path(briefcase.__file__).parent / "platforms" / "linux" / "appimage.py"
         )
