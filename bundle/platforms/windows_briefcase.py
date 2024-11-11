@@ -24,6 +24,7 @@ class WindowsBriefcase(BuilderBase):
         # For mirrors see: https://wiki.openssl.org/index.php/Binaries
         # openssl_url = "http://mirror.firedaemon.com/OpenSSL/openssl-1.1.1q.zip"
         # openssl_url = "http://wiki.overbyte.eu/arch/openssl-1.1.1q-win64.zip"
+        # TODO: Update openssl
         openssl_url = "https://indy.fulgan.com/SSL/openssl-1.0.2u-x64_86-win64.zip"
         target_path = self.PROJECT_PATH / "normcap" / "resources" / "openssl"
         target_path.mkdir(exist_ok=True)
@@ -35,6 +36,7 @@ class WindowsBriefcase(BuilderBase):
         zip_path.unlink()
 
     def _patch_main_cpp(self) -> None:
+        # TODO: Test if still needed
         main_cpp = (
             self.PROJECT_PATH
             / "build"
