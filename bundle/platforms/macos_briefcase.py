@@ -30,7 +30,6 @@ class MacBriefcase(BuilderBase):
         See details:
         https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-113616
         """
-        # TODO: Replace by briefcase config
         file_path = Path("macOS/app/NormCap/NormCap.app/Contents") / "Info.plist"
         patch = """
     <key>LSUIPresentationMode</key>
