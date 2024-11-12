@@ -74,7 +74,7 @@ def install_deps(system: System) -> None:
         run("sudo add-apt-repository -y universe")
         run("sudo apt install -y libfuse2 libxcb1 libxcb-cursor0")
     if system == System.MANJARO_XORG:
-        run("sudo pacman -Sy --noconfirm libxcb xcb-util-cursor libxcrypt-compat")
+        run("sudo pacman -Sy --noconfirm libxcb xcb-util-cursor")
     if system == System.FEDORA_XORG:
         run("sudo dnf install -y libxcb xcb-util-cursor")
 
