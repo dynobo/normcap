@@ -1,16 +1,16 @@
 [build-system]
-requires = ["hatchling"]
+requires = [ "hatchling" ]
 build-backend = "hatchling.build"
 
 [project]
 name = "normcap"
 version = "0.5.9"
 description = "OCR-powered screen-capture tool to capture information instead of images."
-keywords = ["screenshot", "ocr", "capture", "clipboard"]
+keywords = [ "screenshot", "ocr", "capture", "clipboard" ]
 readme = "README.md"
-requires-python = ">=3.9,<=3.12"
-license = "GPL-3.0-or-later"
-authors = [{ name = "dynobo", email = "dynobo@mailbox.org" }]
+requires-python = ">=3.9"
+license.file = "LICENSE"
+authors = [ { name = "dynobo", email = "dynobo@mailbox.org" } ]
 classifiers = [
   "Development Status :: 4 - Beta",
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -34,7 +34,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-build = ["babel", "toml"]
+build = [ "babel", "toml" ]
 
 [project.urls]
 Homepage = "https://dynobo.github.io/normcap/"
@@ -47,8 +47,8 @@ Changelog = "https://github.com/dynobo/normcap/blob/main/CHANGELOG"
 normcap = "normcap.app:run"
 
 [tool.hatch.build]
-exclude = ["assets", "*.po"]
-artifacts = ["*.mo"]
+exclude = [ "assets", "*.po" ]
+artifacts = [ "*.mo" ]
 
 [dependency-groups]
 dev = [
@@ -81,7 +81,7 @@ dev = [
   "typing-extensions>=4.4.0",
   "poethepoet>=0.29.0",
 ]
-analysis = ["radon>=5.1.0", "viztracer>=0.15.3", "vulture>=2.4"]
+analysis = [ "radon>=5.1.0", "viztracer>=0.15.3", "vulture>=2.4" ]
 
 [tool.poe.tasks]
 
@@ -96,50 +96,31 @@ version = "tbump"
 docs-serve = "mkdocs serve"
 docs-build = "mkdocs build"
 
-test =  [
-    { cmd = "pytest" },
-    { cmd = "coverage lcov" },
-]
-quick-test =  [
-    { cmd = "pytest -m 'not gui'" },
-    { cmd = "coverage lcov" },
-]
+test = [ { cmd = "pytest" }, { cmd = "coverage lcov" } ]
+quick-test = [ { cmd = "pytest -m 'not gui'" }, { cmd = "coverage lcov" } ]
 check = [
-    { cmd = "ruff check" },
-    { cmd = "ruff format --check --diff" },
-    { cmd = "mdformat --align-semantic-breaks-in-lists --end-of-line keep" },
-    { cmd = "mypy" },
+  { cmd = "ruff check" },
+  { cmd = "ruff format --check --diff" },
+  { cmd = "mdformat --align-semantic-breaks-in-lists --end-of-line keep" },
+  { cmd = "mypy" },
 ]
 format = [
-    { cmd = "ruff check --fix-only" },
-    { cmd = "ruff format" },
-    { ref = "locales-compile"},
-    { cmd = "mdformat --align-semantic-breaks-in-lists --end-of-line keep" },
+  { cmd = "ruff check --fix-only" },
+  { cmd = "ruff format" },
+  { ref = "locales-compile" },
+  { cmd = "mdformat --align-semantic-breaks-in-lists --end-of-line keep" },
 ]
 chart = [
-    { cmd = "pydeps normcap --max-bacon=2 -o=pydeps.png -T=png" },
-    { cmd = "pydeps normcap --max-bacon=1 -o=pydeps_internal.png -T=png" },
+  { cmd = "pydeps normcap --max-bacon=2 -o=pydeps.png -T=png" },
+  { cmd = "pydeps normcap --max-bacon=1 -o=pydeps_internal.png -T=png" },
 ]
-bundle = [
-    { ref = "locales-compile" },
-    { cmd = "python bundle/build.py" },
-]
+bundle = [ { ref = "locales-compile" }, { cmd = "python bundle/build.py" } ]
 bundle-dev = [
-    { ref = "locales-compile" },
-    { cmd = "python bundle/build.py --dev" },
+  { ref = "locales-compile" },
+  { cmd = "python bundle/build.py --dev" },
 ]
-pre-commit = [
-    "format",
-    "check",
-    "quick-test",
-    "chart"
-]
-cicd-check = [
-  "format",
-  "check",
-  "security",
-  "test",
-]
+pre-commit = [ "format", "check", "quick-test", "chart" ]
+cicd-check = [ "format", "check", "security", "test" ]
 
 inspect-trace = "viztracer --open --log_gc --ignore_c_function -- normcap/app.py"
 inspect-trace-view = "vizviewer {args:result.json}"
@@ -156,70 +137,70 @@ inspect_metrics = [
 [tool.ruff]
 target-version = "py39"
 line-length = 88
-exclude = [".venv"]
+exclude = [ ".venv" ]
 
 [tool.ruff.lint]
 select = [
-  "F",    # Pyflakes
-  "E",    # pycodestyle
-  "I",    # Isort
-  "D",    # pydocstyle
-  "W",    # warning
-  "UP",   # pyupgrad
-  "N",    # pep8-naming
-  "C90",  # mccabe
-  "TRY",  # tryceratops (exception handling)
-  "ANN",  # flake8-annotations
-  "S",    # flake8-bandits
-  "C4",   # flake8-comprehensions
-  "B",    # flake8-bugbear
-  "A",    # flake8-builtins
-  "ISC",  # flake8-implicit-str-concat
-  "ICN",  # flake8-import-conventions
-  "T20",  # flake8-print
-  "PYI",  # flake8-pyi
-  "PT",   # flake8-pytest-style
-  "Q",    # flake8-quotes
-  "RET",  # flake8-return
-  "SIM",  # flake8-simplify
-  "PTH",  # flake8-use-pathlib
-  "G",    # flake8-logging-format
-  "PL",   # pylint
-  "RUF",  # meta rules (unused noqa)
-  "PL",   # meta rules (unused noqa)
+  "F", # Pyflakes
+  "E", # pycodestyle
+  "I", # Isort
+  "D", # pydocstyle
+  "W", # warning
+  "UP", # pyupgrad
+  "N", # pep8-naming
+  "C90", # mccabe
+  "TRY", # tryceratops (exception handling)
+  "ANN", # flake8-annotations
+  "S", # flake8-bandits
+  "C4", # flake8-comprehensions
+  "B", # flake8-bugbear
+  "A", # flake8-builtins
+  "ISC", # flake8-implicit-str-concat
+  "ICN", # flake8-import-conventions
+  "T20", # flake8-print
+  "PYI", # flake8-pyi
+  "PT", # flake8-pytest-style
+  "Q", # flake8-quotes
+  "RET", # flake8-return
+  "SIM", # flake8-simplify
+  "PTH", # flake8-use-pathlib
+  "G", # flake8-logging-format
+  "PL", # pylint
+  "RUF", # meta rules (unused noqa)
+  "PL", # meta rules (unused noqa)
   "PERF", # perflint
 ]
 ignore = [
-  "D100",   # Missing docstring in public module
-  "D101",   # Missing docstring in public class
-  "D102",   # Missing docstring in public method
-  "D103",   # Missing docstring in public function
-  "D104",   # Missing docstring in public package
-  "D107",   # Missing docstring in __init__
+  "D100", # Missing docstring in public module
+  "D101", # Missing docstring in public class
+  "D102", # Missing docstring in public method
+  "D103", # Missing docstring in public function
+  "D104", # Missing docstring in public package
+  "D107", # Missing docstring in __init__
   "ANN101", # Missing type annotation for `self` in method
   "TRY003", # Avoid specifying long messages outside the exception class
   "ISC001", # Rule conflicts with ruff's formatter
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*" = ["PLR2004", "PLR0913", "S101", "TID252", "ANN", "D"]
+"tests/**/*" = [ "PLR2004", "PLR0913", "S101", "TID252", "ANN", "D" ]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.ruff.lint.isort]
-known-first-party = ["normcap"]
+known-first-party = [ "normcap" ]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
 [tool.mypy]
-files = ["normcap/**/*.py", "tests/**/*.py", "bundle/**/*.py"]
+files = [ "normcap/**/*.py", "tests/**/*.py", "bundle/**/*.py" ]
 follow_imports = "skip"
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = [ "tests" ]
 qt_api = "pyside6"
 xvfb_width = 1920
 xvfb_height = 1080
@@ -232,13 +213,13 @@ addopts = [
   "--cov-report=xml",
   "--cov-report=html",
 ]
-markers = ["gui: tests which require a graphical interface to run"]
+markers = [ "gui: tests which require a graphical interface to run" ]
 
 [tool.coverage.run]
-source = ["normcap"]
+source = [ "normcap" ]
 branch = true
 parallel = true
-omit = []
+omit = [  ]
 
 [tool.mdformat]
 wrap = 88
@@ -258,7 +239,7 @@ bundle = "eu.dynobo"
 
 [tool.briefcase.app.normcap]
 formal_name = "NormCap"
-sources = ["normcap"]
+sources = [ "normcap" ]
 icon = "bundle/imgs/normcap"
 installer_icon = "bundle/imgs/normcap_install"
 installer_background = "bundle/imgs/normcap_install_bg"
@@ -307,16 +288,12 @@ cleanup_paths = [
 ]
 
 [tool.briefcase.app.normcap.macOS.Xcode]
-requires = ["std-nslog==1.0.0"]
-universal_build = true
-# TODO: Configure Entitlements.plist ? For screenshot and notify permissions?
-# TODO: Info.plist?
-# TODO: Remove build for x64 (not needed anymore). Also from docs.
-
+requires = [ "std-nslog==1.0.0" ]
+universal_build = false
 
 [tool.briefcase.app.normcap.linux.appimage]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
-template_branch = "v0.3.16"
+template_branch = "v0.3.20"
 manylinux = "manylinux_2_28"
 manylinux_image_tag = "latest"
 system_requires = [
@@ -329,7 +306,7 @@ system_requires = [
   # xcb-utils-cursor deps
   "libxcb-devel",
   "libxkbcommon-x11",
-  "epel-release",     # for xcb-util-cursor
+  "epel-release", # for xcb-util-cursor
 ]
 
 dockerfile_extra_content = """
@@ -358,12 +335,10 @@ RUN cd wl-clipboard \
   && ninja \
   && meson install
 
-ENV LD_LIBRARY_PATH "$LD_LIBRARY_PATH:/app/NormCap.AppDir/usr/app_packages/shiboken6"
+ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/NormCap.AppDir/usr/app_packages/shiboken6"
 
 USER brutus
 """
-
-# TODO: Use briefcase --Xdocker-build for docker build args (if applicable)
 
 [tool.briefcase.app.normcap.windows]
 use_full_install_path = false

@@ -371,21 +371,6 @@ See
 </details>
 
 <details class="question" markdown>
-<summary>[Linux, AppImage] Error while loading shared libraries: libcrypt.so.1</summary>
-
-### \[Linux, AppImage\] Error while loading shared libraries: libcrypt.so.1
-
-The
-[application used to package the AppImage](https://gregoryszorc.com/docs/python-build-standalone/main/running.html#runtime-requirements)
-has a number of runtime requirements. One of those requirements is `libcrypt.so.1`,
-which should be provided by most modern Linux distributions, as it is mandated as part
-of the Linux Standard Base Core Specification. However, some distributions don't include
-`libcrypt.so.1` as part of the base OS configuration. This can usually be fixed by
-installing the `libxcrypt-compat` package.
-
-</details>
-
-<details class="question" markdown>
 <summary>[macOS] When NormCap is started, an empty desktop shows up</summary>
 
 ### \[macOS\] When NormCap is started, an empty desktop shows up
