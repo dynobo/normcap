@@ -1,7 +1,7 @@
-# Russian (Russia) translations for PROJECT.
+# Japanese (Japanese) translations for PROJECT.
 # Copyright (C) 2023 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# Victor <k3kelm4vw@mozmail.com>, 2024.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
 msgid ""
 msgstr ""
