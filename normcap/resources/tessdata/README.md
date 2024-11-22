@@ -1,5 +1,4 @@
-NormCap's tessdata-folder
-=========================
+# Tessdata
 
 This folder contains Tesseract language data files (*.traineddata). They were
 created and maintained by the Tesseract contributors, all credit belongs to them!
