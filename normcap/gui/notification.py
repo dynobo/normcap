@@ -13,7 +13,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from normcap import ocr
 from normcap.gui import system_info
 from normcap.gui.localization import _, translate
-from normcap.gui.models import Capture, CaptureMode
+from normcap.gui.models import Capture
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +85,7 @@ class Notifier(QtCore.QObject):
             title = translate.ngettext(
                 "1 URL captured", "{count} URLs captured", count
             ).format(count=count)
-        elif capture.mode == CaptureMode.RAW:
+        else:
             count = len(capture.ocr_text)
             # Count linesep only as single char:
             count -= (len(os.linesep) - 1) * capture.ocr_text.count(os.linesep)
@@ -94,8 +94,6 @@ class Notifier(QtCore.QObject):
             title = translate.ngettext(
                 "1 character captured", "{count} characters captured", count
             ).format(count=count)
-        else:
-            title = ""
 
         return title, text
 

@@ -7,7 +7,7 @@ import pytest
 from PySide6 import QtGui, QtWidgets
 
 from normcap.gui import notification
-from normcap.gui.models import Capture, CaptureMode, Rect
+from normcap.gui.models import Capture, Rect
 from normcap.ocr.structures import Transformer
 
 
@@ -52,7 +52,7 @@ def test_compose_notification(ocr_transform, ocr_text, output_title, output_text
     capture = Capture(
         ocr_text=ocr_text,
         ocr_transformer=ocr_transform,
-        mode=CaptureMode.PARSE if ocr_transform != "RAW" else CaptureMode.RAW,
+        parse_text=ocr_transform != "RAW",
         image=QtGui.QImage(),
         screen=None,
         scale_factor=1,
@@ -244,7 +244,7 @@ def test_send_notification(monkeypatch):
     capture = Capture(
         ocr_text="text",
         ocr_transformer=Transformer.SINGLE_LINE,
-        mode=CaptureMode.PARSE,
+        parse_text=True,
         image=QtGui.QImage(),
         screen=None,
         scale_factor=1,
