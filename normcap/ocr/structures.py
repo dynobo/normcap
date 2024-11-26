@@ -39,12 +39,12 @@ class OEM(enum.IntEnum):
     DEFAULT = 3  # Run both and combine results - best accuracy.
 
 
-class Transformer(enum.IntEnum):
-    SINGLE_LINE = enum.auto()
-    MULTI_LINE = enum.auto()
-    PARAGRAPH = enum.auto()
-    MAIL = enum.auto()
-    URL = enum.auto()
+class Transformer(str, enum.Enum):
+    SINGLE_LINE = "SINGLE_LINE"
+    MULTI_LINE = "MULTI_LINE"
+    PARAGRAPH = "PARAGRAPH"
+    MAIL = "MAIL"
+    URL = "URL"
 
 
 @dataclass

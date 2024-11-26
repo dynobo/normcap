@@ -265,7 +265,7 @@ def mock_import(monkeypatch):
             fromlist=(),
             level=0,
         ):
-            if name == import_name or fromlist and import_name in fromlist:
+            if name == import_name or (fromlist and import_name in fromlist):
                 raise throw_exc(f"Mocked import error {import_name}")
             return real_import(
                 name, globals=globals, locals=locals, fromlist=fromlist, level=level
