@@ -20,7 +20,7 @@ hide:
 
 ## Native speakers of other languages
 
-- Help to [translate NormCap's UI](https://github.com/dynobo/normcap/tree/main/normcap/resources/locales)
+- Help to [translate NormCap's UI via Weblate](https://hosted.weblate.org/projects/normcap/ui/)
 
 ## Designers & UX
 

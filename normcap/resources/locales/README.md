@@ -20,6 +20,7 @@
 | [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
 | [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
 | [it_IT](./it_IT/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
+| [ja_JP](./ja_JP/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
 | [pl_PL](./pl_PL/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
 | [pt_BR](./pt_BR/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
 | [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
@@ -27,6 +28,14 @@
 | [sv_SE](./sv_SE/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
 | [uk_UA](./uk_UA/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
 | [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
+
+## Contribute to UI translations
+
+**Please use [Weblate](https://hosted.weblate.org/projects/normcap/ui/) to complement or
+correct text for existing language as well as for adding new languages.**
+
+If you prefer to _not_ use Weblate, you can also do it manually as explained below,
+but be aware, that this much more cumbersome!
 
 ## Proofread existing translations
 
