@@ -6,18 +6,110 @@ import sys
 import tempfile
 import textwrap
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import ocr
+from normcap import codes, ocr
 from normcap.gui import system_info
 from normcap.gui.localization import _, translate
 from normcap.gui.models import Capture
 
 logger = logging.getLogger(__name__)
 
-Transformer = ocr.structures.Transformer
+OCR_Transformer = ocr.structures.Transformer
+Code_Transformer = codes.structures.Transformer
+
+
+def _compose_title(capture: Capture) -> str:
+    if capture.ocr_transformer == OCR_Transformer.PARAGRAPH:
+        count = capture.ocr_text.count(os.linesep * 2) + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 paragraph captured", "{count} paragraphs captured", count
+        ).format(count=count)
+    elif capture.ocr_transformer == OCR_Transformer.MAIL:
+        count = capture.ocr_text.count("@")
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 email captured", "{count} emails captured", count
+        ).format(count=count)
+    elif capture.ocr_transformer == OCR_Transformer.SINGLE_LINE:
+        count = capture.ocr_text.count(" ") + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 word captured", "{count} words captured", count
+        ).format(count=count)
+    elif capture.ocr_transformer == OCR_Transformer.MULTI_LINE:
+        count = capture.ocr_text.count(os.linesep) + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 line captured", "{count} lines captured", count
+        ).format(count=count)
+    elif capture.ocr_transformer == OCR_Transformer.URL:
+        count = capture.ocr_text.count(os.linesep) + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 URL captured", "{count} URLs captured", count
+        ).format(count=count)
+    elif capture.ocr_transformer == Code_Transformer.QR:
+        count = capture.ocr_text.count(os.linesep) + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 QR code detected", "{count} QR codes detected", count
+        ).format(count=count)
+    elif capture.ocr_transformer == Code_Transformer.BARCODE:
+        count = capture.ocr_text.count(os.linesep) + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 barcode detected", "{count} barcodes detected", count
+        ).format(count=count)
+    elif capture.ocr_transformer == Code_Transformer.QR_AND_BARCODE:
+        count = capture.ocr_text.count(os.linesep) + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 code detected", "{count} codes detected", count
+        ).format(count=count)
+    elif capture.mode == CaptureMode.RAW:
+        count = len(capture.ocr_text)
+        # Count linesep only as single char:
+        count -= (len(os.linesep) - 1) * capture.ocr_text.count(os.linesep)
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 character captured", "{count} characters captured", count
+        ).format(count=count)
+    else:
+        title = ""
+    return title
+
+
+def _compose_text(capture: Capture) -> str:
+    text = capture.ocr_text.strip().replace(os.linesep, " ")
+    return textwrap.shorten(text, width=45)
+
+
+def _compose_notification(capture: Capture) -> str:
+    """Extract message text out of captures object and include icon."""
+    # Compose message text
+    if capture.ocr_text and capture.ocr_text.strip():
+        title = _compose_title(capture=capture)
+        text = _compose_text(capture=capture)
+    else:
+        # L10N: Notification title
+        title = _("Nothing captured!")
+        # L10N: Notification text
+        text = _("Please try again.")
+
+    return title, text
 
 
 class Communicate(QtCore.QObject):
@@ -35,72 +127,10 @@ class Notifier(QtCore.QObject):
         self.com = Communicate(parent=self)
         self.com.send_notification.connect(self._send_notification)
 
-    @staticmethod
-    def _compose_notification(capture: Capture) -> tuple[str, str]:
-        """Extract message text out of captures object and include icon."""
-        # Compose message text
-        if not capture.ocr_text or len(capture.ocr_text.strip()) < 1:
-            # L10N: Notification title
-            title = _("Nothing captured!")
-            # L10N: Notification text
-            text = _("Please try again.")
-            return title, text
-
-        text = capture.ocr_text.strip().replace(os.linesep, " ")
-        text = textwrap.shorten(text, width=45)
-
-        # Compose message title
-        if capture.ocr_transformer == Transformer.PARAGRAPH:
-            count = capture.ocr_text.count(os.linesep * 2) + 1
-            # L10N: Notification title.
-            # Do NOT translate the variables in curly brackets "{some_variable}"!
-            title = translate.ngettext(
-                "1 paragraph captured", "{count} paragraphs captured", count
-            ).format(count=count)
-        elif capture.ocr_transformer == Transformer.MAIL:
-            count = capture.ocr_text.count("@")
-            # L10N: Notification title.
-            # Do NOT translate the variables in curly brackets "{some_variable}"!
-            title = translate.ngettext(
-                "1 email captured", "{count} emails captured", count
-            ).format(count=count)
-        elif capture.ocr_transformer == Transformer.SINGLE_LINE:
-            count = capture.ocr_text.count(" ") + 1
-            # L10N: Notification title.
-            # Do NOT translate the variables in curly brackets "{some_variable}"!
-            title = translate.ngettext(
-                "1 word captured", "{count} words captured", count
-            ).format(count=count)
-        elif capture.ocr_transformer == Transformer.MULTI_LINE:
-            count = capture.ocr_text.count(os.linesep) + 1
-            # L10N: Notification title.
-            # Do NOT translate the variables in curly brackets "{some_variable}"!
-            title = translate.ngettext(
-                "1 line captured", "{count} lines captured", count
-            ).format(count=count)
-        elif capture.ocr_transformer == Transformer.URL:
-            count = capture.ocr_text.count(os.linesep) + 1
-            # L10N: Notification title.
-            # Do NOT translate the variables in curly brackets "{some_variable}"!
-            title = translate.ngettext(
-                "1 URL captured", "{count} URLs captured", count
-            ).format(count=count)
-        else:
-            count = len(capture.ocr_text)
-            # Count linesep only as single char:
-            count -= (len(os.linesep) - 1) * capture.ocr_text.count(os.linesep)
-            # L10N: Notification title.
-            # Do NOT translate the variables in curly brackets "{some_variable}"!
-            title = translate.ngettext(
-                "1 character captured", "{count} characters captured", count
-            ).format(count=count)
-
-        return title, text
-
-    @QtCore.Slot(Capture)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(Capture)
     def _send_notification(self, capture: Capture) -> None:
         """Show tray icon then send notification."""
-        title, message = self._compose_notification(capture)
+        title, message = _compose_notification(capture)
         if sys.platform == "linux" and shutil.which("notify-send"):
             self._send_via_libnotify(title=title, message=message)
         else:
@@ -153,7 +183,7 @@ class Notifier(QtCore.QObject):
         title: str,
         message: str,
         ocr_text: Optional[str],
-        ocr_transformer: Optional[Transformer],
+        ocr_transformer: Union[OCR_Transformer, Code_Transformer, None],
     ) -> None:
         """Send via QSystemTrayIcon.
 
@@ -195,14 +225,20 @@ class Notifier(QtCore.QObject):
         parent.showMessage(title, message, QtGui.QIcon(":notification"))
 
     @staticmethod
-    def _open_ocr_result(text: str, applied_transformer: Optional[Transformer]) -> None:
+    def _open_ocr_result(
+        text: str, applied_transformer: Union[OCR_Transformer, Code_Transformer, None]
+    ) -> None:
         logger.debug("Notification clicked.")
 
         urls = []
-        if applied_transformer == Transformer.URL:
+        if applied_transformer == OCR_Transformer.URL:  # noqa: SIM114
             urls = text.split()
-        elif applied_transformer == Transformer.MAIL:
-            urls = [f"mailto:{text.replace(',', ';').replace(' ', '')}"]
+        elif isinstance(applied_transformer, Code_Transformer.QR) and all(
+            s.startswith("http") for s in text.split()
+        ):
+            urls = text.split()
+        elif applied_transformer == OCR_Transformer.MAIL:
+            urls = [f'mailto:{text.replace(",", ";").replace(" ", "")}']
         else:
             temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.txt"
             temp_file.write_text(text)

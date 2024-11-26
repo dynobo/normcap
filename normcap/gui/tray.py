@@ -9,13 +9,12 @@ import logging
 import os
 import sys
 import time
-from collections.abc import Iterable
 from enum import Enum
 from typing import Any, NoReturn, Optional, cast
 
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
-from normcap import __version__, clipboard, ocr, screengrab
+from normcap import __version__, clipboard, codes, ocr, screengrab
 from normcap.gui import (
     constants,
     introduction,
@@ -264,25 +263,27 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self._minimize_or_exit_application(delay=0)
             return
 
-        logger.debug("Start OCR")
-        language = self.settings.value("language")
-        if not isinstance(language, str) and not isinstance(language, Iterable):
-            raise TypeError()
-        ocr_result = ocr.recognize.get_text_from_image(
-            tesseract_cmd=system_info.get_tesseract_path(),
-            languages=language,
-            image=self.capture.image,
-            tessdata_path=system_info.get_tessdata_path(),
-            parse=self.capture.parse_text,
-            resize_factor=2,
-            padding_size=80,
-        )
-        utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")
+        if detections := codes.detector.detect_codes(image=self.capture.image):
+            code_text, code_type = detections
+            self.capture.ocr_text = code_text
+            self.capture.ocr_transformer = code_type
+            logger.info("Text from Codes: %s", self.capture.ocr_text)
+        else:
+            logger.debug("Start OCR")
+            ocr_result = ocr.recognize.get_text_from_image(
+                tesseract_cmd=system_info.get_tesseract_path(),
+                languages=self.settings.value("language"),
+                image=self.capture.image,
+                tessdata_path=system_info.get_tessdata_path(),
+                parse=self.capture.parse_text,
+                resize_factor=2,
+                padding_size=80,
+            )
+            self.capture.ocr_text = ocr_result.text
+            self.capture.ocr_transformer = ocr_result.best_scored_transformer
+            utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")
+            logger.info("Text from OCR:\n%s", self.capture.ocr_text)
 
-        self.capture.ocr_text = ocr_result.text
-        self.capture.ocr_transformer = ocr_result.best_scored_transformer
-
-        logger.info("Text from OCR:\n%s", self.capture.ocr_text)
         if self.cli_mode:
             self._print_to_stdout()
         else:
