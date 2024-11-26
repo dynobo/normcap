@@ -16,9 +16,9 @@ def test_version():
     with Path("pyproject.toml").open(encoding="utf8") as toml_file:
         pyproject_toml = toml.load(toml_file)
 
-    briefcase_version = pyproject_toml["tool"]["briefcase"]["version"]
+    pyproject_version = pyproject_toml["project"]["version"]
     normcap_version = normcap.__version__
-    assert normcap_version.startswith(briefcase_version)
+    assert normcap_version.startswith(pyproject_version)
 
 
 def test_get_args(monkeypatch):

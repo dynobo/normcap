@@ -13,10 +13,9 @@ class WindowsBriefcaseZip(WindowsBriefcase):
     binary_platform = "x86_64-Windows"
 
     def run_framework(self) -> None:
+        # TODO: Portable version still asks for installation... why?
         self.run(cmd="briefcase create windows VisualStudio", cwd=self.PROJECT_PATH)
-        self._patch_main_cpp()
         self.run(cmd="briefcase build windows VisualStudio", cwd=self.PROJECT_PATH)
-        self._patch_windows_installer()
         portable_flag_file = (
             self.PROJECT_PATH
             / "build"

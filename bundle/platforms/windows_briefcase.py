@@ -35,6 +35,7 @@ class WindowsBriefcase(BuilderBase):
         zip_path.unlink()
 
     def _patch_main_cpp(self) -> None:
+        # TODO: Test if still needed
         main_cpp = (
             self.PROJECT_PATH
             / "build"
@@ -195,7 +196,7 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
 
     def run_framework(self) -> None:
         self.run(cmd="briefcase create windows VisualStudio", cwd=self.PROJECT_PATH)
-        self._patch_main_cpp()
+        # self._patch_main_cpp()
         self.run(cmd="briefcase build windows VisualStudio", cwd=self.PROJECT_PATH)
         self._patch_windows_installer()
         self.run(cmd="briefcase package windows VisualStudio", cwd=self.PROJECT_PATH)
