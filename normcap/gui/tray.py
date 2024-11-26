@@ -26,7 +26,7 @@ from normcap.gui import (
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
-from normcap.gui.models import Capture, CaptureMode, Days, Rect, Screen, Seconds
+from normcap.gui.models import Capture, Days, Rect, Screen, Seconds
 from normcap.gui.notification import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
@@ -246,7 +246,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if not screenshot:
             raise TypeError("Screenshot is None!")
 
-        self.capture.mode = CaptureMode[str(self.settings.value("mode")).upper()]
+        self.capture.parse_text = bool(self.settings.value("parse-text", type=bool))
         self.capture.rect = rect
         self.capture.screen = self.screens[screen_idx]
         self.capture.image = screenshot.copy(QtCore.QRect(*rect.geometry))
@@ -273,7 +273,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             languages=language,
             image=self.capture.image,
             tessdata_path=system_info.get_tessdata_path(),
-            parse=self.capture.mode is CaptureMode.PARSE,
+            parse=self.capture.parse_text,
             resize_factor=2,
             padding_size=80,
         )

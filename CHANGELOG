@@ -2,6 +2,11 @@
 
 # Changelog
 
+## v0.6.0 (upcoming)
+
+- All: Breaking: Commandline argument `--mode {parse,raw}` is removed in favor of a new
+argument `--parse-text {True, False}`.
+
 ## v0.5.9 (2024-11-10)
 
 - All: Add Chinese translation. Thanks, [@mofazhe](https://github.com/mofazhe)! ([#661](https://github.com/dynobo/normcap/pull/661))

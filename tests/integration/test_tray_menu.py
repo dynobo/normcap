@@ -34,7 +34,7 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     # GIVEN NormCap is started to tray via "background-mode"
     #       and with a certain test image as screenshot
     tray = run_normcap(
-        extra_cli_args=["--language=eng", "--mode=parse", "--background-mode"]
+        extra_cli_args=["--language=eng", "--parse-text=True", "--background-mode"]
     )
     assert not tray.windows
 

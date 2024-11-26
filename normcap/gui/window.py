@@ -17,7 +17,7 @@ from typing import Callable, Optional, cast
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.gui import dbus, system_info
-from normcap.gui.models import CaptureMode, DesktopEnvironment, Rect, Screen
+from normcap.gui.models import DesktopEnvironment, Rect, Screen
 from normcap.gui.settings import Settings
 
 logger = logging.getLogger(__name__)
@@ -87,7 +87,9 @@ class Window(QtWidgets.QMainWindow):
     def _add_ui_container(self) -> None:
         """Add widget for showing selection rectangle and settings button."""
         self.ui_container = UiContainerLabel(
-            parent=self, color=self.color, capture_mode_func=self.get_capture_mode
+            parent=self,
+            color=self.color,
+            parse_text_func=lambda: bool(self.settings.value("parse-text", type=bool)),
         )
 
         if logger.getEffectiveLevel() is logging.DEBUG:
@@ -183,16 +185,6 @@ class Window(QtWidgets.QMainWindow):
         self.ui_container.rect = self.selection_rect
         self.update()
 
-    def get_capture_mode(self) -> CaptureMode:
-        """Read current capture mode from application settings."""
-        mode_setting = str(self.settings.value("mode"))
-        try:
-            mode = CaptureMode[mode_setting.upper()]
-        except KeyError:
-            logger.warning("Unknown capture mode: %s. Fallback to PARSE.", mode_setting)
-            mode = CaptureMode.PARSE
-        return mode
-
     def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:  # noqa: N802
         """Handle ESC key pressed.
 
@@ -270,7 +262,7 @@ class UiContainerLabel(QtWidgets.QLabel):
         self,
         parent: QtWidgets.QWidget,
         color: QtGui.QColor,
-        capture_mode_func: Callable,
+        parse_text_func: Callable,
     ) -> None:
         super().__init__(parent)
 
@@ -280,7 +272,7 @@ class UiContainerLabel(QtWidgets.QLabel):
 
         self.rect: QtCore.QRect = QtCore.QRect()
         self.rect_pen = QtGui.QPen(self.color, 2, QtCore.Qt.PenStyle.DashLine)
-        self.get_capture_mode = capture_mode_func
+        self.get_parse_text = parse_text_func
 
         self.setObjectName("ui_container")
         self.setStyleSheet(f"#ui_container {{border: 3px solid {self.color.name()};}}")
@@ -349,10 +341,12 @@ class UiContainerLabel(QtWidgets.QLabel):
         painter.setPen(self.rect_pen)
         painter.drawRect(self.rect)
 
-        if self.get_capture_mode() is CaptureMode.PARSE:
-            mode_icon = QtGui.QIcon(":parse")
+        if self.get_parse_text():
+            selection_icon = QtGui.QIcon(":parse")
         else:
-            mode_icon = QtGui.QIcon(":raw")
-        mode_icon.paint(painter, self.rect.right() - 24, self.rect.top() - 30, 24, 24)
+            selection_icon = QtGui.QIcon(":raw")
+        selection_icon.paint(
+            painter, self.rect.right() - 24, self.rect.top() - 30, 24, 24
+        )
 
         painter.end()
