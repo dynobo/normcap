@@ -178,7 +178,7 @@ uv run python -m normcap
 Please use [Weblate](https://hosted.weblate.org/projects/normcap/ui/) to complement or
 correct text for existing language as well as for adding new languages.
 
-(If you prefer to not use Weblate, you can also [do it manually](./normcap/resources/locales/README.md), but be aware, that this more more cumbersome.)
+(If you prefer to not use Weblate, you can also [do it manually](./normcap/resources/locales/README.md), but be aware, that this more cumbersome.)
 
 ## Credits
 
