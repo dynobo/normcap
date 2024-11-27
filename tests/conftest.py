@@ -14,7 +14,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from normcap import app
 from normcap.clipboard import system_info as clipboard_system_info
 from normcap.gui import menu_button, system_info
-from normcap.gui.models import Capture, CaptureMode, Rect
+from normcap.gui.models import Capture, Rect
 from normcap.ocr.structures import OEM, PSM, OcrResult, TessArgs
 from normcap.ocr.transformers import email, url
 from normcap.screengrab import system_info as screengrab_system_info
@@ -73,7 +73,7 @@ def capture() -> Capture:
     image.fill(QtGui.QColor("#ff0000"))
 
     return Capture(
-        mode=CaptureMode.PARSE,
+        parse_text=True,
         rect=Rect(20, 30, 220, 330),
         ocr_text="one two three",
         ocr_transformer=None,
@@ -146,7 +146,7 @@ def basic_cli_args():
     """NormCap configuration used by most tests."""
     return [
         sys.argv[0],
-        "--mode=parse",
+        "--parse-text=True",
         "--notification=False",
         "--verbosity=debug",
         "--update=False",

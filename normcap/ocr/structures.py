@@ -123,7 +123,7 @@ class OcrResult:
         """Provides the resulting text of the OCR.
 
         If parsed text (compiled by a transformer) is available, return that one,
-        otherwise fallback to "raw".
+        otherwise fallback to un-parseds.
         """
         return self.parsed or self.add_linebreaks()
 

@@ -29,7 +29,7 @@ def test_settings_menu_creates_actions(monkeypatch, qtbot, run_normcap, test_sig
 
     texts = [a.text().lower() for a in actions]
     assert "show notification" in texts
-    assert "parse" in texts
+    assert "parse text" in texts
     assert "languages" in texts
     assert "about" in texts
     assert "close" in texts

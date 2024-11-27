@@ -40,13 +40,6 @@ class DesktopEnvironment(enum.IntEnum):
     AWESOME = enum.auto()
 
 
-class CaptureMode(enum.IntEnum):
-    """Available transformation modes."""
-
-    RAW = enum.auto()
-    PARSE = enum.auto()
-
-
 @dataclass
 class Urls:
     """URLs used on various places."""
@@ -153,7 +146,7 @@ class Screen(Rect):
 class Capture:
     """Store all information like screenshot and selected region."""
 
-    mode: CaptureMode = CaptureMode.PARSE
+    parse_text: bool = True
 
     # Image of selected region
     image: QtGui.QImage = field(default_factory=QtGui.QImage)

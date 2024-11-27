@@ -171,14 +171,10 @@ class MenuButton(QtWidgets.QToolButton):
             return
 
         # Menu items which change settings
-
-        if group_name == "settings_group":
+        if group_name in ["settings_group", "detection_group"]:
             setting = action_name
             value = action.isChecked()
-        elif group_name == "mode_group":
-            setting = "mode"
-            value = action_name
-        elif group_name == "language_group":
+        if group_name == "language_group":
             setting = "language"
             languages = [a.objectName() for a in group.actions() if a.isChecked()]
             if not languages:
@@ -200,8 +196,8 @@ class MenuButton(QtWidgets.QToolButton):
         self._add_settings_section(menu)
         menu.addSeparator()
         # L10N: Section title in Main Menu
-        self._add_title(menu, _("Capture mode"))
-        self._add_mode_section(menu)
+        self._add_title(menu, _("Detection"))
+        self._add_detection_section(menu)
         menu.addSeparator()
         # L10N: Section title in Main Menu
         self._add_title(menu, _("Languages"))
@@ -272,37 +268,24 @@ class MenuButton(QtWidgets.QToolButton):
         )
         menu.addAction(action)
 
-    def _add_mode_section(self, menu: QtWidgets.QMenu) -> None:
-        mode_group = QtGui.QActionGroup(menu)
-        mode_group.setObjectName("mode_group")
-        mode_group.setExclusive(True)
+    def _add_detection_section(self, menu: QtWidgets.QMenu) -> None:
+        detection_group = QtGui.QActionGroup(menu)
+        detection_group.setObjectName("detection_group")
+        detection_group.setExclusive(False)
 
-        # L10N: Entry in main menu's 'Capture mode' section
-        action = QtGui.QAction(_("parse"), mode_group)
-        action.setObjectName("parse")
+        # L10N: Entry in main menu's 'Detection' section
+        action = QtGui.QAction(_("Parse text"), detection_group)
+        action.setObjectName("parse_text")
         action.setCheckable(True)
-        action.setChecked(self.settings.value("mode") == "parse")
-        # L10N: Tooltip of main menu's 'parse' entry. Use <56 chars p. line.
+        action.setChecked(bool(self.settings.value("parse-text", type=bool)))
+        # L10N: Tooltip of main menu's 'parse text' entry. Use <56 chars p. line.
         action.setToolTip(
             _(
                 "Tries to determine the text's type (e.g. line,\n"
                 "paragraph, URL, email) and formats the output\n"
                 "accordingly.\n"
-                "If the result is unexpected, try 'raw' mode instead."
-            )
-        )
-        menu.addAction(action)
-
-        # L10N: Entry in main menu's 'Capture mode' section
-        action = QtGui.QAction(_("raw"), mode_group)
-        action.setObjectName("raw")
-        action.setCheckable(True)
-        action.setChecked(self.settings.value("mode") == "raw")
-        # L10N: Tooltip of main menu's 'raw' entry. Use <56 chars p. line.
-        action.setToolTip(
-            _(
-                "Returns the text exactly as detected by the Optical\n"
-                "Character Recognition Software."
+                "Turn it off to return the text exactly as detected\n"
+                "by the Optical Character Recognition Software."
             )
         )
         menu.addAction(action)

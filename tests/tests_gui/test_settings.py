@@ -7,28 +7,28 @@ from normcap.gui.settings import Settings, _parse_str_to_bool
 
 
 def test_reset_settings():
-    default = "parse"
-    non_default = "raw"
+    default = True
+    non_default = False
     try:
         settings = Settings(organization="normcap_TEST")
-        settings.setValue("mode", non_default)
-        assert settings.value("mode") == non_default
+        settings.setValue("parse-text", non_default)
+        assert bool(settings.value("parse-text", type=bool)) == non_default
 
         settings.reset()
-        assert settings.value("mode") == default
+        assert bool(settings.value("parse-text", type=bool)) == default
     finally:
         settings.clear()
 
 
 def test_update_from_init_settings(caplog):
-    init_setting = "raw"
+    initial_parse_text = False
     try:
         with caplog.at_level(logging.DEBUG):
             settings = Settings(
                 organization="normcap_TEST",
-                init_settings={"mode": init_setting, "non_existing": True},
+                init_settings={"parse-text": initial_parse_text, "non_existing": True},
             )
-        assert settings.value("mode") == init_setting
+        assert bool(settings.value("parse-text", type=bool)) == initial_parse_text
         assert settings.value("non_existing", False) is False
         assert caplog.records[0].msg
     finally:
@@ -36,16 +36,16 @@ def test_update_from_init_settings(caplog):
 
 
 def test_set_missing_to_default(caplog):
-    default_mode = "parse"
-    non_default_mode = "raw"
+    default_parse_text = True
+    non_default_parse_text = False
     default_language = "eng"
 
     try:
         settings = Settings(organization="normcap_TEST")
-        assert settings.value("mode") == default_mode
+        assert bool(settings.value("parse-text", type=bool)) == default_parse_text
 
-        settings.setValue("mode", non_default_mode)
-        assert settings.value("mode") == non_default_mode
+        settings.setValue("parse-text", non_default_parse_text)
+        assert bool(settings.value("parse-text", type=bool)) == non_default_parse_text
 
         assert settings.value("language") == default_language
         settings.remove("language")
@@ -55,7 +55,7 @@ def test_set_missing_to_default(caplog):
         with caplog.at_level(logging.DEBUG):
             settings = Settings(organization="normcap_TEST")
 
-        assert settings.value("mode") == non_default_mode
+        assert bool(settings.value("parse-text", type=bool)) == non_default_parse_text
         assert settings.value("language") == default_language
         assert "Reset settings to" in caplog.records[0].msg
         assert caplog.records[0].args == ("language", default_language)

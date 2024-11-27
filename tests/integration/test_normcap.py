@@ -15,7 +15,7 @@ def test_normcap_ocr_testcases(
     """Tests complete OCR workflow."""
 
     # GIVEN NormCap is started with "language" set to english
-    #        and "parse"-mode
+    #        and --parse-text True (default)
     #        and a certain test image as screenshot
     monkeypatch.setattr(screengrab, "capture", lambda: [testcase.screenshot])
     monkeypatch.setattr(sys, "exit", test_signal.on_event.emit)

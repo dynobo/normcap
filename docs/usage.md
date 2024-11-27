@@ -31,6 +31,7 @@ hide:
 - The icons <span class="md-pink">★</span> or <span class="md-pink">☰</span> next to the selection-rectangle indicate the active "capture mode" (see below).
 - To abort a capture or quit NormCap press `<esc>`
 
+<!-- TODO: Adjust to new settings -->
 ## Capture Modes
 
 The settings menu <span class="md-pink">⚙</span> allows switching between the two capture modes: "parse" and "raw":

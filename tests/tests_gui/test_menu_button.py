@@ -111,13 +111,14 @@ def test_language_group(menu_btn):
     assert menu_btn.settings.value("language") == [langs[-1]]
 
 
-def test_mode_group(menu_btn):
+def test_detection_group(menu_btn):
     menu_btn.menu().aboutToShow.emit()
 
-    settings_group = menu_btn.findChild(QtGui.QActionGroup, "mode_group")
+    settings_group = menu_btn.findChild(QtGui.QActionGroup, "detection_group")
     for action in settings_group.children():
         action.trigger()
-        assert menu_btn.settings.value("mode") == action.objectName()
+        setting_value = bool(menu_btn.settings.value(action.objectName(), type=bool))
+        assert setting_value == action.isChecked()
 
 
 def test_settings_group(menu_btn):
@@ -126,8 +127,8 @@ def test_settings_group(menu_btn):
     settings_group = menu_btn.findChild(QtGui.QActionGroup, "settings_group")
     for action in settings_group.children():
         action.trigger()
-        setting_value = menu_btn.settings.value(action.objectName())
-        assert str(setting_value).lower() == str(action.isChecked()).lower()
+        setting_value = menu_btn.settings.value(action.objectName(), type=bool)
+        assert setting_value == action.isChecked()
 
 
 def test_show_message_box(qapp, monkeypatch, menu_btn):

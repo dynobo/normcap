@@ -48,7 +48,7 @@ def test_argparser_defaults_are_complete():
         "color",
         "cli_mode",
         "language",
-        "mode",
+        "parse_text",
         "notification",
         "reset",
         "tray",

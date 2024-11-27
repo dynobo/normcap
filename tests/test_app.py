@@ -26,11 +26,18 @@ def test_get_args(monkeypatch):
         m.setattr(
             sys,
             "argv",
-            [sys.argv[0], "--language", "eng", "deu", "--mode=raw", "--tray=True"],
+            [
+                sys.argv[0],
+                "--language",
+                "eng",
+                "deu",
+                "--parse-text=False",
+                "--tray=True",
+            ],
         )
         args = app._get_args()
 
-    assert args.mode == "raw"
+    assert args.parse_text is False
     assert args.language == ["eng", "deu"]
     assert args.tray is True
 

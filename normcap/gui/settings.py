@@ -41,12 +41,15 @@ DEFAULT_SETTINGS = (
         nargs="+",
     ),
     Setting(
-        key="mode",
-        flag="m",
-        type_=str,
-        value="parse",
-        help_="Set capture mode",
-        choices=("raw", "parse"),
+        key="parse-text",
+        flag="p",
+        type_=_parse_str_to_bool,
+        value=True,
+        help_=(
+            "Try to determine the text's type (e.g. line, paragraph, URL, email) and "
+            "format the output accordingly."
+        ),
+        choices=(True, False),
         cli_arg=True,
         nargs=None,
     ),
@@ -145,9 +148,22 @@ class Settings(QtCore.QSettings):
         self._prepare_and_sync()
 
     def _prepare_and_sync(self) -> None:
+        self._migrate_deprecated()
         self._set_missing_to_default()
         self._update_from_init_settings()
         self.sync()
+
+    def _migrate_deprecated(self) -> None:
+        # Migrations to v0.6.0
+        # ONHOLD: Delete in 2025/11
+        if self.value("mode", None):
+            mode = self.value("mode")
+            parse_text = mode == "parse"
+            self.setValue("parse-text", parse_text)
+            self.remove("mode")
+            logger.debug(
+                "Migrated setting 'mode=%s' to 'parse_text=%s'.", mode, parse_text
+            )
 
     def _set_missing_to_default(self) -> None:
         for d in self.default_settings:
