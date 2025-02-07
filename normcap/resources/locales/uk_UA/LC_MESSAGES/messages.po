@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: NormCap 0.4.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2024-05-06 21:18+0200\n"
-"PO-Revision-Date: 2024-05-08 12:08+0000\n"
-"Last-Translator: dynobo <dynobo@mailbox.org>\n"
+"PO-Revision-Date: 2025-02-07 10:05+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/normcap/ui/uk/>"
 "\n"
 "Language: uk_UA\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.5.4-rc\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.14.0\n"
 
 #. Generic error message when any download failed.
@@ -399,6 +399,7 @@ msgstr[2] "{count} символів захоплено"
 #. Error message box on macOS only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/tray.py:411
+#, fuzzy
 msgid ""
 "'{application}' is missing the permission for 'Screen Recording'.\n"
 "\n"
@@ -410,7 +411,7 @@ msgstr ""
 "'{application}' не має дозволу на «Запис екрану».\n"
 "\n"
 "Надайте його за допомогою діалогового вікна, яке з'явиться після натискання "
-"кнопки «Гаразд»,або через «Налаштування системи» > «Конфіденційність і "
+"кнопки «Гаразд»,або через «Налаштування системи» &gt; «Конфіденційність і "
 "безпека». \n"
 "\n"
 "Потім перезапустіть NormCap."
@@ -418,6 +419,7 @@ msgstr ""
 #. Error message box on Linux with Wayland only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/tray.py:422
+#, fuzzy
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
 " via the dialog that will appear after you clicked 'Ok'.<br>Then start "
@@ -426,10 +428,10 @@ msgid ""
 " GitHub.</small>"
 msgstr ""
 "<b>NormCap бракує дозволу на захоплення екрана.</b><br><br>Надайте його за "
-"допомогою діалогового вікна, яке з'явиться після натискання кнопки "
-"«Гаразд».<br>Після цього запустіть NormCap знову.<br><br><small>Іноді це "
-"може не спрацювати. Якщо це саме той випадок, будь ласка,<br><a "
-"href='{issues_url}'>повідомте про це як про баг</a> на GitHub.</small>"
+"допомогою діалогового вікна, яке з'явиться після натискання кнопки «Гаразд»"
+".<br>Після цього запустіть NormCap знову.<br><br><small>Іноді це може не "
+"спрацювати. Якщо це саме той випадок, будь ласка,<br><a href=\"{issues_url}\""
+">повідомте про це як про баг</a> на GitHub.</small>"
 
 #. Tray menu entry
 #: /home/holger/Code/normcap/normcap/gui/tray.py:512
