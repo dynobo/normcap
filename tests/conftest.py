@@ -16,7 +16,7 @@ from normcap.clipboard import system_info as clipboard_system_info
 from normcap.gui import menu_button, system_info
 from normcap.gui.models import Capture, Rect
 from normcap.ocr.structures import OEM, PSM, OcrResult, TessArgs
-from normcap.ocr.transformers import email, url
+from normcap.ocr.transformers import email_address, url
 from normcap.screengrab import system_info as screengrab_system_info
 
 
@@ -25,7 +25,7 @@ def _clear_caches():
     screengrab_system_info.get_gnome_version.cache_clear()
     clipboard_system_info.get_gnome_version.cache_clear()
     url._extract_urls.cache_clear()
-    email._extract_emails.cache_clear()
+    email_address._extract_emails.cache_clear()
     system_info.desktop_environment.cache_clear()
     system_info.display_manager_is_wayland.cache_clear()
     system_info.get_tesseract_path.cache_clear()
@@ -265,7 +265,7 @@ def mock_import(monkeypatch):
             fromlist=(),
             level=0,
         ):
-            if name == import_name or fromlist and import_name in fromlist:
+            if name == import_name or (fromlist and import_name in fromlist):
                 raise throw_exc(f"Mocked import error {import_name}")
             return real_import(
                 name, globals=globals, locals=locals, fromlist=fromlist, level=level

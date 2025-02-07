@@ -28,8 +28,8 @@ classifiers = [
   "Operating System :: MacOS",
 ]
 dependencies = [
-  "shiboken6==6.8.0.2",
-  "PySide6-Essentials==6.8.0.2",
+  "shiboken6==6.8.2.1",
+  "PySide6-Essentials==6.8.2.1",
   "jeepney==0.8.0",
 ]
 
@@ -177,7 +177,6 @@ ignore = [
   "D103", # Missing docstring in public function
   "D104", # Missing docstring in public package
   "D107", # Missing docstring in __init__
-  "ANN101", # Missing type annotation for `self` in method
   "TRY003", # Avoid specifying long messages outside the exception class
   "ISC001", # Rule conflicts with ruff's formatter
 ]

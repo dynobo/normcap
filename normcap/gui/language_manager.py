@@ -89,18 +89,18 @@ class LanguageManager(QtWidgets.QDialog):
         self._update_models()
         close_button.setFocus()
 
-    @QtCore.Slot(str, str)
+    @QtCore.Slot(str, str)  # type: ignore  # pyside typhint bug?
     def _on_download_error(self, reason: str, url: str) -> None:
         self._set_in_progress(False)
         QtWidgets.QMessageBox.critical(
-            parent=self,
+            self,
             # L10N: Language Manager error message box title
-            title=_("Error"),
+            _("Error"),
             # L10N: Language Manager error message box text
-            text=("<b>" + _("Language download failed!") + f"</b><br><br>{reason}"),
+            "<b>" + _("Language download failed!") + f"</b><br><br>{reason}",
         )
 
-    @QtCore.Slot(bytes, str)
+    @QtCore.Slot(bytes, str)  # type: ignore  # pyside typhint bug?
     def _on_download_finished(self, data: bytes, url: str) -> None:
         """Save language to tessdata folder."""
         file_name = url.split("/")[-1]
@@ -125,14 +125,15 @@ class LanguageManager(QtWidgets.QDialog):
 
         if len(self.installed_layout.model.languages) <= 1:
             QtWidgets.QMessageBox.information(
-                parent=self,
+                self,
                 # L10N: Language Manager information message box title
-                title=_("Information"),
+                _("Information"),
                 # L10N: Language Manager information message box text
-                text=_(
+                _(
                     "It is not possible to delete all languages. "
                     "NormCap needs at least one to function correctly."
                 ),
+                QtWidgets.QMessageBox.StandardButton.Close,
             )
             return
 
