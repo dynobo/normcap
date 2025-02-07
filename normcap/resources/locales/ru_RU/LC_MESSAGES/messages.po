@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-05-06 21:18+0200\n"
-"PO-Revision-Date: 2024-08-06 13:09+0000\n"
-"Last-Translator: Vin <k3kelm4vw@mozmail.com>\n"
+"PO-Revision-Date: 2025-02-07 10:05+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/normcap/ui/ru/>\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.7-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.14.0\n"
 
 #. Generic error message when any download failed.
@@ -396,6 +396,7 @@ msgstr[2] "{count} символов захвачено"
 #. Error message box on macOS only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/tray.py:411
+#, fuzzy
 msgid ""
 "'{application}' is missing the permission for 'Screen Recording'.\n"
 "\n"
@@ -407,7 +408,7 @@ msgstr ""
 "У '{application}' отсутствует разрешение на «Запись экрана».\n"
 "\n"
 "Предоставьте его через диалоговое окно, которое появится после того, как вы "
-"нажмете «Ок», или через «Системные настройки» > «Конфиденциальность и "
+"нажмете «Ок», или через «Системные настройки» &gt; «Конфиденциальность и "
 "безопасность».\n"
 "\n"
 "Затем перезапустите NormCap."
@@ -415,6 +416,7 @@ msgstr ""
 #. Error message box on Linux with Wayland only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/tray.py:422
+#, fuzzy
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
 " via the dialog that will appear after you clicked 'Ok'.<br>Then start "
@@ -422,12 +424,12 @@ msgid ""
 "case for you then please<br><a href='{issues_url}'>report this as bug</a> on"
 " GitHub.</small>"
 msgstr ""
-"<b>У NormCap отсутствует разрешение на захват "
-"экрана.</b><br><br>Предоставьте его через диалоговое окно, которое появится "
-"после того, как вы нажмете «Ок».<br>Затем запустите NormCap "
+"<b>У NormCap отсутствует разрешение на захват экрана.</"
+"b><br><br>Предоставьте его через диалоговое окно, которое появится после "
+"того, как вы нажмете «Ок».<br>Затем запустите NormCap "
 "снова.<br><br><small>Иногда это может не сработать. Если это так, то, "
-"пожалуйста,<br><a href='{issues_url}'>сообщите об этом как об ошибке</a> на "
-"GitHub.</small>"
+"пожалуйста,<br><a href=\"{issues_url}\">сообщите об этом как об ошибке</a> "
+"на GitHub.</small>"
 
 #. Tray menu entry
 #: /home/holger/Code/normcap/normcap/gui/tray.py:512
