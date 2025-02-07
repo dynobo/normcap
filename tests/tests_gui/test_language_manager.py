@@ -102,7 +102,7 @@ def test_delete_last_language_impossible(monkeypatch, tmp_path, qtbot: QtBot):
     monkeypatch.setattr(
         language_manager.QtWidgets.QMessageBox,
         "information",
-        lambda parent, title, text: messagebox_args.extend([title, text]),
+        lambda parent, title, text, *_: messagebox_args.extend([title, text]),
     )
 
     Path(tmp_path / "tessdata").mkdir()

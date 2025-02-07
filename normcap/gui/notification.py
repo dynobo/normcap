@@ -97,7 +97,7 @@ class Notifier(QtCore.QObject):
 
         return title, text
 
-    @QtCore.Slot(Capture)
+    @QtCore.Slot(Capture)  # type: ignore  # pyside typhint bug?
     def _send_notification(self, capture: Capture) -> None:
         """Show tray icon then send notification."""
         title, message = self._compose_notification(capture)
@@ -202,7 +202,7 @@ class Notifier(QtCore.QObject):
         if applied_transformer == Transformer.URL:
             urls = text.split()
         elif applied_transformer == Transformer.MAIL:
-            urls = [f'mailto:{text.replace(",", ";").replace(" ", "")}']
+            urls = [f"mailto:{text.replace(',', ';').replace(' ', '')}"]
         else:
             temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.txt"
             temp_file.write_text(text)

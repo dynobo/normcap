@@ -1,6 +1,6 @@
 import pytest
 
-from normcap.ocr.transformers import email
+from normcap.ocr.transformers import email_address
 
 
 @pytest.mark.parametrize(
@@ -17,7 +17,7 @@ from normcap.ocr.transformers import email
 def test_email_transformer_transform(ocr_result, words, transformed_expected):
     """Check some transformations from raw to url."""
     ocr_result.words = [{"text": w} for w in words]
-    transformed = email.transform(ocr_result)
+    transformed = email_address.transform(ocr_result)
 
     assert transformed == transformed_expected
 
@@ -35,6 +35,6 @@ def test_email_transformer_transform(ocr_result, words, transformed_expected):
 )
 def test_email_transformer_score(ocr_result, words, score_expected):
     ocr_result.words = [{"text": w} for w in words]
-    score = email.score(ocr_result)
+    score = email_address.score(ocr_result)
 
     assert score == score_expected

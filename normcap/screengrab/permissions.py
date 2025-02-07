@@ -72,8 +72,7 @@ def _macos_request_screenshot_permission() -> None:
 
 def _macos_open_privacy_settings() -> None:
     link_to_preferences = (
-        "x-apple.systempreferences:com.apple.preference.security"
-        "?Privacy_ScreenCapture"
+        "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"
     )
     try:
         if sys.platform != "darwin":

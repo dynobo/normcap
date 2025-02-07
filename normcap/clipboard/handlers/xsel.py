@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 install_instructions = (
-    "Please install the package 'xsel' " "with your system's package manager."
+    "Please install the package 'xsel' with your system's package manager."
 )
 
 

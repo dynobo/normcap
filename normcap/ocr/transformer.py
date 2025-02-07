@@ -12,7 +12,7 @@ _transformers: dict[Transformer, TransformerProtocol] = {
     Transformer.SINGLE_LINE: transformers.single_line,
     Transformer.MULTI_LINE: transformers.multi_line,
     Transformer.PARAGRAPH: transformers.paragraph,
-    Transformer.MAIL: transformers.email,
+    Transformer.MAIL: transformers.email_address,
     Transformer.URL: transformers.url,
 }
 

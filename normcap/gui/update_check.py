@@ -53,7 +53,7 @@ class UpdateChecker(QtWidgets.QWidget):
         logger.debug("Search for new version on %s", self.url)
         self.downloader.get(self.url, timeout=10)
 
-    @QtCore.Slot(bytes, str)
+    @QtCore.Slot(bytes, str)  # type: ignore  # pyside typhint bug?
     def _on_download_finished(self, data: bytes, url: str) -> None:
         """Parse the tag version from the response and emit version retrieved signal."""
         fetched_version = None
