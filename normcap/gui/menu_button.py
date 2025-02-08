@@ -275,7 +275,7 @@ class MenuButton(QtWidgets.QToolButton):
 
         # L10N: Entry in main menu's 'Detection' section
         action = QtGui.QAction(_("Parse text"), detection_group)
-        action.setObjectName("parse_text")
+        action.setObjectName("parse-text")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("parse-text", type=bool)))
         # L10N: Tooltip of main menu's 'parse text' entry. Use <56 chars p. line.
