@@ -34,67 +34,6 @@ class WindowsBriefcase(BuilderBase):
 
         zip_path.unlink()
 
-    def _patch_main_cpp(self) -> None:
-        # TODO: Test if still needed
-        main_cpp = (
-            self.PROJECT_PATH
-            / "build"
-            / "normcap"
-            / "windows"
-            / "visualstudio"
-            / "NormCap"
-            / "Main.cpp"
-        )
-        # Make sure console get's attached
-        self.patch_file(
-            file_path=main_cpp,
-            insert_after="#include <windows.h>",
-            patch="#include <iostream>",
-            comment_prefix="",
-        )
-        insert_after = "CoUninitialize();"
-        patch = """
-if(AttachConsole(ATTACH_PARENT_PROCESS)) {
-    FILE * pNewStdout = nullptr;
-    FILE * pNewStderr = nullptr;
-    FILE * pNewStdin = nullptr;
-
-    ::freopen_s(&pNewStdout, "CONOUT$", "w", stdout);
-    ::freopen_s(&pNewStderr, "CONOUT$", "w", stderr);
-    ::freopen_s(&pNewStdin, "CONIN$", "r", stdin);
-
-    std::cout.clear();
-    std::cerr.clear();
-    std::cin.clear();
-
-    std::wcout.clear();
-    std::wcerr.clear();
-    std::wcin.clear();
-}
-"""
-        self.patch_file(
-            file_path=main_cpp,
-            insert_after=insert_after,
-            patch=patch,
-            comment_prefix="// ",
-        )
-        self.patch_file(
-            file_path=main_cpp,
-            insert_after="Py_Finalize();",
-            patch="\nFreeConsole();",
-            comment_prefix="// ",
-        )
-        self.remove_lines_from_file(
-            file_path=main_cpp,
-            delete_from="// If we can attach to the console",
-            delete_to='printf("Log started',
-        )
-        self.remove_lines_from_file(
-            file_path=main_cpp,
-            delete_from="String^ log_folder;",
-            delete_to="PyStatus status;",
-        )
-
     def _patch_windows_installer(self) -> None:
         """Customize wix-installer."""
         wxs_file = (
@@ -196,7 +135,6 @@ if(AttachConsole(ATTACH_PARENT_PROCESS)) {
 
     def run_framework(self) -> None:
         self.run(cmd="briefcase create windows VisualStudio", cwd=self.PROJECT_PATH)
-        self._patch_main_cpp()
         self.run(cmd="briefcase build windows VisualStudio", cwd=self.PROJECT_PATH)
         self._patch_windows_installer()
         self.run(cmd="briefcase package windows VisualStudio", cwd=self.PROJECT_PATH)
