@@ -14,8 +14,8 @@ def score(ocr_result: OcrResult) -> float:
     Returns:
         Score between 0-100 (100 = more likely).
     """
-    breaks = ocr_result.num_blocks + ocr_result.num_pars - 1
-    return 100 - (100 / (breaks))
+    breaks = max(1, ocr_result.num_blocks + ocr_result.num_pars - 1)
+    return 100 - (100 / breaks)
 
 
 def transform(ocr_result: OcrResult) -> str:
