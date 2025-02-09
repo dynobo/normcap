@@ -1,7 +1,7 @@
 """Create the settings button and its menu."""
 
 import sys
-from typing import Any, Optional, Union
+from typing import Optional, Union
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -134,14 +134,10 @@ class MenuButton(QtWidgets.QToolButton):
         message_box.exec()
 
     @QtCore.Slot(QtGui.QAction)  # type: ignore  # pyside typhint bug?
-    def on_item_click(self, action: QtGui.QAction) -> None:
-        # TODO: Reduce Cyclomatic Complexity
+    def on_item_click(self, action: QtGui.QAction) -> None:  # noqa: PLR0911
         action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None
-        value: Optional[Any] = None
-
-        # Menu items which trigger actions
 
         if action_name == "close":
             self.com.on_close_in_settings.emit("Clicked close in settings")
@@ -170,20 +166,20 @@ class MenuButton(QtWidgets.QToolButton):
             self.com.on_open_url.emit(action_name)
             return
 
-        # Menu items which change settings
         if group_name in ["settings_group", "detection_group"]:
-            setting = action_name
-            value = action.isChecked()
+            self.settings.setValue(action_name, action.isChecked())
+            self.com.on_setting_change.emit(action_name)
+            return
+
         if group_name == "language_group":
-            setting = "language"
             languages = [a.objectName() for a in group.actions() if a.isChecked()]
             if not languages:
+                # If all languages are unselected, keep the currently clicked active:
                 languages = [action_name]
                 action.setChecked(True)
-            value = languages
-
-        self.settings.setValue(str(setting), value)
-        self.com.on_setting_change.emit(str(setting))
+            self.settings.setValue("language", languages)
+            self.com.on_setting_change.emit("language")
+            return
 
     @QtCore.Slot()
     def populate_menu_entries(self) -> None:
