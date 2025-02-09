@@ -8,15 +8,16 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-05-06 21:18+0200\n"
-"PO-Revision-Date: 2024-11-11 20:44+0900\n"
-"Last-Translator: \n"
-"Language-Team: Russian <https://hosted.weblate.org/projects/normcap/ui/ru/>\n"
-"Language: ja\n"
+"PO-Revision-Date: 2025-02-07 10:05+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Japanese <https://hosted.weblate.org/projects/normcap/ui/ja/>"
+"\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.14.0\n"
 
 #. Generic error message when any download failed.
@@ -380,6 +381,7 @@ msgstr[0] "{count} キャプチャされた文字"
 #. Error message box on macOS only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/tray.py:411
+#, fuzzy
 msgid ""
 "'{application}' is missing the permission for 'Screen Recording'.\n"
 "\n"
@@ -390,14 +392,15 @@ msgid ""
 msgstr ""
 "'{application}' には'画面記録'のアクセス権がありません。\n"
 "\n"
-"[OK] をクリックした後に表示されるダイアログ、または [システム設定] > [プライ"
-"バシーとセキュリティ] を使用して許可します。\n"
+"[OK] をクリックした後に表示されるダイアログ、または [システム設定] &gt; "
+"[プライバシーとセキュリティ] を使用して許可します。\n"
 "\n"
 "その後、NormCapを再起動します。"
 
 #. Error message box on Linux with Wayland only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/tray.py:422
+#, fuzzy
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it "
 "via the dialog that will appear after you clicked 'Ok'.<br>Then start "
@@ -405,10 +408,11 @@ msgid ""
 "case for you then please<br><a href='{issues_url}'>report this as bug</a> on "
 "GitHub.</small>"
 msgstr ""
-"<b>NormCapに画面キャプチャのアクセス許可がありません。</b><br><br>[OK] をク"
-"リックした後に表示されるダイアログで許可します。<br>その後、NormCapを再度起動"
-"します。<br><br><small>うまくいかないこともあります。その場合は、GitHubで"
-"<br><a href='{issues_url}'>バグとして報告</a> してください。</small>"
+"<b>NormCapに画面キャプチャのアクセス許可がありません。</b><br><br>[OK] "
+"をクリックした後に表示されるダイアログで許可します。<br>その後、NormCapを再度"
+"起動します。<br><br><small>うまくいかないこともあります。その場合は、"
+"GitHubで<br><a href=\"{issues_url}\">バグとして報告</a> "
+"してください。</small>"
 
 #. Tray menu entry
 #: /home/holger/Code/normcap/normcap/gui/tray.py:512

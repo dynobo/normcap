@@ -3,22 +3,22 @@
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-05-06 21:18+0200\n"
-"PO-Revision-Date: 2024-07-03 12:06+0800\n"
-"Last-Translator: mfz < >\n"
+"PO-Revision-Date: 2025-02-07 10:05+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
+"projects/normcap/ui/zh_Hans/>\n"
 "Language: zh_CN\n"
-"Language-Team: zh_CN <LL@li.org>\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.14.0\n"
-"X-Generator: PO File Editor https://pofile.net/free-po-editor\n"
 
 #. Generic error message when any download failed.
 #: /home/holger/Code/normcap/normcap/gui/downloader.py:59
@@ -75,8 +75,8 @@ msgid ""
 msgstr "处理需要一些时间。等待通知或系统托盘图标的颜色变化。"
 
 #. Introduction window step title
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:103
 #. Introduction window step title
+#: /home/holger/Code/normcap/normcap/gui/introduction.py:103
 msgid "3. Paste from clipboard"
 msgstr "3. 从剪贴板粘贴"
 
@@ -88,8 +88,8 @@ msgid ""
 msgstr "检测结果将被复制到系统剪贴板上。将其粘贴（{shortcut}）到任何应用程序中。"
 
 #. Introduction window step title
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:117
 #. Introduction window step title
+#: /home/holger/Code/normcap/normcap/gui/introduction.py:117
 msgid "Settings & more"
 msgstr "设置和更多"
 
@@ -337,9 +337,9 @@ msgid "1 word captured"
 msgid_plural "{count} words captured"
 msgstr[0] "捕获了 {count} 个单词"
 
-#: /home/holger/Code/normcap/normcap/gui/notification.py:78
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: /home/holger/Code/normcap/normcap/gui/notification.py:78
 #: /home/holger/Code/normcap/normcap/gui/notification.py:78
 msgid "1 line captured"
 msgid_plural "{count} lines captured"
@@ -362,6 +362,7 @@ msgstr[0] "捕获了 {count} 个字符"
 #. Error message box on macOS only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/tray.py:411
+#, fuzzy
 msgid ""
 "'{application}' is missing the permission for 'Screen Recording'.\n"
 "\n"
@@ -372,13 +373,15 @@ msgid ""
 msgstr ""
 "“{application}”缺少“屏幕录制”的权限。\n"
 "\n"
-"通过在您点击“好的”按钮之后出现的对话框中授予权限或通过“系统设置”>“隐私与安全性”。\n"
+"通过在您点击“好的”按钮之后出现的对话框中授予权限或通过“系统设置”&gt;“隐私与安"
+"全性”。\n"
 "\n"
 "然后重新启动NormCap。"
 
 #. Error message box on Linux with Wayland only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/tray.py:422
+#, fuzzy
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
 " via the dialog that will appear after you clicked 'Ok'.<br>Then start "
@@ -386,9 +389,11 @@ msgid ""
 "case for you then please<br><a href='{issues_url}'>report this as bug</a> on"
 " GitHub.</small>"
 msgstr ""
-"<b>NormCap 缺少屏幕截图的权限。</b><br><br>通过在您点击“好的”按钮之后出现的对话框中进行授予权限。<br>然后重新启动 "
-"NormCap。<br><br ><small>有时，这可能不起作用。如果是您遇到这种情况，请在 GitHub 上<br><a "
-"href='{issues_url}'>报告这个问题</a>。</small>"
+"<b>NormCap "
+"缺少屏幕截图的权限。</b><br><br>通过在您点击“好的”按钮之后出现的对话框中进行"
+"授予权限。<br>然后重新启动 "
+"NormCap。<br><br><small>有时，这可能不起作用。如果是您遇到这种情况，请在 "
+"GitHub 上<br><a href=\"{issues_url}\">报告这个问题</a>。</small>"
 
 #. Tray menu entry
 #: /home/holger/Code/normcap/normcap/gui/tray.py:512

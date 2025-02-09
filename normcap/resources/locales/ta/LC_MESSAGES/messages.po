@@ -1,59 +1,58 @@
-# Russian (Russia) translations for PROJECT.
-# Copyright (C) 2023 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# Victor <k3kelm4vw@mozmail.com>, 2024.
+# Translations template for NormCap.
+# Copyright (C) 2024 dynobo
+# This file is distributed under the same license as the NormCap project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"Project-Id-Version: NormCap 0.5.4\n"
+"Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2024-05-06 21:18+0200\n"
-"PO-Revision-Date: 2025-02-07 10:05+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Russian <https://hosted.weblate.org/projects/normcap/ui/ru/>\n"
-"Language: ru_RU\n"
+"PO-Revision-Date: 2025-01-21 09:26+0000\n"
+"Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
+"Language-Team: Tamil <https://hosted.weblate.org/projects/normcap/ui/ta/>\n"
+"Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.14.0\n"
 
 #. Generic error message when any download failed.
 #: /home/holger/Code/normcap/normcap/gui/downloader.py:59
 msgid "Download error."
-msgstr "Ошибка загрузки."
+msgstr "பிழையைப் பதிவிறக்கவும்."
 
 #. Introduction window title
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:51
 msgid "Introduction to NormCap"
-msgstr "Введение в NormCap"
+msgstr "நார்ம்கேப்புக்கு அறிமுகம்"
 
 #. Introduction window checkbox
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:57
 msgid "Show on startup"
-msgstr "Показывать при запуске"
+msgstr "தொடக்கத்தில் காட்டு"
 
 #. Introduction window button
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:60
 msgid "Ok"
-msgstr "Ок"
+msgstr "சரி"
 
 #. Introduction window shortcut for pasting on Linux and Windows
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:77
 msgid "Ctrl + v"
-msgstr "Ctrl + V"
+msgstr "கட்டுப்பாடு + v"
 
 #. Introduction window shortcut for pasting on macOS
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:79
 msgid "Cmd + v"
-msgstr "Cmd + V"
+msgstr "சிஎம்டி + வி"
 
 #. Introduction window step title
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:83
 msgid "1. Select area"
-msgstr "1. Выберите область"
+msgstr "1. பகுதியைத் தேர்ந்தெடுக்கவும்"
 
 #. Introduction window step description
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:85
@@ -61,13 +60,13 @@ msgid ""
 "Wait until a pink border appears around your screen, then select the desired"
 " capture area."
 msgstr ""
-"Подождите, пока на границе экрана не появится розовая рамка, затем выберите "
-"нужное."
+"உங்கள் திரையைச் சுற்றி ஒரு இளஞ்சிவப்பு எல்லை தோன்றும் வரை காத்திருங்கள், பின்னர் விரும்பிய "
+"பிடிப்பு பகுதியைத் தேர்ந்தெடுக்கவும்."
 
 #. Introduction window step title
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:93
 msgid "2. Wait for detection"
-msgstr "2. Дождитесь обнаружения"
+msgstr "2. கண்டறிதலுக்காக காத்திருங்கள்"
 
 #. Introduction window step description
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:95
@@ -75,13 +74,13 @@ msgid ""
 "Processing takes time. Wait for a notification or a color change of the "
 "system tray icon."
 msgstr ""
-"Обработка требует времени. Дождитесь уведомления или изменения цвета значка "
-"на панели задач."
+"செயலாக்கத்திற்கு நேரம் எடுக்கும். கணினி தட்டு ஐகானின் அறிவிப்பு அல்லது வண்ண மாற்றத்திற்காக "
+"காத்திருங்கள்."
 
 #. Introduction window step title
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:103
 msgid "3. Paste from clipboard"
-msgstr "3. Вставьте из буфера обмена"
+msgstr "3. கிளிப்போர்டிலிருந்து ஒட்டவும்"
 
 #. Introduction window step description
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:105
@@ -89,13 +88,13 @@ msgid ""
 "The detection result will be copied to your system's clipboard. Paste it "
 "into any application ({shortcut})."
 msgstr ""
-"Результат обнаружения будет скопирован в буфер обмена вашей системы. "
-"Вставьте его в любое приложение ({shortcut})."
+"கண்டறிதல் முடிவு உங்கள் கணினியின் இடைநிலைப்பலகைக்கு நகலெடுக்கப்படும். எந்தவொரு "
+"பயன்பாட்டிலும் ({shortcut}) ஒட்டவும்."
 
 #. Introduction window step title
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:117
 msgid "Settings & more"
-msgstr "Настройки и другое"
+msgstr "அமைப்புகள் மற்றும் பல"
 
 #. Introduction window step description
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:119
@@ -103,66 +102,66 @@ msgid ""
 "Open the menu using the gear icon in the upper right corner of corner your "
 "screen."
 msgstr ""
-"Откройте меню, используя значок шестеренки в правом верхнем углу вашего "
-"экрана."
+"உங்கள் திரையின் மூலையின் மேல் வலது மூலையில் உள்ள கியர் ஐகானைப் பயன்படுத்தி மெனுவைத் "
+"திறக்கவும்."
 
 #. Introduction window headline
 #: /home/holger/Code/normcap/normcap/gui/introduction.py:130
 msgid "Basic Usage"
-msgstr "Обычное использование"
+msgstr "அடிப்படை பயன்பாடு"
 
 #. Title of Language Manager
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:32
 msgid "Manage Languages"
-msgstr "Управление языками"
+msgstr "மொழிகளை நிர்வகிக்கவும்"
 
 #. Language Manager section
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:45
 msgid "Installed:"
-msgstr "Установлено:"
+msgstr "நிறுவப்பட்டுள்ளது:"
 
 #. Language Manager button
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:48
 msgid "Delete"
-msgstr "Удалить"
+msgstr "நீக்கு"
 
 #. Language Manager section
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:55
 msgid "Available:"
-msgstr "Доступно:"
+msgstr "கிடைக்கிறது:"
 
 #. Language Manager button
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:58
 msgid "Download"
-msgstr "Скачать"
+msgstr "பதிவிறக்கம்"
 
 #. Language Manager button
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:67
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:390
 msgid "Close"
-msgstr "Закрыть"
+msgstr "மூடு"
 
 #. Language Manager link to directory on file system
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:73
 msgid "Close and view tessdata folder in file manager..."
-msgstr "Закрыть и просмотреть папку tessdata в менеджере файлов..."
+msgstr "கோப்பு மேலாளரில் டெச் டேட்டா கோப்புறையை மூடி பார்க்கவும் ..."
 
 #. Language Manager error message box title
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:98
 #: /home/holger/Code/normcap/normcap/gui/tray.py:406
 msgid "Error"
-msgstr "Ошибка"
+msgstr "பிழை"
 
 #. Language Manager error message box text
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:100
 msgid "Language download failed!"
-msgstr "Загрузка языка не удалась!"
+msgstr "மொழி பதிவிறக்கம் தோல்வியடைந்தது!"
 
 #. Language Manager information message box title
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:130
 msgid "Information"
-msgstr "Информация"
+msgstr "தகவல்"
 
 #. Language Manager information message box text
 #: /home/holger/Code/normcap/normcap/gui/language_manager.py:132
@@ -170,8 +169,8 @@ msgid ""
 "It is not possible to delete all languages. NormCap needs at least one to "
 "function correctly."
 msgstr ""
-"Невозможно удалить все языки. Для правильной работы NormCap необходим хотя "
-"бы один."
+"எல்லா மொழிகளையும் நீக்க முடியாது. சரியாக செயல்பட நார்ம்கேப்பிற்கு குறைந்தபட்சம் ஒன்று "
+"தேவை."
 
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:153
 msgid ""
@@ -179,34 +178,33 @@ msgid ""
 "system. To install additional languages, please refer to the documentation "
 "of that Tesseract installation."
 msgstr ""
-"Эта установка NormCap использует двоичный файл Tesseract, установленный в "
-"вашей системе. Чтобы установить дополнительные языки, пожалуйста, обратитесь "
-"к документации по установке Tesseract."
+"நார்ம்கேப்பின் இந்த நிறுவல் உங்கள் கணினியில் நிறுவப்பட்ட டெசராக்ட் பைனரியைப் பயன்படுத்துகிறது"
+". கூடுதல் மொழிகளை நிறுவ, தயவுசெய்து அந்த டெசராக்ட் நிறுவலின் ஆவணங்களைப் பார்க்கவும்."
 
 #. Section title in Main Menu
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:199
 msgid "Settings"
-msgstr "Настройки"
+msgstr "அமைப்புகள்"
 
 #. Section title in Main Menu
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:203
 msgid "Capture mode"
-msgstr "Режим захвата"
+msgstr "பிடிப்பு முறை"
 
 #. Section title in Main Menu
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:207
 msgid "Languages"
-msgstr "Языки"
+msgstr "மொழிகள்"
 
 #. Section title in Main Menu
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:211
 msgid "Application"
-msgstr "Приложение"
+msgstr "பயன்பாடு"
 
 #. Entry in main menu's 'setting' section
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:231
 msgid "Show notification"
-msgstr "Показывать уведомление"
+msgstr "அறிவிப்பைக் காட்டு"
 
 #. Tooltip of main menu's "Show notification" entry. Use <56 chars p. line.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:236
@@ -214,40 +212,40 @@ msgid ""
 "Show status information via your system's desktop\n"
 "notification center."
 msgstr ""
-"Показывать информацию о состоянии через центр уведомлений\n"
-"на рабочем столе вашей системы."
+"உங்கள் கணினியின் டெச்க்டாப் வழியாக நிலை தகவல்களைக் காட்டுங்கள்\n"
+" அறிவிப்பு நடுவண்."
 
 #. Extension "Show notification"-Tooltip on macOS and Windows.
 #. Entry in main menu's 'setting' section
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:248
 msgid "Keep in system tray"
-msgstr "Оставить в панели задач"
+msgstr "கணினி தட்டில் வைக்கவும்"
 
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:254
 msgid ""
 "Keep NormCap running in the background. Another\n"
 "capture can be triggered via the tray icon."
 msgstr ""
-"Оставить NormCap работать в фоновом режиме. Новый\n"
-"захват можно запустить с помощью значка в панели."
+"நார்ம்கேப்பை பின்னணியில் இயக்கவும். மற்றொன்று\n"
+" தட்டு படவுரு வழியாக பிடிப்பு தூண்டப்படலாம்."
 
 #. Entry in main menu's 'setting' section
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:262
 msgid "Check for update"
-msgstr "Проверять обновления"
+msgstr "புதுப்பிப்புக்கு சரிபார்க்கவும்"
 
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:268
 msgid ""
 "Frequently fetch NormCap's releases online and display\n"
 "a message if a new version is available."
 msgstr ""
-"Часто проверять выпуски NormCap в Интернете и отображать сообщение,\n"
-"если доступна новая версия."
+"நார்ம்கேப்பின் வெளியீடுகளை ஆன்லைனில் அடிக்கடி பெறவும்\n"
+" புதிய பதிப்பு கிடைத்தால் செய்தி."
 
 #. Entry in main menu's 'Capture mode' section
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:281
 msgid "parse"
-msgstr "разбор"
+msgstr "பாகுபடுத்தல்"
 
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:287
 msgid ""
@@ -256,147 +254,141 @@ msgid ""
 "accordingly.\n"
 "If the result is unexpected, try 'raw' mode instead."
 msgstr ""
-"Пытается определить тип текста (например, строка,\n"
-"абзац, URL-адрес, эл. письмо) и соответствующим образом\n"
-"форматирует вывод.\n"
-"Если результат неожиданный, попробуйте вместо этого режим «raw»."
+"உரையின் வகையைத் தீர்மானிக்க முயற்சிக்கிறது (எ.கா. வரி,\n"
+" பத்தி, முகவரி, மின்னஞ்சல்) மற்றும் வெளியீட்டை வடிவமைக்கிறது\n"
+" அதன்படி.\n"
+" முடிவு எதிர்பாராததாக இருந்தால், அதற்கு பதிலாக 'மூல' பயன்முறையை முயற்சிக்கவும்."
 
 #. Entry in main menu's 'Capture mode' section
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:297
 msgid "raw"
-msgstr "raw"
+msgstr "மூல"
 
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:303
 msgid ""
 "Returns the text exactly as detected by the Optical\n"
 "Character Recognition Software."
 msgstr ""
-"Возвращает текст в точности так, как он обнаружен\n"
-"программой оптического распознавания символов."
+"ஆப்டிகல் மூலம் கண்டறியப்பட்டபடி உரையை வழங்குகிறது\n"
+" எழுத்து அங்கீகார மென்பொருள்."
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:332
 msgid "add/remove..."
-msgstr "добавить/удалить..."
+msgstr "சேர்க்க/அகற்று ..."
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:336
 msgid "... need more?"
-msgstr "... нужно больше?"
+msgstr "... இன்னும் தேவையா?"
 
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:345
 msgid "About"
-msgstr "О программе"
+msgstr "பற்றி"
 
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:353
 msgid "Introduction"
-msgstr "Введение"
+msgstr "அறிமுகம்"
 
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:358
 msgid "Website"
-msgstr "Сайт"
+msgstr "வலைத்தளம்"
 
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:363
 msgid "FAQs"
-msgstr "ЧЗВ"
+msgstr "கேள்விகள்"
 
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:368
 msgid "Source code"
-msgstr "Исходный код"
+msgstr "மூலக் குறியீடு"
 
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:373
 msgid "Releases"
-msgstr "Выпуски"
+msgstr "வெளியீடுகள்"
 
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:378
 msgid "Report a problem"
-msgstr "Сообщить о проблеме"
+msgstr "ஒரு சிக்கலைப் புகாரளிக்கவும்"
 
 #. Entry in main menu's 'Application' section.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:383
 msgid "Donate for coffee"
-msgstr "Донат на кофе"
+msgstr "காபிக்கு நன்கொடை"
 
 #. Tooltip of main menu's 'close' entry. Use <56 chars p. line.
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:393
 msgid "Exit NormCap, or minimize to system tray (if enabled)."
-msgstr "Выход из NormCap или сворачивание в панель задач (если включено)."
+msgstr ""
+"நார்ம்கேப்பிலிருந்து வெளியேறவும் அல்லது கணினி தட்டில் குறைக்கவும் (இயக்கப்பட்டால்)."
 
 #. Notification title
 #: /home/holger/Code/normcap/normcap/gui/notification.py:44
 msgid "Nothing captured!"
-msgstr "Ничего не захвачено!"
+msgstr "எதுவும் கைப்பற்றப்படவில்லை!"
 
 #. Notification text
 #: /home/holger/Code/normcap/normcap/gui/notification.py:46
 msgid "Please try again."
-msgstr "Пожалуйста, попробуйте снова."
+msgstr "மீண்டும் முயற்சிக்கவும்."
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/notification.py:57
 msgid "1 paragraph captured"
 msgid_plural "{count} paragraphs captured"
-msgstr[0] "{count} абзац захвачен"
-msgstr[1] "{count} абзаца захвачено"
-msgstr[2] "{count} абзацев захвачено"
+msgstr[0] "1 பத்தி கைப்பற்றப்பட்டது"
+msgstr[1] "{count} பத்திகள் கைப்பற்றப்பட்டன"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/notification.py:64
 msgid "1 email captured"
 msgid_plural "{count} emails captured"
-msgstr[0] "{count} эл. письмо захвачено"
-msgstr[1] "{count} эл. письма захвачено"
-msgstr[2] "{count} эл. писем захвачено"
+msgstr[0] "1 மின்னஞ்சல் கைப்பற்றப்பட்டது"
+msgstr[1] "{count} மின்னஞ்சல்கள் கைப்பற்றப்பட்டன"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/notification.py:71
 msgid "1 word captured"
 msgid_plural "{count} words captured"
-msgstr[0] "{count} слово захвачено"
-msgstr[1] "{count} слова захвачено"
-msgstr[2] "{count} слов захвачено"
+msgstr[0] "1 சொல் கைப்பற்றப்பட்டது"
+msgstr[1] "{count} சொற்கள் கைப்பற்றப்பட்டன"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/notification.py:78
 msgid "1 line captured"
 msgid_plural "{count} lines captured"
-msgstr[0] "{count} строка захвачена"
-msgstr[1] "{count} строки захвачено"
-msgstr[2] "{count} строк захвачено"
+msgstr[0] "1 வரி கைப்பற்றப்பட்டது"
+msgstr[1] "{count} கோடுகள் கைப்பற்றப்பட்டன"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/notification.py:85
 msgid "1 URL captured"
 msgid_plural "{count} URLs captured"
-msgstr[0] "{count} URL-адрес захвачен"
-msgstr[1] "{count} URL-адреса захвачено"
-msgstr[2] "{count} URL-адресов захвачено"
+msgstr[0] "1 முகவரி கைப்பற்றப்பட்டது"
+msgstr[1] "{count} urls கைப்பற்றப்பட்டது"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/notification.py:94
 msgid "1 character captured"
 msgid_plural "{count} characters captured"
-msgstr[0] "{count} символ захвачен"
-msgstr[1] "{count} символа захвачено"
-msgstr[2] "{count} символов захвачено"
+msgstr[0] "1 எழுத்து கைப்பற்றப்பட்டது"
+msgstr[1] "{count} எழுத்துக்கள் கைப்பற்றப்பட்டன"
 
 #. Error message box on macOS only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/tray.py:411
-#, fuzzy
 msgid ""
 "'{application}' is missing the permission for 'Screen Recording'.\n"
 "\n"
@@ -405,18 +397,16 @@ msgid ""
 "\n"
 "Then restart NormCap."
 msgstr ""
-"У '{application}' отсутствует разрешение на «Запись экрана».\n"
+"'{application}' 'திரை பதிவு' செய்வதற்கான அனுமதியைக் காணவில்லை.\n"
 "\n"
-"Предоставьте его через диалоговое окно, которое появится после того, как вы "
-"нажмете «Ок», или через «Системные настройки» &gt; «Конфиденциальность и "
-"безопасность».\n"
+" நீங்கள் 'சரி' என்பதைக் சொடுக்கு செய்தபின் அல்லது 'கணினி அமைப்புகள்'&gt; 'தனியுரிமை "
+"மற்றும் பாதுகாப்பு' வழியாக தோன்றும் உரையாடல் வழியாக அதை வழங்கவும்.\n"
 "\n"
-"Затем перезапустите NormCap."
+" பின்னர் நார்ம்கேப்பை மறுதொடக்கம் செய்யுங்கள்."
 
 #. Error message box on Linux with Wayland only.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/tray.py:422
-#, fuzzy
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
 " via the dialog that will appear after you clicked 'Ok'.<br>Then start "
@@ -424,34 +414,31 @@ msgid ""
 "case for you then please<br><a href='{issues_url}'>report this as bug</a> on"
 " GitHub.</small>"
 msgstr ""
-"<b>У NormCap отсутствует разрешение на захват экрана.</"
-"b><br><br>Предоставьте его через диалоговое окно, которое появится после "
-"того, как вы нажмете «Ок».<br>Затем запустите NormCap "
-"снова.<br><br><small>Иногда это может не сработать. Если это так, то, "
-"пожалуйста,<br><a href=\"{issues_url}\">сообщите об этом как об ошибке</a> "
-"на GitHub.</small>"
+"<b> திரை பிடிப்புக்கான அனுமதியைக் காணவில்லை. &gt; &lt;சிறிய&gt; சில நேரங்களில், இது"
+" வேலை செய்யாது. உங்களுக்காக அப்படியானால், தயவுசெய்து <br> <a href=\"{issues_url}\""
+"> இதை பிழை என்று புகாரளிக்கவும் </a> கிட்அப்பில். </b>"
 
 #. Tray menu entry
 #: /home/holger/Code/normcap/normcap/gui/tray.py:512
 msgid "Capture"
-msgstr "Захватить"
+msgstr "பிடிப்பு"
 
 #. Tray menu entry for exiting NormCap completely.
 #: /home/holger/Code/normcap/normcap/gui/tray.py:519
 msgid "Exit"
-msgstr "Выход"
+msgstr "வெளியேறு"
 
 #. Update available dialog box.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/update_check.py:81
 msgid "NormCap v{version} is available."
-msgstr "Доступен NormCap v{version}."
+msgstr "நார்ம்கேப் வி {version} கிடைக்கிறது."
 
 #. Update available dialog box.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: /home/holger/Code/normcap/normcap/gui/update_check.py:84
 msgid "You have v{version}"
-msgstr "У вас v{version}"
+msgstr "உங்களிடம் v {version} உள்ளது"
 
 #. Message box shown when new version available (Prebuilt package)
 #: /home/holger/Code/normcap/normcap/gui/update_check.py:88
@@ -461,10 +448,10 @@ msgid ""
 "\n"
 "Do you want to visit the release website now?"
 msgstr ""
-"Вы можете загрузить новую версию NormCap для вашей операционной системы с "
-"GitHub.\n"
+"உங்கள் இயக்க முறைமைக்கு நார்ம்கேப்பின் புதிய பதிப்பை கிட்அப்பிலிருந்து பதிவிறக்கம் செய்யலாம்."
 "\n"
-"Хотите посетить сайт с выпуском прямо сейчас?"
+"\n"
+" இப்போது வெளியீட்டு வலைத்தளத்தைப் பார்வையிட விரும்புகிறீர்களா?"
 
 #. Message box shown when new version available (Python package)
 #: /home/holger/Code/normcap/normcap/gui/update_check.py:95
@@ -474,7 +461,7 @@ msgid ""
 "\n"
 "Do you want to view the changelog on GitHub now?"
 msgstr ""
-"Вы можете обновить NormCap через командную строку, например, запустив «pip "
-"install normcap --upgrade».\n"
+"நீங்கள் கட்டளை வரி வழியாக நார்ம்கேப்பை மேம்படுத்தலாம், எ.கா. 'பிஐபி நிறுவுதல் NORMCAP --"
+"upgrade' ஐ இயக்குவதன் மூலம்.\n"
 "\n"
-"Хотите просмотреть журнал изменений на GitHub прямо сейчас?"
+" நீங்கள் இப்போது கிதுபில் சேஞ்ச்லாக் பார்க்க விரும்புகிறீர்களா?"
