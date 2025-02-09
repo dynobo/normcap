@@ -31,16 +31,17 @@ hide:
 - The icons <span class="md-pink">★</span> or <span class="md-pink">☰</span> next to the selection-rectangle indicate the active "capture mode" (see below).
 - To abort a capture or quit NormCap press `<esc>`
 
-<!-- TODO: Adjust to new settings -->
-## Capture Modes
+## Detection settings
 
-The settings menu <span class="md-pink">⚙</span> allows switching between the two capture modes: "parse" and "raw":
+The settings menu <span class="md-pink">⚙</span> allows toggling various detection modes:
 
-- **"Raw"-Mode**
+- **Raw**
 
-    Marked by the <span class="md-pink">☰</span> symbol, it returns text just as detected by the OCR software. For example, all line-breaks are preserved.
+    If no detection setting is active, the selection rectangle gets marked with the
+    <span class="md-pink">☰</span> symbol: it returns text just as detected by the OCR
+    software. For example, all line-breaks are preserved.
 
-- **"Parse"-Mode** <small>(default)</small>
+- **Parse Text** <small>(default)</small>
 
     Indicated by the <span class="md-pink">★</span> symbol, it performs some formatting of the output based on certain implemented rules, which can take additional information like text position and content into account. In a first step, every rule calculates a "score" to determine the likelihood of being responsible for this type of text. In a second step, the rule which achieved the highest "score" takes the necessary actions to "transform" the input text according to its type. The following rules are currently implemented:
 
