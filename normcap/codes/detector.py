@@ -1,4 +1,4 @@
-"""Transformer to handle barodes."""
+"""Barcode and QR Code detection."""
 
 import logging
 import os
@@ -14,7 +14,7 @@ import numpy as np
 from PySide6 import QtGui
 
 from normcap import resources
-from normcap.codes.structures import Transformer
+from normcap.codes.structures import Code
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +67,7 @@ def _image_to_mat(image: QtGui.QImage) -> np.ndarray:
     return arr[:, :, :3]
 
 
-def detect_codes(image: QtGui.QImage) -> Optional[tuple[str, Transformer]]:
+def detect_codes(image: QtGui.QImage) -> Optional[tuple[str, Code]]:
     """Decode QR and barcodes from image.
 
     Args:
@@ -76,7 +76,7 @@ def detect_codes(image: QtGui.QImage) -> Optional[tuple[str, Transformer]]:
     Returns:
         URL(s), separated bye newline
     """
-    logger.info("Apply barcode transformer")
+    logger.info("Detect Barcodes and QR Codes")
 
     mat = _image_to_mat(image)
 
@@ -89,11 +89,11 @@ def detect_codes(image: QtGui.QImage) -> Optional[tuple[str, Transformer]]:
         return None
 
     if barcodes and not qr_codes:
-        code_type = Transformer.BARCODE
+        code_type = Code.BARCODE
     elif qr_codes and not barcodes:
-        code_type = Transformer.QR
+        code_type = Code.QR
     else:
-        code_type = Transformer.QR_AND_BARCODE
+        code_type = Code.QR_AND_BARCODE
 
     return os.linesep.join(codes), code_type
 

@@ -34,18 +34,16 @@ def test_normcap_ocr_testcases(
     capture = tray.capture
     assert capture
 
-    assert capture.ocr_transformer in testcase.expected_ocr_transformers, (
+    assert capture.text_type in testcase.expected_text_type, (
         f"{testcase.image_path.name=}",
-        f"{capture.ocr_text=}",
-        f"{testcase.expected_ocr_text=}",
+        f"{capture.text=}",
+        f"{testcase.expected_text=}",
     )
 
-    similarity = SequenceMatcher(
-        None, capture.ocr_text, testcase.expected_ocr_text
-    ).ratio()
+    similarity = SequenceMatcher(None, capture.text, testcase.expected_text).ratio()
 
     assert similarity >= testcase.expected_similarity, (
         f"{testcase.image_path.name=}",
-        f"{capture.ocr_text=}",
-        f"{testcase.expected_ocr_text=}",
+        f"{capture.text=}",
+        f"{testcase.expected_text=}",
     )

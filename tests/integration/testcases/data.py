@@ -11,8 +11,8 @@ from normcap.ocr.structures import Transformer
 @dataclass
 class TestCase:
     image_path: Path
-    expected_ocr_text: str
-    expected_ocr_transformers: list[Transformer]
+    expected_text: str
+    expected_text_type: list[Transformer]
     expected_similarity: float = 0.98
     skip: bool = False
 
@@ -68,7 +68,7 @@ image_dir = Path(__file__).parent
 testcases: tuple[TestCase, ...] = (
     TestCase(
         image_path=image_dir / "00_parse_urls.png",
-        expected_ocr_text=f"{os.linesep}".join(
+        expected_text=f"{os.linesep}".join(
             [
                 "https://github.com/dynobo/normcap",
                 "https://wikipedia.de",
@@ -77,26 +77,26 @@ testcases: tuple[TestCase, ...] = (
                 "https://pypi.org/project/lmdiag/",
             ]
         ),
-        expected_ocr_transformers=[Transformer.URL],
+        expected_text_type=[Transformer.URL],
     ),
     TestCase(
         image_path=image_dir / "01_parse_colored_url.png",
-        expected_ocr_text="https://regex101.com",
-        expected_ocr_transformers=[Transformer.URL],
+        expected_text="https://regex101.com",
+        expected_text_type=[Transformer.URL],
     ),
     TestCase(
         image_path=image_dir / "02_detect_window_title.png",
-        expected_ocr_text="*Untitled Document 1",
-        expected_ocr_transformers=[Transformer.SINGLE_LINE],
+        expected_text="*Untitled Document 1",
+        expected_text_type=[Transformer.SINGLE_LINE],
     ),
     TestCase(
         image_path=image_dir / "03_parse_emails.png",
-        expected_ocr_text="peter.parker@test.com, HArDToReAd@test.com, 0815@test.com",
-        expected_ocr_transformers=[Transformer.MAIL],
+        expected_text="peter.parker@test.com, HArDToReAd@test.com, 0815@test.com",
+        expected_text_type=[Transformer.MAIL],
     ),
     TestCase(
         image_path=image_dir / "04_parse_email_skip_invalid.png",
-        expected_ocr_text=(
+        expected_text=(
             "To: Peter Parker <peter.parker@test.com>; "
             f"HArD To ReAd{os.linesep}"
             "<HArDToReAd@test.com>; "
@@ -105,26 +105,26 @@ testcases: tuple[TestCase, ...] = (
             "Invalid_two <also/not/valid/@test.com>; "
             "Invalid_three <@test.com>"
         ),
-        expected_ocr_transformers=[Transformer.PARAGRAPH, Transformer.MULTI_LINE],
+        expected_text_type=[Transformer.PARAGRAPH, Transformer.MULTI_LINE],
     ),
     TestCase(
         image_path=image_dir / "05_detect_text_with_low_contrast.png",
-        expected_ocr_text="Orange, the new black!",
-        expected_ocr_transformers=[Transformer.SINGLE_LINE],
+        expected_text="Orange, the new black!",
+        expected_text_type=[Transformer.SINGLE_LINE],
     ),
     TestCase(
         image_path=image_dir / "06_detect_special_characters.png",
-        expected_ocr_text=(
+        expected_text=(
             f"'One small step for Man'{os.linesep}"
             f'"Live long and prosper!"{os.linesep}'
             f"«Open the shuttlebay doors»{os.linesep}"
             '"May the Schwartz™ be with you!"'
         ),
-        expected_ocr_transformers=[Transformer.PARAGRAPH],
+        expected_text_type=[Transformer.PARAGRAPH],
     ),
     TestCase(
         image_path=image_dir / "07_parse_paragraphs_of_text.png",
-        expected_ocr_text=(
+        expected_text=(
             "You rent a hotel room. You put a book in the top drawer of the bedside "
             'table and go to sleep. You check out the next morning, but "forget" to '
             f"give back your key. You steal the key!{os.linesep}"
@@ -134,12 +134,12 @@ testcases: tuple[TestCase, ...] = (
             "How can that be? Aren't the contents of a hotel room drawer inaccessible "
             "if you haven't rented the room?"
         ),
-        expected_ocr_transformers=[Transformer.PARAGRAPH],
+        expected_text_type=[Transformer.PARAGRAPH],
     ),
     TestCase(
         # https://www.gutenberg.org/cache/epub/1321/pg1321-images.html
         image_path=image_dir / "08_paragraphs.png",
-        expected_ocr_text=(
+        expected_text=(
             f"Chapter 17{os.linesep}"
             "The being finished speaking and fixed his looks upon me in the "
             "expectation of a reply. But I was bewildered, perplexed, and "
@@ -154,12 +154,12 @@ testcases: tuple[TestCase, ...] = (
             "cottagers, and as he said this I could no longer suppress the rage that "
             "burned within me."
         ),
-        expected_ocr_transformers=[Transformer.PARAGRAPH],
+        expected_text_type=[Transformer.PARAGRAPH],
         expected_similarity=0.99,
     ),
     TestCase(
         image_path=image_dir / "09_two_columns.png",
-        expected_ocr_text=(
+        expected_text=(
             "Optical character recognition or optical character reader (OCR) is the "
             "electronic or mechanical conversion of images of typed, handwritten or "
             "printed text into machine-encoded text, whether from a scanned document, "
@@ -182,11 +182,11 @@ testcases: tuple[TestCase, ...] = (
             "of reproducing formatted output that closely approximates the original "
             "page including images, columns, and other non-textual components."
         ),
-        expected_ocr_transformers=[Transformer.PARAGRAPH],
+        expected_text_type=[Transformer.PARAGRAPH],
     ),
     TestCase(
         image_path=image_dir / "10_font_sizes.png",
-        expected_ocr_text=(
+        expected_text=(
             "Arial, 8 pt - You only live once, but if you do it right, once is enough."
             f"{os.linesep}"
             "Arial, 11 pt - You only live once, but if you do it right, once is enough."
@@ -197,11 +197,11 @@ testcases: tuple[TestCase, ...] = (
             f"{os.linesep}"
             "Arial, 22 pt - You only live once, but if you do it right, once is enough."
         ),
-        expected_ocr_transformers=[Transformer.PARAGRAPH],
+        expected_text_type=[Transformer.PARAGRAPH],
     ),
     TestCase(
         image_path=image_dir / "11_paragraph_with_bullet_points.png",
-        expected_ocr_text=(
+        expected_text=(
             f"The desired solution: (to be implemented){os.linesep}"
             'The "Paragraph" heuristic should be improved by taking the dimensions '
             f"of the detection boxes into account:{os.linesep}"
@@ -210,12 +210,12 @@ testcases: tuple[TestCase, ...] = (
             '- Relatively small gaps between lines should indicate "Paragraphs", '
             'larger gaps between lines indicate "Multilines"'
         ),
-        expected_ocr_transformers=[Transformer.PARAGRAPH],
+        expected_text_type=[Transformer.PARAGRAPH],
     ),
     TestCase(
         image_path=image_dir / "12_not_a_url.png",
-        expected_ocr_text="www.normcap.gui",
-        expected_ocr_transformers=[Transformer.SINGLE_LINE],
+        expected_text="www.normcap.gui",
+        expected_text_type=[Transformer.SINGLE_LINE],
         expected_similarity=0.95,
     ),
 )
