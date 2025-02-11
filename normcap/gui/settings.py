@@ -162,7 +162,7 @@ class Settings(QtCore.QSettings):
             self.setValue("parse-text", parse_text)
             self.remove("mode")
             logger.debug(
-                "Migrated setting 'mode=%s' to 'parse_text=%s'.", mode, parse_text
+                "Migrated setting 'mode=%s' to 'parse-text=%s'.", mode, parse_text
             )
 
     def _set_missing_to_default(self) -> None:
@@ -174,13 +174,17 @@ class Settings(QtCore.QSettings):
 
     def _update_from_init_settings(self) -> None:
         for key, value in self.init_settings.items():
-            if self.contains(key):
+            # TODO: Migrate setting keys to underscore instead minus
+            setting_key = key.replace("_", "-")
+            if self.contains(setting_key):
                 if value is not None:
-                    self.setValue(key, value)
-            elif key in {"reset", "verbosity"}:
+                    self.setValue(setting_key, value)
+            elif setting_key in {"reset", "verbosity"}:
                 continue
             else:
-                logger.debug("Skip update of non existing setting (%s: %s)", key, value)
+                logger.debug(
+                    "Skip update of unknown setting (%s: %s)", setting_key, value
+                )
 
     def reset(self) -> None:
         """Remove all existing settings and values."""

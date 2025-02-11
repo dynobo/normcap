@@ -48,7 +48,6 @@ from normcap.ocr.structures import Transformer
 def test_compose_notification(ocr_transform, ocr_text, output_title, output_text):
     # GIVEN a Notifier
     #   and an OCR capture with a certain results
-    notifier = notification.Notifier(None)
     capture = Capture(
         ocr_text=ocr_text,
         ocr_transformer=ocr_transform,
@@ -60,7 +59,7 @@ def test_compose_notification(ocr_transform, ocr_text, output_title, output_text
     )
 
     # WHEN the notification is composed
-    title, text = notifier._compose_notification(capture)
+    title, text = notification._compose_notification(capture)
 
     # THEN certain title and text should be used
     assert output_title in title

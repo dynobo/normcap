@@ -22,6 +22,9 @@ Code_Transformer = codes.structures.Transformer
 
 
 def _compose_title(capture: Capture) -> str:
+    if not capture.ocr_text:
+        return ""
+
     if capture.ocr_transformer == OCR_Transformer.PARAGRAPH:
         count = capture.ocr_text.count(os.linesep * 2) + 1
         # L10N: Notification title.
@@ -78,7 +81,7 @@ def _compose_title(capture: Capture) -> str:
         title = translate.ngettext(
             "1 code detected", "{count} codes detected", count
         ).format(count=count)
-    elif capture.mode == CaptureMode.RAW:
+    else:
         count = len(capture.ocr_text)
         # Count linesep only as single char:
         count -= (len(os.linesep) - 1) * capture.ocr_text.count(os.linesep)
@@ -87,17 +90,18 @@ def _compose_title(capture: Capture) -> str:
         title = translate.ngettext(
             "1 character captured", "{count} characters captured", count
         ).format(count=count)
-    else:
-        title = ""
     return title
 
 
 def _compose_text(capture: Capture) -> str:
+    if not capture.ocr_text:
+        return ""
+
     text = capture.ocr_text.strip().replace(os.linesep, " ")
     return textwrap.shorten(text, width=45)
 
 
-def _compose_notification(capture: Capture) -> str:
+def _compose_notification(capture: Capture) -> tuple[str, str]:
     """Extract message text out of captures object and include icon."""
     # Compose message text
     if capture.ocr_text and capture.ocr_text.strip():
@@ -127,7 +131,7 @@ class Notifier(QtCore.QObject):
         self.com = Communicate(parent=self)
         self.com.send_notification.connect(self._send_notification)
 
-    @QtCore.Slot(Capture)
+    @QtCore.Slot(Capture)  # type: ignore  # pyside typhint bug?
     def _send_notification(self, capture: Capture) -> None:
         """Show tray icon then send notification."""
         title, message = _compose_notification(capture)
@@ -233,12 +237,12 @@ class Notifier(QtCore.QObject):
         urls = []
         if applied_transformer == OCR_Transformer.URL:  # noqa: SIM114
             urls = text.split()
-        elif isinstance(applied_transformer, Code_Transformer.QR) and all(
+        elif applied_transformer == Code_Transformer.QR and all(
             s.startswith("http") for s in text.split()
         ):
             urls = text.split()
         elif applied_transformer == OCR_Transformer.MAIL:
-            urls = [f'mailto:{text.replace(",", ";").replace(" ", "")}']
+            urls = [f"mailto:{text.replace(',', ';').replace(' ', '')}"]
         else:
             temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.txt"
             temp_file.write_text(text)
