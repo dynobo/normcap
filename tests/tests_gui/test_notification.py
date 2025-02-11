@@ -27,7 +27,7 @@ from normcap.ocr.structures import Transformer
             Transformer.SINGLE_LINE,
             f"{'a' * 15} {'b' * 15} {'c' * 15}",
             "3 words ",
-            f"{'a' * 15} {'b' * 15} [...]",
+            f"{'a' * 15} {'b' * 15} […]",
         ),
         (
             Transformer.MULTI_LINE,
