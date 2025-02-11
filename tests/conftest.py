@@ -75,8 +75,8 @@ def capture() -> Capture:
     return Capture(
         parse_text=True,
         rect=Rect(20, 30, 220, 330),
-        ocr_text="one two three",
-        ocr_transformer=None,
+        text="one two three",
+        text_type=None,
         image=image,
     )
 

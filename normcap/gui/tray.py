@@ -255,7 +255,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.com.on_image_cropped.emit()
 
-    def _detect_codes(self) -> Optional[tuple[str, codes.structures.Transformer]]:
+    def _detect_codes(self) -> Optional[tuple[str, codes.structures.Code]]:
         logger.debug("Start QR/Barcode detection")
 
         if detections := codes.detector.detect_codes(image=self.capture.image):
@@ -280,7 +280,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         ocr_text = ocr_result.text
         ocr_transformer = ocr_result.best_scored_transformer
         utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")
-        logger.info("Text from OCR:\n%s", self.capture.ocr_text)
+        logger.info("Text from OCR:\n%s", self.capture.text)
         return ocr_text, ocr_transformer
 
     @QtCore.Slot()
@@ -316,8 +316,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             if not text:
                 text, transformer = future_text.result()
 
-            self.capture.ocr_text = text
-            self.capture.ocr_transformer = transformer
+            self.capture.text = text
+            self.capture.text_type = transformer
 
         if self.cli_mode:
             self._print_to_stdout()
@@ -351,25 +351,26 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot()
     def _copy_to_clipboard(self) -> None:
         """Copy results to clipboard."""
-        if not self.capture.ocr_text:
+        if not self.capture.text:
             logger.debug("Nothing there to be copied to clipboard!")
         elif self.clipboard_handler_name:
             logger.debug(
                 "Copy text to clipboard with %s", self.clipboard_handler_name.upper()
             )
             clipboard.copy_with_handler(
-                text=self.capture.ocr_text, handler_name=self.clipboard_handler_name
+                text=self.capture.text,
+                handler_name=self.clipboard_handler_name,
             )
         else:
             logger.debug("Copy text to clipboard")
-            clipboard.copy(text=self.capture.ocr_text)
+            clipboard.copy(text=self.capture.text)
         self.com.on_copied_to_clipboard.emit()
 
     @QtCore.Slot()
     def _print_to_stdout(self) -> None:
         """Print results to stdout ."""
         logger.debug("Print text to stdout and exit.")
-        print(self.capture.ocr_text, file=sys.stdout)  # noqa: T201
+        print(self.capture.text, file=sys.stdout)  # noqa: T201
         self.com.exit_application.emit(0)
 
     @QtCore.Slot()

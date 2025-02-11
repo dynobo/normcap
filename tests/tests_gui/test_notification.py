@@ -12,7 +12,7 @@ from normcap.ocr.structures import Transformer
 
 
 @pytest.mark.parametrize(
-    ("ocr_transform", "ocr_text", "output_title", "output_text"),
+    ("text_type", "text", "output_title", "output_text"),
     [
         (Transformer.SINGLE_LINE, "", "Nothing captured", "Please try again"),
         (
@@ -45,13 +45,13 @@ from normcap.ocr.structures import Transformer
         ("RAW", f"W1 W2{os.linesep}W3", "8 characters", "W1 W2 W3"),
     ],
 )
-def test_compose_notification(ocr_transform, ocr_text, output_title, output_text):
+def test_compose_notification(text_type, text, output_title, output_text):
     # GIVEN a Notifier
     #   and an OCR capture with a certain results
     capture = Capture(
-        ocr_text=ocr_text,
-        ocr_transformer=ocr_transform,
-        parse_text=ocr_transform != "RAW",
+        text=text,
+        text_type=text_type,
+        parse_text=text_type != "RAW",
         image=QtGui.QImage(),
         screen=None,
         scale_factor=1,
@@ -102,7 +102,7 @@ def test_send_via_qt_tray(qtbot):
 
     # WHEN a notification is sent via QT (QSystemTrayIcon)
     notifier._send_via_qt_tray(
-        title="Title", message="Message", ocr_text=None, ocr_transformer=None
+        title="Title", message="Message", text=None, text_type=None
     )
 
     # THEN we expect no exception (it's hard to test, if the notification is shown)
@@ -119,7 +119,7 @@ def test_send_via_qt_tray_without_qsystemtrayicon_parent_raises(qtbot):
     # WHEN a notification is sent via QT (QSystemTrayIcon)
     with pytest.raises(TypeError, match="QSystemTrayIcon"):
         notifier._send_via_qt_tray(
-            title="Title", message="Message", ocr_text=None, ocr_transformer=None
+            title="Title", message="Message", text=None, text_type=None
         )
 
     # THEN we expect an exception, as the parent has to be a QSystemTrayIcon
@@ -150,8 +150,8 @@ def test_send_via_qt_tray_handles_message_click(monkeypatch, qtbot):
     notification_data = {
         "title": "Title",
         "message": "Message",
-        "ocr_text": "text_1",
-        "ocr_transformer": "transformer_1",
+        "text": "text_1",
+        "text_type": "transformer_1",
     }
     notifier._send_via_qt_tray(**notification_data)
     notifier.parent().messageClicked.emit()
@@ -159,11 +159,8 @@ def test_send_via_qt_tray_handles_message_click(monkeypatch, qtbot):
     # THEN the mocked click handler function should get called exactly once
     #    and with the expected kwargs
     assert len(open_ocr_result_calls) == 1
-    assert open_ocr_result_calls[0]["text"] == notification_data["ocr_text"]
-    assert (
-        open_ocr_result_calls[0]["applied_transformer"]
-        == notification_data["ocr_transformer"]
-    )
+    assert open_ocr_result_calls[0]["text"] == notification_data["text"]
+    assert open_ocr_result_calls[0]["text_type"] == notification_data["text_type"]
 
 
 @pytest.mark.gui
@@ -189,8 +186,8 @@ def test_send_via_qt_tray_reconnects_signal(monkeypatch, qtbot):
     notifier._send_via_qt_tray(
         title="Title",
         message="Message",
-        ocr_text="text_1",
-        ocr_transformer="transformer_1",
+        text="text_1",
+        text_type="transformer_1",
     )
 
     # WHEN a subsequent notification is sent via QT
@@ -198,8 +195,8 @@ def test_send_via_qt_tray_reconnects_signal(monkeypatch, qtbot):
     notification_data = {
         "title": "Title",
         "message": "Message",
-        "ocr_text": "text_2",
-        "ocr_transformer": "transformer_2",
+        "text": "text_2",
+        "text_type": "transformer_2",
     }
     notifier._send_via_qt_tray(**notification_data)
     notifier.parent().messageClicked.emit()
@@ -208,11 +205,8 @@ def test_send_via_qt_tray_reconnects_signal(monkeypatch, qtbot):
     #   and only contain the kwargs from the second notification.
     #   because the first messageClick handler got cleared
     assert len(open_ocr_result_calls) == 1
-    assert open_ocr_result_calls[0]["text"] == notification_data["ocr_text"]
-    assert (
-        open_ocr_result_calls[0]["applied_transformer"]
-        == notification_data["ocr_transformer"]
-    )
+    assert open_ocr_result_calls[0]["text"] == notification_data["text"]
+    assert open_ocr_result_calls[0]["text_type"] == notification_data["text_type"]
 
 
 def test_send_notification(monkeypatch):
@@ -226,14 +220,14 @@ def test_send_notification(monkeypatch):
     def mocked_libnotify(cls, title, message):
         result.append({"title": title, "message": message, "method": "libnotify"})
 
-    def mocked_qt_tray(cls, title, message, ocr_text, ocr_transformer):
+    def mocked_qt_tray(cls, title, message, text, text_type):
         result.append(
             {
                 "title": title,
                 "message": message,
                 "method": "qt_tray",
-                "ocr_text": ocr_text,
-                "ocr_transformer": ocr_transformer,
+                "text": text,
+                "text_type": text_type,
             }
         )
 
@@ -241,8 +235,8 @@ def test_send_notification(monkeypatch):
     monkeypatch.setattr(notification.Notifier, "_send_via_qt_tray", mocked_qt_tray)
 
     capture = Capture(
-        ocr_text="text",
-        ocr_transformer=Transformer.SINGLE_LINE,
+        text="text",
+        text_type=Transformer.SINGLE_LINE,
         parse_text=True,
         image=QtGui.QImage(),
         screen=None,
@@ -260,8 +254,8 @@ def test_send_notification(monkeypatch):
     assert result[-1]["method"] == "qt_tray"
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
-    assert result[-1]["ocr_text"] == capture.ocr_text
-    assert result[-1]["ocr_transformer"] == capture.ocr_transformer
+    assert result[-1]["text"] == capture.text
+    assert result[-1]["text_type"] == capture.text_type
 
     # WHEN a notification signal is emitted on a system _with_ libnotify
     monkeypatch.setattr(notification.sys, "platform", "linux")
@@ -288,10 +282,14 @@ def test_send_notification(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    ("ocr_text", "applied_transformer", "expected_urls"),
+    ("text", "text_type", "expected_urls"),
     [
         ("1@test.tld", Transformer.MAIL, ["mailto:1@test.tld"]),
-        ("1@test.tld, 2@test.tld", Transformer.MAIL, ["mailto:1@test.tld;2@test.tld"]),
+        (
+            "1@test.tld, 2@test.tld",
+            Transformer.MAIL,
+            ["mailto:1@test.tld;2@test.tld"],
+        ),
         ("http://1.test.ltd", Transformer.URL, ["http://1.test.ltd"]),
         (
             "http://1.test.ltd \n http://2.test.ltd",
@@ -320,7 +318,7 @@ def test_send_notification(monkeypatch):
         ),
     ],
 )
-def test_open_ocr_result(monkeypatch, ocr_text, applied_transformer, expected_urls):
+def test_open_ocr_result(monkeypatch, text, text_type, expected_urls):
     # GIVEN a mocked Qt openUrl method
     urls = []
 
@@ -330,9 +328,7 @@ def test_open_ocr_result(monkeypatch, ocr_text, applied_transformer, expected_ur
     monkeypatch.setattr(notification.QtGui.QDesktopServices, "openUrl", mocked_openurl)
 
     # WHEN the function is called with certain text and transformer
-    notification.Notifier._open_ocr_result(
-        text=ocr_text, applied_transformer=applied_transformer
-    )
+    notification.Notifier._open_ocr_result(text=text, text_type=text_type)
 
     # THEN the expected urls should be in the format so openUrl would result in the
     #   correct action
@@ -340,4 +336,4 @@ def test_open_ocr_result(monkeypatch, ocr_text, applied_transformer, expected_ur
     assert urls == expected_urls
     if urls[0].toString().startswith("file://"):
         tempfile_text = Path(urls[0].toLocalFile()).read_text()
-        assert tempfile_text == ocr_text
+        assert tempfile_text == text
