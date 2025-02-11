@@ -141,12 +141,6 @@ pip install normcap
 normcap
 ```
 
-## Why "NormCap"?
-
-See [XKCD](https://xkcd.com):
-
-[![Comic](https://imgs.xkcd.com/comics/norm_normal_file_format.png)](https://xkcd.com/2116/)
-
 ## Development
 
 Prerequisites for setting up a development environment are:
@@ -215,6 +209,13 @@ If NormCap doesn't fit your needs, try those alternatives (no particular order):
 - [dpScreenOCR](https://danpla.github.io/dpscreenocr/) (Linux, Windows)
 - [PowerToys Text Extractor](https://learn.microsoft.com/en-us/windows/powertoys/text-extractor)
   (Windows)
+
+## Why "NormCap"?
+
+See [XKCD](https://xkcd.com):
+
+[![Comic](https://imgs.xkcd.com/comics/norm_normal_file_format.png)](https://xkcd.com/2116/)
+
 
 ## Certification
 
