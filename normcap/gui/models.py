@@ -154,10 +154,8 @@ class Capture:
     scale_factor: float = 1
     rect: Rect = field(default_factory=lambda: Rect(left=0, top=0, right=0, bottom=0))
 
-    ocr_text: Optional[str] = None
-    ocr_transformer: Optional[
-        Union[ocr.structures.Transformer, codes.structures.Transformer]
-    ] = None
+    text: Optional[str] = None
+    text_type: Optional[Union[ocr.structures.Transformer, codes.structures.Code]] = None
 
     @property
     def image_area(self) -> int:

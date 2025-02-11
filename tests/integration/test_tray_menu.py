@@ -59,14 +59,12 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     # THEN text should be captured
     #      and close to the ground truth
     #      and normcap should _not_ exit
-    qtbot.waitUntil(lambda: tray.capture.ocr_text is not None)
+    qtbot.waitUntil(lambda: tray.capture.text is not None)
 
     capture = tray.capture
     assert capture
 
-    similarity = SequenceMatcher(
-        None, capture.ocr_text, testcase.expected_ocr_text
-    ).ratio()
-    assert similarity >= 0.98, f"{capture.ocr_text=}"
+    similarity = SequenceMatcher(None, capture.text, testcase.expected_text).ratio()
+    assert similarity >= 0.98, f"{capture.text=}"
 
     assert not exit_calls
