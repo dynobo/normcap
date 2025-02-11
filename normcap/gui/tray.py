@@ -5,6 +5,7 @@ the application is closed. Potential windows or other components are started fro
 here.
 """
 
+import concurrent.futures
 import logging
 import os
 import sys
@@ -254,35 +255,69 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.com.on_image_cropped.emit()
 
-    @QtCore.Slot()
-    def _capture_to_ocr(self) -> None:
-        """Perform content recognition on grabbed image."""
-        minimum_image_area = 25
-        if self.capture.image_area < minimum_image_area:
-            logger.warning("Area of %s too small. Skip OCR.", self.capture.image_area)
-            self._minimize_or_exit_application(delay=0)
-            return
+    def _detect_codes(self) -> Optional[tuple[str, codes.structures.Transformer]]:
+        logger.debug("Start QR/Barcode detection")
 
         if detections := codes.detector.detect_codes(image=self.capture.image):
             code_text, code_type = detections
-            self.capture.ocr_text = code_text
-            self.capture.ocr_transformer = code_type
-            logger.info("Text from Codes: %s", self.capture.ocr_text)
-        else:
-            logger.debug("Start OCR")
-            ocr_result = ocr.recognize.get_text_from_image(
-                tesseract_cmd=system_info.get_tesseract_path(),
-                languages=self.settings.value("language"),
-                image=self.capture.image,
-                tessdata_path=system_info.get_tessdata_path(),
-                parse=self.capture.parse_text,
-                resize_factor=2,
-                padding_size=80,
+            logger.debug("Code detection results: %s [%s]", code_text, code_type)
+            return code_text, code_type
+
+        logger.debug("No codes found")
+        return None
+
+    def _detect_text(self) -> tuple[str, Optional[ocr.structures.Transformer]]:
+        logger.debug("Start Text detection")
+        ocr_result = ocr.recognize.get_text_from_image(
+            tesseract_cmd=system_info.get_tesseract_path(),
+            languages=self.settings.value("language"),
+            image=self.capture.image,
+            tessdata_path=system_info.get_tessdata_path(),
+            parse=self.capture.parse_text,
+            resize_factor=2,
+            padding_size=80,
+        )
+        ocr_text = ocr_result.text
+        ocr_transformer = ocr_result.best_scored_transformer
+        utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")
+        logger.info("Text from OCR:\n%s", self.capture.ocr_text)
+        return ocr_text, ocr_transformer
+
+    @QtCore.Slot()
+    def _trigger_detect(self) -> None:
+        """Perform content recognition on grabbed image."""
+        minimum_image_area = 100
+        if self.capture.image_area < minimum_image_area:
+            logger.warning(
+                "Area of %s too small. Skip detection.", self.capture.image_area
             )
-            self.capture.ocr_text = ocr_result.text
-            self.capture.ocr_transformer = ocr_result.best_scored_transformer
-            utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")
-            logger.info("Text from OCR:\n%s", self.capture.ocr_text)
+            self._minimize_or_exit_application(delay=0)
+            return
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            future_codes: concurrent.futures.Future = executor.submit(
+                self._detect_codes
+            )
+            future_text: concurrent.futures.Future = executor.submit(self._detect_text)
+
+            text, transformer = None, None
+
+            done, _ = concurrent.futures.wait(
+                [future_codes, future_text],
+                return_when=concurrent.futures.FIRST_COMPLETED,
+            )
+
+            for future in done:
+                if future == future_codes and future.result():
+                    # Early stop text detection when code got recognized
+                    future_text.cancel()
+                    text, transformer = future.result()
+
+            if not text:
+                text, transformer = future_text.result()
+
+            self.capture.ocr_text = text
+            self.capture.ocr_transformer = transformer
 
         if self.cli_mode:
             self._print_to_stdout()
@@ -450,7 +485,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.activated.connect(self._handle_tray_click)
         self.com.on_region_selected.connect(self._close_windows)
         self.com.on_region_selected.connect(self._crop_image)
-        self.com.on_image_cropped.connect(self._capture_to_ocr)
+        self.com.on_image_cropped.connect(self._trigger_detect)
         self.com.on_copied_to_clipboard.connect(self._notify)
         self.com.on_copied_to_clipboard.connect(
             lambda: self._minimize_or_exit_application(delay=self._EXIT_DELAY)
