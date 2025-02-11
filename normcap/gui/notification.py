@@ -98,7 +98,12 @@ def _compose_text(capture: Capture) -> str:
         return ""
 
     text = capture.ocr_text.strip().replace(os.linesep, " ")
-    return textwrap.shorten(text, width=45)
+    shortened = textwrap.shorten(text, width=45, placeholder=" […]")
+    if shortened == " […]":
+        # We have one long word which shorten() can not handle
+        shortened = text[:44] + "…"
+
+    return shortened
 
 
 def _compose_notification(capture: Capture) -> tuple[str, str]:
