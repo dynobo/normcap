@@ -10,7 +10,7 @@ from typing import Optional, Union
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import codes, ocr
+from normcap.detectors import codes, ocr
 from normcap.gui import system_info
 from normcap.gui.localization import _, translate
 from normcap.gui.models import Capture

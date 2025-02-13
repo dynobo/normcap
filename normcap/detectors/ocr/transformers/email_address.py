@@ -4,7 +4,7 @@ import functools
 import logging
 import re
 
-from normcap.ocr.structures import OcrResult
+from normcap.detectors.ocr.structures import OcrResult
 
 logger = logging.getLogger(__name__)
 

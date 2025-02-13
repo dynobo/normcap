@@ -8,7 +8,7 @@ from typing import Any, Callable, NamedTuple, Optional, Union
 
 from PySide6 import QtGui
 
-from normcap import codes, ocr
+from normcap.detectors import codes, ocr
 
 logger = logging.getLogger(__name__)
 
@@ -156,6 +156,9 @@ class Capture:
 
     text: Optional[str] = None
     text_type: Optional[Union[ocr.structures.Transformer, codes.structures.Code]] = None
+    text_detector: Optional[
+        Union[ocr.structures.Transformer, codes.structures.Code]
+    ] = None
 
     @property
     def image_area(self) -> int:

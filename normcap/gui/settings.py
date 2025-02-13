@@ -54,6 +54,16 @@ DEFAULT_SETTINGS = (
         nargs=None,
     ),
     Setting(
+        key="detect-codes",
+        flag="_c",
+        type_=_parse_str_to_bool,
+        value=True,
+        help_="Detect barcodes and QR codes.",
+        choices=(True, False),
+        cli_arg=True,
+        nargs=None,
+    ),
+    Setting(
         key="notification",
         flag="n",
         type_=_parse_str_to_bool,

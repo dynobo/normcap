@@ -4,8 +4,8 @@ import sys
 import pytest
 from PySide6 import QtGui
 
+from normcap.detectors.ocr import tesseract
 from normcap.gui import system_info
-from normcap.ocr import tesseract
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Not implemented for Windows")

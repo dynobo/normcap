@@ -14,7 +14,7 @@ import numpy as np
 from PySide6 import QtGui
 
 from normcap import resources
-from normcap.codes.structures import Code
+from normcap.detectors.codes.structures import Code
 
 logger = logging.getLogger(__name__)
 
@@ -105,7 +105,13 @@ if __name__ == "__main__":
 
     reps = 10
 
-    image_file = Path(__file__).parent / "frame4.png"
+    image_file = (
+        Path(__file__).parent.parent.parent
+        / "tests"
+        / "integration"
+        / "testcases"
+        / "13_qr_code_with_text.png"
+    )
     image = QtGui.QImage(str(image_file.resolve()))
     mat = _image_to_mat(image)
 

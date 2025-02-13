@@ -5,8 +5,8 @@ import logging
 import os
 import re
 
-from normcap.ocr.structures import OcrResult
-from normcap.ocr.transformers import url_tlds
+from normcap.detectors.ocr.structures import OcrResult
+from normcap.detectors.ocr.transformers import url_tlds
 
 logger = logging.getLogger(__name__)
 
