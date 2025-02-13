@@ -1,6 +1,6 @@
 """Transformer to handle multi line text selection."""
 
-from normcap.ocr.structures import OcrResult
+from normcap.detectors.ocr.structures import OcrResult
 
 
 def score(ocr_result: OcrResult) -> float:

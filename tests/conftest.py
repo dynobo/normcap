@@ -13,10 +13,10 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import app
 from normcap.clipboard import system_info as clipboard_system_info
+from normcap.detectors.ocr.structures import OEM, PSM, OcrResult, TessArgs
+from normcap.detectors.ocr.transformers import email_address, url
 from normcap.gui import menu_button, system_info
 from normcap.gui.models import Capture, Rect
-from normcap.ocr.structures import OEM, PSM, OcrResult, TessArgs
-from normcap.ocr.transformers import email_address, url
 from normcap.screengrab import system_info as screengrab_system_info
 
 

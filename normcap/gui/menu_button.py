@@ -286,6 +286,20 @@ class MenuButton(QtWidgets.QToolButton):
         )
         menu.addAction(action)
 
+        # L10N: Entry in main menu's 'Detection' section
+        action = QtGui.QAction(_("QR && Barcodes"), detection_group)
+        action.setObjectName("detect-codes")
+        action.setCheckable(True)
+        action.setChecked(bool(self.settings.value("detect-codes", type=bool)))
+        # L10N: Tooltip of main menu's 'QR & Barcodes' entry. Use <56 chars p. line.
+        action.setToolTip(
+            _(
+                "Detects Barcodes and QR codes. If one or more codes are found, "
+                "text detection (OCR) is skipped and only the codes' data is returned."
+            )
+        )
+        menu.addAction(action)
+
     def _add_languages_section(self, menu: QtWidgets.QMenu) -> None:
         languages = self.languages
         overflow_languages_count = 7

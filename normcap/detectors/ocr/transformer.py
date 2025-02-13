@@ -3,8 +3,8 @@
 import logging
 import re
 
-from normcap.ocr import transformers
-from normcap.ocr.structures import OcrResult, Transformer, TransformerProtocol
+from normcap.detectors.ocr import transformers
+from normcap.detectors.ocr.structures import OcrResult, Transformer, TransformerProtocol
 
 logger = logging.getLogger(__name__)
 

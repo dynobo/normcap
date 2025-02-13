@@ -6,9 +6,9 @@ from pathlib import Path
 import pytest
 from PySide6 import QtGui, QtWidgets
 
+from normcap.detectors.ocr.structures import Transformer
 from normcap.gui import notification
 from normcap.gui.models import Capture, Rect
-from normcap.ocr.structures import Transformer
 
 
 @pytest.mark.parametrize(

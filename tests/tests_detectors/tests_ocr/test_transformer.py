@@ -1,7 +1,7 @@
 import pytest
 
-from normcap.ocr import transformer
-from normcap.ocr.structures import Transformer
+from normcap.detectors.ocr import transformer
+from normcap.detectors.ocr.structures import Transformer
 
 
 @pytest.mark.parametrize(
