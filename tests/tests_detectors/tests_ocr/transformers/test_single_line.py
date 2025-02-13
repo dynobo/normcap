@@ -1,6 +1,6 @@
 import pytest
 
-from normcap.ocr.transformers import single_line
+from normcap.detectors.ocr.transformers import single_line
 
 
 @pytest.mark.parametrize(

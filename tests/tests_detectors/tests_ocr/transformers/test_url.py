@@ -1,6 +1,6 @@
 import pytest
 
-from normcap.ocr.transformers import url
+from normcap.detectors.ocr.transformers import url
 
 
 @pytest.mark.parametrize(

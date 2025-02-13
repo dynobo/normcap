@@ -1,18 +1,19 @@
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.ocr.structures import Transformer
+from normcap.detectors.codes.structures import Code
+from normcap.detectors.ocr.structures import Transformer
 
 
 @dataclass
 class TestCase:
     image_path: Path
     expected_text: str
-    expected_text_type: list[Transformer]
+    expected_text_type: list[Union[Transformer, Code]]
     expected_similarity: float = 0.98
     skip: bool = False
 
@@ -217,5 +218,11 @@ testcases: tuple[TestCase, ...] = (
         expected_text="www.normcap.gui",
         expected_text_type=[Transformer.SINGLE_LINE],
         expected_similarity=0.95,
+    ),
+    TestCase(
+        image_path=image_dir / "13_qr_code_with_text.png",
+        expected_text="https://dynobo.github.io/normcap/",
+        expected_text_type=[Code.QR],
+        expected_similarity=1,
     ),
 )

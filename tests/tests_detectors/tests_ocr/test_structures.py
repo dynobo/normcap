@@ -1,6 +1,6 @@
 import os
 
-from normcap.ocr.structures import OEM, PSM, TessArgs
+from normcap.detectors.ocr.structures import OEM, PSM, TessArgs
 
 
 def test_ocr_result(ocr_result):

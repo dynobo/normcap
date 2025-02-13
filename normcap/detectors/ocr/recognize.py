@@ -7,8 +7,8 @@ from typing import Optional, Union
 
 from PySide6.QtGui import QImage
 
-from normcap.ocr import enhance, tesseract, transformer
-from normcap.ocr.structures import OEM, PSM, OcrResult, TessArgs
+from normcap.detectors.ocr import enhance, tesseract, transformer
+from normcap.detectors.ocr.structures import OEM, PSM, OcrResult, TessArgs
 
 logger = logging.getLogger(__name__)
 

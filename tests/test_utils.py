@@ -49,6 +49,7 @@ def test_argparser_defaults_are_complete():
         "cli_mode",
         "language",
         "parse_text",
+        "detect_codes",
         "notification",
         "reset",
         "tray",

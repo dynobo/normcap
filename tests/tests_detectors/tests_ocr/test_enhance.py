@@ -3,7 +3,7 @@ from pathlib import Path
 
 from PySide6 import QtCore, QtGui
 
-from normcap.ocr import enhance
+from normcap.detectors.ocr import enhance
 
 
 def test_identify_most_frequent_edge_color():

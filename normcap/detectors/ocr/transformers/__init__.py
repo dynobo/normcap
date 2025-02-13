@@ -1,4 +1,4 @@
-from normcap.ocr.transformers import (
+from normcap.detectors.ocr.transformers import (
     email_address,
     multi_line,
     paragraph,

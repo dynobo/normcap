@@ -3,7 +3,7 @@ from difflib import SequenceMatcher
 import pytest
 from PySide6 import QtGui
 
-from normcap import ocr
+from normcap.detectors import ocr
 from normcap.gui import system_info
 
 from .testcases import testcases

@@ -15,7 +15,8 @@ from typing import Any, NoReturn, Optional, cast
 
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
-from normcap import __version__, clipboard, codes, ocr, screengrab
+from normcap import __version__, clipboard, screengrab
+from normcap.detectors import codes, ocr
 from normcap.gui import (
     constants,
     introduction,

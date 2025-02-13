@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from normcap.ocr.transformers import paragraph
+from normcap.detectors.ocr.transformers import paragraph
 
 
 @pytest.mark.parametrize(

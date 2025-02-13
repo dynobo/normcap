@@ -1,6 +1,6 @@
 import pytest
 
-from normcap.ocr.transformers import email_address
+from normcap.detectors.ocr.transformers import email_address
 
 
 @pytest.mark.parametrize(
