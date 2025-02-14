@@ -8,8 +8,6 @@ from typing import Any, Callable, NamedTuple, Optional, Union
 
 from PySide6 import QtGui
 
-from normcap.detectors import codes, ocr
-
 logger = logging.getLogger(__name__)
 
 # Type aliases
@@ -38,6 +36,33 @@ class DesktopEnvironment(enum.IntEnum):
     UNITY = enum.auto()
     HYPRLAND = enum.auto()
     AWESOME = enum.auto()
+
+
+class TextType(str, enum.Enum):
+    """Describe format/content of the detected text."""
+
+    MAIL = "MAIL"
+    URL = "URL"
+    PHONE_NUMBER = "PHONE_NUMBER"
+    SINGLE_LINE = "SINGLE_LINE"
+    MULTI_LINE = "MULTI_LINE"
+    PARAGRAPH = "PARAGRAPH"
+
+
+class TextDetector(str, enum.Enum):
+    """Specifies the source of the detected text."""
+
+    OCR_RAW = "OCR_RAW"
+    OCR_PARSED = "OCR_PARSED"
+    QR = "QR"
+    BARCODE = "BARCODE"
+    QR_AND_BARCODE = "QR_AND_BARCODE"
+
+
+class DetectionResult(NamedTuple):
+    text: str
+    text_type: TextType
+    detector: TextDetector
 
 
 @dataclass
@@ -155,10 +180,9 @@ class Capture:
     rect: Rect = field(default_factory=lambda: Rect(left=0, top=0, right=0, bottom=0))
 
     text: Optional[str] = None
-    text_type: Optional[Union[ocr.structures.Transformer, codes.structures.Code]] = None
-    text_detector: Optional[
-        Union[ocr.structures.Transformer, codes.structures.Code]
-    ] = None
+    # TODO: Implement text & detector
+    text_type: Optional[TextType] = None
+    detector: Optional[TextDetector] = None
 
     @property
     def image_area(self) -> int:

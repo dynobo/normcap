@@ -27,7 +27,16 @@ from normcap.gui import (
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
-from normcap.gui.models import Capture, Days, Rect, Screen, Seconds
+from normcap.gui.models import (
+    Capture,
+    Days,
+    DetectionResult,
+    Rect,
+    Screen,
+    Seconds,
+    TextDetector,
+    TextType,
+)
 from normcap.gui.notification import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
@@ -256,18 +265,22 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.com.on_image_cropped.emit()
 
-    def _detect_codes(self) -> Optional[tuple[str, codes.structures.Code]]:
+    def _detect_codes(self) -> Optional[DetectionResult]:
         logger.debug("Start QR/Barcode detection")
 
         if detections := codes.detector.detect_codes(image=self.capture.image):
-            code_text, code_type = detections
-            logger.debug("Code detection results: %s [%s]", code_text, code_type)
-            return code_text, code_type
+            text, code_text_type, code_type = detections
+            logger.debug("Code detection results: %s [%s]", text, code_type)
+            text_detector = TextDetector[code_type.value]
+            text_type = TextType[code_text_type.value]
+            return DetectionResult(
+                text=text, text_type=text_type, detector=text_detector
+            )
 
         logger.debug("No codes found")
         return None
 
-    def _detect_text(self) -> tuple[str, Optional[ocr.structures.Transformer]]:
+    def _detect_ocr(self) -> Optional[DetectionResult]:
         logger.debug("Start Text detection")
         ocr_result = ocr.recognize.get_text_from_image(
             tesseract_cmd=system_info.get_tesseract_path(),
@@ -278,11 +291,28 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             resize_factor=2,
             padding_size=80,
         )
-        ocr_text = ocr_result.text
-        ocr_transformer = ocr_result.best_scored_transformer
         utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")
-        logger.info("Text from OCR:\n%s", self.capture.text)
-        return ocr_text, ocr_transformer
+        if ocr_result.text:
+            logger.info("Text from OCR:\n%s", ocr_result.text)
+            detector = (
+                TextDetector.OCR_PARSED if ocr_result.parsed else TextDetector.OCR_RAW
+            )
+            # TODO: Performance test OCR + QR vs. OCR only
+            # TODO: Better handle missing best_scored_transformer
+            text_type = (
+                TextType[ocr_result.best_scored_transformer.value]
+                if ocr_result.best_scored_transformer
+                else TextType.SINGLE_LINE
+            )
+            # TODO: Test TextType and TextDetector compability of detectors
+            return DetectionResult(
+                text=ocr_result.text,
+                text_type=text_type,
+                detector=detector,
+            )
+
+        logger.debug("No text found")
+        return None
 
     @QtCore.Slot()
     def _trigger_detect(self) -> None:
@@ -299,27 +329,35 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             future_codes: concurrent.futures.Future = executor.submit(
                 self._detect_codes
             )
-            future_text: concurrent.futures.Future = executor.submit(self._detect_text)
+            future_ocr: concurrent.futures.Future = executor.submit(self._detect_ocr)
 
-            text, transformer = None, None
+            code_detection_result = None
+            ocr_detection_result = None
 
             done, _ = concurrent.futures.wait(
-                [future_codes, future_text],
+                [future_codes, future_ocr],
                 return_when=concurrent.futures.FIRST_COMPLETED,
             )
 
             for future in done:
                 if future == future_codes and future.result():
                     # Early stop text detection when code got recognized
-                    future_text.cancel()
-                    text, transformer = future.result()
+                    future_ocr.cancel()
+                    code_detection_result = future.result()
 
-            if not text:
-                text, transformer = future_text.result()
+            if not code_detection_result:
+                # Wait for OCR, when now codes were detected
+                ocr_detection_result = future_ocr.result()
 
-            self.capture.text = text
-            self.capture.text_type = transformer
-
+            detection_result = code_detection_result or ocr_detection_result
+            if detection_result:
+                self.capture.text = detection_result.text
+                self.capture.text_type = detection_result.text_type
+                self.capture.detector = detection_result.detector
+            else:
+                self.capture.text = ""
+                self.capture.text_type = None
+                self.capture.detector = None
         if self.cli_mode:
             self._print_to_stdout()
         else:
