@@ -14,7 +14,7 @@ import numpy as np
 from PySide6 import QtGui
 
 from normcap import resources
-from normcap.detectors.codes.structures import Code
+from normcap.detectors.codes.structures import CodeType, TextType
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +67,21 @@ def _image_to_mat(image: QtGui.QImage) -> np.ndarray:
     return arr[:, :, :3]
 
 
-def detect_codes(image: QtGui.QImage) -> Optional[tuple[str, Code]]:
+def _get_text_type(text: str) -> TextType:
+    if text.startswith("http"):
+        return TextType.URL
+    if text.startswith("tel:"):
+        return TextType.PHONE_NUMBER
+    if text.startswith("mailto:"):
+        return TextType.MAIL
+    if os.sep + os.sep in text:
+        return TextType.PARAGRAPH
+    if os.sep in text:
+        return TextType.MULTI_LINE
+    return TextType.SINGLE_LINE
+
+
+def detect_codes(image: QtGui.QImage) -> Optional[tuple[str, TextType, CodeType]]:
     """Decode QR and barcodes from image.
 
     Args:
@@ -89,13 +103,19 @@ def detect_codes(image: QtGui.QImage) -> Optional[tuple[str, Code]]:
         return None
 
     if barcodes and not qr_codes:
-        code_type = Code.BARCODE
+        code_type = CodeType.BARCODE
     elif qr_codes and not barcodes:
-        code_type = Code.QR
+        code_type = CodeType.QR
     else:
-        code_type = Code.QR_AND_BARCODE
+        code_type = CodeType.QR_AND_BARCODE
 
-    return os.linesep.join(codes), code_type
+    logger.info("Found %s codes", len(codes))
+
+    if len(codes) == 1:
+        text = codes[0]
+        return text, _get_text_type(text), code_type
+
+    return os.linesep.join(codes), TextType.MULTI_LINE, code_type
 
 
 if __name__ == "__main__":

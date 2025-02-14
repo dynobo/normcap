@@ -40,8 +40,13 @@ def test_normcap_ocr_testcases(
         f"{testcase.expected_text=}",
     )
 
-    similarity = SequenceMatcher(None, capture.text, testcase.expected_text).ratio()
+    assert capture.detector in testcase.expected_text_detector, (
+        f"{testcase.image_path.name=}",
+        f"{capture.detector=}",
+        f"{testcase.expected_text_detector=}",
+    )
 
+    similarity = SequenceMatcher(None, capture.text, testcase.expected_text).ratio()
     assert similarity >= testcase.expected_similarity, (
         f"{testcase.image_path.name=}",
         f"{capture.text=}",

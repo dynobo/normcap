@@ -1,19 +1,19 @@
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.detectors.codes.structures import Code
-from normcap.detectors.ocr.structures import Transformer
+from normcap.gui.models import TextDetector, TextType
 
 
 @dataclass
 class TestCase:
     image_path: Path
     expected_text: str
-    expected_text_type: list[Union[Transformer, Code]]
+    expected_text_type: list[TextType]
+    expected_text_detector: list[TextDetector]
     expected_similarity: float = 0.98
     skip: bool = False
 
@@ -78,22 +78,26 @@ testcases: tuple[TestCase, ...] = (
                 "https://pypi.org/project/lmdiag/",
             ]
         ),
-        expected_text_type=[Transformer.URL],
+        expected_text_type=[TextType.URL],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         image_path=image_dir / "01_parse_colored_url.png",
         expected_text="https://regex101.com",
-        expected_text_type=[Transformer.URL],
+        expected_text_type=[TextType.URL],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         image_path=image_dir / "02_detect_window_title.png",
         expected_text="*Untitled Document 1",
-        expected_text_type=[Transformer.SINGLE_LINE],
+        expected_text_type=[TextType.SINGLE_LINE],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         image_path=image_dir / "03_parse_emails.png",
         expected_text="peter.parker@test.com, HArDToReAd@test.com, 0815@test.com",
-        expected_text_type=[Transformer.MAIL],
+        expected_text_type=[TextType.MAIL],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         image_path=image_dir / "04_parse_email_skip_invalid.png",
@@ -106,12 +110,14 @@ testcases: tuple[TestCase, ...] = (
             "Invalid_two <also/not/valid/@test.com>; "
             "Invalid_three <@test.com>"
         ),
-        expected_text_type=[Transformer.PARAGRAPH, Transformer.MULTI_LINE],
+        expected_text_type=[TextType.PARAGRAPH, TextType.MULTI_LINE],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         image_path=image_dir / "05_detect_text_with_low_contrast.png",
         expected_text="Orange, the new black!",
-        expected_text_type=[Transformer.SINGLE_LINE],
+        expected_text_type=[TextType.SINGLE_LINE],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         image_path=image_dir / "06_detect_special_characters.png",
@@ -121,7 +127,8 @@ testcases: tuple[TestCase, ...] = (
             f"«Open the shuttlebay doors»{os.linesep}"
             '"May the Schwartz™ be with you!"'
         ),
-        expected_text_type=[Transformer.PARAGRAPH],
+        expected_text_type=[TextType.PARAGRAPH],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         image_path=image_dir / "07_parse_paragraphs_of_text.png",
@@ -135,7 +142,8 @@ testcases: tuple[TestCase, ...] = (
             "How can that be? Aren't the contents of a hotel room drawer inaccessible "
             "if you haven't rented the room?"
         ),
-        expected_text_type=[Transformer.PARAGRAPH],
+        expected_text_type=[TextType.PARAGRAPH],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         # https://www.gutenberg.org/cache/epub/1321/pg1321-images.html
@@ -155,7 +163,8 @@ testcases: tuple[TestCase, ...] = (
             "cottagers, and as he said this I could no longer suppress the rage that "
             "burned within me."
         ),
-        expected_text_type=[Transformer.PARAGRAPH],
+        expected_text_type=[TextType.PARAGRAPH],
+        expected_text_detector=[TextDetector.OCR_PARSED],
         expected_similarity=0.99,
     ),
     TestCase(
@@ -183,7 +192,8 @@ testcases: tuple[TestCase, ...] = (
             "of reproducing formatted output that closely approximates the original "
             "page including images, columns, and other non-textual components."
         ),
-        expected_text_type=[Transformer.PARAGRAPH],
+        expected_text_type=[TextType.PARAGRAPH],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         image_path=image_dir / "10_font_sizes.png",
@@ -198,7 +208,8 @@ testcases: tuple[TestCase, ...] = (
             f"{os.linesep}"
             "Arial, 22 pt - You only live once, but if you do it right, once is enough."
         ),
-        expected_text_type=[Transformer.PARAGRAPH],
+        expected_text_type=[TextType.PARAGRAPH],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         image_path=image_dir / "11_paragraph_with_bullet_points.png",
@@ -211,18 +222,21 @@ testcases: tuple[TestCase, ...] = (
             '- Relatively small gaps between lines should indicate "Paragraphs", '
             'larger gaps between lines indicate "Multilines"'
         ),
-        expected_text_type=[Transformer.PARAGRAPH],
+        expected_text_type=[TextType.PARAGRAPH],
+        expected_text_detector=[TextDetector.OCR_PARSED],
     ),
     TestCase(
         image_path=image_dir / "12_not_a_url.png",
         expected_text="www.normcap.gui",
-        expected_text_type=[Transformer.SINGLE_LINE],
+        expected_text_type=[TextType.SINGLE_LINE],
+        expected_text_detector=[TextDetector.OCR_PARSED],
         expected_similarity=0.95,
     ),
     TestCase(
         image_path=image_dir / "13_qr_code_with_text.png",
         expected_text="https://dynobo.github.io/normcap/",
-        expected_text_type=[Code.QR],
+        expected_text_type=[TextType.URL],
+        expected_text_detector=[TextDetector.QR],
         expected_similarity=1,
     ),
 )
