@@ -10,15 +10,11 @@ from typing import Optional, Union
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.detectors import codes, ocr
 from normcap.gui import system_info
 from normcap.gui.localization import _, translate
-from normcap.gui.models import Capture
+from normcap.gui.models import Capture, TextDetector, TextType
 
 logger = logging.getLogger(__name__)
-
-TextType = ocr.structures.Transformer
-CodeType = codes.structures.Code
 
 
 def _compose_title(capture: Capture) -> str:
@@ -60,21 +56,21 @@ def _compose_title(capture: Capture) -> str:
         title = translate.ngettext(
             "1 URL captured", "{count} URLs captured", count
         ).format(count=count)
-    elif capture.text_type == CodeType.QR:
+    elif capture.detector == TextDetector.QR:
         count = capture.text.count(os.linesep) + 1
         # L10N: Notification title.
         # Do NOT translate the variables in curly brackets "{some_variable}"!
         title = translate.ngettext(
             "1 QR code detected", "{count} QR codes detected", count
         ).format(count=count)
-    elif capture.text_type == CodeType.BARCODE:
+    elif capture.detector == TextDetector.BARCODE:
         count = capture.text.count(os.linesep) + 1
         # L10N: Notification title.
         # Do NOT translate the variables in curly brackets "{some_variable}"!
         title = translate.ngettext(
             "1 barcode detected", "{count} barcodes detected", count
         ).format(count=count)
-    elif capture.text_type == CodeType.QR_AND_BARCODE:
+    elif capture.detector == TextDetector.QR_AND_BARCODE:
         count = capture.text.count(os.linesep) + 1
         # L10N: Notification title.
         # Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -192,7 +188,7 @@ class Notifier(QtCore.QObject):
         title: str,
         message: str,
         text: Optional[str],
-        text_type: Union[TextType, CodeType, None],
+        text_type: Optional[TextType],
     ) -> None:
         """Send via QSystemTrayIcon.
 
@@ -232,15 +228,11 @@ class Notifier(QtCore.QObject):
         parent.showMessage(title, message, QtGui.QIcon(":notification"))
 
     @staticmethod
-    def _open_ocr_result(text: str, text_type: Union[TextType, CodeType, None]) -> None:
+    def _open_ocr_result(text: str, text_type: Union[TextType, None]) -> None:
         logger.debug("Notification clicked.")
 
         urls = []
-        if text_type == TextType.URL:  # noqa: SIM114
-            urls = text.split()
-        elif text_type == CodeType.QR and all(
-            s.startswith("http") for s in text.split()
-        ):
+        if text_type == TextType.URL:
             urls = text.split()
         elif text_type == TextType.MAIL:
             urls = [f"mailto:{text.replace(',', ';').replace(' ', '')}"]
