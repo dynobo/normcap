@@ -26,9 +26,10 @@ from normcap.gui import (
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
-from normcap.gui.models import Capture, Days, Rect, Screen, Seconds
+from normcap.gui.models import Capture, CaptureMode, Days, Rect, Screen, Seconds
 from normcap.gui.notification import Notifier
 from normcap.gui.settings import Settings
+from normcap.gui.system_info import capture_mode
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
 
@@ -195,13 +196,19 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _show_windows(self, delay_screenshot: bool) -> None:
         """Initialize child windows with method depending on system."""
-        screenshots = self._take_screenshots(delay=delay_screenshot)
-
-        for idx, screenshot in enumerate(screenshots):
-            self.screens[idx].screenshot = screenshot
+        mode = capture_mode()
+        if mode == CaptureMode.PRE_CAPTURE:
+            self._prepare_screenshots(delay_screenshot)
 
         for index in range(len(system_info.screens())):
             self._create_window(index)
+            if mode == CaptureMode.SILENT_CAPTURE:
+                self._prepare_screenshots(delay_screenshot)
+
+    def _prepare_screenshots(self, delay_screenshot: bool) -> None:
+        screenshots = self._take_screenshots(delay=delay_screenshot)
+        for idx, screenshot in enumerate(screenshots):
+            self.screens[idx].screenshot = screenshot
 
     @QtCore.Slot(str)  # type: ignore  # pyside typhint bug?
     def _apply_setting_change(self, setting: str) -> None:
