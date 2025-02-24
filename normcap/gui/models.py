@@ -38,6 +38,25 @@ class DesktopEnvironment(enum.IntEnum):
     UNITY = enum.auto()
     HYPRLAND = enum.auto()
     AWESOME = enum.auto()
+    CINNAMON = enum.auto()
+    XFCE = enum.auto()
+    LXQT = enum.auto()
+    MATE = enum.auto()
+    BUDGIE = enum.auto()
+
+
+class CaptureMode(enum.IntEnum):
+    """Different modes for taking a screenshot and main window behavior.
+
+    PRE_CAPTURE:    Takes a screenshot before the main window is opened, has higher
+                    compatibility than SILENT_CAPTURE.
+
+    SILENT_CAPTURE: Opens the main window immediately with a transparent background
+                    and then takes a screenshot. It feels faster than PRE_CAPTURE.
+    """
+
+    PRE_CAPTURE = enum.auto()
+    SILENT_CAPTURE = enum.auto()
 
 
 @dataclass
