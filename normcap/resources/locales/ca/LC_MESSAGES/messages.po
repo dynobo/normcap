@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: NormCap 0.5.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2024-05-06 21:18+0200\n"
-"PO-Revision-Date: 2025-03-11 18:31+0000\n"
+"PO-Revision-Date: 2025-03-14 09:25+0000\n"
 "Last-Translator: Victor Alonso Barberan <vmalonso@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/normcap/ui/ca/>\n"
 "Language: ca\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.3-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 "Generated-By: Babel 2.14.0\n"
 
 #. Generic error message when any download failed.
@@ -240,8 +240,8 @@ msgid ""
 "Frequently fetch NormCap's releases online and display\n"
 "a message if a new version is available."
 msgstr ""
-"\"Obtín amb freqüència les versions de NormCap en línia i \n"
-"mostra un missatge si hi ha una nova versió disponible.\""
+"Obtín amb freqüència les versions de NormCap en línia i \n"
+"mostra un missatge si hi ha una nova versió disponible."
 
 #. Entry in main menu's 'Capture mode' section
 #: /home/holger/Code/normcap/normcap/gui/menu_button.py:281
@@ -256,9 +256,8 @@ msgid ""
 "If the result is unexpected, try 'raw' mode instead."
 msgstr ""
 "Intenta determinar el tipus de text (per exemple,\n"
-"línia, paràgraf, URL, correu electrònic) i formata \n"
-"l'eixida\\n"
-"en conseqüència.\n"
+"línia, paràgraf, URL, correu electrònic) i formata\n"
+"l'eixida en conseqüència.\n"
 "Si el resultat és inesperat, prova amb el mode 'raw'."
 
 #. Entry in main menu's 'Capture mode' section
@@ -332,7 +331,7 @@ msgstr "Isqueu de NormCap o minimitzeu (si està habilitat)."
 #. Notification title
 #: /home/holger/Code/normcap/normcap/gui/notification.py:44
 msgid "Nothing captured!"
-msgstr "No s'ha capturat res."
+msgstr "No s'ha capturat res"
 
 #. Notification text
 #: /home/holger/Code/normcap/normcap/gui/notification.py:46
