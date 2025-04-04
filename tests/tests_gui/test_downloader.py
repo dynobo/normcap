@@ -26,6 +26,7 @@ def test_downloader_retrieves_website(qtbot: QtBot):
 
 
 def test_downloader_not_existing_url_does_not_trigger_finished(caplog, qtbot: QtBot):
+    # TODO: Fix flakiness of this test
     # GIVEN a Downloader instance
     downloader = Downloader()
 
