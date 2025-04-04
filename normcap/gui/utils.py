@@ -16,7 +16,7 @@ def crop_image(image: QtGui.QImage, rect: Rect) -> QtGui.QImage:
 
     image = image.copy(QtCore.QRect(*rect.geometry))
 
-    save_image_in_temp_folder(image, postfix="_croped")
+    save_image_in_temp_folder(image, postfix="_cropped")
     return image
 
 

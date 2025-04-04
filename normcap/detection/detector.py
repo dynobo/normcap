@@ -15,6 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 def _image_to_mat(image: QtGui.QImage) -> np.ndarray:
+    if image.format() != QtGui.QImage.Format.Format_RGB32:
+        image = image.convertToFormat(QtGui.QImage.Format.Format_RGB32)
+
     ptr = image.constBits()
     arr = np.array(ptr).reshape(image.height(), image.width(), 4)
     return arr[:, :, :3]
