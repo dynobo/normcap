@@ -6,7 +6,7 @@ import sys
 import tempfile
 import textwrap
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -94,10 +94,10 @@ def _compose_text(text: str) -> str:
         return ""
 
     text = text.strip().replace(os.linesep, " ")
-    shortened = textwrap.shorten(text, width=45, placeholder=" […]")
-    if shortened == " […]":
+    shortened = textwrap.shorten(text, width=45, placeholder=" […]").strip()
+    if shortened == "[…]":
         # We have one long word which shorten() can not handle
-        shortened = text[:44] + "…"
+        shortened = text
 
     return shortened
 
@@ -134,7 +134,6 @@ class Notifier(QtCore.QObject):
         self.com = Communicate(parent=self)
         self.com.send_notification.connect(self._send_notification)
 
-    # TODO: Correct type hints?
     @QtCore.Slot(str, str, str)  # type: ignore  # pyside typhint bug?
     def _send_notification(
         self, text: str, result_type: TextType, detector: TextDetector
@@ -194,8 +193,8 @@ class Notifier(QtCore.QObject):
         self,
         title: str,
         message: str,
-        text: Optional[str],
-        text_type: Optional[TextType],
+        text: str,
+        text_type: TextType,
     ) -> None:
         """Send via QSystemTrayIcon.
 
@@ -235,7 +234,7 @@ class Notifier(QtCore.QObject):
         parent.showMessage(title, message, QtGui.QIcon(":notification"))
 
     @staticmethod
-    def _open_ocr_result(text: str, text_type: Union[TextType, None]) -> None:
+    def _open_ocr_result(text: str, text_type: TextType) -> None:
         logger.debug("Notification clicked.")
 
         urls = []

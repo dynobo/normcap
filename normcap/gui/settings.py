@@ -55,7 +55,7 @@ DEFAULT_SETTINGS = (
     ),
     Setting(
         key="detect-codes",
-        flag="_c",
+        flag="d",
         type_=_parse_str_to_bool,
         value=True,
         help_="Detect barcodes and QR codes.",
@@ -165,7 +165,7 @@ class Settings(QtCore.QSettings):
 
     def _migrate_deprecated(self) -> None:
         # Migrations to v0.6.0
-        # ONHOLD: Delete in 2025/11
+        # ONHOLD: Delete in 2026/7
         if self.value("mode", None):
             mode = self.value("mode")
             parse_text = mode == "parse"
