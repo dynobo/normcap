@@ -6,6 +6,7 @@
 
 - All: Breaking: Commandline argument `--mode {parse,raw}` is removed in favor of a new
 argument `--parse-text {True, False}`.
+- All: Added QR and BarCode detection.
 - Linux: AppImage no longer requires `libcrypt`.
 
 ## v0.5.9 (2024-11-10)

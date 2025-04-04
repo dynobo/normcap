@@ -5,7 +5,7 @@ from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.gui.models import TextDetector, TextType
+from normcap.detection.models import TextDetector, TextType
 
 
 @dataclass
@@ -35,8 +35,8 @@ class TestCase:
 
     @property
     def image(self) -> QtGui.QImage:
-        if not self._image:
-            self._image = QtGui.QImage(self.image_path)
+        if self._image is None:
+            self._image = QtGui.QImage(self.image_path.resolve())
         return self._image
 
     @property

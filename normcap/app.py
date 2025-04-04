@@ -1,6 +1,7 @@
 """Start main application logic."""
 
 import logging
+import os
 import signal
 import sys
 from argparse import Namespace
@@ -9,6 +10,7 @@ from typing import NoReturn
 from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__, utils
+from normcap.detection.ocr import tesseract
 from normcap.gui import system_info
 from normcap.gui.tray import SystemTray
 
@@ -61,6 +63,9 @@ def _prepare_envs() -> None:
     # Allow closing QT app with CTRL+C in terminal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+    # Silence opencv warnings
+    os.environ["OPENCV_LOG_LEVEL"] = "OFF"
+
     if system_info.display_manager_is_wayland():
         utils.set_environ_for_wayland()
     if system_info.is_flatpak_package():
@@ -89,7 +94,12 @@ def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
     _prepare_envs()
 
     if system_info.is_prebuilt_package():
-        utils.copy_traineddata_files(target_dir=system_info.get_tessdata_path())
+        tessdata_path = tesseract.get_tessdata_path(
+            config_directory=system_info.config_directory(),
+            is_briefcase_package=system_info.is_briefcase_package(),
+            is_flatpak_package=system_info.is_flatpak_package(),
+        )
+        utils.copy_traineddata_files(target_dir=tessdata_path)
 
     app = _get_application()
     tray = SystemTray(app, vars(args))

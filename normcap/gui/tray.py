@@ -5,7 +5,6 @@ the application is closed. Potential windows or other components are started fro
 here.
 """
 
-import concurrent.futures
 import logging
 import os
 import sys
@@ -15,8 +14,8 @@ from typing import Any, NoReturn, Optional, cast
 
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
-from normcap import __version__, clipboard, screengrab
-from normcap.detectors import codes, ocr
+from normcap import __version__, clipboard, screenshot
+from normcap.detection import detector, ocr
 from normcap.gui import (
     constants,
     introduction,
@@ -27,16 +26,7 @@ from normcap.gui import (
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
-from normcap.gui.models import (
-    Capture,
-    Days,
-    DetectionResult,
-    Rect,
-    Screen,
-    Seconds,
-    TextDetector,
-    TextType,
-)
+from normcap.gui.models import Days, Rect, Screen, Seconds
 from normcap.gui.notification import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
@@ -55,8 +45,7 @@ class Communicate(QtCore.QObject):
 
     exit_application = QtCore.Signal(float)
     on_copied_to_clipboard = QtCore.Signal()
-    on_image_cropped = QtCore.Signal()
-    on_region_selected = QtCore.Signal(Rect)
+    on_region_selected = QtCore.Signal(Rect, int)
     on_languages_changed = QtCore.Signal(list)
 
 
@@ -87,7 +76,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         # Prepare instance attributes
         self.windows: dict[int, Window] = {}
         self.screens: list[Screen] = system_info.screens()
-        self.capture = Capture()
         self.installed_languages: list[str] = []
         self.settings = Settings(init_settings=args)
 
@@ -207,8 +195,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Initialize child windows with method depending on system."""
         screenshots = self._take_screenshots(delay=delay_screenshot)
 
-        for idx, screenshot in enumerate(screenshots):
-            self.screens[idx].screenshot = screenshot
+        for idx, image in enumerate(screenshots):
+            self.screens[idx].screenshot = image
 
         for index in range(len(system_info.screens())):
             self._create_window(index)
@@ -246,122 +234,44 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """
         self.installed_languages = installed_languages
 
-    @QtCore.Slot(Rect)  # type: ignore  # pyside typhint bug?
-    def _crop_image(self, grab_info: tuple[Rect, int]) -> None:  # type: ignore  # pyside typhint bug?
-        """Crop image to selected region."""
-        logger.info("Crop image to region %s", grab_info[0].coords)
-        rect, screen_idx = grab_info
-
-        screenshot = self.screens[screen_idx].screenshot
-        if not screenshot:
-            raise TypeError("Screenshot is None!")
-
-        self.capture.parse_text = bool(self.settings.value("parse-text", type=bool))
-        self.capture.rect = rect
-        self.capture.screen = self.screens[screen_idx]
-        self.capture.image = screenshot.copy(QtCore.QRect(*rect.geometry))
-
-        utils.save_image_in_temp_folder(self.capture.image, postfix="_cropped")
-
-        self.com.on_image_cropped.emit()
-
-    def _detect_codes(self) -> Optional[DetectionResult]:
-        logger.debug("Start QR/Barcode detection")
-
-        if detections := codes.detector.detect_codes(image=self.capture.image):
-            text, code_text_type, code_type = detections
-            logger.debug("Code detection results: %s [%s]", text, code_type)
-            text_detector = TextDetector[code_type.value]
-            text_type = TextType[code_text_type.value]
-            return DetectionResult(
-                text=text, text_type=text_type, detector=text_detector
-            )
-
-        logger.debug("No codes found")
-        return None
-
-    def _detect_ocr(self) -> Optional[DetectionResult]:
-        logger.debug("Start Text detection")
-        ocr_result = ocr.recognize.get_text_from_image(
-            tesseract_cmd=system_info.get_tesseract_path(),
-            languages=self.settings.value("language"),
-            image=self.capture.image,
-            tessdata_path=system_info.get_tessdata_path(),
-            parse=self.capture.parse_text,
-            resize_factor=2,
-            padding_size=80,
+    # TODO: Fix esc key not working
+    @QtCore.Slot()  # type: ignore  # pyside typhint bug?s
+    def _trigger_detect(self, rect: Rect, screen_idx: int) -> None:
+        """Crop screenshot, perform content recognition on it and process result."""
+        cropped_screenshot = utils.crop_image(
+            image=self.screens[screen_idx].screenshot, rect=rect
         )
-        utils.save_image_in_temp_folder(ocr_result.image, postfix="_enhanced")
-        if ocr_result.text:
-            logger.info("Text from OCR:\n%s", ocr_result.text)
-            detector = (
-                TextDetector.OCR_PARSED if ocr_result.parsed else TextDetector.OCR_RAW
-            )
-            # TODO: Performance test OCR + QR vs. OCR only
-            # TODO: Better handle missing best_scored_transformer
-            text_type = (
-                TextType[ocr_result.best_scored_transformer.value]
-                if ocr_result.best_scored_transformer
-                else TextType.SINGLE_LINE
-            )
-            # TODO: Test TextType and TextDetector compability of detectors
-            return DetectionResult(
-                text=ocr_result.text,
-                text_type=text_type,
-                detector=detector,
-            )
 
-        logger.debug("No text found")
-        return None
-
-    @QtCore.Slot()
-    def _trigger_detect(self) -> None:
-        """Perform content recognition on grabbed image."""
         minimum_image_area = 100
-        if self.capture.image_area < minimum_image_area:
-            logger.warning(
-                "Area of %s too small. Skip detection.", self.capture.image_area
-            )
+        image_area = cropped_screenshot.width() * cropped_screenshot.height()
+        if image_area < minimum_image_area:
+            logger.warning("Area of %spx is too small. Skip detection.", image_area)
             self._minimize_or_exit_application(delay=0)
             return
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-            future_codes: concurrent.futures.Future = executor.submit(
-                self._detect_codes
+        result = detector.detect(
+            image=cropped_screenshot,
+            language=self.settings.value("language"),
+            parse_text=bool(self.settings.value("parse-text", type=bool)),
+            detect_codes=bool(self.settings.value("detect-codes", type=bool)),
+        )
+
+        if result.text and self.cli_mode:
+            self._print_to_stdout_and_exit(text=result.text)
+        elif result.text:
+            self._copy_to_clipboard(
+                text=result.text, result_type=result.text_type, detector=result.detector
             )
-            future_ocr: concurrent.futures.Future = executor.submit(self._detect_ocr)
-
-            code_detection_result = None
-            ocr_detection_result = None
-
-            done, _ = concurrent.futures.wait(
-                [future_codes, future_ocr],
-                return_when=concurrent.futures.FIRST_COMPLETED,
-            )
-
-            for future in done:
-                if future == future_codes and future.result():
-                    # Early stop text detection when code got recognized
-                    future_ocr.cancel()
-                    code_detection_result = future.result()
-
-            if not code_detection_result:
-                # Wait for OCR, when now codes were detected
-                ocr_detection_result = future_ocr.result()
-
-            detection_result = code_detection_result or ocr_detection_result
-            if detection_result:
-                self.capture.text = detection_result.text
-                self.capture.text_type = detection_result.text_type
-                self.capture.detector = detection_result.detector
-            else:
-                self.capture.text = ""
-                self.capture.text_type = None
-                self.capture.detector = None
-        if self.cli_mode:
-            self._print_to_stdout()
         else:
-            self._copy_to_clipboard()
+            logger.warning("Nothing detected on selected region.")
+
+        if self.settings.value("notification", type=bool):
+            self.notifier.com.send_notification.emit(
+                result.text, result.text_type, result.detector
+            )
+
+        self._minimize_or_exit_application(delay=self._EXIT_DELAY)
+        self._set_tray_icon_done()
 
     @QtCore.Slot(str)  # type: ignore  # pyside typhint bug?
     def _open_url_and_hide(self, url: str) -> None:
@@ -387,35 +297,27 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         self.language_window.exec()
 
-    @QtCore.Slot()
-    def _copy_to_clipboard(self) -> None:
+    @QtCore.Slot(str, str, str)  # type: ignore  # pyside typhint bug?
+    def _copy_to_clipboard(self, text: str, result_type: str, detector: str) -> None:
         """Copy results to clipboard."""
-        if not self.capture.text:
-            logger.debug("Nothing there to be copied to clipboard!")
-        elif self.clipboard_handler_name:
+        if self.clipboard_handler_name:
             logger.debug(
                 "Copy text to clipboard with %s", self.clipboard_handler_name.upper()
             )
             clipboard.copy_with_handler(
-                text=self.capture.text,
-                handler_name=self.clipboard_handler_name,
+                text=text, handler_name=self.clipboard_handler_name
             )
         else:
             logger.debug("Copy text to clipboard")
-            clipboard.copy(text=self.capture.text)
+            clipboard.copy(text=text)
         self.com.on_copied_to_clipboard.emit()
 
-    @QtCore.Slot()
-    def _print_to_stdout(self) -> None:
+    @QtCore.Slot(str)  # type: ignore  # pyside typhint bug?
+    def _print_to_stdout_and_exit(self, text: str) -> None:
         """Print results to stdout ."""
         logger.debug("Print text to stdout and exit.")
-        print(self.capture.text, file=sys.stdout)  # noqa: T201
+        print(text, file=sys.stdout)  # noqa: T201
         self.com.exit_application.emit(0)
-
-    @QtCore.Slot()
-    def _notify(self) -> None:
-        if self.settings.value("notification", type=bool):
-            self.notifier.com.send_notification.emit(self.capture)
 
     @QtCore.Slot()
     def _close_windows(self) -> None:
@@ -438,8 +340,14 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """
         self.notifier = Notifier(parent=self)
         self.installed_languages = ocr.tesseract.get_languages(
-            tesseract_cmd=system_info.get_tesseract_path(),
-            tessdata_path=system_info.get_tessdata_path(),
+            tesseract_cmd=ocr.tesseract.get_tesseract_path(
+                is_briefcase_package=system_info.is_briefcase_package()
+            ),
+            tessdata_path=ocr.tesseract.get_tessdata_path(
+                config_directory=system_info.config_directory(),
+                is_briefcase_package=system_info.is_briefcase_package(),
+                is_flatpak_package=system_info.is_flatpak_package(),
+            ),
         )
         self.com.on_languages_changed.emit(self.installed_languages)
         self._add_update_checker()
@@ -475,7 +383,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if self.settings.value("has-screenshot-permission", type=bool):
             return True
 
-        if screengrab.has_screenshot_permission():
+        if screenshot.has_screenshot_permission():
             self.settings.setValue("has-screenshot-permission", True)
             return True
 
@@ -511,9 +419,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             # because somehow the setting is associated with the binary and won't work
             # after it got updated.
             self.settings.setValue("version", __version__)
-            screengrab.macos_reset_screenshot_permission()
+            screenshot.macos_reset_screenshot_permission()
 
-        screengrab.request_screenshot_permission(
+        screenshot.request_screenshot_permission(
             dialog_title=dialog_title,
             macos_dialog_text=macos_text,
             linux_dialog_text=linux_text,
@@ -524,13 +432,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Set up signals to trigger program logic."""
         self.activated.connect(self._handle_tray_click)
         self.com.on_region_selected.connect(self._close_windows)
-        self.com.on_region_selected.connect(self._crop_image)
-        self.com.on_image_cropped.connect(self._trigger_detect)
-        self.com.on_copied_to_clipboard.connect(self._notify)
-        self.com.on_copied_to_clipboard.connect(
-            lambda: self._minimize_or_exit_application(delay=self._EXIT_DELAY)
-        )
-        self.com.on_copied_to_clipboard.connect(self._set_tray_icon_done)
+        self.com.on_region_selected.connect(self._trigger_detect)
         self.com.on_languages_changed.connect(self._sanitize_language_setting)
         self.com.on_languages_changed.connect(self._update_installed_languages)
         self.com.exit_application.connect(self._exit_application)
@@ -569,13 +471,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             # short enough to not annoy the users to much. (FTR: 0.15 was too short.)
             time.sleep(0.5)
 
-        screens = screengrab.capture()
+        screens = screenshot.capture()
 
         if not screens:
             raise RuntimeError("No screenshot taken!")
 
-        for idx, screenshot in enumerate(screens):
-            utils.save_image_in_temp_folder(screenshot, postfix=f"_raw_screen{idx}")
+        for idx, image in enumerate(screens):
+            utils.save_image_in_temp_folder(image, postfix=f"_raw_screen{idx}")
 
         return screens
 

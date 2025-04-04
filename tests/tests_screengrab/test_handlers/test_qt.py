@@ -1,8 +1,8 @@
 import pytest
 from PySide6 import QtGui
 
-from normcap.screengrab import system_info
-from normcap.screengrab.handlers.qt import capture
+from normcap.screenshot import system_info
+from normcap.screenshot.handlers.qt import capture
 
 
 @pytest.mark.gui
