@@ -38,33 +38,6 @@ class DesktopEnvironment(enum.IntEnum):
     AWESOME = enum.auto()
 
 
-class TextType(str, enum.Enum):
-    """Describe format/content of the detected text."""
-
-    MAIL = "MAIL"
-    URL = "URL"
-    PHONE_NUMBER = "PHONE_NUMBER"
-    SINGLE_LINE = "SINGLE_LINE"
-    MULTI_LINE = "MULTI_LINE"
-    PARAGRAPH = "PARAGRAPH"
-
-
-class TextDetector(str, enum.Enum):
-    """Specifies the source of the detected text."""
-
-    OCR_RAW = "OCR_RAW"
-    OCR_PARSED = "OCR_PARSED"
-    QR = "QR"
-    BARCODE = "BARCODE"
-    QR_AND_BARCODE = "QR_AND_BARCODE"
-
-
-class DetectionResult(NamedTuple):
-    text: str
-    text_type: TextType
-    detector: TextDetector
-
-
 @dataclass
 class Urls:
     """URLs used on various places."""
@@ -150,7 +123,7 @@ class Screen(Rect):
 
     device_pixel_ratio: float
     index: int
-    screenshot: Optional[QtGui.QImage] = None
+    screenshot: QtGui.QImage = field(default_factory=QtGui.QImage)
 
     # ONHOLD: Annotate as Self with Python 3.11
     def scale(self, factor: Optional[float] = None):  # noqa: ANN201
@@ -165,26 +138,3 @@ class Screen(Rect):
             left=int(self.left * factor),
             right=int(self.right * factor),
         )
-
-
-@dataclass()
-class Capture:
-    """Store all information like screenshot and selected region."""
-
-    parse_text: bool = True
-
-    # Image of selected region
-    image: QtGui.QImage = field(default_factory=QtGui.QImage)
-    screen: Optional[Screen] = None
-    scale_factor: float = 1
-    rect: Rect = field(default_factory=lambda: Rect(left=0, top=0, right=0, bottom=0))
-
-    text: Optional[str] = None
-    # TODO: Implement text & detector
-    text_type: Optional[TextType] = None
-    detector: Optional[TextDetector] = None
-
-    @property
-    def image_area(self) -> int:
-        """Provide area of cropped image in px²."""
-        return self.rect.width * self.rect.height if self.image else 0

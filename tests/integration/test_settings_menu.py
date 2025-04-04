@@ -3,7 +3,7 @@ import sys
 import pytest
 from PySide6 import QtWidgets
 
-from normcap.gui.tray import screengrab
+from normcap.gui.tray import screenshot
 
 from .testcases import testcases
 
@@ -13,7 +13,7 @@ def test_settings_menu_creates_actions(monkeypatch, qtbot, run_normcap, test_sig
     """Test if capture mode can be started through tray icon."""
     # GIVEN NormCap is started with any image as screenshot
     some_image = testcases[0].screenshot
-    monkeypatch.setattr(screengrab, "capture", lambda: [some_image])
+    monkeypatch.setattr(screenshot, "capture", lambda: [some_image])
     monkeypatch.setattr(sys, "exit", test_signal.on_event.emit)
     tray = run_normcap(extra_cli_args=[])
 
@@ -41,7 +41,7 @@ def test_settings_menu_close_action_exits(monkeypatch, qtbot, run_normcap, test_
     # GIVEN NormCap is started with any image as screenshot
     #   and tray icon is disabled
     some_image = testcases[0].screenshot
-    monkeypatch.setattr(screengrab, "capture", lambda: [some_image])
+    monkeypatch.setattr(screenshot, "capture", lambda: [some_image])
     monkeypatch.setattr(sys, "exit", test_signal.on_event.emit)
     tray = run_normcap(extra_cli_args=["--tray=False"])
 
@@ -69,7 +69,7 @@ def test_settings_menu_close_action_minimizes(
     # GIVEN NormCap is started with any image as screenshot
     #   and tray icon is enabled
     some_image = testcases[0].screenshot
-    monkeypatch.setattr(screengrab, "capture", lambda: [some_image])
+    monkeypatch.setattr(screenshot, "capture", lambda: [some_image])
     monkeypatch.setattr(sys, "exit", test_signal.on_event.emit)
     tray = run_normcap(extra_cli_args=["--tray=True"])
 

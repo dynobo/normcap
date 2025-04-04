@@ -34,7 +34,7 @@ class Communicate(QtCore.QObject):
     """Window's communication bus."""
 
     on_esc_key_pressed = QtCore.Signal()
-    on_region_selected = QtCore.Signal(Rect)
+    on_region_selected = QtCore.Signal(Rect, int)
 
 
 class Window(QtWidgets.QMainWindow):
@@ -240,7 +240,7 @@ class Window(QtWidgets.QMainWindow):
         self.clear_selection()
 
         # Emit as last action, cause self might get destroyed by the slots
-        self.com.on_region_selected.emit((scaled_selection_rect, self.screen_.index))
+        self.com.on_region_selected.emit(scaled_selection_rect, self.screen_.index)
 
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802
         """Adjust child widget on resize."""

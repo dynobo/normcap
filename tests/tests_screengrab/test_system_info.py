@@ -1,6 +1,6 @@
 from decimal import DivisionByZero
 
-from normcap.screengrab import system_info
+from normcap.screenshot import system_info
 
 
 # TODO: Parametrize tests?

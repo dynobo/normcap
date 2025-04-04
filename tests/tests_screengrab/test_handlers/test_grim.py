@@ -3,8 +3,8 @@ import subprocess
 import pytest
 from PySide6 import QtCore, QtGui
 
-from normcap.screengrab import system_info
-from normcap.screengrab.handlers import grim
+from normcap.screenshot import system_info
+from normcap.screenshot.handlers import grim
 
 
 @pytest.mark.gui

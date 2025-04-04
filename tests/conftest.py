@@ -13,11 +13,11 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import app
 from normcap.clipboard import system_info as clipboard_system_info
-from normcap.detectors.ocr.structures import OEM, PSM, OcrResult, TessArgs
-from normcap.detectors.ocr.transformers import email_address, url
+from normcap.detection.ocr import tesseract
+from normcap.detection.ocr.models import OEM, PSM, OcrResult, TessArgs
+from normcap.detection.ocr.transformers import email_address, url
 from normcap.gui import menu_button, system_info
-from normcap.gui.models import Capture, Rect
-from normcap.screengrab import system_info as screengrab_system_info
+from normcap.screenshot import system_info as screengrab_system_info
 
 
 @pytest.fixture(autouse=True)
@@ -28,7 +28,7 @@ def _clear_caches():
     email_address._extract_emails.cache_clear()
     system_info.desktop_environment.cache_clear()
     system_info.display_manager_is_wayland.cache_clear()
-    system_info.get_tesseract_path.cache_clear()
+    tesseract.get_tesseract_path.cache_clear()
     system_info.config_directory.cache_clear()
 
 
@@ -56,7 +56,7 @@ def menu_btn_without_lang_man(temp_settings):
 @pytest.fixture
 def dbus_portal(qapp):
     try:
-        from normcap.screengrab.handlers import dbus_portal
+        from normcap.screenshot.handlers import dbus_portal
 
     except ImportError as e:
         raise RuntimeError(
@@ -67,17 +67,18 @@ def dbus_portal(qapp):
 
 
 @pytest.fixture
-def capture() -> Capture:
-    """Create argparser and provide its default values."""
-    image = QtGui.QImage(200, 300, QtGui.QImage.Format.Format_RGB32)
-    image.fill(QtGui.QColor("#ff0000"))
+def tesseract_cmd() -> Path:
+    return tesseract.get_tesseract_path(
+        is_briefcase_package=system_info.is_briefcase_package()
+    )
 
-    return Capture(
-        parse_text=True,
-        rect=Rect(20, 30, 220, 330),
-        text="one two three",
-        text_type=None,
-        image=image,
+
+@pytest.fixture
+def tessdata_path() -> Optional[Path]:
+    return tesseract.get_tessdata_path(
+        config_directory=system_info.config_directory(),
+        is_briefcase_package=system_info.is_briefcase_package(),
+        is_flatpak_package=system_info.is_flatpak_package(),
     )
 
 

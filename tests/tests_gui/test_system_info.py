@@ -1,4 +1,3 @@
-import logging
 import sys
 from pathlib import Path
 
@@ -107,47 +106,6 @@ def test_screens(qtbot):
     assert isinstance(screens[0].height, int)
 
 
-def test_get_tessdata_path(monkeypatch, caplog):
-    data_file = system_info.config_directory() / "tessdata" / "mocked.traineddata"
-    data_file.parent.mkdir(parents=True, exist_ok=True)
-    data_file.touch(exist_ok=True)
-
-    try:
-        with monkeypatch.context() as m:
-            m.setattr(system_info, "is_briefcase_package", lambda: True)
-            m.setattr(system_info, "is_flatpak_package", lambda: False)
-            path_briefcase = system_info.get_tessdata_path()
-            assert str(path_briefcase).endswith("tessdata")
-
-            m.setattr(system_info, "is_briefcase_package", lambda: False)
-            m.setattr(system_info, "is_flatpak_package", lambda: True)
-            path_flatpak = system_info.get_tessdata_path()
-            assert str(path_flatpak).endswith("tessdata")
-
-            m.setattr(system_info, "is_briefcase_package", lambda: False)
-            m.setattr(system_info, "is_flatpak_package", lambda: False)
-            m.setenv("TESSDATA_PREFIX", f"{data_file.parent.parent.resolve()}")
-            path_env_var = system_info.get_tessdata_path()
-            assert str(path_env_var).endswith("tessdata")
-
-            m.setenv("TESSDATA_PREFIX", "")
-            path_non = system_info.get_tessdata_path()
-            assert path_non is None
-
-            m.setenv("TESSDATA_PREFIX", "")
-            monkeypatch.setattr(system_info.sys, "platform", "win32")
-            with caplog.at_level(logging.WARNING):
-                caplog.clear()
-                _ = system_info.get_tessdata_path()
-            assert path_non is None
-            assert "TESSDATA_PREFIX" in caplog.records[0].msg
-
-    finally:
-        data_file.unlink()
-
-    assert path_non is None
-
-
 def test_config_directory_on_windows(monkeypatch, tmp_path):
     with monkeypatch.context() as m:
         m.setattr(sys, "platform", "win32")
@@ -182,47 +140,6 @@ def test_config_directory_fallback(monkeypatch):
         config_dir = system_info.config_directory()
     assert config_dir.name == "normcap"
     assert config_dir.parent.name == ".config"
-
-
-@pytest.mark.parametrize(
-    ("platform", "binary", "directory"),
-    [
-        ("linux", "tesseract", "bin"),
-        ("win32", "tesseract.exe", "tesseract"),
-        ("darwin", "tesseract", "bin"),
-    ],
-)
-def test_get_tesseract_path_in_briefcase(monkeypatch, platform, binary, directory):
-    with monkeypatch.context() as m:
-        m.setattr(system_info, "is_briefcase_package", lambda: True)
-        m.setattr(system_info.Path, "exists", lambda *args: True)
-        m.setattr(system_info.sys, "platform", platform)
-        path = system_info.get_tesseract_path()
-    assert path.name == binary
-    assert path.parent.name == directory
-
-
-def test_get_tesseract_path_unknown_platform_raises(monkeypatch):
-    with monkeypatch.context() as m:
-        m.setattr(system_info, "is_briefcase_package", lambda: True)
-        m.setattr(system_info.Path, "exists", lambda *args: True)
-        m.setattr(system_info.sys, "platform", "unknown")
-        with pytest.raises(ValueError, match="Platform unknown is not supported"):
-            _ = system_info.get_tesseract_path()
-
-
-def test_get_tesseract_path_missing_binary_raises(monkeypatch):
-    with monkeypatch.context() as m:
-        m.setattr(system_info, "is_briefcase_package", lambda: True)
-        with pytest.raises(RuntimeError, match="Could not locate Tesseract binary"):
-            _ = system_info.get_tesseract_path()
-
-
-def test_get_tesseract_path_missing_tesseract_raises(monkeypatch):
-    with monkeypatch.context() as m:
-        m.setattr(system_info.shutil, "which", lambda _: False)
-        with pytest.raises(RuntimeError, match="No Tesseract binary found"):
-            _ = system_info.get_tesseract_path()
 
 
 def test_to_dict():
