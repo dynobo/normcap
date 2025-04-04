@@ -10,77 +10,77 @@ from typing import Optional, Union
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
+from normcap.detection.models import TextDetector, TextType
 from normcap.gui import system_info
 from normcap.gui.localization import _, translate
-from normcap.gui.models import Capture, TextDetector, TextType
 
 logger = logging.getLogger(__name__)
 
 
-def _compose_title(capture: Capture) -> str:
-    if not capture.text:
+def _compose_title(text: str, result_type: TextType, detector: TextDetector) -> str:
+    if not text:
         return ""
 
-    if capture.text_type == TextType.PARAGRAPH:
-        count = capture.text.count(os.linesep * 2) + 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 paragraph captured", "{count} paragraphs captured", count
-        ).format(count=count)
-    elif capture.text_type == TextType.MAIL:
-        count = capture.text.count("@")
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 email captured", "{count} emails captured", count
-        ).format(count=count)
-    elif capture.text_type == TextType.SINGLE_LINE:
-        count = capture.text.count(" ") + 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 word captured", "{count} words captured", count
-        ).format(count=count)
-    elif capture.text_type == TextType.MULTI_LINE:
-        count = capture.text.count(os.linesep) + 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 line captured", "{count} lines captured", count
-        ).format(count=count)
-    elif capture.text_type == TextType.URL:
-        count = capture.text.count(os.linesep) + 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 URL captured", "{count} URLs captured", count
-        ).format(count=count)
-    elif capture.detector == TextDetector.QR:
-        count = capture.text.count(os.linesep) + 1
+    if detector == TextDetector.QR:
+        count = text.count(os.linesep) + 1
         # L10N: Notification title.
         # Do NOT translate the variables in curly brackets "{some_variable}"!
         title = translate.ngettext(
             "1 QR code detected", "{count} QR codes detected", count
         ).format(count=count)
-    elif capture.detector == TextDetector.BARCODE:
-        count = capture.text.count(os.linesep) + 1
+    elif detector == TextDetector.BARCODE:
+        count = text.count(os.linesep) + 1
         # L10N: Notification title.
         # Do NOT translate the variables in curly brackets "{some_variable}"!
         title = translate.ngettext(
             "1 barcode detected", "{count} barcodes detected", count
         ).format(count=count)
-    elif capture.detector == TextDetector.QR_AND_BARCODE:
-        count = capture.text.count(os.linesep) + 1
+    elif detector == TextDetector.QR_AND_BARCODE:
+        count = text.count(os.linesep) + 1
         # L10N: Notification title.
         # Do NOT translate the variables in curly brackets "{some_variable}"!
         title = translate.ngettext(
             "1 code detected", "{count} codes detected", count
         ).format(count=count)
+    elif result_type == TextType.PARAGRAPH:
+        count = text.count(os.linesep * 2) + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 paragraph captured", "{count} paragraphs captured", count
+        ).format(count=count)
+    elif result_type == TextType.MAIL:
+        count = text.count("@")
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 email captured", "{count} emails captured", count
+        ).format(count=count)
+    elif result_type == TextType.SINGLE_LINE:
+        count = text.count(" ") + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 word captured", "{count} words captured", count
+        ).format(count=count)
+    elif result_type == TextType.MULTI_LINE:
+        count = text.count(os.linesep) + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 line captured", "{count} lines captured", count
+        ).format(count=count)
+    elif result_type == TextType.URL:
+        count = text.count(os.linesep) + 1
+        # L10N: Notification title.
+        # Do NOT translate the variables in curly brackets "{some_variable}"!
+        title = translate.ngettext(
+            "1 URL captured", "{count} URLs captured", count
+        ).format(count=count)
     else:
-        count = len(capture.text)
+        count = len(text)
         # Count linesep only as single char:
-        count -= (len(os.linesep) - 1) * capture.text.count(os.linesep)
+        count -= (len(os.linesep) - 1) * text.count(os.linesep)
         # L10N: Notification title.
         # Do NOT translate the variables in curly brackets "{some_variable}"!
         title = translate.ngettext(
@@ -89,11 +89,11 @@ def _compose_title(capture: Capture) -> str:
     return title
 
 
-def _compose_text(capture: Capture) -> str:
-    if not capture.text:
+def _compose_text(text: str) -> str:
+    if not text:
         return ""
 
-    text = capture.text.strip().replace(os.linesep, " ")
+    text = text.strip().replace(os.linesep, " ")
     shortened = textwrap.shorten(text, width=45, placeholder=" […]")
     if shortened == " […]":
         # We have one long word which shorten() can not handle
@@ -102,12 +102,14 @@ def _compose_text(capture: Capture) -> str:
     return shortened
 
 
-def _compose_notification(capture: Capture) -> tuple[str, str]:
+def _compose_notification(
+    text: str, result_type: TextType, detector: TextDetector
+) -> tuple[str, str]:
     """Extract message text out of captures object and include icon."""
     # Compose message text
-    if capture.text and capture.text.strip():
-        title = _compose_title(capture=capture)
-        text = _compose_text(capture=capture)
+    if text and text.strip():
+        title = _compose_title(text=text, result_type=result_type, detector=detector)
+        text = _compose_text(text=text)
     else:
         # L10N: Notification title
         title = _("Nothing captured!")
@@ -120,7 +122,7 @@ def _compose_notification(capture: Capture) -> tuple[str, str]:
 class Communicate(QtCore.QObject):
     """Notifier's communication bus."""
 
-    send_notification = QtCore.Signal(Capture)
+    send_notification = QtCore.Signal(str, str, str)
     on_notification_sent = QtCore.Signal()
 
 
@@ -132,18 +134,23 @@ class Notifier(QtCore.QObject):
         self.com = Communicate(parent=self)
         self.com.send_notification.connect(self._send_notification)
 
-    @QtCore.Slot(Capture)  # type: ignore  # pyside typhint bug?
-    def _send_notification(self, capture: Capture) -> None:
+    # TODO: Correct type hints?
+    @QtCore.Slot(str, str, str)  # type: ignore  # pyside typhint bug?
+    def _send_notification(
+        self, text: str, result_type: TextType, detector: TextDetector
+    ) -> None:
         """Show tray icon then send notification."""
-        title, message = _compose_notification(capture)
+        title, message = _compose_notification(
+            text=text, result_type=result_type, detector=detector
+        )
         if sys.platform == "linux" and shutil.which("notify-send"):
             self._send_via_libnotify(title=title, message=message)
         else:
             self._send_via_qt_tray(
                 title=title,
                 message=message,
-                text=capture.text,
-                text_type=capture.text_type,
+                text=text,
+                text_type=result_type,
             )
         self.com.on_notification_sent.emit()
 

@@ -225,7 +225,7 @@ def qt_log_wrapper(
         logger.error(message)
 
 
-def copy_traineddata_files(target_dir: Optional[os.PathLike]) -> None:
+def copy_traineddata_files(target_dir: Optional[Path]) -> None:
     """Copy Tesseract traineddata files to the target path if they don't already exist.
 
     Args:
@@ -235,7 +235,6 @@ def copy_traineddata_files(target_dir: Optional[os.PathLike]) -> None:
     if not target_dir:
         return
 
-    target_dir = Path(target_dir)
     if target_dir.is_dir() and list(target_dir.glob("*.traineddata")):
         return
 
