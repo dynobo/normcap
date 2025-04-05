@@ -5,7 +5,7 @@ from pathlib import Path
 
 translate = gettext.translation(
     domain="messages",
-    localedir=Path(__file__).parent.parent / "resources" / "locales",
+    localedir=Path(__file__).resolve().parents[1] / "resources" / "locales",
     fallback=True,
 )
 _ = translate.gettext

@@ -78,7 +78,7 @@ def test_desktop_environment_gnome(monkeypatch, envs, expected_environment):
 def test_is_briefcase_package():
     assert not system_info.is_briefcase_package()
 
-    temp_app_packages = Path(__file__).parent.parent.parent.parent / "app_packages"
+    temp_app_packages = Path(__file__).resolve().parents[3] / "app_packages"
     is_briefcase = False
     try:
         temp_app_packages.mkdir()

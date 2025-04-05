@@ -72,7 +72,7 @@ class IntroductionDialog(QtWidgets.QDialog):
     @property
     def sections_data(self) -> list[Section]:
         prefix = sys.platform
-        img_path = Path(__file__).parent.parent / "resources" / "images"
+        img_path = Path(__file__).resolve().parents[1] / "resources" / "images"
         # L10N: Introduction window shortcut for pasting on Linux and Windows
         paste_shortcut_win32_linux = _("Ctrl + v")
         # L10N: Introduction window shortcut for pasting on macOS

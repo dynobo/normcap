@@ -123,7 +123,7 @@ if __name__ == "__main__":
     reps = 10
 
     image_file = (
-        Path(__file__).parent.parent.parent
+        Path(__file__).resolve().parents[2]
         / "tests"
         / "integration"
         / "testcases"

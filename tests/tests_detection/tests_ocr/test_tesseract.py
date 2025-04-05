@@ -138,7 +138,7 @@ def test_get_tessdata_path(
             m.setattr(system_info, "is_briefcase_package", lambda: is_briefcase)
             m.setattr(system_info, "is_flatpak_package", lambda: is_flatpak)
             if has_prefix:
-                m.setenv("TESSDATA_PREFIX", f"{data_file.parent.parent.resolve()}")
+                m.setenv("TESSDATA_PREFIX", f"{data_file.resolve().parents[1]}")
 
             path_briefcase = tesseract.get_tessdata_path(
                 config_directory=system_info.config_directory(),
