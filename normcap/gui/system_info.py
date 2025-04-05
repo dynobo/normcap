@@ -43,11 +43,11 @@ def config_directory() -> Path:
 
 
 def get_resources_path() -> Path:
-    return (Path(__file__).parent.parent / "resources").resolve()
+    return Path(__file__).resolve().parents[1] / "resources"
 
 
 def get_package_root() -> Path:
-    return Path(__file__).parent.parent.parent.parent.resolve()
+    return Path(__file__).resolve().parents[3]
 
 
 @functools.cache
@@ -59,7 +59,7 @@ def is_portable_windows_package() -> bool:
 
 
 def is_briefcase_package() -> bool:
-    app_path = Path(__file__).parent.parent.parent.resolve()
+    app_path = Path(__file__).resolve().parents[2]
     return app_path.is_dir() and (app_path.parent / "app_packages").is_dir()
 
 

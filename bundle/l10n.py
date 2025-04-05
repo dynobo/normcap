@@ -10,7 +10,7 @@ from pathlib import Path
 import toml
 from babel.messages.frontend import CommandLineInterface
 
-LOCALES_PATH = Path(__file__).parent.parent / "normcap" / "resources" / "locales"
+LOCALES_PATH = Path(__file__).resolve().parents[1] / "normcap" / "resources" / "locales"
 
 
 def _get_version() -> str:
@@ -21,7 +21,7 @@ def _get_version() -> str:
         version = __version__
     except Exception:
         print("Could not import __version__. Fallback to pyproject.toml.")  # noqa: T201
-        with (Path(__file__).parent.parent / "pyproject.toml").open(
+        with (Path(__file__).resolve().parents[1] / "pyproject.toml").open(
             encoding="utf8"
         ) as toml_file:
             pyproject_toml = toml.load(toml_file)
@@ -102,7 +102,7 @@ def extract_strings() -> None:
             "--width=79",
             "--add-comments=L10N:",
             "--strip-comment-tag",
-            f"--input-dir={Path('__file__').parent.parent.resolve()}",
+            f"--input-dir={Path('__file__').resolve().parents[1]}",
             f"--output-file={(LOCALES_PATH / 'messages.pot').resolve()}",
         ]
     )

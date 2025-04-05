@@ -156,7 +156,7 @@ def test_set_environ_for_wayland(monkeypatch):
 
 
 def test_set_environ_for_appimage(monkeypatch):
-    binary_path = str((Path(__file__).parent.parent.parent / "bin").resolve())
+    binary_path = str(Path(__file__).resolve().parents[2] / "bin")
     with monkeypatch.context() as m:
         m.setenv("PATH", "/normcap/test")
         utils.set_environ_for_appimage()

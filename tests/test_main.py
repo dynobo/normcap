@@ -13,9 +13,7 @@ def test_main_starts_normcap(monkeypatch):
         called = True
 
     monkeypatch.setattr(app, "run", mocked_app_main)
-    main_module = str(
-        (Path(__file__).parent.parent / "normcap" / "__main__.py").absolute()
-    )
+    main_module = str(Path(__file__).resolve().parents[1] / "normcap" / "__main__.py")
     loader = SourceFileLoader("__main__", main_module)
     spec = spec_from_loader(loader.name, loader)
     assert spec

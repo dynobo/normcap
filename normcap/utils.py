@@ -103,7 +103,7 @@ def set_environ_for_wayland() -> None:
 
 def set_environ_for_appimage() -> None:
     # Append path to shipped binaries to PATH
-    bin_path = str((Path(__file__).parent.parent.parent / "bin").resolve())
+    bin_path = str(Path(__file__).resolve().parents[2] / "bin")
     logger.debug("Append %s to AppImage internal PATH", bin_path)
     os.environ["PATH"] = (
         os.environ.get("PATH", "").rstrip(os.pathsep) + os.pathsep + bin_path
