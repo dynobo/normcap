@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from os import PathLike
 from typing import Optional, Protocol
 
-import numpy as np
+from PySide6 import QtGui
 
 
 @enum.unique
@@ -93,7 +93,7 @@ class OcrResult:
 
     tess_args: TessArgs
     words: list[dict]  # Words+metadata detected by OCR
-    image: np.ndarray
+    image: QtGui.QImage
     transformer_scores: dict[Transformer, float] = field(default_factory=dict)
     parsed: str = ""  # Transformed result
 

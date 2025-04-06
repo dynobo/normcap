@@ -2,8 +2,8 @@ import logging
 import subprocess
 import sys
 
-import numpy as np
 import pytest
+from PySide6 import QtGui
 
 from normcap.detection.ocr import tesseract
 from normcap.gui import system_info
@@ -63,7 +63,7 @@ def test_get_languages_raise_on_no_languages(tmp_path, tesseract_cmd):
 
 def test_orc_perform_raises_on_wrong_cmd():
     tesseract_cmd = "non-existing-binary"
-    img = np.zeros((25, 25, 3))
+    img = QtGui.QImage(200, 50, QtGui.QImage.Format.Format_RGB32)
     with pytest.raises(FileNotFoundError, match="Could not find Tesseract binary"):
         _ = tesseract.perform_ocr(cmd=tesseract_cmd, image=img, args=[""])
 

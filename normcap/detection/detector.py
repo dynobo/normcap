@@ -1,10 +1,8 @@
 import logging
-import multiprocessing
 import time
+from dataclasses import dataclass
 from typing import Optional
 
-import cv2
-import numpy as np
 from PySide6 import QtGui
 
 from normcap.detection import codes, ocr
@@ -14,19 +12,49 @@ from normcap.gui import system_info
 logger = logging.getLogger(__name__)
 
 
-def _image_to_mat(image: QtGui.QImage) -> np.ndarray:
-    if image.format() != QtGui.QImage.Format.Format_RGB32:
-        image = image.convertToFormat(QtGui.QImage.Format.Format_RGB32)
+@dataclass
+class ImageBytes:
+    """Image bytes without padding, but with some metadata."""
 
+    data: bytearray
+    height: int
+    width: int
+    channels: int
+
+
+def _image_to_memoryview(image: QtGui.QImage) -> memoryview:
+    """Transform Qimage to a bytearray without padding.
+
+    Args:
+        image: _description_
+
+    Returns:
+        _description_
+    """
+    image = image.convertToFormat(QtGui.QImage.Format.Format_RGB888)
     ptr = image.constBits()
-    arr = np.array(ptr).reshape(image.height(), image.width(), 4)
-    return arr[:, :, :3]
+    bytes_per_line = image.bytesPerLine()  # Includes padding
+    width = image.width()
+    height = image.height()
+    channels = 3  # RGB888 has 3 channels
+
+    # Create a new bytearray to exclude padding
+    raw_data = bytearray()
+    for y in range(height):
+        row_start = y * bytes_per_line
+        row_end = row_start + (width * channels)
+        raw_data.extend(ptr[row_start:row_end])  # Exclude padding
+
+    return memoryview(raw_data).cast(
+        "B", shape=(image.height(), image.width(), channels)
+    )
 
 
-def _detect_codes(image: cv2.typing.MatLike) -> Optional[DetectionResult]:
+def _detect_codes(image: QtGui.QImage) -> Optional[DetectionResult]:
     logger.debug("Start QR/Barcode detection")
+    image_buffer = _image_to_memoryview(image)
 
-    if detections := codes.detector.detect_codes(image=image):
+    if detections := codes.detector.detect_codes(image=image_buffer):
         text, code_text_type, code_type = detections
         logger.debug("Code detection results: %s [%s]", text, code_type)
         text_detector = TextDetector[code_type.value]
@@ -38,9 +66,10 @@ def _detect_codes(image: cv2.typing.MatLike) -> Optional[DetectionResult]:
 
 
 def _detect_ocr(
-    image: cv2.typing.MatLike, language: str, parse: bool
+    image: QtGui.QImage, language: str, parse: bool
 ) -> Optional[DetectionResult]:
     logger.debug("Start Text detection")
+
     ocr_result = ocr.recognize.get_text_from_image(
         tesseract_cmd=ocr.tesseract.get_tesseract_path(
             is_briefcase_package=system_info.is_briefcase_package()
@@ -82,34 +111,17 @@ def _detect_ocr(
 def detect(
     image: QtGui.QImage, language: str, parse_text: bool, detect_codes: bool
 ) -> DetectionResult:
-    start = time.time()
-
-    mat = _image_to_mat(image=image)
-    timeout_codes_s = 60
-    timeout_ocr_s = 120
-    codes_result = None
     ocr_result = None
+    codes_result = None
 
-    with multiprocessing.Pool(processes=2) as pool:
-        future_codes = pool.apply_async(_detect_codes, (mat,)) if detect_codes else None
-        future_ocr = pool.apply_async(_detect_ocr, (mat, language, parse_text))
+    if detect_codes:
+        start_time = time.time()
+        codes_result = _detect_codes(image)
+        logger.debug("Code detection took %s s", f"{time.time() - start_time:.4f}")
 
-        while True:
-            if (
-                future_codes
-                and future_codes.ready()
-                and not future_ocr.ready()
-                and (codes_result := future_codes.get(timeout=timeout_codes_s))
-            ):
-                logger.debug("Stopping OCR early, due to detected QR/Barcode")
-                pool.terminate()
-                break
-            if future_ocr.ready():
-                ocr_result = future_ocr.get(timeout=timeout_ocr_s)
-                break
-
-    end = time.time()
-    logger.info("Detection took %s s", f"{end - start:.4f}")
+    start_time = time.time()
+    ocr_result = _detect_ocr(image, language, parse_text)
+    logger.debug("OCR detection took %s s", f"{time.time() - start_time:.4f}")
 
     detection_result = codes_result or ocr_result
     if detection_result:

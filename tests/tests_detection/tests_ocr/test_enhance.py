@@ -1,7 +1,7 @@
+from collections import Counter
 from pathlib import Path
 
-import cv2
-import numpy as np
+from PySide6 import QtGui
 
 from normcap.detection.ocr import enhance
 
@@ -9,58 +9,51 @@ TESTIMAGES_PATH = Path(__file__).parent / "testimages"
 
 
 def test_identify_most_frequent_edge_color():
-    image = cv2.imread(str((TESTIMAGES_PATH / "color.png").resolve()))
+    image = QtGui.QImage(str((TESTIMAGES_PATH / "color.png").resolve()))
     color = enhance._identify_most_frequent_edge_color(image)
-    assert color == [255, 0, 0]
+    assert color == (0, 0, 255)
 
 
 def test_identify_most_frequent_edge_color_small_image():
     # GIVEN an image with small dimensions (border < max_sample_size)
-    image = cv2.imread(str((TESTIMAGES_PATH / "color.png").resolve()))
-    image = cv2.resize(src=image, dsize=(40, 40))
+    image = QtGui.QImage(str((TESTIMAGES_PATH / "color.png").resolve()))
+    image = image.scaled(40, 40)
     # WHEN the most frequent color is identified
     color = enhance._identify_most_frequent_edge_color(image)
     # THEN the result should be correct (blue)
-    assert color == [255, 0, 0]
+    assert color == (0, 0, 255)
 
 
 def test_add_padding():
     padding = 33
-    img = cv2.imread(str((TESTIMAGES_PATH / "color.png").resolve()))
-    img_pad = enhance._add_padding(img, padding=padding)
-    assert img.shape[0] == img_pad.shape[0] - padding * 2
-    assert img.shape[1] == img_pad.shape[1] - padding * 2
-    assert img.shape[2] == img_pad.shape[2]
+    img = QtGui.QImage(Path(__file__).parent / "testimages" / "color.png")
+    img_pad = enhance.add_padding(img, padding=padding)
+    assert img.width() == img_pad.width() - padding * 2
+    assert img.height() == img_pad.height() - padding * 2
 
-    top_edge = img_pad[0, :]
-    bottom_edge = img_pad[-1, :]
-    left_edge = img_pad[:, 0]
-    right_edge = img_pad[:, -1]
+    points = [(x, 0) for x in range(img_pad.width())]  # top
+    points += [(x, img_pad.height() - 1) for x in range(img_pad.width())]  # bottom
+    points += [(0, x) for x in range(img_pad.height())]  # left
+    points += [(img_pad.width() - 1, x) for x in range(img_pad.height())]  # right
 
-    # Combine all edge pixels
-    edge_pixels = np.concatenate((top_edge, bottom_edge, left_edge, right_edge), axis=0)
-
-    expected_edge_pixels = np.full(
-        edge_pixels.shape, [255, 0, 0], dtype=edge_pixels.dtype
-    )
-
-    assert np.array_equal(edge_pixels, expected_edge_pixels)
+    edge_pixels = enhance._get_pixels(image=img_pad, points=points)
+    color_count = Counter(edge_pixels)
+    assert set(color_count.keys()) == {(0, 0, 255)}
 
 
 def test_resize_image():
     factor = 2.5
-    img = cv2.imread(str((TESTIMAGES_PATH / "color.png").resolve()))
-    img_result = enhance._resize_image(img.copy(), factor=factor)
-    assert img.shape[0] * factor == img_result.shape[0]
-    assert img.shape[1] * factor == img_result.shape[1]
-    assert img.shape[2] == img_result.shape[2]
+    img = QtGui.QImage(Path(__file__).parent / "testimages" / "color.png")
+    img_result = enhance.resize_image(img.copy(), factor=factor)
+    assert img.width() * factor == img_result.width()
+    assert img.height() * factor == img_result.height()
 
 
 def test_preprocess():
-    img = cv2.imread(str((TESTIMAGES_PATH / "dark.png").resolve()))
+    img = QtGui.QImage(Path(__file__).parent / "testimages" / "dark.png")
     factor = 2
     padding = 10
     img_result = enhance.preprocess(img.copy(), resize_factor=factor, padding=padding)
-    assert img.shape[1] * factor + padding * 2 == img_result.shape[1]
-    assert img_result[0, 0, :].tolist() == [0, 0, 0]
-    assert img_result[99, 49, :].tolist() == [0, 0, 0]
+    assert img.width() * factor + padding * 2 == img_result.width()
+    assert enhance._get_pixels(image=img_result, points=[(0, 0)])[0] == (0, 0, 0)
+    assert enhance._get_pixels(image=img_result, points=[(99, 49)])[0] == (0, 0, 0)

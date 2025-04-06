@@ -12,7 +12,7 @@ from os import PathLike, linesep
 from pathlib import Path
 from typing import Optional, Union
 
-import cv2
+from PySide6 import QtGui
 
 logger = logging.getLogger(__name__)
 
@@ -140,7 +140,7 @@ def _move_to_normcap_temp_dir(input_file: Path, postfix: str) -> None:
 
 
 def _run_tesseract(
-    cmd: Union[PathLike, str], image: cv2.typing.MatLike, args: list[str]
+    cmd: Union[PathLike, str], image: QtGui.QImage, args: list[str]
 ) -> list[list[str]]:
     input_image_filename = "normcap_tesseract_input.png"
 
@@ -151,7 +151,7 @@ def _run_tesseract(
 
     with tempfile.TemporaryDirectory() as temp_dir:
         input_image_path = str((Path(temp_dir) / input_image_filename).resolve())
-        cv2.imwrite(input_image_path, image)
+        image.save(input_image_path)
 
         cmd_args = [
             str(cmd),
@@ -199,7 +199,7 @@ def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
 
 
 def perform_ocr(
-    cmd: Union[PathLike, str], image: cv2.typing.MatLike, args: list[str]
+    cmd: Union[PathLike, str], image: QtGui.QImage, args: list[str]
 ) -> list[dict]:
     lines = _run_tesseract(cmd=cmd, image=image, args=args)
     return _tsv_to_list_of_dict(lines)

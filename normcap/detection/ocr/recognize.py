@@ -8,8 +8,7 @@ from os import PathLike
 from pathlib import Path
 from typing import Optional, Union
 
-import cv2
-import numpy as np
+from PySide6 import QtGui
 
 from normcap.detection.ocr import enhance, tesseract, transformer
 from normcap.detection.ocr.models import OEM, PSM, OcrResult, TessArgs
@@ -17,7 +16,7 @@ from normcap.detection.ocr.models import OEM, PSM, OcrResult, TessArgs
 logger = logging.getLogger(__name__)
 
 
-def _save_image_in_temp_folder(image: np.ndarray, postfix: str = "") -> None:
+def _save_image_in_temp_folder(image: QtGui.QImage, postfix: str = "") -> None:
     """For debugging it can be useful to store the cropped image."""
     if logger.getEffectiveLevel() != logging.DEBUG:
         return
@@ -29,13 +28,13 @@ def _save_image_in_temp_folder(image: np.ndarray, postfix: str = "") -> None:
     file_name = f"{now_str}{postfix}.png"
 
     logger.debug("Save debug image as %s", temp_dir / file_name)
-    cv2.imwrite(str(temp_dir / file_name), image)
+    image.save(str(temp_dir / file_name))
 
 
 def get_text_from_image(  # noqa: PLR0913
     tesseract_cmd: PathLike,
     languages: Union[str, Iterable[str]],
-    image: np.ndarray,
+    image: QtGui.QImage,
     tessdata_path: Optional[PathLike] = None,
     parse: bool = True,
     resize_factor: Optional[float] = None,
@@ -53,7 +52,7 @@ def get_text_from_image(  # noqa: PLR0913
     )
     logger.debug(
         "Run Tesseract on image of size %s with args:\n%s",
-        image.shape[:2],
+        (image.width(), image.height()),
         tess_args,
     )
     ocr_result_data = tesseract.perform_ocr(
