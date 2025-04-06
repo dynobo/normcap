@@ -31,7 +31,7 @@ dependencies = [
   "shiboken6==6.9.0",
   "PySide6-Essentials==6.9.0",
   "jeepney==0.8.0",
-  "opencv-contrib-python-headless>=4.11.0.86",
+  "zxing-cpp==2.3.0",
 ]
 
 [project.optional-dependencies]

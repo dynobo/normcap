@@ -1,7 +1,7 @@
 from difflib import SequenceMatcher
 
-import cv2
 import pytest
+from PySide6 import QtGui
 
 from normcap.detection import ocr
 
@@ -10,7 +10,7 @@ from .testcases import testcases
 
 @pytest.mark.parametrize("testcase", testcases)
 def test_remove_spaces_in_chi(testcase, tesseract_cmd):
-    image = cv2.imread(testcase.image_path)
+    image = QtGui.QImage(testcase.image_path)
     result = ocr.recognize.get_text_from_image(
         tesseract_cmd=tesseract_cmd,
         image=image,
