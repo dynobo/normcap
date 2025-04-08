@@ -70,7 +70,7 @@ class LanguageManager(QtWidgets.QDialog):
         self.tessdata_label = QtWidgets.QLabel(
             f"<a href='file:///{self.tessdata_path.resolve()}'>"
             # L10N: Language Manager link to directory on file system
-            + _("Close and view tessdata folder in file manager...")
+            + _("Close and view tessdata folder in file manager …")
             + "</a>"
         )
         self.tessdata_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)

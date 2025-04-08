@@ -286,7 +286,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot()
     def _open_language_manager(self) -> None:
         """Open url in default browser, then hide to tray or exit."""
-        logger.debug("Loading language manager...")
+        logger.debug("Loading language manager …")
         self.language_window = LanguageManager(
             tessdata_path=system_info.config_directory() / "tessdata",
             parent=self.windows[0],
