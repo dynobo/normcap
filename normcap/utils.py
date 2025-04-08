@@ -42,16 +42,19 @@ def create_argparser() -> argparse.ArgumentParser:
     for setting in DEFAULT_SETTINGS:
         if not setting.cli_arg:
             continue
+        flags = (
+            [f"-{setting.flag}", f"--{setting.key}"]
+            if setting.flag
+            else [f"--{setting.key}"]
+        )
         parser.add_argument(
-            f"-{setting.flag}",
-            f"--{setting.key}",
+            *flags,
             type=setting.type_,
-            help=setting.help_,
+            help=setting.help_ + f" (default: {setting.value})",
             choices=setting.choices,
             nargs=setting.nargs,
         )
     parser.add_argument(
-        "-r",
         "--reset",
         action="store_true",
         help="Reset all settings to default values",

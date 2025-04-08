@@ -10,6 +10,7 @@ from typing import Optional, Union
 
 from PySide6 import QtGui
 
+from normcap.detection.models import DetectionResult, TextDetector, TextType
 from normcap.detection.ocr import enhance, tesseract, transformer
 from normcap.detection.ocr.models import OEM, PSM, OcrResult, TessArgs
 
@@ -39,7 +40,7 @@ def get_text_from_image(  # noqa: PLR0913
     parse: bool = True,
     resize_factor: Optional[float] = None,
     padding_size: Optional[int] = None,
-) -> OcrResult:
+) -> DetectionResult:
     """Apply OCR on selected image section."""
     image = enhance.preprocess(image, resize_factor=resize_factor, padding=padding_size)
     _save_image_in_temp_folder(image, postfix="_enhanced")
@@ -61,8 +62,22 @@ def get_text_from_image(  # noqa: PLR0913
     result = OcrResult(tess_args=tess_args, words=ocr_result_data, image=image)
     logger.debug("OCR detections:\n%s", ",\n".join(str(w) for w in result.words))
 
-    if parse:
-        result = transformer.apply(result)
-        logger.debug("Parsed text:\n%s", result.parsed)
+    if not parse:
+        return DetectionResult(
+            text=result.text,
+            text_type=TextType.SINGLE_LINE,
+            detector=TextDetector.OCR_RAW,
+        )
 
-    return result
+    result = transformer.apply(result)
+    logger.debug("Parsed text:\n%s", result.parsed)
+    text_type = (
+        TextType[result.best_scored_transformer.value]
+        if result.best_scored_transformer
+        else TextType.SINGLE_LINE
+    )
+    return DetectionResult(
+        text=result.parsed,
+        text_type=text_type,
+        detector=TextDetector.OCR_PARSED,
+    )

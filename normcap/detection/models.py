@@ -12,6 +12,8 @@ class TextType(str, enum.Enum):
     SINGLE_LINE = "SINGLE_LINE"
     MULTI_LINE = "MULTI_LINE"
     PARAGRAPH = "PARAGRAPH"
+    VEVENT = "VEVENT"
+    VCARD = "VCARD"
 
 
 class TextDetector(str, enum.Enum):

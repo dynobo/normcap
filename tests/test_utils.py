@@ -50,6 +50,7 @@ def test_argparser_defaults_are_complete():
         "language",
         "parse_text",
         "detect_codes",
+        "detect_text",
         "notification",
         "reset",
         "tray",
