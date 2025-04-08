@@ -118,12 +118,12 @@ C:\Users\<USERNAME>\AppData\Local\Programs\Tesseract-OCR
 3\. Adjust environment variables:
 
 - Create an environment variable `TESSDATA_PREFIX` and set it to _your_ Tesseract base
-  folder, e.g.: "System Properties" → Tab "Advanced" → "Environment Variables..." →
-  "New..." → Variable: `TESSDATA_PREFIX`, Value: `"C:\Program Files\Tesseract-OCR"`
+  folder, e.g.: "System Properties" → Tab "Advanced" → "Environment Variables …" →
+  "New …" → Variable: `TESSDATA_PREFIX`, Value: `"C:\Program Files\Tesseract-OCR"`
 
 - Append Tesseract's base folder to the environment variable `PATH`, e.g.: "System
-  Properties" → Tab "Advanced" → "Environment Variables..." → Section "User variables"
-  → Select `PATH` → "Edit..." → Add a new entry `"C:\Program Files\Tesseract-OCR"`
+  Properties" → Tab "Advanced" → "Environment Variables …" → Section "User variables"
+  → Select `PATH` → "Edit …" → Add a new entry `"C:\Program Files\Tesseract-OCR"`
 
 - To test your setup, open a new `cmd`-terminal and run:
 

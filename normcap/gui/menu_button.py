@@ -322,11 +322,11 @@ class MenuButton(QtWidgets.QToolButton):
 
         if self.has_language_manager:
             # L10N: Entry in main menu's 'Languages' section. Shown in prebuilt package.
-            action = QtGui.QAction(_("add/remove..."), menu)
+            action = QtGui.QAction(_("add/remove …"), menu)
             action.setObjectName("manage_languages")
         else:
             # L10N: Entry in main menu's 'Languages' section. Shown in Python package.
-            action = QtGui.QAction(_("... need more?"), menu)
+            action = QtGui.QAction(_("… need more?"), menu)
             action.setObjectName("show_help_languages")
 
         menu.addAction(action)

@@ -174,7 +174,7 @@ This is e.g. useful, if, you want to autostart NormCap after system start.
 
 The prebuilt packages are shipped with support for English only. To install additional
 languages, click the settings icon and in the "Languages" section of the menu click
-"add/remove...".
+"add/remove …".
 
 If you installed NormCap as Python package, it depends on your system and setup. Please search online.
 
@@ -314,7 +314,7 @@ but its Icon doesn't appear in the system tray, proceed like in the question abo
 
 ### \[Linux\] Error: Could not load the Qt platform plugin
 
-In case you get an output like this...
+In case you get an output like this …
 
 ```
 $ normcap
@@ -324,7 +324,7 @@ Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen,
 vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl, xcb.
 ```
 
-... the chances are, this can be solved by installing additional dependencies:
+… the chances are, this can be solved by installing additional dependencies:
 
 - Arch (Wayland): `pacman -S qt6-wayland`
 - Arch (Xorg): `pacman -S libxcb xcb-util-cursor`
