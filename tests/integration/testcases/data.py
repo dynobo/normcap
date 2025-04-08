@@ -239,4 +239,78 @@ testcases: tuple[TestCase, ...] = (
         expected_text_detector=[TextDetector.QR],
         expected_similarity=1,
     ),
+    TestCase(
+        image_path=image_dir / "14_multiple_qrcode_with_text.png",
+        expected_text=(
+            "OCR powered screen-capture tool to capture information instead of "
+            f"images{os.linesep}"
+            f"https://github.com/dynobo/normcap{os.linesep}"
+            "mailto:dynobo@example.com?subject=NormCap&body=Your Text Here"
+        ),
+        expected_text_type=[TextType.MULTI_LINE],
+        expected_text_detector=[TextDetector.QR],
+        expected_similarity=1,
+    ),
+    TestCase(
+        image_path=image_dir / "15_qrcode_email.png",
+        expected_text="dynobo@example.com?subject=NormCap&body=Your Text Here",
+        expected_text_type=[TextType.MAIL],
+        expected_text_detector=[TextDetector.QR],
+        expected_similarity=1,
+    ),
+    TestCase(
+        image_path=image_dir / "16_qrcode_url.png",
+        expected_text="https://github.com/dynobo/normcap",
+        expected_text_type=[TextType.URL],
+        expected_text_detector=[TextDetector.QR],
+        expected_similarity=1,
+    ),
+    TestCase(
+        image_path=image_dir / "17_qrcode_text.png",
+        expected_text=(
+            "OCR powered screen-capture tool to capture information instead of images"
+        ),
+        expected_text_type=[TextType.SINGLE_LINE],
+        expected_text_detector=[TextDetector.QR],
+        expected_similarity=1,
+    ),
+    TestCase(
+        image_path=image_dir / "18_qrcode_phone_number.png",
+        expected_text="+ 012 34 5678",
+        # TODO: Implement Action for TextType.PHONE_NUMBER
+        expected_text_type=[TextType.PHONE_NUMBER],
+        expected_text_detector=[TextDetector.QR],
+        expected_similarity=1,
+    ),
+    TestCase(
+        image_path=image_dir / "19_qrcode_vcard.png",
+        expected_text=(
+            f"BEGIN:VCARD{os.linesep}"
+            f"VERSION:3.0{os.linesep}"
+            f"N:Obonyb;Dynobo{os.linesep}"
+            f"FN:Dynobo Obonyb{os.linesep}"
+            f"ORG:NormCap{os.linesep}"
+            f"URL:https://github.com/dynobo/normcap{os.linesep}"
+            "END:VCARD"
+        ),
+        # TODO: Implement Action for TextType.VCARD
+        expected_text_type=[TextType.VCARD],
+        expected_text_detector=[TextDetector.QR],
+        expected_similarity=1,
+    ),
+    TestCase(
+        image_path=image_dir / "20_qrcode_event.png",
+        expected_text=(
+            f"BEGIN:VEVENT{os.linesep}"
+            f"SUMMARY:NormCap Hackparty{os.linesep}"
+            f"LOCATION:Headquarters{os.linesep}"
+            f"DTSTART:20250408T114500{os.linesep}"
+            f"DTEND:20250408T114500{os.linesep}"
+            f"END:VEVENT"
+        ),
+        # TODO: Implement Action TextType.VEVENT
+        expected_text_type=[TextType.VEVENT],
+        expected_text_detector=[TextDetector.QR],
+        expected_similarity=1,
+    ),
 )

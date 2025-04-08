@@ -42,7 +42,7 @@ DEFAULT_SETTINGS = (
     ),
     Setting(
         key="parse-text",
-        flag="p",
+        flag="",
         type_=_parse_str_to_bool,
         value=True,
         help_=(
@@ -55,10 +55,20 @@ DEFAULT_SETTINGS = (
     ),
     Setting(
         key="detect-codes",
-        flag="d",
+        flag="",
         type_=_parse_str_to_bool,
         value=True,
         help_="Detect barcodes and QR codes.",
+        choices=(True, False),
+        cli_arg=True,
+        nargs=None,
+    ),
+    Setting(
+        key="detect-text",
+        flag="",
+        type_=_parse_str_to_bool,
+        value=True,
+        help_="Detect text using ocr.",
         choices=(True, False),
         cli_arg=True,
         nargs=None,
@@ -105,7 +115,7 @@ DEFAULT_SETTINGS = (
     ),
     Setting(
         key="show-introduction",
-        flag="i",
+        flag="",
         type_=_parse_str_to_bool,
         value=True,
         help_="Show introductional screen on start",

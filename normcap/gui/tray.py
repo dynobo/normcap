@@ -252,8 +252,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         result = detector.detect(
             image=cropped_screenshot,
             language=self.settings.value("language"),
-            parse_text=bool(self.settings.value("parse-text", type=bool)),
             detect_codes=bool(self.settings.value("detect-codes", type=bool)),
+            detect_text=bool(self.settings.value("detect-text", type=bool)),
+            parse_text=bool(self.settings.value("parse-text", type=bool)),
         )
 
         if result.text and self.cli_mode:

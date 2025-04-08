@@ -17,10 +17,10 @@ def test_remove_spaces_in_chi(testcase, tesseract_cmd):
         languages=testcase.lang.split(","),
     )
 
-    similarity = SequenceMatcher(None, result.parsed, testcase.transformed).ratio()
+    similarity = SequenceMatcher(None, result.text, testcase.transformed).ratio()
 
     is_equal = 1
     assert pytest.approx(similarity, abs=0.1) == is_equal, (
-        result.parsed,
+        result.text,
         testcase.transformed,
     )
