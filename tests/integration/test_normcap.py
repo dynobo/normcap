@@ -27,7 +27,7 @@ def test_normcap_ocr_testcases(
     # WHEN a certain test region is selected on the screen
     with qtbot.waitSignal(test_signal.on_event) as blocker:
         select_region(on=tray.windows[0], pos=testcase.coords)
-        qtbot.waitUntil(lambda: copy_to_clipboard_calls != {})
+        qtbot.waitUntil(lambda: copy_to_clipboard_calls != {}, timeout=7000)
 
     # THEN normcap should exit with code 0
     #    and text should be captured

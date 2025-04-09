@@ -43,8 +43,6 @@ def _image_to_memoryview(image: QtGui.QImage) -> memoryview:
 
 def _get_text_type_and_transform(text: str) -> tuple[str, TextType]:
     """Estimate the type of text based on the content."""
-    text_type = None
-
     if text.startswith("http"):
         text_type = TextType.URL
     elif text.startswith("tel:"):
@@ -61,8 +59,10 @@ def _get_text_type_and_transform(text: str) -> tuple[str, TextType]:
         text_type = TextType.PARAGRAPH
     elif os.linesep in text:
         text_type = TextType.MULTI_LINE
+    else:
+        text_type = TextType.SINGLE_LINE
 
-    return text, text_type or TextType.SINGLE_LINE
+    return text, text_type
 
 
 def _detect_codes_via_zxing(

@@ -147,6 +147,8 @@ def basic_cli_args():
     """NormCap configuration used by most tests."""
     return [
         sys.argv[0],
+        "--detect-text=True",
+        "--detect-codes=True",
         "--parse-text=True",
         "--notification=False",
         "--verbosity=debug",
