@@ -285,12 +285,12 @@ testcases: tuple[TestCase, ...] = (
     TestCase(
         image_path=image_dir / "19_qrcode_vcard.png",
         expected_text=(
-            f"BEGIN:VCARD{os.linesep}"
-            f"VERSION:3.0{os.linesep}"
-            f"N:Obonyb;Dynobo{os.linesep}"
-            f"FN:Dynobo Obonyb{os.linesep}"
-            f"ORG:NormCap{os.linesep}"
-            f"URL:https://github.com/dynobo/normcap{os.linesep}"
+            "BEGIN:VCARD\n"
+            "VERSION:3.0\n"
+            "N:Obonyb;Dynobo\n"
+            "FN:Dynobo Obonyb\n"
+            "ORG:NormCap\n"
+            "URL:https://github.com/dynobo/normcap\n"
             "END:VCARD"
         ),
         # TODO: Implement Action for TextType.VCARD
@@ -301,12 +301,12 @@ testcases: tuple[TestCase, ...] = (
     TestCase(
         image_path=image_dir / "20_qrcode_event.png",
         expected_text=(
-            f"BEGIN:VEVENT{os.linesep}"
-            f"SUMMARY:NormCap Hackparty{os.linesep}"
-            f"LOCATION:Headquarters{os.linesep}"
-            f"DTSTART:20250408T114500{os.linesep}"
-            f"DTEND:20250408T114500{os.linesep}"
-            f"END:VEVENT"
+            "BEGIN:VEVENT\n"
+            "SUMMARY:NormCap Hackparty\n"
+            "LOCATION:Headquarters\n"
+            "DTSTART:20250408T114500\n"
+            "DTEND:20250408T114500\n"
+            "END:VEVENT"
         ),
         # TODO: Implement Action TextType.VEVENT
         expected_text_type=[TextType.VEVENT],

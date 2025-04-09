@@ -38,3 +38,23 @@ def test_email_transformer_score(ocr_result, words, score_expected):
     score = email_address.score(ocr_result)
 
     assert score == score_expected
+
+
+@pytest.mark.parametrize(
+    ("emails", "text", "expected_result_text"),
+    [
+        (
+            ["dynobo@example.com"],
+            "Dynobo <dynobo@example.com>",
+            " dynobo@example.com ",
+        ),
+        (
+            ["dynobo@example.com", "theo.obonyd@example.com"],
+            "Dynobo <dynobo@example.com>; Theo Van Obonyd <theo.obonyd@example.com>",
+            " dynobo@example.com Van theo.obonyd@example.com ",
+        ),
+    ],
+)
+def test__remove_email_names_from_text(emails, text, expected_result_text):
+    text = email_address._remove_email_names_from_text(emails=emails, text=text)
+    assert text == expected_result_text
