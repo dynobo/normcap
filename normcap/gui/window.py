@@ -1,7 +1,13 @@
 """Normcap window.
 
-Supposed to show a screenshot of the current desktop in full screen, on which the
+Supposed to show the current desktop in full screen, on which the
 user can draw a selection rectangle.
+
+Can work in two modes:
+- PRE_CAPTURE: Takes a screenshot before the main window opens. The
+                screenshot is set as the background.
+- SILENT_CAPTURE: Opens the main window immediately without taking
+                  a screenshot, showing the actual content behind.
 
 One instance (single-display) or multiple instances (multi-display) might be created.
 
@@ -15,10 +21,12 @@ from dataclasses import dataclass
 from typing import Callable, Optional, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtCore import Qt
 
 from normcap.gui import dbus, system_info
-from normcap.gui.models import DesktopEnvironment, Rect, Screen
+from normcap.gui.models import CaptureMode, DesktopEnvironment, Rect, Screen
 from normcap.gui.settings import Settings
+from normcap.gui.system_info import capture_mode
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +60,7 @@ class Window(QtWidgets.QMainWindow):
 
         self.settings = settings
         self.screen_ = screen
+        self.capture_mode = capture_mode()
 
         self.com = Communicate(parent=self)
         self.color: QtGui.QColor = QtGui.QColor(str(settings.value("color")))
@@ -69,7 +78,10 @@ class Window(QtWidgets.QMainWindow):
 
         self.selection_rect: QtCore.QRect = QtCore.QRect()
 
-        self._add_image_container()
+        if self.capture_mode == CaptureMode.SILENT_CAPTURE:
+            self.setAttribute(Qt.WA_TranslucentBackground)  # type: ignore[attr-defined]
+        else:
+            self._add_image_container()
         self._add_ui_container()
 
     def _get_scale_factor(self) -> float:
@@ -92,14 +104,18 @@ class Window(QtWidgets.QMainWindow):
             parse_text_func=lambda: bool(self.settings.value("parse-text", type=bool)),
         )
 
-        if logger.getEffectiveLevel() is logging.DEBUG:
+        if (
+            logger.getEffectiveLevel() is logging.DEBUG
+            and self.capture_mode == CaptureMode.PRE_CAPTURE
+        ):
             self.ui_container.debug_info = DebugInfo(
                 scale_factor=self._get_scale_factor(), screen=self.screen_, window=self
             )
 
         self.ui_container.color = self.color
-        self.ui_container.setGeometry(self.image_container.geometry())
-        self.ui_container.raise_()
+        if self.capture_mode == CaptureMode.PRE_CAPTURE:
+            self.ui_container.setGeometry(self.image_container.geometry())
+            self.ui_container.raise_()
 
     def _draw_background_image(self) -> None:
         """Draw screenshot as background image."""
@@ -142,13 +158,14 @@ class Window(QtWidgets.QMainWindow):
         # TODO: Position in Multi Display probably problematic!
         logger.debug("Set window of screen %s to fullscreen", self.screen_.index)
 
-        if not self.screen_.screenshot:
+        if not self.screen_.screenshot and self.capture_mode == CaptureMode.PRE_CAPTURE:
             raise ValueError("Screenshot is missing on screen %s", self.screen_)
 
         # Using scaled window dims to fit sizing with dpr in case scaling is enabled
         # See: https://github.com/dynobo/normcap/issues/397
         if (
             system_info.display_manager_is_wayland()
+            and self.screen_.screenshot is not None
             and self.screen_.size == self.screen_.screenshot.size().toTuple()
             and self.screen_.device_pixel_ratio != 1
         ):
@@ -252,7 +269,8 @@ class Window(QtWidgets.QMainWindow):
     def showEvent(self, event: QtGui.QShowEvent) -> None:  # noqa: N802
         """Update background image on show/reshow."""
         super().showEvent(event)
-        self._draw_background_image()
+        if self.capture_mode == CaptureMode.PRE_CAPTURE:
+            self._draw_background_image()
 
 
 class UiContainerLabel(QtWidgets.QLabel):
