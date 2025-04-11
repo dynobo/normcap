@@ -5,6 +5,7 @@ import contextlib
 import io
 import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -137,31 +138,25 @@ def create_new(locales: list[str]) -> None:
 
 def cleanup_paths() -> None:
     """Strip absolute paths in .po files to relative paths."""
-    po_files = LOCALES_PATH.glob("**/*.po")
-    project_root = str(Path(__file__).resolve().parents[1])
+    pot_file = LOCALES_PATH / "messages.pot"
+    project_root = Path(__file__).resolve().parents[1]
 
-    for po_file in po_files:
-        content = po_file.read_text(encoding="utf-8")
-        # Strip file path
-        content = content.replace(project_root + os.sep, "")
-        # Remove appimage paths
-        content = re.sub(
-            r"^.*appimage\/NormCap\.AppDir\/.*\n",
-            "",
-            content,
-            flags=re.IGNORECASE | re.MULTILINE,
-        )
-        po_file.write_text(content, encoding="utf-8")
+    if (project_root / "build").exists():
+        shutil.rmtree(project_root / "build")
+
+    content = pot_file.read_text(encoding="utf-8")
+    content = content.replace(str(project_root) + os.sep, "")
+    pot_file.write_text(content, encoding="utf-8")
 
 
 def main(args: argparse.Namespace) -> None:
     if args.update_all:
         extract_strings()
+        cleanup_paths()
         update_locales()
     if args.create_new:
         create_new(locales=args.create_new)
     compile_locales()
-    cleanup_paths()
 
 
 if __name__ == "__main__":
