@@ -15,22 +15,22 @@
 
 | Locale                                   | Progress | Translated |
 | :--------------------------------------- | -------: | ---------: |
-| [ca](./ca/LC_MESSAGES/messages.po)       |      61% |  82 of 133 |
-| [cs](./cs/LC_MESSAGES/messages.po)       |      61% |  82 of 133 |
-| [de_DE](./de_DE/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
-| [es_ES](./es_ES/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
-| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
-| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       9% |  12 of 133 |
-| [it_IT](./it_IT/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
-| [ja_JP](./ja_JP/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
-| [pl_PL](./pl_PL/LC_MESSAGES/messages.po) |       9% |  12 of 133 |
-| [pt_BR](./pt_BR/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
-| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
-| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
-| [sv_SE](./sv_SE/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
-| [ta](./ta/LC_MESSAGES/messages.po)       |      61% |  82 of 133 |
-| [uk_UA](./uk_UA/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
-| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |      61% |  82 of 133 |
+| [ca](./ca/LC_MESSAGES/messages.po)       |      94% |   70 of 74 |
+| [cs](./cs/LC_MESSAGES/messages.po)       |      94% |   70 of 74 |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |      12% |    9 of 74 |
+| [it_IT](./it_IT/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [ja_JP](./ja_JP/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [pl_PL](./pl_PL/LC_MESSAGES/messages.po) |      12% |    9 of 74 |
+| [pt_BR](./pt_BR/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [sv_SE](./sv_SE/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [ta](./ta/LC_MESSAGES/messages.po)       |      94% |   70 of 74 |
+| [uk_UA](./uk_UA/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
 
 ## Contribute to UI translations
 
