@@ -7,56 +7,61 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NormCap 0.4.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
-"POT-Creation-Date: 2024-05-06 21:18+0200\n"
+"POT-Creation-Date: 2025-04-11 20:09+0200\n"
 "PO-Revision-Date: 2025-04-11 09:19+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
-"Language-Team: Italian <https://hosted.weblate.org/projects/normcap/ui/it/>\n"
 "Language: it_IT\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/normcap/ui/it/>\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11-dev\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #. Generic error message when any download failed.
 #: normcap/gui/downloader.py:59
+#: /home/holger/Code/ui/normcap/gui/downloader.py:59
 msgid "Download error."
 msgstr "Errore di download."
 
 #. Introduction window title
 #: normcap/gui/introduction.py:51
+#: /home/holger/Code/ui/normcap/gui/introduction.py:51
 msgid "Introduction to NormCap"
 msgstr "Introduzione a NorCap"
 
 #. Introduction window checkbox
 #: normcap/gui/introduction.py:57
+#: /home/holger/Code/ui/normcap/gui/introduction.py:57
 msgid "Show on startup"
 msgstr "Mostra all'avvio"
 
 #. Introduction window button
 #: normcap/gui/introduction.py:60
+#: /home/holger/Code/ui/normcap/gui/introduction.py:60
 msgid "Ok"
 msgstr "Ok"
 
 #. Introduction window shortcut for pasting on Linux and Windows
 #: normcap/gui/introduction.py:77
+#: /home/holger/Code/ui/normcap/gui/introduction.py:77
 msgid "Ctrl + v"
 msgstr "Ctrl + v"
 
 #. Introduction window shortcut for pasting on macOS
 #: normcap/gui/introduction.py:79
+#: /home/holger/Code/ui/normcap/gui/introduction.py:79
 msgid "Cmd + v"
 msgstr "Cmd + v"
 
 #. Introduction window step title
 #: normcap/gui/introduction.py:83
+#: /home/holger/Code/ui/normcap/gui/introduction.py:83
 msgid "1. Select area"
 msgstr "1. Seleziona area"
 
 #: normcap/gui/introduction.py:86
+#: /home/holger/Code/ui/normcap/gui/introduction.py:86
 msgid ""
 "Wait until a pink border appears around your screen, then select the desired"
 " capture area."
@@ -66,10 +71,12 @@ msgstr ""
 
 #. Introduction window step title
 #: normcap/gui/introduction.py:93
+#: /home/holger/Code/ui/normcap/gui/introduction.py:93
 msgid "2. Wait for detection"
 msgstr "2. Attendere il rilevamento"
 
 #: normcap/gui/introduction.py:96
+#: /home/holger/Code/ui/normcap/gui/introduction.py:96
 msgid ""
 "Processing takes time. Wait for a notification or a color change of the "
 "system tray icon."
@@ -79,10 +86,12 @@ msgstr ""
 
 #. Introduction window step title
 #: normcap/gui/introduction.py:103
+#: /home/holger/Code/ui/normcap/gui/introduction.py:103
 msgid "3. Paste from clipboard"
 msgstr "3. Incolla dagli appunti"
 
 #: normcap/gui/introduction.py:106
+#: /home/holger/Code/ui/normcap/gui/introduction.py:106
 #, python-brace-format
 msgid ""
 "The detection result will be copied to your system's clipboard. Paste it "
@@ -93,10 +102,12 @@ msgstr ""
 
 #. Introduction window step title
 #: normcap/gui/introduction.py:117
+#: /home/holger/Code/ui/normcap/gui/introduction.py:117
 msgid "Settings & more"
 msgstr "Impostazioni e altro"
 
 #: normcap/gui/introduction.py:120
+#: /home/holger/Code/ui/normcap/gui/introduction.py:120
 msgid ""
 "Open the menu using the gear icon in the upper right corner of corner your "
 "screen."
@@ -106,31 +117,37 @@ msgstr ""
 
 #. Introduction window headline
 #: normcap/gui/introduction.py:130
+#: /home/holger/Code/ui/normcap/gui/introduction.py:130
 msgid "Basic Usage"
 msgstr "Utilizzo di base"
 
 #. Title of Language Manager
 #: normcap/gui/language_manager.py:32
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:32
 msgid "Manage Languages"
 msgstr "Gestisci le lingue"
 
 #. Language Manager section
 #: normcap/gui/language_manager.py:45
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:45
 msgid "Installed:"
 msgstr "Installate:"
 
 #. Language Manager button
 #: normcap/gui/language_manager.py:48
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:48
 msgid "Delete"
 msgstr "Elimina"
 
 #. Language Manager section
 #: normcap/gui/language_manager.py:55
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:55
 msgid "Available:"
 msgstr "Disponibile:"
 
 #. Language Manager button
 #: normcap/gui/language_manager.py:58
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:58
 msgid "Download"
 msgstr "Download"
 
@@ -138,6 +155,8 @@ msgstr "Download"
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/language_manager.py:67
 #: normcap/gui/menu_button.py:411
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:67
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:411
 msgid "Close"
 msgstr "Chiudi"
 
@@ -148,20 +167,25 @@ msgstr "Chiudi e visualizza la cartella tessdata nel file manager..."
 #. Language Manager error message box title
 #: normcap/gui/language_manager.py:98
 #: normcap/gui/tray.py:391
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:98
+#: /home/holger/Code/ui/normcap/gui/tray.py:391
 msgid "Error"
 msgstr "Errore"
 
 #. Language Manager error message box text
 #: normcap/gui/language_manager.py:100
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:100
 msgid "Language download failed!"
 msgstr "Download della lingua non riuscito!"
 
 #. Language Manager information message box title
 #: normcap/gui/language_manager.py:130
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:130
 msgid "Information"
 msgstr "Informazioni"
 
 #: normcap/gui/language_manager.py:133
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:133
 msgid ""
 "It is not possible to delete all languages. NormCap needs at least one to "
 "function correctly."
@@ -170,6 +194,7 @@ msgstr ""
 "per funzionare correttamente."
 
 #: normcap/gui/menu_button.py:153
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:153
 msgid ""
 "This installation of NormCap uses the Tesseract binary installed on your "
 "system. To install additional languages, please refer to the documentation "
@@ -181,6 +206,7 @@ msgstr ""
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:202
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:202
 msgid "Settings"
 msgstr "Impostazioni"
 
@@ -190,20 +216,24 @@ msgstr "Modalità di cattura"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:214
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:214
 msgid "Languages"
 msgstr "Lingue"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:218
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:218
 msgid "Application"
 msgstr "Applicazioni"
 
 #. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:238
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:238
 msgid "Show notification"
 msgstr "Mostra notifiche"
 
 #: normcap/gui/menu_button.py:244
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:244
 msgid ""
 "Show status information via your system's desktop\n"
 "notification center."
@@ -214,10 +244,12 @@ msgstr ""
 #. Extension "Show notification"-Tooltip on macOS and Windows.
 #. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:255
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:255
 msgid "Keep in system tray"
 msgstr "Conservare nella barra delle applicazioni"
 
 #: normcap/gui/menu_button.py:262
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:262
 msgid ""
 "Keep NormCap running in the background. Another\n"
 "capture can be triggered via the tray icon."
@@ -227,10 +259,12 @@ msgstr ""
 
 #. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:269
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:269
 msgid "Check for update"
 msgstr "Ricerca aggiornamenti"
 
 #: normcap/gui/menu_button.py:276
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:276
 msgid ""
 "Frequently fetch NormCap's releases online and display\n"
 "a message if a new version is available."
@@ -274,46 +308,55 @@ msgstr "... ti serve altro?"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:366
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:366
 msgid "About"
 msgstr "Info su NormCap"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:374
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:374
 msgid "Introduction"
 msgstr "Introduzione"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:379
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:379
 msgid "Website"
 msgstr "Sito Web"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:384
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:384
 msgid "FAQs"
 msgstr "Domande frequenti"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:389
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:389
 msgid "Source code"
 msgstr "Codice sorgente"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:394
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:394
 msgid "Releases"
 msgstr "Rilasci"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:399
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:399
 msgid "Report a problem"
 msgstr "Segnala un problema"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:404
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:404
 msgid "Donate for coffee"
 msgstr "Fai una donazione per il caffè"
 
 #. Tooltip of main menu's 'close' entry. Use <56 chars p. line.
 #: normcap/gui/menu_button.py:414
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:414
 msgid "Exit NormCap, or minimize to system tray (if enabled)."
 msgstr ""
 "Esci da NormCap o riduci a icona nella barra delle applicazioni (se "
@@ -321,17 +364,20 @@ msgstr ""
 
 #. Notification title
 #: normcap/gui/notification.py:115
+#: /home/holger/Code/ui/normcap/gui/notification.py:115
 msgid "Nothing captured!"
 msgstr "Niente di acquisito!"
 
 #. Notification text
 #: normcap/gui/notification.py:117
+#: /home/holger/Code/ui/normcap/gui/notification.py:117
 msgid "Please try again."
 msgstr "Per favore riprova."
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:50
+#: /home/holger/Code/ui/normcap/gui/notification.py:50
 #, python-brace-format
 msgid "1 paragraph captured"
 msgid_plural "{count} paragraphs captured"
@@ -341,6 +387,7 @@ msgstr[1] "{count} paragrafi acquisiti"
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:57
+#: /home/holger/Code/ui/normcap/gui/notification.py:57
 #, python-brace-format
 msgid "1 email captured"
 msgid_plural "{count} emails captured"
@@ -350,6 +397,7 @@ msgstr[1] "{count} email acquisite"
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:64
+#: /home/holger/Code/ui/normcap/gui/notification.py:64
 #, python-brace-format
 msgid "1 word captured"
 msgid_plural "{count} words captured"
@@ -359,6 +407,7 @@ msgstr[1] "{count} parole acquisite"
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:71
+#: /home/holger/Code/ui/normcap/gui/notification.py:71
 #, python-brace-format
 msgid "1 line captured"
 msgid_plural "{count} lines captured"
@@ -368,6 +417,7 @@ msgstr[1] "{count} linee acquisite"
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:78
+#: /home/holger/Code/ui/normcap/gui/notification.py:78
 #, python-brace-format
 msgid "1 URL captured"
 msgid_plural "{count} URLs captured"
@@ -377,6 +427,7 @@ msgstr[1] "{count} URL acquisiti"
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:87
+#: /home/holger/Code/ui/normcap/gui/notification.py:87
 #, python-brace-format
 msgid "1 character captured"
 msgid_plural "{count} characters captured"
@@ -384,6 +435,7 @@ msgstr[0] "1 carattere acquisito"
 msgstr[1] "{count} caratteri acquisiti"
 
 #: normcap/gui/tray.py:397
+#: /home/holger/Code/ui/normcap/gui/tray.py:397
 #, python-brace-format
 msgid ""
 "'{application}' is missing the permission for 'Screen Recording'.\n"
@@ -402,6 +454,7 @@ msgstr ""
 "Quindi riavvia NormCap."
 
 #: normcap/gui/tray.py:408
+#: /home/holger/Code/ui/normcap/gui/tray.py:408
 #, python-brace-format
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
@@ -419,17 +472,20 @@ msgstr ""
 
 #. Tray menu entry
 #: normcap/gui/tray.py:491
+#: /home/holger/Code/ui/normcap/gui/tray.py:491
 msgid "Capture"
 msgstr "Cattura"
 
 #. Tray menu entry for exiting NormCap completely.
 #: normcap/gui/tray.py:498
+#: /home/holger/Code/ui/normcap/gui/tray.py:498
 msgid "Exit"
 msgstr "Uscita"
 
 #. Update available dialog box.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/update_check.py:81
+#: /home/holger/Code/ui/normcap/gui/update_check.py:81
 #, python-brace-format
 msgid "NormCap v{version} is available."
 msgstr "NorCap v{versione} è disponibile."
@@ -437,11 +493,13 @@ msgstr "NorCap v{versione} è disponibile."
 #. Update available dialog box.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/update_check.py:84
+#: /home/holger/Code/ui/normcap/gui/update_check.py:84
 #, python-brace-format
 msgid "You have v{version}"
 msgstr "Hai la v{version}"
 
 #: normcap/gui/update_check.py:89
+#: /home/holger/Code/ui/normcap/gui/update_check.py:89
 msgid ""
 "You can download the new version of NormCap for your operating system from "
 "GitHub.\n"
@@ -454,6 +512,7 @@ msgstr ""
 "Vuoi visitare il sito web del rilascio adesso?"
 
 #: normcap/gui/update_check.py:96
+#: /home/holger/Code/ui/normcap/gui/update_check.py:96
 msgid ""
 "You can upgrade NormCap via the command line, e.g. by running 'pip install "
 "normcap --upgrade'.\n"
@@ -662,28 +721,33 @@ msgstr ""
 
 #. Language Manager link to directory on file system
 #: normcap/gui/language_manager.py:73
+#: /home/holger/Code/ui/normcap/gui/language_manager.py:73
 #, fuzzy
 msgid "Close and view tessdata folder in file manager …"
 msgstr "Chiudi e visualizza la cartella tessdata nel file manager..."
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:206
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:206
 #, fuzzy
 msgid "Detection"
 msgstr "2. Attendere il rilevamento"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:210
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:210
 msgid "Post-processing"
 msgstr ""
 
 #. Entry in main menu's 'Detection' section
 #: normcap/gui/menu_button.py:288
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:288
 #, fuzzy
 msgid "Parse text"
 msgstr "analizzare"
 
 #: normcap/gui/menu_button.py:295
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:295
 #, fuzzy
 msgid ""
 "Tries to determine the text's type (e.g. line,\n"
@@ -698,21 +762,25 @@ msgstr ""
 "Se il risultato è inaspettato, prova invece la modalità 'raw'."
 
 #: normcap/gui/menu_button.py:309
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:309
 #, fuzzy
 msgid "Text"
 msgstr "Uscita"
 
 #. Tooltip of main menu's 'Text' entry. Use <56 chars p. line.
 #: normcap/gui/menu_button.py:314
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:314
 msgid "Tries to detect text in the selected region using OCR."
 msgstr ""
 
 #. Entry in main menu's 'Detection' section
 #: normcap/gui/menu_button.py:318
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:318
 msgid "QR && Barcodes"
 msgstr ""
 
 #: normcap/gui/menu_button.py:325
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:325
 msgid ""
 "Detects Barcodes and QR codes. If one or more codes are found, text "
 "detection (OCR) is skipped and only the codes' data is returned."
@@ -720,12 +788,14 @@ msgstr ""
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: normcap/gui/menu_button.py:353
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:353
 #, fuzzy
 msgid "add/remove …"
 msgstr "Aggiungi/rimuovi..."
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:357
+#: /home/holger/Code/ui/normcap/gui/menu_button.py:357
 #, fuzzy
 msgid "… need more?"
 msgstr "... ti serve altro?"
@@ -733,6 +803,7 @@ msgstr "... ti serve altro?"
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:29
+#: /home/holger/Code/ui/normcap/gui/notification.py:29
 #, python-brace-format
 msgid "1 QR code detected"
 msgid_plural "{count} QR codes detected"
@@ -742,6 +813,7 @@ msgstr[1] ""
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:36
+#: /home/holger/Code/ui/normcap/gui/notification.py:36
 #, python-brace-format
 msgid "1 barcode detected"
 msgid_plural "{count} barcodes detected"
@@ -751,6 +823,7 @@ msgstr[1] ""
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:43
+#: /home/holger/Code/ui/normcap/gui/notification.py:43
 #, fuzzy, python-brace-format
 msgid "1 code detected"
 msgid_plural "{count} codes detected"
