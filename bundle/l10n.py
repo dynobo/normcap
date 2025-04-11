@@ -3,6 +3,7 @@
 import argparse
 import contextlib
 import io
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -134,6 +135,25 @@ def create_new(locales: list[str]) -> None:
         )
 
 
+def cleanup_paths() -> None:
+    """Strip absolute paths in .po files to relative paths."""
+    po_files = LOCALES_PATH.glob("**/*.po")
+    project_root = str(Path(__file__).resolve().parents[1])
+
+    for po_file in po_files:
+        content = po_file.read_text()
+        # Strip file path
+        content = content.replace(project_root + os.sep, "")
+        # Remove appimage paths
+        content = re.sub(
+            r"^.*appimage\/NormCap\.AppDir\/.*\n",
+            "",
+            content,
+            flags=re.IGNORECASE | re.MULTILINE,
+        )
+        po_file.write_text(content)
+
+
 def main(args: argparse.Namespace) -> None:
     if args.update_all:
         extract_strings()
@@ -141,6 +161,7 @@ def main(args: argparse.Namespace) -> None:
     if args.create_new:
         create_new(locales=args.create_new)
     compile_locales()
+    cleanup_paths()
 
 
 if __name__ == "__main__":

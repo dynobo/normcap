@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-04-11 11:23+0200\n"
+"POT-Creation-Date: 2025-04-11 11:52+0200\n"
 "PO-Revision-Date: 2025-02-07 10:05+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language: ru_RU\n"
@@ -20,49 +20,41 @@ msgstr ""
 "Generated-By: Babel 2.17.0\n"
 
 #. Generic error message when any download failed.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/downloader.py:59
-#: /home/holger/Code/normcap/normcap/gui/downloader.py:59
+#: normcap/gui/downloader.py:59
 msgid "Download error."
 msgstr "Ошибка загрузки."
 
 #. Introduction window title
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:51
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:51
+#: normcap/gui/introduction.py:51
 msgid "Introduction to NormCap"
 msgstr "Введение в NormCap"
 
 #. Introduction window checkbox
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:57
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:57
+#: normcap/gui/introduction.py:57
 msgid "Show on startup"
 msgstr "Показывать при запуске"
 
 #. Introduction window button
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:60
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:60
+#: normcap/gui/introduction.py:60
 msgid "Ok"
 msgstr "Ок"
 
 #. Introduction window shortcut for pasting on Linux and Windows
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:77
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:77
+#: normcap/gui/introduction.py:77
 msgid "Ctrl + v"
 msgstr "Ctrl + V"
 
 #. Introduction window shortcut for pasting on macOS
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:79
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:79
+#: normcap/gui/introduction.py:79
 msgid "Cmd + v"
 msgstr "Cmd + V"
 
 #. Introduction window step title
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:83
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:83
+#: normcap/gui/introduction.py:83
 msgid "1. Select area"
 msgstr "1. Выберите область"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:86
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:86
+#: normcap/gui/introduction.py:86
 msgid ""
 "Wait until a pink border appears around your screen, then select the desired"
 " capture area."
@@ -71,13 +63,11 @@ msgstr ""
 "нужное."
 
 #. Introduction window step title
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:93
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:93
+#: normcap/gui/introduction.py:93
 msgid "2. Wait for detection"
 msgstr "2. Дождитесь обнаружения"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:96
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:96
+#: normcap/gui/introduction.py:96
 msgid ""
 "Processing takes time. Wait for a notification or a color change of the "
 "system tray icon."
@@ -86,13 +76,11 @@ msgstr ""
 "на панели задач."
 
 #. Introduction window step title
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:103
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:103
+#: normcap/gui/introduction.py:103
 msgid "3. Paste from clipboard"
 msgstr "3. Вставьте из буфера обмена"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:106
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:106
+#: normcap/gui/introduction.py:106
 #, python-brace-format
 msgid ""
 "The detection result will be copied to your system's clipboard. Paste it "
@@ -102,13 +90,11 @@ msgstr ""
 "Вставьте его в любое приложение ({shortcut})."
 
 #. Introduction window step title
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:117
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:117
+#: normcap/gui/introduction.py:117
 msgid "Settings & more"
 msgstr "Настройки и другое"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:120
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:120
+#: normcap/gui/introduction.py:120
 msgid ""
 "Open the menu using the gear icon in the upper right corner of corner your "
 "screen."
@@ -117,77 +103,63 @@ msgstr ""
 "экрана."
 
 #. Introduction window headline
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/introduction.py:130
-#: /home/holger/Code/normcap/normcap/gui/introduction.py:130
+#: normcap/gui/introduction.py:130
 msgid "Basic Usage"
 msgstr "Обычное использование"
 
 #. Title of Language Manager
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:32
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:32
+#: normcap/gui/language_manager.py:32
 msgid "Manage Languages"
 msgstr "Управление языками"
 
 #. Language Manager section
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:45
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:45
+#: normcap/gui/language_manager.py:45
 msgid "Installed:"
 msgstr "Установлено:"
 
 #. Language Manager button
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:48
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:48
+#: normcap/gui/language_manager.py:48
 msgid "Delete"
 msgstr "Удалить"
 
 #. Language Manager section
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:55
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:55
+#: normcap/gui/language_manager.py:55
 msgid "Available:"
 msgstr "Доступно:"
 
 #. Language Manager button
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:58
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:58
+#: normcap/gui/language_manager.py:58
 msgid "Download"
 msgstr "Скачать"
 
 #. Language Manager button
 #. Entry in main menu's 'Application' section.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:67
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:390
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:67
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:411
+#: normcap/gui/language_manager.py:67
+#: normcap/gui/menu_button.py:411
 msgid "Close"
 msgstr "Закрыть"
 
 #. Language Manager link to directory on file system
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:73
 msgid "Close and view tessdata folder in file manager..."
 msgstr "Закрыть и просмотреть папку tessdata в менеджере файлов..."
 
 #. Language Manager error message box title
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:98
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/tray.py:407
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:98
-#: /home/holger/Code/normcap/normcap/gui/tray.py:391
+#: normcap/gui/language_manager.py:98
+#: normcap/gui/tray.py:391
 msgid "Error"
 msgstr "Ошибка"
 
 #. Language Manager error message box text
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:100
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:100
+#: normcap/gui/language_manager.py:100
 msgid "Language download failed!"
 msgstr "Загрузка языка не удалась!"
 
 #. Language Manager information message box title
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:130
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:130
+#: normcap/gui/language_manager.py:130
 msgid "Information"
 msgstr "Информация"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/language_manager.py:133
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:133
+#: normcap/gui/language_manager.py:133
 msgid ""
 "It is not possible to delete all languages. NormCap needs at least one to "
 "function correctly."
@@ -195,8 +167,7 @@ msgstr ""
 "Невозможно удалить все языки. Для правильной работы NormCap необходим хотя "
 "бы один."
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:154
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:153
+#: normcap/gui/menu_button.py:153
 msgid ""
 "This installation of NormCap uses the Tesseract binary installed on your "
 "system. To install additional languages, please refer to the documentation "
@@ -207,36 +178,30 @@ msgstr ""
 " к документации по установке Tesseract."
 
 #. Section title in Main Menu
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:199
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:202
+#: normcap/gui/menu_button.py:202
 msgid "Settings"
 msgstr "Настройки"
 
 #. Section title in Main Menu
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:203
 msgid "Capture mode"
 msgstr "Режим захвата"
 
 #. Section title in Main Menu
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:207
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:214
+#: normcap/gui/menu_button.py:214
 msgid "Languages"
 msgstr "Языки"
 
 #. Section title in Main Menu
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:211
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:218
+#: normcap/gui/menu_button.py:218
 msgid "Application"
 msgstr "Приложение"
 
 #. Entry in main menu's 'setting' section
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:231
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:238
+#: normcap/gui/menu_button.py:238
 msgid "Show notification"
 msgstr "Показывать уведомление"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:237
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:244
+#: normcap/gui/menu_button.py:244
 msgid ""
 "Show status information via your system's desktop\n"
 "notification center."
@@ -246,13 +211,11 @@ msgstr ""
 
 #. Extension "Show notification"-Tooltip on macOS and Windows.
 #. Entry in main menu's 'setting' section
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:248
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:255
+#: normcap/gui/menu_button.py:255
 msgid "Keep in system tray"
 msgstr "Оставить в панели задач"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:255
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:262
+#: normcap/gui/menu_button.py:262
 msgid ""
 "Keep NormCap running in the background. Another\n"
 "capture can be triggered via the tray icon."
@@ -261,13 +224,11 @@ msgstr ""
 "захват можно запустить с помощью значка в панели."
 
 #. Entry in main menu's 'setting' section
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:262
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:269
+#: normcap/gui/menu_button.py:269
 msgid "Check for update"
 msgstr "Проверять обновления"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:269
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:276
+#: normcap/gui/menu_button.py:276
 msgid ""
 "Frequently fetch NormCap's releases online and display\n"
 "a message if a new version is available."
@@ -276,11 +237,9 @@ msgstr ""
 "если доступна новая версия."
 
 #. Entry in main menu's 'Capture mode' section
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:281
 msgid "parse"
 msgstr "разбор"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:288
 msgid ""
 "Tries to determine the text's type (e.g. line,\n"
 "paragraph, URL, email) and formats the output\n"
@@ -293,11 +252,9 @@ msgstr ""
 "Если результат неожиданный, попробуйте вместо этого режим «raw»."
 
 #. Entry in main menu's 'Capture mode' section
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:297
 msgid "raw"
 msgstr "raw"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:304
 msgid ""
 "Returns the text exactly as detected by the Optical\n"
 "Character Recognition Software."
@@ -306,85 +263,71 @@ msgstr ""
 "программой оптического распознавания символов."
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:332
 msgid "add/remove..."
 msgstr "добавить/удалить..."
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:336
 msgid "... need more?"
 msgstr "... нужно больше?"
 
 #. Entry in main menu's 'Application' section.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:345
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:366
+#: normcap/gui/menu_button.py:366
 msgid "About"
 msgstr "О программе"
 
 #. Entry in main menu's 'Application' section.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:353
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:374
+#: normcap/gui/menu_button.py:374
 msgid "Introduction"
 msgstr "Введение"
 
 #. Entry in main menu's 'Application' section.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:358
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:379
+#: normcap/gui/menu_button.py:379
 msgid "Website"
 msgstr "Сайт"
 
 #. Entry in main menu's 'Application' section.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:363
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:384
+#: normcap/gui/menu_button.py:384
 msgid "FAQs"
 msgstr "ЧЗВ"
 
 #. Entry in main menu's 'Application' section.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:368
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:389
+#: normcap/gui/menu_button.py:389
 msgid "Source code"
 msgstr "Исходный код"
 
 #. Entry in main menu's 'Application' section.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:373
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:394
+#: normcap/gui/menu_button.py:394
 msgid "Releases"
 msgstr "Выпуски"
 
 #. Entry in main menu's 'Application' section.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:378
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:399
+#: normcap/gui/menu_button.py:399
 msgid "Report a problem"
 msgstr "Сообщить о проблеме"
 
 #. Entry in main menu's 'Application' section.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:383
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:404
+#: normcap/gui/menu_button.py:404
 msgid "Donate for coffee"
 msgstr "Донат на кофе"
 
 #. Tooltip of main menu's 'close' entry. Use <56 chars p. line.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/menu_button.py:393
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:414
+#: normcap/gui/menu_button.py:414
 msgid "Exit NormCap, or minimize to system tray (if enabled)."
 msgstr "Выход из NormCap или сворачивание в панель задач (если включено)."
 
 #. Notification title
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/notification.py:44
-#: /home/holger/Code/normcap/normcap/gui/notification.py:115
+#: normcap/gui/notification.py:115
 msgid "Nothing captured!"
 msgstr "Ничего не захвачено!"
 
 #. Notification text
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/notification.py:46
-#: /home/holger/Code/normcap/normcap/gui/notification.py:117
+#: normcap/gui/notification.py:117
 msgid "Please try again."
 msgstr "Пожалуйста, попробуйте снова."
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/notification.py:58
-#: /home/holger/Code/normcap/normcap/gui/notification.py:50
+#: normcap/gui/notification.py:50
 #, python-brace-format
 msgid "1 paragraph captured"
 msgid_plural "{count} paragraphs captured"
@@ -394,8 +337,7 @@ msgstr[2] "{count} абзацев захвачено"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/notification.py:65
-#: /home/holger/Code/normcap/normcap/gui/notification.py:57
+#: normcap/gui/notification.py:57
 #, python-brace-format
 msgid "1 email captured"
 msgid_plural "{count} emails captured"
@@ -405,8 +347,7 @@ msgstr[2] "{count} эл. писем захвачено"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/notification.py:72
-#: /home/holger/Code/normcap/normcap/gui/notification.py:64
+#: normcap/gui/notification.py:64
 #, python-brace-format
 msgid "1 word captured"
 msgid_plural "{count} words captured"
@@ -416,8 +357,7 @@ msgstr[2] "{count} слов захвачено"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/notification.py:79
-#: /home/holger/Code/normcap/normcap/gui/notification.py:71
+#: normcap/gui/notification.py:71
 #, python-brace-format
 msgid "1 line captured"
 msgid_plural "{count} lines captured"
@@ -427,8 +367,7 @@ msgstr[2] "{count} строк захвачено"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/notification.py:86
-#: /home/holger/Code/normcap/normcap/gui/notification.py:78
+#: normcap/gui/notification.py:78
 #, python-brace-format
 msgid "1 URL captured"
 msgid_plural "{count} URLs captured"
@@ -438,8 +377,7 @@ msgstr[2] "{count} URL-адресов захвачено"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/notification.py:95
-#: /home/holger/Code/normcap/normcap/gui/notification.py:87
+#: normcap/gui/notification.py:87
 #, python-brace-format
 msgid "1 character captured"
 msgid_plural "{count} characters captured"
@@ -447,8 +385,7 @@ msgstr[0] "{count} символ захвачен"
 msgstr[1] "{count} символа захвачено"
 msgstr[2] "{count} символов захвачено"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/tray.py:413
-#: /home/holger/Code/normcap/normcap/gui/tray.py:397
+#: normcap/gui/tray.py:397
 #, fuzzy, python-brace-format
 msgid ""
 "'{application}' is missing the permission for 'Screen Recording'.\n"
@@ -466,8 +403,7 @@ msgstr ""
 "\n"
 "Затем перезапустите NormCap."
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/tray.py:424
-#: /home/holger/Code/normcap/normcap/gui/tray.py:408
+#: normcap/gui/tray.py:408
 #, fuzzy, python-brace-format
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
@@ -484,35 +420,30 @@ msgstr ""
 "на GitHub.</small>"
 
 #. Tray menu entry
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/tray.py:513
-#: /home/holger/Code/normcap/normcap/gui/tray.py:491
+#: normcap/gui/tray.py:491
 msgid "Capture"
 msgstr "Захватить"
 
 #. Tray menu entry for exiting NormCap completely.
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/tray.py:520
-#: /home/holger/Code/normcap/normcap/gui/tray.py:498
+#: normcap/gui/tray.py:498
 msgid "Exit"
 msgstr "Выход"
 
 #. Update available dialog box.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/update_check.py:81
-#: /home/holger/Code/normcap/normcap/gui/update_check.py:81
+#: normcap/gui/update_check.py:81
 #, python-brace-format
 msgid "NormCap v{version} is available."
 msgstr "Доступен NormCap v{version}."
 
 #. Update available dialog box.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/update_check.py:84
-#: /home/holger/Code/normcap/normcap/gui/update_check.py:84
+#: normcap/gui/update_check.py:84
 #, python-brace-format
 msgid "You have v{version}"
 msgstr "У вас v{version}"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/update_check.py:89
-#: /home/holger/Code/normcap/normcap/gui/update_check.py:89
+#: normcap/gui/update_check.py:89
 msgid ""
 "You can download the new version of NormCap for your operating system from "
 "GitHub.\n"
@@ -524,8 +455,7 @@ msgstr ""
 "\n"
 "Хотите посетить сайт с выпуском прямо сейчас?"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/app/normcap/gui/update_check.py:96
-#: /home/holger/Code/normcap/normcap/gui/update_check.py:96
+#: normcap/gui/update_check.py:96
 msgid ""
 "You can upgrade NormCap via the command line, e.g. by running 'pip install "
 "normcap --upgrade'.\n"
@@ -537,56 +467,45 @@ msgstr ""
 "\n"
 "Хотите просмотреть журнал изменений на GitHub прямо сейчас?"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:296
 msgid "usage: "
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:861
 msgid ".__call__() not defined"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1204
 #, python-format
 msgid "unknown parser %(parser_name)r (choices: %(choices)s)"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1264
 #, python-format
 msgid "argument \"-\" with mode %r"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1273
 #, python-format
 msgid "can't open '%(filename)s': %(error)s"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1482
 #, python-format
 msgid "cannot merge actions - two groups are named %r"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1520
 msgid "'required' is an invalid argument for positionals"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1542
 #, python-format
 msgid ""
 "invalid option string %(option)r: must start with a character "
 "%(prefix_chars)r"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1560
 #, python-format
 msgid "dest= is required for options like %r"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1577
 #, python-format
 msgid "invalid conflict_resolution value: %r"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1595
 #, python-format
 msgid "conflicting option string: %s"
 msgid_plural "conflicting option strings: %s"
@@ -594,67 +513,50 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1661
 msgid "mutually exclusive arguments must be optional"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1728
 msgid "positional arguments"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1729
 msgid "optional arguments"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1744
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:1238
 msgid "show this help message and exit"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1775
 msgid "cannot have multiple subparser arguments"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1827
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2338
 #, python-format
 msgid "unrecognized arguments: %s"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1928
 #, python-format
 msgid "not allowed with argument %s"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1974
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:1988
 #, python-format
 msgid "ignored explicit argument %r"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2095
 #, python-format
 msgid "the following arguments are required: %s"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2110
 #, python-format
 msgid "one of the arguments %s is required"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2153
 msgid "expected one argument"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2154
 msgid "expected at most one argument"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2155
 msgid "expected at least one argument"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2159
 #, python-format
 msgid "expected %s argument"
 msgid_plural "expected %s arguments"
@@ -662,119 +564,93 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2217
 #, python-format
 msgid "ambiguous option: %(option)s could match %(matches)s"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2281
 #, python-format
 msgid "unexpected option string: %s"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2478
 #, python-format
 msgid "%r is not callable"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2495
 #, python-format
 msgid "invalid %(type)s value: %(value)r"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2506
 #, python-format
 msgid "invalid choice: %(value)r (choose from %(choices)s)"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/argparse.py:2582
 #, python-format
 msgid "%(prog)s: error: %(message)s\n"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/getopt.py:161
 #, python-format
 msgid "option --%s requires argument"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/getopt.py:164
 #, python-format
 msgid "option --%s must not have an argument"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/getopt.py:174
 #, python-format
 msgid "option --%s not recognized"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/getopt.py:184
 #, python-format
 msgid "option --%s not a unique prefix"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/getopt.py:198
 #, python-format
 msgid "option -%s requires argument"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/getopt.py:211
 #, python-format
 msgid "option -%s not recognized"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:146
 #, python-format
 msgid "no such option: %s"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:157
 #, python-format
 msgid "ambiguous option: %s (%s?)"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:381
 #, python-format
 msgid "Usage: %s\n"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:400
 #, fuzzy
 msgid "Usage"
 msgstr "Обычное использование"
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:422
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:423
 msgid "integer"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:424
 msgid "floating-point"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:425
 msgid "complex"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:433
 #, python-format
 msgid "option %s: invalid %s value: %r"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:441
 #, python-format
 msgid "option %s: invalid choice: %r (choose from %s)"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:1243
 msgid "show program's version number and exit"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:1266
 msgid "%prog [options]"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:1486
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:1524
 #, python-format
 msgid "%(option)s option requires %(number)d argument"
 msgid_plural "%(option)s option requires %(number)d arguments"
@@ -782,39 +658,37 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:1496
 #, python-format
 msgid "%s option does not take a value"
 msgstr ""
 
-#: /home/holger/Code/normcap/build/normcap/linux/appimage/NormCap.AppDir/usr/python/lib/python3.9/optparse.py:1612
 msgid "Options"
 msgstr ""
 
 #. Language Manager link to directory on file system
-#: /home/holger/Code/normcap/normcap/gui/language_manager.py:73
+#: normcap/gui/language_manager.py:73
 #, fuzzy
 msgid "Close and view tessdata folder in file manager …"
 msgstr "Закрыть и просмотреть папку tessdata в менеджере файлов..."
 
 #. Section title in Main Menu
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:206
+#: normcap/gui/menu_button.py:206
 #, fuzzy
 msgid "Detection"
 msgstr "2. Дождитесь обнаружения"
 
 #. Section title in Main Menu
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:210
+#: normcap/gui/menu_button.py:210
 msgid "Post-processing"
 msgstr ""
 
 #. Entry in main menu's 'Detection' section
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:288
+#: normcap/gui/menu_button.py:288
 #, fuzzy
 msgid "Parse text"
 msgstr "разбор"
 
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:295
+#: normcap/gui/menu_button.py:295
 #, fuzzy
 msgid ""
 "Tries to determine the text's type (e.g. line,\n"
@@ -828,42 +702,42 @@ msgstr ""
 "форматирует вывод.\n"
 "Если результат неожиданный, попробуйте вместо этого режим «raw»."
 
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:309
+#: normcap/gui/menu_button.py:309
 #, fuzzy
 msgid "Text"
 msgstr "Выход"
 
 #. Tooltip of main menu's 'Text' entry. Use <56 chars p. line.
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:314
+#: normcap/gui/menu_button.py:314
 msgid "Tries to detect text in the selected region using OCR."
 msgstr ""
 
 #. Entry in main menu's 'Detection' section
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:318
+#: normcap/gui/menu_button.py:318
 msgid "QR && Barcodes"
 msgstr ""
 
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:325
+#: normcap/gui/menu_button.py:325
 msgid ""
 "Detects Barcodes and QR codes. If one or more codes are found, text "
 "detection (OCR) is skipped and only the codes' data is returned."
 msgstr ""
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:353
+#: normcap/gui/menu_button.py:353
 #, fuzzy
 msgid "add/remove …"
 msgstr "добавить/удалить..."
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
-#: /home/holger/Code/normcap/normcap/gui/menu_button.py:357
+#: normcap/gui/menu_button.py:357
 #, fuzzy
 msgid "… need more?"
 msgstr "... нужно больше?"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/normcap/gui/notification.py:29
+#: normcap/gui/notification.py:29
 #, python-brace-format
 msgid "1 QR code detected"
 msgid_plural "{count} QR codes detected"
@@ -873,7 +747,7 @@ msgstr[2] ""
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/normcap/gui/notification.py:36
+#: normcap/gui/notification.py:36
 #, python-brace-format
 msgid "1 barcode detected"
 msgid_plural "{count} barcodes detected"
@@ -883,7 +757,7 @@ msgstr[2] ""
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
-#: /home/holger/Code/normcap/normcap/gui/notification.py:43
+#: normcap/gui/notification.py:43
 #, fuzzy, python-brace-format
 msgid "1 code detected"
 msgid_plural "{count} codes detected"
