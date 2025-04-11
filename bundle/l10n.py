@@ -141,7 +141,7 @@ def cleanup_paths() -> None:
     project_root = str(Path(__file__).resolve().parents[1])
 
     for po_file in po_files:
-        content = po_file.read_text()
+        content = po_file.read_text(encoding="utf-8")
         # Strip file path
         content = content.replace(project_root + os.sep, "")
         # Remove appimage paths
@@ -151,7 +151,7 @@ def cleanup_paths() -> None:
             content,
             flags=re.IGNORECASE | re.MULTILINE,
         )
-        po_file.write_text(content)
+        po_file.write_text(content, encoding="utf-8")
 
 
 def main(args: argparse.Namespace) -> None:
