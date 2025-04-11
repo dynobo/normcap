@@ -98,7 +98,11 @@ version = "tbump"
 docs-serve = "mkdocs serve"
 docs-build = "mkdocs build"
 
-test = [ { cmd = "pytest" }, { cmd = "coverage lcov" } ]
+test = [
+  { cmd = "pytest" },
+  { cmd = "coverage lcov" },
+  { cmd = "coverage xml" },
+]
 quick-test = [ { cmd = "pytest -m 'not gui'" }, { cmd = "coverage lcov" } ]
 check = [
   { cmd = "ruff check" },

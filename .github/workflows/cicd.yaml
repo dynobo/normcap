@@ -104,6 +104,12 @@ jobs:
         env:
           QT_DEBUG_PLUGINS: 1
 
+      - name: Comment coverage in PR
+        uses: orgoro/coverage@v3.2
+        with:
+            coverageFile: coverage.xml
+            token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@release/v2
         with:
