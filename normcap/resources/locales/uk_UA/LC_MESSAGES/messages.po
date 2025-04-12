@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: NormCap 0.4.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2025-04-11 21:14+0200\n"
-"PO-Revision-Date: 2025-04-11 09:19+0000\n"
+"PO-Revision-Date: 2025-04-12 15:36+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/normcap/ui/uk/>"
+"\n"
 "Language: uk_UA\n"
-"Language-Team: Ukrainian "
-"<https://hosted.weblate.org/projects/normcap/ui/uk/>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.11-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #. Generic error message when any download failed.
@@ -141,9 +142,8 @@ msgstr "Закрити"
 
 #. Language Manager link to directory on file system
 #: normcap/gui/language_manager.py:73
-#, fuzzy
 msgid "Close and view tessdata folder in file manager …"
-msgstr "Закрити та переглянути папку tessdata у файловому менеджері..."
+msgstr "Закрити та переглянути папку tessdata у файловому менеджері …"
 
 #. Language Manager error message box title
 #: normcap/gui/language_manager.py:98 normcap/gui/tray.py:391
@@ -287,15 +287,14 @@ msgstr ""
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: normcap/gui/menu_button.py:353
-#, fuzzy
 msgid "add/remove …"
-msgstr "додати/видалити..."
+msgstr "додати/видалити …"
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:357
 #, fuzzy
 msgid "… need more?"
-msgstr "... потрібно більше?"
+msgstr "… потрібно більше?"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:366
@@ -463,7 +462,7 @@ msgstr ""
 "Потім перезапустіть NormCap."
 
 #: normcap/gui/tray.py:408
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
 " via the dialog that will appear after you clicked 'Ok'.<br>Then start "
@@ -472,10 +471,10 @@ msgid ""
 " GitHub.</small>"
 msgstr ""
 "<b>NormCap бракує дозволу на захоплення екрана.</b><br><br>Надайте його за "
-"допомогою діалогового вікна, яке з'явиться після натискання кнопки "
-"«Гаразд».<br>Після цього запустіть NormCap знову.<br><br><small>Іноді це "
-"може не спрацювати. Якщо це саме той випадок, будь ласка,<br><a "
-"href=\"{issues_url}\">повідомте про це як про баг</a> на GitHub.</small>"
+"допомогою діалогового вікна, яке з'явиться після натискання кнопки «Гаразд»"
+".<br>Після цього запустіть NormCap знову.<br><br><small>Іноді це може не "
+"спрацювати. Якщо це саме той випадок, будь ласка,<br><a href=\"{issues_url}\""
+">повідомте про це як про баг</a> на GitHub.</small>"
 
 #. Tray menu entry
 #: normcap/gui/tray.py:491
