@@ -322,7 +322,7 @@ class MenuButton(QtWidgets.QToolButton):
         # L10N: Tooltip of main menu's 'QR & Barcodes' entry. Use <56 chars p. line.
         action.setToolTip(
             _(
-                "Detects Barcodes and QR codes. If one or more codes are found, "
+                "Detects Barcodes and QR codes. If one or more codes are found,\n"
                 "text detection (OCR) is skipped and only the codes' data is returned."
             )
         )
