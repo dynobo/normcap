@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: NormCap 0.4.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2025-04-11 21:14+0200\n"
-"PO-Revision-Date: 2025-04-11 09:19+0000\n"
+"PO-Revision-Date: 2025-04-12 15:36+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
-"Language: es_ES\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/normcap/ui/es/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #. Generic error message when any download failed.
@@ -139,9 +140,8 @@ msgstr "Cerrar"
 
 #. Language Manager link to directory on file system
 #: normcap/gui/language_manager.py:73
-#, fuzzy
 msgid "Close and view tessdata folder in file manager …"
-msgstr "Cerrar y ver la carpeta tessdata en el administrador de archivos..."
+msgstr "Cerrar y ver la carpeta tessdata en el administrador de archivos …"
 
 #. Language Manager error message box title
 #: normcap/gui/language_manager.py:98 normcap/gui/tray.py:391
@@ -285,15 +285,14 @@ msgstr ""
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: normcap/gui/menu_button.py:353
-#, fuzzy
 msgid "add/remove …"
-msgstr "añadir/eliminar..."
+msgstr "añadir/eliminar …"
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:357
 #, fuzzy
 msgid "… need more?"
-msgstr "... ¿necesitas más?"
+msgstr "… ¿necesitas más?"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:366
@@ -450,7 +449,7 @@ msgstr ""
 "Luego reinicie NormCap."
 
 #: normcap/gui/tray.py:408
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
 " via the dialog that will appear after you clicked 'Ok'.<br>Then start "
@@ -458,9 +457,9 @@ msgid ""
 "case for you then please<br><a href='{issues_url}'>report this as bug</a> on"
 " GitHub.</small>"
 msgstr ""
-"<b>A NormCap le falta el permiso para la captura de "
-"pantalla.</b><br><br>Concédelo a través del cuadro de diálogo que aparecerá "
-"después de hacer clic en 'Aceptar'.<br>Luego, inicia NormCap "
+"<b>A NormCap le falta el permiso para la captura de pantalla.</"
+"b><br><br>Concédelo a través del cuadro de diálogo que aparecerá después de "
+"hacer clic en 'Aceptar'.<br>Luego, inicia NormCap "
 "nuevamente.<br><br><small>A veces, esto puede no funcionar. Si ese es tu "
 "caso, <br><a href=\"{issues_url}\">infórmalo como error</a> en "
 "GitHub.</small>"
