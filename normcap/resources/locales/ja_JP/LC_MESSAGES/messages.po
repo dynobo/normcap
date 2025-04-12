@@ -8,15 +8,16 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-04-11 21:14+0200\n"
-"PO-Revision-Date: 2025-04-11 09:19+0000\n"
+"PO-Revision-Date: 2025-04-12 15:36+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
-"Language: ja_JP\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/normcap/ui/ja/>"
 "\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.11-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #. Generic error message when any download failed.
@@ -132,9 +133,8 @@ msgstr "閉じる"
 
 #. Language Manager link to directory on file system
 #: normcap/gui/language_manager.py:73
-#, fuzzy
 msgid "Close and view tessdata folder in file manager …"
-msgstr "閉じて、ファイルマネージャでtessdataフォルダーを表示..."
+msgstr "閉じて、ファイルマネージャでtessdataフォルダーを表示 …"
 
 #. Language Manager error message box title
 #: normcap/gui/language_manager.py:98 normcap/gui/tray.py:391
@@ -273,15 +273,14 @@ msgstr ""
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: normcap/gui/menu_button.py:353
-#, fuzzy
 msgid "add/remove …"
-msgstr "追加/削除..."
+msgstr "追加/削除 …"
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:357
 #, fuzzy
 msgid "… need more?"
-msgstr "... さらに必要ですか?"
+msgstr "… さらに必要ですか?"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:366
@@ -427,7 +426,7 @@ msgstr ""
 "その後、NormCapを再起動します。"
 
 #: normcap/gui/tray.py:408
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
 " via the dialog that will appear after you clicked 'Ok'.<br>Then start "
@@ -436,8 +435,10 @@ msgid ""
 " GitHub.</small>"
 msgstr ""
 "<b>NormCapに画面キャプチャのアクセス許可がありません。</b><br><br>[OK] "
-"をクリックした後に表示されるダイアログで許可します。<br>その後、NormCapを再度起動します。<br><br><small>うまくいかないこともあります。その場合は、GitHubで<br><a"
-" href=\"{issues_url}\">バグとして報告</a> してください。</small>"
+"をクリックした後に表示されるダイアログで許可します。<br>その後、NormCapを再度"
+"起動します。<br><br><small>うまくいかないこともあります。その場合は、"
+"GitHubで<br><a href=\"{issues_url}\">バグとして報告</a> "
+"してください。</small>"
 
 #. Tray menu entry
 #: normcap/gui/tray.py:491
