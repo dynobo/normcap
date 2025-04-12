@@ -20,25 +20,21 @@ def _image_to_memoryview(image: QtGui.QImage) -> memoryview:
         image: Input image.
 
     Returns:
-        Memoryview of the image data as 3D array: width x height x RGB.
+        Memoryview of the grayscaled image data as array: width x height.
     """
-    image = image.convertToFormat(QtGui.QImage.Format.Format_RGB888)
+    image = image.convertToFormat(QtGui.QImage.Format.Format_Grayscale8)
     ptr = image.constBits()
     bytes_per_line = image.bytesPerLine()  # Includes padding
     width = image.width()
     height = image.height()
-    channels = 3  # RGB888 has 3 channels
 
     # Create a new bytearray to exclude padding
     raw_data = bytearray()
     for y in range(height):
         row_start = y * bytes_per_line
-        row_end = row_start + (width * channels)
-        raw_data.extend(ptr[row_start:row_end])  # Exclude padding
+        raw_data.extend(ptr[row_start : row_start + width])  # Exclude padding
 
-    return memoryview(raw_data).cast(
-        "B", shape=(image.height(), image.width(), channels)
-    )
+    return memoryview(raw_data).cast("B", shape=(height, width, 1))
 
 
 def _get_text_type_and_transform(text: str) -> tuple[str, TextType]:
