@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: NormCap 0.5.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2025-04-11 21:14+0200\n"
-"PO-Revision-Date: 2025-04-11 09:19+0000\n"
+"PO-Revision-Date: 2025-04-12 15:36+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
-"Language: ca\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/normcap/ui/ca/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #. Generic error message when any download failed.
@@ -139,9 +140,8 @@ msgstr "Tanca"
 
 #. Language Manager link to directory on file system
 #: normcap/gui/language_manager.py:73
-#, fuzzy
 msgid "Close and view tessdata folder in file manager …"
-msgstr "Tanca i mostra la carpeta tessdata en l'administrador de fitxers..."
+msgstr "Tanca i mostra la carpeta tessdata en l'administrador de fitxers …"
 
 #. Language Manager error message box title
 #: normcap/gui/language_manager.py:98 normcap/gui/tray.py:391
@@ -185,7 +185,7 @@ msgstr "Configuració"
 #: normcap/gui/menu_button.py:206
 #, fuzzy
 msgid "Detection"
-msgstr "2. Espereu a la detecció"
+msgstr "Detecció"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:210
@@ -287,13 +287,12 @@ msgstr ""
 #: normcap/gui/menu_button.py:353
 #, fuzzy
 msgid "add/remove …"
-msgstr "afig/elimina..."
+msgstr "afig/elimina…"
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:357
-#, fuzzy
 msgid "… need more?"
-msgstr "... necessiteu més?"
+msgstr "… necessiteu més?"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:366
