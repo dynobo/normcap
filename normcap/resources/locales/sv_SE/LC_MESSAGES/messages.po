@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-04-11 21:14+0200\n"
-"PO-Revision-Date: 2025-04-11 09:19+0000\n"
+"PO-Revision-Date: 2025-04-12 15:36+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
-"Language: sv_SE\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/normcap/ui/sv/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: sv_SE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #. Generic error message when any download failed.
@@ -137,9 +138,8 @@ msgstr "Stäng"
 
 #. Language Manager link to directory on file system
 #: normcap/gui/language_manager.py:73
-#, fuzzy
 msgid "Close and view tessdata folder in file manager …"
-msgstr "Stäng och visa tessdatamappen i filhanteraren..."
+msgstr "Stäng och visa tessdatamappen i filhanteraren …"
 
 #. Language Manager error message box title
 #: normcap/gui/language_manager.py:98 normcap/gui/tray.py:391
@@ -283,15 +283,14 @@ msgstr ""
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: normcap/gui/menu_button.py:353
-#, fuzzy
 msgid "add/remove …"
-msgstr "lägg till/ta bort..."
+msgstr "lägg till/ta bort …"
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:357
 #, fuzzy
 msgid "… need more?"
-msgstr "...behöver du mer?"
+msgstr "… behöver du mer?"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:366
@@ -447,7 +446,7 @@ msgstr ""
 "Starta sedan om NormCap."
 
 #: normcap/gui/tray.py:408
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
 " via the dialog that will appear after you clicked 'Ok'.<br>Then start "
@@ -458,8 +457,8 @@ msgstr ""
 "<b>NormCap saknar behörighet för skärmklipp.</b><br><br>Bevilja det via "
 "dialogrutan som visas efter att du klickat på \"OK\".<br>Starta sedan om "
 "NormCap.<br><br><small>Ibland kanske detta inte fungerar. Om så är fallet "
-"för dig, så vänligen<br><a href=\"{issues_url}\">rapportera det som ett "
-"fel</a> på GitHub.</small>"
+"för dig, så vänligen<br><a href=\"{issues_url}\">rapportera det som ett fel</"
+"a> på GitHub.</small>"
 
 #. Tray menu entry
 #: normcap/gui/tray.py:491
