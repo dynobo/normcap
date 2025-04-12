@@ -397,7 +397,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             "'{application}' is missing the permission for 'Screen Recording'."
             "\n\n"
             "Grant it via the dialog that will appear after you clicked 'Ok' "
-            "or via 'System Settings' > 'Privacy & Security'."
+            "or via 'System Settings' → 'Privacy & Security'."
             "\n\n"
             "Then restart NormCap."
         ).format(application="NormCap" if is_prebuilt else "Terminal")

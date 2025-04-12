@@ -7,16 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NormCap 0.4.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
-"POT-Creation-Date: 2025-04-11 21:14+0200\n"
+"POT-Creation-Date: 2025-04-12 18:27+0200\n"
 "PO-Revision-Date: 2025-04-12 15:36+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
-"Language-Team: Italian <https://hosted.weblate.org/projects/normcap/ui/it/>\n"
 "Language: it_IT\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/normcap/ui/it/>\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #. Generic error message when any download failed.
@@ -277,9 +276,10 @@ msgid "QR && Barcodes"
 msgstr "QR e codice a barre"
 
 #: normcap/gui/menu_button.py:325
+#, fuzzy
 msgid ""
-"Detects Barcodes and QR codes. If one or more codes are found, text "
-"detection (OCR) is skipped and only the codes' data is returned."
+"Detects Barcodes and QR codes. If one or more codes are found,\n"
+"text detection (OCR) is skipped and only the codes' data is returned."
 msgstr ""
 "Rileva i codici a barre e i codici QR. Se vengono trovati uno o più codici,\n"
 "il rilevamento del testo (OCR) viene saltato e vengono restituiti solo i "
@@ -434,12 +434,12 @@ msgid "Please try again."
 msgstr "Per favore riprova."
 
 #: normcap/gui/tray.py:397
-#, python-brace-format
+#, fuzzy, python-brace-format
 msgid ""
 "'{application}' is missing the permission for 'Screen Recording'.\n"
 "\n"
 "Grant it via the dialog that will appear after you clicked 'Ok' or via "
-"'System Settings' > 'Privacy & Security'.\n"
+"'System Settings' → 'Privacy & Security'.\n"
 "\n"
 "Then restart NormCap."
 msgstr ""
