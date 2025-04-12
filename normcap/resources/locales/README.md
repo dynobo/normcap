@@ -17,7 +17,7 @@
 | :--------------------------------------- | -------: | ---------: |
 | [ca](./ca/LC_MESSAGES/messages.po)       |      94% |   70 of 74 |
 | [cs](./cs/LC_MESSAGES/messages.po)       |      94% |   70 of 74 |
-| [de_DE](./de_DE/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   74 of 74 |
 | [es_ES](./es_ES/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
 | [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
 | [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |      12% |    9 of 74 |
