@@ -105,14 +105,14 @@ jobs:
           QT_DEBUG_PLUGINS: 1
 
       - name: Comment coverage in PR
-        if: github.repository == 'dynobo/normcap'
+        if: github.event.pull_request.head.repo.full_name == 'dynobo/normcap'
         uses: orgoro/coverage@v3.2
         with:
             coverageFile: coverage.xml
             token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Coveralls Parallel
-        if: github.repository == 'dynobo/normcap'
+        if: github.event.pull_request.head.repo.full_name == 'dynobo/normcap'
         uses: coverallsapp/github-action@release/v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
