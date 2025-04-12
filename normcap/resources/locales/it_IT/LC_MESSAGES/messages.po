@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: NormCap 0.4.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2025-04-11 21:14+0200\n"
-"PO-Revision-Date: 2025-04-11 09:19+0000\n"
+"PO-Revision-Date: 2025-04-12 15:36+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
-"Language: it_IT\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/normcap/ui/it/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #. Generic error message when any download failed.
@@ -139,9 +140,8 @@ msgstr "Chiudi"
 
 #. Language Manager link to directory on file system
 #: normcap/gui/language_manager.py:73
-#, fuzzy
 msgid "Close and view tessdata folder in file manager …"
-msgstr "Chiudi e visualizza la cartella tessdata nel file manager..."
+msgstr "Chiudi e visualizza la cartella tessdata nel file manager …"
 
 #. Language Manager error message box title
 #: normcap/gui/language_manager.py:98 normcap/gui/tray.py:391
@@ -183,14 +183,14 @@ msgstr "Impostazioni"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:206
-#, fuzzy
 msgid "Detection"
-msgstr "2. Attendere il rilevamento"
+msgstr "Rilevamento"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:210
+#, fuzzy
 msgid "Post-processing"
-msgstr ""
+msgstr "Post-elaborazione"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:214
@@ -246,10 +246,9 @@ msgstr ""
 #: normcap/gui/menu_button.py:288
 #, fuzzy
 msgid "Parse text"
-msgstr "analizzare"
+msgstr "Analizzare il testo"
 
 #: normcap/gui/menu_button.py:295
-#, fuzzy
 msgid ""
 "Tries to determine the text's type (e.g. line,\n"
 "paragraph, URL, email) and formats the output\n"
@@ -260,40 +259,41 @@ msgstr ""
 "Cerca di determinare il tipo di testo (ad esempio riga,\n"
 "paragrafo, URL, email) e formatta l'output\n"
 "di conseguenza.\n"
-"Se il risultato è inaspettato, prova invece la modalità 'raw'."
+"Disattivarlo per restituire il testo esattamente come rilevato\n"
+"dal software di riconoscimento ottico dei caratteri."
 
 #: normcap/gui/menu_button.py:309
-#, fuzzy
 msgid "Text"
-msgstr "Uscita"
+msgstr "Testo"
 
 #. Tooltip of main menu's 'Text' entry. Use <56 chars p. line.
 #: normcap/gui/menu_button.py:314
 msgid "Tries to detect text in the selected region using OCR."
-msgstr ""
+msgstr "Cerca di rilevare il testo nell'area selezionata utilizzando l'OCR."
 
 #. Entry in main menu's 'Detection' section
 #: normcap/gui/menu_button.py:318
 msgid "QR && Barcodes"
-msgstr ""
+msgstr "QR e codice a barre"
 
 #: normcap/gui/menu_button.py:325
 msgid ""
 "Detects Barcodes and QR codes. If one or more codes are found, text "
 "detection (OCR) is skipped and only the codes' data is returned."
 msgstr ""
+"Rileva i codici a barre e i codici QR. Se vengono trovati uno o più codici,\n"
+"il rilevamento del testo (OCR) viene saltato e vengono restituiti solo i "
+"dati dei codici."
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: normcap/gui/menu_button.py:353
-#, fuzzy
 msgid "add/remove …"
-msgstr "Aggiungi/rimuovi..."
+msgstr "Aggiungi/rimuovi…"
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:357
-#, fuzzy
 msgid "… need more?"
-msgstr "... ti serve altro?"
+msgstr "… ti serve altro?"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:366
@@ -348,8 +348,8 @@ msgstr ""
 #, python-brace-format
 msgid "1 QR code detected"
 msgid_plural "{count} QR codes detected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 codice QR acquisita"
+msgstr[1] "{count} codici QR acquisite"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -357,17 +357,17 @@ msgstr[1] ""
 #, python-brace-format
 msgid "1 barcode detected"
 msgid_plural "{count} barcodes detected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 Codice a barre acquisita"
+msgstr[1] "{count} codici a barre acquisite"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:43
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "1 code detected"
 msgid_plural "{count} codes detected"
-msgstr[0] "1 parola acquisita"
-msgstr[1] "{count} parole acquisite"
+msgstr[0] "1 codice acquisita"
+msgstr[1] "{count} codici acquisite"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
