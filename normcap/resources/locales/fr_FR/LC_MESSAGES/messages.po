@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-04-11 21:14+0200\n"
-"PO-Revision-Date: 2025-04-11 09:19+0000\n"
+"PO-Revision-Date: 2025-04-12 15:36+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
-"Language: fr_FR\n"
 "Language-Team: French <https://hosted.weblate.org/projects/normcap/ui/fr/>\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.11-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #. Generic error message when any download failed.
@@ -449,7 +450,7 @@ msgstr ""
 "Puis relancez NormCap."
 
 #: normcap/gui/tray.py:408
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
 " via the dialog that will appear after you clicked 'Ok'.<br>Then start "
@@ -457,11 +458,11 @@ msgid ""
 "case for you then please<br><a href='{issues_url}'>report this as bug</a> on"
 " GitHub.</small>"
 msgstr ""
-"<b>NormCap n'a pas la permission d'enregistrer l'écran.</b><br><br"
-">Autorisez-la via la fenêtre qui apparaîtra après avoir cliqué sur « OK ». "
-"Puis relancez NormCap.<br><br><small>Il se peut que cela ne fonctionne pas "
-"dans certains cas. Si c'est le cas pour vous, veuillez <br><a "
-"href=\"{issues_url}\">signaler le problème</a> sur GitHub.</small>"
+"<b>NormCap n'a pas la permission d'enregistrer l'écran.</b><br><br>Autorisez-"
+"la via la fenêtre qui apparaîtra après avoir cliqué sur « OK ». Puis "
+"relancez NormCap.<br><br><small>Il se peut que cela ne fonctionne pas dans "
+"certains cas. Si c'est le cas pour vous, veuillez <br><a href="
+"\"{issues_url}\">signaler le problème</a> sur GitHub.</small>"
 
 #. Tray menu entry
 #: normcap/gui/tray.py:491
