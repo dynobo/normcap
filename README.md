@@ -183,6 +183,7 @@ This project uses the following non-standard libraries:
 And it depends on external software:
 
 - [tesseract](https://github.com/tesseract-ocr/tesseract) - _OCR engine_
+- [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp) = _QR & barcode detection_
 - [wl-clipboard](https://github.com/bugaevc/wl-clipboard) - _Wayland clipboard
   utilities_
 - [xclip](https://github.com/astrand/xclip) - _CLI to the X11 clipboard_
