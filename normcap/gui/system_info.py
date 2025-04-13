@@ -13,7 +13,7 @@ from PySide6 import __version__ as pyside_version
 from normcap import __version__
 from normcap.detection.ocr import tesseract
 from normcap.gui.localization import translate
-from normcap.gui.models import DesktopEnvironment, Screen
+from normcap.gui.models import CaptureMode, DesktopEnvironment, Screen
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +84,7 @@ def display_manager_is_wayland() -> bool:
 
 
 @functools.cache
-def desktop_environment() -> DesktopEnvironment:  # noqa: PLR0911 # too many returns
+def desktop_environment() -> DesktopEnvironment:  # noqa: C901, PLR0911
     """Detect used desktop environment (Linux)."""
     kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()
     xdg_current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
@@ -95,6 +95,8 @@ def desktop_environment() -> DesktopEnvironment:  # noqa: PLR0911 # too many ret
     if gnome_desktop_session_id == "this-is-deprecated":
         gnome_desktop_session_id = ""
 
+    if xdg_current_desktop == "budgie:gnome":
+        return DesktopEnvironment.BUDGIE
     if gnome_desktop_session_id or "gnome" in xdg_current_desktop:
         return DesktopEnvironment.GNOME
     if kde_full_session or "kde-plasma" in desktop_session:
@@ -107,8 +109,38 @@ def desktop_environment() -> DesktopEnvironment:  # noqa: PLR0911 # too many ret
         return DesktopEnvironment.HYPRLAND
     if "awesome" in xdg_current_desktop:
         return DesktopEnvironment.AWESOME
-
+    if "x-cinnamon" in xdg_current_desktop:
+        return DesktopEnvironment.CINNAMON
+    if "xfce" in xdg_current_desktop:
+        return DesktopEnvironment.XFCE
+    if "lxqt" in xdg_current_desktop:
+        return DesktopEnvironment.LXQT
+    if "mate" in xdg_current_desktop:
+        return DesktopEnvironment.MATE
     return DesktopEnvironment.OTHER
+
+
+@functools.cache
+def capture_mode() -> CaptureMode:
+    """Find out the system's capture mode. Silent capture prefered."""
+    if sys.platform != "linux":
+        return CaptureMode.PRE_CAPTURE
+
+    # Add tested desktops only! - on some desktops, you
+    # get a black background or just the desktop wallpaper.
+    # Not working but tested are: Gnome, awesome and Hyprland
+    supported_desktops = [
+        DesktopEnvironment.KDE,
+        DesktopEnvironment.XFCE,
+        DesktopEnvironment.LXQT,
+        DesktopEnvironment.BUDGIE,
+        DesktopEnvironment.MATE,
+    ]
+
+    if desktop_environment() in supported_desktops:
+        return CaptureMode.SILENT_CAPTURE
+
+    return CaptureMode.PRE_CAPTURE
 
 
 def screens() -> list[Screen]:
