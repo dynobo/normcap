@@ -51,7 +51,7 @@ management, otherwise complexity would not be reduced.
 - Reduced complexity:
     - Use `hatch` as _one_ tool for most tasks `poetry` supported _as well as_ simple task
       runner.
-    - Single entrypoint to tasks (`hatch run ...`)
+    - Single entrypoint to tasks (`hatch run …`)
 - Less maintenance effort because of less duplicated code for tasks.
 - `hatch` was adopted by PyPA and therefore is future-proof and well-supported.
 - Testing a new tool (learning opportunity).

@@ -1,6 +1,6 @@
 import logging
 
-from normcap.clipboard.structures import Handler, HandlerProtocol
+from normcap.clipboard.models import Handler, HandlerProtocol
 
 from .handlers import pbcopy, qtclipboard, windll, wlclipboard, xclip, xsel
 

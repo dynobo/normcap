@@ -3,14 +3,16 @@
 import argparse
 import contextlib
 import io
+import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
 import toml
 from babel.messages.frontend import CommandLineInterface
 
-LOCALES_PATH = Path(__file__).parent.parent / "normcap" / "resources" / "locales"
+LOCALES_PATH = Path(__file__).resolve().parents[1] / "normcap" / "resources" / "locales"
 
 
 def _get_version() -> str:
@@ -21,7 +23,7 @@ def _get_version() -> str:
         version = __version__
     except Exception:
         print("Could not import __version__. Fallback to pyproject.toml.")  # noqa: T201
-        with (Path(__file__).parent.parent / "pyproject.toml").open(
+        with (Path(__file__).resolve().parents[1] / "pyproject.toml").open(
             encoding="utf8"
         ) as toml_file:
             pyproject_toml = toml.load(toml_file)
@@ -102,7 +104,7 @@ def extract_strings() -> None:
             "--width=79",
             "--add-comments=L10N:",
             "--strip-comment-tag",
-            f"--input-dir={Path('__file__').parent.parent.resolve()}",
+            f"--input-dir={Path('__file__').resolve().parents[1]}",
             f"--output-file={(LOCALES_PATH / 'messages.pot').resolve()}",
         ]
     )
@@ -134,9 +136,23 @@ def create_new(locales: list[str]) -> None:
         )
 
 
+def cleanup_paths() -> None:
+    """Strip absolute paths in .po files to relative paths."""
+    pot_file = LOCALES_PATH / "messages.pot"
+    project_root = Path(__file__).resolve().parents[1]
+
+    if (project_root / "build").exists():
+        shutil.rmtree(project_root / "build")
+
+    content = pot_file.read_text(encoding="utf-8")
+    content = content.replace(str(project_root) + os.sep, "")
+    pot_file.write_text(content, encoding="utf-8")
+
+
 def main(args: argparse.Namespace) -> None:
     if args.update_all:
         extract_strings()
+        cleanup_paths()
         update_locales()
     if args.create_new:
         create_new(locales=args.create_new)

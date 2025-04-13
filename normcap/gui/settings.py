@@ -42,13 +42,33 @@ DEFAULT_SETTINGS = (
     ),
     Setting(
         key="parse-text",
-        flag="p",
+        flag="",
         type_=_parse_str_to_bool,
         value=True,
         help_=(
             "Try to determine the text's type (e.g. line, paragraph, URL, email) and "
             "format the output accordingly."
         ),
+        choices=(True, False),
+        cli_arg=True,
+        nargs=None,
+    ),
+    Setting(
+        key="detect-codes",
+        flag="",
+        type_=_parse_str_to_bool,
+        value=True,
+        help_="Detect barcodes and QR codes.",
+        choices=(True, False),
+        cli_arg=True,
+        nargs=None,
+    ),
+    Setting(
+        key="detect-text",
+        flag="",
+        type_=_parse_str_to_bool,
+        value=True,
+        help_="Detect text using ocr.",
         choices=(True, False),
         cli_arg=True,
         nargs=None,
@@ -95,7 +115,7 @@ DEFAULT_SETTINGS = (
     ),
     Setting(
         key="show-introduction",
-        flag="i",
+        flag="",
         type_=_parse_str_to_bool,
         value=True,
         help_="Show introductional screen on start",
@@ -155,14 +175,14 @@ class Settings(QtCore.QSettings):
 
     def _migrate_deprecated(self) -> None:
         # Migrations to v0.6.0
-        # ONHOLD: Delete in 2025/11
+        # ONHOLD: Delete in 2026/7
         if self.value("mode", None):
             mode = self.value("mode")
             parse_text = mode == "parse"
             self.setValue("parse-text", parse_text)
             self.remove("mode")
             logger.debug(
-                "Migrated setting 'mode=%s' to 'parse_text=%s'.", mode, parse_text
+                "Migrated setting 'mode=%s' to 'parse-text=%s'.", mode, parse_text
             )
 
     def _set_missing_to_default(self) -> None:
@@ -174,13 +194,17 @@ class Settings(QtCore.QSettings):
 
     def _update_from_init_settings(self) -> None:
         for key, value in self.init_settings.items():
-            if self.contains(key):
+            # TODO: Migrate setting keys to underscore instead minus
+            setting_key = key.replace("_", "-")
+            if self.contains(setting_key):
                 if value is not None:
-                    self.setValue(key, value)
-            elif key in {"reset", "verbosity"}:
+                    self.setValue(setting_key, value)
+            elif setting_key in {"reset", "verbosity"}:
                 continue
             else:
-                logger.debug("Skip update of non existing setting (%s: %s)", key, value)
+                logger.debug(
+                    "Skip update of unknown setting (%s: %s)", setting_key, value
+                )
 
     def reset(self) -> None:
         """Remove all existing settings and values."""

@@ -118,12 +118,12 @@ C:\Users\<USERNAME>\AppData\Local\Programs\Tesseract-OCR
 3\. Adjust environment variables:
 
 - Create an environment variable `TESSDATA_PREFIX` and set it to _your_ Tesseract base
-  folder, e.g.: "System Properties" → Tab "Advanced" → "Environment Variables..." →
-  "New..." → Variable: `TESSDATA_PREFIX`, Value: `"C:\Program Files\Tesseract-OCR"`
+  folder, e.g.: "System Properties" → Tab "Advanced" → "Environment Variables …" →
+  "New …" → Variable: `TESSDATA_PREFIX`, Value: `"C:\Program Files\Tesseract-OCR"`
 
 - Append Tesseract's base folder to the environment variable `PATH`, e.g.: "System
-  Properties" → Tab "Advanced" → "Environment Variables..." → Section "User variables"
-  → Select `PATH` → "Edit..." → Add a new entry `"C:\Program Files\Tesseract-OCR"`
+  Properties" → Tab "Advanced" → "Environment Variables …" → Section "User variables"
+  → Select `PATH` → "Edit …" → Add a new entry `"C:\Program Files\Tesseract-OCR"`
 
 - To test your setup, open a new `cmd`-terminal and run:
 
@@ -140,12 +140,6 @@ pip install normcap
 # Run
 normcap
 ```
-
-## Why "NormCap"?
-
-See [XKCD](https://xkcd.com):
-
-[![Comic](https://imgs.xkcd.com/comics/norm_normal_file_format.png)](https://xkcd.com/2116/)
 
 ## Development
 
@@ -189,6 +183,7 @@ This project uses the following non-standard libraries:
 And it depends on external software:
 
 - [tesseract](https://github.com/tesseract-ocr/tesseract) - _OCR engine_
+- [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp) = _QR & barcode detection_
 - [wl-clipboard](https://github.com/bugaevc/wl-clipboard) - _Wayland clipboard
   utilities_
 - [xclip](https://github.com/astrand/xclip) - _CLI to the X11 clipboard_
@@ -215,6 +210,13 @@ If NormCap doesn't fit your needs, try those alternatives (no particular order):
 - [dpScreenOCR](https://danpla.github.io/dpscreenocr/) (Linux, Windows)
 - [PowerToys Text Extractor](https://learn.microsoft.com/en-us/windows/powertoys/text-extractor)
   (Windows)
+
+## Why "NormCap"?
+
+See [XKCD](https://xkcd.com):
+
+[![Comic](https://imgs.xkcd.com/comics/norm_normal_file_format.png)](https://xkcd.com/2116/)
+
 
 ## Certification
 

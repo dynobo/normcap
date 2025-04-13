@@ -8,8 +8,6 @@ from typing import Any, Callable, NamedTuple, Optional, Union
 
 from PySide6 import QtGui
 
-from normcap import ocr
-
 logger = logging.getLogger(__name__)
 
 # Type aliases
@@ -144,7 +142,7 @@ class Screen(Rect):
 
     device_pixel_ratio: float
     index: int
-    screenshot: Optional[QtGui.QImage] = None
+    screenshot: QtGui.QImage = field(default_factory=QtGui.QImage)
 
     # ONHOLD: Annotate as Self with Python 3.11
     def scale(self, factor: Optional[float] = None):  # noqa: ANN201
@@ -159,24 +157,3 @@ class Screen(Rect):
             left=int(self.left * factor),
             right=int(self.right * factor),
         )
-
-
-@dataclass()
-class Capture:
-    """Store all information like screenshot and selected region."""
-
-    parse_text: bool = True
-
-    # Image of selected region
-    image: QtGui.QImage = field(default_factory=QtGui.QImage)
-    screen: Optional[Screen] = None
-    scale_factor: float = 1
-    rect: Rect = field(default_factory=lambda: Rect(left=0, top=0, right=0, bottom=0))
-
-    ocr_text: Optional[str] = None
-    ocr_transformer: Optional[ocr.structures.Transformer] = None
-
-    @property
-    def image_area(self) -> int:
-        """Provide area of cropped image in px²."""
-        return self.rect.width * self.rect.height if self.image else 0

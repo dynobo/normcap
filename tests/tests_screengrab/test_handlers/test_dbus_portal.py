@@ -4,7 +4,7 @@ import time
 
 import pytest
 
-from normcap.screengrab.permissions import has_screenshot_permission
+from normcap.screenshot.permissions import has_screenshot_permission
 
 
 @pytest.mark.gui

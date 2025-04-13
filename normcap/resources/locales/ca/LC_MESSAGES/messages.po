@@ -1,0 +1,511 @@
+# Catalan translations for NormCap.
+# Copyright (C) 2024 dynobo
+# This file is distributed under the same license as the NormCap project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: NormCap 0.5.4\n"
+"Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
+"POT-Creation-Date: 2025-04-12 18:27+0200\n"
+"PO-Revision-Date: 2025-04-12 15:36+0000\n"
+"Last-Translator: dynobo <dynobo@mailbox.org>\n"
+"Language: ca\n"
+"Language-Team: Catalan <https://hosted.weblate.org/projects/normcap/ui/ca/>\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#. Generic error message when any download failed.
+#: normcap/gui/downloader.py:59
+msgid "Download error."
+msgstr "Error de descàrrega."
+
+#. Introduction window title
+#: normcap/gui/introduction.py:51
+msgid "Introduction to NormCap"
+msgstr "Introducció a NormCap"
+
+#. Introduction window checkbox
+#: normcap/gui/introduction.py:57
+msgid "Show on startup"
+msgstr "Mostra a l'inici"
+
+#. Introduction window button
+#: normcap/gui/introduction.py:60
+msgid "Ok"
+msgstr "D'acord"
+
+#. Introduction window shortcut for pasting on Linux and Windows
+#: normcap/gui/introduction.py:77
+msgid "Ctrl + v"
+msgstr "Ctrl + v"
+
+#. Introduction window shortcut for pasting on macOS
+#: normcap/gui/introduction.py:79
+msgid "Cmd + v"
+msgstr "Cmd + v"
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:83
+msgid "1. Select area"
+msgstr "1. Seleccioneu l'àrea"
+
+#: normcap/gui/introduction.py:86
+msgid ""
+"Wait until a pink border appears around your screen, then select the desired"
+" capture area."
+msgstr ""
+"Espereu que aparega una vora rosa al voltant de la pantalla i seleccioneu "
+"l'àrea de captura desitjada."
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:93
+msgid "2. Wait for detection"
+msgstr "2. Espereu a la detecció"
+
+#: normcap/gui/introduction.py:96
+msgid ""
+"Processing takes time. Wait for a notification or a color change of the "
+"system tray icon."
+msgstr ""
+"El processament porta el seu temps. Espereu a rebre una notificació o "
+"espereu que canvie el color de la icona de la safata del sistema."
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:103
+msgid "3. Paste from clipboard"
+msgstr "3. Apega des del porta-retalls"
+
+#: normcap/gui/introduction.py:106
+#, python-brace-format
+msgid ""
+"The detection result will be copied to your system's clipboard. Paste it "
+"into any application ({shortcut})."
+msgstr ""
+"El resultat de la detecció es copiarà en el porta-retalls del vostre "
+"sistema. Apegueu-lo en qualsevol aplicació ({shortcut})."
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:117
+msgid "Settings & more"
+msgstr "Configuració i més"
+
+#: normcap/gui/introduction.py:120
+msgid ""
+"Open the menu using the gear icon in the upper right corner of corner your "
+"screen."
+msgstr ""
+"Obriu el menú amb la icona de l'engranatge situat en l'extrem superior dret "
+"de la pantalla."
+
+#. Introduction window headline
+#: normcap/gui/introduction.py:130
+msgid "Basic Usage"
+msgstr "Ús bàsic"
+
+#. Title of Language Manager
+#: normcap/gui/language_manager.py:32
+msgid "Manage Languages"
+msgstr "Gestiona idiomes"
+
+#. Language Manager section
+#: normcap/gui/language_manager.py:45
+msgid "Installed:"
+msgstr "Instal·lat:"
+
+#. Language Manager button
+#: normcap/gui/language_manager.py:48
+msgid "Delete"
+msgstr "Esborra"
+
+#. Language Manager section
+#: normcap/gui/language_manager.py:55
+msgid "Available:"
+msgstr "Disponible:"
+
+#. Language Manager button
+#: normcap/gui/language_manager.py:58
+msgid "Download"
+msgstr "Descarrega"
+
+#. Language Manager button
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/language_manager.py:67 normcap/gui/menu_button.py:411
+msgid "Close"
+msgstr "Tanca"
+
+#. Language Manager link to directory on file system
+#: normcap/gui/language_manager.py:73
+msgid "Close and view tessdata folder in file manager …"
+msgstr "Tanca i mostra la carpeta tessdata en l'administrador de fitxers …"
+
+#. Language Manager error message box title
+#: normcap/gui/language_manager.py:98 normcap/gui/tray.py:391
+msgid "Error"
+msgstr "Error"
+
+#. Language Manager error message box text
+#: normcap/gui/language_manager.py:100
+msgid "Language download failed!"
+msgstr "Error en la descàrrega de l'idioma!"
+
+#. Language Manager information message box title
+#: normcap/gui/language_manager.py:130
+msgid "Information"
+msgstr "Informació"
+
+#: normcap/gui/language_manager.py:133
+msgid ""
+"It is not possible to delete all languages. NormCap needs at least one to "
+"function correctly."
+msgstr ""
+"No és possible eliminar tots els idiomes. NormCap necessita almenys un per a"
+" funcionar correctament."
+
+#: normcap/gui/menu_button.py:153
+msgid ""
+"This installation of NormCap uses the Tesseract binary installed on your "
+"system. To install additional languages, please refer to the documentation "
+"of that Tesseract installation."
+msgstr ""
+"Esta instal·lació de NormCap utilitza el binari de Tesseract instal·lat en "
+"el seu sistema. Per a instal·lar idiomes addicionals, consulteu la "
+"documentació d'eixa instal·lació de Tesseract."
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:202
+msgid "Settings"
+msgstr "Configuració"
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:206
+#, fuzzy
+msgid "Detection"
+msgstr "Detecció"
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:210
+msgid "Post-processing"
+msgstr ""
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:214
+msgid "Languages"
+msgstr "Idiomes"
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:218
+msgid "Application"
+msgstr "Aplicació"
+
+#. Entry in main menu's 'setting' section
+#: normcap/gui/menu_button.py:238
+msgid "Show notification"
+msgstr "Mostra notificació"
+
+#: normcap/gui/menu_button.py:244
+msgid ""
+"Show status information via your system's desktop\n"
+"notification center."
+msgstr ""
+"Mostra informació de l'estat a través del centre de \n"
+"notificacions de l'escriptori del vostre sistema."
+
+#. Extension "Show notification"-Tooltip on macOS and Windows.
+#. Entry in main menu's 'setting' section
+#: normcap/gui/menu_button.py:255
+msgid "Keep in system tray"
+msgstr "Mantín en la safata del sistema"
+
+#: normcap/gui/menu_button.py:262
+msgid ""
+"Keep NormCap running in the background. Another\n"
+"capture can be triggered via the tray icon."
+msgstr ""
+"Mantín NormCap funcionant en segon pla. Es pot activar \n"
+"una altra captura a través de la icona de la safata."
+
+#. Entry in main menu's 'setting' section
+#: normcap/gui/menu_button.py:269
+msgid "Check for update"
+msgstr "Comprova l'actualització"
+
+#: normcap/gui/menu_button.py:276
+msgid ""
+"Frequently fetch NormCap's releases online and display\n"
+"a message if a new version is available."
+msgstr ""
+"Obtín amb freqüència les versions de NormCap en línia i \n"
+"mostra un missatge si hi ha una nova versió disponible."
+
+#. Entry in main menu's 'Detection' section
+#: normcap/gui/menu_button.py:288
+#, fuzzy
+msgid "Parse text"
+msgstr "analitza"
+
+#: normcap/gui/menu_button.py:295
+#, fuzzy
+msgid ""
+"Tries to determine the text's type (e.g. line,\n"
+"paragraph, URL, email) and formats the output\n"
+"accordingly.\n"
+"Turn it off to return the text exactly as detected\n"
+"by the Optical Character Recognition Software."
+msgstr ""
+"Intenta determinar el tipus de text (per exemple,\n"
+"línia, paràgraf, URL, correu electrònic) i formata\n"
+"l'eixida en conseqüència.\n"
+"Si el resultat és inesperat, prova amb el mode 'raw'."
+
+#: normcap/gui/menu_button.py:309
+#, fuzzy
+msgid "Text"
+msgstr "Ix"
+
+#. Tooltip of main menu's 'Text' entry. Use <56 chars p. line.
+#: normcap/gui/menu_button.py:314
+msgid "Tries to detect text in the selected region using OCR."
+msgstr ""
+
+#. Entry in main menu's 'Detection' section
+#: normcap/gui/menu_button.py:318
+msgid "QR && Barcodes"
+msgstr ""
+
+#: normcap/gui/menu_button.py:325
+msgid ""
+"Detects Barcodes and QR codes. If one or more codes are found,\n"
+"text detection (OCR) is skipped and only the codes' data is returned."
+msgstr ""
+
+#. Entry in main menu's 'Languages' section. Shown in prebuilt package.
+#: normcap/gui/menu_button.py:353
+#, fuzzy
+msgid "add/remove …"
+msgstr "afig/elimina…"
+
+#. Entry in main menu's 'Languages' section. Shown in Python package.
+#: normcap/gui/menu_button.py:357
+msgid "… need more?"
+msgstr "… necessiteu més?"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:366
+msgid "About"
+msgstr "Sobre"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:374
+msgid "Introduction"
+msgstr "Introducció"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:379
+msgid "Website"
+msgstr "Lloc web"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:384
+msgid "FAQs"
+msgstr "PMF"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:389
+msgid "Source code"
+msgstr "Codi font"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:394
+msgid "Releases"
+msgstr "Versions"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:399
+msgid "Report a problem"
+msgstr "Informa d'un problema"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:404
+msgid "Donate for coffee"
+msgstr "Fes una donació puntual"
+
+#. Tooltip of main menu's 'close' entry. Use <56 chars p. line.
+#: normcap/gui/menu_button.py:414
+msgid "Exit NormCap, or minimize to system tray (if enabled)."
+msgstr "Isqueu de NormCap o minimitzeu (si està habilitat)."
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:29
+#, python-brace-format
+msgid "1 QR code detected"
+msgid_plural "{count} QR codes detected"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:36
+#, python-brace-format
+msgid "1 barcode detected"
+msgid_plural "{count} barcodes detected"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:43
+#, fuzzy, python-brace-format
+msgid "1 code detected"
+msgid_plural "{count} codes detected"
+msgstr[0] "1 paraula capturada"
+msgstr[1] "{count} paraules capturades"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:50
+#, python-brace-format
+msgid "1 paragraph captured"
+msgid_plural "{count} paragraphs captured"
+msgstr[0] "1 paràgraf capturat"
+msgstr[1] "{count} paràgrafs capturats"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:57
+#, python-brace-format
+msgid "1 email captured"
+msgid_plural "{count} emails captured"
+msgstr[0] "1 correu electrònic capturat"
+msgstr[1] "{count} correus electrònics capturats"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:64
+#, python-brace-format
+msgid "1 word captured"
+msgid_plural "{count} words captured"
+msgstr[0] "1 paraula capturada"
+msgstr[1] "{count} paraules capturades"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:71
+#, python-brace-format
+msgid "1 line captured"
+msgid_plural "{count} lines captured"
+msgstr[0] "1 línia capturada"
+msgstr[1] "{count} línies capturades"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:78
+#, python-brace-format
+msgid "1 URL captured"
+msgid_plural "{count} URLs captured"
+msgstr[0] "1 URL capturat"
+msgstr[1] "{count} URL capturats"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:87
+#, python-brace-format
+msgid "1 character captured"
+msgid_plural "{count} characters captured"
+msgstr[0] "1 caràcter capturat"
+msgstr[1] "{count} caràcters capturats"
+
+#. Notification title
+#: normcap/gui/notification.py:115
+msgid "Nothing captured!"
+msgstr "No s'ha capturat res!"
+
+#. Notification text
+#: normcap/gui/notification.py:117
+msgid "Please try again."
+msgstr "Intenteu-ho de nou."
+
+#: normcap/gui/tray.py:397
+#, fuzzy, python-brace-format
+msgid ""
+"'{application}' is missing the permission for 'Screen Recording'.\n"
+"\n"
+"Grant it via the dialog that will appear after you clicked 'Ok' or via "
+"'System Settings' → 'Privacy & Security'.\n"
+"\n"
+"Then restart NormCap."
+msgstr ""
+"A '{application}' li falta el permís per a 'Gravar pantalla'.\n"
+"\n"
+"Concediu-li'l a través del quadre de diàleg que apareixerà després de fer "
+"clic en 'Accepta' o a través de 'Configuració del sistema' → 'Privacitat i "
+"seguretat'.\n"
+"\n"
+"Després reinicieu NormCap."
+
+#: normcap/gui/tray.py:408
+#, python-brace-format
+msgid ""
+"<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
+" via the dialog that will appear after you clicked 'Ok'.<br>Then start "
+"NormCap again.<br><br><small>Sometimes, this might not work. If that is the "
+"case for you then please<br><a href='{issues_url}'>report this as bug</a> on"
+" GitHub.</small>"
+msgstr ""
+"<b>A NormCap li falta el permís per a la captura de pantalla.</b><br><br"
+">Concediu-li'l a través del quadre de diàleg que apareixerà després de fer "
+"clic en 'Accepta'.<br>Després, inicieu NormCap novament.<br><br><small>A "
+"vegades, pot ser que això no funcione. Si és el cas, <br><a "
+"href=\"{issues_url}\">informeu-ne com a error</a> en GitHub.</small>"
+
+#. Tray menu entry
+#: normcap/gui/tray.py:491
+msgid "Capture"
+msgstr "Captura"
+
+#. Tray menu entry for exiting NormCap completely.
+#: normcap/gui/tray.py:498
+msgid "Exit"
+msgstr "Ix"
+
+#. Update available dialog box.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/update_check.py:81
+#, python-brace-format
+msgid "NormCap v{version} is available."
+msgstr "Està disponible NormCap v{version}."
+
+#. Update available dialog box.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/update_check.py:84
+#, python-brace-format
+msgid "You have v{version}"
+msgstr "Teniu v{version}"
+
+#: normcap/gui/update_check.py:89
+msgid ""
+"You can download the new version of NormCap for your operating system from "
+"GitHub.\n"
+"\n"
+"Do you want to visit the release website now?"
+msgstr ""
+"Podeu descarregar la nova versió de NormCap per al vostre sistema operatiu "
+"des de GitHub.\n"
+"\n"
+"Voleu visitar ara la pàgina web de la versió?"
+
+#: normcap/gui/update_check.py:96
+msgid ""
+"You can upgrade NormCap via the command line, e.g. by running 'pip install "
+"normcap --upgrade'.\n"
+"\n"
+"Do you want to view the changelog on GitHub now?"
+msgstr ""
+"Podeu actualitzar NormCap a través de la línia d'ordes, per exemple, "
+"executant 'pip install normcap --upgrade'.\n"
+"\n"
+"Voleu veure ara el registre de canvis en GitHub?"

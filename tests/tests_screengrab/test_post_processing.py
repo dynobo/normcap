@@ -2,7 +2,7 @@ from pathlib import Path
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.screengrab import post_processing
+from normcap.screenshot import post_processing
 
 
 def test_split_full_desktop_to_screens(monkeypatch):

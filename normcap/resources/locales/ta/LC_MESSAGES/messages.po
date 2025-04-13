@@ -1,0 +1,513 @@
+# Tamil translations for NormCap.
+# Copyright (C) 2024 dynobo
+# This file is distributed under the same license as the NormCap project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: NormCap 0.5.4\n"
+"Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
+"POT-Creation-Date: 2025-04-12 18:27+0200\n"
+"PO-Revision-Date: 2025-04-12 15:36+0000\n"
+"Last-Translator: dynobo <dynobo@mailbox.org>\n"
+"Language: ta\n"
+"Language-Team: Tamil <https://hosted.weblate.org/projects/normcap/ui/ta/>\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#. Generic error message when any download failed.
+#: normcap/gui/downloader.py:59
+msgid "Download error."
+msgstr "பிழையைப் பதிவிறக்கவும்."
+
+#. Introduction window title
+#: normcap/gui/introduction.py:51
+msgid "Introduction to NormCap"
+msgstr "நார்ம்கேப்புக்கு அறிமுகம்"
+
+#. Introduction window checkbox
+#: normcap/gui/introduction.py:57
+msgid "Show on startup"
+msgstr "தொடக்கத்தில் காட்டு"
+
+#. Introduction window button
+#: normcap/gui/introduction.py:60
+msgid "Ok"
+msgstr "சரி"
+
+#. Introduction window shortcut for pasting on Linux and Windows
+#: normcap/gui/introduction.py:77
+msgid "Ctrl + v"
+msgstr "கட்டுப்பாடு + v"
+
+#. Introduction window shortcut for pasting on macOS
+#: normcap/gui/introduction.py:79
+msgid "Cmd + v"
+msgstr "சிஎம்டி + வி"
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:83
+msgid "1. Select area"
+msgstr "1. பகுதியைத் தேர்ந்தெடுக்கவும்"
+
+#: normcap/gui/introduction.py:86
+msgid ""
+"Wait until a pink border appears around your screen, then select the desired"
+" capture area."
+msgstr ""
+"உங்கள் திரையைச் சுற்றி ஒரு இளஞ்சிவப்பு எல்லை தோன்றும் வரை காத்திருங்கள், "
+"பின்னர் விரும்பிய பிடிப்பு பகுதியைத் தேர்ந்தெடுக்கவும்."
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:93
+msgid "2. Wait for detection"
+msgstr "2. கண்டறிதலுக்காக காத்திருங்கள்"
+
+#: normcap/gui/introduction.py:96
+msgid ""
+"Processing takes time. Wait for a notification or a color change of the "
+"system tray icon."
+msgstr ""
+"செயலாக்கத்திற்கு நேரம் எடுக்கும். கணினி தட்டு ஐகானின் அறிவிப்பு அல்லது வண்ண "
+"மாற்றத்திற்காக காத்திருங்கள்."
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:103
+msgid "3. Paste from clipboard"
+msgstr "3. கிளிப்போர்டிலிருந்து ஒட்டவும்"
+
+#: normcap/gui/introduction.py:106
+#, python-brace-format
+msgid ""
+"The detection result will be copied to your system's clipboard. Paste it "
+"into any application ({shortcut})."
+msgstr ""
+"கண்டறிதல் முடிவு உங்கள் கணினியின் இடைநிலைப்பலகைக்கு நகலெடுக்கப்படும். "
+"எந்தவொரு பயன்பாட்டிலும் ({shortcut}) ஒட்டவும்."
+
+#. Introduction window step title
+#: normcap/gui/introduction.py:117
+msgid "Settings & more"
+msgstr "அமைப்புகள் மற்றும் பல"
+
+#: normcap/gui/introduction.py:120
+msgid ""
+"Open the menu using the gear icon in the upper right corner of corner your "
+"screen."
+msgstr ""
+"உங்கள் திரையின் மூலையின் மேல் வலது மூலையில் உள்ள கியர் ஐகானைப் பயன்படுத்தி "
+"மெனுவைத் திறக்கவும்."
+
+#. Introduction window headline
+#: normcap/gui/introduction.py:130
+msgid "Basic Usage"
+msgstr "அடிப்படை பயன்பாடு"
+
+#. Title of Language Manager
+#: normcap/gui/language_manager.py:32
+msgid "Manage Languages"
+msgstr "மொழிகளை நிர்வகிக்கவும்"
+
+#. Language Manager section
+#: normcap/gui/language_manager.py:45
+msgid "Installed:"
+msgstr "நிறுவப்பட்டுள்ளது:"
+
+#. Language Manager button
+#: normcap/gui/language_manager.py:48
+msgid "Delete"
+msgstr "நீக்கு"
+
+#. Language Manager section
+#: normcap/gui/language_manager.py:55
+msgid "Available:"
+msgstr "கிடைக்கிறது:"
+
+#. Language Manager button
+#: normcap/gui/language_manager.py:58
+msgid "Download"
+msgstr "பதிவிறக்கம்"
+
+#. Language Manager button
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/language_manager.py:67 normcap/gui/menu_button.py:411
+msgid "Close"
+msgstr "மூடு"
+
+#. Language Manager link to directory on file system
+#: normcap/gui/language_manager.py:73
+msgid "Close and view tessdata folder in file manager …"
+msgstr "கோப்பு மேலாளரில் டெச் டேட்டா கோப்புறையை மூடி பார்க்கவும் …"
+
+#. Language Manager error message box title
+#: normcap/gui/language_manager.py:98 normcap/gui/tray.py:391
+msgid "Error"
+msgstr "பிழை"
+
+#. Language Manager error message box text
+#: normcap/gui/language_manager.py:100
+msgid "Language download failed!"
+msgstr "மொழி பதிவிறக்கம் தோல்வியடைந்தது!"
+
+#. Language Manager information message box title
+#: normcap/gui/language_manager.py:130
+msgid "Information"
+msgstr "தகவல்"
+
+#: normcap/gui/language_manager.py:133
+msgid ""
+"It is not possible to delete all languages. NormCap needs at least one to "
+"function correctly."
+msgstr ""
+"எல்லா மொழிகளையும் நீக்க முடியாது. சரியாக செயல்பட நார்ம்கேப்பிற்கு "
+"குறைந்தபட்சம் ஒன்று தேவை."
+
+#: normcap/gui/menu_button.py:153
+msgid ""
+"This installation of NormCap uses the Tesseract binary installed on your "
+"system. To install additional languages, please refer to the documentation "
+"of that Tesseract installation."
+msgstr ""
+"நார்ம்கேப்பின் இந்த நிறுவல் உங்கள் கணினியில் நிறுவப்பட்ட டெசராக்ட் பைனரியைப்"
+" பயன்படுத்துகிறது. கூடுதல் மொழிகளை நிறுவ, தயவுசெய்து அந்த டெசராக்ட் "
+"நிறுவலின் ஆவணங்களைப் பார்க்கவும்."
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:202
+msgid "Settings"
+msgstr "அமைப்புகள்"
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:206
+#, fuzzy
+msgid "Detection"
+msgstr "2. கண்டறிதலுக்காக காத்திருங்கள்"
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:210
+msgid "Post-processing"
+msgstr ""
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:214
+msgid "Languages"
+msgstr "மொழிகள்"
+
+#. Section title in Main Menu
+#: normcap/gui/menu_button.py:218
+msgid "Application"
+msgstr "பயன்பாடு"
+
+#. Entry in main menu's 'setting' section
+#: normcap/gui/menu_button.py:238
+msgid "Show notification"
+msgstr "அறிவிப்பைக் காட்டு"
+
+#: normcap/gui/menu_button.py:244
+msgid ""
+"Show status information via your system's desktop\n"
+"notification center."
+msgstr ""
+"உங்கள் கணினியின் டெச்க்டாப் வழியாக நிலை தகவல்களைக் காட்டுங்கள்\n"
+" அறிவிப்பு நடுவண்."
+
+#. Extension "Show notification"-Tooltip on macOS and Windows.
+#. Entry in main menu's 'setting' section
+#: normcap/gui/menu_button.py:255
+msgid "Keep in system tray"
+msgstr "கணினி தட்டில் வைக்கவும்"
+
+#: normcap/gui/menu_button.py:262
+msgid ""
+"Keep NormCap running in the background. Another\n"
+"capture can be triggered via the tray icon."
+msgstr ""
+"நார்ம்கேப்பை பின்னணியில் இயக்கவும். மற்றொன்று\n"
+" தட்டு படவுரு வழியாக பிடிப்பு தூண்டப்படலாம்."
+
+#. Entry in main menu's 'setting' section
+#: normcap/gui/menu_button.py:269
+msgid "Check for update"
+msgstr "புதுப்பிப்புக்கு சரிபார்க்கவும்"
+
+#: normcap/gui/menu_button.py:276
+msgid ""
+"Frequently fetch NormCap's releases online and display\n"
+"a message if a new version is available."
+msgstr ""
+"நார்ம்கேப்பின் வெளியீடுகளை ஆன்லைனில் அடிக்கடி பெறவும்\n"
+" புதிய பதிப்பு கிடைத்தால் செய்தி."
+
+#. Entry in main menu's 'Detection' section
+#: normcap/gui/menu_button.py:288
+#, fuzzy
+msgid "Parse text"
+msgstr "பாகுபடுத்தல்"
+
+#: normcap/gui/menu_button.py:295
+#, fuzzy
+msgid ""
+"Tries to determine the text's type (e.g. line,\n"
+"paragraph, URL, email) and formats the output\n"
+"accordingly.\n"
+"Turn it off to return the text exactly as detected\n"
+"by the Optical Character Recognition Software."
+msgstr ""
+"உரையின் வகையைத் தீர்மானிக்க முயற்சிக்கிறது (எ.கா. வரி,\n"
+" பத்தி, முகவரி, மின்னஞ்சல்) மற்றும் வெளியீட்டை வடிவமைக்கிறது\n"
+" அதன்படி.\n"
+" முடிவு எதிர்பாராததாக இருந்தால், அதற்கு பதிலாக 'மூல' பயன்முறையை "
+"முயற்சிக்கவும்."
+
+#: normcap/gui/menu_button.py:309
+#, fuzzy
+msgid "Text"
+msgstr "வெளியேறு"
+
+#. Tooltip of main menu's 'Text' entry. Use <56 chars p. line.
+#: normcap/gui/menu_button.py:314
+msgid "Tries to detect text in the selected region using OCR."
+msgstr ""
+
+#. Entry in main menu's 'Detection' section
+#: normcap/gui/menu_button.py:318
+msgid "QR && Barcodes"
+msgstr ""
+
+#: normcap/gui/menu_button.py:325
+msgid ""
+"Detects Barcodes and QR codes. If one or more codes are found,\n"
+"text detection (OCR) is skipped and only the codes' data is returned."
+msgstr ""
+
+#. Entry in main menu's 'Languages' section. Shown in prebuilt package.
+#: normcap/gui/menu_button.py:353
+msgid "add/remove …"
+msgstr "சேர்க்க/அகற்று …"
+
+#. Entry in main menu's 'Languages' section. Shown in Python package.
+#: normcap/gui/menu_button.py:357
+#, fuzzy
+msgid "… need more?"
+msgstr "… இன்னும் தேவையா?"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:366
+msgid "About"
+msgstr "பற்றி"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:374
+msgid "Introduction"
+msgstr "அறிமுகம்"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:379
+msgid "Website"
+msgstr "வலைத்தளம்"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:384
+msgid "FAQs"
+msgstr "கேள்விகள்"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:389
+msgid "Source code"
+msgstr "மூலக் குறியீடு"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:394
+msgid "Releases"
+msgstr "வெளியீடுகள்"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:399
+msgid "Report a problem"
+msgstr "ஒரு சிக்கலைப் புகாரளிக்கவும்"
+
+#. Entry in main menu's 'Application' section.
+#: normcap/gui/menu_button.py:404
+msgid "Donate for coffee"
+msgstr "காபிக்கு நன்கொடை"
+
+#. Tooltip of main menu's 'close' entry. Use <56 chars p. line.
+#: normcap/gui/menu_button.py:414
+msgid "Exit NormCap, or minimize to system tray (if enabled)."
+msgstr ""
+"நார்ம்கேப்பிலிருந்து வெளியேறவும் அல்லது கணினி தட்டில் குறைக்கவும் "
+"(இயக்கப்பட்டால்)."
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:29
+#, python-brace-format
+msgid "1 QR code detected"
+msgid_plural "{count} QR codes detected"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:36
+#, python-brace-format
+msgid "1 barcode detected"
+msgid_plural "{count} barcodes detected"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:43
+#, fuzzy, python-brace-format
+msgid "1 code detected"
+msgid_plural "{count} codes detected"
+msgstr[0] "1 சொல் கைப்பற்றப்பட்டது"
+msgstr[1] "{count} சொற்கள் கைப்பற்றப்பட்டன"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:50
+#, python-brace-format
+msgid "1 paragraph captured"
+msgid_plural "{count} paragraphs captured"
+msgstr[0] "1 பத்தி கைப்பற்றப்பட்டது"
+msgstr[1] "{count} பத்திகள் கைப்பற்றப்பட்டன"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:57
+#, python-brace-format
+msgid "1 email captured"
+msgid_plural "{count} emails captured"
+msgstr[0] "1 மின்னஞ்சல் கைப்பற்றப்பட்டது"
+msgstr[1] "{count} மின்னஞ்சல்கள் கைப்பற்றப்பட்டன"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:64
+#, python-brace-format
+msgid "1 word captured"
+msgid_plural "{count} words captured"
+msgstr[0] "1 சொல் கைப்பற்றப்பட்டது"
+msgstr[1] "{count} சொற்கள் கைப்பற்றப்பட்டன"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:71
+#, python-brace-format
+msgid "1 line captured"
+msgid_plural "{count} lines captured"
+msgstr[0] "1 வரி கைப்பற்றப்பட்டது"
+msgstr[1] "{count} கோடுகள் கைப்பற்றப்பட்டன"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:78
+#, python-brace-format
+msgid "1 URL captured"
+msgid_plural "{count} URLs captured"
+msgstr[0] "1 முகவரி கைப்பற்றப்பட்டது"
+msgstr[1] "{count} urls கைப்பற்றப்பட்டது"
+
+#. Notification title.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/notification.py:87
+#, python-brace-format
+msgid "1 character captured"
+msgid_plural "{count} characters captured"
+msgstr[0] "1 எழுத்து கைப்பற்றப்பட்டது"
+msgstr[1] "{count} எழுத்துக்கள் கைப்பற்றப்பட்டன"
+
+#. Notification title
+#: normcap/gui/notification.py:115
+msgid "Nothing captured!"
+msgstr "எதுவும் கைப்பற்றப்படவில்லை!"
+
+#. Notification text
+#: normcap/gui/notification.py:117
+msgid "Please try again."
+msgstr "மீண்டும் முயற்சிக்கவும்."
+
+#: normcap/gui/tray.py:397
+#, fuzzy, python-brace-format
+msgid ""
+"'{application}' is missing the permission for 'Screen Recording'.\n"
+"\n"
+"Grant it via the dialog that will appear after you clicked 'Ok' or via "
+"'System Settings' → 'Privacy & Security'.\n"
+"\n"
+"Then restart NormCap."
+msgstr ""
+"'{application}' 'திரை பதிவு' செய்வதற்கான அனுமதியைக் காணவில்லை.\n"
+"\n"
+" நீங்கள் 'சரி' என்பதைக் சொடுக்கு செய்தபின் அல்லது 'கணினி அமைப்புகள்'→ "
+"'தனியுரிமை மற்றும் பாதுகாப்பு' வழியாக தோன்றும் உரையாடல் வழியாக அதை "
+"வழங்கவும்.\n"
+"\n"
+" பின்னர் நார்ம்கேப்பை மறுதொடக்கம் செய்யுங்கள்."
+
+#: normcap/gui/tray.py:408
+#, python-brace-format
+msgid ""
+"<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
+" via the dialog that will appear after you clicked 'Ok'.<br>Then start "
+"NormCap again.<br><br><small>Sometimes, this might not work. If that is the "
+"case for you then please<br><a href='{issues_url}'>report this as bug</a> on"
+" GitHub.</small>"
+msgstr ""
+"<b>திரை பிடிப்புக்கான அனுமதியைக் காணவில்லை.</b><br><br>சிறிய சில நேரங்களில்,"
+" இது வேலை செய்யாது.<br><br><small>உங்களுக்காக அப்படியானால், தயவுசெய்து<br><a"
+" href=\"{issues_url}\">இதை பிழை என்று புகாரளிக்கவும்</a> "
+"கிட்அப்பில்.</small>"
+
+#. Tray menu entry
+#: normcap/gui/tray.py:491
+msgid "Capture"
+msgstr "பிடிப்பு"
+
+#. Tray menu entry for exiting NormCap completely.
+#: normcap/gui/tray.py:498
+msgid "Exit"
+msgstr "வெளியேறு"
+
+#. Update available dialog box.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/update_check.py:81
+#, python-brace-format
+msgid "NormCap v{version} is available."
+msgstr "நார்ம்கேப் வி {version} கிடைக்கிறது."
+
+#. Update available dialog box.
+#. Do NOT translate the variables in curly brackets "{some_variable}"!
+#: normcap/gui/update_check.py:84
+#, python-brace-format
+msgid "You have v{version}"
+msgstr "உங்களிடம் v {version} உள்ளது"
+
+#: normcap/gui/update_check.py:89
+msgid ""
+"You can download the new version of NormCap for your operating system from "
+"GitHub.\n"
+"\n"
+"Do you want to visit the release website now?"
+msgstr ""
+"உங்கள் இயக்க முறைமைக்கு நார்ம்கேப்பின் புதிய பதிப்பை கிட்அப்பிலிருந்து "
+"பதிவிறக்கம் செய்யலாம்.\n"
+"\n"
+" இப்போது வெளியீட்டு வலைத்தளத்தைப் பார்வையிட விரும்புகிறீர்களா?"
+
+#: normcap/gui/update_check.py:96
+msgid ""
+"You can upgrade NormCap via the command line, e.g. by running 'pip install "
+"normcap --upgrade'.\n"
+"\n"
+"Do you want to view the changelog on GitHub now?"
+msgstr ""
+"நீங்கள் கட்டளை வரி வழியாக நார்ம்கேப்பை மேம்படுத்தலாம், எ.கா. 'பிஐபி "
+"நிறுவுதல் NORMCAP --upgrade' ஐ இயக்குவதன் மூலம்.\n"
+"\n"
+" நீங்கள் இப்போது கிதுபில் சேஞ்ச்லாக் பார்க்க விரும்புகிறீர்களா?"

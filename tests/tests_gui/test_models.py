@@ -1,7 +1,6 @@
 import pytest
-from PySide6 import QtGui
 
-from normcap.gui.models import Capture, Rect, Screen
+from normcap.gui.models import Rect, Screen
 
 
 def test_rect_properties():
@@ -38,18 +37,6 @@ def test_rect_scaled_coords(coords, factor, expected_scaled_coords):
 
     # THEN it should result in certain scaled coords
     assert rect_scaled.coords == expected_scaled_coords
-
-
-@pytest.mark.parametrize(
-    ("width", "height", "expected_area"), [(200, 300, (200 + 1) * (300 + 1)), (0, 0, 0)]
-)
-def test_capture_image_area(capture: Capture, width, height, expected_area):
-    # GIVEN a Capture is instantiated with an image of certain dimension
-    capture.image = QtGui.QImage(width, height, QtGui.QImage.Format.Format_RGB32)
-
-    # WHEN the image are is accessed
-    # THEN it should return the correct value
-    assert capture.image_area == expected_area
 
 
 def test_screen_properties():

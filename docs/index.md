@@ -27,7 +27,7 @@ Packages with the
   <small>arm64, ~65 MB</small>
 </div>
 
-... or install via
+… or install via
 [FlatHub](https://flathub.org/apps/details/com.github.dynobo.normcap),
 [AUR](https://aur.archlinux.org/packages/normcap) or
 [PyPi](https://pypi.org/project/normcap/).

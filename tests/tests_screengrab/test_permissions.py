@@ -4,7 +4,7 @@ import sys
 
 import pytest
 
-from normcap.screengrab import permissions
+from normcap.screenshot import permissions
 
 
 @pytest.mark.skipif(sys.platform in {"win32", "linux"}, reason="macOS specific test")

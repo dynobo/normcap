@@ -4,7 +4,7 @@ from difflib import SequenceMatcher
 import pytest
 from PySide6 import QtGui
 
-from normcap.gui.tray import screengrab
+from normcap.gui.tray import screenshot
 
 from .testcases import testcases
 
@@ -39,7 +39,10 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     assert not tray.windows
 
     testcase = testcases[0]
-    monkeypatch.setattr(screengrab, "capture", lambda: [testcase.screenshot])
+    monkeypatch.setattr(screenshot, "capture", lambda: [testcase.screenshot])
+
+    copy_to_clipboard_calls = {}
+    monkeypatch.setattr(tray, "_copy_to_clipboard", copy_to_clipboard_calls.update)
 
     exit_calls = []
     monkeypatch.setattr(sys, "exit", exit_calls.append)
@@ -59,14 +62,10 @@ def test_tray_menu_capture(monkeypatch, qtbot, run_normcap, select_region):
     # THEN text should be captured
     #      and close to the ground truth
     #      and normcap should _not_ exit
-    qtbot.waitUntil(lambda: tray.capture.ocr_text is not None)
+    qtbot.waitUntil(lambda: copy_to_clipboard_calls != {})
 
-    capture = tray.capture
-    assert capture
-
-    similarity = SequenceMatcher(
-        None, capture.ocr_text, testcase.expected_ocr_text
-    ).ratio()
-    assert similarity >= 0.98, f"{capture.ocr_text=}"
+    detected_text = copy_to_clipboard_calls["text"]
+    similarity = SequenceMatcher(None, detected_text, testcase.expected_text).ratio()
+    assert similarity >= 0.98, f"{detected_text=}"
 
     assert not exit_calls

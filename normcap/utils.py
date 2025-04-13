@@ -42,16 +42,19 @@ def create_argparser() -> argparse.ArgumentParser:
     for setting in DEFAULT_SETTINGS:
         if not setting.cli_arg:
             continue
+        flags = (
+            [f"-{setting.flag}", f"--{setting.key}"]
+            if setting.flag
+            else [f"--{setting.key}"]
+        )
         parser.add_argument(
-            f"-{setting.flag}",
-            f"--{setting.key}",
+            *flags,
             type=setting.type_,
-            help=setting.help_,
+            help=setting.help_ + f" (default: {setting.value})",
             choices=setting.choices,
             nargs=setting.nargs,
         )
     parser.add_argument(
-        "-r",
         "--reset",
         action="store_true",
         help="Reset all settings to default values",
@@ -103,7 +106,7 @@ def set_environ_for_wayland() -> None:
 
 def set_environ_for_appimage() -> None:
     # Append path to shipped binaries to PATH
-    bin_path = str((Path(__file__).parent.parent.parent / "bin").resolve())
+    bin_path = str(Path(__file__).resolve().parents[2] / "bin")
     logger.debug("Append %s to AppImage internal PATH", bin_path)
     os.environ["PATH"] = (
         os.environ.get("PATH", "").rstrip(os.pathsep) + os.pathsep + bin_path
@@ -225,7 +228,7 @@ def qt_log_wrapper(
         logger.error(message)
 
 
-def copy_traineddata_files(target_dir: Optional[os.PathLike]) -> None:
+def copy_traineddata_files(target_dir: Optional[Path]) -> None:
     """Copy Tesseract traineddata files to the target path if they don't already exist.
 
     Args:
@@ -235,7 +238,6 @@ def copy_traineddata_files(target_dir: Optional[os.PathLike]) -> None:
     if not target_dir:
         return
 
-    target_dir = Path(target_dir)
     if target_dir.is_dir() and list(target_dir.glob("*.traineddata")):
         return
 

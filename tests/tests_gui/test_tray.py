@@ -1,6 +1,6 @@
 import pytest
 
-from normcap import ocr
+from normcap.detection import ocr
 from normcap.gui import tray
 from normcap.gui.settings import Settings
 

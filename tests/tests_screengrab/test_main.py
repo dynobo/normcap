@@ -1,16 +1,16 @@
 import pytest
 from PySide6 import QtGui
 
-from normcap import screengrab
-from normcap.screengrab import system_info
-from normcap.screengrab.handlers import grim
-from normcap.screengrab.structures import Handler
+from normcap import screenshot
+from normcap.screenshot import system_info
+from normcap.screenshot.handlers import grim
+from normcap.screenshot.models import Handler
 
 
 def test_capture(qapp):
     # GIVEN any system (with display server)
     # WHEN screenshots are taken
-    images = screengrab.capture()
+    images = screenshot.capture()
 
     # THEN we should retrieve at least one image
     assert len(images) > 0
@@ -50,7 +50,7 @@ def test_get_available_handlers(
     has_grim,
     expected_handler,
 ):
-    monkeypatch.setattr(screengrab.system_info.sys, "platform", sys_platform)
+    monkeypatch.setattr(screenshot.system_info.sys, "platform", sys_platform)
     monkeypatch.setattr(system_info, "has_wayland_display_manager", lambda: is_wayland)
     monkeypatch.setattr(system_info, "has_wlroots_compositor", lambda: is_wlroots)
     monkeypatch.setattr(system_info, "get_gnome_version", lambda: gnome_version)
@@ -58,6 +58,6 @@ def test_get_available_handlers(
         grim.shutil, "which", lambda _: "/usr/bin/grim" if has_grim else None
     )
 
-    handlers = screengrab.main.get_available_handlers()
+    handlers = screenshot.main.get_available_handlers()
 
     assert handlers[0] == expected_handler, handlers

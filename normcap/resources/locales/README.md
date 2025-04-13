@@ -15,19 +15,22 @@
 
 | Locale                                   | Progress | Translated |
 | :--------------------------------------- | -------: | ---------: |
-| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [es_ES](./es_ES/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
-| [it_IT](./it_IT/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [ja_JP](./ja_JP/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [pl_PL](./pl_PL/LC_MESSAGES/messages.po) |       8% |    6 of 68 |
-| [pt_BR](./pt_BR/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [sv_SE](./sv_SE/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [uk_UA](./uk_UA/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
-| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |     100% |   68 of 68 |
+| [ca](./ca/LC_MESSAGES/messages.po)       |      94% |   70 of 74 |
+| [cs](./cs/LC_MESSAGES/messages.po)       |      94% |   70 of 74 |
+| [de_DE](./de_DE/LC_MESSAGES/messages.po) |     100% |   74 of 74 |
+| [es_ES](./es_ES/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |      12% |    9 of 74 |
+| [it_IT](./it_IT/LC_MESSAGES/messages.po) |     100% |   74 of 74 |
+| [ja_JP](./ja_JP/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [pl_PL](./pl_PL/LC_MESSAGES/messages.po) |      12% |    9 of 74 |
+| [pt_BR](./pt_BR/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [sv_SE](./sv_SE/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [ta](./ta/LC_MESSAGES/messages.po)       |      94% |   70 of 74 |
+| [uk_UA](./uk_UA/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
+| [zh_CN](./zh_CN/LC_MESSAGES/messages.po) |      94% |   70 of 74 |
 
 ## Contribute to UI translations
 
@@ -64,7 +67,7 @@ _NOTE:_: Details about the `.po`-file format can be found in the
             ```
         - AppImage:
             ```
-            LANGUAGE=<LOCALE_NAME> NormCap-[...].AppImage
+            LANGUAGE=<LOCALE_NAME> NormCap-[…].AppImage
             ```
         - FlatPak:
             ```
@@ -88,7 +91,7 @@ _NOTE:_: Details about the `.po`-file format can be found in the
             ```
 1. Navigate through the user interface and proofread any text. Pay special attention to
     whether the presentation of the text looks good. (E.g. strings are too long/short,
-    wrong line breaks, ...)
+    wrong line breaks, …)
 1. Propose any changes preferably right away as Pull Request, or if you don't feel
     comfortable in doing that, report your finding as
     [new issue](https://github.com/dynobo/normcap/issues/new).

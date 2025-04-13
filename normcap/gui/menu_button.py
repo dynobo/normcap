@@ -1,5 +1,6 @@
 """Create the settings button and its menu."""
 
+import logging
 import sys
 from typing import Optional, Union
 
@@ -8,6 +9,8 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from normcap import __version__
 from normcap.gui.constants import URLS
 from normcap.gui.localization import _
+
+logger = logging.getLogger(__name__)
 
 _MENU_STYLE = """
 QMenu {
@@ -134,7 +137,7 @@ class MenuButton(QtWidgets.QToolButton):
         message_box.exec()
 
     @QtCore.Slot(QtGui.QAction)  # type: ignore  # pyside typhint bug?
-    def on_item_click(self, action: QtGui.QAction) -> None:  # noqa: PLR0911
+    def on_item_click(self, action: QtGui.QAction) -> None:  # noqa: PLR0911, C901
         action_name = action.objectName()
         group = action.actionGroup()
         group_name = group.objectName() if group else None
@@ -166,7 +169,15 @@ class MenuButton(QtWidgets.QToolButton):
             self.com.on_open_url.emit(action_name)
             return
 
-        if group_name in ["settings_group", "detection_group"]:
+        if group_name in ["settings_group", "postprocessing_group"]:
+            self.settings.setValue(action_name, action.isChecked())
+            self.com.on_setting_change.emit(action_name)
+            return
+
+        if group_name == "detection_group":
+            if not any(a.isChecked() for a in group.actions()):
+                # If all detection methods are unselected, keep the clicked one active:
+                action.setChecked(True)
             self.settings.setValue(action_name, action.isChecked())
             self.com.on_setting_change.emit(action_name)
             return
@@ -174,7 +185,7 @@ class MenuButton(QtWidgets.QToolButton):
         if group_name == "language_group":
             languages = [a.objectName() for a in group.actions() if a.isChecked()]
             if not languages:
-                # If all languages are unselected, keep the currently clicked active:
+                # If all languages are unselected, keep the clicked one active:
                 languages = [action_name]
                 action.setChecked(True)
             self.settings.setValue("language", languages)
@@ -194,6 +205,10 @@ class MenuButton(QtWidgets.QToolButton):
         # L10N: Section title in Main Menu
         self._add_title(menu, _("Detection"))
         self._add_detection_section(menu)
+        menu.addSeparator()
+        # L10N: Section title in Main Menu
+        self._add_title(menu, _("Post-processing"))
+        self._add_postprocessing_section(menu)
         menu.addSeparator()
         # L10N: Section title in Main Menu
         self._add_title(menu, _("Languages"))
@@ -264,13 +279,13 @@ class MenuButton(QtWidgets.QToolButton):
         )
         menu.addAction(action)
 
-    def _add_detection_section(self, menu: QtWidgets.QMenu) -> None:
-        detection_group = QtGui.QActionGroup(menu)
-        detection_group.setObjectName("detection_group")
-        detection_group.setExclusive(False)
+    def _add_postprocessing_section(self, menu: QtWidgets.QMenu) -> None:
+        postprocessing_group = QtGui.QActionGroup(menu)
+        postprocessing_group.setObjectName("postprocessing_group")
+        postprocessing_group.setExclusive(False)
 
         # L10N: Entry in main menu's 'Detection' section
-        action = QtGui.QAction(_("Parse text"), detection_group)
+        action = QtGui.QAction(_("Parse text"), postprocessing_group)
         action.setObjectName("parse-text")
         action.setCheckable(True)
         action.setChecked(bool(self.settings.value("parse-text", type=bool)))
@@ -282,6 +297,33 @@ class MenuButton(QtWidgets.QToolButton):
                 "accordingly.\n"
                 "Turn it off to return the text exactly as detected\n"
                 "by the Optical Character Recognition Software."
+            )
+        )
+        menu.addAction(action)
+
+    def _add_detection_section(self, menu: QtWidgets.QMenu) -> None:
+        detection_group = QtGui.QActionGroup(menu)
+        detection_group.setObjectName("detection_group")
+        detection_group.setExclusive(False)
+
+        action = QtGui.QAction(_("Text"), detection_group)
+        action.setObjectName("detect-text")
+        action.setCheckable(True)
+        action.setChecked(bool(self.settings.value("detect-text", type=bool)))
+        # L10N: Tooltip of main menu's 'Text' entry. Use <56 chars p. line.
+        action.setToolTip(_("Tries to detect text in the selected region using OCR."))
+        menu.addAction(action)
+
+        # L10N: Entry in main menu's 'Detection' section
+        action = QtGui.QAction(_("QR && Barcodes"), detection_group)
+        action.setObjectName("detect-codes")
+        action.setCheckable(True)
+        action.setChecked(bool(self.settings.value("detect-codes", type=bool)))
+        # L10N: Tooltip of main menu's 'QR & Barcodes' entry. Use <56 chars p. line.
+        action.setToolTip(
+            _(
+                "Detects Barcodes and QR codes. If one or more codes are found,\n"
+                "text detection (OCR) is skipped and only the codes' data is returned."
             )
         )
         menu.addAction(action)
@@ -308,11 +350,11 @@ class MenuButton(QtWidgets.QToolButton):
 
         if self.has_language_manager:
             # L10N: Entry in main menu's 'Languages' section. Shown in prebuilt package.
-            action = QtGui.QAction(_("add/remove..."), menu)
+            action = QtGui.QAction(_("add/remove …"), menu)
             action.setObjectName("manage_languages")
         else:
             # L10N: Entry in main menu's 'Languages' section. Shown in Python package.
-            action = QtGui.QAction(_("... need more?"), menu)
+            action = QtGui.QAction(_("… need more?"), menu)
             action.setObjectName("show_help_languages")
 
         menu.addAction(action)

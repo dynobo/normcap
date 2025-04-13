@@ -19,7 +19,7 @@ from retry import retry
 class BuilderBase(ABC):
     """Create a prebuilt package."""
 
-    PROJECT_PATH = Path(__file__).absolute().parent.parent.parent
+    PROJECT_PATH = Path(__file__).resolve().parents[2]
     BUILD_PATH = (PROJECT_PATH / "bundle").resolve()
     IMG_PATH = BUILD_PATH / "imgs"
     RESOURCE_PATH = PROJECT_PATH / "normcap" / "resources"
@@ -64,7 +64,7 @@ class BuilderBase(ABC):
 
     def compile_locales(self) -> None:
         """Create .mo files for all locales."""
-        print("Compiling locales...")  # noqa: T201
+        print("Compiling locales …")  # noqa: T201
         self.run(
             cmd="python bundle/l10n.py",
             cwd=self.PROJECT_PATH,
