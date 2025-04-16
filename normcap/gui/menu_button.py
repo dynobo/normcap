@@ -122,7 +122,7 @@ class MenuButton(QtWidgets.QToolButton):
         menu.aboutToShow.connect(self.populate_menu_entries)
         return menu
 
-    @QtCore.Slot(list)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(list)
     def on_languages_changed(self, installed_languages: list[str]) -> None:
         self.languages = installed_languages
 
@@ -136,7 +136,7 @@ class MenuButton(QtWidgets.QToolButton):
         message_box.setText(text)
         message_box.exec()
 
-    @QtCore.Slot(QtGui.QAction)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(QtGui.QAction)
     def on_item_click(self, action: QtGui.QAction) -> None:  # noqa: PLR0911, C901
         action_name = action.objectName()
         group = action.actionGroup()

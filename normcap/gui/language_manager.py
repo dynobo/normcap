@@ -89,7 +89,7 @@ class LanguageManager(QtWidgets.QDialog):
         self._update_models()
         close_button.setFocus()
 
-    @QtCore.Slot(str, str)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(str, str)
     def _on_download_error(self, reason: str, url: str) -> None:
         self._set_in_progress(False)
         QtWidgets.QMessageBox.critical(
@@ -100,7 +100,7 @@ class LanguageManager(QtWidgets.QDialog):
             "<b>" + _("Language download failed!") + f"</b><br><br>{reason}",
         )
 
-    @QtCore.Slot(bytes, str)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(bytes, str)
     def _on_download_finished(self, data: bytes, url: str) -> None:
         """Save language to tessdata folder."""
         file_name = url.split("/")[-1]
