@@ -277,7 +277,6 @@ testcases: tuple[TestCase, ...] = (
     TestCase(
         image_path=image_dir / "18_qrcode_phone_number.png",
         expected_text="+ 012 34 5678",
-        # TODO: Implement Action for TextType.PHONE_NUMBER
         expected_text_type=[TextType.PHONE_NUMBER],
         expected_text_detector=[TextDetector.QR],
         expected_similarity=1,
@@ -293,7 +292,6 @@ testcases: tuple[TestCase, ...] = (
             "URL:https://github.com/dynobo/normcap\n"
             "END:VCARD"
         ),
-        # TODO: Implement Action for TextType.VCARD
         expected_text_type=[TextType.VCARD],
         expected_text_detector=[TextDetector.QR],
         expected_similarity=1,
@@ -308,7 +306,6 @@ testcases: tuple[TestCase, ...] = (
             "DTEND:20250408T114500\n"
             "END:VEVENT"
         ),
-        # TODO: Implement Action TextType.VEVENT
         expected_text_type=[TextType.VEVENT],
         expected_text_detector=[TextDetector.QR],
         expected_similarity=1,
