@@ -28,11 +28,11 @@ def test_save_image_in_tempfolder():
     assert re.fullmatch(r"^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}_.*", png_files[0].stem)
 
 
-@pytest.mark.parametrize("log_level", ["WARNING", "ERROR"])
+@pytest.mark.parametrize("log_level", ["warning", "error"])
 def test_save_image_in_tempfolder_skip_if_loglevel_not_debug(log_level):
     # GIVEN the logger is set to level other than DEBUG
     #   and a QImage
-    utils.logger.setLevel(log_level)
+    utils.logger.setLevel(log_level.upper())
     image = QtGui.QImage(20, 20, QtGui.QImage.Format.Format_RGB32)
 
     # WHEN the image is saved to the tempfolder
