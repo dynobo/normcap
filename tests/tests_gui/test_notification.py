@@ -114,14 +114,10 @@ def test_send_via_libnotify(monkeypatch):
 
     def popen_decorator(func):
         def decorated_popen(cmd: list[str], **kwargs):
-            cmd.insert(6, "--expire-time=100")  # Reduce test runtime
             cmd_args.extend(cmd)
-            return func(cmd, **kwargs)
+            return func(["echo", "test"], **kwargs)
 
         return decorated_popen
-
-    def _mocked_popen(cmd: str, start_new_session: bool, stdout, stderr):
-        cmd_args.extend(cmd)
 
     monkeypatch.setattr(subprocess, "Popen", popen_decorator(subprocess.Popen))
 
@@ -138,9 +134,8 @@ def test_send_via_libnotify(monkeypatch):
     assert cmd_args[3] == "--action=Open in Editor"
     assert cmd_args[4] == "--transient"
     assert cmd_args[5] == "--wait"
-    assert cmd_args[6].startswith("--expire-time")  # Only during test
-    assert cmd_args[7] == "Title"
-    assert cmd_args[8] == "Message"
+    assert cmd_args[6] == "Title"
+    assert cmd_args[7] == "Message"
 
     icon = cmd_args[1].removeprefix("--icon=")
     assert Path(icon).exists()

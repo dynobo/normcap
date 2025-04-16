@@ -180,7 +180,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self._show_windows(delay_screenshot=True)
 
-    @QtCore.Slot(QtWidgets.QSystemTrayIcon.ActivationReason)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(QtWidgets.QSystemTrayIcon.ActivationReason)
     def _handle_tray_click(
         self, reason: QtWidgets.QSystemTrayIcon.ActivationReason
     ) -> None:
@@ -201,7 +201,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         for index in range(len(system_info.screens())):
             self._create_window(index)
 
-    @QtCore.Slot(str)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(str)
     def _apply_setting_change(self, setting: str) -> None:
         if setting == "tray":
             capture_action = self.contextMenu().findChild(QtGui.QAction, name="capture")
@@ -209,7 +209,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             is_tray_visible = bool(self.settings.value(setting, False, type=bool))
             capture_action.setVisible(is_tray_visible)
 
-    @QtCore.Slot(list)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(list)
     def _sanitize_language_setting(self, installed_languages: list[str]) -> None:
         """Verify that languages selected in the settings exist.
 
@@ -225,7 +225,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.settings.setValue("language", active_languages)
 
-    @QtCore.Slot(list)  # type: ignore  # pyside typhint bug?s
+    @QtCore.Slot(list)
     def _update_installed_languages(self, installed_languages: list[str]) -> None:
         """Update instance attribute to reflect changes.
 
@@ -235,7 +235,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.installed_languages = installed_languages
 
     # TODO: Fix esc key not working
-    @QtCore.Slot()  # type: ignore  # pyside typhint bug?s
+    @QtCore.Slot()
     def _trigger_detect(self, rect: Rect, screen_idx: int) -> None:
         """Crop screenshot, perform content recognition on it and process result."""
         cropped_screenshot = utils.crop_image(
@@ -274,7 +274,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self._minimize_or_exit_application(delay=self._EXIT_DELAY)
         self._set_tray_icon_done()
 
-    @QtCore.Slot(str)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(str)
     def _open_url_and_hide(self, url: str) -> None:
         """Open url in default browser, then hide to tray or exit."""
         logger.debug("Open %s", url)
@@ -298,7 +298,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         self.language_window.exec()
 
-    @QtCore.Slot(str, str, str)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(str, str, str)
     def _copy_to_clipboard(self, text: str, result_type: str, detector: str) -> None:
         """Copy results to clipboard."""
         if self.clipboard_handler_name:
@@ -313,7 +313,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             clipboard.copy(text=text)
         self.com.on_copied_to_clipboard.emit()
 
-    @QtCore.Slot(str)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(str)
     def _print_to_stdout_and_exit(self, text: str) -> None:
         """Print results to stdout ."""
         logger.debug("Print text to stdout and exit.")
@@ -464,7 +464,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             today = time.strftime("%Y-%m-%d", time.gmtime())
             self.settings.setValue("last-update-check", today)
 
-    @QtCore.Slot()  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot()
     def _take_screenshots(self, delay: bool) -> list[QtGui.QImage]:
         """Get new screenshots and cache them."""
         if delay:
@@ -548,7 +548,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         layout.setColumnStretch(0, 1)
         return layout
 
-    @QtCore.Slot()  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot()
     def _minimize_or_exit_application(self, delay: Seconds) -> None:
         self._close_windows()
         if self.settings.value("tray", type=bool):
@@ -556,7 +556,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.com.exit_application.emit(delay)
 
-    @QtCore.Slot(bool)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(bool)
     def _exit_application(self, delay: Seconds) -> None:
         # Unregister the singleton server
         if self._socket_server:

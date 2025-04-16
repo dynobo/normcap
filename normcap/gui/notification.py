@@ -180,7 +180,7 @@ class Notifier(QtCore.QObject):
         self.com = Communicate(parent=self)
         self.com.send_notification.connect(self._send_notification)
 
-    @QtCore.Slot(str, str, str)  # type: ignore  # pyside typhint bug?
+    @QtCore.Slot(str, str, str)
     def _send_notification(
         self, text: str, result_type: TextType, detector: TextDetector
     ) -> None:
