@@ -22,14 +22,14 @@ def _compose_title(text: str, result_type: TextType, detector: TextDetector) -> 
         return ""
 
     if detector == TextDetector.QR:
-        count = text.count(os.linesep) + 1
+        count = text.count(os.linesep) + 1 if result_type == TextType.MULTI_LINE else 1
         # L10N: Notification title.
         # Do NOT translate the variables in curly brackets "{some_variable}"!
         title = translate.ngettext(
             "1 QR code detected", "{count} QR codes detected", count
         ).format(count=count)
     elif detector == TextDetector.BARCODE:
-        count = text.count(os.linesep) + 1
+        count = text.count(os.linesep) + 1 if result_type == TextType.MULTI_LINE else 1
         # L10N: Notification title.
         # Do NOT translate the variables in curly brackets "{some_variable}"!
         title = translate.ngettext(
@@ -119,6 +119,52 @@ def _compose_notification(
     return title, text
 
 
+def _open_uris(urls: list[str]) -> None:
+    for url in urls:
+        logger.debug("Opening URI %s …", url)
+        result = QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
+        )
+        logger.debug("Opened URI with result=%s", result)
+
+
+def _get_line_ending(text: str) -> str:
+    if "\r\n" in text:
+        return "\r\n"  # Windows-style line endings
+
+    if "\r" in text:
+        return "\r"  # Old Mac-style line endings
+
+    return "\n"  # Unix/Linux-style line endings
+
+
+def _open_ocr_result(text: str, text_type: TextType) -> None:
+    logger.debug("Notification clicked.")
+
+    urls = []
+    if text_type == TextType.URL:
+        urls = text.split()
+    elif text_type == TextType.MAIL:
+        urls = [f"mailto:{text.replace(',', ';').replace(' ', '')}"]
+    elif text_type == TextType.PHONE_NUMBER:
+        urls = [f"tel:{text.replace(' ', '').replace('-', '').replace('/', '')}"]
+    elif text_type == TextType.VCARD:
+        temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.vcf"
+        temp_file.write_text(text)
+        urls = [temp_file.as_uri()]
+    elif text_type == TextType.VEVENT:
+        temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.ics"
+        line_sep = _get_line_ending(text)
+        temp_file.write_text(f"BEGIN:VCALENDAR{line_sep}{text}{line_sep}END:VCALENDAR")
+        urls = [temp_file.as_uri()]
+    else:
+        temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.txt"
+        temp_file.write_text(text)
+        urls = [temp_file.as_uri()]
+
+    _open_uris(urls)
+
+
 class Communicate(QtCore.QObject):
     """Notifier's communication bus."""
 
@@ -143,7 +189,12 @@ class Notifier(QtCore.QObject):
             text=text, result_type=result_type, detector=detector
         )
         if sys.platform == "linux" and shutil.which("notify-send"):
-            self._send_via_libnotify(title=title, message=message)
+            self._send_via_libnotify(
+                title=title,
+                message=message,
+                text=text,
+                text_type=result_type,
+            )
         else:
             self._send_via_qt_tray(
                 title=title,
@@ -153,8 +204,13 @@ class Notifier(QtCore.QObject):
             )
         self.com.on_notification_sent.emit()
 
-    @staticmethod
-    def _send_via_libnotify(title: str, message: str) -> None:
+    def _send_via_libnotify(
+        self,
+        title: str,
+        message: str,
+        text: str,
+        text_type: TextType,
+    ) -> None:
         """Send via notify-send.
 
         Seems to work more reliable on Linux + Gnome, but requires libnotify.
@@ -178,16 +234,54 @@ class Notifier(QtCore.QObject):
         message = message.replace("\\", "\\\\")
         message = message.replace("-", "\\-")
 
+        if text_type == TextType.MAIL:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Compose Email")
+        if text_type == TextType.PHONE_NUMBER:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Call Number")
+        elif text_type == TextType.URL:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Open in Browser")
+        elif text_type == TextType.VCARD:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Import to Adressbook")
+        elif text_type == TextType.VEVENT:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Import to Calendar")
+        else:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Open in Editor")
+
         cmds = [
             "notify-send",
             f"--icon={icon_path.resolve()}",
             "--app-name=NormCap",
+            f"--action={action_name}",
+            "--transient",
+            "--wait",
             f"{title}",
             f"{message}",
         ]
 
-        # Left detached on purpose!
-        subprocess.Popen(cmds, start_new_session=True)  # noqa: S603
+        # Left detached on purpose.
+        proc = subprocess.Popen(  # noqa: S603
+            cmds,
+            start_new_session=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        try:
+            stdout, stderr = proc.communicate(timeout=60)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            stdout, stderr = proc.communicate()
+
+        if stdout.decode(encoding="utf-8").strip() == "0":
+            _open_ocr_result(text=text, text_type=text_type)
+
+        if error := stderr.decode(encoding="utf-8"):
+            logger.warning("notify-send returned with error: %s", error)
 
     def _send_via_qt_tray(
         self,
@@ -227,29 +321,8 @@ class Notifier(QtCore.QObject):
         # It only makes sense to act on notification clicks, if we have a result.
         if text and len(text.strip()) >= 1:
             parent.messageClicked.connect(
-                lambda: self._open_ocr_result(text=text, text_type=text_type)
+                lambda: _open_ocr_result(text=text, text_type=text_type)
             )
 
         parent.show()
         parent.showMessage(title, message, QtGui.QIcon(":notification"))
-
-    @staticmethod
-    def _open_ocr_result(text: str, text_type: TextType) -> None:
-        logger.debug("Notification clicked.")
-
-        urls = []
-        if text_type == TextType.URL:
-            urls = text.split()
-        elif text_type == TextType.MAIL:
-            urls = [f"mailto:{text.replace(',', ';').replace(' ', '')}"]
-        else:
-            temp_file = Path(tempfile.gettempdir()) / "normcap_temporary_result.txt"
-            temp_file.write_text(text)
-            urls = [temp_file.as_uri()]
-
-        for url in urls:
-            logger.debug("Opening URI %s …", url)
-            result = QtGui.QDesktopServices.openUrl(
-                QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
-            )
-            logger.debug("Opened URI with result=%s", result)

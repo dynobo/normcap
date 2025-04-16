@@ -112,21 +112,35 @@ def test_send_via_libnotify(monkeypatch):
 
     cmd_args = []
 
-    def _mocked_popen(cmd: str, start_new_session: bool):
+    def popen_decorator(func):
+        def decorated_popen(cmd: list[str], **kwargs):
+            cmd.insert(6, "--expire-time=100")  # Reduce test runtime
+            cmd_args.extend(cmd)
+            return func(cmd, **kwargs)
+
+        return decorated_popen
+
+    def _mocked_popen(cmd: str, start_new_session: bool, stdout, stderr):
         cmd_args.extend(cmd)
 
-    monkeypatch.setattr(subprocess, "Popen", _mocked_popen)
+    monkeypatch.setattr(subprocess, "Popen", popen_decorator(subprocess.Popen))
 
     # WHEN a notification is sent via the libnotify cli tool
-    notifier._send_via_libnotify("Title", "Message")
+    notifier._send_via_libnotify(
+        title="Title", message="Message", text="text", text_type=TextType.SINGLE_LINE
+    )
 
     # THEN the command that gets executed via Popen should be in the specific format
     #    and the icon image should exist
     assert cmd_args[0] == "notify-send"
     assert cmd_args[1].startswith("--icon=")
     assert cmd_args[2] == "--app-name=NormCap"
-    assert cmd_args[3] == "Title"
-    assert cmd_args[4] == "Message"
+    assert cmd_args[3] == "--action=Open in Editor"
+    assert cmd_args[4] == "--transient"
+    assert cmd_args[5] == "--wait"
+    assert cmd_args[6].startswith("--expire-time")  # Only during test
+    assert cmd_args[7] == "Title"
+    assert cmd_args[8] == "Message"
 
     icon = cmd_args[1].removeprefix("--icon=")
     assert Path(icon).exists()
@@ -176,12 +190,10 @@ def test_send_via_qt_tray_handles_message_click(monkeypatch, qtbot):
 
     open_ocr_result_calls = []
 
-    def mocked_open_ocr_result(cls, **kwargs):
+    def mocked_open_ocr_result(**kwargs):
         open_ocr_result_calls.append(kwargs)
 
-    monkeypatch.setattr(
-        notification.Notifier, "_open_ocr_result", mocked_open_ocr_result
-    )
+    monkeypatch.setattr(notification, "_open_ocr_result", mocked_open_ocr_result)
 
     notifier = notification.Notifier(tray)
 
@@ -215,12 +227,10 @@ def test_send_via_qt_tray_reconnects_signal(monkeypatch, qtbot):
 
     open_ocr_result_calls = []
 
-    def mocked_open_ocr_result(cls, **kwargs):
+    def mocked_open_ocr_result(**kwargs):
         open_ocr_result_calls.append(kwargs)
 
-    monkeypatch.setattr(
-        notification.Notifier, "_open_ocr_result", mocked_open_ocr_result
-    )
+    monkeypatch.setattr(notification, "_open_ocr_result", mocked_open_ocr_result)
 
     notifier = notification.Notifier(tray)
     notifier._send_via_qt_tray(
@@ -249,7 +259,17 @@ def test_send_via_qt_tray_reconnects_signal(monkeypatch, qtbot):
     assert open_ocr_result_calls[0]["text_type"] == notification_data["text_type"]
 
 
-def test_send_notification(monkeypatch):
+@pytest.mark.parametrize(
+    ("platform", "has_libnotify", "expected_method"),
+    [
+        ("linux", False, "qt"),
+        ("linux", True, "libnotify"),
+        ("win32", True, "qt"),
+        ("win32", False, "qt"),
+        ("darwin", True, "qt"),
+    ],
+)
+def test_send_notification(monkeypatch, platform, has_libnotify, expected_method):
     """Test which method is used to send notification under certain conditions."""
 
     # GIVEN a Notifier (with mocked notification methods)
@@ -257,15 +277,23 @@ def test_send_notification(monkeypatch):
 
     result = []
 
-    def mocked_libnotify(cls, title, message):
-        result.append({"title": title, "message": message, "method": "libnotify"})
+    def mocked_libnotify(cls, title, message, text, text_type):
+        result.append(
+            {
+                "title": title,
+                "message": message,
+                "method": "libnotify",
+                "text": text,
+                "text_type": text_type,
+            }
+        )
 
     def mocked_qt_tray(cls, title, message, text, text_type):
         result.append(
             {
                 "title": title,
                 "message": message,
-                "method": "qt_tray",
+                "method": "qt",
                 "text": text,
                 "text_type": text_type,
             }
@@ -278,41 +306,18 @@ def test_send_notification(monkeypatch):
     text_type = TextType.SINGLE_LINE
     detector = TextDetector.OCR_PARSED
 
-    # WHEN a notification signal is emitted on a linux system _without_ libnotify
-    monkeypatch.setattr(notification.sys, "platform", "linux")
-    monkeypatch.setattr(notification.shutil, "which", lambda _: False)
-
+    # WHEN a notification is send on a certain platform and w/ or w/o libnotify
+    monkeypatch.setattr(notification.sys, "platform", platform)
+    monkeypatch.setattr(notification.shutil, "which", lambda _: has_libnotify)
     notifier._send_notification(text=text, result_type=text_type, detector=detector)
 
     # THEN QT should be used to send the notification with a certain content
-    assert result[-1]["method"] == "qt_tray"
+    # and with the expected method
+    assert result[-1]["method"] == expected_method
     assert result[-1]["title"] == "1 word captured"
     assert result[-1]["message"] == "text"
     assert result[-1]["text"] == text
     assert result[-1]["text_type"] == text_type
-
-    # WHEN a notification signal is emitted on a system _with_ libnotify
-    monkeypatch.setattr(notification.sys, "platform", "linux")
-    monkeypatch.setattr(notification.shutil, "which", lambda _: True)
-
-    notifier._send_notification(text=text, result_type=text_type, detector=detector)
-
-    # THEN libnotify should be used to send the notification with a certain content
-    assert result[-1]["title"] == "1 word captured"
-    assert result[-1]["message"] == "text"
-    assert result[-1]["method"] == "libnotify"
-
-    # WHEN a notification signal is emitted on a different system than linux
-    #    and even if a binary libnotify is available
-    monkeypatch.setattr(notification.sys, "platform", "win32")
-    monkeypatch.setattr(notification.shutil, "which", lambda _: True)
-
-    notifier._send_notification(text=text, result_type=text_type, detector=detector)
-
-    # THEN QT should be used to send the notification with a certain content
-    assert result[-1]["title"] == "1 word captured"
-    assert result[-1]["message"] == "text"
-    assert result[-1]["method"] == "qt_tray"
 
 
 @pytest.mark.parametrize(
@@ -362,7 +367,7 @@ def test_open_ocr_result(monkeypatch, text, text_type, expected_urls):
     monkeypatch.setattr(notification.QtGui.QDesktopServices, "openUrl", mocked_openurl)
 
     # WHEN the function is called with certain text and TextType
-    notification.Notifier._open_ocr_result(text=text, text_type=text_type)
+    notification._open_ocr_result(text=text, text_type=text_type)
 
     # THEN the expected urls should be in the format so openUrl would result in the
     #   correct action
