@@ -104,21 +104,15 @@ jobs:
         env:
           QT_DEBUG_PLUGINS: 1
 
-      - name: Comment coverage in PR
-        if: github.event.pull_request.head.repo.full_name == 'dynobo/normcap'
-        uses: orgoro/coverage@v3.2
-        with:
-            coverageFile: coverage.xml
-            token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Coveralls Parallel
-        if: github.event.pull_request.head.repo.full_name == 'dynobo/normcap'
+        if: github.repository_owner == 'dynobo'
         uses: coverallsapp/github-action@release/v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: ${{ matrix.os }}
           path-to-lcov: coverage.lcov
           parallel: true
+          debug: true
 
   test-python-package:
     name: Test Python package build
@@ -199,11 +193,14 @@ jobs:
     if: github.repository_owner == 'dynobo'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Coveralls Finished
         uses: coverallsapp/github-action@release/v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
+          debug: true
 
   codeql:
     name: CodeQL
