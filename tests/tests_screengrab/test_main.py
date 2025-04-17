@@ -35,10 +35,10 @@ def test_capture(qapp):
         ("linux", "", True, True, True, Handler.GRIM),
         ("linux", "", True, False, True, Handler.DBUS_PORTAL),
         ("linux", "", True, False, False, Handler.DBUS_PORTAL),
-        ("linux", "41.0", True, False, False, Handler.DBUS_PORTAL),
-        ("linux", "41.0", False, False, False, Handler.QT),
-        ("linux", "40.0", True, False, False, Handler.DBUS_SHELL),
-        ("linux", "40.0", False, False, False, Handler.QT),
+        ("linux", "42.0", True, False, False, Handler.DBUS_PORTAL),
+        ("linux", "47.0", True, False, False, Handler.DBUS_PORTAL),
+        ("linux", "47.0", False, False, False, Handler.QT),
+        ("linux", "42.0", False, False, False, Handler.QT),
     ],
 )
 def test_get_available_handlers(

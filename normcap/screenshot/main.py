@@ -2,7 +2,7 @@ import logging
 
 from PySide6 import QtGui
 
-from normcap.screenshot.handlers import dbus_portal, dbus_shell, grim, qt
+from normcap.screenshot.handlers import dbus_portal, grim, qt
 from normcap.screenshot.models import Handler, HandlerProtocol
 
 logger = logging.getLogger(__name__)
@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 _capture_handlers: dict[Handler, HandlerProtocol] = {
     Handler.QT: qt,
     Handler.DBUS_PORTAL: dbus_portal,
-    Handler.DBUS_SHELL: dbus_shell,
     Handler.GRIM: grim,
 }
 

@@ -47,6 +47,3 @@ class Handler(enum.IntEnum):
 
     # For linux with wayland
     DBUS_PORTAL = enum.auto()
-
-    # For linux with wayland, old variant, e.g. for Ubuntu 20.04
-    DBUS_SHELL = enum.auto()
