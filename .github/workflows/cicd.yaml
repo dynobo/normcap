@@ -112,7 +112,6 @@ jobs:
           flag-name: ${{ matrix.os }}
           path-to-lcov: coverage.lcov
           parallel: true
-          debug: true
 
   test-python-package:
     name: Test Python package build
@@ -200,7 +199,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
-          debug: true
 
   codeql:
     name: CodeQL
