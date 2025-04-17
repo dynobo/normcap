@@ -296,12 +296,12 @@ universal_build = false
 
 [tool.briefcase.app.normcap.linux.appimage]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
-template_branch = "v0.3.20"
+template_branch = "v0.3.22"
 manylinux = "manylinux_2_28"
 manylinux_image_tag = "latest"
 system_requires = [
   "wget",
-  "tesseract",
+  # "tesseract",
   # wl-clipboard deps
   "wayland-devel",
   "wayland-protocols-devel",
@@ -315,9 +315,13 @@ system_requires = [
 dockerfile_extra_content = """
 USER root
 
-RUN dnf config-manager --add-repo https://download.opensuse.org/repositories/home:Alexander_Pozdnyakov:tesseract5/CentOS_8/home:Alexander_Pozdnyakov:tesseract5.repo
-RUN dnf config-manager --set-enabled home_Alexander_Pozdnyakov_tesseract5
 RUN dnf upgrade -y
+RUN wget https://picnico.de/tesseract-langpack-osd-5.0.0.rpm
+RUN wget https://picnico.de/tesseract-langpack-eng-5.0.0.rpm
+RUN wget https://picnico.de/tesseract-5.3.0-5.1.x86_64.rpm
+RUN dnf install -y ./tesseract-langpack-osd-5.0.0.rpm
+RUN dnf install -y ./tesseract-langpack-eng-5.0.0.rpm
+RUN dnf install -y ./tesseract-5.3.0-5.1.x86_64.rpm
 
 RUN wget https://pkgs.sysadmins.ws/el8/base/x86_64/raven-release.el8.noarch.rpm
 RUN rpm -ivh raven-release*.rpm
