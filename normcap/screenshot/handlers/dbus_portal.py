@@ -10,7 +10,6 @@ from urllib.parse import unquote, urlparse
 
 from PySide6 import QtCore, QtDBus, QtGui
 
-from normcap.screenshot import system_info
 from normcap.screenshot.post_processing import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)
@@ -220,9 +219,9 @@ def is_compatible() -> bool:
 
 
 def is_installed() -> bool:
-    # TODO: What's with KDE?
-    gnome_version = system_info.get_gnome_version()
-    return not gnome_version or gnome_version >= "41"
+    # For now, we assume that the distro uses freedesktop portal, as most modern do.
+    # TODO: Test if freedesktop portal is supported via dbus call
+    return True
 
 
 def capture() -> list[QtGui.QImage]:
