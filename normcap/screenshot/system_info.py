@@ -9,6 +9,16 @@ import sys
 logger = logging.getLogger(__name__)
 
 
+def is_gnome() -> bool:
+    xdg_current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+    gnome_desktop_session_id = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
+
+    if gnome_desktop_session_id == "this-is-deprecated":
+        gnome_desktop_session_id = ""
+
+    return bool(gnome_desktop_session_id) or ("gnome" in xdg_current_desktop)
+
+
 def has_wlroots_compositor() -> bool:
     """Check if wlroots compositor is running, as grim only supports wlroots.
 

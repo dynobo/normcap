@@ -6,9 +6,11 @@
 
 - All: Breaking: Commandline argument `--mode {parse,raw}` is removed in favor of a new
 argument `--parse-text {True, False}`.
+- All: Added option `--screenshot-handler` to explicitly choose among available methods.
 - All: Added (optional) QR and BarCode detection.
 - Linux: Breaking: Drop support for Ubuntu 20.04
 - Linux: Add support for clickable notification (if `send-notify` is available).
+- Linux: Add handler to take screenshots via `gnome-screenshot`. Should mitigate some issue for screenshots on Wayland (not all!).
 - Linux: AppImage no longer requires `libcrypt`.
 
 ## v0.5.9 (2024-11-10)

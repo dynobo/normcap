@@ -59,6 +59,7 @@ def test_argparser_defaults_are_complete():
         "version",
         "show_introduction",
         "clipboard_handler",
+        "screenshot_handler",
     }
     args_keys = set(vars(parsed_args).keys())
     assert args_keys == expected_options
@@ -113,6 +114,7 @@ def test_argparser_attributes_in_settings():
             "cli_mode",
             "background_mode",
             "clipboard_handler",
+            "screenshot_handler",
         }:
             continue
         assert arg.replace("_", "-") in settings.allKeys()

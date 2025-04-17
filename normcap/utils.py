@@ -10,9 +10,10 @@ from typing import Optional
 
 from PySide6 import QtCore
 
-from normcap.clipboard import Handler
+from normcap.clipboard import Handler as ClipboardHandler
 from normcap.gui import system_info
 from normcap.gui.settings import DEFAULT_SETTINGS
+from normcap.screenshot import Handler as ScreenshotHandler
 
 logger = logging.getLogger("normcap")
 
@@ -86,8 +87,17 @@ def create_argparser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--clipboard-handler",
         action="store",
-        choices=[h.name.lower() for h in Handler],
+        choices=[h.name.lower() for h in ClipboardHandler],
         help="Force using specific clipboard handler instead of auto-selecting",
+    )
+    parser.add_argument(
+        "--screenshot-handler",
+        action="store",
+        choices=[h.name.lower() for h in ScreenshotHandler],
+        help=(
+            "Only relevant on Linux! Force using specific screenshot handler instead "
+            "of auto-selecting"
+        ),
     )
     return parser
 
