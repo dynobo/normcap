@@ -148,7 +148,15 @@ def init_logger(log_level: str = "WARNING") -> None:
     """Initializes a logger with a specified log level."""
     log_format = "%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s"
     datefmt = "%H:%M:%S"
-    logging.basicConfig(format=log_format, datefmt=datefmt)
+    if sys.platform == "win32":
+        logging.basicConfig(
+            filename=system_info.config_directory() / "normcap.log",
+            filemode="w",
+            format=log_format,
+            datefmt=datefmt,
+        )
+    else:
+        logging.basicConfig(format=log_format, datefmt=datefmt)
     logger.setLevel(log_level)
 
 
