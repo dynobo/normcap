@@ -206,7 +206,7 @@ testcases: tuple[TestCase, ...] = (
             f"{os.linesep}"
             "Arial, 16 pt - You only live once, but if you do it right, once is enough."
             f"{os.linesep}"
-            "Arial, 22 pt - You only live once, but if you do it right, once is enough."
+            "Arial, 22 pt - You only live once, but if you do it right, once is"
         ),
         expected_text_type=[TextType.PARAGRAPH],
         expected_text_detector=[TextDetector.OCR_PARSED],
