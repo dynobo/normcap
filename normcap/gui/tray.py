@@ -80,6 +80,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.settings = Settings(init_settings=args)
 
         self.clipboard_handler_name = args.get("clipboard_handler")
+        self.screenshot_handler_name = args.get("screenshot_handler")
 
         # Handle special cli args
         if args.get("reset", False):
@@ -472,7 +473,16 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             # short enough to not annoy the users to much. (FTR: 0.15 was too short.)
             time.sleep(0.5)
 
-        screens = screenshot.capture()
+        if self.screenshot_handler_name:
+            logger.debug(
+                "Take screenshot explicitly with %s",
+                self.screenshot_handler_name.upper(),
+            )
+            screens = screenshot.capture_with_handler(
+                handler_name=self.screenshot_handler_name
+            )
+        else:
+            screens = screenshot.capture()
 
         if not screens:
             raise RuntimeError("No screenshot taken!")
