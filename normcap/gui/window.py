@@ -143,7 +143,7 @@ class Window(QtWidgets.QMainWindow):
         logger.debug("Set window of screen %s to fullscreen", self.screen_.index)
 
         if not self.screen_.screenshot:
-            raise ValueError("Screenshot is missing on screen %s", self.screen_)
+            raise ValueError(f"Screenshot is missing on screen {self.screen_}")
 
         # Using scaled window dims to fit sizing with dpr in case scaling is enabled
         # See: https://github.com/dynobo/normcap/issues/397
