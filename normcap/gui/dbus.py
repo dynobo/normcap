@@ -12,18 +12,6 @@ from normcap.gui.models import Rect
 logger = logging.getLogger(__name__)
 
 
-class DBusShell(MessageGenerator):
-    interface = "org.gnome.Shell"
-
-    def __init__(
-        self, object_path: str = "/org/gnome/Shell", bus_name: str = "org.gnome.Shell"
-    ) -> None:
-        super().__init__(object_path=object_path, bus_name=bus_name)
-
-    def eval_(self, script: str) -> Message:
-        return new_method_call(self, "Eval", "s", (script,))
-
-
 class DBusKwinScripting(MessageGenerator):
     interface = "org.kde.kwin.Scripting"
 
