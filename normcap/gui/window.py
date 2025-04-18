@@ -116,13 +116,9 @@ class Window(QtWidgets.QMainWindow):
 
         def move_to_screen(win: Window) -> None:
             if system_info.desktop_environment() == DesktopEnvironment.GNOME:
-                result = dbus.move_windows_via_window_calls_extension(
+                dbus.move_windows_via_window_calls_extension(
                     title_id=win.windowTitle(), position=win.screen_
                 )
-                if not result:
-                    dbus.move_window_via_gnome_shell_eval(
-                        title_id=win.windowTitle(), position=win.screen_
-                    )
             elif system_info.desktop_environment() == DesktopEnvironment.KDE:
                 dbus.move_window_via_kde_kwin_scripting(
                     title_id=win.windowTitle(), position=win.screen_
