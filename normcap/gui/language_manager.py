@@ -250,8 +250,8 @@ class LanguageModel(QtCore.QAbstractTableModel):
             return self.languages[index.row()][index.column()]
         return None
 
-    def rowCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802
+    def rowCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802 # lowercase
         return len(self.languages)
 
-    def columnCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802
+    def columnCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802 # lowercase
         return len(self.languages[0]) if self.languages else 0
