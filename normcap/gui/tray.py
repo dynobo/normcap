@@ -237,7 +237,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """
         self.installed_languages = installed_languages
 
-    # TODO: Fix esc key not working
     @QtCore.Slot()
     def _trigger_detect(self, rect: Rect, screen_idx: int) -> None:
         """Crop screenshot, perform content recognition on it and process result."""
