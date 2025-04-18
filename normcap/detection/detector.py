@@ -1,6 +1,5 @@
 import logging
 import time
-from dataclasses import dataclass
 
 from PySide6 import QtGui
 
@@ -9,16 +8,6 @@ from normcap.detection.models import DetectionResult, TextDetector, TextType
 from normcap.gui import system_info
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class ImageBytes:
-    """Image bytes without padding, but with some metadata."""
-
-    data: bytearray
-    height: int
-    width: int
-    channels: int
 
 
 def detect(

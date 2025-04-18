@@ -1,12 +1,10 @@
 import fileinput
 import hashlib
-import os
 import re
 import shutil
 import subprocess
 import sys
 import urllib.request
-import zipfile
 from abc import ABC, abstractmethod
 from pathlib import Path
 from textwrap import dedent
@@ -25,7 +23,6 @@ class BuilderBase(ABC):
     RESOURCE_PATH = PROJECT_PATH / "normcap" / "resources"
     TESSERACT_PATH = RESOURCE_PATH / "tesseract"
     PYPROJECT_PATH = PROJECT_PATH / "pyproject.toml"
-    VENV_PATH = Path(os.environ["VIRTUAL_ENV"])
     TESSDATA_PATH = RESOURCE_PATH / "tessdata"
     binary_suffix = "_legacy"
     binary_extension: Optional[str] = None
@@ -254,42 +251,3 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
         each_file.rename(builder.TESSERACT_PATH / each_file.name)
 
     shutil.rmtree(tesseract_path)
-
-
-@retry(tries=5, delay=1, backoff=2)
-def bundle_tesseract_windows_appveyor(builder: BuilderBase) -> None:
-    """Download tesseract binaries including dependencies into resource path."""
-    zip_path = builder.BUILD_PATH / "tesseract.zip"
-
-    if zip_path.exists():
-        return
-
-    url = (
-        "https://ci.appveyor.com/api/projects/zdenop/tesseract/artifacts/tesseract.zip"
-    )
-
-    urllib.request.urlretrieve(url, zip_path)  # noqa: S310
-
-    if not zip_path.exists():
-        raise FileNotFoundError("Downloading of tesseract.zip might have failed!")
-
-    with zipfile.ZipFile(zip_path) as artifact_zip:
-        members = [
-            m
-            for m in artifact_zip.namelist()
-            if ".test." not in m and ".training." not in m
-        ]
-        subdir = members[0].split("/")[0]
-        artifact_zip.extractall(path=builder.RESOURCE_PATH, members=members)
-    zip_path.unlink()
-
-    for each_file in Path(builder.RESOURCE_PATH / subdir).glob("*.*"):
-        (builder.TESSERACT_PATH / each_file.name).unlink(missing_ok=True)
-        each_file.rename(builder.TESSERACT_PATH / each_file.name)
-
-    (builder.TESSERACT_PATH / "tesseract.exe").unlink(missing_ok=True)
-    (builder.TESSERACT_PATH / "google.tesseract.tesseract-main.exe").rename(
-        builder.TESSERACT_PATH / "tesseract.exe"
-    )
-
-    shutil.rmtree(builder.RESOURCE_PATH / subdir)
