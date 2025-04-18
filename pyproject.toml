@@ -130,7 +130,7 @@ cicd-check = [ "format", "check", "security", "test" ]
 
 inspect-trace = "viztracer --open --log_gc --ignore_c_function -- normcap/app.py"
 inspect-trace-view = "vizviewer {args:result.json}"
-inspect-unused = "vulture {args:} normcap tests bundle"
+inspect-unused = "vulture normcap tests bundle"
 inspect_metrics = [
   { cmd = "echo 'For metrics description see: https://radon.readthedocs.io/en/latest/intro.html'" },
   { cmd = "echo '------[ Cyclomatic Complexity ]-------'" },
