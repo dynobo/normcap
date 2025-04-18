@@ -65,55 +65,6 @@ class DBusWindowCalls(MessageGenerator):
         )
 
 
-def move_window_via_gnome_shell_eval(title_id: str, position: Rect) -> bool:
-    """Move currently active window to a certain position.
-
-    This is a workaround for not being able to reposition windows on wayland.
-    It only works on Gnome Shell.
-
-    Args:
-        title_id: Window title (has to be unique)
-        position: Target geometry
-
-    Returns:
-        If call was successful
-    """
-    logger.debug(
-        "Moving window '%s' to %s via org.gnome.Shell.Eval", title_id, position
-    )
-    js_code = f"""
-    const GLib = imports.gi.GLib;
-    global.get_window_actors().forEach(function (w) {{
-        var mw = w.meta_window;
-        if (mw.get_title() == "{title_id}") {{
-            mw.move_resize_frame(
-                0,
-                {position.left},
-                {position.top},
-                {position.width},
-                {position.height}
-            );
-        }}
-    }});
-    """
-    try:
-        with open_dbus_connection() as router:
-            proxy = Proxy(DBusShell(), router)
-            response = proxy.eval_(script=js_code)
-        if not response[0]:
-            raise RuntimeError("DBus response was not OK!")  # noqa: TRY301
-    except Exception as exc:
-        logger.warning("Failed to move window via org.gnome.Shell.Eval!")
-        logger.debug(
-            "".join(
-                traceback.format_exception(type(exc), exc, exc.__traceback__)
-            ).strip()
-        )
-        return False
-    else:
-        return True
-
-
 def move_window_via_kde_kwin_scripting(title_id: str, position: Rect) -> bool:
     """Move currently active window to a certain position.
 
