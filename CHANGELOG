@@ -8,6 +8,7 @@
 argument `--parse-text {True, False}`.
 - All: Added option `--screenshot-handler` to explicitly choose among available methods.
 - All: Added (optional) QR and BarCode detection.
+- Windows: Debug logs (`normcap.exe -v debug`) are now stored in `{DESKTOP_FOLDER}\normcap.log` fore easier access.
 - Linux: Breaking: Drop support for Ubuntu 20.04
 - Linux: Add support for clickable notification (if `send-notify` is available).
 - Linux: Add handler to take screenshots via `gnome-screenshot`. Should mitigate some issue for screenshots on Wayland (not all!).

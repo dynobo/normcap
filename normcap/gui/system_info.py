@@ -42,6 +42,36 @@ def config_directory() -> Path:
     return Path.home() / ".config" / postfix
 
 
+def desktop_dir() -> Path:
+    """Return path the User's Desktop directory.
+
+    Raises:
+        NotImplementedError: When called on other systems than Windows.
+
+    Returns:
+        Path to desktop directory.
+    """
+    if sys.platform != "win32":
+        raise NotImplementedError()
+
+    try:
+        import winreg
+
+        reg_key = winreg.OpenKey(
+            winreg.HKEY_CURRENT_USER,
+            r"Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders",
+        )
+        desktop = Path(winreg.QueryValueEx(reg_key, "Desktop")[0]).resolve()
+        winreg.CloseKey(reg_key)
+    except Exception:
+        desktop = Path().home() / "Desktop"
+
+    if not desktop.is_dir() or not desktop.exists():
+        raise RuntimeError(f"Detected desktop directory '{desktop}' does not exist!")
+
+    return desktop
+
+
 def get_resources_path() -> Path:
     return Path(__file__).resolve().parents[1] / "resources"
 
