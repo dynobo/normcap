@@ -119,6 +119,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             return
 
         # Prepare UI
+        self._set_tray_icon_normal()
+
         self.tray_menu = QtWidgets.QMenu(None)
         self.tray_menu.aboutToShow.connect(self._populate_context_menu_entries)
 
@@ -353,7 +355,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         self.com.on_languages_changed.emit(self.installed_languages)
         self._add_update_checker()
-        self._set_tray_icon_normal()
 
     def _set_tray_icon_normal(self) -> None:
         self.setIcon(QtGui.QIcon(TrayIcon.NORMAL.value))

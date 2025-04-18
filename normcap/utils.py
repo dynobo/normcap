@@ -150,7 +150,7 @@ def init_logger(log_level: str = "WARNING") -> None:
     datefmt = "%H:%M:%S"
     if sys.platform == "win32":
         logging.basicConfig(
-            filename=system_info.config_directory() / "normcap.log",
+            filename=system_info.desktop_dir() / "normcap.log",
             filemode="w",
             format=log_format,
             datefmt=datefmt,
