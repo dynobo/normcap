@@ -13,6 +13,7 @@ argument `--parse-text {True, False}`.
 - Linux: Add support for clickable notification (if `send-notify` is available).
 - Linux: Add handler to take screenshots via `gnome-screenshot`. Should mitigate some issue for screenshots on Wayland (not all!).
 - Linux: AppImage no longer requires `libcrypt`.
+- Linux: Fix NormCap not getting focus when moved with Gnome extension "Window Calls"
 
 ## v0.5.9 (2024-11-10)
 

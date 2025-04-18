@@ -45,6 +45,9 @@ class DBusWindowCalls(MessageGenerator):
     def get_title(self, win_id: int) -> Message:
         return new_method_call(self, "GetTitle", "u", (win_id,))
 
+    def activate(self, win_id: int) -> Message:
+        return new_method_call(self, "Activate", "u", (win_id,))
+
     def move_resize(
         self, win_id: int, x: int, y: int, width: int, height: int
     ) -> Message:
@@ -154,6 +157,9 @@ def move_windows_via_window_calls_extension(title_id: str, position: Rect) -> bo
                 position.width,
                 position.height,
             )
+
+            response = proxy.activate(window_id)
+
     except Exception as exc:
         logger.warning("Failed to move window via org.gnome.Shell.extensions.windows!")
         logger.debug(
