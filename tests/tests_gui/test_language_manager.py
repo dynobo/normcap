@@ -1,5 +1,4 @@
 from pathlib import Path
-from urllib.error import URLError
 
 import pytest
 from pytestqt.qtbot import QtBot
@@ -152,9 +151,6 @@ def test_download_error_show_messagebox(qtbot, tmp_path, monkeypatch, mock_urlop
     # WHEN selecting an available language
     #      and clicking the download button
     #      and the download fails
-    def _raise_error():
-        raise URLError("http://un.known")
-
     mock_urlopen(response=None)
 
     window.available_layout.view.selectRow(0)
