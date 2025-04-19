@@ -215,7 +215,7 @@ def _synchronized_capture(interactive: bool) -> QtGui.QImage:
 
 def is_compatible() -> bool:
     # TODO: Specify closer!
-    return sys.platform == "linux"
+    return sys.platform == "linux" or "bsd" in sys.platform
 
 
 def is_installed() -> bool:
