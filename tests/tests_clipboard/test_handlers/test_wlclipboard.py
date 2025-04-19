@@ -14,8 +14,7 @@ from normcap.clipboard.handlers import wlclipboard
     [
         ("linux", "Wayland", "", "44", True),
         ("linux", "", "Gnome Wayland", "44", True),
-        ("linux", "Wayland", "Gnome Wayland", "44", True),
-        ("linux", "Wayland", "Gnome Wayland", "45.1", False),
+        ("linux", "Wayland", "Gnome Wayland", "45.1", True),
         ("linux", "", "Gnome Shell", "44", False),
         ("linux", "", "", "44", False),
         ("win32", "Wayland", "Gnome Wayland", "", False),

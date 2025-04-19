@@ -16,9 +16,9 @@ _clipboard_handlers: dict[Handler, HandlerProtocol] = {
     Handler.WINDLL: windll,
     Handler.PBCOPY: pbcopy,
     Handler.QT: qtclipboard,
-    Handler.WLCLIPBOARD: wlclipboard,
     Handler.XSEL: xsel,
     Handler.XCLIP: xclip,
+    Handler.WLCLIPBOARD: wlclipboard,
 }
 
 

@@ -4,16 +4,22 @@
 
 ## v0.6.0 (upcoming)
 
-- All: Breaking: Commandline argument `--mode {parse,raw}` is removed in favor of a new
+**All systems:**
+- 🗲 Breaking: Remove commandline argument `--mode {parse,raw}` in favor of a new
 argument `--parse-text {True, False}`.
-- All: Added option `--screenshot-handler` to explicitly choose among available methods.
-- All: Added (optional) QR and BarCode detection.
-- Windows: Debug logs (`normcap.exe -v debug`) are now stored in `{DESKTOP_FOLDER}\normcap.log` fore easier access.
-- Linux: Breaking: Drop support for Ubuntu 20.04 and Gnome < 41.0
-- Linux: Add support for clickable notification (if `send-notify` is available).
-- Linux: Add handler to take screenshots via `gnome-screenshot`. Should mitigate some issue for screenshots on Wayland (not all!).
-- Linux: AppImage no longer requires `libcrypt`.
-- Linux: Fix NormCap not getting focus when moved with Gnome extension "Window Calls"
+- Add option `--screenshot-handler` to explicitly choose among available methods.
+- Add QR and BarCode detection (optional).
+
+**Windows:**
+- Add automatic export of debug logs (when running `normcap.exe -v debug`) to `{DESKTOP_FOLDER}\normcap.log` for easier access.
+
+**Linux:**
+- 🗲 Breaking: Drop support for Ubuntu 20.04 and Gnome < 41.0
+- Change priority of clipboard handlers: `wl-clipboard` is now lowest priority (as it seems least reliable), below `xsel` and `xclip`. (Please [open an issues](https://github.com/dynobo/normcap/issues/new/choose), if this doesn't work well for you.)
+- Add support for clickable notification (if `send-notify` is available).
+- Add handler to take screenshots via `gnome-screenshot`. Should mitigate some issue for screenshots on Wayland (not all!).
+- Fix AppImage requires `libcrypt`, which is not the case anymore.
+- Fix NormCap not getting focus when moved with Gnome extension "Window Calls"
 
 ## v0.5.9 (2024-11-10)
 
