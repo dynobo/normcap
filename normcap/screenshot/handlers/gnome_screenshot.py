@@ -18,7 +18,7 @@ install_instructions = (
 
 
 def is_compatible() -> bool:
-    return sys.platform == "linux" and system_info.is_gnome()
+    return (sys.platform == "linux" or "bsd" in sys.platform) and system_info.is_gnome()
 
 
 def is_installed() -> bool:

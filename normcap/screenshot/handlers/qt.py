@@ -11,7 +11,9 @@ install_instructions = ""
 
 
 def is_compatible() -> bool:
-    return sys.platform != "linux" or not system_info.has_wayland_display_manager()
+    return (
+        sys.platform != "linux" and "bsd" not in sys.platform
+    ) or not system_info.has_wayland_display_manager()
 
 
 def is_installed() -> bool:

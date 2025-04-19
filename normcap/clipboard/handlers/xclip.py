@@ -31,7 +31,7 @@ def copy(text: str) -> None:
 
 
 def is_compatible() -> bool:
-    if sys.platform != "linux":
+    if sys.platform != "linux" and "bsd" not in sys.platform:
         logger.debug("%s is not compatible on non-Linux systems", __name__)
         return False
 

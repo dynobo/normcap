@@ -188,7 +188,9 @@ class Notifier(QtCore.QObject):
         title, message = _compose_notification(
             text=text, result_type=result_type, detector=detector
         )
-        if sys.platform == "linux" and shutil.which("notify-send"):
+        if (sys.platform == "linux" or "bsd" in sys.platform) and shutil.which(
+            "notify-send"
+        ):
             self._send_via_libnotify(
                 title=title,
                 message=message,

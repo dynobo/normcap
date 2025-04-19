@@ -25,7 +25,7 @@ def has_wlroots_compositor() -> bool:
     Certainly not wlroots based are: KDE, GNOME and Unity.
     Others are likely wlroots based.
     """
-    if sys.platform != "linux":
+    if sys.platform != "linux" and "bsd" not in sys.platform:
         return False
 
     kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()
@@ -46,7 +46,7 @@ def has_wlroots_compositor() -> bool:
 
 def has_wayland_display_manager() -> bool:
     """Identify relevant display managers (Linux)."""
-    if sys.platform != "linux":
+    if sys.platform != "linux" and "bsd" not in sys.platform:
         return False
 
     xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
@@ -61,7 +61,7 @@ def get_gnome_version() -> str:
     Returns:
         Version string or empty string if not detected.
     """
-    if sys.platform != "linux":
+    if sys.platform != "linux" and "bsd" not in sys.platform:
         return ""
 
     if (

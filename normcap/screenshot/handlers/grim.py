@@ -17,7 +17,7 @@ install_instructions = "Install the package `grim` using your system's package m
 
 def is_compatible() -> bool:
     return (
-        sys.platform == "linux"
+        (sys.platform == "linux" or "bsd" in sys.platform)
         and system_info.has_wayland_display_manager()
         and system_info.has_wlroots_compositor()
     )
