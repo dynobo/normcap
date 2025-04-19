@@ -34,6 +34,7 @@ def is_compatible() -> bool:
         return False
 
     logger.debug("%s is compatible", __name__)
+    return False
     return True
 
 

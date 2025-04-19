@@ -43,11 +43,14 @@ def is_compatible() -> bool:
 
     if gnome_version := system_info.get_gnome_version():
         gnome_major = int(gnome_version.split(".")[0])
-        # TODO: Verify, if wlclipboard works on newer versions again
         last_working_gnome_version = 44
         if gnome_major > last_working_gnome_version:
-            logger.debug("%s is not compatible with Gnome %s", __name__, gnome_version)
-            return False
+            logger.warning(
+                "%s is not working well with Gnome %s. Try xclip or xsel instead!",
+                __name__,
+                gnome_version,
+            )
+            return True
 
     logger.debug("%s is compatible", __name__)
     return True
