@@ -19,6 +19,7 @@ from normcap.detection import detector, ocr
 from normcap.gui import (
     constants,
     introduction,
+    permissions,
     resources,  # noqa: F401 (loads resources!)
     system_info,
     utils,
@@ -107,17 +108,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.com.exit_application.emit(0)
             return
 
-        if not self._ensure_screenshot_permission():
-            logger.error("Missing screenshot permission!")
-            delay = 0
-            if sys.platform == "darwin":
-                # When NormCaps exits, the macOS dialog to grant "Screen Recording
-                # permission will also disappear immediately. That's why the user gets
-                # some seconds to click on the dialog, before we exit the application.
-                delay = 8
-            self.com.exit_application.emit(delay)
-            return
-
         # Prepare UI
         self._set_tray_icon_normal()
 
@@ -127,6 +117,14 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.setContextMenu(self.tray_menu)
         self._populate_context_menu_entries()
 
+        # Verify screenshot permissions
+        if not self.settings.value("has-screenshot-permission", type=bool):
+            if screenshot.has_screenshot_permission():
+                self.settings.setValue("has-screenshot-permission", True)
+            else:
+                self.show_permissions_info()
+
+        # Show intro (and delay screenshot to not capute the intro)
         if (
             args.get("show_introduction") is None
             and self.settings.value("show-introduction", type=bool)
@@ -150,6 +148,29 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.settings.setValue("show-introduction", True)
         if result == introduction.Choice.DONT_SHOW:
             self.settings.setValue("show-introduction", False)
+
+    @QtCore.Slot()
+    def show_permissions_info(self) -> None:
+        logger.error("Missing screenshot permission!")
+        delay = 0
+
+        if sys.platform == "darwin":
+            calling_app = "NormCap" if system_info.is_prebuilt_package() else "Terminal"
+            text = constants.PERMISSIONS_TEXT_MACOS.format(application=calling_app)
+
+            # Reset privacy permission in case of new NormCap version. This is necessary
+            # because somehow the setting is associated with the binary and won't work
+            # after it got updated.
+            screenshot.macos_reset_screenshot_permission()
+
+        elif system_info.is_flatpak_package():
+            text = constants.PERMISSIONS_TEXT_FLATPAK
+
+        elif system_info.display_manager_is_wayland():
+            text = constants.PERMISSIONS_TEXT_WAYLAND
+
+        permissions.PermissionDialog(text=text).exec()
+        self.com.exit_application.emit(delay)
 
     @QtCore.Slot()
     def _set_tray_icon_done(self) -> None:
@@ -380,55 +401,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self._create_socket_server()
         return True
-
-    def _ensure_screenshot_permission(self) -> bool:
-        if self.settings.value("has-screenshot-permission", type=bool):
-            return True
-
-        if screenshot.has_screenshot_permission():
-            self.settings.setValue("has-screenshot-permission", True)
-            return True
-
-        dialog_title = _("Error")
-
-        is_prebuilt = system_info.is_prebuilt_package()
-        # L10N: Error message box on macOS only.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        macos_text = _(
-            "'{application}' is missing the permission for 'Screen Recording'."
-            "\n\n"
-            "Grant it via the dialog that will appear after you clicked 'Ok' "
-            "or via 'System Settings' → 'Privacy & Security'."
-            "\n\n"
-            "Then restart NormCap."
-        ).format(application="NormCap" if is_prebuilt else "Terminal")
-
-        # L10N: Error message box on Linux with Wayland only.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        linux_text = _(
-            "<b>NormCap is missing the permission for screen capture.</b><br>"
-            "<br>"
-            "Grant it via the dialog that will appear after you clicked 'Ok'.<br>"
-            "Then start NormCap again.<br>"
-            "<br>"
-            "<small>Sometimes, this might not work. If that is the case for you "
-            "then please<br>"
-            "<a href='{issues_url}'>report this as bug</a> on GitHub.</small>"
-        ).format(issues_url=constants.URLS.issues)
-
-        if sys.platform == "darwin" and self.settings.value("version") != __version__:
-            # Reset privacy permission in case of new NormCap version. This is necessary
-            # because somehow the setting is associated with the binary and won't work
-            # after it got updated.
-            self.settings.setValue("version", __version__)
-            screenshot.macos_reset_screenshot_permission()
-
-        screenshot.request_screenshot_permission(
-            dialog_title=dialog_title,
-            macos_dialog_text=macos_text,
-            linux_dialog_text=linux_text,
-        )
-        return False
 
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""

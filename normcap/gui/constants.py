@@ -1,5 +1,6 @@
 """Global constant strings."""
 
+from normcap.gui.localization import _
 from normcap.gui.models import Urls
 
 URLS = Urls(
@@ -16,6 +17,75 @@ URLS = Urls(
 TESSDATA_REPO = "https://github.com/tesseract-ocr/tessdata_fast"
 TESSDATA_BASE_URL = f"{TESSDATA_REPO}/raw/4.1.0/"
 
+CMD_WAYLAND_PERMISSION = (
+    "<p><code>"
+    "dbus-send --session --print-reply=literal \\<br>"
+    "--dest=org.freedesktop.impl.portal.PermissionStore \\<br>"
+    "/org/freedesktop/impl/portal/PermissionStore \\<br>"
+    "org.freedesktop.impl.portal.PermissionStore.DeletePermission \\<br>"
+    "string:'screenshot' string:'screenshot' string:''"
+    "</code></p>"
+)
+
+CMD_FLATPAK_PERMISSION = (
+    "<p><code>"
+    "flatpak permission-set screenshot screenshot com.github.dynobo.normcap yes"
+    "</code></p>"
+)
+
+# L10N: Headline of the missing permissions dialog
+PERMISSION_DIALOG_HEADLINE = _(
+    "<h3>NormCap is missing the permission for screen capture.</h3>"
+)
+
+# L10N: Info at the bottom of the missing permissions dialog
+# # Do NOT translate the variables in curly brackets "{some_variable}"!
+OPEN_ISSUE_TEXT = _(
+    "<small>"
+    "If this doesn't resolve the issue, please "
+    "<a href='{issues_url}'>report it as a bug</a> on GitHub."
+    "</small>"
+).format(issues_url=URLS.issues)
+
+# L10N: Error message box on Linux with Wayland only.
+# Do NOT translate the variables in curly brackets "{some_variable}"!
+PERMISSIONS_TEXT_WAYLAND = _(
+    "{headline}"
+    "<p>"
+    "When launching NormCap for the first time, you should be prompted to grant "
+    "permissions for taking or sharing a screenshot."
+    "</p><p>"
+    "If you declined or the prompt didn't appear, you can try to reset screenshot "
+    "permissions for <b><u>all</u></b> applications by running the following "
+    "command in a terminal:"
+    "</p>"
+    "{command}"
+).format(
+    headline=PERMISSION_DIALOG_HEADLINE,
+    command=CMD_WAYLAND_PERMISSION,
+)
+
+# L10N: Error message box on Linux for FlatPak package only.
+# Do NOT translate the variables in curly brackets "{some_variable}"!
+PERMISSIONS_TEXT_FLATPAK = _(
+    "{headline}<p>Grant it by running the following command in a terminal:</p>{command}"
+).format(
+    headline=PERMISSION_DIALOG_HEADLINE,
+    command=CMD_FLATPAK_PERMISSION,
+)
+
+# L10N: Error message box on macOS only.
+# Do NOT translate the variables in curly brackets "{some_variable}"!
+PERMISSIONS_TEXT_MACOS = _(
+    "<h3>'{application}' is missing the permission for 'Screen Recording'.</h3>"
+    "<p>"
+    "Grant it via 'System Settings' → "
+    "'<a href='x-apple.systempreferences:com.apple.preference.security?"
+    "Privacy_ScreenCapture'>Privacy & Security'</a>."
+    "</p>"
+)
+
+# Info for Language Manager
 LANGUAGES = (
     ("afr", "2.5 MB", "Afrikaans", "Afrikaans"),
     ("amh", "5.2 MB", "Amharic", "አማርኛ"),
