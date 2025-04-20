@@ -29,9 +29,9 @@ jobs:
         os: [macos-13, macos-14, macos-15, windows-2022, windows-2025, ubuntu-22.04, ubuntu-24.04]
     steps:
       # Setup environment
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         if: ${{ github.event_name != 'workflow_dispatch' }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           ref: ${{ inputs.refToBuild }}
@@ -106,7 +106,7 @@ jobs:
 
       - name: Coveralls Parallel
         if: github.repository_owner == 'dynobo'
-        uses: coverallsapp/github-action@release/v2
+        uses: coverallsapp/github-action@v2.3.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: ${{ matrix.os }}
@@ -121,7 +121,7 @@ jobs:
       matrix:
         os: [macos-13, macos-15, windows-2025, ubuntu-24.04]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Setup Python
         uses: ./.github/actions/setup
@@ -137,7 +137,7 @@ jobs:
       matrix:
         os: [macos-13, macos-15, windows-2025, ubuntu-24.04]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Setup Python
         uses: ./.github/actions/setup
@@ -157,7 +157,7 @@ jobs:
         shell: bash -l {0}
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
       - name: Draft internal release
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1.16.0
         # It's possible, that the run lacks release permissions (e.g. on forks). In
         # this is not crucial, so we just silence the error.
         continue-on-error: true
@@ -178,7 +178,7 @@ jobs:
     name: Test documentation build
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Setup Python
         uses: ./.github/actions/setup
@@ -192,9 +192,9 @@ jobs:
     if: github.repository_owner == 'dynobo'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
       - name: Coveralls Finished
-        uses: coverallsapp/github-action@release/v2
+        uses: coverallsapp/github-action@v2.3.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
@@ -212,16 +212,16 @@ jobs:
         language: ["javascript", "python"]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v3.28.15
         with:
           languages: ${{ matrix.language }}
           queries: security-extended
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@v3.28.15
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v3.28.15
 
   deploy-briefcase:
     name: Briefcase build & draft release
@@ -238,7 +238,7 @@ jobs:
       matrix:
         os: [macos-13, macos-15, windows-2025, ubuntu-24.04]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Setup Python
         uses: ./.github/actions/setup
@@ -248,7 +248,7 @@ jobs:
         run: uv run poe bundle
       - name: Draft release
         if: github.repository == 'dynobo/normcap'
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1.16.0
         with:
           body:
             See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG) for
@@ -286,7 +286,7 @@ jobs:
       # Used to attach signing artifacts to the published release.
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Setup Python
         uses: ./.github/actions/setup
@@ -294,7 +294,7 @@ jobs:
       - name: Build Python package
         run: uv build
       - name: Publish to PyPi
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@v1.12.4
         with:
           verbose: true
           print-hash: true
@@ -315,7 +315,7 @@ jobs:
       && github.repository_owner == 'dynobo'
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Setup Python
         uses: ./.github/actions/setup
