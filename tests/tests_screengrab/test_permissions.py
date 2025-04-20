@@ -25,14 +25,14 @@ def test_macos_has_screenshot_permission_on_non_macos(caplog):
 @pytest.mark.skipif(sys.platform in {"win32", "linux"}, reason="macOS specific test")
 def test_macos_request_screenshot_permission(caplog):
     with caplog.at_level(logging.DEBUG):
-        permissions._macos_request_screenshot_permission()
+        permissions.macos_request_screenshot_permission()
     assert "request screen recording" in caplog.text.lower()
 
 
 @pytest.mark.skipif(sys.platform == "darwin", reason="non-macOS specific test")
 def test_macos_request_screenshot_permission_on_non_macos(caplog):
     with caplog.at_level(logging.DEBUG):
-        permissions._macos_request_screenshot_permission()
+        permissions.macos_request_screenshot_permission()
     assert "couldn't request" in caplog.text.lower()
 
 

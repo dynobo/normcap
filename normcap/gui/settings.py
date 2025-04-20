@@ -3,6 +3,7 @@ from typing import Optional
 
 from PySide6 import QtCore
 
+from normcap import __version__
 from normcap.gui.models import Setting
 from normcap.gui.system_info import config_directory, is_portable_windows_package
 
@@ -205,6 +206,16 @@ class Settings(QtCore.QSettings):
                 logger.debug(
                     "Skip update of unknown setting (%s: %s)", setting_key, value
                 )
+
+    def _on_version_change(self) -> None:
+        if self.value("version", "") != __version__:
+            logger.info("First run of new NormCap version")
+            # Assume we've lost screenshot permissions.
+            # (which will trigger an additional probing screenshot)
+            self.setValue("has-screenshot-permission", False)
+
+            # Update version setting
+            self.setValue("version", __version__)
 
     def reset(self) -> None:
         """Remove all existing settings and values."""

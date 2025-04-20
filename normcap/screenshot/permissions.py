@@ -18,25 +18,6 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_MACOS_DIALOG_TEXT = (
-    "This application is missing the permission for 'Screen Recording'."
-    "\n\n"
-    "Grant it via the dialog that will appear after you clicked 'Ok' "
-    "or via 'System Settings' > 'Privacy & Security'."
-    "\n\n"
-    "Then restart this application."
-)
-DEFAULT_LINUX_DIALOG_TEXT = (
-    "<b>This application does not have permission to take screenshots!</b><br>"
-    "<br>"
-    "Click 'OK' to trigger a request for permission: A system<br>"
-    "dialog should appear and ask you to confirm granting that<br>"
-    "permission.<br>"
-    "<br>"
-    "(Sometimes, this might not work. If that is the case for you<br>"
-    "then please report this as bug to the application author.)"
-)
-
 
 def _macos_load_core_graphics() -> ctypes.CDLL:
     if core_graphics := ctypes.util.find_library("CoreGraphics"):
@@ -60,7 +41,7 @@ def _macos_has_screenshot_permission() -> bool:
     return has_permission
 
 
-def _macos_request_screenshot_permission() -> None:
+def macos_request_screenshot_permission() -> None:
     """Use CoreGraphics to request screen recording permissions."""
     try:
         cg = _macos_load_core_graphics()
@@ -109,21 +90,8 @@ def macos_reset_screenshot_permission() -> None:
             )
     except Exception:
         logger.exception("Couldn't reset screen recording permissions.")
-
-
-def macos_show_request_permission_dialog(title: str, text: str) -> bool:
-    QtWidgets.QMessageBox.critical(
-        None,
-        title,
-        text,
-        buttons=QtWidgets.QMessageBox.StandardButton.Ok,
-    )
-    # Trigger permission request to make the NormCap entry available in settings
-    _macos_request_screenshot_permission()
-
-    # On macOS, an application is required to restart after receiving the permission,
-    # therefore it will never be there when the permission just got requested
-    return False
+    finally:
+        macos_request_screenshot_permission()
 
 
 class DbusPortalPermissionDialog(QtWidgets.QDialog):
@@ -232,41 +200,3 @@ def has_screenshot_permission() -> bool:
     if sys.platform == "win32":
         return True
     raise NotImplementedError("Missing permission check for this platform.")
-
-
-def request_screenshot_permission(
-    dialog_title: str = "Error",
-    macos_dialog_text: str = DEFAULT_MACOS_DIALOG_TEXT,
-    linux_dialog_text: str = DEFAULT_LINUX_DIALOG_TEXT,
-) -> None:
-    if sys.platform == "win32":
-        logger.debug(
-            "Not necessary to request screenshot permission on Windows. Skipping."
-        )
-        return
-
-    if (
-        sys.platform == "linux" or "bsd" in sys.platform
-    ) and not system_info.has_wayland_display_manager():
-        logger.debug(
-            "Not necessary to request screenshot permission on Linux, if the "
-            "display manager is not Wayland. Skipping."
-        )
-        return
-
-    if (
-        sys.platform == "linux" or "bsd" in sys.platform
-    ) and system_info.has_wayland_display_manager():
-        logger.debug("Show request permission dialog.")
-        dbus_portal_show_request_permission_dialog(
-            title=dialog_title, text=linux_dialog_text
-        )
-        return
-
-    if sys.platform == "darwin":
-        logger.debug("Show request permission dialog.")
-        macos_show_request_permission_dialog(title=dialog_title, text=macos_dialog_text)
-
-    raise NotImplementedError(
-        "Missing permission request implementation this platform."
-    )
