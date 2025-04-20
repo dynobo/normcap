@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-04-12 18:27+0200\n"
+"POT-Creation-Date: 2025-04-20 22:46+0200\n"
 "PO-Revision-Date: 2025-04-12 15:36+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
 "Language: pt_BR\n"
@@ -18,6 +18,43 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
+
+#: normcap/gui/constants.py:38
+msgid "<h3>NormCap is missing the permission for screen capture.</h3>"
+msgstr ""
+
+#: normcap/gui/constants.py:44
+#, python-brace-format
+msgid ""
+"<small>If this doesn't resolve the issue, please <a "
+"href='{issues_url}'>report it as a bug</a> on GitHub.</small>"
+msgstr ""
+
+#: normcap/gui/constants.py:53
+#, python-brace-format
+msgid ""
+"{headline}<p>When launching NormCap for the first time, you should be "
+"prompted to grant permissions for taking or sharing a screenshot.</p><p>If "
+"you declined or the prompt didn't appear, you can try to reset screenshot "
+"permissions for <b><u>all</u></b> applications by running the following "
+"command in a terminal:</p>{command}"
+msgstr ""
+
+#: normcap/gui/constants.py:71
+#, python-brace-format
+msgid ""
+"{headline}<p>Grant it by running the following command in a "
+"terminal:</p>{command}"
+msgstr ""
+
+#: normcap/gui/constants.py:80
+#, python-brace-format
+msgid ""
+"<h3>'{application}' is missing the permission for 'Screen "
+"Recording'.</h3><p>Grant it via 'System Settings' → '<a "
+"href='x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture'>Privacy"
+" & Security'</a>.</p>"
+msgstr ""
 
 #. Generic error message when any download failed.
 #: normcap/gui/downloader.py:59
@@ -144,7 +181,7 @@ msgid "Close and view tessdata folder in file manager …"
 msgstr "Feche e visualize a pasta tessdata no gerenciador de arquivos …"
 
 #. Language Manager error message box title
-#: normcap/gui/language_manager.py:98 normcap/gui/tray.py:391
+#: normcap/gui/language_manager.py:98
 msgid "Error"
 msgstr "Erro"
 
@@ -430,47 +467,51 @@ msgstr "Nada foi capturado!"
 msgid "Please try again."
 msgstr "Por favor, tente novamente."
 
-#: normcap/gui/tray.py:397
-#, fuzzy, python-brace-format
-msgid ""
-"'{application}' is missing the permission for 'Screen Recording'.\n"
-"\n"
-"Grant it via the dialog that will appear after you clicked 'Ok' or via "
-"'System Settings' → 'Privacy & Security'.\n"
-"\n"
-"Then restart NormCap."
+#. Button text of notification action in Linux.
+#: normcap/gui/notification.py:241
+msgid "Compose Email"
 msgstr ""
-"'{application}' não tem permissão para 'Gravação de tela'.\n"
-"\n"
-"Conceda por meio da caixa de diálogo que aparecerá após você clicar em 'Ok' "
-"ou por meio de'Configurações do sistema' → 'Privacidade e segurança'.\n"
-"\n"
-"Então reinicie o NormCap."
 
-#: normcap/gui/tray.py:408
-#, python-brace-format
-msgid ""
-"<b>NormCap is missing the permission for screen capture.</b><br><br>Grant it"
-" via the dialog that will appear after you clicked 'Ok'.<br>Then start "
-"NormCap again.<br><br><small>Sometimes, this might not work. If that is the "
-"case for you then please<br><a href='{issues_url}'>report this as bug</a> on"
-" GitHub.</small>"
+#. Button text of notification action in Linux.
+#: normcap/gui/notification.py:244
+msgid "Call Number"
 msgstr ""
-"<b>NormCap não tem permissão para captura de tela.</b><br><br>Conceda "
-"através da caixa de diálogo que aparecerá após você clicar em 'Ok'.<br>Então"
-" inicie NormCap novamente.<br><br><small>Às vezes, isso pode não funcionar. "
-"Se esse for o caso para você, por favor<br><a href=\"{issues_url}\">informe "
-"isso como bug</a> no GitHub.</small>"
 
-#. Tray menu entry
-#: normcap/gui/tray.py:491
-msgid "Capture"
-msgstr "Capturar"
+#. Button text of notification action in Linux.
+#: normcap/gui/notification.py:247
+msgid "Open in Browser"
+msgstr ""
 
+#. Button text of notification action in Linux.
+#: normcap/gui/notification.py:250
+msgid "Import to Adressbook"
+msgstr ""
+
+#. Button text of notification action in Linux.
+#: normcap/gui/notification.py:253
+msgid "Import to Calendar"
+msgstr ""
+
+#. Button text of notification action in Linux.
+#: normcap/gui/notification.py:256
+msgid "Open in Editor"
+msgstr ""
+
+#. Permission dialog window title
+#: normcap/gui/permissions.py:23
+msgid "NormCap - Missing Permissions!"
+msgstr ""
+
+#. Permission dialog button
 #. Tray menu entry for exiting NormCap completely.
-#: normcap/gui/tray.py:498
+#: normcap/gui/permissions.py:53 normcap/gui/tray.py:480
 msgid "Exit"
 msgstr "Sair"
+
+#. Tray menu entry
+#: normcap/gui/tray.py:473
+msgid "Capture"
+msgstr "Capturar"
 
 #. Update available dialog box.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
