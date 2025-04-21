@@ -2,7 +2,6 @@
 
 import logging
 import random
-import re
 import sys
 from pathlib import Path
 from typing import Optional
@@ -133,37 +132,27 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
             self.on_exception.emit(RuntimeError(msg))
             return
 
-        logger.debug("Parse response")
-        # ONHOLD: Extracting DBusArgument as below should work, but it doesn't.
-        #         As there doesn't seem to be another way to access the arguments,
-        #         we workaround by parsing the URI from string representation.
-        # _, arg = message.arguments()
-        # QtDBus.QDBusMessage()
-        # arg.beginArray()
-        # while not arg.atEnd():
-        #     arg.beginMap()
-        #     while not arg.atEnd():
-        #         arg.beginMapEntry()
-        #         key = arg.asVariant()
-        #         value = arg.asVariant()
-        #         arg.endMapEntry()
-        #     arg.endMap()
-        # arg.endArray()
+        logger.debug("Process dbus response")
+        # There currently seems to be no other way to get the URI from the message
+        # arguments
+        uri = None
+        _, arg = message.arguments()
+        QtDBus.QDBusMessage()
+        arg.beginArray()
+        while not arg.atEnd():
+            arg.beginMap()
+            while not arg.atEnd():
+                key = arg.asVariant()
+                value = arg.asVariant()
+                if key == "uri":
+                    uri = value.variant()
 
-        reg_uri = r"""
-                  \[Variant\(QString\)\:\ \"  # start of URI object
-                  (.*)                       # URI itself
-                  \"\]\}                     # end of URI object
-                  """
-        result = re.search(reg_uri, str(message), re.VERBOSE)
-
-        if not result:
-            msg = f"Couldn't parse URI from message: {message}"
+        if not uri:
+            msg = f"Could not retrieve URI from message: {message}"
             logger.error(msg)
             self.on_exception.emit(RuntimeError(message))
             return
 
-        uri = result.group(1)
         self.on_result.emit(uri)
 
 
