@@ -48,5 +48,8 @@ class Handler(enum.IntEnum):
     # For linux with wayland and Gnome
     GNOME_SCREENSHOT = enum.auto()
 
+    # For linux with wayland and KDE
+    SPECTACLE = enum.auto()
+
     # For linux with wayland
     DBUS_PORTAL = enum.auto()

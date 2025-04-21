@@ -19,6 +19,12 @@ def is_gnome() -> bool:
     return bool(gnome_desktop_session_id) or ("gnome" in xdg_current_desktop)
 
 
+def is_kde() -> bool:
+    desktop_session = os.environ.get("DESKTOP_SESSION", "").lower()
+    kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()
+    return bool(kde_full_session) or ("kde-plasma" in desktop_session)
+
+
 def has_wlroots_compositor() -> bool:
     """Check if wlroots compositor is running, as grim only supports wlroots.
 

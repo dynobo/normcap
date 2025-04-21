@@ -120,6 +120,7 @@ def detect_codes(image: QtGui.QImage) -> Optional[DetectionResult]:
             are separated by newlines. If no code is detected, None is returned.
     """
     logger.debug("Start QR/Barcode detection")
+    # ONHOLD: Switch to using QImage directly, when a new zxingcpp is released
     image_buffer = _image_to_memoryview(image)
 
     if detections := _detect_codes_via_zxing(image=image_buffer):
