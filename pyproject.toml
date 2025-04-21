@@ -239,6 +239,7 @@ max_cluster_size = 1
 [tool.briefcase]
 project_name = "NormCap"
 bundle = "eu.dynobo"
+version = "0.6.0"
 
 [tool.briefcase.app.normcap]
 formal_name = "NormCap"
