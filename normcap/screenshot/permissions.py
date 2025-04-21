@@ -7,7 +7,8 @@ from typing import Any, Optional, cast
 
 from PySide6 import QtGui, QtWidgets
 
-from normcap.screenshot import system_info
+from normcap.screenshot import models
+from normcap.screenshot.main import get_available_handlers
 
 try:
     from normcap.screenshot.handlers import dbus_portal
@@ -187,16 +188,21 @@ def dbus_portal_show_request_permission_dialog(title: str, text: str) -> bool:
 
 def has_screenshot_permission() -> bool:
     logger.debug("Checking screenshot permission")
-    if sys.platform == "darwin":
-        return _macos_has_screenshot_permission()
-    if (
-        sys.platform == "linux" or "bsd" in sys.platform
-    ) and not system_info.has_wayland_display_manager():
-        return True
-    if (
-        sys.platform == "linux" or "bsd" in sys.platform
-    ) and system_info.has_wayland_display_manager():
-        return _dbus_portal_has_screenshot_permission()
+
     if sys.platform == "win32":
         return True
-    raise NotImplementedError("Missing permission check for this platform.")
+
+    if sys.platform == "darwin":
+        return _macos_has_screenshot_permission()
+
+    handlers = get_available_handlers()
+    primary_handler = handlers[0] if handlers else None
+    if not primary_handler:
+        raise RuntimeError(
+            "Could not identify a screenshot method for this system configuration."
+        )
+
+    if primary_handler == models.Handler.DBUS_PORTAL:
+        return _dbus_portal_has_screenshot_permission()
+
+    return True
