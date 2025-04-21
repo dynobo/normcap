@@ -161,14 +161,10 @@ def move_windows_via_window_calls_extension(title_id: str, position: Rect) -> bo
             response = proxy.activate(window_id)
 
     except Exception as exc:
-        logger.warning("Failed to move window via org.gnome.Shell.extensions.windows!")
-        logger.debug(
-            "".join(
-                traceback.format_exception(type(exc), exc, exc.__traceback__)
-            ).strip()
-        )
+        logger.warning(exc)
         logger.warning(
-            "If you experience issues with NormCap's position in a multi monitor "
+            "Failed to move window via org.gnome.Shell.extensions.windows! "
+            "If you experience issues with NormCap's position, e.g. in a multi monitor "
             "setting, try installing the Gnome Shell Extension 'Window Calls' "
             "from https://extensions.gnome.org/extension/4724/window-calls/"
         )
