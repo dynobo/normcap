@@ -106,11 +106,21 @@ DEFAULT_SETTINGS = (
     ),
     Setting(
         key="version",
-        flag="_v",
+        flag="",
         type_=str,
         value="0.0.0",
         help_="NormCap version number",
         choices=None,
+        cli_arg=False,
+        nargs=None,
+    ),
+    Setting(
+        key="has-screenshot-permission",
+        flag="",
+        type_=_parse_str_to_bool,
+        value=False,
+        help_="Screenshot permission has been confirmed",
+        choices=(True, False),
         cli_arg=False,
         nargs=None,
     ),
@@ -170,6 +180,7 @@ class Settings(QtCore.QSettings):
 
     def _prepare_and_sync(self) -> None:
         self._migrate_deprecated()
+        self._on_version_change()
         self._set_missing_to_default()
         self._update_from_init_settings()
         self.sync()

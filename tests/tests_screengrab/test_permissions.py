@@ -66,9 +66,10 @@ def test_has_screenshot_permission(qapp):
     assert isinstance(result, bool)
 
 
+@pytest.mark.skipif(sys.platform != "linux", reason="linux specific test")
 def test_has_screenshot_permission_raises(monkeypatch, qapp):
-    monkeypatch.setattr(permissions.sys, "platform", "unknown")
-    with pytest.raises(NotImplementedError, match="for this platform"):
+    monkeypatch.setattr(permissions, "get_available_handlers", lambda: [])
+    with pytest.raises(RuntimeError, match="screenshot method"):
         _ = permissions.has_screenshot_permission()
 
 
