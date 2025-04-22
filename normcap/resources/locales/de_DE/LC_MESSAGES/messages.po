@@ -8,19 +8,20 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-04-20 22:46+0200\n"
-"PO-Revision-Date: 2025-04-12 09:06+0000\n"
+"PO-Revision-Date: 2025-04-23 16:01+0000\n"
 "Last-Translator: dynobo <dynobo@mailbox.org>\n"
-"Language: de_DE\n"
 "Language-Team: German <https://hosted.weblate.org/projects/normcap/ui/de/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11.1-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: normcap/gui/constants.py:38
 msgid "<h3>NormCap is missing the permission for screen capture.</h3>"
-msgstr ""
+msgstr "<h3>NormCap fehlt die Berechtigung für Bildschirmfotos.</h3>"
 
 #: normcap/gui/constants.py:44
 #, python-brace-format
@@ -28,6 +29,8 @@ msgid ""
 "<small>If this doesn't resolve the issue, please <a "
 "href='{issues_url}'>report it as a bug</a> on GitHub.</small>"
 msgstr ""
+"<small>Falls dies nicht hilft, dann <a href=\"{issues_url}\">melde bitten "
+"den Fehler</a> über GitHub.</small>"
 
 #: normcap/gui/constants.py:53
 #, python-brace-format
@@ -38,6 +41,12 @@ msgid ""
 "permissions for <b><u>all</u></b> applications by running the following "
 "command in a terminal:</p>{command}"
 msgstr ""
+"{headline}<p>Beim ersten Start von NormCap solltest Du in einem "
+"Dialogfenster gefragt werden, ob Du die Berechtigung für Bildschirmfotos "
+"erteilen möchtest.</p><p>Falls Du abgelehnt hast oder der Dialog nie "
+"angezeigt wurde, kannst Du versuchen, die Bildschirmfoto-Berechtigungen für "
+"<b><u>alle</u></b> Anwendungen mit folgendem Befehl "
+"zurückzusetzen:</p>{command}"
 
 #: normcap/gui/constants.py:71
 #, python-brace-format
@@ -45,6 +54,8 @@ msgid ""
 "{headline}<p>Grant it by running the following command in a "
 "terminal:</p>{command}"
 msgstr ""
+"{headline}<p>Um sie zu erteilen, führe den folgenden Befehl in einem "
+"Terminal aus:</p>{command}"
 
 #: normcap/gui/constants.py:80
 #, python-brace-format
@@ -54,6 +65,9 @@ msgid ""
 "href='x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture'>Privacy"
 " & Security'</a>.</p>"
 msgstr ""
+"<h3>'{application}' fehlt die Berechtigung für 'Bildschirmaufnahme'.</"
+"h3><p>Erteile sie über 'Systemeinstellungen' → 'Privatssphäre &amp; "
+"Sicherheit'.</p>"
 
 #. Generic error message when any download failed.
 #: normcap/gui/downloader.py:59
@@ -311,13 +325,12 @@ msgid "QR && Barcodes"
 msgstr "QR &amp;&amp; Strichcodes"
 
 #: normcap/gui/menu_button.py:325
-#, fuzzy
 msgid ""
 "Detects Barcodes and QR codes. If one or more codes are found,\n"
 "text detection (OCR) is skipped and only the codes' data is returned."
 msgstr ""
-"Erkennt Strichcodes und QR Codes. Wenn mindestens ein Code erkannt "
-"wurde,wird die Texterkennung (OCR) übersprungen."
+"Erkennt Strich- und QR Codes. Wenn mindestens ein Code erkannt wurde,\n"
+"wird die Texterkennung (OCR) übersprungen."
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: normcap/gui/menu_button.py:353
@@ -470,37 +483,37 @@ msgstr "Bitte versuche es nochmal."
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:241
 msgid "Compose Email"
-msgstr ""
+msgstr "Email schreiben"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:244
 msgid "Call Number"
-msgstr ""
+msgstr "Nummer anrufen"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:247
 msgid "Open in Browser"
-msgstr ""
+msgstr "Im Browser öffnen"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:250
 msgid "Import to Adressbook"
-msgstr ""
+msgstr "Ins Adressbuch importieren"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:253
 msgid "Import to Calendar"
-msgstr ""
+msgstr "In den Kalender importieren"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:256
 msgid "Open in Editor"
-msgstr ""
+msgstr "Im Texteditor öffnen"
 
 #. Permission dialog window title
 #: normcap/gui/permissions.py:23
 msgid "NormCap - Missing Permissions!"
-msgstr ""
+msgstr "NormCap - Fehlende Berechtigungen!"
 
 #. Permission dialog button
 #. Tray menu entry for exiting NormCap completely.
