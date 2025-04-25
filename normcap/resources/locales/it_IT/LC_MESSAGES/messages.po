@@ -8,19 +8,21 @@ msgstr ""
 "Project-Id-Version: NormCap 0.4.4\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2025-04-20 22:46+0200\n"
-"PO-Revision-Date: 2025-04-20 11:08+0000\n"
+"PO-Revision-Date: 2025-04-26 12:03+0000\n"
 "Last-Translator: albanobattistella <albano_battistella@hotmail.com>\n"
-"Language: it_IT\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/normcap/ui/it/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: normcap/gui/constants.py:38
 msgid "<h3>NormCap is missing the permission for screen capture.</h3>"
 msgstr ""
+"<h3>A NormCap manca l'autorizzazione per l'acquisizione dello schermo.</h3>"
 
 #: normcap/gui/constants.py:44
 #, python-brace-format
@@ -28,6 +30,8 @@ msgid ""
 "<small>If this doesn't resolve the issue, please <a "
 "href='{issues_url}'>report it as a bug</a> on GitHub.</small>"
 msgstr ""
+"<small>Se questo non risolve il problema, <a href=\"{issues_url}\">segnalalo "
+"come bug</a> su GitHub.</small>"
 
 #: normcap/gui/constants.py:53
 #, python-brace-format
@@ -38,6 +42,11 @@ msgid ""
 "permissions for <b><u>all</u></b> applications by running the following "
 "command in a terminal:</p>{command}"
 msgstr ""
+"{headline}<p>Quando avvii NormCap per la prima volta, ti verrà chiesto di "
+"concedere le autorizzazioni per acquisire o condividere uno screenshot.</"
+"p><p>Se hai rifiutato o la richiesta non è apparsa, puoi provare a "
+"reimpostare le autorizzazioni per gli screenshot per <b><u>tutte</u></b> le "
+"applicazioni eseguendo il seguente comando in un terminale:</p>{command}"
 
 #: normcap/gui/constants.py:71
 #, python-brace-format
@@ -45,6 +54,8 @@ msgid ""
 "{headline}<p>Grant it by running the following command in a "
 "terminal:</p>{command}"
 msgstr ""
+"{headline}<p>Concedilo eseguendo il seguente comando in un "
+"terminale:</p>{command}"
 
 #: normcap/gui/constants.py:80
 #, python-brace-format
@@ -54,6 +65,9 @@ msgid ""
 "href='x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture'>Privacy"
 " & Security'</a>.</p>"
 msgstr ""
+"<h3>A '{application}' manca l'autorizzazione per 'Registrazione schermo'.</"
+"h3><p>Concedila tramite 'Impostazioni di sistema' → '<a>Privacy e "
+"sicurezza'</a>.</p>"
 
 #. Generic error message when any download failed.
 #: normcap/gui/downloader.py:59
@@ -279,9 +293,8 @@ msgstr ""
 
 #. Entry in main menu's 'Detection' section
 #: normcap/gui/menu_button.py:288
-#, fuzzy
 msgid "Parse text"
-msgstr "Analizzare il testo"
+msgstr "Analizza il testo"
 
 #: normcap/gui/menu_button.py:295
 msgid ""
@@ -471,37 +484,37 @@ msgstr "Per favore riprova."
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:241
 msgid "Compose Email"
-msgstr ""
+msgstr "Componi email"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:244
 msgid "Call Number"
-msgstr ""
+msgstr "Numero di chiamata"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:247
 msgid "Open in Browser"
-msgstr ""
+msgstr "Apri nel browser"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:250
 msgid "Import to Adressbook"
-msgstr ""
+msgstr "Importa nella Rubrica"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:253
 msgid "Import to Calendar"
-msgstr ""
+msgstr "Importa nel calendario"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:256
 msgid "Open in Editor"
-msgstr ""
+msgstr "Apri nell'editor"
 
 #. Permission dialog window title
 #: normcap/gui/permissions.py:23
 msgid "NormCap - Missing Permissions!"
-msgstr ""
+msgstr "NormCap - Permessi mancanti!"
 
 #. Permission dialog button
 #. Tray menu entry for exiting NormCap completely.
