@@ -1,6 +1,7 @@
 """Detect OCR tool & language and perform OCR on selected part of image."""
 
 import logging
+import sys
 import tempfile
 import time
 from collections.abc import Iterable
@@ -36,7 +37,7 @@ def get_text_from_image(  # noqa: PLR0913
     tesseract_cmd: PathLike,
     languages: Union[str, Iterable[str]],
     image: QtGui.QImage,
-    tessdata_path: Optional[PathLike] = None,
+    tessdata_path: Union[PathLike, str, None] = None,
     parse: bool = True,
     resize_factor: Optional[float] = None,
     padding_size: Optional[int] = None,
@@ -44,6 +45,10 @@ def get_text_from_image(  # noqa: PLR0913
     """Apply OCR on selected image section."""
     image = enhance.preprocess(image, resize_factor=resize_factor, padding=padding_size)
     _save_image_in_temp_folder(image, postfix="_enhanced")
+
+    # TODO: Improve handling of tesseract_cmd and tessdata_path
+    if sys.platform == "win32" and tessdata_path:
+        tessdata_path = tesseract.get_short_path(str(tessdata_path))
 
     tess_args = TessArgs(
         tessdata_path=tessdata_path,

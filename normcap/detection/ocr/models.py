@@ -2,7 +2,7 @@ import enum
 import os
 from dataclasses import dataclass, field
 from os import PathLike
-from typing import Optional, Protocol
+from typing import Optional, Protocol, Union
 
 from PySide6 import QtGui
 
@@ -51,7 +51,7 @@ class Transformer(str, enum.Enum):
 class TessArgs:
     """Arguments used when evoking tesseract."""
 
-    tessdata_path: Optional[PathLike]
+    tessdata_path: Union[PathLike, str, None]
     lang: str
     oem: OEM
     psm: PSM

@@ -12,6 +12,7 @@ argument `--parse-text {True, False}`.
 
 **Windows:**
 - Add automatic export of debug logs (when running `normcap.exe -v debug`) to `{DESKTOP_FOLDER}\normcap.log` for easier access.
+- Fix crash on start if user directory contains special characters ([#608](https://github.com/dynobo/normcap/issues/608)).
 
 **Linux:**
 - 🗲 Breaking: Drop support for Ubuntu 20.04 and Gnome < 41.0
