@@ -61,7 +61,7 @@ def test_get_languages_raise_on_no_languages(tmp_path, tesseract_cmd):
         )
 
 
-def test_orc_perform_raises_on_wrong_cmd():
+def test_ocr_perform_raises_on_wrong_cmd():
     tesseract_cmd = "non-existing-binary"
     img = QtGui.QImage(200, 50, QtGui.QImage.Format.Format_RGB32)
     with pytest.raises(FileNotFoundError, match="Could not find Tesseract binary"):

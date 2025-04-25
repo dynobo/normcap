@@ -1,4 +1,5 @@
 import csv
+import ctypes
 import functools
 import logging
 import os
@@ -8,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from ctypes import wintypes
 from os import PathLike, linesep
 from pathlib import Path
 from typing import Optional, Union
@@ -15,6 +17,41 @@ from typing import Optional, Union
 from PySide6 import QtGui
 
 logger = logging.getLogger(__name__)
+
+
+@functools.cache
+def get_short_path(long_path: str) -> str:
+    """Convert long Windows path to short 8.3 path.
+
+    This is necessary for paths which contain special utf-8 chars, which can't be
+    handled as arguments by the tesseract binary on Windows.
+    """
+    if sys.platform != "win32":
+        raise NotImplementedError(
+            "_get_short_path_as_str() is only supported on Windows."
+        )
+
+    # bind the Win32 API
+    _GetShortPathName = ctypes.windll.kernel32.GetShortPathNameW  # type:ignore  # noqa: N806
+    _GetShortPathName.argtypes = [
+        wintypes.LPCWSTR,  # lpLongPath
+        wintypes.LPWSTR,  # lpShortPath
+        wintypes.DWORD,  # cchBuffer
+    ]
+    _GetShortPathName.restype = wintypes.DWORD
+
+    # first call to get required buffer size
+    needed = _GetShortPathName(long_path, None, 0)
+    if needed == 0:
+        raise ctypes.WinError()  # type:ignore  # not available on non-Windows systems
+
+    # allocate buffer and fetch the short path
+    buf = ctypes.create_unicode_buffer(needed)
+    result = _GetShortPathName(long_path, buf, needed)
+    if result == 0:
+        raise ctypes.WinError()  # type:ignore  # not available on non-Windows systems
+
+    return buf.value
 
 
 @functools.cache
@@ -108,6 +145,8 @@ def get_languages(
 ) -> list[str]:
     cmd_args = [str(tesseract_cmd), "--list-langs"]
     if tessdata_path:
+        if sys.platform == "win32":
+            tessdata_path = get_short_path(str(tessdata_path))
         cmd_args.extend(["--tessdata-dir", str(tessdata_path)])
 
     output = _run_command(cmd_args=cmd_args)
@@ -152,6 +191,9 @@ def _run_tesseract(
     with tempfile.TemporaryDirectory() as temp_dir:
         input_image_path = str((Path(temp_dir) / input_image_filename).resolve())
         image.save(input_image_path)
+
+        if sys.platform == "win32":
+            input_image_path = get_short_path(input_image_path)
 
         cmd_args = [
             str(cmd),
