@@ -59,7 +59,7 @@ def test_capture_with_grim_mocked(monkeypatch, caplog, qapp):
         screenshot.save(image_path)
         return subprocess.CompletedProcess(args="", returncode=0, stdout="", stderr="")
 
-    monkeypatch.setattr(grim.sys, "platform", "linux")
+    monkeypatch.setattr(system_info.sys, "platform", "linux")
     monkeypatch.setattr(grim.shutil, "which", lambda *_: "/some/path")
     monkeypatch.setattr(grim.subprocess, "run", mocked_run)
     monkeypatch.setattr(system_info, "has_wlroots_compositor", lambda: True)

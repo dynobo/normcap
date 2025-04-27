@@ -21,7 +21,11 @@ def is_compatible() -> bool:
 
 
 def is_installed() -> bool:
-    return bool(shutil.which("spectacle"))
+    if not (spectacle_bin := shutil.which("spectacle")):
+        return False
+
+    logger.debug("%s dependencies are installed (%s)", __name__, spectacle_bin)
+    return True
 
 
 def capture() -> list[QtGui.QImage]:

@@ -35,7 +35,7 @@ def test_qtclipboard_is_compatible_without_pyside6(monkeypatch, mock_import):
 
 
 @pytest.mark.skipif(
-    system_info.os_has_wayland_display_manager(), reason="non-Wayland specific test"
+    system_info.has_wayland_display_manager(), reason="non-Wayland specific test"
 )
 def test_qtclipboard_copy(qapp):
     text = "test"

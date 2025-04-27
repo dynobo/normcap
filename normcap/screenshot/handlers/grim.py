@@ -19,7 +19,11 @@ def is_compatible() -> bool:
 
 
 def is_installed() -> bool:
-    return bool(shutil.which("grim"))
+    if not (grim_bin := shutil.which("grim")):
+        return False
+
+    logger.debug("%s dependencies are installed (%s)", __name__, grim_bin)
+    return True
 
 
 def capture() -> list[QtGui.QImage]:

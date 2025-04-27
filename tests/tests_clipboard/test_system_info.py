@@ -21,7 +21,7 @@ def test_os_has_wayland_display_manager(
     monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
     monkeypatch.setattr(system_info.sys, "platform", platform)
 
-    assert system_info.os_has_wayland_display_manager() == expected_result
+    assert system_info.has_wayland_display_manager() == expected_result
 
 
 @pytest.mark.parametrize(
@@ -37,7 +37,7 @@ def test_os_has_awesome_wm(monkeypatch, platform, desktop, expected_result):
     with monkeypatch.context() as m:
         m.setenv("XDG_CURRENT_DESKTOP", desktop)
         m.setattr(system_info.sys, "platform", platform)
-        assert system_info.os_has_awesome_wm() == expected_result
+        assert system_info.has_awesome_wm() == expected_result
 
 
 @pytest.mark.parametrize(
