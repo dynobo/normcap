@@ -157,7 +157,6 @@ git clone https://github.com/dynobo/normcap.git
 cd normcap
 
 # Create virtual env and install dependencies
-uv venv
 uv sync
 
 # Register pre-commit hook
