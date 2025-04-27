@@ -19,7 +19,7 @@ from normcap.detection import detector, ocr
 from normcap.gui import (
     constants,
     introduction,
-    permissions,
+    permissions_dialog,
     resources,  # noqa: F401 (loads resources!)
     system_info,
     utils,
@@ -169,7 +169,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         elif system_info.display_manager_is_wayland():
             text = constants.PERMISSIONS_TEXT_WAYLAND
 
-        permissions.PermissionDialog(text=text).exec()
+        permissions_dialog.PermissionDialog(text=text).exec()
         self.com.exit_application.emit(delay)
 
     @QtCore.Slot()
