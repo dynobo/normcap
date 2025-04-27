@@ -4,6 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from normcap.clipboard import system_info
+
 logger = logging.getLogger(__name__)
 
 
@@ -32,6 +34,9 @@ def is_compatible() -> bool:
     if sys.platform != "linux" and "bsd" not in sys.platform:
         logger.debug("%s is not compatible on non-Linux systems", __name__)
         return False
+
+    if system_info.is_flatpak_package():
+        logger.debug("%s is not compatible in Flatpak package", __name__)
 
     logger.debug("%s is compatible", __name__)
     return True
