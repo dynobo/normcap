@@ -26,6 +26,8 @@ def os_has_awesome_wm() -> bool:
 
 
 def is_flatpak_package() -> bool:
+    if sys.platform != "linux" and "bsd" not in sys.platform:
+        return False
     return os.getenv("FLATPAK_ID") is not None
 
 
