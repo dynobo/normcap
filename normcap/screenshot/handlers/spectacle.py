@@ -1,7 +1,6 @@
 import logging
 import shutil
 import subprocess
-import sys
 import tempfile
 from pathlib import Path
 
@@ -18,7 +17,7 @@ install_instructions = (
 
 
 def is_compatible() -> bool:
-    return (sys.platform == "linux" or "bsd" in sys.platform) and system_info.is_kde()
+    return system_info.is_kde() and not system_info.is_flatpak_package()
 
 
 def is_installed() -> bool:

@@ -203,7 +203,7 @@ def _synchronized_capture(interactive: bool) -> QtGui.QImage:
 
 
 def is_compatible() -> bool:
-    # TODO: Specify closer!
+    # TODO: Specify closer! Can I check if a dbus service is available?
     return sys.platform == "linux" or "bsd" in sys.platform
 
 

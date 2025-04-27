@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 def is_gnome() -> bool:
+    if sys.platform != "linux" and "bsd" not in sys.platform:
+        return False
+
     xdg_current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
     gnome_desktop_session_id = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
 
@@ -20,9 +23,19 @@ def is_gnome() -> bool:
 
 
 def is_kde() -> bool:
+    if sys.platform != "linux" and "bsd" not in sys.platform:
+        return False
+
     desktop_session = os.environ.get("DESKTOP_SESSION", "").lower()
     kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()
     return bool(kde_full_session) or ("kde-plasma" in desktop_session)
+
+
+def is_flatpak_package() -> bool:
+    if sys.platform != "linux" and "bsd" not in sys.platform:
+        return False
+
+    return os.getenv("FLATPAK_ID") is not None
 
 
 def has_wlroots_compositor() -> bool:
@@ -31,7 +44,7 @@ def has_wlroots_compositor() -> bool:
     Certainly not wlroots based are: KDE, GNOME and Unity.
     Others are likely wlroots based.
     """
-    if sys.platform != "linux" and "bsd" not in sys.platform:
+    if not has_wayland_display_manager():
         return False
 
     kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()

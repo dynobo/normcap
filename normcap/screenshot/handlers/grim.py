@@ -1,7 +1,6 @@
 import logging
 import shutil
 import subprocess
-import sys
 import tempfile
 from pathlib import Path
 
@@ -16,11 +15,7 @@ install_instructions = "Install the package `grim` using your system's package m
 
 
 def is_compatible() -> bool:
-    return (
-        (sys.platform == "linux" or "bsd" in sys.platform)
-        and system_info.has_wayland_display_manager()
-        and system_info.has_wlroots_compositor()
-    )
+    return system_info.has_wlroots_compositor() and not system_info.is_flatpak_package()
 
 
 def is_installed() -> bool:
