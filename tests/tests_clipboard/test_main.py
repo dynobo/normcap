@@ -27,7 +27,7 @@ def test_copy_without_compatible_handler_fails(monkeypatch):
 
 
 @pytest.mark.skipif(
-    clipboard.system_info.os_has_wayland_display_manager()
+    clipboard.system_info.has_wayland_display_manager()
     and not (shutil.which("wl-copy") or shutil.which("xclip")),
     reason="Needs wl-cop or xclip",
 )

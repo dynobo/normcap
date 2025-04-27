@@ -21,7 +21,11 @@ def is_compatible() -> bool:
 
 
 def is_installed() -> bool:
-    return bool(shutil.which("gnome-screenshot"))
+    if not (screenshot_bin := shutil.which("gnome-screenshot")):
+        return False
+
+    logger.debug("%s dependencies are installed (%s)", __name__, screenshot_bin)
+    return True
 
 
 def capture() -> list[QtGui.QImage]:

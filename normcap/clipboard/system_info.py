@@ -9,7 +9,7 @@ import sys
 logger = logging.getLogger(__name__)
 
 
-def os_has_wayland_display_manager() -> bool:
+def has_wayland_display_manager() -> bool:
     if sys.platform != "linux" and "bsd" not in sys.platform:
         return False
 
@@ -18,7 +18,7 @@ def os_has_wayland_display_manager() -> bool:
     return "wayland" in xdg_session_type or has_wayland_display_env
 
 
-def os_has_awesome_wm() -> bool:
+def has_awesome_wm() -> bool:
     if sys.platform != "linux" and "bsd" not in sys.platform:
         return False
 

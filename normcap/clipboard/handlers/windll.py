@@ -183,14 +183,8 @@ def copy(text: str) -> None:  # noqa: PLR0915
 
 
 def is_compatible() -> bool:
-    if sys.platform != "win32":
-        logger.debug("%s is incompatible on non-Windows systems", __name__)
-        return False
-
-    logger.debug("%s is compatible", __name__)
-    return True
+    return sys.platform == "win32"
 
 
 def is_installed() -> bool:
-    logger.debug("%s requires no dependencies", __name__)
     return True

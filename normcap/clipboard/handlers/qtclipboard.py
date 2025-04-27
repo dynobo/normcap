@@ -28,17 +28,10 @@ def copy(text: str) -> None:
 
 def is_compatible() -> bool:
     if not QtGui:
-        logger.debug("%s is not compatible on systems w/o PySide6", __name__)
         return False
 
-    if system_info.os_has_wayland_display_manager():
-        logger.debug("%s is not compatible with Wayland", __name__)
-        return False
-
-    logger.debug("%s is compatible", __name__)
-    return True
+    return not system_info.has_wayland_display_manager()
 
 
 def is_installed() -> bool:
-    logger.debug("%s requires no dependencies", __name__)
     return True

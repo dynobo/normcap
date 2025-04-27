@@ -21,6 +21,7 @@ argument `--parse-text {True, False}`.
 - Add handlers to take screenshots via `gnome-screenshot` or `spectacle`. Should mitigate some issue for screenshots on Wayland (not all!).
 - Fix AppImage requires `libcrypt`, which is not the case anymore.
 - Fix NormCap not getting focus when moved with Gnome extension "Window Calls"
+- Fix trying incompatible screenshot and clipboard handlers in Flatpak.
 
 ## v0.5.9 (2024-11-10)
 

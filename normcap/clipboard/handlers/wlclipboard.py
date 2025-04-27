@@ -30,15 +30,13 @@ def copy(text: str) -> None:
 
 
 def is_compatible() -> bool:
-    if not system_info.os_has_wayland_display_manager():
-        logger.debug(
-            "%s is not compatible on non-Linux systems and on Linux w/o Wayland",
-            __name__,
-        )
+    if not system_info.has_wayland_display_manager():
         return False
 
-    if system_info.os_has_awesome_wm():
-        logger.debug("%s is not compatible with Awesome WM", __name__)
+    if system_info.has_awesome_wm():
+        return False
+
+    if system_info.is_flatpak_package():
         return False
 
     if gnome_version := system_info.get_gnome_version():
@@ -50,15 +48,12 @@ def is_compatible() -> bool:
                 __name__,
                 gnome_version,
             )
-            return True
 
-    logger.debug("%s is compatible", __name__)
     return True
 
 
 def is_installed() -> bool:
     if not (wl_copy_bin := shutil.which("wl-copy")):
-        logger.debug("%s is not installed: wl-copy was not found", __name__)
         return False
 
     logger.debug("%s dependencies are installed (%s)", __name__, wl_copy_bin)

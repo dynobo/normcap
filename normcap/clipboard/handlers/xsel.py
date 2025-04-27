@@ -32,19 +32,13 @@ def copy(text: str) -> None:
 
 def is_compatible() -> bool:
     if sys.platform != "linux" and "bsd" not in sys.platform:
-        logger.debug("%s is not compatible on non-Linux systems", __name__)
         return False
 
-    if system_info.is_flatpak_package():
-        logger.debug("%s is not compatible in Flatpak package", __name__)
-
-    logger.debug("%s is compatible", __name__)
-    return True
+    return not system_info.is_flatpak_package()
 
 
 def is_installed() -> bool:
     if not (xclip_bin := shutil.which("xsel")):
-        logger.debug("%s is not installed: xsel was not found", __name__)
         return False
 
     logger.debug("%s dependencies are installed (%s)", __name__, xclip_bin)
