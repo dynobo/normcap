@@ -255,6 +255,7 @@ class Notifier(QtCore.QObject):
             # L10N: Button text of notification action in Linux.
             action_name = _("Open in Editor")
 
+        # FIXME: Notification hangs too long! Lower timeout?
         cmds = [
             "notify-send",
             f"--icon={icon_path.resolve()}",

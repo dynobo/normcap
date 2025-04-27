@@ -17,6 +17,8 @@ URLS = Urls(
 TESSDATA_REPO = "https://github.com/tesseract-ocr/tessdata_fast"
 TESSDATA_BASE_URL = f"{TESSDATA_REPO}/raw/4.1.0/"
 
+
+# TODO: Link to webpage instead!
 CMD_WAYLAND_PERMISSION = (
     "<p><code>"
     "dbus-send --session --print-reply=literal \\<br>"

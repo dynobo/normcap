@@ -11,6 +11,7 @@ from normcap.gui import constants
 from normcap.gui.localization import _
 
 
+# FIX: Checks for permission, but it should be stored in settings!
 class PermissionDialog(QtWidgets.QDialog):
     def __init__(
         self,

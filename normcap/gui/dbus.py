@@ -139,6 +139,7 @@ def move_windows_via_window_calls_extension(title_id: str, position: Rect) -> bo
 
             window_id = None
             for window in normcap_windows:
+                # TODO: No need to check title, it's already in list!
                 response = proxy.get_title(window["id"])
                 window_title = response[0]
                 if window_title == title_id:
