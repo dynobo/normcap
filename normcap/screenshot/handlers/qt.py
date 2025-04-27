@@ -1,5 +1,4 @@
 import logging
-import sys
 
 from PySide6 import QtGui, QtWidgets
 
@@ -11,9 +10,7 @@ install_instructions = ""
 
 
 def is_compatible() -> bool:
-    return (
-        sys.platform != "linux" and "bsd" not in sys.platform
-    ) or not system_info.has_wayland_display_manager()
+    return not system_info.has_wayland_display_manager()
 
 
 def is_installed() -> bool:

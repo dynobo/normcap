@@ -28,9 +28,9 @@ def test_capture(qapp):
         "expected_handler",
     ),
     [
-        ("win32", "", True, True, True, False, Handler.QT),
+        ("win32", "", False, False, True, False, Handler.QT),
         ("win32", "", False, False, False, False, Handler.QT),
-        ("darwin", "", True, True, True, False, Handler.QT),
+        ("darwin", "", False, False, True, False, Handler.QT),
         ("darwin", "", False, False, False, False, Handler.QT),
         ("linux", "", False, True, True, False, Handler.QT),
         ("linux", "", True, True, True, False, Handler.GRIM),
