@@ -169,6 +169,10 @@ def move_windows_via_window_calls_extension(title_id: str, position: Rect) -> bo
             "setting, try installing the Gnome Shell Extension 'Window Calls' "
             "from https://extensions.gnome.org/extension/4724/window-calls/"
         )
+        # FIXME: Test availability via dbus call instead:
+        # dbus-send --session --dest=org.gnome.Shell --type=method_call \
+        # --print-reply /org/gnome/Shell/Extensions/Windowss \
+        # org.freedesktop.DBus.Introspectable.Introspect
         return False
     else:
         return True

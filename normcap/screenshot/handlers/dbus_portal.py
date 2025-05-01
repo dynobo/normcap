@@ -3,6 +3,7 @@
 import logging
 import random
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 from urllib.parse import unquote, urlparse
@@ -33,6 +34,16 @@ install_instructions = ""
 TIMEOUT_SECONDS = 10
 
 
+@dataclass(frozen=True)
+class DBUS:
+    DESKTOP_SERVICE: str = "org.freedesktop.portal.Desktop"
+    DESKTOP_PATH: str = "/org/freedesktop/portal/desktop"
+    SCREENSHOT_INTERFACE: str = "org.freedesktop.portal.Screenshot"
+    REQUEST_INTERFACE: str = "org.freedesktop.portal.Request"
+    REQUEST_PATH: str = "/org/freedesktop/portal/desktop/request"
+    INTROSPECTABLE_SERVICE: str = "org.freedesktop.DBus.Introspectable"
+
+
 class OrgFreedesktopPortalRequestInterface(QtDBus.QDBusAbstractInterface):
     Response = QtCore.Signal(QtDBus.QDBusMessage)
 
@@ -40,9 +51,9 @@ class OrgFreedesktopPortalRequestInterface(QtDBus.QDBusAbstractInterface):
         self, path: str, connection: QtDBus.QDBusConnection, parent: QtCore.QObject
     ) -> None:
         super().__init__(
-            "org.freedesktop.portal.Desktop",
+            DBUS.DESKTOP_SERVICE,
             path,
-            "org.freedesktop.portal.Request",  # type: ignore
+            DBUS.REQUEST_INTERFACE,  # type: ignore
             connection,
             parent,
         )
@@ -71,15 +82,15 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
 
         random_str = "".join(random.choice("abcdefghi") for _ in range(8))  # noqa: S311
         token = f"normcap_{random_str}"
-        object_path = f"/org/freedesktop/portal/desktop/request/{base}/{token}"
+        object_path = f"{DBUS.REQUEST_PATH}/{base}/{token}"
 
         request = OrgFreedesktopPortalRequestInterface(object_path, bus, self)
         request.Response.connect(self.on_response)
 
         interface = QtDBus.QDBusInterface(
-            "org.freedesktop.portal.Desktop",
-            "/org/freedesktop/portal/desktop",
-            "org.freedesktop.portal.Screenshot",
+            DBUS.DESKTOP_SERVICE,
+            DBUS.DESKTOP_PATH,
+            DBUS.SCREENSHOT_INTERFACE,
             bus,
             self,
         )
@@ -89,16 +100,26 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         )
         logger.debug("DBus request message: %s", str(message))
 
-        if (
-            isinstance(message, QtDBus.QDBusMessage)
-            and message.arguments()
-            and isinstance(message.arguments()[0], QtDBus.QDBusObjectPath)
-        ):
-            logger.debug("Request accepted")
-        else:
-            msg = "No object path received from xdg-portal!"
+        reply = QtDBus.QDBusReply(message)
+        if not reply.isValid():
+            error = reply.error().message()
+            msg = f"DBus Screenshot responded with error: {error}; Reply: {reply}"
             logger.error(msg)
             self.on_exception.emit(RuntimeError(msg))
+            return
+
+        value = reply.value()
+
+        if not isinstance(value, QtDBus.QDBusObjectPath):
+            msg = (
+                "No object path received from xdg-portal! "
+                f"Value: {value}; Reply: {reply}"
+            )
+            logger.error(msg)
+            self.on_exception.emit(RuntimeError(msg))
+            return
+
+        logger.debug("Request accepted")
 
     def _get_timeout_timer(self, timeout_sec: int) -> QtCore.QTimer:
         def _timeout_triggered() -> None:
@@ -112,40 +133,53 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
         timeout_timer.timeout.connect(_timeout_triggered)
         return timeout_timer
 
-    def got_signal(self, message: QtDBus.QDBusMessage) -> None:
-        self.timeout_timer.stop()
-        logger.debug("DBus signal message: %s", str(message))
-
-        code, _ = message.arguments()
-        all_okay_code = 0
-        permission_denied_code = 2
-
-        if code == permission_denied_code:
-            msg = f"Permission denied for Screenshot via xdg-portal! Message: {message}"
-            logger.error(msg)
-            self.on_exception.emit(PermissionError(msg))
-            return
-
-        if code != all_okay_code:
-            msg = f"Error code {code} received from xdg-portal!"
-            logger.error(msg)
-            self.on_exception.emit(RuntimeError(msg))
-            return
-
-        logger.debug("Process dbus response")
-        # There currently seems to be no other way to get the URI from the message
-        # arguments
-        uri = None
-        _, arg = message.arguments()
-        QtDBus.QDBusMessage()
+    @staticmethod
+    def extract_key_from_dbus_argument(
+        arg: QtDBus.QDBusArgument, name: str
+    ) -> Optional[str]:
+        """Extract a value for a specific key from a nested QDBusArgument."""
         arg.beginArray()
         while not arg.atEnd():
             arg.beginMap()
             while not arg.atEnd():
                 key = arg.asVariant()
                 value = arg.asVariant()
-                if key == "uri":
-                    uri = value.variant()
+                if key == name:
+                    return value.variant()
+            arg.endMap()
+        arg.endArray()
+        return None
+
+    def got_signal(self, message: QtDBus.QDBusMessage) -> None:
+        self.timeout_timer.stop()
+        logger.debug("DBus signal message: %s", str(message))
+
+        reply = QtDBus.QDBusReply(message)
+        if not reply.isValid():
+            msg = f"DBus signal message is invalid! Message: {message}"
+            logger.error(msg)
+            self.on_exception.emit(PermissionError(msg))
+            return
+
+        status_code = reply.value()
+        all_okay_code = 0
+        permission_denied_code = 2
+
+        if status_code == permission_denied_code:
+            msg = f"Permission denied for Screenshot via xdg-portal! Message: {message}"
+            logger.error(msg)
+            self.on_exception.emit(PermissionError(msg))
+            return
+
+        if status_code != all_okay_code:
+            msg = f"Error code {status_code} received from xdg-portal!"
+            logger.error(msg)
+            self.on_exception.emit(RuntimeError(msg))
+            return
+
+        logger.debug("Process dbus response")
+        _, arg = message.arguments()
+        uri = self.extract_key_from_dbus_argument(arg=arg, name="uri")
 
         if not uri:
             msg = f"Could not retrieve URI from message: {message}"
@@ -203,14 +237,36 @@ def _synchronized_capture(interactive: bool) -> QtGui.QImage:
 
 
 def is_compatible() -> bool:
-    # TODO: Specify closer! Can I check if a dbus service is available?
     return sys.platform == "linux" or "bsd" in sys.platform
 
 
 def is_installed() -> bool:
-    # For now, we assume that the distro uses freedesktop portal, as most modern do.
-    # TODO: Test if freedesktop portal is supported via dbus call
-    return True
+    session_bus = QtDBus.QDBusConnection.sessionBus()
+    if not session_bus.isConnected():
+        logger.warning("Cannot connect to the DBus session bus.")
+        return False
+
+    iface = QtDBus.QDBusInterface(
+        DBUS.DESKTOP_SERVICE,
+        DBUS.DESKTOP_PATH,
+        DBUS.INTROSPECTABLE_SERVICE,
+        session_bus,
+    )
+    if not iface.isValid():
+        logger.warning(
+            "DBus Screenshot is invalid: %s", session_bus.lastError().message()
+        )
+        return False
+
+    message = iface.call("Introspect")
+    reply = QtDBus.QDBusReply(message)
+    if not reply.isValid():
+        error = reply.error().message()
+        logger.warning("Cannot introspect DBus: %s", error)
+        return False
+
+    value = reply.value()
+    return DBUS.SCREENSHOT_INTERFACE in value
 
 
 def capture() -> list[QtGui.QImage]:

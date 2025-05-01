@@ -21,7 +21,7 @@
 | [es_ES](./es_ES/LC_MESSAGES/messages.po) |      80% |   68 of 84 |
 | [fr_FR](./fr_FR/LC_MESSAGES/messages.po) |      80% |   68 of 84 |
 | [hi_IN](./hi_IN/LC_MESSAGES/messages.po) |      10% |    9 of 84 |
-| [it_IT](./it_IT/LC_MESSAGES/messages.po) |      85% |   72 of 84 |
+| [it_IT](./it_IT/LC_MESSAGES/messages.po) |     100% |   84 of 84 |
 | [ja_JP](./ja_JP/LC_MESSAGES/messages.po) |      80% |   68 of 84 |
 | [pl_PL](./pl_PL/LC_MESSAGES/messages.po) |      10% |    9 of 84 |
 | [pt_BR](./pt_BR/LC_MESSAGES/messages.po) |      80% |   68 of 84 |
