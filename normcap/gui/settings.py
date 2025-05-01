@@ -105,8 +105,8 @@ DEFAULT_SETTINGS = (
         nargs=None,
     ),
     Setting(
-        key="version",
-        flag="",
+        key="current-version",
+        flag="_c",
         type_=str,
         value="0.0.0",
         help_="NormCap version number",
@@ -116,7 +116,7 @@ DEFAULT_SETTINGS = (
     ),
     Setting(
         key="has-screenshot-permission",
-        flag="",
+        flag="_h",
         type_=_parse_str_to_bool,
         value=False,
         help_="Screenshot permission has been confirmed",
@@ -186,6 +186,11 @@ class Settings(QtCore.QSettings):
         self.sync()
 
     def _migrate_deprecated(self) -> None:
+        # Remove deprected settings from v0.6.0
+        # ONHOLD: Delete in 2026/7
+        if self.value("version", None):
+            self.remove("version")
+
         # Migrations to v0.6.0
         # ONHOLD: Delete in 2026/7
         if self.value("mode", None):
@@ -219,14 +224,14 @@ class Settings(QtCore.QSettings):
                 )
 
     def _on_version_change(self) -> None:
-        if self.value("version", "") != __version__:
+        if self.value("current-version", "") != __version__:
             logger.info("First run of new NormCap version")
             # Assume we've lost screenshot permissions.
             # (which will trigger an additional probing screenshot)
             self.setValue("has-screenshot-permission", False)
 
             # Update version setting
-            self.setValue("version", __version__)
+            self.setValue("current-version", __version__)
 
     def reset(self) -> None:
         """Remove all existing settings and values."""
