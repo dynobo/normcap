@@ -106,16 +106,17 @@ def test_argparser_parses_all_types(monkeypatch):
 def test_argparser_attributes_in_settings():
     argparser_defaults = vars(utils.create_argparser().parse_args([]))
     settings = Settings(organization="normcap_TEST")
-
+    args_without_setting = {
+        "background_mode",
+        "cli_mode",
+        "clipboard_handler",
+        "reset",
+        "screenshot_handler",
+        "verbosity",
+        "version",
+    }
     for arg in argparser_defaults:
-        if arg in {
-            "verbosity",
-            "reset",
-            "cli_mode",
-            "background_mode",
-            "clipboard_handler",
-            "screenshot_handler",
-        }:
+        if arg in args_without_setting:
             continue
         assert arg.replace("_", "-") in settings.allKeys()
 
@@ -124,7 +125,7 @@ def test_settings_in_argparser_attributes():
     argparser_defaults = vars(utils.create_argparser().parse_args([]))
     settings = Settings(organization="normcap_TEST")
     for key in settings.allKeys():
-        if key in {"version", "last-update-check", "has-screenshot-permission"}:
+        if key in {"current-version", "last-update-check", "has-screenshot-permission"}:
             continue
         assert key.replace("-", "_") in argparser_defaults
 
