@@ -19,6 +19,7 @@ from normcap.detection import detector, ocr
 from normcap.gui import (
     constants,
     introduction,
+    notification,
     permissions_dialog,
     resources,  # noqa: F401 (loads resources!)
     system_info,
@@ -28,7 +29,6 @@ from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Days, Rect, Screen, Seconds
-from normcap.gui.notification import Notifier
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
@@ -290,8 +290,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             logger.warning("Nothing detected on selected region.")
 
         if self.settings.value("notification", type=bool):
-            self.notifier.com.send_notification.emit(
-                result.text, result.text_type, result.detector
+            notification.send_notification(
+                text=result.text, text_type=result.text_type, detector=result.detector
             )
 
         self._minimize_or_exit_application(delay=self._EXIT_DELAY)
@@ -362,7 +362,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         By running this async of __init__(),  its runtime of ~30ms doesn't
         contribute to the delay until the GUI becomes active for the user on startup.
         """
-        self.notifier = Notifier(parent=self)
         self.installed_languages = ocr.tesseract.get_languages(
             tesseract_cmd=ocr.tesseract.get_tesseract_path(
                 is_briefcase_package=system_info.is_briefcase_package()
