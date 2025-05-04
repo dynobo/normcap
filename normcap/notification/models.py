@@ -49,11 +49,11 @@ class Handler(enum.IntEnum):
     and uses the first one that is detected as compatible.
     """
 
-    # For Linux
-    NOTIFY_SEND = enum.auto()
-
     # For Flatpak
     DBUS_PORTAL = enum.auto()
+
+    # For Linux
+    NOTIFY_SEND = enum.auto()
 
     # For MacOS and Windows
     QT = enum.auto()

@@ -6,7 +6,6 @@ from pathlib import Path
 
 from PySide6 import QtCore, QtGui
 
-from normcap import notification
 from normcap.detection.models import TextDetector, TextType
 from normcap.gui.localization import _, translate
 
@@ -181,17 +180,3 @@ def _get_action_label(text_type: TextType) -> str:
         # L10N: Button text of notification action in Linux.
         action_name = _("Open in Editor")
     return action_name
-
-
-def send_notification(text: str, text_type: TextType, detector: TextDetector) -> None:
-    title, message = _compose_notification(
-        text=text, result_type=text_type, detector=detector
-    )
-    action_label = _get_action_label(text_type=text_type)
-
-    notification.notify(
-        title=title,
-        message=message,
-        action_label=action_label,
-        action_callback=lambda: _open_ocr_result(text=text, text_type=text_type),
-    )
