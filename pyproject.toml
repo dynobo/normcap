@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "normcap"
-version = "0.6.0-beta1"
+version = "0.6.0-beta2"
 description = "OCR-powered screen-capture tool to capture information instead of images."
 keywords = [ "screenshot", "ocr", "capture", "clipboard" ]
 readme = "README.md"
@@ -353,7 +353,7 @@ USER brutus
 use_full_install_path = false
 
 [tool.tbump.version]
-current = "0.6.0-beta1"
+current = "0.6.0-beta2"
 regex = '''
   (?P<major>\d+)
   \.
