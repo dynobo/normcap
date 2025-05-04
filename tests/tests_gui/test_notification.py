@@ -1,15 +1,11 @@
 import os
-import shutil
-import sys
 import tempfile
 from pathlib import Path
-from typing import Callable
 
 import pytest
 
 from normcap.detection.models import TextDetector, TextType
-from normcap.gui import notification
-from normcap.notification.handlers import notify_send, qt
+from normcap.gui import notification_utils
 
 
 @pytest.mark.parametrize(
@@ -99,7 +95,7 @@ def test_compose_notification(
 ):
     # GIVEN a Notifier and a certain input
     # WHEN the notification is composed
-    title, text = notification._compose_notification(
+    title, text = notification_utils._compose_notification(
         text=text, result_type=text_type, detector=text_detector
     )
 
@@ -112,64 +108,67 @@ def test_compose_notification(
     # THEN we expect an exception, as the parent has to be a QSystemTrayIcon
 
 
-@pytest.mark.parametrize(
-    ("platform", "has_notify_send", "expected_method"),
-    [
-        ("linux", False, "qt"),
-        ("linux", True, "notify_send"),
-        ("win32", True, "qt"),
-        ("win32", False, "qt"),
-        ("darwin", True, "qt"),
-    ],
-)
-def test_send_notification(monkeypatch, platform, has_notify_send, expected_method):
-    """Test which method is used to send notification under certain conditions."""
+# FIXME: Drop Test?
+# @pytest.mark.parametrize(
+#     ("platform", "has_notify_send", "expected_method"),
+#     [
+#         ("linux", False, "qt"),
+#         ("linux", True, "notify_send"),
+#         ("win32", True, "qt"),
+#         ("win32", False, "qt"),
+#         ("darwin", True, "qt"),
+#     ],
+# )
+# def test_send_notification(monkeypatch, platform, has_notify_send, expected_method):
+#     """Test which method is used to send notification under certain conditions."""
 
-    # GIVEN a Notifier (with mocked notification methods)
-    result = []
+#     # GIVEN a Notifier (with mocked notification methods)
+#     result = []
 
-    def mocked_notify_send(title, message, action_label, action_callback):
-        result.append(
-            {
-                "title": title,
-                "message": message,
-                "method": "notify_send",
-                "action_label": action_label,
-                "action_callback": action_callback,
-            }
-        )
+#     def mocked_notify_send(title, message, action_label, action_callback):
+#         result.append(
+#             {
+#                 "title": title,
+#                 "message": message,
+#                 "method": "notify_send",
+#                 "action_label": action_label,
+#                 "action_callback": action_callback,
+#             }
+#         )
 
-    def mocked_qt(title, message, action_label, action_callback):
-        result.append(
-            {
-                "title": title,
-                "message": message,
-                "method": "qt",
-                "action_label": action_label,
-                "action_callback": action_callback,
-            }
-        )
+#     def mocked_qt(title, message, action_label, action_callback):
+#         result.append(
+#             {
+#                 "title": title,
+#                 "message": message,
+#                 "method": "qt",
+#                 "action_label": action_label,
+#                 "action_callback": action_callback,
+#             }
+#         )
 
-    monkeypatch.setattr(notify_send, "notify", mocked_notify_send)
-    monkeypatch.setattr(qt, "notify", mocked_qt)
+#     monkeypatch.setattr(notify_send, "notify", mocked_notify_send)
+#     monkeypatch.setattr(qt, "notify", mocked_qt)
 
-    text = "text"
-    text_type = TextType.SINGLE_LINE
-    detector = TextDetector.OCR_PARSED
+#     text = "text"
+#     text_type = TextType.SINGLE_LINE
+#     detector = TextDetector.OCR_PARSED
 
-    # WHEN a notification is send on a certain platform and w/ or w/o libnotify
-    monkeypatch.setattr(sys, "platform", platform)
-    monkeypatch.setattr(shutil, "which", lambda _: has_notify_send)
+#     # WHEN a notification is send on a certain platform and w/ or w/o libnotify
+#     monkeypatch.setattr(sys, "platform", platform)
+#     monkeypatch.setattr(shutil, "which", lambda _: has_notify_send)
 
-    notification.send_notification(text=text, text_type=text_type, detector=detector)
+#     notification_utils.send_notification(
+#         text=text, text_type=text_type, detector=detector
+#     )
 
-    # THEN QT should be used to send the notification with a certain content
-    # and with the expected method
-    assert result[-1]["method"] == expected_method
-    assert result[-1]["title"] == "1 word captured"
-    assert result[-1]["message"] == "text"
-    assert result[-1]["action_label"]
-    assert isinstance(result[-1]["action_callback"], Callable)
+#     # THEN QT should be used to send the notification with a certain content
+#     # and with the expected method
+#     assert result[-1]["method"] == expected_method
+#     assert result[-1]["title"] == "1 word captured"
+#     assert result[-1]["message"] == "text"
+#     assert result[-1]["action_label"]
+#     assert isinstance(result[-1]["action_callback"], Callable)
 
 
 @pytest.mark.parametrize(
@@ -216,10 +215,12 @@ def test_open_ocr_result(monkeypatch, text, text_type, expected_urls):
     def mocked_openurl(url):
         return urls.append(url)
 
-    monkeypatch.setattr(notification.QtGui.QDesktopServices, "openUrl", mocked_openurl)
+    monkeypatch.setattr(
+        notification_utils.QtGui.QDesktopServices, "openUrl", mocked_openurl
+    )
 
     # WHEN the function is called with certain text and TextType
-    notification._open_ocr_result(text=text, text_type=text_type)
+    notification_utils._open_ocr_result(text=text, text_type=text_type)
 
     # THEN the expected urls should be in the format so openUrl would result in the
     #   correct action

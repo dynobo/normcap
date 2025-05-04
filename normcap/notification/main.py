@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 _notification_handlers: dict[Handler, HandlerProtocol] = {
+    Handler.DBUS_PORTAL: dbus_portal,
     Handler.NOTIFY_SEND: notify_send,
     Handler.QT: qt,
-    Handler.DBUS_PORTAL: dbus_portal,
 }
 
 

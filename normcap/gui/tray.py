@@ -14,12 +14,13 @@ from typing import Any, NoReturn, Optional, cast
 
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
-from normcap import __version__, clipboard, screenshot
+from normcap import __version__, clipboard, notification, screenshot
 from normcap.detection import detector, ocr
+from normcap.detection.models import TextDetector, TextType
 from normcap.gui import (
     constants,
     introduction,
-    notification,
+    notification_utils,
     permissions_dialog,
     resources,  # noqa: F401 (loads resources!)
     system_info,
@@ -80,8 +81,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.installed_languages: list[str] = []
         self.settings = Settings(init_settings=args)
 
-        self.clipboard_handler_name = args.get("clipboard_handler")
         self.screenshot_handler_name = args.get("screenshot_handler")
+        self.clipboard_handler_name = args.get("clipboard_handler")
+        self.notification_handler_name = args.get("notification_handler")
 
         # Handle special cli args
         if args.get("reset", False):
@@ -290,12 +292,42 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             logger.warning("Nothing detected on selected region.")
 
         if self.settings.value("notification", type=bool):
-            notification.send_notification(
+            self._send_notification(
                 text=result.text, text_type=result.text_type, detector=result.detector
             )
 
         self._minimize_or_exit_application(delay=self._EXIT_DELAY)
         self._set_tray_icon_done()
+
+    def _send_notification(
+        self, text: str, text_type: TextType, detector: TextDetector
+    ) -> None:
+        title, message = notification_utils._compose_notification(
+            text=text, result_type=text_type, detector=detector
+        )
+        action_label = notification_utils._get_action_label(text_type=text_type)
+
+        # TODO: refactor to use one function with optional handler_name
+        if self.notification_handler_name:
+            notification.notify_with_handler(
+                handler_name=self.notification_handler_name,
+                title=title,
+                message=message,
+                action_label=action_label,
+                action_callback=lambda: notification_utils._open_ocr_result(
+                    text=text, text_type=text_type
+                ),
+            )
+
+        else:
+            notification.notify(
+                title=title,
+                message=message,
+                action_label=action_label,
+                action_callback=lambda: notification_utils._open_ocr_result(
+                    text=text, text_type=text_type
+                ),
+            )
 
     @QtCore.Slot(str)
     def _open_url_and_hide(self, url: str) -> None:

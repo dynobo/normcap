@@ -13,6 +13,7 @@ from PySide6 import QtCore
 from normcap.clipboard import Handler as ClipboardHandler
 from normcap.gui import system_info
 from normcap.gui.settings import DEFAULT_SETTINGS
+from normcap.notification import Handler as NotificationHandler
 from normcap.screenshot import Handler as ScreenshotHandler
 
 logger = logging.getLogger("normcap")
@@ -85,17 +86,26 @@ def create_argparser() -> argparse.ArgumentParser:
         help="Start minimized to tray, without capturing",
     )
     parser.add_argument(
+        "--screenshot-handler",
+        action="store",
+        choices=[h.name.lower() for h in ScreenshotHandler],
+        help=(
+            "Only relevant on Linux! Force using specific screenshot handler instead "
+            "of auto-selecting"
+        ),
+    )
+    parser.add_argument(
         "--clipboard-handler",
         action="store",
         choices=[h.name.lower() for h in ClipboardHandler],
         help="Force using specific clipboard handler instead of auto-selecting",
     )
     parser.add_argument(
-        "--screenshot-handler",
+        "--notification-handler",
         action="store",
-        choices=[h.name.lower() for h in ScreenshotHandler],
+        choices=[h.name.lower() for h in NotificationHandler],
         help=(
-            "Only relevant on Linux! Force using specific screenshot handler instead "
+            "Only relevant on Linux! Force using specific notification handler instead "
             "of auto-selecting"
         ),
     )
