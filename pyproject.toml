@@ -118,8 +118,8 @@ format = [
   { cmd = "mdformat --align-semantic-breaks-in-lists --end-of-line keep" },
 ]
 chart = [
-  { cmd = "pydeps normcap --max-bacon=2 -o=pydeps.png -T=png" },
-  { cmd = "pydeps normcap --max-bacon=1 -o=pydeps_internal.png -T=png" },
+  { cmd = "pydeps normcap --max-bacon=2 --noise-level=0 -o=pydeps.png -T=png" },
+  { cmd = "pydeps normcap --max-bacon=1 --noise-level=0 -o=pydeps_internal.png -T=png" },
 ]
 bundle = [ { ref = "locales-compile" }, { cmd = "python bundle/build.py" } ]
 bundle-dev = [
@@ -186,10 +186,11 @@ ignore = [
   "D107", # Missing docstring in __init__
   "TRY003", # Avoid specifying long messages outside the exception class
   "ISC001", # Rule conflicts with ruff's formatter
+  "PLR0913", # Too many arguments in function definition (> 5)
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*" = [ "PLR2004", "PLR0913", "S101", "TID252", "ANN", "D" ]
+"tests/**/*" = [ "PLR2004", "S101", "TID252", "ANN", "D" ]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

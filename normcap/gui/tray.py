@@ -16,7 +16,7 @@ from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
 from normcap import __version__, clipboard, notification, screenshot
 from normcap.detection import detector, ocr
-from normcap.detection.models import TextDetector, TextType
+from normcap.detection.models import DetectionMode, TextDetector, TextType
 from normcap.gui import (
     constants,
     introduction,
@@ -274,11 +274,27 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self._minimize_or_exit_application(delay=0)
             return
 
+        tessdata_path = system_info.get_tessdata_path(
+            config_directory=system_info.config_directory(),
+            is_flatpak_package=system_info.is_flatpak_package(),
+            is_briefcase_package=system_info.is_briefcase_package(),
+        )
+        tesseract_bin_path = system_info.get_tesseract_bin_path(
+            is_briefcase_package=system_info.is_briefcase_package()
+        )
+
+        detection_mode = DetectionMode(0)
+        if bool(self.settings.value("detect-codes", type=bool)):
+            detection_mode |= DetectionMode.CODES
+        if bool(self.settings.value("detect-text", type=bool)):
+            detection_mode |= DetectionMode.TESSERACT
+
         result = detector.detect(
             image=cropped_screenshot,
+            tesseract_bin_path=tesseract_bin_path,
+            tessdata_path=tessdata_path,
             language=self.settings.value("language"),
-            detect_codes=bool(self.settings.value("detect-codes", type=bool)),
-            detect_text=bool(self.settings.value("detect-text", type=bool)),
+            detect_mode=detection_mode,
             parse_text=bool(self.settings.value("parse-text", type=bool)),
         )
 
@@ -395,10 +411,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         contribute to the delay until the GUI becomes active for the user on startup.
         """
         self.installed_languages = ocr.tesseract.get_languages(
-            tesseract_cmd=ocr.tesseract.get_tesseract_path(
+            tesseract_cmd=system_info.get_tesseract_bin_path(
                 is_briefcase_package=system_info.is_briefcase_package()
             ),
-            tessdata_path=ocr.tesseract.get_tessdata_path(
+            tessdata_path=system_info.get_tessdata_path(
                 config_directory=system_info.config_directory(),
                 is_briefcase_package=system_info.is_briefcase_package(),
                 is_flatpak_package=system_info.is_flatpak_package(),

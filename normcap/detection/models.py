@@ -2,6 +2,11 @@ import enum
 from typing import NamedTuple
 
 
+class DetectionMode(enum.Flag):
+    TESSERACT = enum.auto()
+    CODES = enum.auto()
+
+
 class TextType(str, enum.Enum):
     """Describe format/content of the detected text."""
 

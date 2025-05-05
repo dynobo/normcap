@@ -10,7 +10,6 @@ from typing import NoReturn
 from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__, utils
-from normcap.detection.ocr import tesseract
 from normcap.gui import system_info
 from normcap.gui.tray import SystemTray
 
@@ -94,7 +93,7 @@ def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
     _prepare_envs()
 
     if system_info.is_prebuilt_package():
-        tessdata_path = tesseract.get_tessdata_path(
+        tessdata_path = system_info.get_tessdata_path(
             config_directory=system_info.config_directory(),
             is_briefcase_package=system_info.is_briefcase_package(),
             is_flatpak_package=system_info.is_flatpak_package(),

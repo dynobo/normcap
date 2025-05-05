@@ -1,26 +1,33 @@
 import logging
 import time
+from pathlib import Path
+from typing import Optional
 
 from PySide6 import QtGui
 
 from normcap.detection import codes, ocr
-from normcap.detection.models import DetectionResult, TextDetector, TextType
-from normcap.gui import system_info
+from normcap.detection.models import (
+    DetectionMode,
+    DetectionResult,
+    TextDetector,
+    TextType,
+)
 
 logger = logging.getLogger(__name__)
 
 
 def detect(
     image: QtGui.QImage,
+    tesseract_bin_path: Path,
+    tessdata_path: Optional[Path],
     language: str,
-    detect_codes: bool,
-    detect_text: bool,
+    detect_mode: DetectionMode,
     parse_text: bool,
 ) -> DetectionResult:
     ocr_result = None
     codes_result = None
 
-    if detect_codes:
+    if DetectionMode.CODES in detect_mode:
         start_time = time.time()
         codes_result = codes.detector.detect_codes(image)
         logger.debug("Code detection took %s s", f"{time.time() - start_time:.4f}.")
@@ -29,20 +36,12 @@ def detect(
         logger.debug("Codes detected, skipping OCR.")
         return codes_result
 
-    if detect_text:
+    if DetectionMode.TESSERACT in detect_mode:
         start_time = time.time()
-        tessdata_path = ocr.tesseract.get_tessdata_path(
-            config_directory=system_info.config_directory(),
-            is_flatpak_package=system_info.is_flatpak_package(),
-            is_briefcase_package=system_info.is_briefcase_package(),
-        )
-        tesseract_cmd = ocr.tesseract.get_tesseract_path(
-            is_briefcase_package=system_info.is_briefcase_package()
-        )
         ocr_result = ocr.recognize.get_text_from_image(
-            tesseract_cmd=tesseract_cmd,
             languages=language,
             image=image,
+            tesseract_bin_path=tesseract_bin_path,
             tessdata_path=tessdata_path,
             parse=parse_text,
             resize_factor=2,
