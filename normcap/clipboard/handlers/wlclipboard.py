@@ -37,7 +37,7 @@ def is_compatible() -> bool:
         return False
 
     if system_info.is_flatpak_package():
-        return False
+        return True
 
     if gnome_version := system_info.get_gnome_version():
         gnome_major = int(gnome_version.split(".")[0])
