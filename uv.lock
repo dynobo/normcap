@@ -1064,7 +1064,7 @@ wheels = [
 
 [[package]]
 name = "normcap"
-version = "0.6.0b1"
+version = "0.6.0b2"
 source = { editable = "." }
 dependencies = [
     { name = "jeepney" },
