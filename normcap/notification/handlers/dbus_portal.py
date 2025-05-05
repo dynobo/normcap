@@ -1,5 +1,4 @@
 import logging
-import os
 from typing import Callable, Optional
 
 from PySide6 import QtDBus
@@ -49,57 +48,6 @@ def is_installed() -> bool:
     return NOTIFICATION_INTERFACE in value
 
 
-def register_application_id(app_id: str) -> bool:
-    """Registers the application ID with the session bus."""
-    bus = QtDBus.QDBusConnection.sessionBus()
-    if not bus.isConnected():
-        logger.error("Failed to connect to the session bus.")
-        return False
-
-    logger.info("Successfully registered application ID '%s'.", app_id)
-    return True
-
-
-def get_application_ids_from_pid() -> list[str]:
-    pid = os.getpid()
-    bus = QtDBus.QDBusConnection.sessionBus()
-    if not bus.isConnected():
-        raise RuntimeError("Failed to connect to the session bus.")
-
-    # Query the list of names (services) on the bus
-    message = QtDBus.QDBusMessage.createMethodCall(
-        "org.freedesktop.DBus",
-        "/org/freedesktop/DBus",
-        "org.freedesktop.DBus",
-        "ListNames",
-    )
-    response = bus.call(message)
-
-    if not response.isValid():
-        raise RuntimeError("Failed to retrieve the list of names from DBus.")
-
-    # Extract the list of names
-    names = response.arguments()[0]
-
-    results = []
-    # Find the connection name associated with the given PID
-    for name in names:
-        pid_message = QtDBus.QDBusMessage.createMethodCall(
-            "org.freedesktop.DBus",
-            "/org/freedesktop/DBus",
-            "org.freedesktop.DBus",
-            "GetConnectionUnixProcessID",
-        )
-        pid_message.setArguments([name])
-        pid_response = bus.call(pid_message)
-
-        if pid_response.arguments()[0] == pid:
-            # The connection name matches the PID
-            results.append(name)
-
-    return results
-
-
 def notify(
     title: str,
     message: str,
@@ -118,19 +66,6 @@ def notify(
 
     # if action_label and action_callback:
     #     notification_data["buttons"] = [{"label": action_label, "action": "default"}]
-
-    # Verify app id got registered
-    try:
-        app_ids = get_application_ids_from_pid()
-    except Exception:
-        logger.exception("Exceptions when listing application ids")
-        app_ids = []
-
-    if notification_app_id in app_ids:
-        logger.info("App id already registered. app_ids=%s", app_ids)
-    else:
-        logger.error("App id not yet registered. Trying again. app_ids=%s", app_ids)
-        register_application_id(notification_app_id)
 
     # Send the notification
     dbus_message = QtDBus.QDBusMessage.createMethodCall(
