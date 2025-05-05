@@ -3,15 +3,16 @@
 import functools
 import logging
 import os
+import shutil
 import sys
 from pathlib import Path
 from platform import python_version
+from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as pyside_version
 
 from normcap import __version__
-from normcap.detection.ocr import tesseract
 from normcap.gui.localization import translate
 from normcap.gui.models import DesktopEnvironment, Screen
 
@@ -156,6 +157,63 @@ def screens() -> list[Screen]:
     ]
 
 
+@functools.cache
+def get_tesseract_bin_path(is_briefcase_package: bool) -> Path:
+    """Get the path to the Tesseract binary.
+
+    Returns:
+        Path: The path to the Tesseract binary.
+
+    Raises:
+        ValueError: If the platform is not supported.
+        RuntimeError: If the Tesseract binary cannot be located.
+    """
+    if is_briefcase_package:
+        if sys.platform == "linux" or "bsd" in sys.platform:
+            bin_path = Path(__file__).resolve().parents[4] / "bin"
+        elif sys.platform == "win32":
+            bin_path = Path(__file__).resolve().parents[2] / "resources" / "tesseract"
+        elif sys.platform == "darwin":
+            bin_path = Path(__file__).resolve().parents[4] / "app_packages" / "bin"
+        else:
+            raise ValueError(f"Platform {sys.platform} is not supported")
+        extension = ".exe" if sys.platform == "win32" else ""
+        tesseract_path = bin_path / f"tesseract{extension}"
+        if not tesseract_path.exists():
+            raise RuntimeError(f"Could not locate Tesseract binary {tesseract_path}!")
+        return tesseract_path
+
+    # Then try to find tesseract on system
+    if tesseract_bin := shutil.which("tesseract"):
+        tesseract_path = Path(tesseract_bin)
+        if tesseract_path.exists():
+            return tesseract_path
+
+    raise RuntimeError(
+        "No Tesseract binary found! Tesseract has to be installed and added "
+        "to PATH environment variable."
+    )
+
+
+def get_tessdata_path(
+    config_directory: Path, is_briefcase_package: bool, is_flatpak_package: bool
+) -> Optional[Path]:
+    """Decide which path for tesseract language files to use."""
+    if is_briefcase_package or is_flatpak_package:
+        tessdata_path = config_directory / "tessdata"
+        return tessdata_path.resolve()
+
+    if prefix := os.environ.get("TESSDATA_PREFIX", None):
+        tessdata_path = Path(prefix) / "tessdata"
+        if tessdata_path.is_dir() and list(tessdata_path.glob("*.traineddata")):
+            return tessdata_path.resolve()
+
+    if sys.platform == "win32":
+        logger.warning("Missing tessdata directory. (Is TESSDATA_PREFIX variable set?)")
+
+    return None
+
+
 def to_dict() -> dict:
     """Cast all system infos to string for logging."""
     return {
@@ -174,10 +232,10 @@ def to_dict() -> dict:
         "locale": translate.info().get("language", "DEFAULT"),
         "config_directory": config_directory(),
         "resources_path": get_resources_path(),
-        "tesseract_path": tesseract.get_tesseract_path(
+        "tesseract_path": get_tesseract_bin_path(
             is_briefcase_package=is_briefcase_package()
         ),
-        "tessdata_path": tesseract.get_tessdata_path(
+        "tessdata_path": get_tessdata_path(
             config_directory=config_directory(),
             is_briefcase_package=is_briefcase_package(),
             is_flatpak_package=is_flatpak_package(),

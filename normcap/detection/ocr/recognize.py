@@ -33,10 +33,10 @@ def _save_image_in_temp_folder(image: QtGui.QImage, postfix: str = "") -> None:
     image.save(str(temp_dir / file_name))
 
 
-def get_text_from_image(  # noqa: PLR0913
-    tesseract_cmd: PathLike,
+def get_text_from_image(
     languages: Union[str, Iterable[str]],
     image: QtGui.QImage,
+    tesseract_bin_path: PathLike,
     tessdata_path: Union[PathLike, str, None] = None,
     parse: bool = True,
     resize_factor: Optional[float] = None,
@@ -62,7 +62,7 @@ def get_text_from_image(  # noqa: PLR0913
         tess_args,
     )
     ocr_result_data = tesseract.perform_ocr(
-        cmd=tesseract_cmd, image=image, args=tess_args.as_list()
+        tesseract_bin_path=tesseract_bin_path, image=image, args=tess_args.as_list()
     )
     result = OcrResult(tess_args=tess_args, words=ocr_result_data, image=image)
     logger.debug("OCR detections:\n%s", ",\n".join(str(w) for w in result.words))

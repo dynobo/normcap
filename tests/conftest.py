@@ -13,7 +13,6 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import app
 from normcap.clipboard import system_info as clipboard_system_info
-from normcap.detection.ocr import tesseract
 from normcap.detection.ocr.models import OEM, PSM, OcrResult, TessArgs
 from normcap.detection.ocr.transformers import email_address, url
 from normcap.gui import menu_button, system_info
@@ -28,7 +27,7 @@ def _clear_caches():
     email_address._extract_emails.cache_clear()
     system_info.desktop_environment.cache_clear()
     system_info.display_manager_is_wayland.cache_clear()
-    tesseract.get_tesseract_path.cache_clear()
+    system_info.get_tesseract_bin_path.cache_clear()
     system_info.config_directory.cache_clear()
 
 
@@ -68,14 +67,14 @@ def dbus_portal(qapp):
 
 @pytest.fixture
 def tesseract_cmd() -> Path:
-    return tesseract.get_tesseract_path(
+    return system_info.get_tesseract_bin_path(
         is_briefcase_package=system_info.is_briefcase_package()
     )
 
 
 @pytest.fixture
 def tessdata_path() -> Optional[Path]:
-    return tesseract.get_tessdata_path(
+    return system_info.get_tessdata_path(
         config_directory=system_info.config_directory(),
         is_briefcase_package=system_info.is_briefcase_package(),
         is_flatpak_package=system_info.is_flatpak_package(),

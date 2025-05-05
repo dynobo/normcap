@@ -2,9 +2,7 @@ import csv
 import ctypes
 import functools
 import logging
-import os
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -12,7 +10,7 @@ import time
 from ctypes import wintypes
 from os import PathLike, linesep
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 from PySide6 import QtGui
 
@@ -52,63 +50,6 @@ def get_short_path(long_path: str) -> str:
         raise ctypes.WinError()  # type:ignore  # not available on non-Windows systems
 
     return buf.value
-
-
-@functools.cache
-def get_tesseract_path(is_briefcase_package: bool) -> Path:
-    """Get the path to the Tesseract binary.
-
-    Returns:
-        Path: The path to the Tesseract binary.
-
-    Raises:
-        ValueError: If the platform is not supported.
-        RuntimeError: If the Tesseract binary cannot be located.
-    """
-    if is_briefcase_package:
-        if sys.platform == "linux" or "bsd" in sys.platform:
-            bin_path = Path(__file__).resolve().parents[4] / "bin"
-        elif sys.platform == "win32":
-            bin_path = Path(__file__).resolve().parents[2] / "resources" / "tesseract"
-        elif sys.platform == "darwin":
-            bin_path = Path(__file__).resolve().parents[4] / "app_packages" / "bin"
-        else:
-            raise ValueError(f"Platform {sys.platform} is not supported")
-        extension = ".exe" if sys.platform == "win32" else ""
-        tesseract_path = bin_path / f"tesseract{extension}"
-        if not tesseract_path.exists():
-            raise RuntimeError(f"Could not locate Tesseract binary {tesseract_path}!")
-        return tesseract_path
-
-    # Then try to find tesseract on system
-    if tesseract_bin := shutil.which("tesseract"):
-        tesseract_path = Path(tesseract_bin)
-        if tesseract_path.exists():
-            return tesseract_path
-
-    raise RuntimeError(
-        "No Tesseract binary found! Tesseract has to be installed and added "
-        "to PATH environment variable."
-    )
-
-
-def get_tessdata_path(
-    config_directory: Path, is_briefcase_package: bool, is_flatpak_package: bool
-) -> Optional[Path]:
-    """Decide which path for tesseract language files to use."""
-    if is_briefcase_package or is_flatpak_package:
-        tessdata_path = config_directory / "tessdata"
-        return tessdata_path.resolve()
-
-    if prefix := os.environ.get("TESSDATA_PREFIX", None):
-        tessdata_path = Path(prefix) / "tessdata"
-        if tessdata_path.is_dir() and list(tessdata_path.glob("*.traineddata")):
-            return tessdata_path.resolve()
-
-    if sys.platform == "win32":
-        logger.warning("Missing tessdata directory. (Is TESSDATA_PREFIX variable set?)")
-
-    return None
 
 
 def _raise_on_error(proc: subprocess.CompletedProcess) -> None:
@@ -179,7 +120,7 @@ def _move_to_normcap_temp_dir(input_file: Path, postfix: str) -> None:
 
 
 def _run_tesseract(
-    cmd: Union[PathLike, str], image: QtGui.QImage, args: list[str]
+    tesseract_bin_path: Union[PathLike, str], image: QtGui.QImage, args: list[str]
 ) -> list[list[str]]:
     input_image_filename = "normcap_tesseract_input.png"
 
@@ -196,7 +137,7 @@ def _run_tesseract(
             input_image_path = get_short_path(input_image_path)
 
         cmd_args = [
-            str(cmd),
+            str(tesseract_bin_path),
             input_image_path,
             input_image_path,  # will be suffixed with .tsv
             "-c",
@@ -241,7 +182,9 @@ def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
 
 
 def perform_ocr(
-    cmd: Union[PathLike, str], image: QtGui.QImage, args: list[str]
+    tesseract_bin_path: Union[PathLike, str], image: QtGui.QImage, args: list[str]
 ) -> list[dict]:
-    lines = _run_tesseract(cmd=cmd, image=image, args=args)
+    lines = _run_tesseract(
+        tesseract_bin_path=tesseract_bin_path, image=image, args=args
+    )
     return _tsv_to_list_of_dict(lines)

@@ -12,7 +12,7 @@ from .testcases import testcases
 def test_remove_spaces_in_chi(testcase, tesseract_cmd):
     image = QtGui.QImage(testcase.image_path)
     result = ocr.recognize.get_text_from_image(
-        tesseract_cmd=tesseract_cmd,
+        tesseract_bin_path=tesseract_cmd,
         image=image,
         languages=testcase.lang.split(","),
     )
