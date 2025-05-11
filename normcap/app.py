@@ -5,7 +5,8 @@ import os
 import signal
 import sys
 from argparse import Namespace
-from typing import NoReturn
+from pathlib import Path
+from typing import NoReturn, Optional
 
 from PySide6 import QtCore, QtWidgets
 
@@ -34,7 +35,7 @@ def _get_args() -> Namespace:
     return args
 
 
-def _prepare_logging(log_level: str) -> None:
+def _prepare_logging(log_level: str, log_file: Optional[Path] = None) -> None:
     """Initialize the logger with the given log level.
 
     This function wraps the QT logger to control the output in the Python logger.
@@ -43,10 +44,11 @@ def _prepare_logging(log_level: str) -> None:
 
     Args:
         log_level: Valid Python log level (debug, warning, error)
+        log_file: Target for saving log to file
     """
     sys.excepthook = utils.hook_exceptions
 
-    utils.init_logger(log_level=log_level.upper())
+    utils.init_logger(log_level=log_level.upper(), log_file=log_file)
     logger = logging.getLogger("normcap")
     logger.info("Start NormCap v%s", __version__)
 
@@ -89,7 +91,10 @@ def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
     """
     args = _get_args()
 
-    _prepare_logging(log_level=str(getattr(args, "verbosity", "ERROR")))
+    _prepare_logging(
+        log_level=str(getattr(args, "verbosity", "ERROR")),
+        log_file=getattr(args, "log_file", Path.cwd() / "normcap.log"),
+    )
     _prepare_envs()
 
     if system_info.is_prebuilt_package():

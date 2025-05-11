@@ -71,6 +71,12 @@ def create_argparser() -> argparse.ArgumentParser:
         help="Set level of detail for console output (default: %(default)s)",
     )
     parser.add_argument(
+        "--log-file",
+        type=Path,
+        action="store",
+        help="Save console output to a file",
+    )
+    parser.add_argument(
         "--version",
         action="store_true",
         help="Print NormCap version and exit",
@@ -154,19 +160,28 @@ def set_environ_for_flatpak() -> None:
         os.environ["LD_PRELOAD"] = ""
 
 
-def init_logger(log_level: str = "WARNING") -> None:
+def init_logger(log_level: str = "WARNING", log_file: Optional[Path] = None) -> None:
     """Initializes a logger with a specified log level."""
     log_format = "%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s"
     datefmt = "%H:%M:%S"
+
+    handlers: list[logging.Handler] = []
+
     if sys.platform == "win32":
-        logging.basicConfig(
-            filename=system_info.desktop_dir() / "normcap.log",
-            filemode="w",
-            format=log_format,
-            datefmt=datefmt,
-        )
+        handlers.append(logging.FileHandler(system_info.desktop_dir() / "normcap.log"))
     else:
-        logging.basicConfig(format=log_format, datefmt=datefmt)
+        handlers.append(logging.StreamHandler())
+
+    if log_file:
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+        log_file.unlink(missing_ok=True)
+        handlers.append(logging.FileHandler(log_file))
+
+    logging.basicConfig(
+        format=log_format,
+        datefmt=datefmt,
+        handlers=handlers,
+    )
     logger.setLevel(log_level)
 
 
