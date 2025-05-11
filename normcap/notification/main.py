@@ -76,7 +76,7 @@ def _notify(
         logger.exception("%s's notify() failed!", handler.name)
         return False
 
-    logger.info("Notification send using %s", handler.name)
+    logger.info("Notification sent using %s", handler.name)
     return True
 
 
