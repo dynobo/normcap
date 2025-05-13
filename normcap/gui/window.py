@@ -16,7 +16,8 @@ from typing import Callable, Optional, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.gui import dbus, system_info
+from normcap import positioning
+from normcap.gui import system_info
 from normcap.gui.models import DesktopEnvironment, Rect, Screen
 from normcap.gui.settings import Settings
 
@@ -107,30 +108,6 @@ class Window(QtWidgets.QMainWindow):
         pixmap.convertFromImage(self.screen_.screenshot)
         self.image_container.setPixmap(pixmap)
 
-    def _move_to_screen_on_wayland(self) -> None:
-        """Move window to respective monitor on Wayland.
-
-        In Wayland, the compositor has the responsibility for positioning windows, the
-        client itself can't do this. However, there are DE dependent workarounds.
-        """
-
-        def move_to_screen(win: Window) -> None:
-            if system_info.desktop_environment() == DesktopEnvironment.GNOME:
-                dbus.move_windows_via_window_calls_extension(
-                    title_id=win.windowTitle(), position=win.screen_
-                )
-            elif system_info.desktop_environment() == DesktopEnvironment.KDE:
-                dbus.move_window_via_kde_kwin_scripting(
-                    title_id=win.windowTitle(), position=win.screen_
-                )
-            else:
-                logger.warning(
-                    "No window move method for %s", system_info.desktop_environment()
-                )
-
-        # Delay move to ensure window is active & registered in window manager.
-        QtCore.QTimer.singleShot(20, lambda: move_to_screen(win=self))
-
     def set_fullscreen(self) -> None:
         """Set window to full screen using platform specific methods."""
         # TODO: Test in Multi Display setups with different scaling
@@ -171,10 +148,13 @@ class Window(QtWidgets.QMainWindow):
         self.setFocus()
 
         # On Wayland, setting geometry doesn't move the window to the right screen, as
-        # only the compositor is allowed to do this. In case of multi-display setups, we
-        # need to use hacks to position the window:
+        # only the compositor is allowed to do this. That's why in case of multi-display
+        # setups, we need to use hacks to position the window:
         if system_info.display_manager_is_wayland():
-            self._move_to_screen_on_wayland()
+            # The delay should ensure window is active & registered in window manager.
+            QtCore.QTimer.singleShot(
+                20, lambda: positioning.move(window=self, screen=self.screen_)
+            )
 
     def clear_selection(self) -> None:
         self.selection_rect = QtCore.QRect()
