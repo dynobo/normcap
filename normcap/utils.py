@@ -167,21 +167,22 @@ def init_logger(log_level: str = "WARNING", log_file: Optional[Path] = None) -> 
 
     handlers: list[logging.Handler] = []
 
-    if sys.platform == "win32":
-        handlers.append(logging.FileHandler(system_info.desktop_dir() / "normcap.log"))
-    else:
-        handlers.append(logging.StreamHandler())
+    handlers.append(logging.StreamHandler())
+
+    # On Windows, stream handler output is not visible. Therefore, we log to file on
+    # desktop, if the level was set to more detailed than Warning (the default).
+    if (
+        log_file is None
+        and sys.platform == "win32"
+        and logging.getLevelName(log_level) < logging.WARNING
+    ):
+        log_file = system_info.desktop_dir() / "normcap.log"
 
     if log_file:
         log_file.parent.mkdir(parents=True, exist_ok=True)
-        log_file.unlink(missing_ok=True)
-        handlers.append(logging.FileHandler(log_file))
+        handlers.append(logging.FileHandler(log_file, mode="w"))
 
-    logging.basicConfig(
-        format=log_format,
-        datefmt=datefmt,
-        handlers=handlers,
-    )
+    logging.basicConfig(format=log_format, datefmt=datefmt, handlers=handlers)
     logger.setLevel(log_level)
 
 
