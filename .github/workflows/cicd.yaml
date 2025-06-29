@@ -157,7 +157,7 @@ jobs:
         shell: bash -l {0}
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
       - name: Draft internal release
-        uses: ncipollo/release-action@v1.16.0
+        uses: ncipollo/release-action@v1.17.0
         # It's possible, that the run lacks release permissions (e.g. on forks). In
         # this is not crucial, so we just silence the error.
         continue-on-error: true
@@ -214,14 +214,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3.28.18
+        uses: github/codeql-action/init@v3.29.1
         with:
           languages: ${{ matrix.language }}
           queries: security-extended
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3.28.18
+        uses: github/codeql-action/autobuild@v3.29.1
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3.28.18
+        uses: github/codeql-action/analyze@v3.29.1
 
   deploy-briefcase:
     name: Briefcase build & draft release
@@ -248,7 +248,7 @@ jobs:
         run: uv run poe bundle
       - name: Draft release
         if: github.repository == 'dynobo/normcap'
-        uses: ncipollo/release-action@v1.16.0
+        uses: ncipollo/release-action@v1.17.0
         with:
           body:
             See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG) for
@@ -299,7 +299,7 @@ jobs:
           verbose: true
           print-hash: true
       - name: Sign published artifacts
-        uses: sigstore/gh-action-sigstore-python@v3.0.0
+        uses: sigstore/gh-action-sigstore-python@v3.0.1
         with:
           inputs: |
             ./dist/*.tar.gz
