@@ -52,24 +52,14 @@ def notify(
     message = message.replace("\\", "\\\\")
     message = message.replace("-", "\\-")
 
-    # Note: Timeout is ignored by some DEs
-    timeout_ms = 5_000
-
     cmds = [
         "notify-send",
         f"--icon={icon_path.resolve()}",
         "--app-name=NormCap",
         "--transient",
+        f"{title}",
+        f"{message}",
     ]
-    if action_label and action_callback:
-        cmds.extend(
-            [
-                f"--action={action_label}",
-                f"--expire-time={timeout_ms}",
-                "--wait",
-            ]
-        )
-    cmds.extend([f"{title}", f"{message}"])
 
     # Left detached on purpose.
     proc = subprocess.Popen(  # noqa: S603
@@ -79,17 +69,10 @@ def notify(
         stderr=subprocess.PIPE,
     )
     try:
-        stdout, stderr = proc.communicate(timeout=60)
+        _stdout, stderr = proc.communicate(timeout=60)
     except subprocess.TimeoutExpired:
         proc.kill()
-        stdout, stderr = proc.communicate()
-
-    if (
-        action_label
-        and action_callback
-        and stdout.decode(encoding="utf-8").strip() == "0"
-    ):
-        action_callback()
+        _stdout, stderr = proc.communicate()
 
     if error := stderr.decode(encoding="utf-8"):
         logger.warning("notify-send returned with error: %s", error)
