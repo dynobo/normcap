@@ -89,12 +89,18 @@ def test_argparser_parses_all_types(monkeypatch):
     monkeypatch.setattr(
         sys,
         "argv",
-        """python
-           --notification True
-           --tray 0
-           --verbosity info
-           --language uvw xyz
-        """.split(),
+        [
+            "python",
+            "--notification",
+            "True",
+            "--tray",
+            "0",
+            "--verbosity",
+            "info",
+            "--language",
+            "uvw",
+            "xyz",
+        ],
     )
     args = argparser.parse_args()
 

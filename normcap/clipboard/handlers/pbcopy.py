@@ -8,7 +8,7 @@ install_instructions = ""  # pbcopy is pre-installed on macOS
 
 
 def copy(text: str) -> None:
-    subprocess.run(  # noqa: S603
+    subprocess.run(
         ["pbcopy", "w"],  # noqa: S607
         shell=False,
         input=text.encode("utf-8"),

@@ -187,6 +187,7 @@ ignore = [
   "TRY003", # Avoid specifying long messages outside the exception class
   "ISC001", # Rule conflicts with ruff's formatter
   "PLR0913", # Too many arguments in function definition (> 5)
+  "PLC0415", # inmport should be at top-level of a file
 ]
 
 [tool.ruff.lint.per-file-ignores]

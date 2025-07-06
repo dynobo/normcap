@@ -93,7 +93,7 @@ def get_gnome_version() -> str:
         return ""
 
     try:
-        output = subprocess.check_output(  # noqa: S603
+        output = subprocess.check_output(
             ["gnome-shell", "--version"],  # noqa: S607
             shell=False,
             text=True,
