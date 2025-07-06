@@ -222,7 +222,7 @@ alternative for you: It completely depends on your use case and requirements. So
 similar open-source Projects are:
 
 - [TextSnatcher](https://github.com/RajSolai/TextSnatcher) (Linux)
-- [GreenShot](https://getgreenshot.org/) (Linux, macOS)
+- [GreenShot](https://getgreenshot.org/) (Windows, macOS)
 - [TextShot](https://github.com/ianzhao05/textshot) (Windows)
 - [gImageReader](https://github.com/manisandro/gImageReader) (Linux, Windows)
 - [Capture2Text](https://sourceforge.net/projects/capture2text) (Windows)
