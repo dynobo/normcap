@@ -41,7 +41,7 @@ def test_windll_copy():
     text = "test"
     windll.copy(text=text)
 
-    with subprocess.Popen(  # noqa: S603
+    with subprocess.Popen(
         ["powershell", "-command", "Get-Clipboard"],  # noqa: S607
         stdout=subprocess.PIPE,
     ) as p:
