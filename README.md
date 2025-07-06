@@ -209,7 +209,7 @@ Thanks to the maintainers of those nice tools!
 If NormCap doesn't fit your needs, try those alternatives (no particular order):
 
 - [TextSnatcher](https://github.com/RajSolai/TextSnatcher) (Linux)
-- [GreenShot](https://getgreenshot.org/) (Linux, macOS)
+- [GreenShot](https://getgreenshot.org/) (Windows, macOS)
 - [TextShot](https://github.com/ianzhao05/textshot) (Windows)
 - [gImageReader](https://github.com/manisandro/gImageReader) (Linux, Windows)
 - [Capture2Text](https://sourceforge.net/projects/capture2text) (Windows)
