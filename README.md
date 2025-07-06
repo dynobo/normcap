@@ -24,7 +24,7 @@ macOS and Windows._**
 
 [![Screencast](https://user-images.githubusercontent.com/11071876/189767585-8bc45c18-8392-411d-84dc-cef1cb5dbc47.gif)](https://raw.githubusercontent.com/dynobo/normcap/main/assets/normcap.gif)
 
-## Quickstart
+## Installation
 
 Choose **_one_** of the options for a prebuilt release. If you encounter an issue please
 take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
@@ -38,10 +38,20 @@ take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
   (Portable)
 
 #### Linux
-- [NormCap-0.5.9-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64.AppImage)
-  (Binary, requires [fuse](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-appimages-require-fuse-to-run))
-- [com.github.dynobo.normcap @ FlatHub](https://flathub.org/apps/details/com.github.dynobo.normcap)
-  (FlatPak)
+
+It's recommended to install NormCap from [Flathub](https://flathub.org):
+
+```sh
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub com.github.dynobo.normcap
+```
+
+<a href="https://flathub.org/apps/details/com.github.dynobo.normcap"><img src="https://flathub.org/assets/badges/flathub-badge-en.png" width="160"/></a>
+
+Alternativ options:
+
+- [NormCap-0.5.9-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64.AppImage) - ⚠️ ***deprecated***
+  (Requires [fuse](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-appimages-require-fuse-to-run))
 - [`normcap` @ AUR](https://aur.archlinux.org/packages/normcap) (Arch/Manjaro)
 
 #### macOS
@@ -55,7 +65,7 @@ screenshots. ([#135](https://github.com/dynobo/normcap/issues/135))
 - [NormCap-0.5.9-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-arm64-macOS.dmg)
   (Installer for M1)
 
-## Install Python package
+## Use Python package
 
 As an _alternative_ to a prebuilt package from above you can install the
 [NormCap Python package](https://pypi.org/project/normcap/) for **Python >=3.9**, but it
