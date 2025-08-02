@@ -323,27 +323,15 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         action_label = notification_utils._get_action_label(text_type=text_type)
 
-        # TODO: refactor to use one function with optional handler_name
-        if self.notification_handler_name:
-            notification.notify_with_handler(
-                handler_name=self.notification_handler_name,
-                title=title,
-                message=message,
-                action_label=action_label,
-                action_callback=lambda: notification_utils._open_ocr_result(
-                    text=text, text_type=text_type
-                ),
-            )
-
-        else:
-            notification.notify(
-                title=title,
-                message=message,
-                action_label=action_label,
-                action_callback=lambda: notification_utils._open_ocr_result(
-                    text=text, text_type=text_type
-                ),
-            )
+        notification.notify(
+            title=title,
+            message=message,
+            action_label=action_label,
+            action_callback=lambda: notification_utils._open_ocr_result(
+                text=text, text_type=text_type
+            ),
+            handler_name=self.notification_handler_name,
+        )
 
     @QtCore.Slot(str)
     def _open_url_and_hide(self, url: str) -> None:
