@@ -70,6 +70,18 @@ Detection is performed on your device and no telemetry data is collected.
 
 <div class="card" markdown>
 
+:material-qrcode-scan:{ .lg .middle } **QR & Barcodes**
+
+---
+
+Scan QR-Codes and Barcodes to extract their information.
+
+[:octicons-arrow-right-24: Learn more](faqs.md#is-any-data-send-to-the-internet)
+
+</div>
+
+<div class="card" markdown>
+
 :material-format-font:{ .lg .middle } **Heuristic Parsing**
 
 ---
