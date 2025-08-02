@@ -1,4 +1,7 @@
+import functools
 import logging
+import re
+import subprocess
 import tempfile
 import traceback
 
@@ -12,6 +15,36 @@ from normcap.gui.models import DesktopEnvironment, Screen
 logger = logging.getLogger(__name__)
 
 install_instructions = ""
+
+
+@functools.cache
+def _is_compatible_plasma_version() -> bool:
+    compatible = True
+    try:
+        completed = subprocess.run(
+            ["plasmashell", "--version"],  # noqa: S607  # start process partial path
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        out = completed.stdout.strip()
+        m = re.search(r"(\d+)\.(\d+)\.(\d+)", out)
+        if not m:
+            logger.warning("Could not parse KDE plasma version from: '%s'", out)
+            return compatible
+
+        major, minor, _patch = map(int, m.groups())
+
+        # Incompatible since 5.71.0 (2020)
+        max_supported_major = 5
+        max_supported_minor = 70
+        if major > max_supported_major or (
+            major == max_supported_major and minor > max_supported_minor
+        ):
+            compatible = False
+    except Exception:
+        logger.warning("Could not retrieved KDE plasma version.", exc_info=True)
+    return compatible
 
 
 class DBusKwinScripting(MessageGenerator):
@@ -51,8 +84,10 @@ def is_compatible() -> bool:
     Returns:
         System could be capable of using this method
     """
-    # TODO: Not compatible on newer KDE. Which version?!
-    return system_info.desktop_environment() == DesktopEnvironment.KDE
+    return (
+        system_info.desktop_environment() == DesktopEnvironment.KDE
+        and _is_compatible_plasma_version()
+    )
 
 
 def is_installed() -> bool:
