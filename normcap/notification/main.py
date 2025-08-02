@@ -1,5 +1,5 @@
 import logging
-from typing import Callable
+from typing import Callable, Optional
 
 from normcap.notification.models import Handler, HandlerProtocol
 
@@ -80,31 +80,21 @@ def _notify(
     return True
 
 
-def notify_with_handler(
-    handler_name: str,
-    title: str,
-    message: str,
-    action_label: str,
-    action_callback: Callable,
-) -> bool:
-    """Send desktop notification using a specific handler."""
-    return _notify(
-        handler=Handler[handler_name.upper()],
-        title=title,
-        message=message,
-        action_label=action_label,
-        action_callback=action_callback,
-    )
-
-
 def notify(
     title: str,
     message: str,
     action_label: str,
     action_callback: Callable,
+    handler_name: Optional[str] = None,
 ) -> None:
-    """Send desktop notification using compatible handlers."""
-    for handler in get_available_handlers():
+    """Send desktop notification using provided handler, or try all compatible ones."""
+    handlers = (
+        get_available_handlers()
+        if handler_name is None
+        else [Handler[handler_name.upper()]]
+    )
+
+    for handler in handlers:
         if _notify(
             handler=handler,
             title=title,
@@ -114,4 +104,4 @@ def notify(
         ):
             return
 
-    logger.error("Unable to capture screen! (Increase log-level for details)")
+    logger.error("Unable to send notifications! (Increase log-level for details)")
