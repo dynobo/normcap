@@ -26,7 +26,7 @@
 | [pl_PL](./pl_PL/LC_MESSAGES/messages.po) |      10% |    9 of 84 |
 | [pt_BR](./pt_BR/LC_MESSAGES/messages.po) |      80% |   68 of 84 |
 | [pt_PT](./pt_PT/LC_MESSAGES/messages.po) |      80% |   68 of 84 |
-| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |      80% |   68 of 84 |
+| [ru_RU](./ru_RU/LC_MESSAGES/messages.po) |     100% |   84 of 84 |
 | [sv_SE](./sv_SE/LC_MESSAGES/messages.po) |      80% |   68 of 84 |
 | [ta](./ta/LC_MESSAGES/messages.po)       |      80% |   68 of 84 |
 | [uk_UA](./uk_UA/LC_MESSAGES/messages.po) |      80% |   68 of 84 |
