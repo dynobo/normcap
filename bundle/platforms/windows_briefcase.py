@@ -56,7 +56,10 @@ class WindowsBriefcase(BuilderBase):
         root = tree.getroot()
         product = root.find(f"{ns}Product")
         if not product:
-            raise ValueError("Product section not found!")
+            raise ValueError(
+                "Product section not found!\n"
+                f"File: {wxs_file.resolve()}, Content:\n{wxs_file.read_text()}"
+            )
 
         # Copy installer images
         left = "normcap_install_bg.bmp"
@@ -106,7 +109,10 @@ class WindowsBriefcase(BuilderBase):
         )
         sequence = product.find(f"{ns}InstallExecuteSequence")
         if not sequence:
-            raise ValueError("InstallExecuteSequence section not found!")
+            raise ValueError(
+                "InstallExecuteSequence section not found!\n"
+                f"File: {wxs_file.resolve()}, Content:\n{wxs_file.read_text()}"
+            )
         ET.SubElement(
             sequence,
             "Custom",
@@ -119,7 +125,11 @@ class WindowsBriefcase(BuilderBase):
 
         upgrade = product.find(f"{ns}Upgrade")
         if not upgrade:
-            raise ValueError("Upgrade section not found!")
+            raise ValueError(
+                "Upgrade section not found!\n"
+                f"File: {wxs_file.resolve()}, Content:\n{wxs_file.read_text()}"
+            )
+
         product.remove(upgrade)
 
         # Write & fix header
