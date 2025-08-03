@@ -9,6 +9,7 @@
 argument `--parse-text {True, False}`.
 - Add (optional) QR-Code and barcode detection.
 - Add option `--screenshot-handler` to explicitly choose among available methods.
+- Fix language downloads for some specific languages by falling back to different model type ([#744](https://github.com/dynobo/normcap/issues/744)).
 
 **Windows:**
 - Add automatic export of debug logs (when running `normcap.exe -v debug`) to `{DESKTOP_FOLDER}\normcap.log` for easier access.

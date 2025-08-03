@@ -14,9 +14,14 @@ URLS = Urls(
     buymeacoffee="https://buymeacoffee.com/dynobo",
 )
 
-TESSDATA_REPO = "https://github.com/tesseract-ocr/tessdata_fast"
+TESSDATA_REPO = "https://github.com/tesseract-ocr/tessdata"
 TESSDATA_BASE_URL = f"{TESSDATA_REPO}/raw/4.1.0/"
 
+TESSDATA_BEST_REPO = "https://github.com/tesseract-ocr/tessdata_best"
+TESSDATA_BEST_BASE_URL = f"{TESSDATA_BEST_REPO}/raw/4.1.0/"
+
+TESSDATA_FAST_REPO = "https://github.com/tesseract-ocr/tessdata_fast"
+TESSDATA_FAST_BASE_URL = f"{TESSDATA_FAST_REPO}/raw/4.1.0/"
 
 # TODO: Link to webpage instead!
 CMD_WAYLAND_PERMISSION = (
