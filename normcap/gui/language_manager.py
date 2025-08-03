@@ -91,6 +91,25 @@ class LanguageManager(QtWidgets.QDialog):
 
     @QtCore.Slot(str, str)
     def _on_download_error(self, reason: str, url: str) -> None:
+        logger.error("Language download from failed: %s", reason)
+
+        if "404" in reason:
+            # Some traineddata files are not available every repo (default, best, fast)
+            # Therefore, lets look into the other repos (default and best), too.
+            fallback_url = None
+            if url.startswith(constants.TESSDATA_FAST_BASE_URL):
+                fallback_url = constants.TESSDATA_BASE_URL + url.removeprefix(
+                    constants.TESSDATA_FAST_BASE_URL
+                )
+            elif url.startswith(constants.TESSDATA_BASE_URL):
+                fallback_url = constants.TESSDATA_BEST_BASE_URL + url.removeprefix(
+                    constants.TESSDATA_BASE_URL
+                )
+            if fallback_url:
+                logger.info("Trying to download from %s instead...", fallback_url)
+                self.downloader.get(fallback_url)
+                return
+
         self._set_in_progress(False)
         QtWidgets.QMessageBox.critical(
             self,
@@ -115,7 +134,9 @@ class LanguageManager(QtWidgets.QDialog):
             self._set_in_progress(True)
             index = indexes[0]
             language = self.available_layout.model.languages[index.row()][0]
-            self.downloader.get(constants.TESSDATA_BASE_URL + language + ".traineddata")
+            self.downloader.get(
+                constants.TESSDATA_FAST_BASE_URL + language + ".traineddata"
+            )
 
     @QtCore.Slot()
     def _on_delete_btn_clicked(self) -> None:
