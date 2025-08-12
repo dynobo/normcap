@@ -23,14 +23,13 @@ TESSDATA_BEST_BASE_URL = f"{TESSDATA_BEST_REPO}/raw/4.1.0/"
 TESSDATA_FAST_REPO = "https://github.com/tesseract-ocr/tessdata_fast"
 TESSDATA_FAST_BASE_URL = f"{TESSDATA_FAST_REPO}/raw/4.1.0/"
 
-# TODO: Link to webpage instead!
 CMD_WAYLAND_PERMISSION = (
     "<p><code>"
-    "dbus-send --session --print-reply=literal \\<br>"
-    "--dest=org.freedesktop.impl.portal.PermissionStore \\<br>"
+    "dbus-send --session --dest=org.freedesktop.impl.portal.PermissionStore \\<br>"
     "/org/freedesktop/impl/portal/PermissionStore \\<br>"
-    "org.freedesktop.impl.portal.PermissionStore.DeletePermission \\<br>"
-    "string:'screenshot' string:'screenshot' string:''"
+    "org.freedesktop.impl.portal.PermissionStore.SetPermission \\<br>"
+    "string:'screenshot' boolean:true string:'screenshot' \\<br>"
+    "string:'com.github.dynobo.normcap' array:string:['yes']"
     "</code></p>"
 )
 
@@ -62,8 +61,8 @@ PERMISSIONS_TEXT_WAYLAND = _(
     "When launching NormCap for the first time, you should be prompted to grant "
     "permissions for taking or sharing a screenshot."
     "</p><p>"
-    "If you declined or the prompt didn't appear, you can try to reset screenshot "
-    "permissions for <b><u>all</u></b> applications by running the following "
+    "If you declined or the prompt didn't appear, you can try to set screenshot "
+    "permissions for NormCap manually by running the following "
     "command in a terminal:"
     "</p>"
     "{command}"
