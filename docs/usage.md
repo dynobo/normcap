@@ -17,16 +17,9 @@ hide:
 
 ![](./assets/screenshot.png)
 
-## Example use-cases
-
-- Extract text from screenshots you received via mail.
-- Copy error messages from non-selectable UI elements.
-- Retrieve information from photos.
-- Capture mail addresses from "crawler safe" images on the web.
-
 ## User Interface
 
-- The settings can be accessed via the <span class="md-pink">⚙</span>-icon in the top right.
+- The settings can be accessed via the <span class="md-pink">⚙</span>-icon in the top right of your primary monitor.
 - In the settings, you can adjust the language(s) you are trying to recognize, which is important for a good accuracy.
 - The icons <span class="md-pink">★</span> or <span class="md-pink">☰</span> next to the selection-rectangle indicate the active "capture mode" (see below).
 - To abort a capture or quit NormCap press `<esc>`
@@ -34,6 +27,8 @@ hide:
 ## Detection settings
 
 The settings menu <span class="md-pink">⚙</span> allows toggling various detection modes:
+
+// TODO: Update usage and add qr/barcode info
 
 - **Raw**
 
@@ -54,3 +49,13 @@ The settings menu <span class="md-pink">⚙</span> allows toggling various detec
     | **Paragraph**   | Multiple blocks of lines or multiple paragraphs      | Join every paragraph into a single line, separate different paragraphs by empty line |
     | **E-Mail**      | Number of chars in email addresses vs. overall chars | Transform to a comma-separated list of email addresses                               |
     | **URL**         | Number of chars in URLs vs. overall chars            | Transform to line-break separated URLs, discard all other characters.                |
+
+## Exemplary use cases
+
+- Extract text from screenshots you received via mail.
+- Copy error messages from non-selectable UI elements.
+- Retrieve information from photos.
+- Capture mail addresses from "crawler safe" images on the web.
+- Scan QR-codes in livestreams or online presentations.
+- Read barcodes from product pictures.
+- *... and many more!*
