@@ -29,9 +29,9 @@ jobs:
         os: [macos-13, macos-14, macos-15, windows-2022, windows-2025, ubuntu-22.04, ubuntu-24.04]
     steps:
       # Setup environment
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
         if: ${{ github.event_name != 'workflow_dispatch' }}
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
         if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           ref: ${{ inputs.refToBuild }}
@@ -121,7 +121,7 @@ jobs:
       matrix:
         os: [macos-13, macos-15, windows-2025, ubuntu-24.04]
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - name: Setup Python
         uses: ./.github/actions/setup
@@ -137,7 +137,7 @@ jobs:
       matrix:
         os: [macos-13, macos-15, windows-2025, ubuntu-24.04]
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - name: Setup Python
         uses: ./.github/actions/setup
@@ -178,7 +178,7 @@ jobs:
     name: Test documentation build
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - name: Setup Python
         uses: ./.github/actions/setup
@@ -192,7 +192,7 @@ jobs:
     if: github.repository_owner == 'dynobo'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
       - name: Coveralls Finished
         uses: coverallsapp/github-action@v2.3.6
         with:
@@ -212,16 +212,16 @@ jobs:
         language: ["javascript", "python"]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.0.0
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3.29.8
+        uses: github/codeql-action/init@v3.29.9
         with:
           languages: ${{ matrix.language }}
           queries: security-extended
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3.29.8
+        uses: github/codeql-action/autobuild@v3.29.9
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3.29.8
+        uses: github/codeql-action/analyze@v3.29.9
 
   deploy-briefcase:
     name: Briefcase build & draft release
@@ -238,7 +238,7 @@ jobs:
       matrix:
         os: [macos-13, macos-15, windows-2025, ubuntu-24.04]
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - name: Setup Python
         uses: ./.github/actions/setup
@@ -286,7 +286,7 @@ jobs:
       # Used to attach signing artifacts to the published release.
       contents: write
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - name: Setup Python
         uses: ./.github/actions/setup
@@ -315,7 +315,7 @@ jobs:
       && github.repository_owner == 'dynobo'
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
 
       - name: Setup Python
         uses: ./.github/actions/setup
