@@ -169,7 +169,9 @@ def get_tesseract_bin_path(is_briefcase_package: bool) -> Path:
         RuntimeError: If the Tesseract binary cannot be located.
     """
     if is_briefcase_package:
-        if sys.platform == "linux" or "bsd" in sys.platform:
+        if is_appimage_package():
+            bin_path = Path(__file__).resolve().parents[3] / "bin"
+        elif sys.platform == "linux" or "bsd" in sys.platform:
             bin_path = Path(__file__).resolve().parents[4] / "bin"
         elif sys.platform == "win32":
             bin_path = Path(__file__).resolve().parents[2] / "resources" / "tesseract"
