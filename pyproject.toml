@@ -43,6 +43,7 @@ Issues = "https://github.com/dynobo/normcap/issues"
 "Source Code" = "https://github.com/dynobo/normcap"
 FAQs = "https://dynobo.github.io/normcap/#faqs"
 Changelog = "https://github.com/dynobo/normcap/blob/main/CHANGELOG"
+BuyMeACoffee = "https://www.buymeacoffee.com/dynobo"
 
 [project.scripts]
 normcap = "normcap.app:run"

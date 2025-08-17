@@ -8,7 +8,7 @@ from platforms.windows_briefcase_zip import WindowsBriefcaseZip
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog="Package NormCap", description="Create prebuilt packages of Normcap."
+        prog="Package NormCap", description="Create prebuilt packages of NormCap."
     )
     parser.add_argument(
         "--dev",
