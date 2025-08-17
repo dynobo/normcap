@@ -368,7 +368,7 @@ class MenuButton(QtWidgets.QToolButton):
         about_group = QtGui.QActionGroup(menu)
         about_group.setObjectName("website_group")
 
-        self._add_title(submenu, f"Normcap v{__version__}", about_group)
+        self._add_title(submenu, f"NormCap v{__version__}", about_group)
 
         # L10N: Entry in main menu's 'Application' section.
         action = QtGui.QAction(_("Introduction"), menu)
