@@ -10,7 +10,7 @@ hide:
 
 ## General questions
 
-Please take a look at the [frequently asked questions](https://dynobo.github.io/normcap//#faqs).
+Please take a look at the [frequently asked questions](https://dynobo.github.io/normcap/#faqs).
 
 If that does not help you, please use the [discussions](https://github.com/dynobo/normcap/discussions/categories/q-a) board.
 
@@ -18,7 +18,7 @@ If that does not help you, please use the [discussions](https://github.com/dynob
 
 [Search the issues](https://github.com/dynobo/normcap/issues), if your problem already has been reported.
 
-If this is not the case, do not hesitate and [open a new issue](https://github.com/dynobo/normcap/issues/new).
+If this is not the case, do not hesitate to [open a new issue](https://github.com/dynobo/normcap/issues/new).
 
 ## Not satisfied with NormCap?
 
