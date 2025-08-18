@@ -4,6 +4,7 @@ import logging
 
 from PySide6 import QtWidgets
 
+from normcap.gui.constants import URLS
 from normcap.gui.models import Screen
 from normcap.positioning.handlers import kscript, window_calls
 from normcap.positioning.models import Handler, HandlerProtocol
@@ -99,4 +100,11 @@ def move(window: QtWidgets.QMainWindow, screen: Screen) -> None:
         _move(handler=handler, window=window, screen=screen)
         return
 
-    logger.error("Unable to capture screen! (Increase log-level for details)")
+    logger.error(
+        "Unable to to position window! "
+        "This is ususally no probem when NormCap is used with a single monitor. "
+        "But in multi monitor setups, it likely causes window displacments which "
+        "can practically make NormCap unusable. "
+        "Consider reporting your report issue: %s",
+        URLS.issues,
+    )
