@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=NormCap
+Name[de]=NormCap
+GenericName=OCR powered screen-capture tool
+GenericName[de]=OCR-gestütztes Tool für die Bildschirmaufzeichnung
+Comment=Extract text from an image directly into clipboard
+Comment[de]=Text aus einem Bild direkt in die Zwischenablage extrahieren
+Exec=normcap
+Icon=com.github.dynobo.normcap
+Terminal=false
+Type=Application
+Categories=Utility;Office;
+Keywords=Text;Extraction;OCR;

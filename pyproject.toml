@@ -394,3 +394,7 @@ search = 'download/v{current_version}/'
 [[tool.tbump.before_commit]]
 name = "check changelog"
 cmd = "grep -q {new_version} CHANGELOG"
+
+[[tool.tbump.before_commit]]
+name = "check appdata.xml"
+cmd = "grep -q {new_version} com.github.dynobo.normcap.appdata.xml"
