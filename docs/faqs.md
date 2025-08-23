@@ -178,7 +178,16 @@ The prebuilt packages are shipped with support for English only. To install addi
 languages, click the settings icon and in the "Languages" section of the menu click
 "add/remove …".
 
-If you installed NormCap as Python package, it depends on your system and setup. Please search online.
+If you installed NormCap as a Python package, how to add Tesseract languages depends on your system and setup. Please search online for instructions specific to your environment.
+
+</details>
+
+<details class="question" markdown>
+<summary>What types of QR codes and barcodes does NormCap support?</summary>
+
+### What types of QR codes and barcodes does NormCap support?
+
+NormCap uses the excellent [ZXing-C++](https://github.com/zxing-cpp/zxing-cpp) library for code detection and decoding. This means NormCap can detect and decode [all formats supported by ZXing-C++](https://github.com/zxing-cpp/zxing-cpp?tab=readme-ov-file#supported-formats).
 
 </details>
 
@@ -221,7 +230,7 @@ Those features are:
 
 Some applications offer similar features like NormCap and might be a good or even better
 alternative for you: It completely depends on your use case and requirements. Some
-similar open-source Projects are:
+similar open-source projects are:
 
 - [TextSnatcher](https://github.com/RajSolai/TextSnatcher) (Linux)
 - [GreenShot](https://getgreenshot.org/) (Windows, macOS)
@@ -288,7 +297,7 @@ If you still experience any problems after such a clean installation, please
 <details class="question" markdown>
 <summary>[Linux] NormCap is missing screenshot permissions</summary>
 
-### \[Linux, Wayland\] NormCap is missing screenshot permissions
+### \[Linux\] NormCap is missing screenshot permissions
 
 **Why is it so difficult for NormCap to take screenshots?**
 
