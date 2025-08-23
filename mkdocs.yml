@@ -2,6 +2,8 @@ site_name: NormCap
 repo_url: https://github.com/dynobo/normcap
 repo_name: dynobo/normcap
 edit_uri: edit/main/docs/
+docs_dir: ./docs
+site_dir: ./site
 theme:
   name: material
   language: en
