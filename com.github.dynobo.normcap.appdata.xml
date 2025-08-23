@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf-8'?>
+<component type="desktop">
+  <id>com.github.dynobo.normcap</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>NormCap</name>
+  <developer_name>dynobo</developer_name>
+  <summary>Capture text from any screen area</summary>
+  <description>
+    <p>OCR-powered screen-capture tool to capture information instead of images.</p>
+    <p>Usage:</p>
+    <ol>
+      <li>Start NormCap</li>
+      <li>Select a region on the screen</li>
+      <li>Wait while the text is being extracted</li>
+      <li>Paste the result from the clipboard (ctrl+v)</li>
+    </ol>
+    <p>Features:</p>
+    <ul>
+      <li>Detects text in many different languages</li>
+      <li>Detects QR codes and barcodes</li>
+      <li>Heuristic parsing to improve results</li>
+      <li>Works offline (data doesn't leave your computer)</li>
+      <li>Supports multi-monitor setups</li>
+      <li>Free and Open Source</li>
+      <li>Available for Linux, Windows, and macOS</li>
+    </ul>
+    <p>Tags: OCR, QR, barcode, screenshot, recognition, Tesseract</p>
+  </description>
+  <url type="homepage">https://github.com/dynobo/normcap</url>
+  <url type="bugtracker">https://github.com/dynobo/normcap/issues</url>
+  <url type="help">https://github.com/dynobo/normcap/issues</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/dynobo/normcap/main/assets/flatpak/screenshot-1.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/dynobo/normcap/main/assets/flatpak/screenshot-2.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/dynobo/normcap/main/assets/flatpak/screenshot-3.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/dynobo/normcap/main/assets/flatpak/screenshot-4.png</image>
+    </screenshot>
+  </screenshots>
+  <branding>
+    <color type="primary" scheme_preference="light">#e2e2ec</color>
+    <color type="primary" scheme_preference="dark">#3d3d3f</color>
+  </branding>
+  <releases>
+    <release version="0.5.9" date="2025-04-23" />
+    <release version="0.5.8" date="2024-05-19" />
+    <release version="0.5.7" date="2024-05-18" />
+    <release version="0.5.6" date="2024-05-08" />
+    <release version="0.5.4" date="2024-01-15" />
+    <release version="0.5.3" date="204-01-04" />
+    <release version="0.5.2" date="2023-12-12" />
+    <release version="0.4.4" date="2023-06-04" />
+    <release version="0.4.3" date="2023-06-03" />
+    <release version="0.4.2" date="2023-05-21" />
+    <release version="0.4.1" date="2023-05-01" />
+    <release version="0.4.0" date="2023-01-29" />
+    <release version="0.3.15" date="2022-11-20" />
+    <release version="0.3.14" date="2022-10-30" />
+    <release version="0.3.13" date="2022-10-19" />
+    <release version="0.3.12" date="2022-09-14" />
+    <release version="0.3.11" date="2022-09-03" />
+    <release version="0.3.10" date="2022-09-03" />
+    <release version="0.3.9" date="2022-08-28" />
+    <release version="0.3.8" date="2022-08-21" />
+    <release version="0.3.7" date="2022-08-03" />
+    <release version="0.3.6" date="2022-08-01" />
+    <release version="0.3.4" date="2022-06-25" />
+  </releases>
+  <launchable type="desktop-id">com.github.dynobo.normcap.desktop</launchable>
+  <content_rating type="oars-1.1" />
+</component>
