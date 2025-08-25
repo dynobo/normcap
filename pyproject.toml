@@ -95,8 +95,8 @@ security = "pip-audit"
 
 version = "tbump"
 
-docs-serve = "mkdocs serve"
-docs-build = "mkdocs build"
+docs-serve = "mkdocs serve -f docs/mkdocs.yml"
+docs-build = "mkdocs build -f docs/mkdocs.yml"
 
 test = [
   { cmd = "pytest" },
