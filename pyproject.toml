@@ -43,6 +43,7 @@ Issues = "https://github.com/dynobo/normcap/issues"
 "Source Code" = "https://github.com/dynobo/normcap"
 FAQs = "https://dynobo.github.io/normcap/#faqs"
 Changelog = "https://github.com/dynobo/normcap/blob/main/CHANGELOG"
+BuyMeACoffee = "https://www.buymeacoffee.com/dynobo"
 
 [project.scripts]
 normcap = "normcap.app:run"
@@ -94,8 +95,8 @@ security = "pip-audit"
 
 version = "tbump"
 
-docs-serve = "mkdocs serve"
-docs-build = "mkdocs build"
+docs-serve = "mkdocs serve -f docs/mkdocs.yml"
+docs-build = "mkdocs build -f docs/mkdocs.yml"
 
 test = [
   { cmd = "pytest" },

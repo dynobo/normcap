@@ -1,4 +1,4 @@
-"""Normcap window.
+"""NormCap window.
 
 Supposed to show a screenshot of the current desktop in full screen, on which the
 user can draw a selection rectangle.

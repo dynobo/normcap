@@ -15,7 +15,7 @@ hide:
 The quality of detections is mainly determined by
 [Tesseract](https://tesseract-ocr.github.io), an open source project for OCR of
 _printed_ text. NormCap builds upon this great library and can influence the quality
-only a bit by preprocessing the images regarding screen specific properties. _You_, the
+only slightly by preprocessing the images regarding screen-specific properties. _You_, the
 user, have much more influence on the quality by paying attention to certain aspects:
 
 #### 1) Select the correct language
@@ -24,7 +24,7 @@ Make sure to select the appropriate language(s) in the settings. Selecting multi
 
 #### 2) Avoid selecting decorations
 
-The text detection is very sensible to elements
+The text detection is very sensitive to elements
 _other_ than text, for example borders, lines or icons. If possible, do not select
 those:
 
@@ -56,7 +56,7 @@ of text can improve the accuracy.
 
 The prebuilt NormCap packages are using
 [tessdata-fast](https://github.com/tesseract-ocr/tessdata_fast) models, which offer
-a very good accuracy to speed compromise. But you can also try the slower and
+a very good accuracy-to-speed compromise. But you can also try the slower and
 larger models from [tessdata](https://github.com/tesseract-ocr/tessdata) or
 [tessdata-best](https://github.com/tesseract-ocr/tessdata_best) instead.\
 To find
@@ -88,7 +88,7 @@ and installation method:
 - **On Linux (AUR):** `normcap`
 - **Installed as Python package:** `normcap`
 
-NormCap has some useful command line feature, you can list them by appending the flag
+NormCap has some useful command line features. List them by appending the flag
 `--help` to the command mentioned above.
 
 </details>
@@ -113,14 +113,15 @@ following these guides:
 #### :material-linux: Linux
 
 - Ubuntu/Gnome:
-  [Set Keyboard Shortcuts](https://help.ubuntu.com/stable/ubuntu-help/keyboard-shortcuts-set.html)
+    [Set Keyboard Shortcuts](https://help.ubuntu.com/stable/ubuntu-help/keyboard-shortcuts-set.html)
 - Manjaro/Xfce, Plasma:
-  [Keyboard Shortcuts](https://wiki.manjaro.org/index.php?title=Keyboard_Shortcuts)
+    [Keyboard Shortcuts](https://wiki.manjaro.org/index.php?title=Keyboard_Shortcuts)
 
 To identify the command to run NormCap, please see the FAQ
 "[How can I start NormCap via command line interface?](#how-can-i-start-normcap-via-command-line-interface)"
 
 !!! Info
+
     The reason for _not_ adding an option to configure a shortcut within
     NormCap itself can be found in
     [this
@@ -139,15 +140,16 @@ Use your operating system's functionality to autostart applications after boot. 
 search for tutorials how to run that on start-up, e.g.:
 
 - Windows:
-  [How to Add a Program to Startup in Windows 10 or 11](https://www.howtogeek.com/208224/how-to-add-a-program-to-startup-in-windows/)
+    [How to Add a Program to Startup in Windows 10 or 11](https://www.howtogeek.com/208224/how-to-add-a-program-to-startup-in-windows/)
 - macOS:
-  [How to add a startup program on a Mac](https://www.howtogeek.com/877239/how-to-change-startup-programs-on-a-mac/#how-to-add-a-startup-program-on-a-mac)
+    [How to add a startup program on a Mac](https://www.howtogeek.com/877239/how-to-change-startup-programs-on-a-mac/#how-to-add-a-startup-program-on-a-mac)
 - Linux (Gnome):
-  [Automatically run program on startup](https://www.simplified.guide/gnome/automatically-run-program-on-startup)
+    [Automatically run program on startup](https://www.simplified.guide/gnome/automatically-run-program-on-startup)
 - Linux (KDE):
-  [How to automatically run program on KDE startup](https://www.simplified.guide/kde/automatically-run-program-on-startup)
+    [How to automatically run program on KDE startup](https://www.simplified.guide/kde/automatically-run-program-on-startup)
 
 !!! warning
+
     Add the `--background-mode` flag to the
     command used to start NormCap! Then NormCap will start silently minimized to system tray without triggering a capture!
 
@@ -199,11 +201,11 @@ some feedback regarding this topic!
 <details class="question" markdown>
 <summary>Is any data send to the internet?</summary>
 
-### Is any data send to the internet?
+### Is any data sent to the internet?
 
 In general, NormCap works offline and does not send any data anywhere.
 
-The only exceptions are optional features, which _require_ accessing resources on the internet. In that case, HTTPS request are performed and generate the typical access log data on the target server.
+The only exceptions are optional features, which _require_ accessing resources on the internet. In that case, HTTPS requests are performed and generate the typical access log data on the target server.
 
 Those features are:
 
@@ -231,7 +233,7 @@ similar open-source Projects are:
 - [Text-Grab](https://github.com/TheJoeFin/Text-Grab) (Windows)
 - [dpScreenOCR](https://danpla.github.io/dpscreenocr/) (Linux, Windows)
 - [PowerToys Text Extractor](https://learn.microsoft.com/en-us/windows/powertoys/text-extractor)
-  (Windows)
+    (Windows)
 
 </details>
 
@@ -284,9 +286,68 @@ If you still experience any problems after such a clean installation, please
 </details>
 
 <details class="question" markdown>
-<summary>[Linux] Normcap does not show up in system tray</summary>
+<summary>[Linux] NormCap is missing screenshot permissions</summary>
 
-### \[Linux\] Normcap does not show up in system tray
+### \[Linux, Wayland\] NormCap is missing screenshot permissions
+
+**Why is it so difficult for NormCap to take screenshots?**
+
+The [Wayland](https://wayland.freedesktop.org/) protocol (successor to [X Window System](https://x.org/wiki/)) requires applications to request permission for system features like taking screenshots. While this improves security, the protocol is challenging for developers to implement. The variety of Wayland servers, window managers, and versions with different implementations makes building compatible applications difficult. Most third-party screenshot tools face these same issues.
+
+**If you installed NormCap as Flatpak:**
+
+1. View the permissions by running:
+    ```sh
+    flatpak permission-show com.github.dynobo.normcap
+    ```
+    In the output, there should be a line like:
+    ```sh
+    screenshot    screenshot   com.github.dynobo.normcap [yes]
+    ```
+1. If that is not the case, set the permission explicitly:
+    ```sh
+    flatpak permission-set screenshot screenshot com.github.dynobo.normcap yes
+    ```
+
+**If you're using the NormCap AppImage:**
+
+1. List all applications with screenshot permissions:
+    ```sh
+    dbus-send --print-reply=literal \
+      --session --dest=org.freedesktop.impl.portal.PermissionStore \
+      /org/freedesktop/impl/portal/PermissionStore \
+      org.freedesktop.impl.portal.PermissionStore.Lookup \
+      string:'screenshot' string:'screenshot'
+    ```
+    Among the entries in the output, there should be something like:
+    ```sh
+    dict entry(
+         com.github.dynobo.normcap         array [
+            [yes]         ]
+      )
+    ```
+1. If that is not the case, grant permission by running:
+    ```sh
+    dbus-send --print-reply=literal \
+      --session --dest=org.freedesktop.impl.portal.PermissionStore \
+      /org/freedesktop/impl/portal/PermissionStore \
+      org.freedesktop.impl.portal.PermissionStore.SetPermission \
+      string:'screenshot' boolean:true string:'screenshot' \
+      string:'com.github.dynobo.normcap' array:string:['yes']
+    ```
+
+**Further tips for debugging:**
+
+- If starting NormCap from a terminal or shell script, ensure the calling context (e.g., the terminal application) has been granted screenshot permission.
+- Run NormCap with the `-v debug` flag and look for warnings or errors in the output.
+- Run `dbus-monitor --session` while starting NormCap and check the (quite verbose) output for screenshot or permission-related messages.
+
+</details>
+
+<details class="question" markdown>
+<summary>[Linux] NormCap does not show up in system tray</summary>
+
+### \[Linux\] NormCap does not show up in system tray
 
 Is your display environment Gnome Shell? Then you probably need to install a
 [Gnome Shell extension](https://extensions.gnome.org/) to support showing applications
@@ -305,7 +366,7 @@ in the top bar, e.g.:
 ### \[Linux\] NormCap doesn't show a notification after capture
 
 NormCap's notifications depend on the system tray functionality. If you start NormCap,
-but its Icon doesn't appear in the system tray, proceed like in the question above.
+but its Icon doesn't appear in the system tray, proceed like in the [question above](#linux-normcap-does-not-show-up-in-system-tray).
 
 </details>
 
@@ -340,7 +401,7 @@ vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl
 
 ### \[Linux\] NormCap doesn't copy the results to clipboard when launched via shortcut
 
-This is behavior
+This behavior
 [was observed only on KDE + Wayland (#422)](https://github.com/dynobo/normcap/issues/422)
 so far, and only when NormCap was started via a keyboard shortcut / key binding. The
 root cause is still unknown, if you have any information or ideas, please comment in the
@@ -375,22 +436,22 @@ See
 
 ### \[macOS\] When NormCap is started, an empty desktop shows up
 
-This issue usually occurs on the after installing NormCap, either for the first time or
+This issue usually occurs after installing NormCap, either for the first time or
 after an update.
 
-This is a known issue related to macOS's permissions settings: If NormCap doesn't have
+It is a known issue related to macOS's permissions settings: If NormCap doesn't have
 the system's permission to take a screenshot, an empty desktop will be
-shown. Or to be precise: NormCap doesn't _know_ that it lacks permissions,
+shown. Or to be more precise: NormCap doesn't _know_ that it lacks permissions,
 tries to take a screenshot nevertheless, which results in a screenshot of the empty
-desktop.</small>
+desktop.
 
 Steps to solve this:
 
 1. Close NormCap, if it is running.
 1. Navigate to "System Preferences" → "Security & Privacy" → "Privacy" → "Screen
-   Recording" → "Click unlock".
+    Recording" → "Click unlock".
 1. Do you already see "NormCap" on the right side? If yes, "remove" \[–\] it.
-   **Un-ticking the checkbox is not enough!**
+    **Un-ticking the checkbox is not enough!**
 1. Click "add" \[+\] → "Applications" → "NormCap".
 1. Confirm that you see NormCap on the right side with a checkmark in front of it.
 1. Start NormCap, it should work now.
