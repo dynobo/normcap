@@ -44,7 +44,7 @@ def _clean(text: str) -> str:
     text = re.sub(r"[„”“‟″‶ʺ]", '"', text)
     # Singe quotation marks
     text = re.sub(r"[‚‘’‛]", "'", text)  # noqa: RUF001  # ambiguous string
-    return text  # noqa: RET504  # unnecessary return for clarity
+    return text  # unnecessary return for clarity
 
 
 def _post_process(ocr_result: OcrResult) -> str:

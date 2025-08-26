@@ -28,8 +28,8 @@ classifiers = [
   "Operating System :: MacOS",
 ]
 dependencies = [
-  "shiboken6==6.9.1",
-  "PySide6-Essentials==6.9.1",
+  "shiboken6==6.9.2",
+  "PySide6-Essentials==6.9.2",
   "jeepney==0.9.0",
   "zxing-cpp==2.3.0",
 ]
@@ -182,6 +182,7 @@ ignore = [
   "D103", # Missing docstring in public function
   "D104", # Missing docstring in public package
   "D107", # Missing docstring in __init__
+  "RET504", # Unnecessary assignement before return
   "TRY003", # Avoid specifying long messages outside the exception class
   "ISC001", # Rule conflicts with ruff's formatter
   "PLR0913", # Too many arguments in function definition (> 5)
