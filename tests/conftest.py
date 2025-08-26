@@ -1,5 +1,7 @@
 import builtins
 import importlib
+import os
+import platform
 import sys
 from contextlib import contextmanager
 from functools import partial
@@ -7,6 +9,13 @@ from pathlib import Path
 from types import ModuleType
 from typing import Callable, Optional
 from urllib import request
+
+if platform.system() == "linux":
+    # Ensures headless UI tests on Wayland when running `pytest` from CLI.
+    # Must be done before any Qt imports.
+    # Note: This does not work with VSCode Testing, which requires setting the envvar
+    # via a `.env.test` file.
+    os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
