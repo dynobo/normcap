@@ -5,8 +5,10 @@ import subprocess
 import sys
 from typing import Any, Optional, cast
 
-from PySide6 import QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
+from normcap.gui import constants
+from normcap.gui.localization import _
 from normcap.screenshot import models
 from normcap.screenshot.main import get_available_handlers
 
@@ -95,47 +97,63 @@ def macos_reset_screenshot_permission() -> None:
         macos_request_screenshot_permission()
 
 
+# TODO: Pull the permission dialog out to gui
 class DbusPortalPermissionDialog(QtWidgets.QDialog):
     def __init__(
         self,
-        title: str,
-        text: str,
         parent: Optional[QtWidgets.QWidget] = None,
     ) -> None:
         super().__init__(parent)
-        self.capture: list[QtGui.QImage] = []
+        # L10N: Title of screenshot permission dialog only shown on Linux + Wayland.
+        title = _("NormCap - Screenshot Permission")
+        # L10N: Text of screenshot permission dialog only shown on Linux + Wayland.
+        text = _(
+            "<h3>Request screenshot permission?</h3>"
+            "<p>NormCap needs permission to take screenshots, which is essential"
+            "<br> for its functionality. It appears these permissions are "
+            "currently missing.</p>"
+            "<p>Click 'OK' to trigger a system prompt requesting access.<br>"
+            "Please allow this, otherwise NormCap may not work properly.</p>"
+        )
 
         self.setWindowTitle(title)
+        self.setWindowIcon(QtGui.QIcon(":normcap"))
+        self.setMinimumSize(600, 300)
+        self.setModal(True)
 
-        self.button_box = self._create_button_box()
-        self.button_box.accepted.connect(self.accept_button_pressed)
-        self.button_box.rejected.connect(self.reject_button_pressed)
-
-        label = QtWidgets.QLabel(text)
-        label.setOpenExternalLinks(True)
-
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(label)
-        layout.addWidget(self.button_box)
-
-        self.setLayout(layout)
+        main_vbox = QtWidgets.QVBoxLayout()
+        main_vbox.addWidget(self._create_message(text))
+        main_vbox.addStretch()
+        main_vbox.addLayout(self._create_footer())
+        self.setLayout(main_vbox)
 
     @staticmethod
-    def _create_button_box() -> QtWidgets.QDialogButtonBox:
-        button_box = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.StandardButton.Ok
-            | QtWidgets.QDialogButtonBox.StandardButton.Cancel
-        )
+    def _create_message(text: str) -> QtWidgets.QLabel:
+        message = QtWidgets.QLabel(text)
+        message.setWordWrap(True)
+        return message
 
-        cancel_button = button_box.button(
-            QtWidgets.QDialogButtonBox.StandardButton.Cancel
-        )
-        cancel_button.setAutoDefault(False)
-        cancel_button.setDefault(False)
+    def _create_footer(self) -> QtWidgets.QLayout:
+        footer_hbox = QtWidgets.QHBoxLayout()
+        footer_hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        footer_hbox.setContentsMargins(0, 0, 2, 0)
 
-        ok_button = button_box.button(QtWidgets.QDialogButtonBox.StandardButton.Cancel)
+        open_issue_text = QtWidgets.QLabel(constants.OPEN_ISSUE_TEXT)
+
+        # L10N: Permission request dialog button
+        ok_button = QtWidgets.QPushButton(_("Ok"))
+        ok_button.clicked.connect(self.accept_button_pressed)
         ok_button.setDefault(True)
-        return button_box
+
+        # L10N: Permission request dialog button
+        cancle_button = QtWidgets.QPushButton(_("Cancel"))
+        cancle_button.clicked.connect(self.reject_button_pressed)
+
+        footer_hbox.addWidget(open_issue_text)
+        footer_hbox.addStretch()
+        footer_hbox.addWidget(ok_button)
+        footer_hbox.addWidget(cancle_button)
+        return footer_hbox
 
     def accept_button_pressed(self) -> None:
         if not dbus_portal:
@@ -144,17 +162,23 @@ class DbusPortalPermissionDialog(QtWidgets.QDialog):
             )
 
         self.setEnabled(False)
+
+        screenshots = []
         try:
-            logger.debug("Request screenshot with interactive=True")
-            self.capture = dbus_portal._synchronized_capture(interactive=True)
+            logger.debug("Request screenshot.")
+            screenshots = dbus_portal.capture()
         except TimeoutError:
             logger.warning("Timeout when taking screenshot!")
-        self.setResult(0)
+        except PermissionError:
+            logger.warning("Missing permission for taking screenshot!")
+
         self.setEnabled(True)
+        self.setResult(len(screenshots) > 0)
         self.hide()
 
     def reject_button_pressed(self) -> None:
-        self.setResult(1)
+        logger.warning("Screenshot permission dialog was canceled!")
+        self.setResult(False)
         self.hide()
 
 
@@ -168,19 +192,14 @@ def _dbus_portal_has_screenshot_permission() -> bool:
         result = dbus_portal.capture()
     except (PermissionError, TimeoutError) as exc:
         logger.warning("Screenshot permissions on Wayland seem missing.", exc_info=exc)
-    return len(result) > 0
 
+    if len(result) > 0:
+        return True
 
-def dbus_portal_show_request_permission_dialog(title: str, text: str) -> bool:
-    window = DbusPortalPermissionDialog(title=title, text=text + "<br>")
-    choice = window.exec()
-
-    if choice != 0:
-        logger.warning("Screenshot permission dialog was canceled!")
-        return False
-
-    if not window.capture:
-        logger.warning("Permission for screenshot is still missing!")
+    logger.info("Trying to request permissions via dialog.")
+    permissions_granted = DbusPortalPermissionDialog().exec()
+    if not permissions_granted:
+        logger.warning("Requesting screenshot permissions on Wayland failed!")
         return False
 
     return True

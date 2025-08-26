@@ -163,6 +163,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             # Reset privacy permission in case of new NormCap version. This is necessary
             # because somehow the setting is associated with the binary and won't work
             # after it got updated.
+            # TODO: should this be done within has_screenshot_permission?
             screenshot.macos_reset_screenshot_permission()
 
         elif system_info.is_flatpak_package():
