@@ -438,6 +438,8 @@ the `FUSE` library is installed on your system. E.g. on Ubuntu 22.04 you need to
 See
 [this blog post for details](https://techpiezo.com/linux/error-appimages-require-fuse-to-run-in-ubuntu-22-04/).
 
+<strong>Please note, that the AppImage build is deprecated. Please switch to the [Flatpak build via Flathub](https://github.com/flathub/com.github.dynobo.normcap).</strong>
+
 </details>
 
 <details class="question" markdown>
@@ -467,35 +469,5 @@ Steps to solve this:
 1. You might need to repeat those steps after installing a new version of NormCap.
 
 Hopefully, this cumbersome user experience can be improved in a future release.
-
-</details>
-
-## Development
-
-<details class="question" markdown>
-<summary>"No such file or directory" error when running 'briefcase build'</summary>
-
-### "No such file or directory" error when running `briefcase build`
-
-To verify, if this is the issue you are facing, run the docker image interactively and
-try to run the `linuxdeploy-*.AppImage` file there:
-
-```sh
-$ docker run -it \
-  --volume /home/<USER>/<PROJECT PATH>/normcap/linux:/app:z \
-  --volume /home/<USER>/.briefcase:/home/brutus/.briefcase:z \
-  --env VERSION=0.2.0 briefcase/eu.dynobo.normcap:py3.9 \
-  /bin/bash
-$ /home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage
-```
-
-If that results in a `No such file or directory` error, according to
-[this issue](https://github.com/AppImage/AppImageKit/issues/1027#issuecomment-641601097)
-and [this one](https://github.com/AppImage/AppImageKit/issues/828) a workaround is to
-correct the "magic" bytes of the AppImage. This worked for me:
-
-```sh
-sed '0,/AI\x02/{s|AI\x02|\x00\x00\x00|}' -i linuxdeploy-x86_64.AppImage
-```
 
 </details>
