@@ -1,0 +1,37 @@
+name: Draft Internal Release
+description: Publish test builds as internal draft release
+
+inputs:
+  token:
+    description: 'A Github PAT'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+      # For security reasons, github doesn't allow setting envvars using expressions
+      # directly. Therefore, we need an extra step:
+    - name: Set current date as env variable
+      shell: bash -l {0}
+      run: |
+        echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+        ls -la
+        ls -la bundle/
+
+    - name: Draft internal release
+      uses: ncipollo/release-action@v1.18.0
+      # It's possible, that the run lacks release permissions (e.g. on forks).
+      # This is not crucial, so we just silence the error.
+      continue-on-error: true
+      if: github.repository_owner == 'dynobo'
+      with:
+        name: Internal
+        body: "Only for internal tests. Should not be published. [${{ env.NOW }}]"
+        repo: normcap
+        owner: dynobo
+        artifacts: "*/*.+(dmg|AppImage|msi|zip|flatpak)"
+        allowUpdates: true
+        draft: true
+        prerelease: true
+        token: ${{ inputs.token }}
+        tag: "internal"
