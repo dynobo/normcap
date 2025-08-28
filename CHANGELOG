@@ -2,7 +2,7 @@
 
 # Changelog
 
-## v0.6.0 (upcoming)
+## v0.6.0 (2025-08-31)
 
 **All systems:**
 - 🗲 Breaking: Remove commandline argument `--mode {parse,raw}` in favor of a new
