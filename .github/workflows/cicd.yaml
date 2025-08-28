@@ -36,8 +36,7 @@ jobs:
         with:
           ref: ${{ inputs.refToBuild }}
 
-      - name: Setup Python
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-python-uv
 
       - name: Prepare Linux
         if: startsWith(matrix.os, 'ubuntu')
@@ -123,11 +122,42 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
 
-      - name: Setup Python
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-python-uv
 
       - name: Test build python package
         run: uv build
+
+  test-flatpak:
+    name: Test flatpak build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5.0.0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install flatpak
+        run: |
+          sudo apt update && sudo apt install -y flatpak flatpak-builder
+          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Clone git clone
+        run: |
+          git clone https://github.com/flathub/com.github.dynobo.normcap.git
+          cd com.github.dynobo.normcap
+          git switch feature/move-xml-to-main-repo
+          cd ..
+
+      - name: Run build script
+        run: |
+          cd com.github.dynobo.normcap
+          python update.py --keep --bundle ${{ github.head_ref }}
+
+      - name: Draft internal release
+        uses: ./.github/actions/draft-internal-release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   test-briefcase:
     name: Test Briefcase build
@@ -139,8 +169,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
 
-      - name: Setup Python
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-python-uv
 
       - name: Test build briefcase package
         shell: bash -l {0}
@@ -151,28 +180,11 @@ jobs:
         run: |
           (cat logs/briefcase*) || true
           find build/normcap || true
-      # For security reasons, github doesn't allow setting envvars using expressions
-      # directly. Therefore, we need an extra step:
-      - name: Set current date as env variable
-        shell: bash -l {0}
-        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+
       - name: Draft internal release
-        uses: ncipollo/release-action@v1.18.0
-        # It's possible, that the run lacks release permissions (e.g. on forks). In
-        # this is not crucial, so we just silence the error.
-        continue-on-error: true
-        if: github.repository_owner == 'dynobo'
+        uses: ./.github/actions/draft-internal-release
         with:
-          name: Internal
-          body: "Only for internal tests. Should not be published. [${{ env.NOW }}]"
-          repo: normcap
-          owner: dynobo
-          artifacts: "*/*.+(dmg|AppImage|msi|zip)"
-          allowUpdates: true
-          draft: true
-          prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "internal"
 
   test-documentation:
     name: Test documentation build
@@ -180,8 +192,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
 
-      - name: Setup Python
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-python-uv
 
       - name: Build documentation
         run: uv run poe docs-build
@@ -228,6 +239,7 @@ jobs:
     needs:
       - test
       - test-briefcase
+      - test-flatpak
       - test-python-package
     if: |
       startsWith(github.ref, 'refs/tags/v')
@@ -240,8 +252,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
 
-      - name: Setup Python
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-python-uv
 
       - name: Build package briefcase
         shell: bash -l {0}
@@ -288,8 +299,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
 
-      - name: Setup Python
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-python-uv
 
       - name: Build Python package
         run: uv build
@@ -317,8 +327,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
 
-      - name: Setup Python
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-python-uv
 
       - name: Build documentation
         run: uv run poe docs-build

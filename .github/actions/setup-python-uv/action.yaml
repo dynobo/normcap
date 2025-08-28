@@ -1,4 +1,4 @@
-name: Setup
+name: Setup Python UV
 description: Checkout, install python and uv
 
 runs:
