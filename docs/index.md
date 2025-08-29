@@ -19,7 +19,9 @@ Packages with the
   <small>Installer, x86_64, ~120 MB</small>
 - [Download for **Windows**](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64-Windows.zip)
   <small>Portable, x86_64, ~120 MB</small>
-- [Download for **Linux**](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64.AppImage)
+- [Download for **Linux (via Flathub)**](https://flathub.org/apps/details/com.github.dynobo.normcap)
+  <small>x86_64, ~350 MB</small>
+- [Download for **Linux (AppImage)¹**](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64.AppImage)
   <small>x86_64, ~90 MB</small>
 - [Download for **macOS**](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64-macOS.dmg)
   <small>x86_64, ~80 MB</small>
@@ -28,10 +30,10 @@ Packages with the
 </div>
 
 … or install via
-[FlatHub](https://flathub.org/apps/details/com.github.dynobo.normcap),
 [AUR](https://aur.archlinux.org/packages/normcap) or
 [PyPi](https://pypi.org/project/normcap/).
 
+¹ AppImage suppprt is deprecated. Please switch to Flatpak.
 </div>
 
 <div style="display:flex;align-items:center;text-align:center;" markdown>
@@ -70,11 +72,23 @@ Detection is performed on your device and no telemetry data is collected.
 
 <div class="card" markdown>
 
+:material-qrcode-scan:{ .lg .middle } **QR & Barcodes**
+
+---
+
+Scan QR codes and barcodes to extract their information.
+
+[:octicons-arrow-right-24: Learn more](faqs.md#is-any-data-send-to-the-internet)
+
+</div>
+
+<div class="card" markdown>
+
 :material-format-font:{ .lg .middle } **Heuristic Parsing**
 
 ---
 
-Mail addresses and URLs are detected and handled accordingly.
+Email addresses and URLs are detected and handled accordingly.
 
 [:octicons-arrow-right-24: Learn more](usage.md#capture-modes)
 

@@ -9,48 +9,58 @@ hide:
 
 ## Quickstart
 
-1. Start NormCap and wait until a pink border appears.
-1. Select a region on the screen with your mouse. <br>
-   Then wait for a notification or a pink tray icon to appear to indicate, that the processing finished.
-1. The detected text gets copied into your system clipboard, paste it into any application.
-1. Use the menu <span class="md-pink">⚙</span> in the top right corner to adjust settings.
+1. Start NormCap and wait for the pink border to appear.
+1. Select a screen region with your mouse and wait for the notification or pink tray icon.
+1. Paste the detected text from your clipboard into any application.
+1. Access settings via the <span class="md-pink">⚙</span> menu in the top right corner.
 
-![](./assets/screenshot.png)
-
-## Example use-cases
-
-- Extract text from screenshots you received via mail.
-- Copy error messages from non-selectable UI elements.
-- Retrieve information from photos.
-- Capture mail addresses from "crawler safe" images on the web.
+![Screenshot of NormCap interface](./assets/screenshot.png)
 
 ## User Interface
 
-- The settings can be accessed via the <span class="md-pink">⚙</span>-icon in the top right.
-- In the settings, you can adjust the language(s) you are trying to recognize, which is important for a good accuracy.
-- The icons <span class="md-pink">★</span> or <span class="md-pink">☰</span> next to the selection-rectangle indicate the active "capture mode" (see below).
-- To abort a capture or quit NormCap press `<esc>`
+- Access settings via the <span class="md-pink">⚙</span> icon in the top right of your primary monitor.
+- Adjust recognition language(s) in settings for better accuracy.
+- The icons <span class="md-pink">★</span> or <span class="md-pink">☰</span> next to the selection rectangle indicate "Parse Text" status (see below).
+- Press `<esc>` to abort capture or quit NormCap.
 
 ## Detection settings
 
 The settings menu <span class="md-pink">⚙</span> allows toggling various detection modes:
 
-- **Raw**
+### "Detection"
 
-    If no detection setting is active, the selection rectangle gets marked with the
-    <span class="md-pink">☰</span> symbol: it returns text just as detected by the OCR
-    software. For example, all line-breaks are preserved.
+- **Text**
 
-- **Parse Text** <small>(default)</small>
+    Extracts text from the selected area.
 
-    Indicated by the <span class="md-pink">★</span> symbol, it performs some formatting of the output based on certain implemented rules, which can take additional information like text position and content into account. In a first step, every rule calculates a "score" to determine the likelihood of being responsible for this type of text. In a second step, the rule which achieved the highest "score" takes the necessary actions to "transform" the input text according to its type. The following rules are currently implemented:
+- **QR & Barcodes**
 
-    **Heuristics performed in parse-mode:**
+    Detects and decodes QR codes and barcodes in the selected area. Data from multiple codes are separated by newlines.
 
-    | **Rule name**   | **Score heuristics**                                 | **Transform**                                                                        |
-    | --------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
-    | **Single line** | Only single line is detected                         | Trim unnecessary whitespace                                                          |
-    | **Multi line**  | Multiple lines, but single paragraph                 | Separate using line breaks and trim unnecessary whitespace in each line              |
-    | **Paragraph**   | Multiple blocks of lines or multiple paragraphs      | Join every paragraph into a single line, separate different paragraphs by empty line |
-    | **E-Mail**      | Number of chars in email addresses vs. overall chars | Transform to a comma-separated list of email addresses                               |
-    | **URL**         | Number of chars in URLs vs. overall chars            | Transform to line-break separated URLs, discard all other characters.                |
+    !!! info
+
+        When both "Text" and "QR & Barcode" are active, "QR & Barcode" takes priority: if a code is found, text detection is skipped.
+
+### "Post-Processing"
+
+- **Parse Text**
+
+    When active, the selection rectangle gets marked with a <span class="md-pink">★</span> symbol. This mode performs some formatting of the output based on certain implemented rules, which can take additional information like text position and content into account. In the first step, every rule calculates a "score" to determine the likelihood of being responsible for this type of text. In the second step, the rule which achieved the highest "score" takes the necessary actions to "transform" the input text according to its type. The following rules are currently implemented:
+
+    | **Rule name**   | **Score heuristics**                | **Transform**                                                 |
+    | --------------- | ----------------------------------- | ------------------------------------------------------------- |
+    | **Single line** | Only single line detected           | Trim unnecessary whitespace                                   |
+    | **Multi line**  | Multiple lines, single paragraph    | Separate with line breaks, trim whitespace per line           |
+    | **Paragraph**   | Multiple line blocks or paragraphs  | Join paragraphs into single lines, separate with empty lines  |
+    | **Email**       | Email address chars vs. total chars | Transform to comma-separated email list                       |
+    | **URL**         | URL chars vs. total chars           | Transform to newline-separated URLs, discard other characters |
+
+## Exemplary use cases
+
+- Extract text from screenshots you received via email.
+- Copy error messages from non-selectable UI elements.
+- Retrieve information from photos.
+- Capture email addresses from "crawler safe" images on the web.
+- Scan QR codes in livestreams or online presentations.
+- Read barcodes from product pictures.
+- *... and many more!*

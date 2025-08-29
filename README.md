@@ -14,7 +14,6 @@ macOS and Windows._**
 [![Flathub](https://img.shields.io/flathub/downloads/com.github.dynobo.normcap?label=Flathub%20downloads&color=blue)](https://flathub.org/apps/details/com.github.dynobo.normcap)
 [![AUR](https://img.shields.io/aur/votes/normcap?label=AUR%20votes&color=blue)](https://aur.archlinux.org/packages/normcap)
 
-<a href="https://www.buymeacoffee.com/dynobo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 40px !important;" ></a>
 
 **Links:** [Source Code](https://github.com/dynobo/normcap) |
 [Documentation](https://dynobo.github.io/normcap/) |
@@ -48,7 +47,7 @@ flatpak install flathub com.github.dynobo.normcap
 
 <a href="https://flathub.org/apps/details/com.github.dynobo.normcap"><img src="https://flathub.org/assets/badges/flathub-badge-en.png" width="160"/></a>
 
-Alternativ options:
+Alternative options:
 
 - [NormCap-0.5.9-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64.AppImage) - ⚠️ ***deprecated***
   (Requires [fuse](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-appimages-require-fuse-to-run))
@@ -56,8 +55,8 @@ Alternativ options:
 
 #### macOS
 
-Note: You have to allow the unsigned application on first start: "System Preferences" →
-"Security & Privacy" → "General" → "Open anyway". You also have to allow NormCap to take
+**Note:** You must allow the unsigned application on first start: "System Preferences" →
+"Security & Privacy" → "General" → "Open anyway". You also need to allow NormCap to take
 screenshots. ([#135](https://github.com/dynobo/normcap/issues/135))
 
 - [NormCap-0.5.9-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.5.9/NormCap-0.5.9-x86_64-macOS.dmg)
@@ -67,9 +66,9 @@ screenshots. ([#135](https://github.com/dynobo/normcap/issues/135))
 
 ## Use Python package
 
-As an _alternative_ to a prebuilt package from above you can install the
+As an _alternative_ to the prebuilt packages above, you can install the
 [NormCap Python package](https://pypi.org/project/normcap/) for **Python >=3.9**, but it
-is a bit more complicated:
+requires more setup:
 
 #### On Linux
 
@@ -111,8 +110,8 @@ pip install normcap
 1\. Install `Tesseract 5` by using the
 [installer provided by UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki).
 
-2\. Identify the path to Tesseract base folder. It should contain a `/tessdata` subfolder
-and the `tesseract.exe` binary. Depending on if you installed Tesseract system-wide or
+2\. Identify the path to the Tesseract base folder. It should contain a `/tessdata` subfolder
+and the `tesseract.exe` binary. Depending on whether you installed Tesseract system-wide or
 in userspace, the base folder should be:
 
 ```
@@ -153,10 +152,10 @@ normcap
 
 ## Development
 
-Prerequisites for setting up a development environment are:
+Prerequisites for setting up a development environment:
 [**Python >=3.9**](https://www.python.org/downloads/),
-[**uv**](https://docs.astral.sh/uv/getting-started/installation/) and
-[**Tesseract >=5.0**](https://tesseract-ocr.github.io/tessdoc/#5xx) (incl. **language
+[**uv**](https://docs.astral.sh/uv/getting-started/installation/), and
+[**Tesseract >=5.0**](https://tesseract-ocr.github.io/tessdoc/#5xx) (including **language
 data**).
 
 ```sh
@@ -179,34 +178,34 @@ uv run python -m normcap
 ## Contribute to UI translations
 
 Please use [Weblate](https://hosted.weblate.org/projects/normcap/ui/) to complement or
-correct text for existing language as well as for adding new languages.
+correct text for existing languages as well as for adding new languages.
 
-(If you prefer to not use Weblate, you can also [do it manually](./normcap/resources/locales/README.md), but be aware, that this more cumbersome.)
+(If you prefer not to use Weblate, you can also [do it manually](./normcap/resources/locales/README.md), but be aware that this is more cumbersome.)
 
 ## Credits
 
 This project uses the following non-standard libraries:
 
-- [pyside6](https://pypi.org/project/PySide6/) _- bindings for Qt UI Framework_
+- [pyside6](https://pypi.org/project/PySide6/) - _bindings for Qt UI Framework_
 
 And it depends on external software:
 
 - [tesseract](https://github.com/tesseract-ocr/tesseract) - _OCR engine_
-- [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp) = _QR & barcode detection_
+- [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp) - _QR & barcode detection_
 - [wl-clipboard](https://github.com/bugaevc/wl-clipboard) - _Wayland clipboard
   utilities_
 - [xclip](https://github.com/astrand/xclip) - _CLI to the X11 clipboard_
 
 Packaging is done with:
 
-- [briefcase](https://pypi.org/project/briefcase/) _- converting Python projects into_
-  _standalone apps_
+- [briefcase](https://pypi.org/project/briefcase/) - _converting Python projects into
+  standalone apps_
 
 Thanks to the maintainers of those nice tools!
 
 ## Similar open source tools
 
-If NormCap doesn't fit your needs, try those alternatives (no particular order):
+If NormCap doesn't fit your needs, try these alternatives (no particular order):
 
 - [TextSnatcher](https://github.com/RajSolai/TextSnatcher) (Linux)
 - [GreenShot](https://getgreenshot.org/) (Windows, macOS)

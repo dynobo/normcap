@@ -39,4 +39,5 @@ hide:
     - Help to improve [test coverage](https://coveralls.io/github/dynobo/normcap)
 
 !!! warning
+
     When in doubt, please share your contribution ideas _before_ you start working on it to avoid any unnecessary disappointment.
