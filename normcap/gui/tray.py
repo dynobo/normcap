@@ -493,6 +493,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             screens = screenshot.capture()
 
         if not screens:
+            self.settings.setValue("has-screenshot-permission", False)
             raise RuntimeError("No screenshot taken!")
 
         for idx, image in enumerate(screens):
