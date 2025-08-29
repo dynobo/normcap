@@ -7,7 +7,6 @@ pyside6-rcc normcap/resources/icons/resources.qrc -o normcap/gui/resources.py &&
         <file alias="normcap">normcap.png</file>
         <file alias="settings">settings.png</file>
         <file alias="tray">tray.png</file>
-        <file alias="tray_processing">tray_processing.png</file>
         <file alias="tray_done">tray_done.png</file>
         <file alias="parse">parse.png</file>
         <file alias="raw">raw.png</file>

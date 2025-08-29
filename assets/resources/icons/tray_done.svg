@@ -1,52 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xml:space="preserve"
-   width="256"
-   height="256"
-   viewBox="0 0 256 256"
-   version="1.1"
-   id="svg3"
-   sodipodi:docname="tray_done.svg"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><defs
-   id="defs3" /><sodipodi:namedview
-   id="namedview3"
-   pagecolor="#ffffff"
-   bordercolor="#000000"
-   borderopacity="0.25"
-   inkscape:showpageshadow="2"
-   inkscape:pageopacity="0.0"
-   inkscape:pagecheckerboard="0"
-   inkscape:deskcolor="#d1d1d1"
-   inkscape:zoom="1.839013"
-   inkscape:cx="141.92396"
-   inkscape:cy="132.40798"
-   inkscape:window-width="1503"
-   inkscape:window-height="933"
-   inkscape:window-x="0"
-   inkscape:window-y="0"
-   inkscape:window-maximized="1"
-   inkscape:current-layer="g3" />&#10;    &#10;    &#10;    &#10;    <g
-   id="g3"
-   transform="matrix(1.1901508,0,0,1.1901508,-1.2155752,-1.1559143)"><path
-     d="m 10.54,143.2 19.82,7.34 0.9,21 13.17,-16.45 20.38,5.62 -11.68,-17.52 11.68,-17.52 -20.38,5.63 -13.16,-16.45 -0.91,21 z"
-     style="fill:#ff2e88;fill-opacity:1;stroke:#000000;stroke-width:15;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:3.65;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-     id="path1" /><path
-     d="m 107.66,56.01 24.47,9.09 1.13,25.96 L 149.5,70.7 174.67,77.66 160.24,56 174.67,34.34 149.5,41.3 133.26,20.96 132.13,46.92 Z"
-     style="fill:#ff2e88;fill-opacity:1;stroke:#000000;stroke-width:15.0001;stroke-linejoin:round;stroke-miterlimit:3.65;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-     id="path2" /><path
-     d="M 8.52,50.94 38.15,61.96 39.51,93.42 59.18,68.76 89.65,77.19 72.18,50.94 89.65,24.7 59.18,33.14 39.51,8.47 38.15,39.93 Z"
-     style="fill:#ff2e88;fill-opacity:1;stroke:#000000;stroke-width:15.0001;stroke-linejoin:round;stroke-miterlimit:3.65;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-     id="path3" /><rect
-     width="32.950127"
-     height="148.43016"
-     x="-37.762772"
-     y="135.52959"
-     rx="10.000039"
-     ry="10.000011"
-     style="opacity:1;fill:#ff2e88;fill-opacity:1;stroke:#000000;stroke-width:15.0008;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:3.65;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-     transform="matrix(0.66073745,-0.7506171,0.76043911,0.64940924,0,0)"
-     id="rect3" /></g>&#10;</svg>
+<svg width="128" height="128" version="1.1" viewBox="0 0 128 128" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+
+
+
+
+<g transform="matrix(3.7795 0 0 3.7795 -154 -489)"><g transform="matrix(.17748 0 0 .17739 28.577 141.25)" stroke="#000" stroke-width="4.4734"><g transform="matrix(.99261 0 0 .99261 30.846 -81.358)" stroke-width="4.5067">
+        <rect transform="rotate(-45)" x="4.6237" y="137.17" width="23.791" height="158.61" rx="6.0089" ry="6.0089" fill="#ff2e88" stroke="#000" stroke-linejoin="round" stroke-width="4.5067"/>
+
+    </g><g transform="matrix(8.98 0 0 8.9869 -279.29 -1363.9)" fill="#ff2e88" fill-rule="evenodd"><path transform="matrix(.23836 0 0 .23836 42.686 111.91)" d="m37.012 168.44c-0.91696 0-2.877-6.9055-3.5254-7.5539s-7.5539-2.6084-7.5539-3.5254c0-0.91696 6.9055-2.877 7.5539-3.5254s2.6084-7.5539 3.5254-7.5539 2.877 6.9055 3.5254 7.5539 7.5539 2.6084 7.5539 3.5254c0 0.91697-6.9055 2.877-7.5539 3.5254s-2.6084 7.5539-3.5254 7.5539z" stroke-width="2.0891"/><path transform="matrix(.22245 0 0 .22245 33.217 119.73)" d="m37.012 168.44c-0.91696 0-2.877-6.9055-3.5254-7.5539s-7.5539-2.6084-7.5539-3.5254c0-0.91696 6.9055-2.877 7.5539-3.5254s2.6084-7.5539 3.5254-7.5539 2.877 6.9055 3.5254 7.5539 7.5539 2.6084 7.5539 3.5254c0 0.91697-6.9055 2.877-7.5539 3.5254s-2.6084 7.5539-3.5254 7.5539z" stroke-width="2.2386"/><path transform="matrix(.30265 0 0 .30265 32.642 100.3)" d="m37.012 168.44c-0.91696 0-2.877-6.9055-3.5254-7.5539s-7.5539-2.6084-7.5539-3.5254c0-0.91696 6.9055-2.877 7.5539-3.5254s2.6084-7.5539 3.5254-7.5539 2.877 6.9055 3.5254 7.5539 7.5539 2.6084 7.5539 3.5254c0 0.91697-6.9055 2.877-7.5539 3.5254s-2.6084 7.5539-3.5254 7.5539z" stroke-width="1.6454"/></g></g></g></svg>
