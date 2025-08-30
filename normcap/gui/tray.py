@@ -262,6 +262,12 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.installed_languages = installed_languages
 
     @QtCore.Slot()
+    def _schedule_detection(self, rect: Rect, screen_idx: int) -> None:
+        """Schedule detection to run after window closing is complete."""
+        # Use a single-shot timer to defer detection execution
+        QtCore.QTimer.singleShot(1, lambda: self._trigger_detect(rect, screen_idx))
+
+    @QtCore.Slot()
     def _trigger_detect(self, rect: Rect, screen_idx: int) -> None:
         """Crop screenshot, perform content recognition on it and process result."""
         cropped_screenshot = utils.crop_image(
@@ -442,7 +448,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Set up signals to trigger program logic."""
         self.activated.connect(self._handle_tray_click)
         self.com.on_region_selected.connect(self._close_windows)
-        self.com.on_region_selected.connect(self._trigger_detect)
+        self.com.on_region_selected.connect(self._schedule_detection)
         self.com.on_languages_changed.connect(self._sanitize_language_setting)
         self.com.on_languages_changed.connect(self._update_installed_languages)
         self.com.exit_application.connect(self._exit_application)
