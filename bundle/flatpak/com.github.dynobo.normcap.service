@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=com.github.dynobo.normcap
+Exec=/app/bin/normcap --dbus-activation

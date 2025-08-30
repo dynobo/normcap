@@ -115,6 +115,11 @@ def create_argparser() -> argparse.ArgumentParser:
             "of auto-selecting"
         ),
     )
+    parser.add_argument(
+        "--dbus-activation",
+        action="store_true",
+        help=argparse.SUPPRESS,
+    )
     return parser
 
 
