@@ -91,6 +91,10 @@ def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
     """
     args = _get_args()
 
+    if args.dbus_activation:
+        # TODO: Properly implement notification action
+        sys.exit(0)
+
     _prepare_logging(
         log_level=str(getattr(args, "verbosity", "ERROR")),
         log_file=getattr(args, "log_file", Path.cwd() / "normcap.log"),

@@ -45,23 +45,24 @@ def test_argparser_defaults_are_complete():
     # THEN an expected set of options should be present with default values
     expected_options = {
         "background_mode",
-        "color",
         "cli_mode",
-        "language",
-        "log_file",
-        "parse_text",
+        "clipboard_handler",
+        "color",
+        "dbus_activation",
         "detect_codes",
         "detect_text",
+        "language",
+        "log_file",
+        "notification_handler",
         "notification",
+        "parse_text",
         "reset",
+        "screenshot_handler",
+        "show_introduction",
         "tray",
         "update",
         "verbosity",
         "version",
-        "show_introduction",
-        "clipboard_handler",
-        "screenshot_handler",
-        "notification_handler",
     }
     args_keys = set(vars(parsed_args).keys())
     assert args_keys == expected_options
@@ -118,6 +119,7 @@ def test_argparser_attributes_in_settings():
         "background_mode",
         "cli_mode",
         "clipboard_handler",
+        "dbus_activation",
         "log_file",
         "notification_handler",
         "reset",
@@ -134,8 +136,13 @@ def test_argparser_attributes_in_settings():
 def test_settings_in_argparser_attributes():
     argparser_defaults = vars(utils.create_argparser().parse_args([]))
     settings = Settings(organization="normcap_TEST")
+    settings_without_arg = {
+        "current-version",
+        "last-update-check",
+        "has-screenshot-permission",
+    }
     for key in settings.allKeys():
-        if key in {"current-version", "last-update-check", "has-screenshot-permission"}:
+        if key in settings_without_arg:
             continue
         assert key.replace("-", "_") in argparser_defaults
 
@@ -146,6 +153,7 @@ def test_argparser_defaults_are_correct():
     assert argparser_defaults.pop("version") is False
     assert argparser_defaults.pop("cli_mode") is False
     assert argparser_defaults.pop("background_mode") is False
+    assert argparser_defaults.pop("dbus_activation") is False
     assert argparser_defaults.pop("verbosity") == "warning"
     for value in argparser_defaults.values():
         assert value is None
