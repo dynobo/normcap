@@ -472,15 +472,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-use-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example use-cases
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#user-interface" class="md-nav__link">
     <span class="md-ellipsis">
       User Interface
@@ -493,6 +484,15 @@
   <a href="#detection-settings" class="md-nav__link">
     <span class="md-ellipsis">
       Detection settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemplary-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exemplary use cases
     </span>
   </a>
   
@@ -610,15 +610,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-use-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example use-cases
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#user-interface" class="md-nav__link">
     <span class="md-ellipsis">
       User Interface
@@ -631,6 +622,15 @@
   <a href="#detection-settings" class="md-nav__link">
     <span class="md-ellipsis">
       Detection settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemplary-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exemplary use cases
     </span>
   </a>
   
@@ -667,44 +667,45 @@
 
 <h2 id="quickstart">Quickstart<a class="headerlink" href="#quickstart" title="Permanent link">¶</a></h2>
 <ol>
-<li>Start NormCap and wait until a pink border appears.</li>
-<li>Select a region on the screen with your mouse. <br>
-   Then wait for a notification or a pink tray icon to appear to indicate, that the processing finished.</li>
-<li>The detected text gets copied into your system clipboard, paste it into any application.</li>
-<li>Use the menu <span class="md-pink">⚙</span> in the top right corner to adjust settings.</li>
+<li>Start NormCap and wait for the pink border to appear.</li>
+<li>Select a screen region with your mouse and wait for the notification or pink tray icon.</li>
+<li>Paste the detected text from your clipboard into any application.</li>
+<li>Access settings via the <span class="md-pink">⚙</span> menu in the top right corner.</li>
 </ol>
-<p><a class="glightbox" href="../assets/screenshot.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="" src="../assets/screenshot.png" /></a></p>
-<h2 id="example-use-cases">Example use-cases<a class="headerlink" href="#example-use-cases" title="Permanent link">¶</a></h2>
-<ul>
-<li>Extract text from screenshots you received via mail.</li>
-<li>Copy error messages from non-selectable UI elements.</li>
-<li>Retrieve information from photos.</li>
-<li>Capture mail addresses from "crawler safe" images on the web.</li>
-</ul>
+<p><a class="glightbox" href="../assets/screenshot.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Screenshot of NormCap interface" src="../assets/screenshot.png" /></a></p>
 <h2 id="user-interface">User Interface<a class="headerlink" href="#user-interface" title="Permanent link">¶</a></h2>
 <ul>
-<li>The settings can be accessed via the <span class="md-pink">⚙</span>-icon in the top right.</li>
-<li>In the settings, you can adjust the language(s) you are trying to recognize, which is important for a good accuracy.</li>
-<li>The icons <span class="md-pink">★</span> or <span class="md-pink">☰</span> next to the selection-rectangle indicate the active "capture mode" (see below).</li>
-<li>To abort a capture or quit NormCap press <code>&lt;esc&gt;</code></li>
+<li>Access settings via the <span class="md-pink">⚙</span> icon in the top right of your primary monitor.</li>
+<li>Adjust recognition language(s) in settings for better accuracy.</li>
+<li>The icons <span class="md-pink">★</span> or <span class="md-pink">☰</span> next to the selection rectangle indicate "Parse Text" status (see below).</li>
+<li>Press <code>&lt;esc&gt;</code> to abort capture or quit NormCap.</li>
 </ul>
 <h2 id="detection-settings">Detection settings<a class="headerlink" href="#detection-settings" title="Permanent link">¶</a></h2>
 <p>The settings menu <span class="md-pink">⚙</span> allows toggling various detection modes:</p>
+<h3 id="detection">"Detection"<a class="headerlink" href="#detection" title="Permanent link">¶</a></h3>
 <ul>
 <li>
-<p><strong>Raw</strong></p>
-<p>If no detection setting is active, the selection rectangle gets marked with the
-<span class="md-pink">☰</span> symbol: it returns text just as detected by the OCR
-software. For example, all line-breaks are preserved.</p>
+<p><strong>Text</strong></p>
+<p>Extracts text from the selected area.</p>
 </li>
 <li>
-<p><strong>Parse Text</strong> <small>(default)</small></p>
-<p>Indicated by the <span class="md-pink">★</span> symbol, it performs some formatting of the output based on certain implemented rules, which can take additional information like text position and content into account. In a first step, every rule calculates a "score" to determine the likelihood of being responsible for this type of text. In a second step, the rule which achieved the highest "score" takes the necessary actions to "transform" the input text according to its type. The following rules are currently implemented:</p>
-<p><strong>Heuristics performed in parse-mode:</strong></p>
+<p><strong>QR &amp; Barcodes</strong></p>
+<p>Detects and decodes QR codes and barcodes in the selected area. Data from multiple codes are separated by newlines.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>When both "Text" and "QR &amp; Barcode" are active, "QR &amp; Barcode" takes priority: if a code is found, text detection is skipped.</p>
+</div>
+</li>
+</ul>
+<h3 id="post-processing">"Post-Processing"<a class="headerlink" href="#post-processing" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p><strong>Parse Text</strong></p>
+<p>When active, the selection rectangle gets marked with a <span class="md-pink">★</span> symbol. This mode performs some formatting of the output based on certain implemented rules, which can take additional information like text position and content into account. In the first step, every rule calculates a "score" to determine the likelihood of being responsible for this type of text. In the second step, the rule which achieved the highest "score" takes the necessary actions to "transform" the input text according to its type. The following rules are currently implemented:</p>
 <table>
 <thead>
 <tr>
-<th><strong>Rule name</strong></th>
+<th><strong>Rule name</strong></th>
 <th><strong>Score heuristics</strong></th>
 <th><strong>Transform</strong></th>
 </tr>
@@ -712,32 +713,42 @@ software. For example, all line-breaks are preserved.</p>
 <tbody>
 <tr>
 <td><strong>Single line</strong></td>
-<td>Only single line is detected</td>
+<td>Only single line detected</td>
 <td>Trim unnecessary whitespace</td>
 </tr>
 <tr>
 <td><strong>Multi line</strong></td>
-<td>Multiple lines, but single paragraph</td>
-<td>Separate using line breaks and trim unnecessary whitespace in each line</td>
+<td>Multiple lines, single paragraph</td>
+<td>Separate with line breaks, trim whitespace per line</td>
 </tr>
 <tr>
 <td><strong>Paragraph</strong></td>
-<td>Multiple blocks of lines or multiple paragraphs</td>
-<td>Join every paragraph into a single line, separate different paragraphs by empty line</td>
+<td>Multiple line blocks or paragraphs</td>
+<td>Join paragraphs into single lines, separate with empty lines</td>
 </tr>
 <tr>
-<td><strong>E-Mail</strong></td>
-<td>Number of chars in email addresses vs. overall chars</td>
-<td>Transform to a comma-separated list of email addresses</td>
+<td><strong>Email</strong></td>
+<td>Email address chars vs. total chars</td>
+<td>Transform to comma-separated email list</td>
 </tr>
 <tr>
 <td><strong>URL</strong></td>
-<td>Number of chars in URLs vs. overall chars</td>
-<td>Transform to line-break separated URLs, discard all other characters.</td>
+<td>URL chars vs. total chars</td>
+<td>Transform to newline-separated URLs, discard other characters</td>
 </tr>
 </tbody>
 </table>
 </li>
+</ul>
+<h2 id="exemplary-use-cases">Exemplary use cases<a class="headerlink" href="#exemplary-use-cases" title="Permanent link">¶</a></h2>
+<ul>
+<li>Extract text from screenshots you received via email.</li>
+<li>Copy error messages from non-selectable UI elements.</li>
+<li>Retrieve information from photos.</li>
+<li>Capture email addresses from "crawler safe" images on the web.</li>
+<li>Scan QR codes in livestreams or online presentations.</li>
+<li>Read barcodes from product pictures.</li>
+<li><em>... and many more!</em></li>
 </ul>
 
 

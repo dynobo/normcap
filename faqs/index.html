@@ -502,15 +502,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#development" class="md-nav__link">
-    <span class="md-ellipsis">
-      Development
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -609,15 +600,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#development" class="md-nav__link">
-    <span class="md-ellipsis">
-      Development
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -652,12 +634,12 @@
 <p>The quality of detections is mainly determined by
 <a href="https://tesseract-ocr.github.io">Tesseract</a>, an open source project for OCR of
 <em>printed</em> text. NormCap builds upon this great library and can influence the quality
-only a bit by preprocessing the images regarding screen specific properties. <em>You</em>, the
+only slightly by preprocessing the images regarding screen-specific properties. <em>You</em>, the
 user, have much more influence on the quality by paying attention to certain aspects:</p>
 <h4 id="1-select-the-correct-language">1) Select the correct language<a class="headerlink" href="#1-select-the-correct-language" title="Permanent link">¶</a></h4>
 <p>Make sure to select the appropriate language(s) in the settings. Selecting multiple languages might slow down the recognition.</p>
 <h4 id="2-avoid-selecting-decorations">2) Avoid selecting decorations<a class="headerlink" href="#2-avoid-selecting-decorations" title="Permanent link">¶</a></h4>
-<p>The text detection is very sensible to elements
+<p>The text detection is very sensitive to elements
 <em>other</em> than text, for example borders, lines or icons. If possible, do not select
 those:</p>
 <p><a class="glightbox" href="../assets/selections_1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="How to avoid borders" src="../assets/selections_1.png" /></a></p>
@@ -679,7 +661,7 @@ of text can improve the accuracy.</p>
 <h4 id="6-try-different-language-models">6) Try different language models<a class="headerlink" href="#6-try-different-language-models" title="Permanent link">¶</a></h4>
 <p>The prebuilt NormCap packages are using
 <a href="https://github.com/tesseract-ocr/tessdata_fast">tessdata-fast</a> models, which offer
-a very good accuracy to speed compromise. But you can also try the slower and
+a very good accuracy-to-speed compromise. But you can also try the slower and
 larger models from <a href="https://github.com/tesseract-ocr/tessdata">tessdata</a> or
 <a href="https://github.com/tesseract-ocr/tessdata_best">tessdata-best</a> instead.\
 To find
@@ -705,7 +687,7 @@ and installation method:</p>
 <li><strong>On Linux (AUR):</strong> <code>normcap</code></li>
 <li><strong>Installed as Python package:</strong> <code>normcap</code></li>
 </ul>
-<p>NormCap has some useful command line feature, you can list them by appending the flag
+<p>NormCap has some useful command line features. List them by appending the flag
 <code>--help</code> to the command mentioned above.</p>
 </details>
 <details class="question">
@@ -725,9 +707,9 @@ following these guides:</p>
 <h4 id="linux"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.62 8.35c-.42.28-1.75 1.04-1.95 1.19-.39.31-.75.29-1.14-.01-.2-.16-1.53-.92-1.95-1.19-.48-.31-.45-.7.08-.92 1.64-.69 3.28-.64 4.91.03.49.21.51.6.05.9m7.22 7.28c-.93-2.09-2.2-3.99-3.84-5.66a4.3 4.3 0 0 1-1.06-1.88c-.1-.33-.17-.67-.24-1.01-.2-.88-.29-1.78-.7-2.61-.73-1.58-2-2.4-3.84-2.47-1.81.05-3.16.81-3.95 2.4-.21.43-.36.88-.46 1.34-.17.76-.32 1.55-.5 2.32-.15.65-.45 1.21-.96 1.71-1.61 1.57-2.9 3.37-3.88 5.35-.14.29-.28.58-.37.88-.19.66.29 1.12.99.96.44-.09.88-.18 1.3-.31.41-.15.57-.05.67.35.65 2.15 2.07 3.66 4.24 4.5 4.12 1.56 8.93-.66 9.97-4.58.07-.27.17-.37.47-.27.46.14.93.24 1.4.35.49.09.85-.16.92-.64.03-.26-.06-.49-.16-.73"/></svg></span> Linux<a class="headerlink" href="#linux" title="Permanent link">¶</a></h4>
 <ul>
 <li>Ubuntu/Gnome:
-  <a href="https://help.ubuntu.com/stable/ubuntu-help/keyboard-shortcuts-set.html">Set Keyboard Shortcuts</a></li>
+    <a href="https://help.ubuntu.com/stable/ubuntu-help/keyboard-shortcuts-set.html">Set Keyboard Shortcuts</a></li>
 <li>Manjaro/Xfce, Plasma:
-  <a href="https://wiki.manjaro.org/index.php?title=Keyboard_Shortcuts">Keyboard Shortcuts</a></li>
+    <a href="https://wiki.manjaro.org/index.php?title=Keyboard_Shortcuts">Keyboard Shortcuts</a></li>
 </ul>
 <p>To identify the command to run NormCap, please see the FAQ
 "<a href="#how-can-i-start-normcap-via-command-line-interface">How can I start NormCap via command line interface?</a>"</p>
@@ -748,13 +730,13 @@ discussion</a>.</p>
 search for tutorials how to run that on start-up, e.g.:</p>
 <ul>
 <li>Windows:
-  <a href="https://www.howtogeek.com/208224/how-to-add-a-program-to-startup-in-windows/">How to Add a Program to Startup in Windows 10 or 11</a></li>
+    <a href="https://www.howtogeek.com/208224/how-to-add-a-program-to-startup-in-windows/">How to Add a Program to Startup in Windows 10 or 11</a></li>
 <li>macOS:
-  <a href="https://www.howtogeek.com/877239/how-to-change-startup-programs-on-a-mac/#how-to-add-a-startup-program-on-a-mac">How to add a startup program on a Mac</a></li>
+    <a href="https://www.howtogeek.com/877239/how-to-change-startup-programs-on-a-mac/#how-to-add-a-startup-program-on-a-mac">How to add a startup program on a Mac</a></li>
 <li>Linux (Gnome):
-  <a href="https://www.simplified.guide/gnome/automatically-run-program-on-startup">Automatically run program on startup</a></li>
+    <a href="https://www.simplified.guide/gnome/automatically-run-program-on-startup">Automatically run program on startup</a></li>
 <li>Linux (KDE):
-  <a href="https://www.simplified.guide/kde/automatically-run-program-on-startup">How to automatically run program on KDE startup</a></li>
+    <a href="https://www.simplified.guide/kde/automatically-run-program-on-startup">How to automatically run program on KDE startup</a></li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -776,7 +758,12 @@ system tray, without triggering a capture.</p>
 <p>The prebuilt packages are shipped with support for English only. To install additional
 languages, click the settings icon and in the "Languages" section of the menu click
 "add/remove …".</p>
-<p>If you installed NormCap as Python package, it depends on your system and setup. Please search online.</p>
+<p>If you installed NormCap as a Python package, how to add Tesseract languages depends on your system and setup. Please search online for instructions specific to your environment.</p>
+</details>
+<details class="question">
+<summary>What types of QR codes and barcodes does NormCap support?</summary>
+<h3 id="what-types-of-qr-codes-and-barcodes-does-normcap-support">What types of QR codes and barcodes does NormCap support?<a class="headerlink" href="#what-types-of-qr-codes-and-barcodes-does-normcap-support" title="Permanent link">¶</a></h3>
+<p>NormCap uses the excellent <a href="https://github.com/zxing-cpp/zxing-cpp">ZXing-C++</a> library for code detection and decoding. This means NormCap can detect and decode <a href="https://github.com/zxing-cpp/zxing-cpp?tab=readme-ov-file#supported-formats">all formats supported by ZXing-C++</a>.</p>
 </details>
 <details class="question">
 <summary>Why is the Windows-Installer's file size so large?</summary>
@@ -791,9 +778,9 @@ some feedback regarding this topic!</p>
 </details>
 <details class="question">
 <summary>Is any data send to the internet?</summary>
-<h3 id="is-any-data-send-to-the-internet">Is any data send to the internet?<a class="headerlink" href="#is-any-data-send-to-the-internet" title="Permanent link">¶</a></h3>
+<h3 id="is-any-data-sent-to-the-internet">Is any data sent to the internet?<a class="headerlink" href="#is-any-data-sent-to-the-internet" title="Permanent link">¶</a></h3>
 <p>In general, NormCap works offline and does not send any data anywhere.</p>
-<p>The only exceptions are optional features, which <em>require</em> accessing resources on the internet. In that case, HTTPS request are performed and generate the typical access log data on the target server.</p>
+<p>The only exceptions are optional features, which <em>require</em> accessing resources on the internet. In that case, HTTPS requests are performed and generate the typical access log data on the target server.</p>
 <p>Those features are:</p>
 <ul>
 <li><strong>Update check</strong>: If you enable the check for updates on start, NormCap regularly fetches its releases page from GitHub.</li>
@@ -805,7 +792,7 @@ some feedback regarding this topic!</p>
 <h3 id="are-there-alternatives-to-normcap">Are there alternatives to NormCap?<a class="headerlink" href="#are-there-alternatives-to-normcap" title="Permanent link">¶</a></h3>
 <p>Some applications offer similar features like NormCap and might be a good or even better
 alternative for you: It completely depends on your use case and requirements. Some
-similar open-source Projects are:</p>
+similar open-source projects are:</p>
 <ul>
 <li><a href="https://github.com/RajSolai/TextSnatcher">TextSnatcher</a> (Linux)</li>
 <li><a href="https://getgreenshot.org/">GreenShot</a> (Windows, macOS)</li>
@@ -817,7 +804,7 @@ similar open-source Projects are:</p>
 <li><a href="https://github.com/TheJoeFin/Text-Grab">Text-Grab</a> (Windows)</li>
 <li><a href="https://danpla.github.io/dpscreenocr/">dpScreenOCR</a> (Linux, Windows)</li>
 <li><a href="https://learn.microsoft.com/en-us/windows/powertoys/text-extractor">PowerToys Text Extractor</a>
-  (Windows)</li>
+    (Windows)</li>
 </ul>
 </details>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">¶</a></h2>
@@ -853,8 +840,56 @@ and you <em>might</em> have to re-download languages.)</p>
 <a href="https://github.com/dynobo/normcap/issues/new/choose">report that issue</a>.</p>
 </details>
 <details class="question">
-<summary>[Linux] Normcap does not show up in system tray</summary>
-<h3 id="linux-normcap-does-not-show-up-in-system-tray">[Linux] Normcap does not show up in system tray<a class="headerlink" href="#linux-normcap-does-not-show-up-in-system-tray" title="Permanent link">¶</a></h3>
+<summary>[Linux] NormCap is missing screenshot permissions</summary>
+<h3 id="linux-normcap-is-missing-screenshot-permissions">[Linux] NormCap is missing screenshot permissions<a class="headerlink" href="#linux-normcap-is-missing-screenshot-permissions" title="Permanent link">¶</a></h3>
+<p><strong>Why is it so difficult for NormCap to take screenshots?</strong></p>
+<p>The <a href="https://wayland.freedesktop.org/">Wayland</a> protocol (successor to <a href="https://x.org/wiki/">X Window System</a>) requires applications to request permission for system features like taking screenshots. While this improves security, the protocol is challenging for developers to implement. The variety of Wayland servers, window managers, and versions with different implementations makes building compatible applications difficult. Most third-party screenshot tools face these same issues.</p>
+<p><strong>If you installed NormCap as Flatpak:</strong></p>
+<ol>
+<li>View the permissions by running:
+    <div class="highlight"><pre><span></span><code>flatpak<span class="w"> </span>permission-show<span class="w"> </span>com.github.dynobo.normcap
+</code></pre></div>
+    In the output, there should be a line like:
+    <div class="highlight"><pre><span></span><code>screenshot<span class="w">    </span>screenshot<span class="w">   </span>com.github.dynobo.normcap<span class="w"> </span><span class="o">[</span>yes<span class="o">]</span>
+</code></pre></div></li>
+<li>If that is not the case, set the permission explicitly:
+    <div class="highlight"><pre><span></span><code>flatpak<span class="w"> </span>permission-set<span class="w"> </span>screenshot<span class="w"> </span>screenshot<span class="w"> </span>com.github.dynobo.normcap<span class="w"> </span>yes
+</code></pre></div></li>
+</ol>
+<p><strong>If you're using the NormCap AppImage:</strong></p>
+<ol>
+<li>List all applications with screenshot permissions:
+    <div class="highlight"><pre><span></span><code>dbus-send<span class="w"> </span>--print-reply<span class="o">=</span>literal<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--session<span class="w"> </span>--dest<span class="o">=</span>org.freedesktop.impl.portal.PermissionStore<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/org/freedesktop/impl/portal/PermissionStore<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>org.freedesktop.impl.portal.PermissionStore.Lookup<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>string:<span class="s1">&#39;screenshot&#39;</span><span class="w"> </span>string:<span class="s1">&#39;screenshot&#39;</span>
+</code></pre></div>
+    Among the entries in the output, there should be something like:
+    <div class="highlight"><pre><span></span><code>dict<span class="w"> </span>entry<span class="o">(</span>
+<span class="w">     </span>com.github.dynobo.normcap<span class="w">         </span>array<span class="w"> </span><span class="o">[</span>
+<span class="w">        </span><span class="o">[</span>yes<span class="o">]</span><span class="w">         </span><span class="o">]</span>
+<span class="w">  </span><span class="o">)</span>
+</code></pre></div></li>
+<li>If that is not the case, grant permission by running:
+    <div class="highlight"><pre><span></span><code>dbus-send<span class="w"> </span>--print-reply<span class="o">=</span>literal<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--session<span class="w"> </span>--dest<span class="o">=</span>org.freedesktop.impl.portal.PermissionStore<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>/org/freedesktop/impl/portal/PermissionStore<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>org.freedesktop.impl.portal.PermissionStore.SetPermission<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>string:<span class="s1">&#39;screenshot&#39;</span><span class="w"> </span>boolean:true<span class="w"> </span>string:<span class="s1">&#39;screenshot&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>string:<span class="s1">&#39;com.github.dynobo.normcap&#39;</span><span class="w"> </span>array:string:<span class="o">[</span><span class="s1">&#39;yes&#39;</span><span class="o">]</span>
+</code></pre></div></li>
+</ol>
+<p><strong>Further tips for debugging:</strong></p>
+<ul>
+<li>If starting NormCap from a terminal or shell script, ensure the calling context (e.g., the terminal application) has been granted screenshot permission.</li>
+<li>Run NormCap with the <code>-v debug</code> flag and look for warnings or errors in the output.</li>
+<li>Run <code>dbus-monitor --session</code> while starting NormCap and check the (quite verbose) output for screenshot or permission-related messages.</li>
+</ul>
+</details>
+<details class="question">
+<summary>[Linux] NormCap does not show up in system tray</summary>
+<h3 id="linux-normcap-does-not-show-up-in-system-tray">[Linux] NormCap does not show up in system tray<a class="headerlink" href="#linux-normcap-does-not-show-up-in-system-tray" title="Permanent link">¶</a></h3>
 <p>Is your display environment Gnome Shell? Then you probably need to install a
 <a href="https://extensions.gnome.org/">Gnome Shell extension</a> to support showing applications
 in the top bar, e.g.:</p>
@@ -869,7 +904,7 @@ in the top bar, e.g.:</p>
 <summary>[Linux] NormCap doesn't show a notification after capture</summary>
 <h3 id="linux-normcap-doesnt-show-a-notification-after-capture">[Linux] NormCap doesn't show a notification after capture<a class="headerlink" href="#linux-normcap-doesnt-show-a-notification-after-capture" title="Permanent link">¶</a></h3>
 <p>NormCap's notifications depend on the system tray functionality. If you start NormCap,
-but its Icon doesn't appear in the system tray, proceed like in the question above.</p>
+but its Icon doesn't appear in the system tray, proceed like in the <a href="#linux-normcap-does-not-show-up-in-system-tray">question above</a>.</p>
 </details>
 <details class="question">
 <summary>[Linux] Error: Could not load the Qt platform plugin</summary>
@@ -894,7 +929,7 @@ vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl
 <details class="question">
 <summary>[Linux] NormCap doesn't copy the results to clipboard when launched via shortcut</summary>
 <h3 id="linux-normcap-doesnt-copy-the-results-to-clipboard-when-launched-via-shortcut">[Linux] NormCap doesn't copy the results to clipboard when launched via shortcut<a class="headerlink" href="#linux-normcap-doesnt-copy-the-results-to-clipboard-when-launched-via-shortcut" title="Permanent link">¶</a></h3>
-<p>This is behavior
+<p>This behavior
 <a href="https://github.com/dynobo/normcap/issues/422">was observed only on KDE + Wayland (#422)</a>
 so far, and only when NormCap was started via a keyboard shortcut / key binding. The
 root cause is still unknown, if you have any information or ideas, please comment in the
@@ -913,50 +948,31 @@ the <code>FUSE</code> library is installed on your system. E.g. on Ubuntu 22.04 
 <code>sudo apt install libfuse2</code>.</p>
 <p>See
 <a href="https://techpiezo.com/linux/error-appimages-require-fuse-to-run-in-ubuntu-22-04/">this blog post for details</a>.</p>
+<p><strong>Please note, that the AppImage build is deprecated. Please switch to the <a href="https://github.com/flathub/com.github.dynobo.normcap">Flatpak build via Flathub</a>.</strong></p>
 </details>
 <details class="question">
 <summary>[macOS] When NormCap is started, an empty desktop shows up</summary>
 <h3 id="macos-when-normcap-is-started-an-empty-desktop-shows-up">[macOS] When NormCap is started, an empty desktop shows up<a class="headerlink" href="#macos-when-normcap-is-started-an-empty-desktop-shows-up" title="Permanent link">¶</a></h3>
-<p>This issue usually occurs on the after installing NormCap, either for the first time or
+<p>This issue usually occurs after installing NormCap, either for the first time or
 after an update.</p>
-<p>This is a known issue related to macOS's permissions settings: If NormCap doesn't have
+<p>It is a known issue related to macOS's permissions settings: If NormCap doesn't have
 the system's permission to take a screenshot, an empty desktop will be
-shown. Or to be precise: NormCap doesn't <em>know</em> that it lacks permissions,
+shown. Or to be more precise: NormCap doesn't <em>know</em> that it lacks permissions,
 tries to take a screenshot nevertheless, which results in a screenshot of the empty
-desktop.</small></p>
+desktop.</p>
 <p>Steps to solve this:</p>
 <ol>
 <li>Close NormCap, if it is running.</li>
 <li>Navigate to "System Preferences" → "Security &amp; Privacy" → "Privacy" → "Screen
-   Recording" → "Click unlock".</li>
+    Recording" → "Click unlock".</li>
 <li>Do you already see "NormCap" on the right side? If yes, "remove" [–] it.
-   <strong>Un-ticking the checkbox is not enough!</strong></li>
+    <strong>Un-ticking the checkbox is not enough!</strong></li>
 <li>Click "add" [+] → "Applications" → "NormCap".</li>
 <li>Confirm that you see NormCap on the right side with a checkmark in front of it.</li>
 <li>Start NormCap, it should work now.</li>
 <li>You might need to repeat those steps after installing a new version of NormCap.</li>
 </ol>
 <p>Hopefully, this cumbersome user experience can be improved in a future release.</p>
-</details>
-<h2 id="development">Development<a class="headerlink" href="#development" title="Permanent link">¶</a></h2>
-<details class="question">
-<summary>"No such file or directory" error when running 'briefcase build'</summary>
-<h3 id="no-such-file-or-directory-error-when-running-briefcase-build">"No such file or directory" error when running <code>briefcase build</code><a class="headerlink" href="#no-such-file-or-directory-error-when-running-briefcase-build" title="Permanent link">¶</a></h3>
-<p>To verify, if this is the issue you are facing, run the docker image interactively and
-try to run the <code>linuxdeploy-*.AppImage</code> file there:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--volume<span class="w"> </span>/home/&lt;USER&gt;/&lt;PROJECT<span class="w"> </span>PATH&gt;/normcap/linux:/app:z<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--volume<span class="w"> </span>/home/&lt;USER&gt;/.briefcase:/home/brutus/.briefcase:z<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--env<span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.2.0<span class="w"> </span>briefcase/eu.dynobo.normcap:py3.9<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>/bin/bash
-$<span class="w"> </span>/home/brutus/.briefcase/tools/linuxdeploy-x86_64.AppImage
-</code></pre></div>
-<p>If that results in a <code>No such file or directory</code> error, according to
-<a href="https://github.com/AppImage/AppImageKit/issues/1027#issuecomment-641601097">this issue</a>
-and <a href="https://github.com/AppImage/AppImageKit/issues/828">this one</a> a workaround is to
-correct the "magic" bytes of the AppImage. This worked for me:</p>
-<div class="highlight"><pre><span></span><code>sed<span class="w"> </span><span class="s1">&#39;0,/AI\x02/{s|AI\x02|\x00\x00\x00|}&#39;</span><span class="w"> </span>-i<span class="w"> </span>linuxdeploy-x86_64.AppImage
-</code></pre></div>
 </details>
 
 
