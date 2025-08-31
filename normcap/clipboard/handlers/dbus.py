@@ -28,10 +28,13 @@ depending on the specific portal implementation and desktop environment.
 
 import logging
 import os
+import random
+import time
 from typing import Optional
 
 from jeepney import new_method_call
-from jeepney.io.blocking import Proxy, open_dbus_connection
+from jeepney.io.blocking import DBusConnection, Proxy, open_dbus_connection
+from jeepney.low_level import HeaderFields
 from jeepney.wrappers import MessageGenerator
 
 from normcap.clipboard import system_info
@@ -149,25 +152,38 @@ def _get_or_create_session() -> Optional[str]:
             remote_desktop_proxy = Proxy(DBusRemoteDesktopPortal(), connection)
 
             # Create session with a unique token
-            session_token = f"normcap_session_{os.getpid()}"
+            random_str = "".join(random.choice("abcdefghi") for _ in range(8))  # noqa: S311
+            token = f"normcap_{random_str}"
             create_options = {
-                "session_handle_token": ("s", session_token),
+                "session_handle_token": ("s", token),
             }
 
             # This returns a request handle, not the session handle directly
             request_handle = remote_desktop_proxy.create_session(create_options)[0]
             logger.debug("Created session request: %s", request_handle)
 
-            # For simplicity, construct the expected session handle path
-            # In a real implementation, you'd listen for the Response signal
-            # from the request to get the actual session handle
-            session_handle = f"/org/freedesktop/portal/desktop/session/{session_token}"
+            # Wait for the Response signal to get the actual session handle
+            session_handle = _wait_for_request_response(connection, request_handle)
+            if not session_handle:
+                logger.warning("Failed to get session handle from Response signal")
+                return None
 
-            # Try to request clipboard access for this session
+            # Now request clipboard access for this session
             clipboard_proxy = Proxy(DBusClipboardPortal(), connection)
             clipboard_options: dict = {}
+            logger.debug("Created clipboard proxy")
 
-            clipboard_proxy.request_clipboard(session_handle, clipboard_options)
+            # Request clipboard access and wait for response
+            clipboard_request = clipboard_proxy.request_clipboard(
+                session_handle, clipboard_options
+            )
+            logger.debug("Created clipboard request: %s", clipboard_request)
+
+            # Wait for clipboard access response
+            # clipboard_granted = _wait_for_request_response(connection, session_handle)
+            # if not clipboard_granted:
+            #    logger.warning("Clipboard access was denied")
+            #    return None
 
             _session_manager.session_handle = session_handle
             logger.debug(
@@ -176,9 +192,81 @@ def _get_or_create_session() -> Optional[str]:
             )
             return _session_manager.session_handle
 
-    except Exception as exc:
-        logger.warning("Failed to create clipboard session: %s", exc)
+    except Exception:
+        logger.exception("Failed to create clipboard session")
         return None
+
+
+def _wait_for_request_response(
+    connection: DBusConnection, request_handle: str, timeout: float = 10.0
+) -> Optional[str]:
+    """Wait for a Response signal on the given request handle.
+
+    Args:
+        connection: The D-Bus connection
+        request_handle: The request handle to wait for
+        timeout: Timeout in seconds
+
+    Returns:
+        For session creation: session handle if successful, None otherwise
+        For other requests: the request handle itself if successful, None otherwise
+    """
+    start_time = time.time()
+    logger.debug("Waiting for response on request: %s", request_handle)
+
+    while time.time() - start_time < timeout:
+        try:
+            # Try to receive a message with a short timeout
+            message = connection.receive(timeout=0.2)
+            logger.debug("Received message: %s", message)
+
+            path = message.header.fields[HeaderFields.path]
+            member = message.header.fields[HeaderFields.member]
+            logger.info("Message path: %s, member: %s", path, member)
+            # Check if this is a Response signal for our request
+            if path == request_handle and member == "Response":
+                logger.debug("Found matching Response signal")
+
+                # Parse the response - format is (response_code, results)
+                min_args_length = 2
+                args = message.body
+                if len(args) >= min_args_length:
+                    response_code, results = args[0], args[1]
+                else:
+                    logger.warning("Unexpected message format: %s", args)
+                    continue
+
+                logger.debug("Response code: %d, Results: %s", response_code, results)
+
+                if response_code == 0:  # Success
+                    # For session creation, extract session handle from results
+                    if isinstance(results, dict) and "session_handle" in results:
+                        session_handle = results["session_handle"]
+                        # Handle both direct string and (type, value) tuple formats
+                        tuple_value_index = 2
+                        if (
+                            isinstance(session_handle, (list, tuple))
+                            and len(session_handle) >= tuple_value_index
+                        ):
+                            session_handle = session_handle[1]
+                        logger.debug("Received session handle: %s", session_handle)
+                        return session_handle
+                    # For other requests, return request handle to indicate success
+                    logger.debug("Request completed successfully")
+                    return request_handle
+
+                logger.warning("Request failed with response code: %d", response_code)
+                return None
+
+        except TimeoutError:
+            logger.debug("No message received within timeout, continue waiting")
+            continue
+        except Exception as exc:
+            logger.debug("Exception while waiting for response: %s", exc)
+            continue
+
+    logger.warning("Timeout waiting for response on request: %s", request_handle)
+    return None
 
 
 def _handle_selection_transfer(
