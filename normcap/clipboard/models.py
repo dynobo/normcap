@@ -40,6 +40,9 @@ class Handler(enum.IntEnum):
     and uses the first one that is detected as compatible.
     """
 
+    # For flatpak applications
+    DBUS = enum.auto()
+
     # For win32
     WINDLL = enum.auto()
 

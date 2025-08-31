@@ -2,7 +2,7 @@ import logging
 
 from normcap.clipboard.models import Handler, HandlerProtocol
 
-from .handlers import pbcopy, qtclipboard, windll, wlclipboard, xclip, xsel
+from .handlers import dbus, pbcopy, qtclipboard, windll, wlclipboard, xclip, xsel
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 _clipboard_handlers: dict[Handler, HandlerProtocol] = {
+    Handler.DBUS: dbus,
     Handler.WINDLL: windll,
     Handler.PBCOPY: pbcopy,
     Handler.QT: qtclipboard,
