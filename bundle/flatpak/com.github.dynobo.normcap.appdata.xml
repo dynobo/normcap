@@ -49,6 +49,7 @@
     <color type="primary" scheme_preference="dark">#3d3d3f</color>
   </branding>
   <releases>
+    <release version="0.6.0" date="2025-08-31" />
     <release version="0.5.9" date="2025-04-23" />
     <release version="0.5.8" date="2024-05-19" />
     <release version="0.5.7" date="2024-05-18" />
