@@ -152,7 +152,7 @@ jobs:
       - name: Run build script
         run: |
           cd com.github.dynobo.normcap
-          python update.py --keep --bundle ${{ github.head_ref }}
+          python update.py --keep --bundle ${{ github.head_ref || github.ref_name }}
 
       - name: Draft internal release
         uses: ./.github/actions/draft-internal-release
