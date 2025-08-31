@@ -7,7 +7,7 @@ hide:
 <div class="grid" markdown>
 
 <div markdown>
-# NormCap v0.6.0-beta2 {.md-title}
+# NormCap v0.6.0 {.md-title}
 
 <p class="md-subtitle">OCR-powered screenshot tool to capture text<br> instead of images.</p>
 
@@ -15,17 +15,17 @@ Packages with the
 [latest changes](https://github.com/dynobo/normcap/blob/main/CHANGELOG) for your system:
 
 <div class="annotate" markdown>
-- [Download for **Windows**](https://github.com/dynobo/normcap/releases/download/v0.6.0-beta2/NormCap-0.6.0-beta2-x86_64-Windows.msi)
+- [Download for **Windows**](https://github.com/dynobo/normcap/releases/download/v0.6.0/NormCap-0.6.0-x86_64-Windows.msi)
   <small>Installer, x86_64, ~120 MB</small>
-- [Download for **Windows**](https://github.com/dynobo/normcap/releases/download/v0.6.0-beta2/NormCap-0.6.0-beta2-x86_64-Windows.zip)
+- [Download for **Windows**](https://github.com/dynobo/normcap/releases/download/v0.6.0/NormCap-0.6.0-x86_64-Windows.zip)
   <small>Portable, x86_64, ~120 MB</small>
 - [Download for **Linux (via Flathub)**](https://flathub.org/apps/details/com.github.dynobo.normcap)
   <small>x86_64, ~350 MB</small>
-- [Download for **Linux (AppImage)¹**](https://github.com/dynobo/normcap/releases/download/v0.6.0-beta2/NormCap-0.6.0-beta2-x86_64.AppImage)
+- [Download for **Linux (AppImage)¹**](https://github.com/dynobo/normcap/releases/download/v0.6.0/NormCap-0.6.0-x86_64.AppImage)
   <small>x86_64, ~90 MB</small>
-- [Download for **macOS**](https://github.com/dynobo/normcap/releases/download/v0.6.0-beta2/NormCap-0.6.0-beta2-x86_64-macOS.dmg)
+- [Download for **macOS**](https://github.com/dynobo/normcap/releases/download/v0.6.0/NormCap-0.6.0-x86_64-macOS.dmg)
   <small>x86_64, ~80 MB</small>
-- [Download for **macOS (M1)**](https://github.com/dynobo/normcap/releases/download/v0.6.0-beta2/NormCap-0.6.0-beta2-arm64-macOS.dmg)
+- [Download for **macOS (M1)**](https://github.com/dynobo/normcap/releases/download/v0.6.0/NormCap-0.6.0-arm64-macOS.dmg)
   <small>arm64, ~65 MB</small>
 </div>
 

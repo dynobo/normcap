@@ -31,9 +31,9 @@ take a look at the [FAQs](https://dynobo.github.io/normcap/#faqs) or
 
 #### Windows
 
-- [NormCap-0.6.0-beta2-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.6.0-beta2/NormCap-0.6.0-beta2-x86_64-Windows.msi)
+- [NormCap-0.6.0-x86_64-Windows.msi](https://github.com/dynobo/normcap/releases/download/v0.6.0/NormCap-0.6.0-x86_64-Windows.msi)
   (Installer)
-- [NormCap-0.6.0-beta2-x86_64-Windows.zip](https://github.com/dynobo/normcap/releases/download/v0.6.0-beta2/NormCap-0.6.0-beta2-x86_64-Windows.zip)
+- [NormCap-0.6.0-x86_64-Windows.zip](https://github.com/dynobo/normcap/releases/download/v0.6.0/NormCap-0.6.0-x86_64-Windows.zip)
   (Portable)
 
 #### Linux
@@ -49,7 +49,7 @@ flatpak install flathub com.github.dynobo.normcap
 
 Alternative options:
 
-- [NormCap-0.6.0-beta2-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.6.0-beta2/NormCap-0.6.0-beta2-x86_64.AppImage) - ⚠️ ***deprecated***
+- [NormCap-0.6.0-x86_64.AppImage](https://github.com/dynobo/normcap/releases/download/v0.6.0/NormCap-0.6.0-x86_64.AppImage) - ⚠️ ***deprecated***
   (Requires [fuse](https://dynobo.github.io/normcap/faqs/#linux-appimage-error-appimages-require-fuse-to-run))
 - [`normcap` @ AUR](https://aur.archlinux.org/packages/normcap) (Arch/Manjaro)
 
@@ -59,9 +59,9 @@ Alternative options:
 "Security & Privacy" → "General" → "Open anyway". You also need to allow NormCap to take
 screenshots. ([#135](https://github.com/dynobo/normcap/issues/135))
 
-- [NormCap-0.6.0-beta2-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.6.0-beta2/NormCap-0.6.0-beta2-x86_64-macOS.dmg)
+- [NormCap-0.6.0-x86_64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.6.0/NormCap-0.6.0-x86_64-macOS.dmg)
   (Installer for x86/64)
-- [NormCap-0.6.0-beta2-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.6.0-beta2/NormCap-0.6.0-beta2-arm64-macOS.dmg)
+- [NormCap-0.6.0-arm64-macOS.dmg](https://github.com/dynobo/normcap/releases/download/v0.6.0/NormCap-0.6.0-arm64-macOS.dmg)
   (Installer for M1)
 
 ## Use Python package
