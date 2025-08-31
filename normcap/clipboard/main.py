@@ -13,12 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 _clipboard_handlers: dict[Handler, HandlerProtocol] = {
-    Handler.DBUS: dbus,
     Handler.WINDLL: windll,
     Handler.PBCOPY: pbcopy,
     Handler.QT: qtclipboard,
     Handler.XSEL: xsel,
     Handler.XCLIP: xclip,
+    Handler.DBUS: dbus,
     Handler.WLCLIPBOARD: wlclipboard,
 }
 

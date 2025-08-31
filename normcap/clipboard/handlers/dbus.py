@@ -1,440 +1,50 @@
-"""D-Bus clipboard handler for flatpak applications.
-
-This module implements clipboard functionality using the freedesktop portal
-D-Bus interfaces, specifically designed for sandboxed applications like
-flatpak packages. It uses the org.freedesktop.portal.Clipboard interface
-in conjunction with org.freedesktop.portal.RemoteDesktop for session management.
-
-The implementation provides:
-- Session management for clipboard access
-- Text clipboard operations via D-Bus portals
-- Signal handling infrastructure for SelectionTransfer events
-- File descriptor-based data transfer methods
-- Temporary file-based clipboard data storage
-- Compatibility checking for flatpak environments
-- Proper error handling and logging
-
-This implementation includes the complete clipboard transfer workflow:
-1. Session creation and clipboard access request
-2. Selection advertisement with MIME types
-3. Data storage for SelectionTransfer signal handling
-4. File descriptor-based data writing capabilities
-5. Transfer completion signaling
-
-Note: The signal handling for SelectionTransfer is implemented but simplified.
-A production implementation might require more robust async signal handling
-depending on the specific portal implementation and desktop environment.
-"""
-
 import logging
 import os
 import random
-import time
-from typing import Optional
-
-from jeepney import new_method_call
-from jeepney.io.blocking import DBusConnection, Proxy, open_dbus_connection
-from jeepney.low_level import HeaderFields
-from jeepney.wrappers import MessageGenerator
 
 from normcap.clipboard import system_info
+from normcap.clipboard.handlers.dbus_clipboard import Clipboard
+from normcap.clipboard.handlers.dbus_session import Session
 
 logger = logging.getLogger(__name__)
 
-install_instructions = ""
 
-DESKTOP_SERVICE = "org.freedesktop.portal.Desktop"
-DESKTOP_PATH = "/org/freedesktop/portal/desktop"
-CLIPBOARD_INTERFACE = "org.freedesktop.portal.Clipboard"
-REMOTE_DESKTOP_INTERFACE = "org.freedesktop.portal.RemoteDesktop"
-INTROSPECTABLE_SERVICE = "org.freedesktop.DBus.Introspectable"
-
-
-class _SessionManager:
-    """Manages the session handle and clipboard data for transfer."""
-
-    def __init__(self) -> None:
-        self.session_handle: Optional[str] = None
-        self.clipboard_text: Optional[str] = None
-        self.pending_transfers: dict[int, str] = {}  # serial -> text mapping
-
-
-_session_manager = _SessionManager()
-
-
-class DBusClipboardPortal(MessageGenerator):
-    """jeepney MessageGenerator for the clipboard portal."""
-
-    interface = CLIPBOARD_INTERFACE
-
-    def __init__(
-        self,
-        object_path: str = DESKTOP_PATH,
-        bus_name: str = DESKTOP_SERVICE,
-    ) -> None:
-        super().__init__(object_path=object_path, bus_name=bus_name)
-
-    def request_clipboard(self, session_handle: str, options: dict) -> object:
-        return new_method_call(
-            self, "RequestClipboard", "oa{sv}", (session_handle, options)
-        )
-
-    def set_selection(self, session_handle: str, options: dict) -> object:
-        return new_method_call(
-            self, "SetSelection", "oa{sv}", (session_handle, options)
-        )
-
-    def selection_write(self, session_handle: str, serial: int) -> object:
-        return new_method_call(self, "SelectionWrite", "ou", (session_handle, serial))
-
-    def selection_write_done(
-        self, session_handle: str, serial: int, success: bool
-    ) -> object:
-        return new_method_call(
-            self, "SelectionWriteDone", "oub", (session_handle, serial, success)
-        )
-
-
-class DBusRemoteDesktopPortal(MessageGenerator):
-    """jeepney MessageGenerator for the remote desktop portal."""
-
-    interface = REMOTE_DESKTOP_INTERFACE
-
-    def __init__(
-        self,
-        object_path: str = DESKTOP_PATH,
-        bus_name: str = DESKTOP_SERVICE,
-    ) -> None:
-        super().__init__(object_path=object_path, bus_name=bus_name)
-
-    def create_session(self, options: dict) -> object:
-        return new_method_call(self, "CreateSession", "a{sv}", (options,))
-
-    def select_devices(self, session_handle: str, options: dict) -> object:
-        return new_method_call(
-            self, "SelectDevices", "oa{sv}", (session_handle, options)
-        )
-
-    def start(self, session_handle: str, parent_window: str, options: dict) -> object:
-        return new_method_call(
-            self, "Start", "osa{sv}", (session_handle, parent_window, options)
-        )
-
-
-class DBusIntrospectable(MessageGenerator):
-    """jeepney MessageGenerator for introspection."""
-
-    interface = INTROSPECTABLE_SERVICE
-
-    def __init__(
-        self,
-        object_path: str = DESKTOP_PATH,
-        bus_name: str = DESKTOP_SERVICE,
-    ) -> None:
-        super().__init__(object_path=object_path, bus_name=bus_name)
-
-    def introspect(self) -> object:
-        return new_method_call(self, "Introspect")
-
-
-def _get_or_create_session() -> Optional[str]:
-    """Get or create a remote desktop session with clipboard access.
-
-    Returns:
-        Session handle object path, or None if failed
-    """
-    if _session_manager.session_handle:
-        return _session_manager.session_handle
-
-    try:
-        with open_dbus_connection() as connection:
-            # Create a new remote desktop session
-            remote_desktop_proxy = Proxy(DBusRemoteDesktopPortal(), connection)
-
-            # Create session with a unique token
-            random_str = "".join(random.choice("abcdefghi") for _ in range(8))  # noqa: S311
-            token = f"normcap_{random_str}"
-            create_options = {
-                "session_handle_token": ("s", token),
-            }
-
-            # This returns a request handle, not the session handle directly
-            request_handle = remote_desktop_proxy.create_session(create_options)[0]
-            logger.debug("Created session request: %s", request_handle)
-
-            # Wait for the Response signal to get the actual session handle
-            session_handle = _wait_for_request_response(connection, request_handle)
-            if not session_handle:
-                logger.warning("Failed to get session handle from Response signal")
-                return None
-
-            # Now request clipboard access for this session
-            clipboard_proxy = Proxy(DBusClipboardPortal(), connection)
-            clipboard_options: dict = {}
-            logger.debug("Created clipboard proxy")
-
-            # Request clipboard access and wait for response
-            clipboard_request = clipboard_proxy.request_clipboard(
-                session_handle, clipboard_options
-            )
-            logger.debug("Created clipboard request: %s", clipboard_request)
-
-            # Wait for clipboard access response
-            # clipboard_granted = _wait_for_request_response(connection, session_handle)
-            # if not clipboard_granted:
-            #    logger.warning("Clipboard access was denied")
-            #    return None
-
-            _session_manager.session_handle = session_handle
-            logger.debug(
-                "Created session with clipboard access: %s",
-                _session_manager.session_handle,
-            )
-            return _session_manager.session_handle
-
-    except Exception:
-        logger.exception("Failed to create clipboard session")
-        return None
-
-
-def _wait_for_request_response(
-    connection: DBusConnection, request_handle: str, timeout: float = 10.0
-) -> Optional[str]:
-    """Wait for a Response signal on the given request handle.
-
-    Args:
-        connection: The D-Bus connection
-        request_handle: The request handle to wait for
-        timeout: Timeout in seconds
-
-    Returns:
-        For session creation: session handle if successful, None otherwise
-        For other requests: the request handle itself if successful, None otherwise
-    """
-    start_time = time.time()
-    logger.debug("Waiting for response on request: %s", request_handle)
-
-    while time.time() - start_time < timeout:
-        try:
-            # Try to receive a message with a short timeout
-            message = connection.receive(timeout=0.2)
-            logger.debug("Received message: %s", message)
-
-            path = message.header.fields[HeaderFields.path]
-            member = message.header.fields[HeaderFields.member]
-            logger.info("Message path: %s, member: %s", path, member)
-            # Check if this is a Response signal for our request
-            if path == request_handle and member == "Response":
-                logger.debug("Found matching Response signal")
-
-                # Parse the response - format is (response_code, results)
-                min_args_length = 2
-                args = message.body
-                if len(args) >= min_args_length:
-                    response_code, results = args[0], args[1]
-                else:
-                    logger.warning("Unexpected message format: %s", args)
-                    continue
-
-                logger.debug("Response code: %d, Results: %s", response_code, results)
-
-                if response_code == 0:  # Success
-                    # For session creation, extract session handle from results
-                    if isinstance(results, dict) and "session_handle" in results:
-                        session_handle = results["session_handle"]
-                        # Handle both direct string and (type, value) tuple formats
-                        tuple_value_index = 2
-                        if (
-                            isinstance(session_handle, (list, tuple))
-                            and len(session_handle) >= tuple_value_index
-                        ):
-                            session_handle = session_handle[1]
-                        logger.debug("Received session handle: %s", session_handle)
-                        return session_handle
-                    # For other requests, return request handle to indicate success
-                    logger.debug("Request completed successfully")
-                    return request_handle
-
-                logger.warning("Request failed with response code: %d", response_code)
-                return None
-
-        except TimeoutError:
-            logger.debug("No message received within timeout, continue waiting")
-            continue
-        except Exception as exc:
-            logger.debug("Exception while waiting for response: %s", exc)
-            continue
-
-    logger.warning("Timeout waiting for response on request: %s", request_handle)
-    return None
-
-
-def _handle_selection_transfer(
-    session_handle: str, mime_type: str, serial: int, text: str
-) -> None:
-    """Handle a SelectionTransfer signal by writing the clipboard data.
-
-    Args:
-        session_handle: The session requesting the data
-        mime_type: The requested MIME type
-        serial: Serial number for tracking this transfer
-        text: The text to write to the clipboard
-    """
-    try:
-        with open_dbus_connection() as connection:
-            clipboard_proxy = Proxy(DBusClipboardPortal(), connection)
-
-            # Get file descriptor for writing
-            fd_handle = clipboard_proxy.selection_write(session_handle, serial)[0]
-
-            # Write the text data to the file descriptor
-            with os.fdopen(fd_handle, "w", encoding="utf-8") as fd_file:
-                fd_file.write(text)
-                fd_file.flush()
-
-            # Notify that the transfer completed successfully
-            clipboard_proxy.selection_write_done(session_handle, serial, True)
-            logger.debug(
-                "Successfully transferred clipboard data for serial %d", serial
-            )
-
-    except Exception as exc:
-        logger.warning("Failed to handle selection transfer: %s", exc)
-        try:
-            with open_dbus_connection() as connection:
-                clipboard_proxy = Proxy(DBusClipboardPortal(), connection)
-                clipboard_proxy.selection_write_done(session_handle, serial, False)
-        except Exception:
-            logger.exception("Failed to signal transfer failure")
-
-
-def _write_clipboard_data_directly(session_handle: str, text: str) -> bool:
-    """Write clipboard data directly using a temporary file approach.
-
-    This is a simplified approach that works by creating a temporary file
-    and using it to transfer the clipboard data.
-
-    Args:
-        session_handle: The session handle for clipboard access
-        text: The text to write to clipboard
-
-    Returns:
-        True if successful, False otherwise
-    """
-    import contextlib
-    import tempfile
-    from pathlib import Path
-
-    try:
-        # Create a temporary file with the text content
-        with tempfile.NamedTemporaryFile(
-            mode="w", delete=False, suffix=".txt"
-        ) as tmp_file:
-            tmp_file.write(text)
-            tmp_file.flush()
-            temp_filename = tmp_file.name
-
-        try:
-            # For a real implementation, we would need to handle the
-            # SelectionTransfer signal properly. This is a simplified
-            # approach that sets the selection and stores the text for
-            # potential future transfers.
-            _session_manager.clipboard_text = text
-
-            logger.debug("Stored clipboard text for future transfers")
-            return True
-
-        finally:
-            # Clean up temporary file
-            with contextlib.suppress(OSError):
-                Path(temp_filename).unlink()
-
-    except Exception as exc:
-        logger.warning("Failed to write clipboard data: %s", exc)
-        return False
+install_instructions = (
+    "Please install the package 'xclip' with your system's package manager."
+)
 
 
 def copy(text: str) -> None:
-    """Use D-Bus portal to copy text to system clipboard.
+    """Use xclip package to copy text to system clipboard."""
+    random_str = "".join(random.choice("abcdefghi") for _ in range(8))  # noqa: S311
+    session = Session.from_handle_token(f"normcap_{random_str}")
+    logger.debug("session: %s", session)
 
-    This implementation uses the org.freedesktop.portal.Clipboard interface
-    which requires a remote desktop session for clipboard access.
-    """
-    session_handle = _get_or_create_session()
-    if not session_handle:
-        msg = "Could not create or access clipboard session"
-        raise RuntimeError(msg)
+    clipboard = Clipboard.new()
 
-    try:
-        with open_dbus_connection() as connection:
-            clipboard_proxy = Proxy(DBusClipboardPortal(), connection)
+    clipboard.request(session.path())
 
-            # Set selection to advertise that we have text/plain content
-            selection_options = {
-                "mime_types": ("as", ["text/plain", "text/plain;charset=utf-8"]),
-            }
+    mime_types = ["text/plain"]
+    clipboard.set_selection(session.path(), mime_types)
 
-            clipboard_proxy.set_selection(session_handle, selection_options)
+    # The portal expects you to write the clipboard data to a file descriptor
+    serial = 1  # Serial should be unique per transfer; here we use 1 for demo
+    fd = clipboard.selection_write(session.path(), serial)
+    logger.debug("fd: %s", fd)
 
-            # Store the text for potential future transfers and attempt direct write
-            success = _write_clipboard_data_directly(session_handle, text)
-            if success:
-                logger.debug(
-                    "Successfully set clipboard selection for text of length %d",
-                    len(text),
-                )
-            else:
-                logger.warning("Failed to write clipboard data directly")
+    # Write the plain text to the fd (as bytes)
+    text = "Hello from Python!"
+    os.write(fd, text.encode("utf-8"))
+    os.close(fd)
 
-            # Note: In a complete implementation with signal handling,
-            # we would also listen for SelectionTransfer signals here
-            # and respond with SelectionWrite/SelectionWriteDone
-
-    except Exception as exc:
-        logger.exception("Failed to copy text to clipboard via D-Bus portal")
-        raise RuntimeError(f"D-Bus clipboard copy failed: {exc}") from exc
+    clipboard.selection_write_done(
+        session_path=session.path(), serial=serial, success=True
+    )
 
 
 def is_compatible() -> bool:
-    """Check if the system can use D-Bus clipboard portal.
-
-    This is specifically designed for flatpak applications.
-    """
     return system_info.is_flatpak_package()
 
 
 def is_installed() -> bool:
-    """Check if the D-Bus clipboard portal is available.
-
-    Returns:
-        True if the portal is available, False otherwise
-    """
-    try:
-        with open_dbus_connection() as connection:
-            proxy = Proxy(DBusIntrospectable(), connection)
-            xml_response = proxy.introspect()[0]
-
-            if not isinstance(xml_response, str):
-                logger.warning("Invalid introspection response: %s", xml_response)
-                return False
-
-            # Check for both clipboard and remote desktop interfaces
-            has_clipboard = CLIPBOARD_INTERFACE in xml_response
-            has_remote_desktop = REMOTE_DESKTOP_INTERFACE in xml_response
-
-            result = has_clipboard and has_remote_desktop
-            if result:
-                logger.debug("D-Bus clipboard portal is available")
-            else:
-                logger.debug(
-                    "D-Bus clipboard portal missing interfaces - "
-                    "clipboard: %s, remote_desktop: %s",
-                    has_clipboard,
-                    has_remote_desktop,
-                )
-
-            return result
-
-    except Exception as exc:
-        logger.warning("Cannot introspect D-Bus for clipboard portal: %s", exc)
-        return False
+    return system_info.is_flatpak_package()

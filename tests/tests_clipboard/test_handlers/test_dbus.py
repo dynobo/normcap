@@ -40,27 +40,40 @@ class TestDBusClipboardHandler:
         """Test that is_installed checks for required D-Bus interfaces."""
 
         # Mock successful introspection with required interfaces
-        def mock_introspect():
-            return [
-                "org.freedesktop.portal.Clipboard and "
-                "org.freedesktop.portal.RemoteDesktop"
-            ]
+        mock_introspection_xml = """<?xml version="1.0"?>
+<node>
+  <interface name="org.freedesktop.portal.Clipboard">
+    <method name="RequestClipboard">
+      <arg direction="in" name="session_path" type="o"/>
+      <arg direction="in" name="options" type="a{sv}"/>
+      <arg direction="out" name="response" type="u"/>
+      <arg direction="out" name="results" type="a{sv}"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.portal.RemoteDesktop">
+    <method name="CreateSession">
+      <arg direction="in" name="options" type="a{sv}"/>
+      <arg direction="out" name="response" type="u"/>
+      <arg direction="out" name="results" type="a{sv}"/>
+    </method>
+  </interface>
+</node>"""
 
         class MockProxy:
-            def introspect(self):
-                return mock_introspect()
+            def Introspect(self):
+                return mock_introspection_xml
 
-        def mock_open_connection():
-            class MockConnection:
-                def __enter__(self):
-                    return self
+        class MockConnection:
+            def __enter__(self):
+                return self
 
-                def __exit__(self, *args):
-                    pass
+            def __exit__(self, *args):
+                pass
 
+        def mock_open_connection(bus="session"):
             return MockConnection()
 
-        def mock_proxy_constructor(generator, connection):
+        def mock_proxy_constructor(message_generator, connection):
             return MockProxy()
 
         monkeypatch.setattr(

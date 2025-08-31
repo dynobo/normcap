@@ -40,9 +40,6 @@ class Handler(enum.IntEnum):
     and uses the first one that is detected as compatible.
     """
 
-    # For flatpak applications
-    DBUS = enum.auto()
-
     # For win32
     WINDLL = enum.auto()
 
@@ -67,3 +64,8 @@ class Handler(enum.IntEnum):
     # - Not working with Awesome WM
     # - Problems with Gnome 45+, where it hangs indefinetly: https://github.com/bugaevc/wl-clipboard/issues/168
     WLCLIPBOARD = enum.auto()
+
+    # For linux with xdg-desktop-portal (Flatpak)
+    # - Works only within sandboxed applications like Flatpak
+    # - Uses the org.freedesktop.portal.Clipboard interface
+    DBUS = enum.auto()
