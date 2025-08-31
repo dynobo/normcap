@@ -133,7 +133,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5.6.0
         with:
           python-version: "3.13"
 
@@ -271,7 +271,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: FTP upload windows package
         if: startsWith(matrix.os, 'windows') && github.repository == 'dynobo/normcap'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ${{ secrets.WEBGO_FTP_HOST }}
           username: ${{ secrets.WEBGO_FTP_USER }}
