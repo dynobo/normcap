@@ -6,7 +6,7 @@ import shutil
 import sys
 from pathlib import Path
 from types import TracebackType
-from typing import Optional
+from typing import Any, Optional
 
 from PySide6 import QtCore
 
@@ -26,6 +26,35 @@ def _is_wayland_display_manager() -> bool:
     xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
     has_wayland_display_env = bool(os.environ.get("WAYLAND_DISPLAY", ""))
     return "wayland" in xdg_session_type or has_wayland_display_env
+
+
+def _patch_print_help(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+    """Patch print_help to write directly to console handle on Windows.
+
+    This is a workaround for the quirk of briefcase packaged GUI apps on Windows,
+    where sys.stdout and sys.stderr are not available. Therefore, we use windll api
+    to directly write the help text to the console.
+    """
+    if sys.platform != "win32":
+        raise RuntimeError(
+            f"Windows specific _patch_print_help() got called on {sys.platform} system!"
+        )
+
+    print_help = parser.print_help
+
+    def patched_print_help(file: Any = None) -> None:  # noqa: ANN401
+        try:
+            with Path("CON").open("w", encoding="utf-8") as console:
+                console.write("\r\033[K")
+                print_help(file=console)
+                console.write("\r\n\r\nPress Enter to continue ...")
+                console.flush()
+        except Exception:  # noqa:S110  # except with pass
+            # Avoid crash/error.
+            pass
+
+    parser.print_help = patched_print_help  # type: ignore
+    return parser
 
 
 def create_argparser() -> argparse.ArgumentParser:
@@ -120,6 +149,11 @@ def create_argparser() -> argparse.ArgumentParser:
         action="store_true",
         help=argparse.SUPPRESS,
     )
+
+    if sys.platform == "win32" and sys.stdout is None:
+        # ONHOLD: After briefcase update: Check if patch still necessary
+        parser = _patch_print_help(parser)
+
     return parser
 
 
