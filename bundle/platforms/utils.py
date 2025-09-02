@@ -8,7 +8,6 @@ import urllib.request
 from abc import ABC, abstractmethod
 from pathlib import Path
 from textwrap import dedent
-from typing import Optional, Union
 
 import toml
 from retry import retry
@@ -25,8 +24,8 @@ class BuilderBase(ABC):
     PYPROJECT_PATH = PROJECT_PATH / "pyproject.toml"
     TESSDATA_PATH = RESOURCE_PATH / "tessdata"
     binary_suffix = "_legacy"
-    binary_extension: Optional[str] = None
-    binary_platform: Optional[str] = None
+    binary_extension: str | None = None
+    binary_platform: str | None = None
 
     @abstractmethod
     def install_system_deps(self) -> None:
@@ -93,7 +92,7 @@ class BuilderBase(ABC):
         return pyproject_toml["project"]["version"]
 
     @staticmethod
-    def run(cmd: Union[str, list], cwd: Optional[Path] = None) -> Optional[str]:
+    def run(cmd: str | list, cwd: Path | None = None) -> str | None:
         """Execute a shell command and raises in case of error."""
         if not isinstance(cmd, str):
             cmd = " ".join(cmd)

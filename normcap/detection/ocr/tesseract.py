@@ -10,7 +10,6 @@ import time
 from ctypes import wintypes
 from os import PathLike, linesep
 from pathlib import Path
-from typing import Union
 
 from PySide6 import QtGui
 
@@ -82,7 +81,7 @@ def _run_command(cmd_args: list[str]) -> str:
 
 
 def get_languages(
-    tesseract_cmd: Union[PathLike, str], tessdata_path: Union[PathLike, str, None]
+    tesseract_cmd: PathLike | str, tessdata_path: PathLike | str | None
 ) -> list[str]:
     cmd_args = [str(tesseract_cmd), "--list-langs"]
     if tessdata_path:
@@ -120,7 +119,7 @@ def _move_to_normcap_temp_dir(input_file: Path, postfix: str) -> None:
 
 
 def _run_tesseract(
-    tesseract_bin_path: Union[PathLike, str], image: QtGui.QImage, args: list[str]
+    tesseract_bin_path: PathLike | str, image: QtGui.QImage, args: list[str]
 ) -> list[list[str]]:
     input_image_filename = "normcap_tesseract_input.png"
 
@@ -168,7 +167,7 @@ def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
     fields = tsv_lines.pop(0)
     words: list[dict] = [{} for _ in range(len(tsv_lines))]
     for idx, line in enumerate(tsv_lines):
-        for field, value in zip(fields, line):
+        for field, value in zip(fields, line, strict=False):
             if field == "text":
                 words[idx][field] = value
             elif field == "conf":
@@ -182,7 +181,7 @@ def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
 
 
 def perform_ocr(
-    tesseract_bin_path: Union[PathLike, str], image: QtGui.QImage, args: list[str]
+    tesseract_bin_path: PathLike | str, image: QtGui.QImage, args: list[str]
 ) -> list[dict]:
     lines = _run_tesseract(
         tesseract_bin_path=tesseract_bin_path, image=image, args=args

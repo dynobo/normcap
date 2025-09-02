@@ -7,7 +7,6 @@ import time
 from collections.abc import Iterable
 from os import PathLike
 from pathlib import Path
-from typing import Optional, Union
 
 from PySide6 import QtGui
 
@@ -34,13 +33,13 @@ def _save_image_in_temp_folder(image: QtGui.QImage, postfix: str = "") -> None:
 
 
 def get_text_from_image(
-    languages: Union[str, Iterable[str]],
+    languages: str | Iterable[str],
     image: QtGui.QImage,
     tesseract_bin_path: PathLike,
-    tessdata_path: Union[PathLike, str, None] = None,
+    tessdata_path: PathLike | str | None = None,
     parse: bool = True,
-    resize_factor: Optional[float] = None,
-    padding_size: Optional[int] = None,
+    resize_factor: float | None = None,
+    padding_size: int | None = None,
 ) -> DetectionResult:
     """Apply OCR on selected image section."""
     image = enhance.preprocess(image, resize_factor=resize_factor, padding=padding_size)

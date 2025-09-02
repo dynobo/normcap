@@ -11,8 +11,9 @@ nevertheless display potentially multiple windows in fullscreen on multiple disp
 """
 
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable, Optional, cast
+from typing import cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -26,8 +27,8 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class DebugInfo:
-    screen: Optional[Screen] = None
-    window: Optional[QtWidgets.QMainWindow] = None
+    screen: Screen | None = None
+    window: QtWidgets.QMainWindow | None = None
     scale_factor: float = 1
 
 
@@ -45,7 +46,7 @@ class Window(QtWidgets.QMainWindow):
         self,
         screen: Screen,
         settings: Settings,
-        parent: Optional[QtWidgets.QWidget] = None,
+        parent: QtWidgets.QWidget | None = None,
     ) -> None:
         """Initialize window."""
         super().__init__(parent=parent)
@@ -244,7 +245,7 @@ class UiContainerLabel(QtWidgets.QLabel):
 
         self.color: QtGui.QColor = color
 
-        self.debug_info: Optional[DebugInfo] = None
+        self.debug_info: DebugInfo | None = None
 
         self.rect: QtCore.QRect = QtCore.QRect()
         self.rect_pen = QtGui.QPen(self.color, 2, QtCore.Qt.PenStyle.DashLine)

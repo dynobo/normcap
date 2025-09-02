@@ -2,7 +2,6 @@
 
 import logging
 import sys
-from typing import Optional, Union
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -88,7 +87,7 @@ class MenuButton(QtWidgets.QToolButton):
         settings: QtCore.QSettings,
         installed_languages: list[str],
         language_manager: bool = False,
-        parent: Optional[QtWidgets.QWidget] = None,
+        parent: QtWidgets.QWidget | None = None,
     ) -> None:
         super().__init__(parent=parent)
         self.languages = installed_languages
@@ -222,7 +221,7 @@ class MenuButton(QtWidgets.QToolButton):
         self,
         menu: QtWidgets.QMenu,
         text: str,
-        action_parent: Union[QtGui.QAction, QtGui.QActionGroup, None] = None,
+        action_parent: QtGui.QAction | QtGui.QActionGroup | None = None,
     ) -> None:
         action = QtGui.QAction(text, action_parent or menu)
         action.setEnabled(False)

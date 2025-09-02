@@ -1,5 +1,4 @@
 import logging
-from typing import Optional
 
 from PySide6 import QtCore
 
@@ -166,8 +165,8 @@ class Settings(QtCore.QSettings):
         self,
         organization: str = "normcap",
         application: str = "settings",
-        parent: Optional[QtCore.QObject] = None,
-        init_settings: Optional[dict] = None,
+        parent: QtCore.QObject | None = None,
+        init_settings: dict | None = None,
     ) -> None:
         if is_portable_windows_package():
             ini_file = (config_directory() / f"{application}.ini").resolve()

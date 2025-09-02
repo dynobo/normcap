@@ -1,7 +1,6 @@
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -17,7 +16,7 @@ class TestCase:
     expected_similarity: float = 0.98
     skip: bool = False
 
-    _image: Optional[QtGui.QImage] = None
+    _image: QtGui.QImage | None = None
 
     @property
     def _screen_size(self) -> QtCore.QSize:

@@ -10,7 +10,7 @@ import os
 import sys
 import time
 from enum import Enum
-from typing import Any, NoReturn, Optional, cast
+from typing import Any, NoReturn, cast
 
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
@@ -63,9 +63,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     # Used for singleton:
     _socket_name = f"v{__version__}-normcap"
-    _socket_out: Optional[QtNetwork.QLocalSocket] = None
-    _socket_in: Optional[QtNetwork.QLocalSocket] = None
-    _socket_server: Optional[QtNetwork.QLocalServer] = None
+    _socket_out: QtNetwork.QLocalSocket | None = None
+    _socket_in: QtNetwork.QLocalSocket | None = None
+    _socket_server: QtNetwork.QLocalServer | None = None
 
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("System info:\n%s", system_info.to_dict())

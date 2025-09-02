@@ -6,7 +6,7 @@ import shutil
 import sys
 from pathlib import Path
 from types import TracebackType
-from typing import Any, Optional
+from typing import Any
 
 from PySide6 import QtCore
 
@@ -199,7 +199,7 @@ def set_environ_for_flatpak() -> None:
         os.environ["LD_PRELOAD"] = ""
 
 
-def init_logger(log_level: str = "WARNING", log_file: Optional[Path] = None) -> None:
+def init_logger(log_level: str = "WARNING", log_file: Path | None = None) -> None:
     """Initializes a logger with a specified log level."""
     log_format = "%(asctime)s - %(levelname)-7s - %(name)s:%(lineno)d - %(message)s"
     datefmt = "%H:%M:%S"
@@ -228,7 +228,7 @@ def init_logger(log_level: str = "WARNING", log_file: Optional[Path] = None) -> 
 def hook_exceptions(
     exc_type: type[BaseException],
     exc_value: BaseException,
-    exc_traceback: Optional[TracebackType],
+    exc_traceback: TracebackType | None,
 ) -> None:
     """Print traceback and quit application."""
     logger.critical(
@@ -311,7 +311,7 @@ def qt_log_wrapper(
         logger.error(message)
 
 
-def copy_traineddata_files(target_dir: Optional[Path]) -> None:
+def copy_traineddata_files(target_dir: Path | None) -> None:
     """Copy Tesseract traineddata files to the target path if they don't already exist.
 
     Args:

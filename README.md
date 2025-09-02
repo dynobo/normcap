@@ -67,7 +67,7 @@ screenshots. ([#135](https://github.com/dynobo/normcap/issues/135))
 ## Use Python package
 
 As an _alternative_ to the prebuilt packages above, you can install the
-[NormCap Python package](https://pypi.org/project/normcap/) for **Python >=3.9**, but it
+[NormCap Python package](https://pypi.org/project/normcap/) for **Python >=3.10**, but it
 requires more setup:
 
 #### On Linux
@@ -153,7 +153,6 @@ normcap
 ## Development
 
 Prerequisites for setting up a development environment:
-[**Python >=3.9**](https://www.python.org/downloads/),
 [**uv**](https://docs.astral.sh/uv/getting-started/installation/), and
 [**Tesseract >=5.0**](https://tesseract-ocr.github.io/tessdoc/#5xx) (including **language
 data**).
