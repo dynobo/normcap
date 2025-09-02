@@ -3,7 +3,7 @@ import ctypes.util
 import logging
 import subprocess
 import sys
-from typing import Any, Optional, cast
+from typing import Any, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -101,7 +101,7 @@ def macos_reset_screenshot_permission() -> None:
 class DbusPortalPermissionDialog(QtWidgets.QDialog):
     def __init__(
         self,
-        parent: Optional[QtWidgets.QWidget] = None,
+        parent: QtWidgets.QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         # L10N: Title of screenshot permission dialog only shown on Linux + Wayland.

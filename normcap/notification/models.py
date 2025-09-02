@@ -1,5 +1,6 @@
 import enum
-from typing import Callable, Optional, Protocol
+from collections.abc import Callable
+from typing import Protocol
 
 
 class HandlerProtocol(Protocol):
@@ -9,8 +10,8 @@ class HandlerProtocol(Protocol):
         self,
         title: str,
         message: str,
-        action_label: Optional[str],
-        action_callback: Optional[Callable],
+        action_label: str | None,
+        action_callback: Callable | None,
     ) -> bool:
         """Show notification.
 

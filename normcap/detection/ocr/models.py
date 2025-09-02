@@ -2,7 +2,7 @@ import enum
 import os
 from dataclasses import dataclass, field
 from os import PathLike
-from typing import Optional, Protocol, Union
+from typing import Protocol
 
 from PySide6 import QtGui
 
@@ -51,7 +51,7 @@ class Transformer(str, enum.Enum):
 class TessArgs:
     """Arguments used when evoking tesseract."""
 
-    tessdata_path: Union[PathLike, str, None]
+    tessdata_path: PathLike | str | None
     lang: str
     oem: OEM
     psm: PSM
@@ -103,7 +103,7 @@ class OcrResult:
         return len(unique_sections)
 
     @property
-    def best_scored_transformer(self) -> Optional[Transformer]:
+    def best_scored_transformer(self) -> Transformer | None:
         """Transformer with highest score."""
         if self.transformer_scores:
             return max(

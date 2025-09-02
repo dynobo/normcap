@@ -11,7 +11,6 @@ import enum
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -43,7 +42,7 @@ class IntroductionDialog(QtWidgets.QDialog):
     def __init__(
         self,
         show_on_startup: bool,
-        parent: Optional[QtWidgets.QWidget] = None,
+        parent: QtWidgets.QWidget | None = None,
     ) -> None:
         super().__init__(parent=parent)
 

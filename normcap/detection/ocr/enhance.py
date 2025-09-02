@@ -4,7 +4,6 @@ import logging
 import random
 from collections import Counter
 from collections.abc import Iterable
-from typing import Optional
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QImage, QPainter
@@ -92,7 +91,7 @@ def resize_image(image: QImage, factor: float) -> QImage:
 
 
 def preprocess(
-    image: QImage, resize_factor: Optional[float], padding: Optional[int]
+    image: QImage, resize_factor: float | None, padding: int | None
 ) -> QImage:
     image = image.convertToFormat(QImage.Format.Format_RGB32)
     if resize_factor:

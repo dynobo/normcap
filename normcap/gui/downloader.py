@@ -1,7 +1,6 @@
 """Download any file from url asynchronously."""
 
 import logging
-from typing import Optional
 
 from PySide6 import QtCore
 
@@ -70,11 +69,11 @@ class Downloader(QtCore.QObject):
     of urllib.request fails with 'no module named _scproxy' in the packaged version.
     """
 
-    def __init__(self, parent: Optional[QtCore.QObject] = None) -> None:
+    def __init__(self, parent: QtCore.QObject | None = None) -> None:
         super().__init__(parent=parent)
         self.com = Communicate()
         self.threadpool = QtCore.QThreadPool()
-        self.worker: Optional[Worker] = None
+        self.worker: Worker | None = None
 
     def get(self, url: str, timeout: float = 30) -> None:
         """Start downloading url. Emits failed or finished signal, when done."""

@@ -5,7 +5,6 @@ import random
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 from urllib.parse import unquote, urlparse
 
 from PySide6 import QtCore, QtDBus, QtGui
@@ -66,7 +65,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
 
     def __init__(
         self,
-        parent: Optional[QtCore.QObject] = None,
+        parent: QtCore.QObject | None = None,
         interactive: bool = False,
         timeout_sec: int = 15,
     ) -> None:
@@ -136,7 +135,7 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
     @staticmethod
     def extract_key_from_dbus_argument(
         arg: QtDBus.QDBusArgument, name: str
-    ) -> Optional[str]:
+    ) -> str | None:
         """Extract a value for a specific key from a nested QDBusArgument."""
         arg.beginArray()
         while not arg.atEnd():

@@ -3,11 +3,11 @@ import importlib
 import os
 import platform
 import sys
+from collections.abc import Callable
 from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
 from types import ModuleType
-from typing import Callable, Optional
 from urllib import request
 
 if platform.system() == "linux":
@@ -82,7 +82,7 @@ def tesseract_cmd() -> Path:
 
 
 @pytest.fixture
-def tessdata_path() -> Optional[Path]:
+def tessdata_path() -> Path | None:
     return system_info.get_tessdata_path(
         config_directory=system_info.config_directory(),
         is_briefcase_package=system_info.is_briefcase_package(),
@@ -170,7 +170,7 @@ def basic_cli_args():
 def run_normcap(monkeypatch, qapp, qtbot, basic_cli_args):
     trays = []
 
-    def _run_normcap(extra_cli_args: Optional[list[str]] = None):
+    def _run_normcap(extra_cli_args: list[str] | None = None):
         extra_cli_args = extra_cli_args or []
         basic_cli_args.extend(extra_cli_args)
         monkeypatch.setattr(sys, "argv", basic_cli_args)
@@ -228,7 +228,7 @@ def mock_urlopen(monkeypatch) -> Callable:
     """
 
     class _MockedResponse:
-        def __init__(self, response: Optional[bytes]):
+        def __init__(self, response: bytes | None):
             self._response = response
 
         def read(self) -> bytes:
@@ -237,10 +237,10 @@ def mock_urlopen(monkeypatch) -> Callable:
             return self._response
 
     @contextmanager
-    def _mocked_urlopen(*_, response: Optional[bytes], **__):
+    def _mocked_urlopen(*_, response: bytes | None, **__):
         yield _MockedResponse(response=response)
 
-    def _monkeypatch_urlopen(response: Optional[bytes]):
+    def _monkeypatch_urlopen(response: bytes | None):
         monkeypatch.setattr(
             request, "urlopen", partial(_mocked_urlopen, response=response)
         )

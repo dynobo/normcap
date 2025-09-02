@@ -2,9 +2,9 @@
 
 import enum
 import logging
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
-from typing import Any, Callable, NamedTuple, Optional, Union
+from typing import Any, NamedTuple
 
 from PySide6 import QtGui
 
@@ -18,12 +18,12 @@ Days = int
 class Setting(NamedTuple):
     key: str
     flag: str
-    type_: Union[type, Callable]
+    type_: type | Callable
     value: Any
-    choices: Optional[Iterable]
+    choices: Iterable | None
     help_: str
     cli_arg: bool
-    nargs: Union[int, str, None]
+    nargs: int | str | None
 
 
 class DesktopEnvironment(enum.IntEnum):
@@ -126,7 +126,7 @@ class Screen(Rect):
     screenshot: QtGui.QImage = field(default_factory=QtGui.QImage)
 
     # ONHOLD: Annotate as Self with Python 3.11
-    def scale(self, factor: Optional[float] = None):  # noqa: ANN201
+    def scale(self, factor: float | None = None):  # noqa: ANN201
         """Create an integer-scaled copy of the Rect."""
         factor = factor or 1 / self.device_pixel_ratio
         return Screen(

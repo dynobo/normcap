@@ -2,7 +2,7 @@ import logging
 import shutil
 import subprocess
 import sys
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from normcap.gui import system_info
 
@@ -32,8 +32,8 @@ def is_installed() -> bool:
 def notify(
     title: str,
     message: str,
-    action_label: Optional[str],
-    action_callback: Optional[Callable],
+    action_label: str | None,
+    action_callback: Callable | None,
 ) -> bool:
     """Send via notify-send.
 

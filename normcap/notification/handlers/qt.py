@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -32,8 +32,8 @@ def get_qsystem_tray_icon() -> QtWidgets.QSystemTrayIcon:
 def notify(
     title: str,
     message: str,
-    action_label: Optional[str] = None,
-    action_callback: Optional[Callable] = None,
+    action_label: str | None = None,
+    action_callback: Callable | None = None,
 ) -> bool:
     """Send via QSystemTrayIcon.
 
