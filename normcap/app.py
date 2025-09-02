@@ -6,7 +6,7 @@ import signal
 import sys
 from argparse import Namespace
 from pathlib import Path
-from typing import NoReturn, Optional
+from typing import NoReturn
 
 from PySide6 import QtCore, QtWidgets
 
@@ -35,7 +35,7 @@ def _get_args() -> Namespace:
     return args
 
 
-def _prepare_logging(log_level: str, log_file: Optional[Path] = None) -> None:
+def _prepare_logging(log_level: str, log_file: Path | None = None) -> None:
     """Initialize the logger with the given log level.
 
     This function wraps the QT logger to control the output in the Python logger.

@@ -2,6 +2,11 @@
 
 # Changelog
 
+## v0.6.1 (upcoming)
+
+**Windows**:
+- Fix crash on `NormCap.exe --help`. ([#783](https://github.com/dynobo/normcap/issues/783))
+
 ## v0.6.0 (2025-08-31)
 
 **All systems:**

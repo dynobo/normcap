@@ -3,8 +3,6 @@
 This dialog is used to inform the user about required permissions.
 """
 
-from typing import Optional
-
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.gui import constants
@@ -15,7 +13,7 @@ class PermissionDialog(QtWidgets.QDialog):
     def __init__(
         self,
         text: str,
-        parent: Optional[QtWidgets.QWidget] = None,
+        parent: QtWidgets.QWidget | None = None,
     ) -> None:
         super().__init__(parent=parent)
 

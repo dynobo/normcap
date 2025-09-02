@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from normcap.notification.models import Handler, HandlerProtocol
 
@@ -85,7 +85,7 @@ def notify(
     message: str,
     action_label: str,
     action_callback: Callable,
-    handler_name: Optional[str] = None,
+    handler_name: str | None = None,
 ) -> None:
     """Send desktop notification using provided handler, or try all compatible ones."""
     handlers = (

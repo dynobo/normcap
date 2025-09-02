@@ -7,7 +7,6 @@ import shutil
 import sys
 from pathlib import Path
 from platform import python_version
-from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as pyside_version
@@ -197,7 +196,7 @@ def get_tesseract_bin_path(is_briefcase_package: bool) -> Path:
 
 def get_tessdata_path(
     config_directory: Path, is_briefcase_package: bool, is_flatpak_package: bool
-) -> Optional[Path]:
+) -> Path | None:
     """Decide which path for tesseract language files to use."""
     if is_briefcase_package or is_flatpak_package:
         tessdata_path = config_directory / "tessdata"

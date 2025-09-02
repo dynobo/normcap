@@ -145,9 +145,6 @@ jobs:
       - name: Clone git clone
         run: |
           git clone https://github.com/flathub/com.github.dynobo.normcap.git
-          cd com.github.dynobo.normcap
-          git switch feature/move-xml-to-main-repo
-          cd ..
 
       - name: Run build script
         run: |

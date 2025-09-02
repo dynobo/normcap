@@ -2,7 +2,6 @@
 
 import logging
 import os
-from typing import Optional
 
 import zxingcpp
 from PySide6 import QtGui
@@ -67,7 +66,7 @@ def _get_text_type_and_transform(text: str) -> tuple[str, TextType]:
 
 def _detect_codes_via_zxing(
     image: memoryview,
-) -> Optional[tuple[str, TextType, CodeType]]:
+) -> tuple[str, TextType, CodeType] | None:
     """Decode QR and barcodes from image.
 
     Args:
@@ -109,7 +108,7 @@ def _detect_codes_via_zxing(
     return os.linesep.join(codes), TextType.MULTI_LINE, code_type
 
 
-def detect_codes(image: QtGui.QImage) -> Optional[DetectionResult]:
+def detect_codes(image: QtGui.QImage) -> DetectionResult | None:
     """Decode & decode QR and barcodes from image.
 
     Args:

@@ -8,17 +8,17 @@ version = "0.6.0"
 description = "OCR-powered screen-capture tool to capture information instead of images."
 keywords = [ "screenshot", "ocr", "capture", "clipboard" ]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license.file = "LICENSE"
 authors = [ { name = "dynobo", email = "dynobo@mailbox.org" } ]
 classifiers = [
   "Development Status :: 4 - Beta",
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Topic :: Utilities",
   "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
@@ -141,7 +141,7 @@ inspect_metrics = [
 
 
 [tool.ruff]
-target-version = "py39"
+target-version = "py310"
 line-length = 88
 exclude = [ ".venv" ]
 

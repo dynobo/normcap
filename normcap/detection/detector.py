@@ -1,7 +1,6 @@
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
 from PySide6 import QtGui
 
@@ -19,7 +18,7 @@ logger = logging.getLogger(__name__)
 def detect(
     image: QtGui.QImage,
     tesseract_bin_path: Path,
-    tessdata_path: Optional[Path],
+    tessdata_path: Path | None,
     language: str,
     detect_mode: DetectionMode,
     parse_text: bool,

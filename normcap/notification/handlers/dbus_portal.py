@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from jeepney.io.blocking import Proxy, open_dbus_connection
 from jeepney.wrappers import MessageGenerator, new_method_call
@@ -79,8 +79,8 @@ def is_installed() -> bool:
 def notify(
     title: str,
     message: str,
-    action_label: Optional[str] = None,
-    action_callback: Optional[Callable] = None,
+    action_label: str | None = None,
+    action_callback: Callable | None = None,
 ) -> bool:
     """Send a notification via the DBus portal.
 
