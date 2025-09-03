@@ -78,7 +78,7 @@ Detection is performed on your device and no telemetry data is collected.
 
 Scan QR codes and barcodes to extract their information.
 
-[:octicons-arrow-right-24: Learn more](faqs.md#is-any-data-send-to-the-internet)
+[:octicons-arrow-right-24: Learn more](usage.md#detection-settings)
 
 </div>
 

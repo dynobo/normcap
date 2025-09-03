@@ -37,9 +37,9 @@ The settings menu <span class="md-pink">⚙</span> allows toggling various detec
 
     Detects and decodes QR codes and barcodes in the selected area. Data from multiple codes are separated by newlines.
 
-    !!! info
+!!! info
 
-        When both "Text" and "QR & Barcode" are active, "QR & Barcode" takes priority: if a code is found, text detection is skipped.
+    When both "Text" and "QR & Barcode" are active, "QR & Barcode" takes priority: if a code is found, text detection is skipped.
 
 ### "Post-Processing"
 
