@@ -327,10 +327,10 @@ USER root
 RUN dnf upgrade -y
 RUN wget https://picnico.de/tesseract-langpack-osd-5.0.0.rpm
 RUN wget https://picnico.de/tesseract-langpack-eng-5.0.0.rpm
-RUN wget https://picnico.de/tesseract-5.3.0-5.1.x86_64.rpm
+RUN wget https://picnico.de/tesseract-5.3.4-6-omv2590.x86_64.rpm
 RUN dnf install -y ./tesseract-langpack-osd-5.0.0.rpm
 RUN dnf install -y ./tesseract-langpack-eng-5.0.0.rpm
-RUN dnf install -y ./tesseract-5.3.0-5.1.x86_64.rpm
+RUN dnf install -y ./tesseract-5.3.4-6-omv2590.x86_64.rpm
 
 RUN wget https://pkgs.sysadmins.ws/el8/base/x86_64/raven-release.el8.noarch.rpm
 RUN rpm -ivh raven-release*.rpm

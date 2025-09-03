@@ -78,7 +78,8 @@ jobs:
       - name: Prepare Windows
         if: startsWith(matrix.os, 'windows')
         run: |
-          $url = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.4.0.20240606.exe"
+          # Mirror of: https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.4.0.20240606.exe
+          $url = "https://picnico.de/tesseract-ocr-w64-setup-5.4.0.20240606.exe"
           Invoke-WebRequest -Uri $url -OutFile "tesseract_installer.exe"
           7z x tesseract_installer.exe -O"C:\Program Files\Tesseract-OCR"
 
