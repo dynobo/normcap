@@ -55,7 +55,7 @@ artifacts = [ "*.mo" ]
 [dependency-groups]
 dev = [
   "babel>=2.12.1",
-  "briefcase==0.3.22", # 0.3.23+ needs python 3.10  # pinned because building relies on it!
+  "briefcase==0.3.25", # pinned because building relies on it!
   "coverage[toml]>=6.5",
   "coveralls>=3.3.1",
   "mdformat-gfm>=0.3.6",
@@ -241,9 +241,8 @@ cluster = true
 max_cluster_size = 1
 
 [tool.briefcase]
-project_name = "NormCap"
-bundle = "eu.dynobo"
-version = "0.6.0"
+project_name = "normcap"
+bundle = "com.github.dynobo"
 
 [tool.briefcase.app.normcap]
 formal_name = "NormCap"
@@ -296,13 +295,13 @@ cleanup_paths = [
 ]
 
 [tool.briefcase.app.normcap.macOS.Xcode]
-min_os_version = "12.0"
+min_os_version = "13.0"
 requires = [ "std-nslog==1.0.0" ]
 universal_build = false
 
 [tool.briefcase.app.normcap.linux.appimage]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
-template_branch = "v0.3.22"
+template_branch = "v0.3.25"
 manylinux = "manylinux_2_28"
 manylinux_image_tag = "latest"
 system_requires = [
