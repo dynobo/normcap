@@ -4,6 +4,9 @@
 
 ## v0.6.1 (upcoming)
 
+**All systems:**
+- Drop support for Python 3.9.
+
 **Windows**:
 - Fix crash on `NormCap.exe --help`. ([#783](https://github.com/dynobo/normcap/issues/783))
 

@@ -379,10 +379,6 @@ src = "pyproject.toml"
 search = 'version = "{current_version}"'
 
 [[tool.tbump.file]]
-src = "normcap/__init__.py"
-search = '__version__ = "{current_version}"'
-
-[[tool.tbump.file]]
 src = "docs/index.md"
 
 [[tool.tbump.file]]
