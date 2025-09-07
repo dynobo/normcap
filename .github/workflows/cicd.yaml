@@ -291,8 +291,6 @@ jobs:
       # Used to authenticate to PyPI via OIDC.
       # Used to sign the release's artifacts with sigstore-python.
       id-token: write
-      # Used to attach signing artifacts to the published release.
-      contents: write
     steps:
       - uses: actions/checkout@v5.0.0
 
@@ -305,12 +303,6 @@ jobs:
         with:
           verbose: true
           print-hash: true
-      - name: Sign published artifacts
-        uses: sigstore/gh-action-sigstore-python@v3.0.1
-        with:
-          inputs: |
-            ./dist/*.tar.gz
-            ./dist/*.whl
 
   release-documentation:
     name: Deploy github pages
