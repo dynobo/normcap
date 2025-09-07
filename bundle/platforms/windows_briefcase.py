@@ -3,7 +3,6 @@
 import shutil
 import urllib.request
 import zipfile
-from pathlib import Path
 from xml.etree import ElementTree as ET
 
 from retry import retry
@@ -45,19 +44,15 @@ class WindowsBriefcase(BuilderBase):
             / "normcap.wxs"
         )
 
-        # Cache header for inserting later
-        with Path(wxs_file).open(encoding="utf-8") as f:
-            header_lines = f.readlines()[:3]
-
-        ns = "{http://schemas.microsoft.com/wix/2006/wi}"
-        ET.register_namespace("", ns[1:-1])
+        ns = "{http://wixtoolset.org/schemas/v4/wxs}"
+        ET.register_namespace("", ns.strip("{}"))
 
         tree = ET.parse(wxs_file)  # noqa: S314
         root = tree.getroot()
-        product = root.find(f"{ns}Product")
-        if not product:
+        package = root.find(f"{ns}Package")
+        if package is None:
             raise ValueError(
-                "Product section not found!\n"
+                "Package section not found!\n"
                 f"File: {wxs_file.resolve()}, Content:\n{wxs_file.read_text()}"
             )
 
@@ -79,65 +74,42 @@ class WindowsBriefcase(BuilderBase):
 
         # Set installer images
         ET.SubElement(
-            product, "WixVariable", {"Id": "WixUIDialogBmp", "Value": f"{left}"}
+            package, f"{ns}WixVariable", {"Id": "WixUIDialogBmp", "Value": f"{left}"}
         )
         ET.SubElement(
-            product, "WixVariable", {"Id": "WixUIBannerBmp", "Value": f"{top}"}
+            package, f"{ns}WixVariable", {"Id": "WixUIBannerBmp", "Value": f"{top}"}
         )
-
-        # Allow upgrades
-        major_upgrade = ET.SubElement(product, "MajorUpgrade")
-        major_upgrade.set("Schedule", "afterInstallInitialize")
-        major_upgrade.set("DowngradeErrorMessage", "Can't downgrade. Uninstall first.")
 
         # Cleanup tessdata folder on uninstall
         ET.SubElement(
-            product,
+            package,
             "CustomAction",
             {
-                "Id": "Cleanup_orphaned_files",
+                "Id": "CleanupOrphanedFiles",
                 "Directory": "TARGETDIR",
-                "ExeCommand": (
-                    'cmd /C "rmdir /s /q %localappdata%\\normcap '
-                    '& rmdir /s /q %localappdata%\\dynobo";'
-                ),
+                "ExeCommand": 'cmd /C rmdir /s /q "%localappdata%\\normcap"',
                 "Execute": "deferred",
                 "Return": "ignore",
                 "HideTarget": "no",
                 "Impersonate": "no",
             },
         )
-        sequence = product.find(f"{ns}InstallExecuteSequence")
-        if not sequence:
-            raise ValueError(
-                "InstallExecuteSequence section not found!\n"
-                f"File: {wxs_file.resolve()}, Content:\n{wxs_file.read_text()}"
-            )
+        sequence = package.find(f"{ns}InstallExecuteSequence")
+        if sequence is None:
+            sequence = ET.SubElement(package, f"{ns}InstallExecuteSequence")
         ET.SubElement(
             sequence,
             "Custom",
-            {"Action": "Cleanup_orphaned_files", "Before": "RemoveFiles"},
-        ).text = '(REMOVE = "ALL") AND NOT UPGRADINGPRODUCTCODE'
+            {
+                "Action": "CleanupOrphanedFiles",
+                "Before": "RemoveFiles",
+                "Condition": 'REMOVE = "ALL" AND NOT UPGRADINGPRODUCTCODE',
+            },
+        )
 
-        # Remove node which throws error during compilation
-        remove_existing_product = sequence.find(f"{ns}RemoveExistingProducts")
-        sequence.remove(remove_existing_product)  # type: ignore
-
-        upgrade = product.find(f"{ns}Upgrade")
-        if not upgrade:
-            raise ValueError(
-                "Upgrade section not found!\n"
-                f"File: {wxs_file.resolve()}, Content:\n{wxs_file.read_text()}"
-            )
-
-        product.remove(upgrade)
-
-        # Write & fix header
-        tree.write(wxs_file, encoding="utf-8", xml_declaration=False)
-        with Path(wxs_file).open("r+", encoding="utf-8") as f:
-            lines = f.readlines()
-            f.seek(0)
-            f.writelines(header_lines + lines)
+        with wxs_file.open("wb") as fh:
+            ET.indent(tree=tree)
+            tree.write(fh, encoding="utf-8", xml_declaration=False)
 
     def bundle_tesseract(self) -> None:
         """Download tesseract binaries including dependencies into resource path."""
