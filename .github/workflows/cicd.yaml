@@ -133,7 +133,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
 
-      - uses: actions/setup-python@v5.6.0
+      - uses: actions/setup-python@v6.0.0
         with:
           python-version: "3.13"
 
@@ -222,14 +222,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5.0.0
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3.29.11
+        uses: github/codeql-action/init@v3.30.1
         with:
           languages: ${{ matrix.language }}
           queries: security-extended
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3.29.11
+        uses: github/codeql-action/autobuild@v3.30.1
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3.29.11
+        uses: github/codeql-action/analyze@v3.30.1
 
   deploy-briefcase:
     name: Briefcase build & draft release
@@ -256,7 +256,7 @@ jobs:
         run: uv run poe bundle
       - name: Draft release
         if: github.repository == 'dynobo/normcap'
-        uses: ncipollo/release-action@v1.18.0
+        uses: ncipollo/release-action@v1.20.0
         with:
           body:
             See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG) for
@@ -301,7 +301,7 @@ jobs:
       - name: Build Python package
         run: uv build
       - name: Publish to PyPi
-        uses: pypa/gh-action-pypi-publish@v1.12.4
+        uses: pypa/gh-action-pypi-publish@v1.13.0
         with:
           verbose: true
           print-hash: true
