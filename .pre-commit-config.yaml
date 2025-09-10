@@ -1,4 +1,3 @@
-# See https://pre-commit.com/ for usage and config
 fail_fast: true
 
 repos:
