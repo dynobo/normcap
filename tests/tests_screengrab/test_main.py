@@ -7,6 +7,7 @@ from normcap.screenshot.handlers import dbus_portal, gnome_screenshot, grim
 from normcap.screenshot.models import Handler
 
 
+@pytest.mark.gui
 def test_capture(qapp):
     # GIVEN any system (with display server)
     # WHEN screenshots are taken

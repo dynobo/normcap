@@ -26,6 +26,7 @@ from normcap.gui import (
     system_info,
     utils,
 )
+from normcap.gui.dbus_activation import DBusActivationService
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
@@ -73,7 +74,19 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         # Prepare and connect signals
         self.com = Communicate(parent=self)
+
+        # Register DBus Service
+        self.dbus_service = DBusActivationService(self.parent())
+        if not self.dbus_service.register_service():
+            logger.error("Failed to register DBus activation service")
+        else:
+            logger.debug("Registered DBus activation service")
+
         self._set_signals()
+
+        if args.get("dbus_activation", False):
+            QtCore.QTimer.singleShot(5000, lambda: sys.exit(0))
+            return
 
         # Prepare instance attributes
         self.windows: dict[int, Window] = {}
@@ -446,6 +459,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
+        self.dbus_service.activation_requested.connect(self._handle_dbus_activation)
         self.activated.connect(self._handle_tray_click)
         self.com.on_region_selected.connect(self._close_windows)
         self.com.on_region_selected.connect(self._schedule_detection)
@@ -453,6 +467,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_languages_changed.connect(self._update_installed_languages)
         self.com.exit_application.connect(self._exit_application)
         self.messageClicked.connect(self._open_language_manager)
+
+    def _handle_dbus_activation(self, parameters: list[str]) -> None:
+        QtWidgets.QMessageBox.information(None, "Dbus Activation", f"{parameters}")
 
     def _add_update_checker(self) -> None:
         if not self.settings.value("update", type=bool):

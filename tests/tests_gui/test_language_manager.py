@@ -133,6 +133,7 @@ def test_delete_last_language_impossible(monkeypatch, tmp_path, qtbot: QtBot):
     assert "at least one" in messagebox_args[1].lower()
 
 
+@pytest.mark.gui
 def test_download_error_show_messagebox(qtbot, tmp_path, monkeypatch, mock_urlopen):
     # GIVEN only one language is installed
     messagebox_args = []
