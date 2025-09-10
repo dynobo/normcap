@@ -51,7 +51,10 @@ class MacBriefcase(BuilderBase):
         # https://stackoverflow.com/q/73941230
         # TODO: Re-enable if we have a solution for unfocusing on macOS
         # patch_info_plist_for_proper_fullscreen()
-        self.run(cmd="briefcase package macos app --adhoc-sign", cwd=self.PROJECT_PATH)
+        self.run(
+            cmd=f"briefcase package macos -p {self.binary_extension} --adhoc-sign",
+            cwd=self.PROJECT_PATH,
+        )
 
     def bundle_tesseract(self) -> None:
         bin_path = (
