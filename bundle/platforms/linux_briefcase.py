@@ -17,7 +17,7 @@ class LinuxBriefcase(BuilderBase):
 
     def _add_metainfo_to_appimage(self) -> None:
         """Copy metainfo file with info for appimage hub."""
-        metainfo = self.BUILD_PATH / "metainfo"
+        metainfo = self.BUILD_PATH / "flatpak" / "com.github.dynobo.normcap.appdata.xml"
         target_path = (
             self.PROJECT_PATH
             / "build"
