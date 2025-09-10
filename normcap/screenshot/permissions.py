@@ -75,8 +75,8 @@ def _macos_open_privacy_settings() -> None:
 
 def macos_reset_screenshot_permission() -> None:
     """Use tccutil to reset permissions for current application."""
-    logger.info("Reset screen recording permissions for eu.dynobo.normcap")
-    cmd = ["tccutil", "reset", "ScreenCapture", "eu.dynobo.normcap"]
+    logger.info("Reset screen recording permissions for com.github.dynobo.normcap")
+    cmd = ["tccutil", "reset", "ScreenCapture", "com.github.dynobo.normcap"]
     try:
         completed_proc = subprocess.run(  # noqa: S603
             cmd,
