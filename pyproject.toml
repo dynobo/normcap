@@ -243,6 +243,7 @@ max_cluster_size = 1
 [tool.briefcase]
 project_name = "normcap"
 bundle = "com.github.dynobo"
+requirement_installer_args = [ "-vv" ]
 
 [tool.briefcase.app.normcap]
 formal_name = "NormCap"
@@ -294,10 +295,13 @@ cleanup_paths = [
   "**/NormCap.pdb",
 ]
 
-[tool.briefcase.app.normcap.macOS.Xcode]
-min_os_version = "13.0"
-requires = [ "std-nslog==1.0.0" ]
-universal_build = false
+[tool.briefcase.app.normcap.macOS]
+min_os_version = "12.0"
+requires = [ "std-nslog==1.0.3" ]
+universal_build = true
+
+[tool.briefcase.app.normcap.windows]
+use_full_install_path = false
 
 [tool.briefcase.app.normcap.linux.appimage]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
@@ -351,9 +355,6 @@ ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/NormCap.AppDir/usr/app_packages/shibo
 
 USER brutus
 """
-
-[tool.briefcase.app.normcap.windows]
-use_full_install_path = false
 
 [tool.tbump.version]
 current = "0.6.0"
