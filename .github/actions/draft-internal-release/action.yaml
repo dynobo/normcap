@@ -29,7 +29,7 @@ runs:
         body: "Only for internal tests. Should not be published. [${{ env.NOW }}]"
         repo: normcap
         owner: dynobo
-        artifacts: "*/*.+(dmg|AppImage|msi|zip|flatpak)"
+        artifacts: "*/*.+(dmg|AppImage|msi|zip|flatpak|app)"
         allowUpdates: true
         draft: true
         prerelease: true

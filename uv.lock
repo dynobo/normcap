@@ -1040,7 +1040,6 @@ source = { editable = "." }
 dependencies = [
     { name = "jeepney" },
     { name = "pyside6-essentials" },
-    { name = "shiboken6" },
     { name = "zxing-cpp" },
 ]
 
@@ -1092,7 +1091,6 @@ requires-dist = [
     { name = "babel", marker = "extra == 'build'" },
     { name = "jeepney", specifier = "==0.9.0" },
     { name = "pyside6-essentials", specifier = "==6.9.2" },
-    { name = "shiboken6", specifier = "==6.9.2" },
     { name = "toml", marker = "extra == 'build'" },
     { name = "zxing-cpp", specifier = "==2.3.0" },
 ]
