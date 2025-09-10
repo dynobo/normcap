@@ -168,7 +168,7 @@ cd normcap
 uv sync
 
 # Register pre-commit hook
-uv run pre-commit install
+uv run prek install
 
 # Run NormCap in virtual env
 uv run python -m normcap
