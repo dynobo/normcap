@@ -1,5 +1,6 @@
 import fileinput
 import hashlib
+import os
 import re
 import shutil
 import subprocess
@@ -105,6 +106,7 @@ class BuilderBase(ABC):
             cwd=cwd,
             capture_output=False,
             check=False,
+            env=os.environ,
         )
 
         if completed_proc.returncode != 0:
