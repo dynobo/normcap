@@ -7,6 +7,7 @@ from pytestqt.qtbot import QtBot
 from normcap.gui.downloader import Downloader, Worker
 
 
+@pytest.mark.gui
 @pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_downloader_retrieves_website(qtbot: QtBot):
     # GIVEN a Downloader instance
