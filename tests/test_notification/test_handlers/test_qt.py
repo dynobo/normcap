@@ -2,6 +2,7 @@ import pytest
 from PySide6 import QtWidgets
 
 from normcap import notification
+from normcap.notification.models import NotificationAction
 
 
 @pytest.mark.gui
@@ -15,7 +16,7 @@ def test_notify(qapp):
 
     # WHEN a notification is send via QT (QSystemTrayIcon)
     result = notification.handlers.qt.notify(
-        title="Title", message="Message", action_label=None, action_callback=None
+        title="Title", message="Message", actions=None
     )
 
     # THEN result status should be ok
@@ -34,8 +35,7 @@ def test_notify_without_qsystemtrayicon_raises(monkeypatch, qapp):
         _ = notification.handlers.qt.notify(
             title="Title",
             message="Message",
-            action_label=None,
-            action_callback=None,
+            actions=None,
         )
 
 
@@ -54,8 +54,12 @@ def test_notify_runs_action_callback(monkeypatch, qtbot, qapp):
     result = notification.handlers.qt.notify(
         title="Title",
         message="Message",
-        action_label="Action",
-        action_callback=lambda: callback_result.append(1),
+        actions=[
+            # TODO: Also test notification func args
+            NotificationAction(
+                label="Action", func=lambda args: callback_result.append(1), args=[]
+            )
+        ],
     )
     tray.messageClicked.emit()
 
@@ -78,8 +82,7 @@ def test_notify_reconnects_signal(monkeypatch, qapp, qtbot):
     result = notification.handlers.qt.notify(
         title="Title",
         message="Message",
-        action_label=None,
-        action_callback=None,
+        actions=None,
     )
     assert result is True
     assert callback_result == []
@@ -89,12 +92,16 @@ def test_notify_reconnects_signal(monkeypatch, qapp, qtbot):
     result = notification.handlers.qt.notify(
         title="Title",
         message="Message",
-        action_label="Action",
-        action_callback=callback_result.append(2),
+        actions=[
+            # TODO: Also test notification func args
+            NotificationAction(
+                label="Action", func=lambda args: callback_result.append(1), args=[]
+            )
+        ],
     )
     tray.messageClicked.emit()
 
     # THEN the action callback of the second notifcation should have been called once
     #   because the action callback of the first notification got cleared
     assert result is True
-    assert callback_result == [2]
+    assert callback_result == [1]

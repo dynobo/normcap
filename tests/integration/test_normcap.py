@@ -37,18 +37,6 @@ def test_normcap_ocr_testcases(
 
     assert copy_to_clipboard_calls
 
-    assert copy_to_clipboard_calls["result_type"] in testcase.expected_text_type, (
-        f"{testcase.image_path.name=}",
-        f"{copy_to_clipboard_calls['text']=}",
-        f"{testcase.expected_text=}",
-    )
-
-    assert copy_to_clipboard_calls["detector"] in testcase.expected_text_detector, (
-        f"{testcase.image_path.name=}",
-        f"{copy_to_clipboard_calls['detector'].detector=}",
-        f"{testcase.expected_text_detector=}",
-    )
-
     similarity = SequenceMatcher(
         None, copy_to_clipboard_calls["text"], testcase.expected_text
     ).ratio()

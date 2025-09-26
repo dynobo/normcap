@@ -1,7 +1,8 @@
 import logging
-from collections.abc import Callable
 
 from PySide6 import QtCore, QtGui, QtWidgets
+
+from normcap.notification.models import NotificationAction
 
 logger = logging.getLogger(__name__)
 
@@ -32,12 +33,11 @@ def get_qsystem_tray_icon() -> QtWidgets.QSystemTrayIcon:
 def notify(
     title: str,
     message: str,
-    action_label: str | None = None,
-    action_callback: Callable | None = None,
+    actions: list[NotificationAction] | None,
 ) -> bool:
     """Send via QSystemTrayIcon.
 
-    Doesn't support an action label, but triggers action on notification clicked.
+    Doesn't support an action label, but triggers first action on notification clicked.
 
     Used for:
         - Windows
@@ -61,8 +61,9 @@ def notify(
         tray.messageClicked.disconnect()
 
     # Only act on notification clicks, if we have an action.
-    if action_callback is not None:
-        tray.messageClicked.connect(action_callback)
+    if actions:
+        action = actions[0]
+        tray.messageClicked.connect(lambda: action.func(action.args))
 
     tray.show()
     tray.showMessage(title, message, QtGui.QIcon(":notification"))

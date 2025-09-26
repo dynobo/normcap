@@ -26,6 +26,7 @@ from normcap.gui import (
     system_info,
     utils,
 )
+from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
@@ -33,6 +34,7 @@ from normcap.gui.models import Days, Rect, Screen, Seconds
 from normcap.gui.settings import Settings
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
+from normcap.notification.models import NAME_NOTIFICATION_CLICKED_ACTION
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +51,7 @@ class Communicate(QtCore.QObject):
     on_copied_to_clipboard = QtCore.Signal()
     on_region_selected = QtCore.Signal(Rect, int)
     on_languages_changed = QtCore.Signal(list)
+    on_action_finished = QtCore.Signal()
 
 
 class SystemTray(QtWidgets.QSystemTrayIcon):
@@ -70,6 +73,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("System info:\n%s", system_info.to_dict())
         super().__init__(parent)
+
+        self.dbus_service = (
+            self._get_dbus_service() if system_info.is_flatpak() else None
+        )
 
         # Prepare and connect signals
         self.com = Communicate(parent=self)
@@ -119,6 +126,15 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.setContextMenu(self.tray_menu)
         self._populate_context_menu_entries()
 
+        if args.get("dbus_activation", False):
+            # Skip UI setup. Just wait for ActionActivate signal to happen the exit
+            self.com.on_action_finished.connect(
+                lambda: self.com.exit_application.emit(0)
+            )
+            # Otherwise exit after timeout
+            QtCore.QTimer.singleShot(1000, lambda: self.com.exit_application.emit(0))
+            return
+
         # Verify screenshot permissions
         if not self.settings.value("has-screenshot-permission", type=bool):
             if screenshot.has_screenshot_permission():
@@ -138,6 +154,15 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         if not args.get("background_mode", False):
             self._show_windows(delay_screenshot=delay_screenshot)
+
+    def _get_dbus_service(self) -> DBusApplicationService | None:
+        dbus_service = DBusApplicationService(self.parent())
+        if not dbus_service.register_service():
+            logger.error("Failed to register DBus activation service")
+            return None
+
+        logger.debug("Registered DBus activation service")
+        return dbus_service
 
     @QtCore.Slot()
     def show_introduction(self) -> None:
@@ -308,9 +333,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if result.text and self.cli_mode:
             self._print_to_stdout_and_exit(text=result.text)
         elif result.text:
-            self._copy_to_clipboard(
-                text=result.text, result_type=result.text_type, detector=result.detector
-            )
+            self._copy_to_clipboard(text=result.text)
         else:
             logger.warning("Nothing detected on selected region.")
 
@@ -325,18 +348,18 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _send_notification(
         self, text: str, text_type: TextType, detector: TextDetector
     ) -> None:
-        title, message = notification_utils._compose_notification(
-            text=text, result_type=text_type, detector=detector
+        title = notification_utils.get_title(
+            text=text, text_type=text_type, detector=detector
         )
-        action_label = notification_utils._get_action_label(text_type=text_type)
+        message = notification_utils.get_text(text=text)
+        actions = notification_utils.get_actions(
+            text=text, text_type=text_type, action_func=self._handle_action_activate
+        )
 
         notification.notify(
             title=title,
             message=message,
-            action_label=action_label,
-            action_callback=lambda: notification_utils._open_ocr_result(
-                text=text, text_type=text_type
-            ),
+            actions=actions,
             handler_name=self.notification_handler_name,
         )
 
@@ -364,8 +387,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
         self.language_window.exec()
 
-    @QtCore.Slot(str, str, str)
-    def _copy_to_clipboard(self, text: str, result_type: str, detector: str) -> None:
+    def _copy_to_clipboard(self, text: str) -> None:
         """Copy results to clipboard."""
         if self.clipboard_handler_name:
             logger.debug(
@@ -446,6 +468,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
+        if self.dbus_service:
+            self.dbus_service.action_activated.connect(self._handle_action_activate)
         self.activated.connect(self._handle_tray_click)
         self.com.on_region_selected.connect(self._close_windows)
         self.com.on_region_selected.connect(self._schedule_detection)
@@ -453,6 +477,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_languages_changed.connect(self._update_installed_languages)
         self.com.exit_application.connect(self._exit_application)
         self.messageClicked.connect(self._open_language_manager)
+
+    @QtCore.Slot(str, list)
+    def _handle_action_activate(self, action_name: str, parameter: list) -> None:
+        if action_name == NAME_NOTIFICATION_CLICKED_ACTION:
+            text, text_type = parameter
+            notification_utils.perform_action(text=text, text_type=text_type)
+            self.com.on_action_finished.emit()
 
     def _add_update_checker(self) -> None:
         if not self.settings.value("update", type=bool):
