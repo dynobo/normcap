@@ -90,14 +90,13 @@ from normcap.gui import notification_utils
         ),
     ],
 )
-def test_compose_notification(
-    text, text_type, text_detector, output_title, output_text
-):
+def test_get_text_get_title(text, text_type, text_detector, output_title, output_text):
     # GIVEN a Notifier and a certain input
     # WHEN the notification is composed
-    title, text = notification_utils._compose_notification(
-        text=text, result_type=text_type, detector=text_detector
+    title = notification_utils.get_title(
+        text=text, text_type=text_type, detector=text_detector
     )
+    text = notification_utils.get_text(text=text)
 
     # THEN certain title and text should be used
     assert output_title in title
@@ -189,22 +188,22 @@ def test_compose_notification(
         (
             "test test\ntest",
             TextType.PARAGRAPH,
-            [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
+            [(Path(tempfile.gettempdir()) / "normcap_result.txt").as_uri()],
         ),
         (
             "test",
             TextType.SINGLE_LINE,
-            [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
+            [(Path(tempfile.gettempdir()) / "normcap_result.txt").as_uri()],
         ),
         (
             "test\ntest",
             TextType.MULTI_LINE,
-            [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
+            [(Path(tempfile.gettempdir()) / "normcap_result.txt").as_uri()],
         ),
         (
             "raw test",
             None,
-            [(Path(tempfile.gettempdir()) / "normcap_temporary_result.txt").as_uri()],
+            [(Path(tempfile.gettempdir()) / "normcap_result.txt").as_uri()],
         ),
     ],
 )
@@ -220,7 +219,7 @@ def test_open_ocr_result(monkeypatch, text, text_type, expected_urls):
     )
 
     # WHEN the function is called with certain text and TextType
-    notification_utils._open_ocr_result(text=text, text_type=text_type)
+    notification_utils.perform_action(text=text, text_type=text_type)
 
     # THEN the expected urls should be in the format so openUrl would result in the
     #   correct action

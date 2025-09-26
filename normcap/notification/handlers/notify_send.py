@@ -2,9 +2,9 @@ import logging
 import shutil
 import subprocess
 import sys
-from collections.abc import Callable
 
 from normcap.gui import system_info
+from normcap.notification.models import NotificationAction
 
 logger = logging.getLogger(__name__)
 
@@ -32,8 +32,7 @@ def is_installed() -> bool:
 def notify(
     title: str,
     message: str,
-    action_label: str | None,
-    action_callback: Callable | None,
+    actions: list[NotificationAction] | None,
 ) -> bool:
     """Send via notify-send.
 

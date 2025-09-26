@@ -24,7 +24,9 @@ def test_notify_without_action(monkeypatch):
 
     # WHEN a notification is send
     result = notify_send.notify(
-        title="Title", message="Message", action_label=None, action_callback=None
+        title="Title",
+        message="Message",
+        actions=None,
     )
 
     # THEN the command that gets executed via Popen should be in the specific format

@@ -1,10 +1,13 @@
 import logging
-from collections.abc import Callable
 
 from jeepney.io.blocking import Proxy, open_dbus_connection
 from jeepney.wrappers import MessageGenerator, new_method_call
 
 from normcap.gui import system_info
+from normcap.notification.models import (
+    NAME_NOTIFICATION_CLICKED_ACTION,
+    NotificationAction,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -79,26 +82,26 @@ def is_installed() -> bool:
 def notify(
     title: str,
     message: str,
-    action_label: str | None = None,
-    action_callback: Callable | None = None,
+    actions: list[NotificationAction] | None = None,
 ) -> bool:
-    """Send a notification via the DBus portal.
-
-    Note: For flatpak applications, notification actions are limited.
-    This implementation sends a simple notification that activates the app
-    when clicked, but doesn't support custom action buttons reliably.
-
-    Args:
-        title: Notification title
-        message: Notification message body
-        action_label: Optional label for action button (ignored for now)
-        action_callback: Optional callback (not used directly but required
-                         for interface compatibility)
-
-    Returns:
-        True if notification was sent successfully, False otherwise
-    """
+    """Send a notification via the DBus portal."""
     try:
+        # L10N: Button text of notification action in Linux.
+        if actions is None:
+            actions = []
+
+        buttons = [
+            {
+                "label": ("s", action.label),
+                "action": (
+                    "s",
+                    f"app.{NAME_NOTIFICATION_CLICKED_ACTION}",
+                ),
+                "target": ("as", action.args),
+            }
+            for action in actions
+        ]
+
         with open_dbus_connection() as connection:
             proxy = Proxy(DBusNotificationPortal(), connection)
 
@@ -106,8 +109,15 @@ def notify(
             notification_data: dict[str, tuple[str, object]] = {
                 "title": ("s", title),
                 "body": ("s", message),
-                "default-action": ("s", "activate"),
+                "icon": ("(sv)", ("themed", ("as", ["com.github.dynobo.normcap"]))),
+                "default-action": ("s", "app.activate"),
+                "priority": ("s", "urgent"),
+                "buttons": (
+                    "aa{sv}",
+                    buttons,
+                ),
             }
+            logger.info(notification_data)
 
             proxy.add_notification(notification_app_id, notification_data)
             return True

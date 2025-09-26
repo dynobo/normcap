@@ -1,7 +1,6 @@
 import logging
-from collections.abc import Callable
 
-from normcap.notification.models import Handler, HandlerProtocol
+from normcap.notification.models import Handler, HandlerProtocol, NotificationAction
 
 from .handlers import dbus_portal, notify_send, qt
 
@@ -59,8 +58,7 @@ def _notify(
     handler: Handler,
     title: str,
     message: str,
-    action_label: str,
-    action_callback: Callable,
+    actions: list[NotificationAction] | None,
 ) -> bool:
     notification_handler = _notification_handlers[handler]
     if not notification_handler.is_compatible():
@@ -69,8 +67,7 @@ def _notify(
         notification_handler.notify(
             title=title,
             message=message,
-            action_label=action_label,
-            action_callback=action_callback,
+            actions=actions,
         )
     except Exception:
         logger.exception("%s's notify() failed!", handler.name)
@@ -80,11 +77,12 @@ def _notify(
     return True
 
 
+# TODO: remove text_type and text. Just use action_data.
+# TODO: Action callback should just be slot
 def notify(
     title: str,
     message: str,
-    action_label: str,
-    action_callback: Callable,
+    actions: list[NotificationAction] | None = None,
     handler_name: str | None = None,
 ) -> None:
     """Send desktop notification using provided handler, or try all compatible ones."""
@@ -99,8 +97,7 @@ def notify(
             handler=handler,
             title=title,
             message=message,
-            action_label=action_label,
-            action_callback=action_callback,
+            actions=actions,
         ):
             return
 

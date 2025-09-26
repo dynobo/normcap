@@ -7,6 +7,7 @@ class DetectionMode(enum.Flag):
     CODES = enum.auto()
 
 
+# ONHOLD: Switch to StrEnum when Python 3.11
 class TextType(str, enum.Enum):
     """Describe format/content of the detected text."""
 
@@ -19,6 +20,14 @@ class TextType(str, enum.Enum):
     PARAGRAPH = "PARAGRAPH"
     VEVENT = "VEVENT"
     VCARD = "VCARD"
+
+
+PlaintextTextTypes = [
+    TextType.NONE,
+    TextType.SINGLE_LINE,
+    TextType.MULTI_LINE,
+    TextType.PARAGRAPH,
+]
 
 
 class TextDetector(str, enum.Enum):

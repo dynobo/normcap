@@ -5,10 +5,13 @@
 ## v0.6.1 (upcoming)
 
 **All systems:**
-- Drop support for Python 3.9.
+- 🗲 Breaking: Drop support for Python 3.9.
 
 **Windows**:
 - Fix crash on `NormCap.exe --help`. ([#783](https://github.com/dynobo/normcap/issues/783))
+
+**Linux**:
+- Add notification actions for FlatPak package.
 
 ## v0.6.0 (2025-08-31)
 

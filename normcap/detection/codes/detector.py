@@ -126,6 +126,7 @@ def detect_codes(image: QtGui.QImage) -> DetectionResult | None:
         text, code_text_type, code_type = detections
         logger.debug("Code detection results: %s [%s]", text, code_type)
         text_detector = TextDetector[code_type.value]
+        # TODO: Set text type to URL heuristically
         text_type = TextType[code_text_type.value]
         return DetectionResult(text=text, text_type=text_type, detector=text_detector)
 

@@ -1,6 +1,16 @@
 import enum
 from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Protocol
+
+NAME_NOTIFICATION_CLICKED_ACTION = "notification_clicked"
+
+
+@dataclass
+class NotificationAction:
+    label: str
+    func: Callable
+    args: list[str] | None
 
 
 class HandlerProtocol(Protocol):
@@ -10,16 +20,15 @@ class HandlerProtocol(Protocol):
         self,
         title: str,
         message: str,
-        action_label: str | None,
-        action_callback: Callable | None,
+        actions: list[NotificationAction] | None,
     ) -> bool:
         """Show notification.
 
         Args:
             title: Title of the notification.
             message: Body of the notification.
-            action_label: Button text.
-            action_callback: Button action.
+            actions: List of actions which the user can trigger through notification.
+                Note: Not all handlers support (multiple) notification.
 
         Returns:
             False, if an error has occurred.
