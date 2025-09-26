@@ -36,7 +36,7 @@ def is_compatible() -> bool:
     if system_info.has_awesome_wm():
         return False
 
-    if system_info.is_flatpak_package():
+    if system_info.is_flatpak():
         return True
 
     if gnome_version := system_info.get_gnome_version():

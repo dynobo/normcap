@@ -90,12 +90,12 @@ def test_is_briefcase_package():
     assert is_briefcase
 
 
-def test_is_flatpak_package(monkeypatch):
-    assert not system_info.is_flatpak_package()
+def test_is_flatpak(monkeypatch):
+    assert not system_info.is_flatpak()
 
     with monkeypatch.context() as m:
         m.setenv("FLATPAK_ID", "123")
-        assert system_info.is_flatpak_package()
+        assert system_info.is_flatpak()
 
 
 def test_screens(qtbot):
@@ -234,7 +234,7 @@ def test_get_tessdata_path(
     try:
         with monkeypatch.context() as m:
             m.setattr(system_info, "is_briefcase_package", lambda: is_briefcase)
-            m.setattr(system_info, "is_flatpak_package", lambda: is_flatpak)
+            m.setattr(system_info, "is_flatpak", lambda: is_flatpak)
             if has_prefix:
                 m.setenv("TESSDATA_PREFIX", f"{data_file.resolve().parents[1]}")
 
@@ -261,7 +261,7 @@ def test_get_tessdata_path_warn_on_win32(monkeypatch, caplog):
     try:
         with monkeypatch.context() as m:
             m.setattr(system_info, "is_briefcase_package", lambda: False)
-            m.setattr(system_info, "is_flatpak_package", lambda: False)
+            m.setattr(system_info, "is_flatpak", lambda: False)
             m.setenv("TESSDATA_PREFIX", "")
 
             monkeypatch.setattr(system_info.sys, "platform", "win32")
@@ -270,7 +270,7 @@ def test_get_tessdata_path_warn_on_win32(monkeypatch, caplog):
                 _ = system_info.get_tessdata_path(
                     config_directory=system_info.config_directory(),
                     is_briefcase_package=system_info.is_briefcase_package(),
-                    is_flatpak_package=system_info.is_flatpak_package(),
+                    is_flatpak_package=system_info.is_flatpak(),
                 )
             assert "TESSDATA_PREFIX" in caplog.records[0].msg
 

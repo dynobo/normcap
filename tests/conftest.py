@@ -86,7 +86,7 @@ def tessdata_path() -> Path | None:
     return system_info.get_tessdata_path(
         config_directory=system_info.config_directory(),
         is_briefcase_package=system_info.is_briefcase_package(),
-        is_flatpak_package=system_info.is_flatpak_package(),
+        is_flatpak_package=system_info.is_flatpak(),
     )
 
 
