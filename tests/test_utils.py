@@ -234,7 +234,7 @@ def test_copy_traineddata_files_briefcase(tmp_path, monkeypatch):
 
 def test_copy_traineddata_files_flatpak(tmp_path, monkeypatch):
     # Create placeholder for traineddata files, if they don't exist
-    monkeypatch.setattr(utils.system_info, "is_flatpak_package", lambda: True)
+    monkeypatch.setattr(utils.system_info, "is_flatpak", lambda: True)
     with resources.as_file(resources.files("normcap.resources")) as file_path:
         resource_path = Path(file_path)
     (resource_path / "tessdata" / "placeholder_1.traineddata").touch()

@@ -166,7 +166,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             # TODO: should this be done within has_screenshot_permission?
             screenshot.macos_reset_screenshot_permission()
 
-        elif system_info.is_flatpak_package():
+        elif system_info.is_flatpak():
             text = constants.PERMISSIONS_TEXT_FLATPAK
 
         elif system_info.display_manager_is_wayland():
@@ -283,7 +283,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         tessdata_path = system_info.get_tessdata_path(
             config_directory=system_info.config_directory(),
-            is_flatpak_package=system_info.is_flatpak_package(),
+            is_flatpak_package=system_info.is_flatpak(),
             is_briefcase_package=system_info.is_briefcase_package(),
         )
         tesseract_bin_path = system_info.get_tesseract_bin_path(
@@ -412,7 +412,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             tessdata_path=system_info.get_tessdata_path(
                 config_directory=system_info.config_directory(),
                 is_briefcase_package=system_info.is_briefcase_package(),
-                is_flatpak_package=system_info.is_flatpak_package(),
+                is_flatpak_package=system_info.is_flatpak(),
             ),
         )
         self.com.on_languages_changed.emit(self.installed_languages)

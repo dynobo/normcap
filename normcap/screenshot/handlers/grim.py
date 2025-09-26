@@ -15,7 +15,7 @@ install_instructions = "Install the package `grim` using your system's package m
 
 
 def is_compatible() -> bool:
-    return system_info.has_wlroots_compositor() and not system_info.is_flatpak_package()
+    return system_info.has_wlroots_compositor() and not system_info.is_flatpak()
 
 
 def is_installed() -> bool:

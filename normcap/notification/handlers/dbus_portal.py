@@ -51,7 +51,7 @@ class DBusIntrospectable(MessageGenerator):
 
 
 def is_compatible() -> bool:
-    return system_info.is_flatpak_package()
+    return system_info.is_flatpak()
 
 
 def is_installed() -> bool:

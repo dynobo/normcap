@@ -31,7 +31,7 @@ def is_kde() -> bool:
     return bool(kde_full_session) or ("kde-plasma" in desktop_session)
 
 
-def is_flatpak_package() -> bool:
+def is_flatpak() -> bool:
     if sys.platform != "linux" and "bsd" not in sys.platform:
         return False
 

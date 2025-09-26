@@ -97,13 +97,13 @@ def is_appimage_package() -> bool:
     return os.getenv("APPIMAGE") is not None
 
 
-def is_flatpak_package() -> bool:
+def is_flatpak() -> bool:
     return os.getenv("FLATPAK_ID") is not None
 
 
 def is_prebuilt_package() -> bool:
     # TODO: Fix usage of this function and rename!
-    return is_briefcase_package() or is_flatpak_package()
+    return is_briefcase_package() or is_flatpak()
 
 
 @functools.cache
@@ -220,7 +220,7 @@ def to_dict() -> dict:
         "python_version": python_version(),
         "cli_args": " ".join(sys.argv),
         "is_briefcase_package": is_briefcase_package(),
-        "is_flatpak_package": is_flatpak_package(),
+        "is_flatpak_package": is_flatpak(),
         "is_appimage_package": is_appimage_package(),
         "platform": sys.platform,
         "desktop_environment": desktop_environment(),
@@ -237,7 +237,7 @@ def to_dict() -> dict:
         "tessdata_path": get_tessdata_path(
             config_directory=config_directory(),
             is_briefcase_package=is_briefcase_package(),
-            is_flatpak_package=is_flatpak_package(),
+            is_flatpak_package=is_flatpak(),
         ),
         "envs": {
             "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX", None),

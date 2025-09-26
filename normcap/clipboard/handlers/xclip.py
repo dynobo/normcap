@@ -34,7 +34,7 @@ def is_compatible() -> bool:
     if sys.platform != "linux" and "bsd" not in sys.platform:
         return False
 
-    return not system_info.is_flatpak_package()
+    return not system_info.is_flatpak()
 
 
 def is_installed() -> bool:

@@ -69,7 +69,7 @@ def _prepare_envs() -> None:
 
     if system_info.display_manager_is_wayland():
         utils.set_environ_for_wayland()
-    if system_info.is_flatpak_package():
+    if system_info.is_flatpak():
         utils.set_environ_for_flatpak()
     if system_info.is_appimage_package():
         utils.set_environ_for_appimage()
@@ -105,7 +105,7 @@ def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
         tessdata_path = system_info.get_tessdata_path(
             config_directory=system_info.config_directory(),
             is_briefcase_package=system_info.is_briefcase_package(),
-            is_flatpak_package=system_info.is_flatpak_package(),
+            is_flatpak_package=system_info.is_flatpak(),
         )
         utils.copy_traineddata_files(target_dir=tessdata_path)
 

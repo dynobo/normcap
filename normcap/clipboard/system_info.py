@@ -25,7 +25,7 @@ def has_awesome_wm() -> bool:
     return "awesome" in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
 
 
-def is_flatpak_package() -> bool:
+def is_flatpak() -> bool:
     if sys.platform != "linux" and "bsd" not in sys.platform:
         return False
     return os.getenv("FLATPAK_ID") is not None
