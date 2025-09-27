@@ -11,7 +11,7 @@ from typing import NoReturn
 from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__, utils
-from normcap.gui import system_info
+from normcap.gui import introduction, system_info
 from normcap.gui.tray import SystemTray
 
 
@@ -106,7 +106,7 @@ def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
         utils.copy_traineddata_files(target_dir=tessdata_path)
 
     app = _get_application()
-    tray = SystemTray(app, vars(args))
+    tray = SystemTray(None, vars(args))
 
     return app, tray
 

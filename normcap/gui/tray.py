@@ -169,7 +169,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         show_intro = bool(self.settings.value("show-introduction", type=bool))
         result = introduction.IntroductionDialog(
             show_on_startup=show_intro,
-            parent=self.windows[0] if self.windows else None,
+            parent=None,  # self.windows[0] if self.windows else None,
         ).exec()
         if result == introduction.Choice.SHOW:
             self.settings.setValue("show-introduction", True)
