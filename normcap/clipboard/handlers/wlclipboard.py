@@ -15,6 +15,16 @@ install_instructions = (
 
 def copy(text: str) -> None:
     """Use wl-clipboard package to copy text to system clipboard."""
+    if gnome_version := system_info.get_gnome_version():
+        gnome_major = int(gnome_version.split(".")[0])
+        last_working_gnome_version = 44
+        if gnome_major > last_working_gnome_version:
+            logger.warning(
+                "%s is not working well with Gnome %s. Try installing xclip or xsel!",
+                __name__,
+                gnome_version,
+            )
+
     subprocess.run(
         args=["wl-copy"],
         shell=False,
@@ -38,16 +48,6 @@ def is_compatible() -> bool:
 
     if system_info.is_flatpak():
         return True
-
-    if gnome_version := system_info.get_gnome_version():
-        gnome_major = int(gnome_version.split(".")[0])
-        last_working_gnome_version = 44
-        if gnome_major > last_working_gnome_version:
-            logger.warning(
-                "%s is not working well with Gnome %s. Try xclip or xsel instead!",
-                __name__,
-                gnome_version,
-            )
 
     return True
 
