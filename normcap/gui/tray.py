@@ -44,16 +44,6 @@ class TrayIcon(Enum):
     DONE = ":tray_done"
 
 
-class Communicate(QtCore.QObject):
-    """TrayMenus' communication bus."""
-
-    exit_application = QtCore.Signal(float)
-    on_copied_to_clipboard = QtCore.Signal()
-    on_region_selected = QtCore.Signal(Rect, int)
-    on_languages_changed = QtCore.Signal(list)
-    on_action_finished = QtCore.Signal()
-
-
 class SystemTray(QtWidgets.QSystemTrayIcon):
     """System tray icon with menu."""
 
@@ -79,7 +69,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
 
         # Prepare and connect signals
-        self.com = Communicate(parent=self)
+        self.com = parent.com  # Communicate(parent=self)
         self._set_signals()
 
         # Prepare instance attributes
