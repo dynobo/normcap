@@ -105,7 +105,7 @@ jobs:
 
       - name: Coveralls Parallel
         if: github.repository_owner == 'dynobo'
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@v2.3.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: ${{ matrix.os }}
@@ -202,7 +202,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
       - name: Coveralls Finished
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@v2.3.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
@@ -222,14 +222,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5.0.0
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3.30.3
+        uses: github/codeql-action/init@v3.30.5
         with:
           languages: ${{ matrix.language }}
           queries: security-extended
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3.30.3
+        uses: github/codeql-action/autobuild@v3.30.5
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3.30.3
+        uses: github/codeql-action/analyze@v3.30.5
 
   deploy-briefcase:
     name: Briefcase build & draft release
