@@ -12,9 +12,9 @@ import time
 from enum import Enum
 from typing import Any, NoReturn, cast
 
-from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import __version__, clipboard, notification, screenshot
+from normcap import clipboard, notification, screenshot
 from normcap.detection import detector, ocr
 from normcap.detection.models import DetectionMode, TextDetector, TextType
 from normcap.gui import (
@@ -54,12 +54,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     # (Normally language manager is only available in pre-build version)
     _testing_language_manager = False
 
-    # Used for singleton:
-    _socket_name = f"v{__version__}-normcap"
-    _socket_out: QtNetwork.QLocalSocket | None = None
-    _socket_in: QtNetwork.QLocalSocket | None = None
-    _socket_server: QtNetwork.QLocalServer | None = None
-
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("System info:\n%s", system_info.to_dict())
         super().__init__(parent)
@@ -69,7 +63,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         )
 
         # Prepare and connect signals
-        self.com = parent.com  # Communicate(parent=self)
+        self.com = parent.com  # type:ignore
         self._set_signals()
 
         # Prepare instance attributes
@@ -102,11 +96,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.delayed_init_timer.timeout.connect(self._delayed_init)
         self.delayed_init_timer.start(50)
 
-        # Check/get prerequisites for running
-        if not self._ensure_single_instance():
-            self.com.exit_application.emit(0)
-            return
-
         # Prepare UI
         self._set_tray_icon_normal()
 
@@ -119,10 +108,10 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if args.get("dbus_activation", False):
             # Skip UI setup. Just wait for ActionActivate signal to happen the exit
             self.com.on_action_finished.connect(
-                lambda: self.com.exit_application.emit(0)
+                lambda: self.com.on_exit_application.emit(0)
             )
             # Otherwise exit after timeout
-            QtCore.QTimer.singleShot(1000, lambda: self.com.exit_application.emit(0))
+            QtCore.QTimer.singleShot(1000, lambda: self.com.on_exit_application.emit(0))
             return
 
         # Verify screenshot permissions
@@ -188,39 +177,12 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             text = constants.PERMISSIONS_TEXT_WAYLAND
 
         permissions_dialog.PermissionDialog(text=text).exec()
-        self.com.exit_application.emit(delay)
+        self.com.on_exit_application.emit(delay)
 
     @QtCore.Slot()
     def _set_tray_icon_done(self) -> None:
         self.setIcon(QtGui.QIcon(TrayIcon.DONE.value))
         self.reset_tray_icon_timer.start(5000)
-
-    @QtCore.Slot()
-    def _on_new_connection(self) -> None:
-        """Open incoming socket to listen for messages from other NormCap instances."""
-        if not self._socket_server:
-            return
-        self._socket_in = self._socket_server.nextPendingConnection()
-        if self._socket_in:
-            logger.debug("Connect to incoming socket.")
-            self._socket_in.readyRead.connect(self._on_ready_read)
-
-    @QtCore.Slot()
-    def _on_ready_read(self) -> None:
-        """Process messages received from other NormCap instances."""
-        if not self._socket_in:
-            return
-
-        message = self._socket_in.readAll().data().decode("utf-8", errors="ignore")
-        if message != "capture":
-            return
-
-        logger.info("Received socket signal to capture.")
-        if self.windows:
-            logger.debug("Capture window(s) already open. Doing nothing.")
-            return
-
-        self._show_windows(delay_screenshot=True)
 
     @QtCore.Slot(QtWidgets.QSystemTrayIcon.ActivationReason)
     def _handle_tray_click(
@@ -396,7 +358,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """Print results to stdout ."""
         logger.debug("Print text to stdout and exit.")
         print(text, file=sys.stdout)  # noqa: T201
-        self.com.exit_application.emit(0)
+        self.com.on_exit_application.emit(0)
 
     @QtCore.Slot()
     def _close_windows(self) -> None:
@@ -433,29 +395,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def _set_tray_icon_normal(self) -> None:
         self.setIcon(QtGui.QIcon(TrayIcon.NORMAL.value))
 
-    def _create_socket_server(self) -> None:
-        """Open socket server to listen for other NormCap instances."""
-        if self._socket_out:
-            self._socket_out.close()
-            self._socket_out = None
-        QtNetwork.QLocalServer().removeServer(self._socket_name)
-        self._socket_server = QtNetwork.QLocalServer(self)
-        self._socket_server.newConnection.connect(self._on_new_connection)
-        self._socket_server.listen(self._socket_name)
-        logger.debug("Listen on local socket %s.", self._socket_server.serverName())
-
-    def _ensure_single_instance(self) -> bool:
-        self._socket_out = QtNetwork.QLocalSocket(self)
-        self._socket_out.connectToServer(self._socket_name)
-        if self._socket_out.waitForConnected():
-            logger.debug("Another instance is already running. Sending capture signal.")
-            self._socket_out.write(b"capture")
-            self._socket_out.waitForBytesWritten(1000)
-            return False
-
-        self._create_socket_server()
-        return True
-
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
         if self.dbus_service:
@@ -465,7 +404,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.com.on_region_selected.connect(self._schedule_detection)
         self.com.on_languages_changed.connect(self._sanitize_language_setting)
         self.com.on_languages_changed.connect(self._update_installed_languages)
-        self.com.exit_application.connect(self._exit_application)
         self.messageClicked.connect(self._open_language_manager)
 
     @QtCore.Slot(str, list)
@@ -543,7 +481,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         # L10N: Tray menu entry for exiting NormCap completely.
         action = QtGui.QAction(_("Exit"), self.tray_menu)
         action.setObjectName("exit")
-        action.triggered.connect(lambda: self.com.exit_application.emit(0))
+        action.triggered.connect(lambda: self.com.on_exit_application.emit(0))
         self.tray_menu.addAction(action)
 
     def _create_window(self, index: int) -> None:
@@ -600,20 +538,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if self.settings.value("tray", type=bool):
             return
 
-        self.com.exit_application.emit(delay)
-
-    @QtCore.Slot(bool)
-    def _exit_application(self, delay: Seconds) -> None:
-        # Unregister the singleton server
-        if self._socket_server:
-            self._socket_server.close()
-            self._socket_server.removeServer(self._socket_name)
-            self._socket_server = None
-
-        if delay:
-            self.delayed_exit_timer.start(int(delay * 1000))
-        else:
-            self.hide()
+        self.com.on_exit_application.emit(delay)
 
     def hide(self) -> NoReturn:
         """Perform last cleanups before quitting application.

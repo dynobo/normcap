@@ -6,31 +6,15 @@ import signal
 import sys
 from argparse import Namespace
 from pathlib import Path
-from typing import Any, NoReturn
+from typing import NoReturn
 
 from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__, utils
 from normcap.gui import system_info
-from normcap.gui.models import Rect
-from normcap.gui.tray import SystemTray
+from normcap.gui.application import NormcapApp
 
-
-class Communicate(QtCore.QObject):
-    """TrayMenus' communication bus."""
-
-    exit_application = QtCore.Signal(float)
-    on_copied_to_clipboard = QtCore.Signal()
-    on_region_selected = QtCore.Signal(Rect, int)
-    on_languages_changed = QtCore.Signal(list)
-    on_action_finished = QtCore.Signal()
-
-
-class NormcapApp(QtWidgets.QApplication):
-    def __init__(self, args: dict[str, Any]) -> None:
-        super().__init__()
-        self.setQuitOnLastWindowClosed(False)
-        self.com = Communicate(parent=self)
+logger = logging.getLogger(__name__)
 
 
 def _get_args() -> Namespace:
@@ -48,6 +32,7 @@ def _get_args() -> Namespace:
         sys.exit(0)
 
     if args.background_mode:
+        # Background mode requires tray icon
         args.tray = True
 
     return args
@@ -93,12 +78,13 @@ def _prepare_envs() -> None:
         utils.set_environ_for_appimage()
 
 
-def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
-    """Prepares the application and system tray without executing.
+def _init_normcap() -> QtWidgets.QApplication:
+    """Prepares the application.
+
+    This does not call app.exec() to simplify testing.
 
     Returns:
-        A tuple containing the QApplication ready for execution
-            and the not yet visible SystemTray.
+        NormcapApp instance.
     """
     args = _get_args()
 
@@ -116,17 +102,12 @@ def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
         )
         utils.copy_traineddata_files(target_dir=tessdata_path)
 
-    app = NormcapApp(args=vars(args))
-    tray = SystemTray(app, vars(args))
-
-    return app, tray
+    return NormcapApp(args=vars(args))
 
 
 def run() -> NoReturn:
     """Run the main application."""
-    app, tray = _prepare()
-    tray.show()
-    sys.exit(app.exec())
+    sys.exit(_init_normcap().exec())
 
 
 if __name__ == "__main__":

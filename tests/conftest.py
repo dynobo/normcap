@@ -176,7 +176,7 @@ def run_normcap(monkeypatch, qapp, qtbot, basic_cli_args):
         monkeypatch.setattr(sys, "argv", basic_cli_args)
 
         monkeypatch.setattr(app, "_get_application", lambda: qapp)
-        _, tray = app._prepare()
+        _, tray = app._init_normcap()
 
         # wait for windows to be created and moved on wayland
         qtbot.wait(50)

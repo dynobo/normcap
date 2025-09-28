@@ -12,6 +12,8 @@
 - **Why safe**: Only structural changes, no behavior changes
 - **Testing**: Application should start and work exactly as before
 
+_done_
+
 #### **Subtask 1.2: Move singleton management to NormcapApp**
 - **Goal**: Transfer single-instance logic from SystemTray to NormcapApp
 - **What to do**:
@@ -21,6 +23,8 @@
   - SystemTray should connect to NormcapApp's signal for "capture" requests
 - **Why safe**: Singleton logic is independent of tray functionality
 - **Testing**: Single instance behavior should work the same, new instances should trigger capture
+
+_done_
 
 ### **Phase 2: Move Core Application State**
 
@@ -119,7 +123,7 @@
 ### **Key Benefits of This Approach:**
 
 1. **Incremental**: Each subtask is small and testable
-2. **Reversible**: Changes can be backed out easily if issues arise  
+2. **Reversible**: Changes can be backed out easily if issues arise
 3. **Logical**: Follows natural separation of concerns (UI vs business logic vs system integration)
 4. **Maintainable**: Results in cleaner, more maintainable code architecture
 5. **Testable**: Each phase maintains working application state

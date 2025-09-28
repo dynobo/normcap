@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pytest
 import toml
-from PySide6 import QtWidgets
 
 import normcap
 from normcap import app, utils
@@ -68,12 +67,6 @@ def test_prepare_logging(monkeypatch, arg_value, expected_level, caplog):
 
     assert logger.level == expected_level
     assert sys.excepthook == utils.hook_exceptions
-
-
-def test_get_application():
-    qt_app = app._get_application()
-    assert isinstance(qt_app, QtWidgets.QApplication)
-    assert not qt_app.quitOnLastWindowClosed()
 
 
 def test_prepare_env():
