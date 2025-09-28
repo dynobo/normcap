@@ -6,13 +6,31 @@ import signal
 import sys
 from argparse import Namespace
 from pathlib import Path
-from typing import NoReturn
+from typing import Any, NoReturn
 
 from PySide6 import QtCore, QtWidgets
 
 from normcap import __version__, utils
 from normcap.gui import system_info
+from normcap.gui.models import Rect
 from normcap.gui.tray import SystemTray
+
+
+class Communicate(QtCore.QObject):
+    """TrayMenus' communication bus."""
+
+    exit_application = QtCore.Signal(float)
+    on_copied_to_clipboard = QtCore.Signal()
+    on_region_selected = QtCore.Signal(Rect, int)
+    on_languages_changed = QtCore.Signal(list)
+    on_action_finished = QtCore.Signal()
+
+
+class NormcapApp(QtWidgets.QApplication):
+    def __init__(self, args: dict[str, Any]) -> None:
+        super().__init__()
+        self.setQuitOnLastWindowClosed(False)
+        self.com = Communicate(parent=self)
 
 
 def _get_args() -> Namespace:
@@ -75,13 +93,6 @@ def _prepare_envs() -> None:
         utils.set_environ_for_appimage()
 
 
-def _get_application() -> QtWidgets.QApplication:
-    """Get a QApplication instance that doesn't exit on window close."""
-    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
-    app.setQuitOnLastWindowClosed(False)
-    return app
-
-
 def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
     """Prepares the application and system tray without executing.
 
@@ -105,7 +116,7 @@ def _prepare() -> tuple[QtWidgets.QApplication, SystemTray]:
         )
         utils.copy_traineddata_files(target_dir=tessdata_path)
 
-    app = _get_application()
+    app = NormcapApp(args=vars(args))
     tray = SystemTray(app, vars(args))
 
     return app, tray
