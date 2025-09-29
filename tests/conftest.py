@@ -2,7 +2,6 @@ import builtins
 import importlib
 import os
 import platform
-import sys
 from collections.abc import Callable
 from contextlib import contextmanager
 from functools import partial
@@ -20,12 +19,34 @@ if platform.system() == "linux":
 import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import app
 from normcap.clipboard import system_info as clipboard_system_info
 from normcap.detection.ocr.models import OEM, PSM, OcrResult, TessArgs
 from normcap.detection.ocr.transformers import email_address, url
-from normcap.gui import menu_button, system_info
+from normcap.gui import application, menu_button, system_info
 from normcap.screenshot import system_info as screengrab_system_info
+
+
+@pytest.fixture(scope="session")
+def qapp_cls():
+    normcap = application.NormcapApp
+    normcap._exit_application = lambda *args, **kwargs: None
+    return normcap
+
+
+@pytest.fixture(scope="session")
+def qapp_args():
+    return {
+        "language": "eng",
+        "detect_text": True,
+        "detect_codes": True,
+        "parse_text": True,
+        "notification": False,
+        "verbosity": "debug",
+        "update": False,
+        "tray": True,
+        "show_introduction": False,
+        "background_mode": True,
+    }
 
 
 @pytest.fixture(autouse=True)
@@ -151,51 +172,6 @@ def ocr_result() -> OcrResult:
 
 
 @pytest.fixture
-def basic_cli_args():
-    """NormCap configuration used by most tests."""
-    return [
-        sys.argv[0],
-        "--detect-text=True",
-        "--detect-codes=True",
-        "--parse-text=True",
-        "--notification=False",
-        "--verbosity=debug",
-        "--update=False",
-        "--tray=False",
-        "--show-introduction=False",
-    ]
-
-
-@pytest.fixture
-def run_normcap(monkeypatch, qapp, qtbot, basic_cli_args):
-    trays = []
-
-    def _run_normcap(extra_cli_args: list[str] | None = None):
-        extra_cli_args = extra_cli_args or []
-        basic_cli_args.extend(extra_cli_args)
-        monkeypatch.setattr(sys, "argv", basic_cli_args)
-
-        monkeypatch.setattr(app, "_get_application", lambda: qapp)
-        _, tray = app._init_normcap()
-
-        # wait for windows to be created and moved on wayland
-        qtbot.wait(50)
-
-        tray._EXIT_DELAY = 0.1
-        trays.append(tray)
-        return tray
-
-    yield _run_normcap
-
-    for tray in trays:
-        tray._close_windows()
-        tray._exit_application(delay=0)
-        tray.deleteLater()
-
-    QtCore.QTimer.singleShot(0, QtCore.QCoreApplication.processEvents)
-
-
-@pytest.fixture
 def test_signal():
     """Create a QT signal for usage with qtbot.waitSignal().
 
@@ -211,7 +187,7 @@ def test_signal():
     """
 
     class TestSignal(QtCore.QObject):
-        on_event = QtCore.Signal(int)
+        on_event = QtCore.Signal()
 
     return TestSignal()
 

@@ -6,8 +6,11 @@ from typing import Any
 from PySide6 import QtCore, QtNetwork, QtWidgets
 
 from normcap import __version__
-from normcap.gui.models import Rect, Seconds
+from normcap.gui import system_info
+from normcap.gui.models import Rect, Screen, Seconds
+from normcap.gui.settings import Settings
 from normcap.gui.tray import SystemTray
+from normcap.gui.window import Window
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +23,7 @@ class Communicate(QtCore.QObject):
     on_region_selected = QtCore.Signal(Rect, int)
     on_languages_changed = QtCore.Signal(list)
     on_action_finished = QtCore.Signal()
+    on_windows_closed = QtCore.Signal()
 
 
 class Timers:
@@ -28,18 +32,23 @@ class Timers:
 
 
 class NormcapApp(QtWidgets.QApplication):
+    """Main NormCap application logic."""
+
     # Used for singleton:
     _socket_name = f"v{__version__}-normcap"
     _socket_out: QtNetwork.QLocalSocket | None = None
     _socket_in: QtNetwork.QLocalSocket | None = None
     _socket_server: QtNetwork.QLocalServer | None = None
 
+    _EXIT_DELAY: Seconds = 5
+
     def __init__(self, args: dict[str, Any]) -> None:
         super().__init__()
         self.setQuitOnLastWindowClosed(False)
+
         self.com = Communicate(parent=self)
         self.timers = Timers(parent=self)
-        self.timers.delayed_exit.timeout.connect(self.quit)
+        self.timers.delayed_exit.timeout.connect(self._exit_application)
 
         self.com.on_exit_application.connect(self._exit_application)
 
@@ -49,6 +58,11 @@ class NormcapApp(QtWidgets.QApplication):
             return
 
         self._create_socket_server()
+
+        self.settings = Settings(init_settings=args)
+        self.screens: list[Screen] = system_info.screens()
+        self.windows: dict[int, Window] = {}
+        self.installed_languages: list[str] = []
 
         self.tray = SystemTray(self, args)
         self.tray.show()
@@ -104,7 +118,7 @@ class NormcapApp(QtWidgets.QApplication):
         self.tray._show_windows(delay_screenshot=True)
 
     @QtCore.Slot(bool)
-    def _exit_application(self, delay: Seconds) -> None:
+    def _exit_application(self, delay: Seconds = 0) -> None:
         # Unregister the singleton server
         if self._socket_server:
             self._socket_server.close()

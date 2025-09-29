@@ -10,7 +10,7 @@ import os
 import sys
 import time
 from enum import Enum
-from typing import Any, NoReturn, cast
+from typing import Any, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -30,8 +30,7 @@ from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
-from normcap.gui.models import Days, Rect, Screen, Seconds
-from normcap.gui.settings import Settings
+from normcap.gui.models import Days, Rect, Seconds
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
 from normcap.notification.models import NAME_NOTIFICATION_CLICKED_ACTION
@@ -57,20 +56,23 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("System info:\n%s", system_info.to_dict())
         super().__init__(parent)
+        self.app = parent
 
         self.dbus_service = (
             self._get_dbus_service() if system_info.is_flatpak() else None
         )
 
         # Prepare and connect signals
-        self.com = parent.com  # type:ignore
+        self.com = parent.com
+
         self._set_signals()
 
         # Prepare instance attributes
-        self.windows: dict[int, Window] = {}
-        self.screens: list[Screen] = system_info.screens()
-        self.installed_languages: list[str] = []
-        self.settings = Settings(init_settings=args)
+        self.screens = parent.screens
+
+        self.installed_languages = parent.installed_languages
+
+        self.settings = parent.settings
 
         self.screenshot_handler_name = args.get("screenshot_handler")
         self.clipboard_handler_name = args.get("clipboard_handler")
@@ -148,7 +150,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         show_intro = bool(self.settings.value("show-introduction", type=bool))
         result = introduction.IntroductionDialog(
             show_on_startup=show_intro,
-            parent=self.windows[0] if self.windows else None,
+            parent=self.app.windows[0] if self.app.windows else None,
         ).exec()
         if result == introduction.Choice.SHOW:
             self.settings.setValue("show-introduction", True)
@@ -331,7 +333,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         logger.debug("Loading language manager …")
         self.language_window = LanguageManager(
             tessdata_path=system_info.config_directory() / "tessdata",
-            parent=self.windows[0],
+            parent=self.app.windows[0],
         )
         self.language_window.com.on_open_url.connect(self._open_url_and_hide)
         self.language_window.com.on_languages_changed.connect(
@@ -363,15 +365,16 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot()
     def _close_windows(self) -> None:
         """Hide all windows of normcap."""
-        window_count = len(self.windows)
+        window_count = len(self.app.windows)
         if window_count < 1:
             return
         logger.debug("Hide %s window%s", window_count, "s" if window_count > 1 else "")
         QtWidgets.QApplication.restoreOverrideCursor()
         QtWidgets.QApplication.processEvents()
-        for window in self.windows.values():
+        for window in self.app.windows.values():
             window.close()
-        self.windows = {}
+        self.app.windows = {}
+        self.com.on_windows_closed.emit()
 
     def _delayed_init(self) -> None:
         """Setup things that can be done independent of the first capture.
@@ -504,7 +507,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         new_window.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         new_window.set_fullscreen()
-        self.windows[index] = new_window
+        self.app.windows[index] = new_window
 
     def _create_menu_button(self) -> QtWidgets.QWidget:
         if self._testing_language_manager:
@@ -540,7 +543,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.com.on_exit_application.emit(delay)
 
-    def hide(self) -> NoReturn:
+    def hide(self) -> None:
         """Perform last cleanups before quitting application.
 
         Note: Don't call directly! Instead do `self.com.exit_application.emit(0)`!
@@ -560,4 +563,4 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         # The preferable QApplication.quit() doesn't work reliably on macOS. E.g. when
         # right clicking on "close" in tray menu, NormCap process keeps running.
-        sys.exit(0)
+        # sys.exit(0)

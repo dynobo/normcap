@@ -5,44 +5,40 @@
 #### **Subtask 1.1: Create NormcapApp skeleton class**
 - **Goal**: Create a new `NormcapApp(QtWidgets.QApplication)` class with basic structure
 - **What to do**:
-  - Create new file app.py with `NormcapApp` class inheriting from `QtWidgets.QApplication`
-  - Move the `Communicate` class from tray.py to the new app.py as it represents application-wide communication
-  - Add basic initialization accepting the same `args` parameter
-  - Update app.py to use `NormcapApp` instead of generic `QtWidgets.QApplication`
+  - [x] Create new file app.py with `NormcapApp` class inheriting from `QtWidgets.QApplication`
+  - [x] Move the `Communicate` class from tray.py to the new app.py as it represents application-wide communication
+  - [x] Add basic initialization accepting the same `args` parameter
+  - [x] Update app.py to use `NormcapApp` instead of generic `QtWidgets.QApplication`
 - **Why safe**: Only structural changes, no behavior changes
 - **Testing**: Application should start and work exactly as before
-
-_done_
 
 #### **Subtask 1.2: Move singleton management to NormcapApp**
 - **Goal**: Transfer single-instance logic from SystemTray to NormcapApp
 - **What to do**:
-  - Move socket-related attributes (`_socket_name`, `_socket_out`, `_socket_in`, `_socket_server`) to NormcapApp
-  - Move methods: `_create_socket_server()`, `_ensure_single_instance()`, `_on_new_connection()`, `_on_ready_read()`
-  - Update socket message handling to trigger SystemTray methods through signals
-  - SystemTray should connect to NormcapApp's signal for "capture" requests
+  - [x] Move socket-related attributes (`_socket_name`, `_socket_out`, `_socket_in`, `_socket_server`) to NormcapApp
+  - [x] Move methods: `_create_socket_server()`, `_ensure_single_instance()`, `_on_new_connection()`, `_on_ready_read()`
+  - [x] Update socket message handling to trigger SystemTray methods through signals
+  - [x] SystemTray should connect to NormcapApp's signal for "capture" requests
 - **Why safe**: Singleton logic is independent of tray functionality
 - **Testing**: Single instance behavior should work the same, new instances should trigger capture
-
-_done_
 
 ### **Phase 2: Move Core Application State**
 
 #### **Subtask 2.1: Move settings and core state to NormcapApp**
 - **Goal**: Transfer application-wide state management
 - **What to do**:
-  - Move `settings`, `screens`, `installed_languages` to NormcapApp
-  - Move CLI argument processing (`cli_mode`, handler names, `reset` logic)
-  - Move constants (`_EXIT_DELAY`, `_UPDATE_CHECK_INTERVAL`)
-  - Update SystemTray to receive these via constructor or property access
-  - Move `_testing_language_manager` flag to NormcapApp
+  - [x] Move `settings`, `screens`, `installed_languages` to NormcapApp
+  - [ ] Move CLI argument processing (`cli_mode`, handler names, `reset` logic)
+  - [ ] Move constants (`_EXIT_DELAY`, `_UPDATE_CHECK_INTERVAL`)
+  - [ ] Update SystemTray to receive these via constructor or property access
+  - [ ] Move `_testing_language_manager` flag to NormcapApp
 - **Why safe**: Only moving data, not changing how it's used
 - **Testing**: All settings and preferences should work as before
 
 #### **Subtask 2.2: Move window management to NormcapApp**
 - **Goal**: Transfer window lifecycle management
 - **What to do**:
-  - Move `windows` dictionary to NormcapApp
+  - [x] Move `windows` dictionary to NormcapApp
   - Move methods: `_show_windows()`, `_close_windows()`, `_create_window()`, `_create_menu_button()`, `_create_layout()`
   - Move screenshot handling: `_take_screenshots()`
   - SystemTray should request window operations through NormcapApp methods
