@@ -2,7 +2,7 @@ from difflib import SequenceMatcher
 
 import pytest
 
-from normcap.gui.tray import screenshot
+from normcap.gui.application import screenshot
 
 from .testcases import testcases
 

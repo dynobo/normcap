@@ -10,7 +10,15 @@ from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 from normcap import __version__, clipboard, notification, screenshot
 from normcap.detection import detector, ocr
 from normcap.detection.models import DetectionMode, TextDetector, TextType
-from normcap.gui import notification_utils, system_info, utils
+from normcap.gui import (
+    constants,
+    introduction,
+    notification_utils,
+    permissions_dialog,
+    system_info,
+    utils,
+)
+from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Days, Rect, Screen, Seconds
@@ -18,6 +26,7 @@ from normcap.gui.settings import Settings
 from normcap.gui.tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
+from normcap.notification.models import NAME_NOTIFICATION_CLICKED_ACTION
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +83,11 @@ class NormcapApp(QtWidgets.QApplication):
         # Start listening to socket for other instances
         self._create_socket_server()
 
+        # Create DBus Service to listen for notification actions and activations
+        self.dbus_service = (
+            self._get_dbus_service() if system_info.is_flatpak() else None
+        )
+
         # Perform settings reset
         if args.get("reset", False):
             self.settings.reset()
@@ -108,6 +122,58 @@ class NormcapApp(QtWidgets.QApplication):
         # Show system tray
         self.tray = SystemTray(self, args)
         self.tray.show()
+
+    @QtCore.Slot()
+    def show_introduction(self) -> None:
+        show_intro = bool(self.settings.value("show-introduction", type=bool))
+        result = introduction.IntroductionDialog(
+            show_on_startup=show_intro,
+            parent=self.windows[0] if self.windows else None,
+        ).exec()
+        if result == introduction.Choice.SHOW:
+            self.settings.setValue("show-introduction", True)
+        if result == introduction.Choice.DONT_SHOW:
+            self.settings.setValue("show-introduction", False)
+
+    @QtCore.Slot()
+    def show_permissions_info(self) -> None:
+        logger.error("Missing screenshot permission!")
+        delay = 0
+
+        if sys.platform == "darwin":
+            calling_app = "NormCap" if system_info.is_prebuilt_package() else "Terminal"
+            text = constants.PERMISSIONS_TEXT_MACOS.format(application=calling_app)
+
+            # Reset privacy permission in case of new NormCap version. This is necessary
+            # because somehow the setting is associated with the binary and won't work
+            # after it got updated.
+            # TODO: should this be done within has_screenshot_permission?
+            screenshot.macos_reset_screenshot_permission()
+
+        elif system_info.is_flatpak():
+            text = constants.PERMISSIONS_TEXT_FLATPAK
+
+        elif system_info.display_manager_is_wayland():
+            text = constants.PERMISSIONS_TEXT_WAYLAND
+
+        permissions_dialog.PermissionDialog(text=text).exec()
+        self.com.on_exit_application.emit(delay)
+
+    def _get_dbus_service(self) -> DBusApplicationService | None:
+        dbus_service = DBusApplicationService(self)
+        if not dbus_service.register_service():
+            logger.error("Failed to register DBus activation service")
+            return None
+
+        logger.debug("Registered DBus activation service")
+        return dbus_service
+
+    @QtCore.Slot(str, list)
+    def _handle_action_activate(self, action_name: str, parameter: list) -> None:
+        if action_name == NAME_NOTIFICATION_CLICKED_ACTION:
+            text, text_type = parameter
+            notification_utils.perform_action(text=text, text_type=text_type)
+            self.com.on_action_finished.emit()
 
     def _verify_screenshot_permission(self) -> None:
         if not self.settings.value("has-screenshot-permission", type=bool):
@@ -151,7 +217,7 @@ class NormcapApp(QtWidgets.QApplication):
         settings_menu.com.on_open_url.connect(self._open_url_and_hide)
         settings_menu.com.on_manage_languages.connect(self._open_language_manager)
         settings_menu.com.on_setting_change.connect(self.tray._apply_setting_change)
-        settings_menu.com.on_show_introduction.connect(self.tray.show_introduction)
+        settings_menu.com.on_show_introduction.connect(self.show_introduction)
         settings_menu.com.on_close_in_settings.connect(
             lambda: self.tray._minimize_or_exit_application(delay=0)
         )

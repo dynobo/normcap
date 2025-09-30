@@ -3,7 +3,7 @@ from difflib import SequenceMatcher
 import pytest
 from PySide6 import QtGui
 
-from normcap.gui.tray import screenshot
+from normcap.gui.application import screenshot
 
 from .testcases import testcases
 
@@ -39,7 +39,7 @@ def test_tray_menu_capture(monkeypatch, qtbot, qapp, select_region):
     capture_action.trigger()
 
     # wait for windows to be created and moved on wayland
-    qtbot.wait(50)
+    qtbot.waitUntil(lambda: len(qapp.windows) >= 1)
 
     select_region(on=qapp.windows[0], pos=testcase.coords)
 

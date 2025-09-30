@@ -7,27 +7,19 @@ here.
 
 import logging
 import os
-import sys
 import time
 from enum import Enum
 from typing import Any, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import screenshot
 from normcap.gui import (
-    constants,
-    introduction,
-    notification_utils,
-    permissions_dialog,
     resources,  # noqa: F401 (loads resources!)
     system_info,
     utils,
 )
-from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.localization import _
 from normcap.gui.models import Seconds
-from normcap.notification.models import NAME_NOTIFICATION_CLICKED_ACTION
 
 logger = logging.getLogger(__name__)
 
@@ -44,10 +36,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         logger.debug("System info:\n%s", system_info.to_dict())
         super().__init__(parent)
         self.app = parent
-
-        self.dbus_service = (
-            self._get_dbus_service() if system_info.is_flatpak() else None
-        )
 
         # Prepare and connect signals
         self.com = parent.com
@@ -94,53 +82,8 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             QtCore.QTimer.singleShot(1000, lambda: self.com.on_exit_application.emit(0))
             return
 
-    def _get_dbus_service(self) -> DBusApplicationService | None:
-        dbus_service = DBusApplicationService(self.app)
-        if not dbus_service.register_service():
-            logger.error("Failed to register DBus activation service")
-            return None
-
-        logger.debug("Registered DBus activation service")
-        return dbus_service
-
     def _set_tray_icon_normal(self) -> None:
         self.setIcon(QtGui.QIcon(TrayIcon.NORMAL.value))
-
-    @QtCore.Slot()
-    def show_introduction(self) -> None:
-        show_intro = bool(self.settings.value("show-introduction", type=bool))
-        result = introduction.IntroductionDialog(
-            show_on_startup=show_intro,
-            parent=self.app.windows[0] if self.app.windows else None,
-        ).exec()
-        if result == introduction.Choice.SHOW:
-            self.settings.setValue("show-introduction", True)
-        if result == introduction.Choice.DONT_SHOW:
-            self.settings.setValue("show-introduction", False)
-
-    @QtCore.Slot()
-    def show_permissions_info(self) -> None:
-        logger.error("Missing screenshot permission!")
-        delay = 0
-
-        if sys.platform == "darwin":
-            calling_app = "NormCap" if system_info.is_prebuilt_package() else "Terminal"
-            text = constants.PERMISSIONS_TEXT_MACOS.format(application=calling_app)
-
-            # Reset privacy permission in case of new NormCap version. This is necessary
-            # because somehow the setting is associated with the binary and won't work
-            # after it got updated.
-            # TODO: should this be done within has_screenshot_permission?
-            screenshot.macos_reset_screenshot_permission()
-
-        elif system_info.is_flatpak():
-            text = constants.PERMISSIONS_TEXT_FLATPAK
-
-        elif system_info.display_manager_is_wayland():
-            text = constants.PERMISSIONS_TEXT_WAYLAND
-
-        permissions_dialog.PermissionDialog(text=text).exec()
-        self.com.on_exit_application.emit(delay)
 
     @QtCore.Slot()
     def _set_tray_icon_done(self) -> None:
@@ -168,21 +111,16 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
-        if self.dbus_service:
-            self.dbus_service.action_activated.connect(self._handle_action_activate)
+        if self.app.dbus_service:
+            self.app.dbus_service.action_activated.connect(
+                self.app._handle_action_activate
+            )
         self.activated.connect(self._handle_tray_click)
         self.com.on_region_selected.connect(self.app._close_windows)
         self.com.on_region_selected.connect(self.app._schedule_detection)
         self.com.on_languages_changed.connect(self.app._sanitize_language_setting)
         self.com.on_languages_changed.connect(self.app._update_installed_languages)
         self.messageClicked.connect(self.app._open_language_manager)
-
-    @QtCore.Slot(str, list)
-    def _handle_action_activate(self, action_name: str, parameter: list) -> None:
-        if action_name == NAME_NOTIFICATION_CLICKED_ACTION:
-            text, text_type = parameter
-            notification_utils.perform_action(text=text, text_type=text_type)
-            self.com.on_action_finished.emit()
 
     @QtCore.Slot()
     def _populate_context_menu_entries(self) -> None:
