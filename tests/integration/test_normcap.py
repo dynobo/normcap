@@ -21,7 +21,7 @@ def test_normcap_ocr_testcases(
     monkeypatch.setattr(qapp.tray, "_set_tray_icon_done", test_signal.on_event.emit)
 
     copy_to_clipboard_calls = {}
-    monkeypatch.setattr(qapp.tray, "_copy_to_clipboard", copy_to_clipboard_calls.update)
+    monkeypatch.setattr(qapp, "_copy_to_clipboard", copy_to_clipboard_calls.update)
 
     qapp._show_windows(delay_screenshot=False)
     # qtbot.waitUntil(lambda: len(qapp.windows) >= 1)

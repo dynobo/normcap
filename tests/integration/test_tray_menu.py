@@ -29,7 +29,7 @@ def test_tray_menu_capture(monkeypatch, qtbot, qapp, select_region):
     monkeypatch.setattr(screenshot, "capture", lambda: [testcase.screenshot])
 
     copy_to_clipboard_calls = {}
-    monkeypatch.setattr(qapp.tray, "_copy_to_clipboard", copy_to_clipboard_calls.update)
+    monkeypatch.setattr(qapp, "_copy_to_clipboard", copy_to_clipboard_calls.update)
 
     # WHEN "capture" is clicked in system tray menu
     #      and a region on the screen is selected

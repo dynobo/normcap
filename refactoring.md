@@ -42,7 +42,7 @@
   - [x] Move methods: `_show_windows()`, `_close_windows()`, `_create_window()`, `_create_menu_button()`, `_create_layout()`
   - [x] Move screenshot handling: `_take_screenshots()`
   - [x] SystemTray should request window operations through NormcapApp methods
-  - [ ] Keep tray-specific UI (context menu) in SystemTray
+  - [x] Keep tray-specific UI (context menu) in SystemTray
 - **Why safe**: Window management is logically separate from tray icon
 - **Testing**: Screenshot capture and window display should work normally
 
@@ -51,10 +51,10 @@
 #### **Subtask 3.1: Move OCR detection pipeline to NormcapApp**
 - **Goal**: Transfer core OCR and text detection functionality
 - **What to do**:
-  - [ ] Move methods: `_schedule_detection()`, `_trigger_detect()`
-  - [ ] Move clipboard operations: `_copy_to_clipboard()`, `_print_to_stdout_and_exit()`
-  - [ ] Move notification handling: `_send_notification()`
-  - [ ] SystemTray should connect to NormcapApp signals for region selection and trigger detection through app
+  - [x] Move methods: `_schedule_detection()`, `_trigger_detect()`
+  - [x] Move clipboard operations: `_copy_to_clipboard()`, `_print_to_stdout_and_exit()`
+  - [x] Move notification handling: `_send_notification()`
+  - [x] SystemTray should connect to NormcapApp signals for region selection and trigger detection through app
 - **Why safe**: Detection logic is pure business logic, independent of tray
 - **Testing**: Text detection, clipboard copying, and notifications should work identically
 
