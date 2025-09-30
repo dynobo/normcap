@@ -1,7 +1,6 @@
 import pytest
 
 from normcap.detection import ocr
-from normcap.gui import tray
 from normcap.gui.settings import Settings
 
 
@@ -25,9 +24,8 @@ def test_sanitize_active_language(qapp, monkeypatch, active, available, sanitize
     settings = Settings(organization="normcap_TEST")
     try:
         settings.setValue("language", active)
-        tray_cls = tray.SystemTray
-        tray_cls.settings = settings
-        tray_cls._sanitize_language_setting(tray_cls, installed_languages=available)
+        qapp.settings = settings
+        qapp._sanitize_language_setting(installed_languages=available)
         assert settings.value("language") == sanitized
     finally:
         for k in settings.allKeys():

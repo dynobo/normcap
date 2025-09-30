@@ -8,13 +8,15 @@ from typing import Any
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
 from normcap import __version__, clipboard, notification, screenshot
-from normcap.detection import detector
+from normcap.detection import detector, ocr
 from normcap.detection.models import DetectionMode, TextDetector, TextType
 from normcap.gui import notification_utils, system_info, utils
+from normcap.gui.language_manager import LanguageManager
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Days, Rect, Screen, Seconds
 from normcap.gui.settings import Settings
 from normcap.gui.tray import SystemTray
+from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
 
 logger = logging.getLogger(__name__)
@@ -146,8 +148,8 @@ class NormcapApp(QtWidgets.QApplication):
             language_manager=system_info.is_prebuilt_package(),
             installed_languages=self.installed_languages,
         )
-        settings_menu.com.on_open_url.connect(self.tray._open_url_and_hide)
-        settings_menu.com.on_manage_languages.connect(self.tray._open_language_manager)
+        settings_menu.com.on_open_url.connect(self._open_url_and_hide)
+        settings_menu.com.on_manage_languages.connect(self._open_language_manager)
         settings_menu.com.on_setting_change.connect(self.tray._apply_setting_change)
         settings_menu.com.on_show_introduction.connect(self.tray.show_introduction)
         settings_menu.com.on_close_in_settings.connect(
@@ -188,6 +190,41 @@ class NormcapApp(QtWidgets.QApplication):
             window.close()
         self.windows = {}
         self.com.on_windows_closed.emit()
+
+    def _add_update_checker(self) -> None:
+        if not self.settings.value("update", type=bool):
+            return
+
+        now_sub_interval_sec = time.time() - (
+            60 * 60 * 24 * self._UPDATE_CHECK_INTERVAL
+        )
+        now_sub_interval = time.strftime("%Y-%m-%d", time.gmtime(now_sub_interval_sec))
+        if str(self.settings.value("last-update-check", type=str)) > now_sub_interval:
+            return
+
+        self.checker = UpdateChecker(
+            parent=None, packaged=system_info.is_prebuilt_package()
+        )
+        self.checker.com.on_version_checked.connect(
+            self._update_time_of_last_update_check
+        )
+        self.checker.com.on_click_get_new_version.connect(self._open_url_and_hide)
+        QtCore.QTimer.singleShot(500, self.checker.com.check.emit)
+
+    def _update_time_of_last_update_check(self, newest_version: str) -> None:
+        if newest_version is not None:
+            today = time.strftime("%Y-%m-%d", time.gmtime())
+            self.settings.setValue("last-update-check", today)
+
+    @QtCore.Slot(str)
+    def _open_url_and_hide(self, url: str) -> None:
+        """Open url in default browser, then hide to tray or exit."""
+        logger.debug("Open %s", url)
+        result = QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
+        )
+        logger.debug("Opened uri with result=%s", result)
+        self.tray._minimize_or_exit_application(delay=0)
 
     @QtCore.Slot()
     def _schedule_detection(self, rect: Rect, screen_idx: int) -> None:
@@ -321,6 +358,65 @@ class NormcapApp(QtWidgets.QApplication):
             utils.save_image_in_temp_folder(image, postfix=f"_raw_screen{idx}")
 
         return screens
+
+    def _delayed_init(self) -> None:
+        """Setup things that can be done independent of the first capture.
+
+        By running this async of __init__(),  its runtime of ~30ms doesn't
+        contribute to the delay until the GUI becomes active for the user on startup.
+        """
+        self.installed_languages = ocr.tesseract.get_languages(
+            tesseract_cmd=system_info.get_tesseract_bin_path(
+                is_briefcase_package=system_info.is_briefcase_package()
+            ),
+            tessdata_path=system_info.get_tessdata_path(
+                config_directory=system_info.config_directory(),
+                is_briefcase_package=system_info.is_briefcase_package(),
+                is_flatpak_package=system_info.is_flatpak(),
+            ),
+        )
+        self.com.on_languages_changed.emit(self.installed_languages)
+        self._add_update_checker()
+
+    @QtCore.Slot()
+    def _open_language_manager(self) -> None:
+        """Open url in default browser, then hide to tray or exit."""
+        logger.debug("Loading language manager …")
+        self.language_window = LanguageManager(
+            tessdata_path=system_info.config_directory() / "tessdata",
+            parent=self.windows[0],
+        )
+        self.language_window.com.on_open_url.connect(self._open_url_and_hide)
+        self.language_window.com.on_languages_changed.connect(
+            self.com.on_languages_changed
+        )
+        self.language_window.exec()
+
+    @QtCore.Slot(list)
+    def _sanitize_language_setting(self, installed_languages: list[str]) -> None:
+        """Verify that languages selected in the settings exist.
+
+        If one doesn't, remove it. If none does, select the first in list.
+        """
+        active_languages = self.settings.value("language")
+        if not isinstance(active_languages, list):
+            active_languages = [active_languages]
+
+        active_languages = [
+            a for a in active_languages if a in installed_languages
+        ] or [installed_languages[0]]
+
+        self.settings.setValue("language", active_languages)
+
+    @QtCore.Slot(list)
+    def _update_installed_languages(self, installed_languages: list[str]) -> None:
+        """Update instance attribute to reflect changes.
+
+        the instance attribute is used e.g. to create a menu_button with an up to
+        date language menu.
+        """
+        # TODO: Seems suboptimal
+        self.installed_languages = installed_languages
 
     def _other_instance_is_running(self) -> bool:
         """Test if connection to another NormCap instance socket can be established."""
