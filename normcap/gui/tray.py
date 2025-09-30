@@ -14,9 +14,8 @@ from typing import Any, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import clipboard, notification, screenshot
-from normcap.detection import detector, ocr
-from normcap.detection.models import DetectionMode, TextDetector, TextType
+from normcap import screenshot
+from normcap.detection import ocr
 from normcap.gui import (
     constants,
     introduction,
@@ -29,7 +28,7 @@ from normcap.gui import (
 from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
-from normcap.gui.models import Rect, Seconds
+from normcap.gui.models import Seconds
 from normcap.gui.update_check import UpdateChecker
 from normcap.notification.models import NAME_NOTIFICATION_CLICKED_ACTION
 
@@ -192,83 +191,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         """
         self.installed_languages = installed_languages
 
-    @QtCore.Slot()
-    def _schedule_detection(self, rect: Rect, screen_idx: int) -> None:
-        """Schedule detection to run after window closing is complete."""
-        # Use a single-shot timer to defer detection execution
-        QtCore.QTimer.singleShot(1, lambda: self._trigger_detect(rect, screen_idx))
-
-    @QtCore.Slot()
-    def _trigger_detect(self, rect: Rect, screen_idx: int) -> None:
-        """Crop screenshot, perform content recognition on it and process result."""
-        cropped_screenshot = utils.crop_image(
-            image=self.screens[screen_idx].screenshot, rect=rect
-        )
-
-        minimum_image_area = 100
-        image_area = cropped_screenshot.width() * cropped_screenshot.height()
-        if image_area < minimum_image_area:
-            logger.warning("Area of %spx is too small. Skip detection.", image_area)
-            self._minimize_or_exit_application(delay=0)
-            return
-
-        tessdata_path = system_info.get_tessdata_path(
-            config_directory=system_info.config_directory(),
-            is_flatpak_package=system_info.is_flatpak(),
-            is_briefcase_package=system_info.is_briefcase_package(),
-        )
-        tesseract_bin_path = system_info.get_tesseract_bin_path(
-            is_briefcase_package=system_info.is_briefcase_package()
-        )
-
-        detection_mode = DetectionMode(0)
-        if bool(self.settings.value("detect-codes", type=bool)):
-            detection_mode |= DetectionMode.CODES
-        if bool(self.settings.value("detect-text", type=bool)):
-            detection_mode |= DetectionMode.TESSERACT
-
-        result = detector.detect(
-            image=cropped_screenshot,
-            tesseract_bin_path=tesseract_bin_path,
-            tessdata_path=tessdata_path,
-            language=self.settings.value("language"),
-            detect_mode=detection_mode,
-            parse_text=bool(self.settings.value("parse-text", type=bool)),
-        )
-
-        if result.text and self.app.cli_mode:
-            self._print_to_stdout_and_exit(text=result.text)
-        elif result.text:
-            self._copy_to_clipboard(text=result.text)
-        else:
-            logger.warning("Nothing detected on selected region.")
-
-        if self.settings.value("notification", type=bool):
-            self._send_notification(
-                text=result.text, text_type=result.text_type, detector=result.detector
-            )
-
-        self._minimize_or_exit_application(delay=self.app._EXIT_DELAY)
-        self._set_tray_icon_done()
-
-    def _send_notification(
-        self, text: str, text_type: TextType, detector: TextDetector
-    ) -> None:
-        title = notification_utils.get_title(
-            text=text, text_type=text_type, detector=detector
-        )
-        message = notification_utils.get_text(text=text)
-        actions = notification_utils.get_actions(
-            text=text, text_type=text_type, action_func=self._handle_action_activate
-        )
-
-        notification.notify(
-            title=title,
-            message=message,
-            actions=actions,
-            handler_name=self.app.notification_handler_name,
-        )
-
     @QtCore.Slot(str)
     def _open_url_and_hide(self, url: str) -> None:
         """Open url in default browser, then hide to tray or exit."""
@@ -292,28 +214,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.com.on_languages_changed
         )
         self.language_window.exec()
-
-    def _copy_to_clipboard(self, text: str) -> None:
-        """Copy results to clipboard."""
-        if self.app.app.clipboard_handler_name:
-            logger.debug(
-                "Copy text to clipboard with %s",
-                self.app.clipboard_handler_name.upper(),
-            )
-            clipboard.copy_with_handler(
-                text=text, handler_name=self.app.clipboard_handler_name
-            )
-        else:
-            logger.debug("Copy text to clipboard")
-            clipboard.copy(text=text)
-        self.com.on_copied_to_clipboard.emit()
-
-    @QtCore.Slot(str)
-    def _print_to_stdout_and_exit(self, text: str) -> None:
-        """Print results to stdout ."""
-        logger.debug("Print text to stdout and exit.")
-        print(text, file=sys.stdout)  # noqa: T201
-        self.com.on_exit_application.emit(0)
 
     def _delayed_init(self) -> None:
         """Setup things that can be done independent of the first capture.
@@ -343,7 +243,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.dbus_service.action_activated.connect(self._handle_action_activate)
         self.activated.connect(self._handle_tray_click)
         self.com.on_region_selected.connect(self.app._close_windows)
-        self.com.on_region_selected.connect(self._schedule_detection)
+        self.com.on_region_selected.connect(self.app._schedule_detection)
         self.com.on_languages_changed.connect(self._sanitize_language_setting)
         self.com.on_languages_changed.connect(self._update_installed_languages)
         self.messageClicked.connect(self._open_language_manager)

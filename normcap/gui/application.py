@@ -1,13 +1,16 @@
 """Start main application logic."""
 
 import logging
+import sys
 import time
 from typing import Any
 
 from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
-from normcap import __version__, screenshot
-from normcap.gui import system_info, utils
+from normcap import __version__, clipboard, notification, screenshot
+from normcap.detection import detector
+from normcap.detection.models import DetectionMode, TextDetector, TextType
+from normcap.gui import notification_utils, system_info, utils
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Days, Rect, Screen, Seconds
 from normcap.gui.settings import Settings
@@ -31,6 +34,7 @@ class Communicate(QtCore.QObject):
 class Timers:
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         self.delayed_exit = QtCore.QTimer(parent=parent, singleShot=True)
+        self.delayed_detectation = QtCore.QTimer(parent=parent, singleShot=True)
 
 
 class NormcapApp(QtWidgets.QApplication):
@@ -57,6 +61,7 @@ class NormcapApp(QtWidgets.QApplication):
         self.timers = Timers(parent=self)
         self.timers.delayed_exit.timeout.connect(self._exit_application)
 
+        # Connect to signals
         self.com.on_exit_application.connect(self._exit_application)
 
         # Ensure that only a single instance of NormCap is running.
@@ -64,17 +69,18 @@ class NormcapApp(QtWidgets.QApplication):
             self.com.on_exit_application.emit(0)
             return
 
+        # Start listening to socket for other instances
         self._create_socket_server()
 
+        # Perform settings reset
+        if args.get("reset", False):
+            self.settings.reset()
+
+        # Init state
         self.settings = Settings(init_settings=args)
         self.screens: list[Screen] = system_info.screens()
         self.windows: dict[int, Window] = {}
         self.installed_languages: list[str] = []
-
-        # Process cli args
-        if args.get("reset", False):
-            self.settings.reset()
-
         self.cli_mode = args.get("cli_mode", False)
         self.screenshot_handler_name = args.get("screenshot_handler")
         self.clipboard_handler_name = args.get("clipboard_handler")
@@ -93,9 +99,11 @@ class NormcapApp(QtWidgets.QApplication):
         else:
             delay_screenshot = False
 
+        # Show main UI
         if not args.get("background_mode", False):
             self._show_windows(delay_screenshot=delay_screenshot)
 
+        # Show system tray
         self.tray = SystemTray(self, args)
         self.tray.show()
 
@@ -180,6 +188,111 @@ class NormcapApp(QtWidgets.QApplication):
             window.close()
         self.windows = {}
         self.com.on_windows_closed.emit()
+
+    @QtCore.Slot()
+    def _schedule_detection(self, rect: Rect, screen_idx: int) -> None:
+        """Schedule detection to run after window closing is complete."""
+        # Use a single-shot timer to defer detection execution
+        # TODO: Is this required?
+        self.timers.delayed_detectation.timeout.connect(
+            lambda: self._trigger_detect(rect, screen_idx)
+        )
+        self.timers.delayed_detectation.start(1)
+
+    @QtCore.Slot()
+    def _trigger_detect(self, rect: Rect, screen_idx: int) -> None:
+        """Crop screenshot, perform content recognition on it and process result."""
+        cropped_screenshot = utils.crop_image(
+            image=self.screens[screen_idx].screenshot, rect=rect
+        )
+
+        minimum_image_area = 100
+        image_area = cropped_screenshot.width() * cropped_screenshot.height()
+        if image_area < minimum_image_area:
+            logger.warning("Area of %spx is too small. Skip detection.", image_area)
+            self.tray._minimize_or_exit_application(delay=0)
+            return
+
+        tessdata_path = system_info.get_tessdata_path(
+            config_directory=system_info.config_directory(),
+            is_flatpak_package=system_info.is_flatpak(),
+            is_briefcase_package=system_info.is_briefcase_package(),
+        )
+        tesseract_bin_path = system_info.get_tesseract_bin_path(
+            is_briefcase_package=system_info.is_briefcase_package()
+        )
+
+        detection_mode = DetectionMode(0)
+        if bool(self.settings.value("detect-codes", type=bool)):
+            detection_mode |= DetectionMode.CODES
+        if bool(self.settings.value("detect-text", type=bool)):
+            detection_mode |= DetectionMode.TESSERACT
+
+        result = detector.detect(
+            image=cropped_screenshot,
+            tesseract_bin_path=tesseract_bin_path,
+            tessdata_path=tessdata_path,
+            language=self.settings.value("language"),
+            detect_mode=detection_mode,
+            parse_text=bool(self.settings.value("parse-text", type=bool)),
+        )
+
+        if result.text and self.cli_mode:
+            self._print_to_stdout_and_exit(text=result.text)
+        elif result.text:
+            self._copy_to_clipboard(text=result.text)
+        else:
+            logger.warning("Nothing detected on selected region.")
+
+        if self.settings.value("notification", type=bool):
+            self._send_notification(
+                text=result.text, text_type=result.text_type, detector=result.detector
+            )
+
+        self.tray._minimize_or_exit_application(delay=self._EXIT_DELAY)
+        self.tray._set_tray_icon_done()
+
+    def _copy_to_clipboard(self, text: str) -> None:
+        """Copy results to clipboard."""
+        if self.clipboard_handler_name:
+            logger.debug(
+                "Copy text to clipboard with %s",
+                self.clipboard_handler_name.upper(),
+            )
+            clipboard.copy_with_handler(
+                text=text, handler_name=self.clipboard_handler_name
+            )
+        else:
+            logger.debug("Copy text to clipboard")
+            clipboard.copy(text=text)
+        self.com.on_copied_to_clipboard.emit()
+
+    @QtCore.Slot(str)
+    def _print_to_stdout_and_exit(self, text: str) -> None:
+        """Print results to stdout ."""
+        logger.debug("Print text to stdout and exit.")
+        print(text, file=sys.stdout)  # noqa: T201
+        self.com.on_exit_application.emit(0)
+
+    def _send_notification(
+        self, text: str, text_type: TextType, detector: TextDetector
+    ) -> None:
+        title = notification_utils.get_title(
+            text=text, text_type=text_type, detector=detector
+        )
+        message = notification_utils.get_text(text=text)
+        actions = notification_utils.get_actions(
+            text=text,
+            text_type=text_type,
+            action_func=self.tray._handle_action_activate,
+        )
+
+        notification.notify(
+            title=title,
+            message=message,
+            actions=actions,
+            handler_name=self.notification_handler_name,
+        )
 
     @QtCore.Slot()
     def _take_screenshots(self, delay: bool) -> list[QtGui.QImage]:
