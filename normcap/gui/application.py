@@ -5,9 +5,9 @@ from typing import Any
 
 from PySide6 import QtCore, QtNetwork, QtWidgets
 
-from normcap import __version__
+from normcap import __version__, screenshot
 from normcap.gui import system_info
-from normcap.gui.models import Rect, Screen, Seconds
+from normcap.gui.models import Days, Rect, Screen, Seconds
 from normcap.gui.settings import Settings
 from normcap.gui.tray import SystemTray
 from normcap.gui.window import Window
@@ -41,6 +41,11 @@ class NormcapApp(QtWidgets.QApplication):
     _socket_server: QtNetwork.QLocalServer | None = None
 
     _EXIT_DELAY: Seconds = 5
+    _UPDATE_CHECK_INTERVAL: Days = 7
+
+    # Only for testing purposes: forcefully enables language manager in settings menu
+    # (Normally language manager is only available in pre-build version)
+    _TESTING_LANGUAGE_MANAGER = False
 
     def __init__(self, args: dict[str, Any]) -> None:
         super().__init__()
@@ -64,8 +69,27 @@ class NormcapApp(QtWidgets.QApplication):
         self.windows: dict[int, Window] = {}
         self.installed_languages: list[str] = []
 
+        # Process cli args
+        if args.get("reset", False):
+            self.settings.reset()
+
+        self.cli_mode = args.get("cli_mode", False)
+        self.screenshot_handler_name = args.get("screenshot_handler")
+        self.clipboard_handler_name = args.get("clipboard_handler")
+        self.notification_handler_name = args.get("notification_handler")
+
+        # Run main logic
+        self._verify_screenshot_permission()
+
         self.tray = SystemTray(self, args)
         self.tray.show()
+
+    def _verify_screenshot_permission(self) -> None:
+        if not self.settings.value("has-screenshot-permission", type=bool):
+            if screenshot.has_screenshot_permission():
+                self.settings.setValue("has-screenshot-permission", True)
+            else:
+                self.show_permissions_info()
 
     def _other_instance_is_running(self) -> bool:
         """Test if connection to another NormCap instance socket can be established."""
