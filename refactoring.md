@@ -28,10 +28,10 @@
 - **Goal**: Transfer application-wide state management
 - **What to do**:
   - [x] Move `settings`, `screens`, `installed_languages` to NormcapApp
-  - [ ] Move CLI argument processing (`cli_mode`, handler names, `reset` logic)
-  - [ ] Move constants (`_EXIT_DELAY`, `_UPDATE_CHECK_INTERVAL`)
-  - [ ] Update SystemTray to receive these via constructor or property access
-  - [ ] Move `_testing_language_manager` flag to NormcapApp
+  - [x] Move CLI argument processing (`cli_mode`, handler names, `reset` logic)
+  - [x] Move constants (`_EXIT_DELAY`, `_UPDATE_CHECK_INTERVAL`)
+  - [x] Update SystemTray to receive these via constructor or property access
+  - [x] Move `_testing_language_manager` flag to NormcapApp
 - **Why safe**: Only moving data, not changing how it's used
 - **Testing**: All settings and preferences should work as before
 
@@ -39,10 +39,10 @@
 - **Goal**: Transfer window lifecycle management
 - **What to do**:
   - [x] Move `windows` dictionary to NormcapApp
-  - Move methods: `_show_windows()`, `_close_windows()`, `_create_window()`, `_create_menu_button()`, `_create_layout()`
-  - Move screenshot handling: `_take_screenshots()`
-  - SystemTray should request window operations through NormcapApp methods
-  - Keep tray-specific UI (context menu) in SystemTray
+  - [ ] Move methods: `_show_windows()`, `_close_windows()`, `_create_window()`, `_create_menu_button()`, `_create_layout()`
+  - [ ] Move screenshot handling: `_take_screenshots()`
+  - [ ] SystemTray should request window operations through NormcapApp methods
+  - [ ] Keep tray-specific UI (context menu) in SystemTray
 - **Why safe**: Window management is logically separate from tray icon
 - **Testing**: Screenshot capture and window display should work normally
 
@@ -51,21 +51,21 @@
 #### **Subtask 3.1: Move OCR detection pipeline to NormcapApp**
 - **Goal**: Transfer core OCR and text detection functionality
 - **What to do**:
-  - Move methods: `_schedule_detection()`, `_trigger_detect()`
-  - Move clipboard operations: `_copy_to_clipboard()`, `_print_to_stdout_and_exit()`
-  - Move notification handling: `_send_notification()`
-  - SystemTray should connect to NormcapApp signals for region selection and trigger detection through app
+  - [ ] Move methods: `_schedule_detection()`, `_trigger_detect()`
+  - [ ] Move clipboard operations: `_copy_to_clipboard()`, `_print_to_stdout_and_exit()`
+  - [ ] Move notification handling: `_send_notification()`
+  - [ ] SystemTray should connect to NormcapApp signals for region selection and trigger detection through app
 - **Why safe**: Detection logic is pure business logic, independent of tray
 - **Testing**: Text detection, clipboard copying, and notifications should work identically
 
 #### **Subtask 3.2: Move language and update management to NormcapApp**
 - **Goal**: Transfer language management and update checking
 - **What to do**:
-  - Move methods: `_delayed_init()`, `_sanitize_language_setting()`, `_update_installed_languages()`
-  - Move language manager: `_open_language_manager()`
-  - Move update checker: `_add_update_checker()`, `_update_time_of_last_update_check()`
-  - Move URL handling: `_open_url_and_hide()`
-  - Update signal connections to flow through NormcapApp
+  - [ ] Move methods: `_delayed_init()`, `_sanitize_language_setting()`, `_update_installed_languages()`
+  - [ ] Move language manager: `_open_language_manager()`
+  - [ ] Move update checker: `_add_update_checker()`, `_update_time_of_last_update_check()`
+  - [ ] Move URL handling: `_open_url_and_hide()`
+  - [ ] Update signal connections to flow through NormcapApp
 - **Why safe**: These are application-wide features, not tray-specific
 - **Testing**: Language switching, language manager, and update checks should function normally
 
@@ -74,21 +74,21 @@
 #### **Subtask 4.1: Move DBus and permissions handling to NormcapApp**
 - **Goal**: Transfer system-level integration
 - **What to do**:
-  - Move DBus service: `dbus_service`, `_get_dbus_service()`, `_handle_action_activate()`
-  - Move permissions handling: `show_permissions_info()`
-  - Move introduction dialog: `show_introduction()`
-  - Keep these accessible to SystemTray through NormcapApp reference
+  - [ ] Move DBus service: `dbus_service`, `_get_dbus_service()`, `_handle_action_activate()`
+  - [ ] Move permissions handling: `show_permissions_info()`
+  - [ ] Move introduction dialog: `show_introduction()`
+  - [ ] Keep these accessible to SystemTray through NormcapApp reference
 - **Why safe**: System integration is application-level, not tray-specific
 - **Testing**: DBus activation, permissions prompts, and introduction should work as before
 
 #### **Subtask 4.2: Move application lifecycle management to NormcapApp**
 - **Goal**: Transfer exit and lifecycle control
 - **What to do**:
-  - Move methods: `_minimize_or_exit_application()`, `_exit_application()`, `hide()`
-  - Move timers: `delayed_exit_timer`, `delayed_init_timer`
-  - Move application exit logic and cleanup
-  - SystemTray should request app exit through NormcapApp methods
-  - Override QApplication's exit behavior in NormcapApp
+  - [ ] Move methods: `_minimize_or_exit_application()`, `_exit_application()`, `hide()`
+  - [ ] Move timers: `delayed_exit_timer`, `delayed_init_timer`
+  - [ ] Move application exit logic and cleanup
+  - [ ] SystemTray should request app exit through NormcapApp methods
+  - [ ] Override QApplication's exit behavior in NormcapApp
 - **Why safe**: Application lifecycle is naturally QApplication's responsibility
 - **Testing**: Exit behavior, timers, and cleanup should work identically
 
@@ -97,22 +97,22 @@
 #### **Subtask 5.1: Refactor SystemTray to UI-only component**
 - **Goal**: Make SystemTray focus only on tray icon and menu
 - **What to do**:
-  - Keep only tray icon management: `_set_tray_icon_normal()`, `_set_tray_icon_done()`, icon enum
-  - Keep only tray menu: `_populate_context_menu_entries()`, `_handle_tray_click()`, `_apply_setting_change()`
-  - Keep only tray-specific timers: `reset_tray_icon_timer`
-  - Update signal connections to communicate with NormcapApp
-  - Remove all non-tray logic from SystemTray
+  - [ ] Keep only tray icon management: `_set_tray_icon_normal()`, `_set_tray_icon_done()`, icon enum
+  - [ ] Keep only tray menu: `_populate_context_menu_entries()`, `_handle_tray_click()`, `_apply_setting_change()`
+  - [ ] Keep only tray-specific timers: `reset_tray_icon_timer`
+  - [ ] Update signal connections to communicate with NormcapApp
+  - [ ] Remove all non-tray logic from SystemTray
 - **Why safe**: Clearly separates UI concerns from business logic
 - **Testing**: Tray icon, context menu, and tray interactions should work normally
 
 #### **Subtask 5.2: Final cleanup and optimization**
 - **Goal**: Optimize the new structure and clean up imports
 - **What to do**:
-  - Review and optimize signal connections between NormcapApp and SystemTray
-  - Clean up imports in both files
-  - Update documentation and docstrings
-  - Ensure proper error handling across the boundary
-  - Add type hints where needed
+  - [ ] Review and optimize signal connections between NormcapApp and SystemTray
+  - [ ] Clean up imports in both files
+  - [ ] Update documentation and docstrings
+  - [ ] Ensure proper error handling across the boundary
+  - [ ] Add type hints where needed
 - **Why safe**: Only cleanup and optimization, no functional changes
 - **Testing**: Full application functionality test, especially edge cases and error conditions
 

@@ -30,7 +30,7 @@ from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.menu_button import MenuButton
-from normcap.gui.models import Days, Rect, Seconds
+from normcap.gui.models import Rect, Seconds
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
 from normcap.notification.models import NAME_NOTIFICATION_CLICKED_ACTION
@@ -45,13 +45,6 @@ class TrayIcon(Enum):
 
 class SystemTray(QtWidgets.QSystemTrayIcon):
     """System tray icon with menu."""
-
-    _EXIT_DELAY: Seconds = 5
-    _UPDATE_CHECK_INTERVAL: Days = 7
-
-    # Only for testing purposes: forcefully enables language manager in settings menu
-    # (Normally language manager is only available in pre-build version)
-    _testing_language_manager = False
 
     def __init__(self, parent: QtCore.QObject, args: dict[str, Any]) -> None:
         logger.debug("System info:\n%s", system_info.to_dict())
@@ -73,15 +66,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.installed_languages = parent.installed_languages
 
         self.settings = parent.settings
-
-        self.screenshot_handler_name = args.get("screenshot_handler")
-        self.clipboard_handler_name = args.get("clipboard_handler")
-        self.notification_handler_name = args.get("notification_handler")
-
-        # Handle special cli args
-        if args.get("reset", False):
-            self.settings.reset()
-        self.cli_mode = args.get("cli_mode", False)
 
         # Setup timers
         # TODO: Handle timers less verbose and init in separate method
@@ -116,13 +100,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             QtCore.QTimer.singleShot(1000, lambda: self.com.on_exit_application.emit(0))
             return
 
-        # Verify screenshot permissions
-        if not self.settings.value("has-screenshot-permission", type=bool):
-            if screenshot.has_screenshot_permission():
-                self.settings.setValue("has-screenshot-permission", True)
-            else:
-                self.show_permissions_info()
-
         # Show intro (and delay screenshot to not capute the intro)
         if (
             args.get("show_introduction") is None
@@ -137,7 +114,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self._show_windows(delay_screenshot=delay_screenshot)
 
     def _get_dbus_service(self) -> DBusApplicationService | None:
-        dbus_service = DBusApplicationService(self.parent())
+        dbus_service = DBusApplicationService(self.app)
         if not dbus_service.register_service():
             logger.error("Failed to register DBus activation service")
             return None
@@ -284,7 +261,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             parse_text=bool(self.settings.value("parse-text", type=bool)),
         )
 
-        if result.text and self.cli_mode:
+        if result.text and self.app.cli_mode:
             self._print_to_stdout_and_exit(text=result.text)
         elif result.text:
             self._copy_to_clipboard(text=result.text)
@@ -296,7 +273,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
                 text=result.text, text_type=result.text_type, detector=result.detector
             )
 
-        self._minimize_or_exit_application(delay=self._EXIT_DELAY)
+        self._minimize_or_exit_application(delay=self.app._EXIT_DELAY)
         self._set_tray_icon_done()
 
     def _send_notification(
@@ -314,7 +291,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             title=title,
             message=message,
             actions=actions,
-            handler_name=self.notification_handler_name,
+            handler_name=self.app.notification_handler_name,
         )
 
     @QtCore.Slot(str)
@@ -343,12 +320,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _copy_to_clipboard(self, text: str) -> None:
         """Copy results to clipboard."""
-        if self.clipboard_handler_name:
+        if self.app.app.clipboard_handler_name:
             logger.debug(
-                "Copy text to clipboard with %s", self.clipboard_handler_name.upper()
+                "Copy text to clipboard with %s",
+                self.app.clipboard_handler_name.upper(),
             )
             clipboard.copy_with_handler(
-                text=text, handler_name=self.clipboard_handler_name
+                text=text, handler_name=self.app.clipboard_handler_name
             )
         else:
             logger.debug("Copy text to clipboard")
@@ -421,7 +399,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             return
 
         now_sub_interval_sec = time.time() - (
-            60 * 60 * 24 * self._UPDATE_CHECK_INTERVAL
+            60 * 60 * 24 * self.parent.app._UPDATE_CHECK_INTERVAL
         )
         now_sub_interval = time.strftime("%Y-%m-%d", time.gmtime(now_sub_interval_sec))
         if str(self.settings.value("last-update-check", type=str)) > now_sub_interval:
@@ -449,13 +427,13 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             # short enough to not annoy the users to much. (FTR: 0.15 was too short.)
             time.sleep(0.5)
 
-        if self.screenshot_handler_name:
+        if self.app.screenshot_handler_name:
             logger.debug(
                 "Take screenshot explicitly with %s",
-                self.screenshot_handler_name.upper(),
+                self.app.screenshot_handler_name.upper(),
             )
             screens = screenshot.capture_with_handler(
-                handler_name=self.screenshot_handler_name
+                handler_name=self.app.screenshot_handler_name
             )
         else:
             screens = screenshot.capture()
@@ -510,7 +488,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.app.windows[index] = new_window
 
     def _create_menu_button(self) -> QtWidgets.QWidget:
-        if self._testing_language_manager:
+        if self.app._TESTING_LANGUAGE_MANAGER:
             system_info.is_briefcase_package = lambda: True
         settings_menu = MenuButton(
             settings=self.settings,

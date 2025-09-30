@@ -6,7 +6,7 @@ from normcap.gui.settings import Settings
 
 
 def test_debug_language_manager_is_deactivated(qapp):
-    assert not tray.SystemTray._testing_language_manager
+    assert not qapp._TESTING_LANGUAGE_MANAGER
 
 
 @pytest.mark.parametrize(
