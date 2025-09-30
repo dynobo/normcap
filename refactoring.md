@@ -74,10 +74,10 @@
 #### **Subtask 4.1: Move DBus and permissions handling to NormcapApp**
 - **Goal**: Transfer system-level integration
 - **What to do**:
-  - [ ] Move DBus service: `dbus_service`, `_get_dbus_service()`, `_handle_action_activate()`
-  - [ ] Move permissions handling: `show_permissions_info()`
-  - [ ] Move introduction dialog: `show_introduction()`
-  - [ ] Keep these accessible to SystemTray through NormcapApp reference
+  - [x] Move DBus service: `dbus_service`, `_get_dbus_service()`, `_handle_action_activate()`
+  - [x] Move permissions handling: `show_permissions_info()`
+  - [x] Move introduction dialog: `show_introduction()`
+  - [x] Keep these accessible to SystemTray through NormcapApp reference
 - **Why safe**: System integration is application-level, not tray-specific
 - **Testing**: DBus activation, permissions prompts, and introduction should work as before
 

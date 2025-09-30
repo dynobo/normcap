@@ -1,7 +1,7 @@
 import pytest
 from PySide6 import QtWidgets
 
-from normcap.gui.tray import screenshot
+from normcap.gui.application import screenshot
 
 from .testcases import testcases
 
