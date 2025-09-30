@@ -1,12 +1,14 @@
 """Start main application logic."""
 
 import logging
+import time
 from typing import Any
 
-from PySide6 import QtCore, QtNetwork, QtWidgets
+from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
 
 from normcap import __version__, screenshot
-from normcap.gui import system_info
+from normcap.gui import system_info, utils
+from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Days, Rect, Screen, Seconds
 from normcap.gui.settings import Settings
 from normcap.gui.tray import SystemTray
@@ -81,6 +83,19 @@ class NormcapApp(QtWidgets.QApplication):
         # Run main logic
         self._verify_screenshot_permission()
 
+        # Show intro (and delay screenshot to not capute the intro)
+        if (
+            args.get("show_introduction") is None
+            and self.settings.value("show-introduction", type=bool)
+        ) or args.get("show_introduction") is True:
+            self.show_introduction()
+            delay_screenshot = True
+        else:
+            delay_screenshot = False
+
+        if not args.get("background_mode", False):
+            self._show_windows(delay_screenshot=delay_screenshot)
+
         self.tray = SystemTray(self, args)
         self.tray.show()
 
@@ -90,6 +105,109 @@ class NormcapApp(QtWidgets.QApplication):
                 self.settings.setValue("has-screenshot-permission", True)
             else:
                 self.show_permissions_info()
+
+    def _create_window(self, index: int) -> None:
+        """Open a child window for the specified screen."""
+        new_window = Window(
+            screen=self.screens[index], settings=self.settings, parent=None
+        )
+        new_window.com.on_esc_key_pressed.connect(
+            lambda: self.tray._minimize_or_exit_application(delay=0)
+        )
+        new_window.com.on_esc_key_pressed.connect(
+            lambda: self.tray._minimize_or_exit_application(delay=0)
+        )
+        new_window.com.on_region_selected.connect(self.com.on_region_selected)
+        if index == 0:
+            # TODO: Move to window?
+            menu_button = self._create_menu_button()
+            layout = self._create_layout()
+            layout.addWidget(menu_button, 0, 1)
+            new_window.ui_container.setLayout(layout)
+
+        new_window.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
+        new_window.set_fullscreen()
+        self.windows[index] = new_window
+
+    # TODO: Move create menu logix to window?
+    def _create_menu_button(self) -> QtWidgets.QWidget:
+        if self._TESTING_LANGUAGE_MANAGER:
+            system_info.is_briefcase_package = lambda: True
+        settings_menu = MenuButton(
+            settings=self.settings,
+            language_manager=system_info.is_prebuilt_package(),
+            installed_languages=self.installed_languages,
+        )
+        settings_menu.com.on_open_url.connect(self.tray._open_url_and_hide)
+        settings_menu.com.on_manage_languages.connect(self.tray._open_language_manager)
+        settings_menu.com.on_setting_change.connect(self.tray._apply_setting_change)
+        settings_menu.com.on_show_introduction.connect(self.tray.show_introduction)
+        settings_menu.com.on_close_in_settings.connect(
+            lambda: self.tray._minimize_or_exit_application(delay=0)
+        )
+        self.com.on_languages_changed.connect(settings_menu.on_languages_changed)
+        return settings_menu
+
+    # TODO: Move to window
+    @staticmethod
+    def _create_layout() -> QtWidgets.QGridLayout:
+        layout = QtWidgets.QGridLayout()
+        layout.setContentsMargins(26, 26, 26, 26)
+        layout.setRowStretch(1, 1)
+        layout.setColumnStretch(0, 1)
+        return layout
+
+    def _show_windows(self, delay_screenshot: bool) -> None:
+        """Initialize child windows with method depending on system."""
+        screenshots = self._take_screenshots(delay=delay_screenshot)
+
+        for idx, image in enumerate(screenshots):
+            self.screens[idx].screenshot = image
+
+        for index in range(len(system_info.screens())):
+            self._create_window(index)
+
+    @QtCore.Slot()
+    def _close_windows(self) -> None:
+        """Hide all windows of normcap."""
+        window_count = len(self.windows)
+        if window_count < 1:
+            return
+        logger.debug("Hide %s window%s", window_count, "s" if window_count > 1 else "")
+        QtWidgets.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.processEvents()
+        for window in self.windows.values():
+            window.close()
+        self.windows = {}
+        self.com.on_windows_closed.emit()
+
+    @QtCore.Slot()
+    def _take_screenshots(self, delay: bool) -> list[QtGui.QImage]:
+        """Get new screenshots and cache them."""
+        if delay:
+            # Timeout should be high enough for visible windows to completely hide and
+            # short enough to not annoy the users to much. (FTR: 0.15 was too short.)
+            time.sleep(0.5)
+
+        if self.screenshot_handler_name:
+            logger.debug(
+                "Take screenshot explicitly with %s",
+                self.screenshot_handler_name.upper(),
+            )
+            screens = screenshot.capture_with_handler(
+                handler_name=self.screenshot_handler_name
+            )
+        else:
+            screens = screenshot.capture()
+
+        if not screens:
+            self.settings.setValue("has-screenshot-permission", False)
+            raise RuntimeError("No screenshot taken!")
+
+        for idx, image in enumerate(screens):
+            utils.save_image_in_temp_folder(image, postfix=f"_raw_screen{idx}")
+
+        return screens
 
     def _other_instance_is_running(self) -> bool:
         """Test if connection to another NormCap instance socket can be established."""
@@ -139,7 +257,7 @@ class NormcapApp(QtWidgets.QApplication):
             logger.debug("Capture window(s) already open. Doing nothing.")
             return
 
-        self.tray._show_windows(delay_screenshot=True)
+        self._show_windows(delay_screenshot=True)
 
     @QtCore.Slot(bool)
     def _exit_application(self, delay: Seconds = 0) -> None:

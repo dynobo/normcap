@@ -39,9 +39,9 @@
 - **Goal**: Transfer window lifecycle management
 - **What to do**:
   - [x] Move `windows` dictionary to NormcapApp
-  - [ ] Move methods: `_show_windows()`, `_close_windows()`, `_create_window()`, `_create_menu_button()`, `_create_layout()`
-  - [ ] Move screenshot handling: `_take_screenshots()`
-  - [ ] SystemTray should request window operations through NormcapApp methods
+  - [x] Move methods: `_show_windows()`, `_close_windows()`, `_create_window()`, `_create_menu_button()`, `_create_layout()`
+  - [x] Move screenshot handling: `_take_screenshots()`
+  - [x] SystemTray should request window operations through NormcapApp methods
   - [ ] Keep tray-specific UI (context menu) in SystemTray
 - **Why safe**: Window management is logically separate from tray icon
 - **Testing**: Screenshot capture and window display should work normally

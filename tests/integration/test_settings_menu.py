@@ -12,7 +12,7 @@ def test_settings_menu_creates_actions(monkeypatch, qtbot, qapp):
     # GIVEN NormCap is started with any image as screenshot
     some_image = testcases[0].screenshot
     monkeypatch.setattr(screenshot, "capture", lambda: [some_image])
-    qapp.tray._show_windows(delay_screenshot=False)
+    qapp._show_windows(delay_screenshot=False)
 
     # WHEN the menu button is clicked (mocked here via aboutToShow, because menus are
     #    hard to test as they have their own event loops
@@ -49,7 +49,7 @@ def test_settings_menu_close_action_exits(monkeypatch, qtbot, qapp, test_signal)
         return original_value_func(*args, **kwargs)
 
     monkeypatch.setattr(qapp.settings, "value", _mocked_settings)
-    qapp.tray._show_windows(delay_screenshot=False)
+    qapp._show_windows(delay_screenshot=False)
 
     # WHEN the menu button is clicked (mocked here via aboutToShow, because menus are
     #    hard to test as they have their own event loops)
@@ -71,7 +71,7 @@ def test_settings_menu_close_action_minimizes(monkeypatch, qtbot, qapp):
     #   and tray icon is enabled
     some_image = testcases[0].screenshot
     monkeypatch.setattr(screenshot, "capture", lambda: [some_image])
-    qapp.tray._show_windows(delay_screenshot=False)
+    qapp._show_windows(delay_screenshot=False)
 
     # WHEN the menu button is clicked (mocked here via aboutToShow, because menus are
     #    hard to test as they have their own event loops)
