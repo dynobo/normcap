@@ -29,10 +29,8 @@ from normcap.gui import (
 from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
-from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Rect, Seconds
 from normcap.gui.update_check import UpdateChecker
-from normcap.gui.window import Window
 from normcap.notification.models import NAME_NOTIFICATION_CLICKED_ACTION
 
 logger = logging.getLogger(__name__)
@@ -100,19 +98,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             QtCore.QTimer.singleShot(1000, lambda: self.com.on_exit_application.emit(0))
             return
 
-        # Show intro (and delay screenshot to not capute the intro)
-        if (
-            args.get("show_introduction") is None
-            and self.settings.value("show-introduction", type=bool)
-        ) or args.get("show_introduction") is True:
-            self.show_introduction()
-            delay_screenshot = True
-        else:
-            delay_screenshot = False
-
-        if not args.get("background_mode", False):
-            self._show_windows(delay_screenshot=delay_screenshot)
-
     def _get_dbus_service(self) -> DBusApplicationService | None:
         dbus_service = DBusApplicationService(self.app)
         if not dbus_service.register_service():
@@ -172,17 +157,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             reason == QtWidgets.QSystemTrayIcon.ActivationReason.Trigger
             and self.settings.value("tray", False, type=bool)
         ):
-            self._show_windows(delay_screenshot=True)
-
-    def _show_windows(self, delay_screenshot: bool) -> None:
-        """Initialize child windows with method depending on system."""
-        screenshots = self._take_screenshots(delay=delay_screenshot)
-
-        for idx, image in enumerate(screenshots):
-            self.screens[idx].screenshot = image
-
-        for index in range(len(system_info.screens())):
-            self._create_window(index)
+            self.app._show_windows(delay_screenshot=True)
 
     @QtCore.Slot(str)
     def _apply_setting_change(self, setting: str) -> None:
@@ -340,20 +315,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         print(text, file=sys.stdout)  # noqa: T201
         self.com.on_exit_application.emit(0)
 
-    @QtCore.Slot()
-    def _close_windows(self) -> None:
-        """Hide all windows of normcap."""
-        window_count = len(self.app.windows)
-        if window_count < 1:
-            return
-        logger.debug("Hide %s window%s", window_count, "s" if window_count > 1 else "")
-        QtWidgets.QApplication.restoreOverrideCursor()
-        QtWidgets.QApplication.processEvents()
-        for window in self.app.windows.values():
-            window.close()
-        self.app.windows = {}
-        self.com.on_windows_closed.emit()
-
     def _delayed_init(self) -> None:
         """Setup things that can be done independent of the first capture.
 
@@ -381,7 +342,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         if self.dbus_service:
             self.dbus_service.action_activated.connect(self._handle_action_activate)
         self.activated.connect(self._handle_tray_click)
-        self.com.on_region_selected.connect(self._close_windows)
+        self.com.on_region_selected.connect(self.app._close_windows)
         self.com.on_region_selected.connect(self._schedule_detection)
         self.com.on_languages_changed.connect(self._sanitize_language_setting)
         self.com.on_languages_changed.connect(self._update_installed_languages)
@@ -420,34 +381,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             self.settings.setValue("last-update-check", today)
 
     @QtCore.Slot()
-    def _take_screenshots(self, delay: bool) -> list[QtGui.QImage]:
-        """Get new screenshots and cache them."""
-        if delay:
-            # Timeout should be high enough for visible windows to completely hide and
-            # short enough to not annoy the users to much. (FTR: 0.15 was too short.)
-            time.sleep(0.5)
-
-        if self.app.screenshot_handler_name:
-            logger.debug(
-                "Take screenshot explicitly with %s",
-                self.app.screenshot_handler_name.upper(),
-            )
-            screens = screenshot.capture_with_handler(
-                handler_name=self.app.screenshot_handler_name
-            )
-        else:
-            screens = screenshot.capture()
-
-        if not screens:
-            self.settings.setValue("has-screenshot-permission", False)
-            raise RuntimeError("No screenshot taken!")
-
-        for idx, image in enumerate(screens):
-            utils.save_image_in_temp_folder(image, postfix=f"_raw_screen{idx}")
-
-        return screens
-
-    @QtCore.Slot()
     def _populate_context_menu_entries(self) -> None:
         """Create menu for system tray."""
         self.tray_menu.clear()
@@ -455,7 +388,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         # L10N: Tray menu entry
         action = QtGui.QAction(_("Capture"), self.tray_menu)
         action.setObjectName("capture")
-        action.triggered.connect(lambda: self._show_windows(delay_screenshot=True))
+        action.triggered.connect(lambda: self.app._show_windows(delay_screenshot=True))
         action.setVisible(bool(self.settings.value("tray", False, type=bool)))
         self.tray_menu.addAction(action)
 
@@ -465,57 +398,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         action.triggered.connect(lambda: self.com.on_exit_application.emit(0))
         self.tray_menu.addAction(action)
 
-    def _create_window(self, index: int) -> None:
-        """Open a child window for the specified screen."""
-        new_window = Window(
-            screen=self.screens[index], settings=self.settings, parent=None
-        )
-        new_window.com.on_esc_key_pressed.connect(
-            lambda: self._minimize_or_exit_application(delay=0)
-        )
-        new_window.com.on_esc_key_pressed.connect(
-            lambda: self._minimize_or_exit_application(delay=0)
-        )
-        new_window.com.on_region_selected.connect(self.com.on_region_selected)
-        if index == 0:
-            menu_button = self._create_menu_button()
-            layout = self._create_layout()
-            layout.addWidget(menu_button, 0, 1)
-            new_window.ui_container.setLayout(layout)
-
-        new_window.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
-        new_window.set_fullscreen()
-        self.app.windows[index] = new_window
-
-    def _create_menu_button(self) -> QtWidgets.QWidget:
-        if self.app._TESTING_LANGUAGE_MANAGER:
-            system_info.is_briefcase_package = lambda: True
-        settings_menu = MenuButton(
-            settings=self.settings,
-            language_manager=system_info.is_prebuilt_package(),
-            installed_languages=self.installed_languages,
-        )
-        settings_menu.com.on_open_url.connect(self._open_url_and_hide)
-        settings_menu.com.on_manage_languages.connect(self._open_language_manager)
-        settings_menu.com.on_setting_change.connect(self._apply_setting_change)
-        settings_menu.com.on_show_introduction.connect(self.show_introduction)
-        settings_menu.com.on_close_in_settings.connect(
-            lambda: self._minimize_or_exit_application(delay=0)
-        )
-        self.com.on_languages_changed.connect(settings_menu.on_languages_changed)
-        return settings_menu
-
-    @staticmethod
-    def _create_layout() -> QtWidgets.QGridLayout:
-        layout = QtWidgets.QGridLayout()
-        layout.setContentsMargins(26, 26, 26, 26)
-        layout.setRowStretch(1, 1)
-        layout.setColumnStretch(0, 1)
-        return layout
-
     @QtCore.Slot()
     def _minimize_or_exit_application(self, delay: Seconds) -> None:
-        self._close_windows()
+        self.app._close_windows()
         if self.settings.value("tray", type=bool):
             return
 

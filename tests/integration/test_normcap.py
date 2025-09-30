@@ -23,7 +23,7 @@ def test_normcap_ocr_testcases(
     copy_to_clipboard_calls = {}
     monkeypatch.setattr(qapp.tray, "_copy_to_clipboard", copy_to_clipboard_calls.update)
 
-    qapp.tray._show_windows(delay_screenshot=False)
+    qapp._show_windows(delay_screenshot=False)
     # qtbot.waitUntil(lambda: len(qapp.windows) >= 1)
 
     # WHEN a certain test region is selected on the screen
