@@ -61,11 +61,11 @@
 #### **Subtask 3.2: Move language and update management to NormcapApp**
 - **Goal**: Transfer language management and update checking
 - **What to do**:
-  - [ ] Move methods: `_delayed_init()`, `_sanitize_language_setting()`, `_update_installed_languages()`
-  - [ ] Move language manager: `_open_language_manager()`
-  - [ ] Move update checker: `_add_update_checker()`, `_update_time_of_last_update_check()`
-  - [ ] Move URL handling: `_open_url_and_hide()`
-  - [ ] Update signal connections to flow through NormcapApp
+  - [x] Move methods: `_delayed_init()`, `_sanitize_language_setting()`, `_update_installed_languages()`
+  - [x] Move language manager: `_open_language_manager()`
+  - [x] Move update checker: `_add_update_checker()`, `_update_time_of_last_update_check()`
+  - [x] Move URL handling: `_open_url_and_hide()`
+  - [x] Update signal connections to flow through NormcapApp
 - **Why safe**: These are application-wide features, not tray-specific
 - **Testing**: Language switching, language manager, and update checks should function normally
 

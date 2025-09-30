@@ -15,7 +15,6 @@ from typing import Any, cast
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import screenshot
-from normcap.detection import ocr
 from normcap.gui import (
     constants,
     introduction,
@@ -26,10 +25,8 @@ from normcap.gui import (
     utils,
 )
 from normcap.gui.dbus_application_service import DBusApplicationService
-from normcap.gui.language_manager import LanguageManager
 from normcap.gui.localization import _
 from normcap.gui.models import Seconds
-from normcap.gui.update_check import UpdateChecker
 from normcap.notification.models import NAME_NOTIFICATION_CLICKED_ACTION
 
 logger = logging.getLogger(__name__)
@@ -76,7 +73,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         self.delayed_init_timer = QtCore.QTimer(parent=self)
         self.delayed_init_timer.setSingleShot(True)
-        self.delayed_init_timer.timeout.connect(self._delayed_init)
+        self.delayed_init_timer.timeout.connect(self.app._delayed_init)
         self.delayed_init_timer.start(50)
 
         # Prepare UI
@@ -105,6 +102,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
         logger.debug("Registered DBus activation service")
         return dbus_service
+
+    def _set_tray_icon_normal(self) -> None:
+        self.setIcon(QtGui.QIcon(TrayIcon.NORMAL.value))
 
     @QtCore.Slot()
     def show_introduction(self) -> None:
@@ -166,77 +166,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             is_tray_visible = bool(self.settings.value(setting, False, type=bool))
             capture_action.setVisible(is_tray_visible)
 
-    @QtCore.Slot(list)
-    def _sanitize_language_setting(self, installed_languages: list[str]) -> None:
-        """Verify that languages selected in the settings exist.
-
-        If one doesn't, remove it. If none does, select the first in list.
-        """
-        active_languages = self.settings.value("language")
-        if not isinstance(active_languages, list):
-            active_languages = [active_languages]
-
-        active_languages = [
-            a for a in active_languages if a in installed_languages
-        ] or [installed_languages[0]]
-
-        self.settings.setValue("language", active_languages)
-
-    @QtCore.Slot(list)
-    def _update_installed_languages(self, installed_languages: list[str]) -> None:
-        """Update instance attribute to reflect changes.
-
-        the instance attribute is used e.g. to create a menu_button with an up to
-        date language menu.
-        """
-        self.installed_languages = installed_languages
-
-    @QtCore.Slot(str)
-    def _open_url_and_hide(self, url: str) -> None:
-        """Open url in default browser, then hide to tray or exit."""
-        logger.debug("Open %s", url)
-        result = QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
-        )
-        logger.debug("Opened uri with result=%s", result)
-        self._minimize_or_exit_application(delay=0)
-
-    @QtCore.Slot()
-    def _open_language_manager(self) -> None:
-        """Open url in default browser, then hide to tray or exit."""
-        logger.debug("Loading language manager …")
-        self.language_window = LanguageManager(
-            tessdata_path=system_info.config_directory() / "tessdata",
-            parent=self.app.windows[0],
-        )
-        self.language_window.com.on_open_url.connect(self._open_url_and_hide)
-        self.language_window.com.on_languages_changed.connect(
-            self.com.on_languages_changed
-        )
-        self.language_window.exec()
-
-    def _delayed_init(self) -> None:
-        """Setup things that can be done independent of the first capture.
-
-        By running this async of __init__(),  its runtime of ~30ms doesn't
-        contribute to the delay until the GUI becomes active for the user on startup.
-        """
-        self.installed_languages = ocr.tesseract.get_languages(
-            tesseract_cmd=system_info.get_tesseract_bin_path(
-                is_briefcase_package=system_info.is_briefcase_package()
-            ),
-            tessdata_path=system_info.get_tessdata_path(
-                config_directory=system_info.config_directory(),
-                is_briefcase_package=system_info.is_briefcase_package(),
-                is_flatpak_package=system_info.is_flatpak(),
-            ),
-        )
-        self.com.on_languages_changed.emit(self.installed_languages)
-        self._add_update_checker()
-
-    def _set_tray_icon_normal(self) -> None:
-        self.setIcon(QtGui.QIcon(TrayIcon.NORMAL.value))
-
     def _set_signals(self) -> None:
         """Set up signals to trigger program logic."""
         if self.dbus_service:
@@ -244,9 +173,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         self.activated.connect(self._handle_tray_click)
         self.com.on_region_selected.connect(self.app._close_windows)
         self.com.on_region_selected.connect(self.app._schedule_detection)
-        self.com.on_languages_changed.connect(self._sanitize_language_setting)
-        self.com.on_languages_changed.connect(self._update_installed_languages)
-        self.messageClicked.connect(self._open_language_manager)
+        self.com.on_languages_changed.connect(self.app._sanitize_language_setting)
+        self.com.on_languages_changed.connect(self.app._update_installed_languages)
+        self.messageClicked.connect(self.app._open_language_manager)
 
     @QtCore.Slot(str, list)
     def _handle_action_activate(self, action_name: str, parameter: list) -> None:
@@ -254,31 +183,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             text, text_type = parameter
             notification_utils.perform_action(text=text, text_type=text_type)
             self.com.on_action_finished.emit()
-
-    def _add_update_checker(self) -> None:
-        if not self.settings.value("update", type=bool):
-            return
-
-        now_sub_interval_sec = time.time() - (
-            60 * 60 * 24 * self.parent.app._UPDATE_CHECK_INTERVAL
-        )
-        now_sub_interval = time.strftime("%Y-%m-%d", time.gmtime(now_sub_interval_sec))
-        if str(self.settings.value("last-update-check", type=str)) > now_sub_interval:
-            return
-
-        self.checker = UpdateChecker(
-            parent=None, packaged=system_info.is_prebuilt_package()
-        )
-        self.checker.com.on_version_checked.connect(
-            self._update_time_of_last_update_check
-        )
-        self.checker.com.on_click_get_new_version.connect(self._open_url_and_hide)
-        QtCore.QTimer.singleShot(500, self.checker.com.check.emit)
-
-    def _update_time_of_last_update_check(self, newest_version: str) -> None:
-        if newest_version is not None:
-            today = time.strftime("%Y-%m-%d", time.gmtime())
-            self.settings.setValue("last-update-check", today)
 
     @QtCore.Slot()
     def _populate_context_menu_entries(self) -> None:
