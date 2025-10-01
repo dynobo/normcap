@@ -155,6 +155,7 @@ class NormcapApp(QtWidgets.QApplication):
         self.tray.com.on_menu_capture_clicked.connect(
             lambda: self._show_windows(delay_screenshot=True)
         )
+        self.settings.com.on_value_changed.connect(self.tray.apply_setting_change)
         self.tray.show()
         self.timers.delayed_init.start(50)
 
@@ -251,8 +252,6 @@ class NormcapApp(QtWidgets.QApplication):
         )
         settings_menu.com.on_open_url.connect(self._open_url_and_hide)
         settings_menu.com.on_manage_languages.connect(self._open_language_manager)
-        # TODO: Can I directly subscribe to QSettings?
-        settings_menu.com.on_setting_change.connect(self._propagate_setting_change)
         settings_menu.com.on_show_introduction.connect(self.show_introduction)
         settings_menu.com.on_close_in_settings.connect(
             lambda: self._minimize_or_exit_application(delay=0)
@@ -268,9 +267,6 @@ class NormcapApp(QtWidgets.QApplication):
         layout.setRowStretch(1, 1)
         layout.setColumnStretch(0, 1)
         return layout
-
-    def _propagate_setting_change(self, setting: str) -> None:
-        self.tray.apply_setting_change(setting, self.settings.value(setting))
 
     def _show_windows(self, delay_screenshot: bool) -> None:
         """Initialize child windows with method depending on system."""
@@ -392,7 +388,7 @@ class NormcapApp(QtWidgets.QApplication):
             )
 
         self._minimize_or_exit_application(delay=self._EXIT_DELAY)
-        self.tray._show_completion_icon()
+        self.tray.show_completion_icon()
 
     def _copy_to_clipboard(self, text: str) -> None:
         """Copy results to clipboard."""

@@ -73,7 +73,6 @@ class Communicate(QtCore.QObject):
     on_open_url = QtCore.Signal(str)
     on_close_in_settings = QtCore.Signal(str)
     on_manage_languages = QtCore.Signal()
-    on_setting_change = QtCore.Signal(str)
     on_show_introduction = QtCore.Signal()
 
 
@@ -170,7 +169,6 @@ class MenuButton(QtWidgets.QToolButton):
 
         if group_name in ["settings_group", "postprocessing_group"]:
             self.settings.setValue(action_name, action.isChecked())
-            self.com.on_setting_change.emit(action_name)
             return
 
         if group_name == "detection_group":
@@ -178,7 +176,6 @@ class MenuButton(QtWidgets.QToolButton):
                 # If all detection methods are unselected, keep the clicked one active:
                 action.setChecked(True)
             self.settings.setValue(action_name, action.isChecked())
-            self.com.on_setting_change.emit(action_name)
             return
 
         if group_name == "language_group":
@@ -188,7 +185,6 @@ class MenuButton(QtWidgets.QToolButton):
                 languages = [action_name]
                 action.setChecked(True)
             self.settings.setValue("language", languages)
-            self.com.on_setting_change.emit("language")
             return
 
     @QtCore.Slot()
