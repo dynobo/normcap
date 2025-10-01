@@ -27,7 +27,7 @@ from normcap.gui.settings import Settings
 from normcap.gui.tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
-from normcap.notification.models import NAME_NOTIFICATION_CLICKED_ACTION
+from normcap.notification.models import ACTION_NAME_NOTIFICATION_CLICKED
 
 logger = logging.getLogger(__name__)
 
@@ -43,13 +43,6 @@ class Communicate(QtCore.QObject):
     on_windows_closed = QtCore.Signal()
 
 
-class Timers:
-    def __init__(self, parent: QtWidgets.QWidget) -> None:
-        self.delayed_exit = QtCore.QTimer(parent=parent, singleShot=True)
-        self.delayed_detectation = QtCore.QTimer(parent=parent, singleShot=True)
-        self.delayed_init = QtCore.QTimer(parent=parent, singleShot=True)
-
-
 class NormcapApp(QtWidgets.QApplication):
     """Main NormCap application logic."""
 
@@ -59,7 +52,7 @@ class NormcapApp(QtWidgets.QApplication):
     _socket_in: QtNetwork.QLocalSocket | None = None
     _socket_server: QtNetwork.QLocalServer | None = None
 
-    _EXIT_DELAY: Seconds = 5
+    _EXIT_DELAY: Seconds = 5  # To keep tray icon visible for a while
     _UPDATE_CHECK_INTERVAL: Days = 7
 
     # Only for testing purposes: forcefully enables language manager in settings menu
@@ -71,9 +64,6 @@ class NormcapApp(QtWidgets.QApplication):
         self.setQuitOnLastWindowClosed(False)
 
         self.com = Communicate(parent=self)
-        self.timers = Timers(parent=self)
-        self.timers.delayed_exit.timeout.connect(self._exit_application)
-        self.timers.delayed_init.timeout.connect(self._delayed_init)
 
         # Create DBus Service to listen for notification actions and activations
         self.dbus_service = (
@@ -85,7 +75,9 @@ class NormcapApp(QtWidgets.QApplication):
             self.dbus_service.action_activated.connect(self._handle_action_activate)
         self.com.on_exit_application.connect(self._exit_application)
         self.com.on_region_selected.connect(self._close_windows)
-        self.com.on_region_selected.connect(self._schedule_detection)
+        self.com.on_region_selected.connect(self._trigger_detect)
+
+        # TODO: Handle this more clean!
         self.com.on_languages_changed.connect(self._sanitize_language_setting)
         self.com.on_languages_changed.connect(self._update_installed_languages)
 
@@ -121,7 +113,7 @@ class NormcapApp(QtWidgets.QApplication):
             QtCore.QTimer.singleShot(1000, lambda: self.com.on_exit_application.emit(0))
             return
 
-        # Run main logic
+        # Check if have screenshot permission and try to request if needed
         self._verify_screenshot_permission()
 
         # Show intro (and delay screenshot to not capute the intro)
@@ -145,10 +137,6 @@ class NormcapApp(QtWidgets.QApplication):
         self.tray.com.on_tray_clicked.connect(
             lambda: self._show_windows(delay_screenshot=True)
         )
-        # TODO: Properly connect QT notification
-        self.tray.com.on_notification_clicked.connect(
-            lambda: self._handle_action_activate()
-        )
         self.tray.com.on_menu_exit_clicked.connect(
             lambda: self.com.on_exit_application.emit(0)
         )
@@ -157,7 +145,9 @@ class NormcapApp(QtWidgets.QApplication):
         )
         self.settings.com.on_value_changed.connect(self.tray.apply_setting_change)
         self.tray.show()
-        self.timers.delayed_init.start(50)
+
+        # Defer non-crucial init to faster be interactive
+        QtCore.QTimer.singleShot(50, self._delayed_init)
 
     @QtCore.Slot()
     def show_introduction(self) -> None:
@@ -206,7 +196,7 @@ class NormcapApp(QtWidgets.QApplication):
 
     @QtCore.Slot(str, list)
     def _handle_action_activate(self, action_name: str, parameter: list) -> None:
-        if action_name == NAME_NOTIFICATION_CLICKED_ACTION:
+        if action_name == ACTION_NAME_NOTIFICATION_CLICKED:
             text, text_type = parameter
             notification_utils.perform_action(text=text, text_type=text_type)
             self.com.on_action_finished.emit()
@@ -310,6 +300,7 @@ class NormcapApp(QtWidgets.QApplication):
             self._update_time_of_last_update_check
         )
         self.checker.com.on_click_get_new_version.connect(self._open_url_and_hide)
+        # TODO: Trigger check via checker.com signal?
         QtCore.QTimer.singleShot(500, self.checker.com.check.emit)
 
     def _update_time_of_last_update_check(self, newest_version: str) -> None:
@@ -326,16 +317,6 @@ class NormcapApp(QtWidgets.QApplication):
         )
         logger.debug("Opened uri with result=%s", result)
         self._minimize_or_exit_application(delay=0)
-
-    @QtCore.Slot()
-    def _schedule_detection(self, rect: Rect, screen_idx: int) -> None:
-        """Schedule detection to run after window closing is complete."""
-        # Use a single-shot timer to defer detection execution
-        # TODO: Is this required?
-        self.timers.delayed_detectation.timeout.connect(
-            lambda: self._trigger_detect(rect, screen_idx)
-        )
-        self.timers.delayed_detectation.start(1)
 
     @QtCore.Slot()
     def _trigger_detect(self, rect: Rect, screen_idx: int) -> None:
@@ -531,6 +512,7 @@ class NormcapApp(QtWidgets.QApplication):
 
         return False
 
+    # TODO: Carve out socket logic into own module?
     def _create_socket_server(self) -> None:
         """Open socket server to listen for other NormCap instances."""
         if self._socket_out:
@@ -578,7 +560,7 @@ class NormcapApp(QtWidgets.QApplication):
             self._socket_server = None
 
         if delay:
-            self.timers.delayed_exit.start(int(delay * 1000))
+            QtCore.QTimer.singleShot(int(delay * 1000), self._exit_application)
         else:
             self.tray.hide()
             logger.info("Exit normcap")

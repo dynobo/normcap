@@ -25,7 +25,6 @@ class Icon(Enum):
 class Communicate(QtCore.QObject):
     """System Tray's communication bus."""
 
-    on_notification_clicked = QtCore.Signal()
     on_tray_clicked = QtCore.Signal()
     on_menu_capture_clicked = QtCore.Signal()
     on_menu_exit_clicked = QtCore.Signal()
@@ -50,7 +49,6 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
 
     def _connect_signals(self) -> None:
         self.activated.connect(self._handle_activated)
-        self.messageClicked.connect(lambda: self.com.on_notification_clicked.emit())
         self.tray_menu.aboutToShow.connect(self._update_context_menu_entries)
 
     def set_icon(self, icon: Icon) -> None:
