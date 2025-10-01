@@ -53,7 +53,7 @@ def test_disable_language_manager(monkeypatch, menu_btn_without_lang_man):
 def test_languages_section_does_overflow(qtbot, menu_btn):
     threshold = 8
     # Test does _not_ overflow below threshold
-    menu_btn.on_languages_changed([str(i) for i in range(threshold - 1)])
+    menu_btn.installed_languages = [str(i) for i in range(threshold - 1)]
     menu_btn.menu().aboutToShow.emit()
 
     select_menu = menu_btn.findChild(QtWidgets.QMenu, "language_menu")
@@ -63,7 +63,7 @@ def test_languages_section_does_overflow(qtbot, menu_btn):
     assert len(language_group.children()) == threshold - 1
 
     # Test _does_ overflow on threshold
-    menu_btn.on_languages_changed([str(i) for i in range(threshold)])
+    menu_btn.installed_languages = [str(i) for i in range(threshold)]
     menu_btn.menu().aboutToShow.emit()
 
     select_menu = menu_btn.findChild(QtWidgets.QMenu, "language_menu")
@@ -77,7 +77,7 @@ def test_close_triggered(qtbot, menu_btn):
     menu_btn.menu().aboutToShow.emit()
 
     action = menu_btn.findChild(QtGui.QAction, "close")
-    with qtbot.wait_signal(menu_btn.com.on_close_in_settings, timeout=1000):
+    with qtbot.wait_signal(menu_btn.com.on_close, timeout=1000):
         action.trigger()
 
 
@@ -94,7 +94,7 @@ def test_open_url_triggered(qtbot, menu_btn):
 
 def test_language_group(menu_btn):
     langs = ["afr", "deu", "eng"]
-    menu_btn.on_languages_changed(langs)
+    menu_btn.installed_languages = langs
     menu_btn.menu().aboutToShow.emit()
 
     # enabling all

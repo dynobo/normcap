@@ -21,7 +21,6 @@ from normcap.gui import (
 )
 from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
-from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import Days, Rect, Screen, Seconds
 from normcap.gui.settings import Settings
 from normcap.gui.tray import SystemTray
@@ -38,7 +37,6 @@ class Communicate(QtCore.QObject):
     on_exit_application = QtCore.Signal(float)
     on_copied_to_clipboard = QtCore.Signal()
     on_region_selected = QtCore.Signal(Rect, int)
-    on_languages_changed = QtCore.Signal(list)
     on_action_finished = QtCore.Signal()
     on_windows_closed = QtCore.Signal()
 
@@ -57,7 +55,7 @@ class NormcapApp(QtWidgets.QApplication):
 
     # Only for testing purposes: forcefully enables language manager in settings menu
     # (Normally language manager is only available in pre-build version)
-    _TESTING_LANGUAGE_MANAGER = False
+    _DEBUG_LANGUAGE_MANAGER = False
 
     def __init__(self, args: dict[str, Any]) -> None:
         super().__init__()
@@ -77,10 +75,6 @@ class NormcapApp(QtWidgets.QApplication):
         self.com.on_region_selected.connect(self._close_windows)
         self.com.on_region_selected.connect(self._trigger_detect)
 
-        # TODO: Handle this more clean!
-        self.com.on_languages_changed.connect(self._sanitize_language_setting)
-        self.com.on_languages_changed.connect(self._update_installed_languages)
-
         # Ensure that only a single instance of NormCap is running.
         if self._other_instance_is_running():
             self.com.on_exit_application.emit(0)
@@ -97,8 +91,8 @@ class NormcapApp(QtWidgets.QApplication):
         # Init state
         self.screens: list[Screen] = system_info.screens()
         self.windows: dict[int, Window] = {}
-        self.installed_languages: list[str] = []
         self.cli_mode = args.get("cli_mode", False)
+        self.installed_languages = ["eng"]
         self.screenshot_handler_name = args.get("screenshot_handler")
         self.clipboard_handler_name = args.get("clipboard_handler")
         self.notification_handler_name = args.get("notification_handler")
@@ -210,53 +204,33 @@ class NormcapApp(QtWidgets.QApplication):
 
     def _create_window(self, index: int) -> None:
         """Open a child window for the specified screen."""
-        new_window = Window(
-            screen=self.screens[index], settings=self.settings, parent=None
-        )
-        new_window.com.on_esc_key_pressed.connect(
-            lambda: self._minimize_or_exit_application(delay=0)
-        )
-        new_window.com.on_esc_key_pressed.connect(
-            lambda: self._minimize_or_exit_application(delay=0)
-        )
-        new_window.com.on_region_selected.connect(self.com.on_region_selected)
-        if index == 0:
-            # TODO: Move to window?
-            menu_button = self._create_menu_button()
-            layout = self._create_layout()
-            layout.addWidget(menu_button, 0, 1)
-            new_window.ui_container.setLayout(layout)
-
-        new_window.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
-        new_window.set_fullscreen()
-        self.windows[index] = new_window
-
-    # TODO: Move create menu logix to window?
-    def _create_menu_button(self) -> QtWidgets.QWidget:
-        if self._TESTING_LANGUAGE_MANAGER:
-            system_info.is_briefcase_package = lambda: True
-        settings_menu = MenuButton(
+        window = Window(
+            screen=self.screens[index],
+            index=index,
             settings=self.settings,
-            language_manager=system_info.is_prebuilt_package(),
             installed_languages=self.installed_languages,
+            debug_language_manager=self._DEBUG_LANGUAGE_MANAGER,
         )
-        settings_menu.com.on_open_url.connect(self._open_url_and_hide)
-        settings_menu.com.on_manage_languages.connect(self._open_language_manager)
-        settings_menu.com.on_show_introduction.connect(self.show_introduction)
-        settings_menu.com.on_close_in_settings.connect(
+        window.com.on_esc_key_pressed.connect(
             lambda: self._minimize_or_exit_application(delay=0)
         )
-        self.com.on_languages_changed.connect(settings_menu.on_languages_changed)
-        return settings_menu
+        window.com.on_esc_key_pressed.connect(
+            lambda: self._minimize_or_exit_application(delay=0)
+        )
+        window.com.on_region_selected.connect(self.com.on_region_selected)
 
-    # TODO: Move to window
-    @staticmethod
-    def _create_layout() -> QtWidgets.QGridLayout:
-        layout = QtWidgets.QGridLayout()
-        layout.setContentsMargins(26, 26, 26, 26)
-        layout.setRowStretch(1, 1)
-        layout.setColumnStretch(0, 1)
-        return layout
+        if window.menu_button is not None:
+            window.menu_button.com.on_open_url.connect(self._open_url_and_hide)
+            window.menu_button.com.on_manage_languages.connect(
+                self._open_language_manager
+            )
+            window.menu_button.com.on_show_introduction.connect(self.show_introduction)
+            window.menu_button.com.on_close.connect(
+                lambda: self._minimize_or_exit_application(delay=0)
+            )
+
+        window.set_fullscreen()
+        self.windows[index] = window
 
     def _show_windows(self, delay_screenshot: bool) -> None:
         """Initialize child windows with method depending on system."""
@@ -447,6 +421,10 @@ class NormcapApp(QtWidgets.QApplication):
         By running this async of __init__(),  its runtime of ~30ms doesn't
         contribute to the delay until the GUI becomes active for the user on startup.
         """
+        self._add_update_checker()
+        self._update_installed_languages()
+
+    def _update_installed_languages(self) -> None:
         self.installed_languages = ocr.tesseract.get_languages(
             tesseract_cmd=system_info.get_tesseract_bin_path(
                 is_briefcase_package=system_info.is_briefcase_package()
@@ -457,8 +435,7 @@ class NormcapApp(QtWidgets.QApplication):
                 is_flatpak_package=system_info.is_flatpak(),
             ),
         )
-        self.com.on_languages_changed.emit(self.installed_languages)
-        self._add_update_checker()
+        self._sanitize_language_setting()
 
     @QtCore.Slot()
     def _open_language_manager(self) -> None:
@@ -470,12 +447,14 @@ class NormcapApp(QtWidgets.QApplication):
         )
         self.language_window.com.on_open_url.connect(self._open_url_and_hide)
         self.language_window.com.on_languages_changed.connect(
-            self.com.on_languages_changed
+            self._update_installed_languages
         )
         self.language_window.exec()
 
     @QtCore.Slot(list)
-    def _sanitize_language_setting(self, installed_languages: list[str]) -> None:
+    def _sanitize_language_setting(
+        self,
+    ) -> None:
         """Verify that languages selected in the settings exist.
 
         If one doesn't, remove it. If none does, select the first in list.
@@ -485,20 +464,10 @@ class NormcapApp(QtWidgets.QApplication):
             active_languages = [active_languages]
 
         active_languages = [
-            a for a in active_languages if a in installed_languages
-        ] or [installed_languages[0]]
+            a for a in active_languages if a in self.installed_languages
+        ] or [self.installed_languages[0]]
 
         self.settings.setValue("language", active_languages)
-
-    @QtCore.Slot(list)
-    def _update_installed_languages(self, installed_languages: list[str]) -> None:
-        """Update instance attribute to reflect changes.
-
-        the instance attribute is used e.g. to create a menu_button with an up to
-        date language menu.
-        """
-        # TODO: Seems suboptimal
-        self.installed_languages = installed_languages
 
     def _other_instance_is_running(self) -> bool:
         """Test if connection to another NormCap instance socket can be established."""
