@@ -156,6 +156,12 @@ DEFAULT_SETTINGS = (
 )
 
 
+class Communicate(QtCore.QObject):
+    """Settings's communication bus."""
+
+    on_value_changed = QtCore.Signal(str, object)
+
+
 class Settings(QtCore.QSettings):
     """Provide interface to persisted user settings."""
 
@@ -173,8 +179,10 @@ class Settings(QtCore.QSettings):
             super().__init__(str(ini_file), QtCore.QSettings.IniFormat)
         else:
             super().__init__(organization, application=application, parent=parent)
-        self.setFallbacksEnabled(False)
+
         self.init_settings: dict = init_settings or {}
+        self.setFallbacksEnabled(False)
+        self.com = Communicate()
         self._prepare_and_sync()
 
     def _prepare_and_sync(self) -> None:
@@ -231,6 +239,15 @@ class Settings(QtCore.QSettings):
 
             # Update version setting
             self.setValue("current-version", __version__)
+
+    def setValue(self, key: str, value: object) -> None:  # noqa: N802 # all lowercase
+        old_value = self.value(key)
+        super().setValue(key, value)
+        if old_value != value:
+            logger.debug(
+                "Setting '%s' changed from '%s' to '%s'", key, old_value, value
+            )
+            self.com.on_value_changed.emit(key, value)
 
     def reset(self) -> None:
         """Remove all existing settings and values."""

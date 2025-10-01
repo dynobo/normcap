@@ -18,7 +18,7 @@ def test_normcap_ocr_testcases(
     #        and --parse-text True (default)
     #        and a certain test image as screenshot
     monkeypatch.setattr(screenshot, "capture", lambda: [testcase.screenshot])
-    monkeypatch.setattr(qapp.tray, "_set_tray_icon_done", test_signal.on_event.emit)
+    monkeypatch.setattr(qapp.tray, "_show_completion_icon", test_signal.on_event.emit)
 
     copy_to_clipboard_calls = {}
     monkeypatch.setattr(qapp, "_copy_to_clipboard", copy_to_clipboard_calls.update)
