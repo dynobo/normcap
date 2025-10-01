@@ -30,7 +30,9 @@ def test_window_get_scale_factor(
     )
 
     # WHEN the window is created
-    win = window.Window(screen=screen, settings=temp_settings, parent=None)
+    win = window.Window(
+        screen=screen, index=0, settings=temp_settings, installed_languages=["eng"]
+    )
     win.resize(QtCore.QSize(*window_size))
 
     # THEN the expected scaling factor should be calculated
@@ -53,7 +55,9 @@ def test_window_get_scale_factor_raises_if_missing(qtbot, temp_settings):
 
     # WHEN the window is created
     #   and the screenshot is not available (anymore)
-    win = window.Window(screen=screen, settings=temp_settings, parent=None)
+    win = window.Window(
+        screen=screen, index=0, settings=temp_settings, installed_languages=["eng"]
+    )
     win.screen_.screenshot = None
 
     # THEN an exception should be raised when trying to calculate the scale factor
@@ -76,7 +80,9 @@ def test_window_esc_key_pressed(qtbot, temp_settings):
         index=0,
         screenshot=image,
     )
-    win = window.Window(screen=screen, settings=temp_settings, parent=None)
+    win = window.Window(
+        screen=screen, index=0, settings=temp_settings, installed_languages=["eng"]
+    )
     qtbot.add_widget(win)
 
     # WHEN nothing is selected and  the ESC key is pressed
@@ -100,7 +106,9 @@ def test_window_esc_key_pressed_while_selecting(qtbot, temp_settings):
         index=0,
         screenshot=image,
     )
-    win = window.Window(screen=screen, settings=temp_settings, parent=None)
+    win = window.Window(
+        screen=screen, index=0, settings=temp_settings, installed_languages=["eng"]
+    )
     qtbot.add_widget(win)
 
     # WHEN a region is currently selected

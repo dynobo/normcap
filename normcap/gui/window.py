@@ -19,6 +19,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import positioning
 from normcap.gui import system_info
+from normcap.gui.menu_button import MenuButton
 from normcap.gui.models import DesktopEnvironment, Rect, Screen
 from normcap.gui.settings import Settings
 
@@ -30,6 +31,103 @@ class DebugInfo:
     screen: Screen | None = None
     window: QtWidgets.QMainWindow | None = None
     scale_factor: float = 1
+
+
+class UiContainerLabel(QtWidgets.QLabel):
+    """Widget to draw border, selection rectangle and potentially debug infos."""
+
+    def __init__(
+        self,
+        parent: QtWidgets.QWidget,
+        color: QtGui.QColor,
+        parse_text_func: Callable,
+    ) -> None:
+        super().__init__(parent)
+
+        self.color: QtGui.QColor = color
+
+        self.debug_info: DebugInfo | None = None
+
+        self.rect: QtCore.QRect = QtCore.QRect()
+        self.rect_pen = QtGui.QPen(self.color, 2, QtCore.Qt.PenStyle.DashLine)
+        self.get_parse_text = parse_text_func
+
+        self.setObjectName("ui_container")
+        self.setStyleSheet(f"#ui_container {{border: 3px solid {self.color.name()};}}")
+        self.setCursor(QtCore.Qt.CursorShape.CrossCursor)
+        self.setScaledContents(True)
+
+    def _draw_debug_infos(self, painter: QtGui.QPainter, rect: QtCore.QRect) -> None:
+        """Draw debug information to top left."""
+        if (
+            not self.debug_info
+            or not self.debug_info.screen
+            or not self.debug_info.screen.screenshot
+            or not self.debug_info.window
+        ):
+            return
+
+        selection = Rect(*cast(tuple, rect.normalized().getCoords()))
+        selection_scaled = selection.scale(self.debug_info.scale_factor)
+
+        lines = (
+            "[ Screen ]",
+            f"Size: {self.debug_info.screen.size}",
+            f"Position: {self.debug_info.screen.coords}",
+            f"Device pixel ratio: {self.debug_info.screen.device_pixel_ratio}",
+            "",
+            "[ Window ]",
+            f"Size: {self.debug_info.window.size().toTuple()}",
+            f"Position: {cast(tuple, self.debug_info.window.geometry().getCoords())}",
+            f"Device pixel ratio: {self.debug_info.window.devicePixelRatio()}",
+            f"Selected region: {selection.coords}",
+            "",
+            "[ Screenshot ]",
+            f"Size: {self.debug_info.screen.screenshot.size().toTuple()}",
+            f"Selected region (scaled): {selection_scaled.coords}",
+            "",
+            "[ Scaling detected ]",
+            f"Factor: {self.debug_info.scale_factor:.2f}",
+        )
+
+        painter.setPen(QtGui.QColor(0, 0, 0, 0))
+        painter.setBrush(QtGui.QColor(0, 0, 0, 175))
+        painter.drawRect(3, 3, 300, 20 * len(lines) + 5)
+        painter.setBrush(QtGui.QColor(0, 0, 0, 0))
+
+        painter.setPen(self.color)
+        painter.setFont(QtGui.QFont(QtGui.QFont().family(), 10, 600))
+        for idx, line in enumerate(lines):
+            painter.drawText(10, 20 * (idx + 1), line)
+
+    def paintEvent(self, event: QtGui.QPaintEvent) -> None:  # noqa: N802
+        """Draw selection rectangle and mode indicator icon."""
+        super().paintEvent(event)
+
+        if not (self.rect or self.debug_info):
+            return
+
+        painter = QtGui.QPainter(self)
+        self.rect = self.rect.normalized()
+
+        if self.debug_info:
+            self._draw_debug_infos(painter, self.rect)
+
+        if not self.rect:
+            return
+
+        painter.setPen(self.rect_pen)
+        painter.drawRect(self.rect)
+
+        if self.get_parse_text():
+            selection_icon = QtGui.QIcon(":parse")
+        else:
+            selection_icon = QtGui.QIcon(":raw")
+        selection_icon.paint(
+            painter, self.rect.right() - 24, self.rect.top() - 30, 24, 24
+        )
+
+        painter.end()
 
 
 class Communicate(QtCore.QObject):
@@ -45,15 +143,20 @@ class Window(QtWidgets.QMainWindow):
     def __init__(
         self,
         screen: Screen,
+        index: int,
         settings: Settings,
-        parent: QtWidgets.QWidget | None = None,
+        installed_languages: list[str],
+        debug_language_manager: bool = False,
     ) -> None:
         """Initialize window."""
-        super().__init__(parent=parent)
+        super().__init__()
         logger.debug("Create window for screen %s", screen.index)
 
-        self.settings = settings
         self.screen_ = screen
+        self.index = index
+        self.settings = settings
+        self.installed_languages = installed_languages
+        self.debug_language_manager = debug_language_manager
 
         self.com = Communicate(parent=self)
         self.color: QtGui.QColor = QtGui.QColor(str(settings.value("color")))
@@ -66,13 +169,25 @@ class Window(QtWidgets.QMainWindow):
             | QtGui.Qt.WindowType.WindowStaysOnTopHint
         )
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.setAnimated(False)
         self.setEnabled(True)
 
         self.selection_rect: QtCore.QRect = QtCore.QRect()
 
-        self._add_image_container()
-        self._add_ui_container()
+        self.image_container = QtWidgets.QLabel(scaledContents=True)
+        self.setCentralWidget(self.image_container)
+        self.ui_container = self._create_ui_container(
+            geometry=self.image_container.geometry()
+        )
+
+        self.menu_button = None
+
+        if self.index == 0:
+            self.menu_button = self._create_menu_button()
+            layout = self._create_layout()
+            layout.addWidget(self.menu_button, 0, 1)
+            self.ui_container.setLayout(layout)
 
     def _get_scale_factor(self) -> float:
         """Calculate scale factor from image and screen dimensions."""
@@ -80,34 +195,48 @@ class Window(QtWidgets.QMainWindow):
             raise ValueError("Screenshot image is missing!")
         return self.screen_.screenshot.width() / self.width()
 
-    def _add_image_container(self) -> None:
-        """Add widget showing screenshot."""
-        self.image_container = QtWidgets.QLabel()
-        self.image_container.setScaledContents(True)
-        self.setCentralWidget(self.image_container)
-
-    def _add_ui_container(self) -> None:
+    def _create_ui_container(self, geometry: QtCore.QRect) -> UiContainerLabel:
         """Add widget for showing selection rectangle and settings button."""
-        self.ui_container = UiContainerLabel(
+        ui_container = UiContainerLabel(
             parent=self,
             color=self.color,
             parse_text_func=lambda: bool(self.settings.value("parse-text", type=bool)),
         )
 
         if logger.getEffectiveLevel() is logging.DEBUG:
-            self.ui_container.debug_info = DebugInfo(
+            ui_container.debug_info = DebugInfo(
                 scale_factor=self._get_scale_factor(), screen=self.screen_, window=self
             )
 
-        self.ui_container.color = self.color
-        self.ui_container.setGeometry(self.image_container.geometry())
-        self.ui_container.raise_()
+        ui_container.color = self.color
+        ui_container.setGeometry(geometry)
+        ui_container.raise_()
+        return ui_container
 
     def _draw_background_image(self) -> None:
         """Draw screenshot as background image."""
         pixmap = QtGui.QPixmap()
         pixmap.convertFromImage(self.screen_.screenshot)
         self.image_container.setPixmap(pixmap)
+
+    def _create_menu_button(self) -> QtWidgets.QWidget:
+        if self.debug_language_manager:
+            system_info.is_briefcase_package = lambda: True
+
+        menu_button = MenuButton(
+            settings=self.settings,
+            language_manager=system_info.is_prebuilt_package(),
+            installed_languages=self.installed_languages,
+        )
+        return menu_button
+
+    @staticmethod
+    def _create_layout() -> QtWidgets.QGridLayout:
+        layout = QtWidgets.QGridLayout()
+        layout.setContentsMargins(26, 26, 26, 26)
+        layout.setRowStretch(1, 1)
+        layout.setColumnStretch(0, 1)
+        return layout
 
     def set_fullscreen(self) -> None:
         """Set window to full screen using platform specific methods."""
@@ -230,100 +359,3 @@ class Window(QtWidgets.QMainWindow):
         """Update background image on show/reshow."""
         super().showEvent(event)
         self._draw_background_image()
-
-
-class UiContainerLabel(QtWidgets.QLabel):
-    """Widget to draw border, selection rectangle and potentially debug infos."""
-
-    def __init__(
-        self,
-        parent: QtWidgets.QWidget,
-        color: QtGui.QColor,
-        parse_text_func: Callable,
-    ) -> None:
-        super().__init__(parent)
-
-        self.color: QtGui.QColor = color
-
-        self.debug_info: DebugInfo | None = None
-
-        self.rect: QtCore.QRect = QtCore.QRect()
-        self.rect_pen = QtGui.QPen(self.color, 2, QtCore.Qt.PenStyle.DashLine)
-        self.get_parse_text = parse_text_func
-
-        self.setObjectName("ui_container")
-        self.setStyleSheet(f"#ui_container {{border: 3px solid {self.color.name()};}}")
-        self.setCursor(QtCore.Qt.CursorShape.CrossCursor)
-        self.setScaledContents(True)
-
-    def _draw_debug_infos(self, painter: QtGui.QPainter, rect: QtCore.QRect) -> None:
-        """Draw debug information to top left."""
-        if (
-            not self.debug_info
-            or not self.debug_info.screen
-            or not self.debug_info.screen.screenshot
-            or not self.debug_info.window
-        ):
-            return
-
-        selection = Rect(*cast(tuple, rect.normalized().getCoords()))
-        selection_scaled = selection.scale(self.debug_info.scale_factor)
-
-        lines = (
-            "[ Screen ]",
-            f"Size: {self.debug_info.screen.size}",
-            f"Position: {self.debug_info.screen.coords}",
-            f"Device pixel ratio: {self.debug_info.screen.device_pixel_ratio}",
-            "",
-            "[ Window ]",
-            f"Size: {self.debug_info.window.size().toTuple()}",
-            f"Position: {cast(tuple, self.debug_info.window.geometry().getCoords())}",
-            f"Device pixel ratio: {self.debug_info.window.devicePixelRatio()}",
-            f"Selected region: {selection.coords}",
-            "",
-            "[ Screenshot ]",
-            f"Size: {self.debug_info.screen.screenshot.size().toTuple()}",
-            f"Selected region (scaled): {selection_scaled.coords}",
-            "",
-            "[ Scaling detected ]",
-            f"Factor: {self.debug_info.scale_factor:.2f}",
-        )
-
-        painter.setPen(QtGui.QColor(0, 0, 0, 0))
-        painter.setBrush(QtGui.QColor(0, 0, 0, 175))
-        painter.drawRect(3, 3, 300, 20 * len(lines) + 5)
-        painter.setBrush(QtGui.QColor(0, 0, 0, 0))
-
-        painter.setPen(self.color)
-        painter.setFont(QtGui.QFont(QtGui.QFont().family(), 10, 600))
-        for idx, line in enumerate(lines):
-            painter.drawText(10, 20 * (idx + 1), line)
-
-    def paintEvent(self, event: QtGui.QPaintEvent) -> None:  # noqa: N802
-        """Draw selection rectangle and mode indicator icon."""
-        super().paintEvent(event)
-
-        if not (self.rect or self.debug_info):
-            return
-
-        painter = QtGui.QPainter(self)
-        self.rect = self.rect.normalized()
-
-        if self.debug_info:
-            self._draw_debug_infos(painter, self.rect)
-
-        if not self.rect:
-            return
-
-        painter.setPen(self.rect_pen)
-        painter.drawRect(self.rect)
-
-        if self.get_parse_text():
-            selection_icon = QtGui.QIcon(":parse")
-        else:
-            selection_icon = QtGui.QIcon(":raw")
-        selection_icon.paint(
-            painter, self.rect.right() - 24, self.rect.top() - 30, 24, 24
-        )
-
-        painter.end()

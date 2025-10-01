@@ -71,7 +71,7 @@ class Communicate(QtCore.QObject):
     """SettingsMenu' communication bus."""
 
     on_open_url = QtCore.Signal(str)
-    on_close_in_settings = QtCore.Signal(str)
+    on_close = QtCore.Signal(str)
     on_manage_languages = QtCore.Signal()
     on_show_introduction = QtCore.Signal()
 
@@ -89,7 +89,7 @@ class MenuButton(QtWidgets.QToolButton):
         parent: QtWidgets.QWidget | None = None,
     ) -> None:
         super().__init__(parent=parent)
-        self.languages = installed_languages
+        self.installed_languages = installed_languages
         self.setObjectName("settings_icon")
         self.settings = settings
         self.has_language_manager = language_manager
@@ -120,10 +120,6 @@ class MenuButton(QtWidgets.QToolButton):
         menu.aboutToShow.connect(self.populate_menu_entries)
         return menu
 
-    @QtCore.Slot(list)
-    def on_languages_changed(self, installed_languages: list[str]) -> None:
-        self.languages = installed_languages
-
     def _show_message_box(self, text: str) -> None:
         message_box = QtWidgets.QMessageBox(parent=self)
         message_box.setIconPixmap(QtGui.QIcon(":normcap").pixmap(48, 48))
@@ -141,7 +137,7 @@ class MenuButton(QtWidgets.QToolButton):
         group_name = group.objectName() if group else None
 
         if action_name == "close":
-            self.com.on_close_in_settings.emit("Clicked close in settings")
+            self.com.on_close.emit("Clicked close in settings")
             return
 
         if action_name == "show_help_languages":
@@ -324,9 +320,8 @@ class MenuButton(QtWidgets.QToolButton):
         menu.addAction(action)
 
     def _add_languages_section(self, menu: QtWidgets.QMenu) -> None:
-        languages = self.languages
         overflow_languages_count = 7
-        if len(languages) <= overflow_languages_count:
+        if len(self.installed_languages) <= overflow_languages_count:
             language_menu = menu
         else:
             language_menu = QtWidgets.QMenu("select", menu)
@@ -336,7 +331,7 @@ class MenuButton(QtWidgets.QToolButton):
         language_group = QtGui.QActionGroup(language_menu)
         language_group.setObjectName("language_group")
         language_group.setExclusive(False)
-        for language in languages:
+        for language in self.installed_languages:
             action = QtGui.QAction(language, language_group)
             action.setObjectName(language)
             action.setCheckable(True)

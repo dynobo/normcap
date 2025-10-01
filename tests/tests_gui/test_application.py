@@ -5,7 +5,7 @@ from normcap.gui.settings import Settings
 
 
 def test_debug_language_manager_is_deactivated(qapp):
-    assert not qapp._TESTING_LANGUAGE_MANAGER
+    assert not qapp._DEBUG_LANGUAGE_MANAGER
 
 
 @pytest.mark.parametrize(
@@ -25,7 +25,8 @@ def test_sanitize_active_language(qapp, monkeypatch, active, available, sanitize
     try:
         settings.setValue("language", active)
         qapp.settings = settings
-        qapp._sanitize_language_setting(installed_languages=available)
+        qapp.installed_languages = available
+        qapp._sanitize_language_setting()
         assert settings.value("language") == sanitized
     finally:
         for k in settings.allKeys():
