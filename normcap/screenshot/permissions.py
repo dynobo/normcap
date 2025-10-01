@@ -41,6 +41,13 @@ def _macos_has_screenshot_permission() -> bool:
         has_permission = True
         logger.warning("Couldn't detect screen recording permission: %s", e)
         logger.warning("Assuming screen recording permission is %s", has_permission)
+
+    if not has_permission:
+        # Reset privacy permission in case of new NormCap version. This is necessary
+        # because somehow the setting is associated with the binary and won't work
+        # after it got updated.
+        macos_reset_screenshot_permission()
+
     return has_permission
 
 

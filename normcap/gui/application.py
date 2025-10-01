@@ -164,12 +164,6 @@ class NormcapApp(QtWidgets.QApplication):
             calling_app = "NormCap" if system_info.is_prebuilt_package() else "Terminal"
             text = constants.PERMISSIONS_TEXT_MACOS.format(application=calling_app)
 
-            # Reset privacy permission in case of new NormCap version. This is necessary
-            # because somehow the setting is associated with the binary and won't work
-            # after it got updated.
-            # TODO: should this be done within has_screenshot_permission?
-            screenshot.macos_reset_screenshot_permission()
-
         elif system_info.is_flatpak():
             text = constants.PERMISSIONS_TEXT_FLATPAK
 
