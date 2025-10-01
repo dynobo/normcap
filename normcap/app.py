@@ -102,6 +102,7 @@ def _init_normcap() -> QtWidgets.QApplication:
         )
         utils.copy_traineddata_files(target_dir=tessdata_path)
 
+    logger.debug("System info:\n%s", system_info.to_dict())
     return NormcapApp(args=vars(args))
 
 

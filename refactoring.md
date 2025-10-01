@@ -84,11 +84,11 @@
 #### **Subtask 4.2: Move application lifecycle management to NormcapApp**
 - **Goal**: Transfer exit and lifecycle control
 - **What to do**:
-  - [ ] Move methods: `_minimize_or_exit_application()`, `_exit_application()`, `hide()`
-  - [ ] Move timers: `delayed_exit_timer`, `delayed_init_timer`
-  - [ ] Move application exit logic and cleanup
+  - [x] Move methods: `_minimize_or_exit_application()`, `_exit_application()`, `hide()`
+  - [x] Move timers: `delayed_exit_timer`, `delayed_init_timer`
+  - [x] Move application exit logic and cleanup
   - [ ] SystemTray should request app exit through NormcapApp methods
-  - [ ] Override QApplication's exit behavior in NormcapApp
+  - [x] Override QApplication's exit behavior in NormcapApp
 - **Why safe**: Application lifecycle is naturally QApplication's responsibility
 - **Testing**: Exit behavior, timers, and cleanup should work identically
 
@@ -97,11 +97,11 @@
 #### **Subtask 5.1: Refactor SystemTray to UI-only component**
 - **Goal**: Make SystemTray focus only on tray icon and menu
 - **What to do**:
-  - [ ] Keep only tray icon management: `_set_tray_icon_normal()`, `_set_tray_icon_done()`, icon enum
-  - [ ] Keep only tray menu: `_populate_context_menu_entries()`, `_handle_tray_click()`, `_apply_setting_change()`
-  - [ ] Keep only tray-specific timers: `reset_tray_icon_timer`
-  - [ ] Update signal connections to communicate with NormcapApp
-  - [ ] Remove all non-tray logic from SystemTray
+  - [x] Keep only tray icon management: `_set_tray_icon_normal()`, `_set_tray_icon_done()`, icon enum
+  - [x] Keep only tray menu: `_populate_context_menu_entries()`, `_handle_tray_click()`, `_apply_setting_change()`
+  - [x] Keep only tray-specific timers: `reset_tray_icon_timer`
+  - [x] Update signal connections to communicate with NormcapApp
+  - [x] Remove all non-tray logic from SystemTray
 - **Why safe**: Clearly separates UI concerns from business logic
 - **Testing**: Tray icon, context menu, and tray interactions should work normally
 

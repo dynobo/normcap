@@ -1,6 +1,7 @@
 """Start main application logic."""
 
 import logging
+import os
 import sys
 import time
 from typing import Any
@@ -32,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 
 class Communicate(QtCore.QObject):
-    """TrayMenus' communication bus."""
+    """Application's communication bus."""
 
     on_exit_application = QtCore.Signal(float)
     on_copied_to_clipboard = QtCore.Signal()
@@ -46,6 +47,7 @@ class Timers:
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         self.delayed_exit = QtCore.QTimer(parent=parent, singleShot=True)
         self.delayed_detectation = QtCore.QTimer(parent=parent, singleShot=True)
+        self.delayed_init = QtCore.QTimer(parent=parent, singleShot=True)
 
 
 class NormcapApp(QtWidgets.QApplication):
@@ -71,9 +73,21 @@ class NormcapApp(QtWidgets.QApplication):
         self.com = Communicate(parent=self)
         self.timers = Timers(parent=self)
         self.timers.delayed_exit.timeout.connect(self._exit_application)
+        self.timers.delayed_init.timeout.connect(self._delayed_init)
+
+        # Create DBus Service to listen for notification actions and activations
+        self.dbus_service = (
+            self._get_dbus_service() if system_info.is_flatpak() else None
+        )
 
         # Connect to signals
+        if self.dbus_service:
+            self.dbus_service.action_activated.connect(self._handle_action_activate)
         self.com.on_exit_application.connect(self._exit_application)
+        self.com.on_region_selected.connect(self._close_windows)
+        self.com.on_region_selected.connect(self._schedule_detection)
+        self.com.on_languages_changed.connect(self._sanitize_language_setting)
+        self.com.on_languages_changed.connect(self._update_installed_languages)
 
         # Ensure that only a single instance of NormCap is running.
         if self._other_instance_is_running():
@@ -83,17 +97,12 @@ class NormcapApp(QtWidgets.QApplication):
         # Start listening to socket for other instances
         self._create_socket_server()
 
-        # Create DBus Service to listen for notification actions and activations
-        self.dbus_service = (
-            self._get_dbus_service() if system_info.is_flatpak() else None
-        )
-
-        # Perform settings reset
+        # Init settings
+        self.settings = Settings(init_settings=args)
         if args.get("reset", False):
             self.settings.reset()
 
         # Init state
-        self.settings = Settings(init_settings=args)
         self.screens: list[Screen] = system_info.screens()
         self.windows: dict[int, Window] = {}
         self.installed_languages: list[str] = []
@@ -101,6 +110,16 @@ class NormcapApp(QtWidgets.QApplication):
         self.screenshot_handler_name = args.get("screenshot_handler")
         self.clipboard_handler_name = args.get("clipboard_handler")
         self.notification_handler_name = args.get("notification_handler")
+
+        # TODO: Move more to top?
+        if args.get("dbus_activation", False):
+            # Skip UI setup. Just wait for ActionActivate signal to happen the exit
+            self.com.on_action_finished.connect(
+                lambda: self.com.on_exit_application.emit(0)
+            )
+            # Otherwise exit after timeout
+            QtCore.QTimer.singleShot(1000, lambda: self.com.on_exit_application.emit(0))
+            return
 
         # Run main logic
         self._verify_screenshot_permission()
@@ -120,8 +139,24 @@ class NormcapApp(QtWidgets.QApplication):
             self._show_windows(delay_screenshot=delay_screenshot)
 
         # Show system tray
-        self.tray = SystemTray(self, args)
+        self.tray = SystemTray(
+            self, keep_in_tray=bool(self.settings.value("tray", False, type=bool))
+        )
+        self.tray.com.on_tray_clicked.connect(
+            lambda: self._show_windows(delay_screenshot=True)
+        )
+        # TODO: Properly connect QT notification
+        self.tray.com.on_notification_clicked.connect(
+            lambda: self._handle_action_activate()
+        )
+        self.tray.com.on_menu_exit_clicked.connect(
+            lambda: self.com.on_exit_application.emit(0)
+        )
+        self.tray.com.on_menu_capture_clicked.connect(
+            lambda: self._show_windows(delay_screenshot=True)
+        )
         self.tray.show()
+        self.timers.delayed_init.start(50)
 
     @QtCore.Slot()
     def show_introduction(self) -> None:
@@ -188,10 +223,10 @@ class NormcapApp(QtWidgets.QApplication):
             screen=self.screens[index], settings=self.settings, parent=None
         )
         new_window.com.on_esc_key_pressed.connect(
-            lambda: self.tray._minimize_or_exit_application(delay=0)
+            lambda: self._minimize_or_exit_application(delay=0)
         )
         new_window.com.on_esc_key_pressed.connect(
-            lambda: self.tray._minimize_or_exit_application(delay=0)
+            lambda: self._minimize_or_exit_application(delay=0)
         )
         new_window.com.on_region_selected.connect(self.com.on_region_selected)
         if index == 0:
@@ -216,10 +251,11 @@ class NormcapApp(QtWidgets.QApplication):
         )
         settings_menu.com.on_open_url.connect(self._open_url_and_hide)
         settings_menu.com.on_manage_languages.connect(self._open_language_manager)
-        settings_menu.com.on_setting_change.connect(self.tray._apply_setting_change)
+        # TODO: Can I directly subscribe to QSettings?
+        settings_menu.com.on_setting_change.connect(self._propagate_setting_change)
         settings_menu.com.on_show_introduction.connect(self.show_introduction)
         settings_menu.com.on_close_in_settings.connect(
-            lambda: self.tray._minimize_or_exit_application(delay=0)
+            lambda: self._minimize_or_exit_application(delay=0)
         )
         self.com.on_languages_changed.connect(settings_menu.on_languages_changed)
         return settings_menu
@@ -232,6 +268,9 @@ class NormcapApp(QtWidgets.QApplication):
         layout.setRowStretch(1, 1)
         layout.setColumnStretch(0, 1)
         return layout
+
+    def _propagate_setting_change(self, setting: str) -> None:
+        self.tray.apply_setting_change(setting, self.settings.value(setting))
 
     def _show_windows(self, delay_screenshot: bool) -> None:
         """Initialize child windows with method depending on system."""
@@ -290,7 +329,7 @@ class NormcapApp(QtWidgets.QApplication):
             QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
         )
         logger.debug("Opened uri with result=%s", result)
-        self.tray._minimize_or_exit_application(delay=0)
+        self._minimize_or_exit_application(delay=0)
 
     @QtCore.Slot()
     def _schedule_detection(self, rect: Rect, screen_idx: int) -> None:
@@ -313,7 +352,7 @@ class NormcapApp(QtWidgets.QApplication):
         image_area = cropped_screenshot.width() * cropped_screenshot.height()
         if image_area < minimum_image_area:
             logger.warning("Area of %spx is too small. Skip detection.", image_area)
-            self.tray._minimize_or_exit_application(delay=0)
+            self._minimize_or_exit_application(delay=0)
             return
 
         tessdata_path = system_info.get_tessdata_path(
@@ -352,8 +391,8 @@ class NormcapApp(QtWidgets.QApplication):
                 text=result.text, text_type=result.text_type, detector=result.detector
             )
 
-        self.tray._minimize_or_exit_application(delay=self._EXIT_DELAY)
-        self.tray._set_tray_icon_done()
+        self._minimize_or_exit_application(delay=self._EXIT_DELAY)
+        self.tray._show_completion_icon()
 
     def _copy_to_clipboard(self, text: str) -> None:
         """Copy results to clipboard."""
@@ -387,7 +426,7 @@ class NormcapApp(QtWidgets.QApplication):
         actions = notification_utils.get_actions(
             text=text,
             text_type=text_type,
-            action_func=self.tray._handle_action_activate,
+            action_func=self._handle_action_activate,
         )
 
         notification.notify(
@@ -528,7 +567,7 @@ class NormcapApp(QtWidgets.QApplication):
             return
 
         logger.info("Received socket signal to capture.")
-        if self.tray.windows:
+        if self.windows:
             logger.debug("Capture window(s) already open. Doing nothing.")
             return
 
@@ -546,4 +585,16 @@ class NormcapApp(QtWidgets.QApplication):
             self.timers.delayed_exit.start(int(delay * 1000))
         else:
             self.tray.hide()
+            logger.info("Exit normcap")
+            logger.debug(
+                "Debug images saved in %s%snormcap", utils.tempfile.gettempdir(), os.sep
+            )
             self.exit(0)
+
+    @QtCore.Slot()
+    def _minimize_or_exit_application(self, delay: Seconds) -> None:
+        self._close_windows()
+        if self.settings.value("tray", type=bool):
+            return
+
+        self.com.on_exit_application.emit(delay)
