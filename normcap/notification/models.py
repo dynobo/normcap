@@ -3,7 +3,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Protocol
 
-NAME_NOTIFICATION_CLICKED_ACTION = "notification_clicked"
+ACTION_NAME_NOTIFICATION_CLICKED = "notification_clicked"
 
 
 @dataclass

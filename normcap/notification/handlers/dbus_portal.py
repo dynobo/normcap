@@ -5,7 +5,7 @@ from jeepney.wrappers import MessageGenerator, new_method_call
 
 from normcap.gui import system_info
 from normcap.notification.models import (
-    NAME_NOTIFICATION_CLICKED_ACTION,
+    ACTION_NAME_NOTIFICATION_CLICKED,
     NotificationAction,
 )
 
@@ -95,7 +95,7 @@ def notify(
                 "label": ("s", action.label),
                 "action": (
                     "s",
-                    f"app.{NAME_NOTIFICATION_CLICKED_ACTION}",
+                    f"app.{ACTION_NAME_NOTIFICATION_CLICKED}",
                 ),
                 "target": ("as", action.args),
             }
