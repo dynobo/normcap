@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 _positioning_handlers: dict[Handler, HandlerProtocol] = {
     Handler.WINDOW_CALLS: window_calls,
+    # TODO: [HIGH] Add Window Calls Extended handler
     Handler.KSCRIPT: kscript,
 }
 

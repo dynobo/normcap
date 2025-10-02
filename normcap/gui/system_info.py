@@ -102,7 +102,7 @@ def is_flatpak() -> bool:
 
 
 def is_prebuilt_package() -> bool:
-    # TODO: Fix usage of this function and rename!
+    # TODO: [HIGH] Fix usage of this function and rename!
     return is_briefcase_package() or is_flatpak()
 
 
