@@ -19,6 +19,7 @@ from normcap.gui import (
     system_info,
     utils,
 )
+from normcap.gui.constants import APP_ID
 from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.models import Days, Rect, Screen, Seconds
@@ -60,6 +61,10 @@ class NormcapApp(QtWidgets.QApplication):
     def __init__(self, args: dict[str, Any]) -> None:
         super().__init__()
         self.setQuitOnLastWindowClosed(False)
+
+        # Set application identity for portal recognition
+        self.setApplicationName(APP_ID)
+        self.setDesktopFileName(f"{APP_ID}.desktop")
 
         self.com = Communicate(parent=self)
 
