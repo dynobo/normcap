@@ -255,28 +255,34 @@ class NormcapApp(QtWidgets.QApplication):
         self.windows = {}
         self.com.on_windows_closed.emit()
 
+    def _is_time_for_update_check(self) -> bool:
+        """Test if the time of last update exceeds the days of update interval."""
+        date_fmt_in_settings = "%Y-%m-%d"  # TODO: Unify with storing!
+        seconds_per_day = 60 * 60 * 24
+        update_interval_seconds = seconds_per_day * self._UPDATE_CHECK_INTERVAL
+
+        cutoff_timestamp = time.time() - update_interval_seconds
+        cutoff_date_str = time.strftime(
+            date_fmt_in_settings, time.gmtime(cutoff_timestamp)
+        )
+        last_check_date = str(self.settings.value("last-update-check", type=str))
+
+        return last_check_date > cutoff_date_str
+
     def _add_update_checker(self) -> None:
         if not self.settings.value("update", type=bool):
             return
 
-        now_sub_interval_sec = time.time() - (
-            60 * 60 * 24 * self._UPDATE_CHECK_INTERVAL
-        )
-        now_sub_interval = time.strftime("%Y-%m-%d", time.gmtime(now_sub_interval_sec))
-        if str(self.settings.value("last-update-check", type=str)) > now_sub_interval:
+        if not self._is_time_for_update_check():
             return
 
-        self.checker = UpdateChecker(
-            parent=None, packaged=system_info.is_prebuilt_package()
-        )
-        self.checker.com.on_version_checked.connect(
-            self._update_time_of_last_update_check
-        )
+        self.checker = UpdateChecker(packaged=system_info.is_prebuilt_package())
+        self.checker.com.on_version_checked.connect(self._set_last_update_check_time)
         self.checker.com.on_click_get_new_version.connect(self._open_url_and_hide)
-        # TODO: Trigger check via checker.com signal?
-        QtCore.QTimer.singleShot(500, self.checker.com.check.emit)
 
-    def _update_time_of_last_update_check(self, newest_version: str) -> None:
+        QtCore.QTimer.singleShot(500, self.checker.check_for_updates)
+
+    def _set_last_update_check_time(self, newest_version: str) -> None:
         if newest_version is not None:
             today = time.strftime("%Y-%m-%d", time.gmtime())
             self.settings.setValue("last-update-check", today)
