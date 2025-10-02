@@ -13,6 +13,9 @@ if os.environ.get("NORMCAP_DEV"):
     # DBus Portal.
     APP_ID += "-dev"
 
+# Used to store dates in settings
+DATE_FORMAT = "%Y-%m-%d"
+
 URLS = Urls(
     releases="https://github.com/dynobo/normcap/releases",
     changelog="https://github.com/dynobo/normcap/blob/main/CHANGELOG",

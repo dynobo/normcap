@@ -260,17 +260,15 @@ class NormcapApp(QtWidgets.QApplication):
 
     def _is_time_for_update_check(self) -> bool:
         """Test if the time of last update exceeds the days of update interval."""
-        date_fmt_in_settings = "%Y-%m-%d"  # TODO: Unify with storing!
         seconds_per_day = 60 * 60 * 24
         update_interval_seconds = seconds_per_day * self._UPDATE_CHECK_INTERVAL
 
-        cutoff_timestamp = time.time() - update_interval_seconds
-        cutoff_date_str = time.strftime(
-            date_fmt_in_settings, time.gmtime(cutoff_timestamp)
-        )
-        last_check_date = str(self.settings.value("last-update-check", type=str))
+        cutoff_date = time.gmtime(time.time() - update_interval_seconds)
+        cutoff_date_str = time.strftime(constants.DATE_FORMAT, cutoff_date)
 
-        return last_check_date > cutoff_date_str
+        last_check_date_str = str(self.settings.value("last-update-check", type=str))
+
+        return last_check_date_str > cutoff_date_str
 
     def _add_update_checker(self) -> None:
         if not self.settings.value("update", type=bool):
@@ -287,7 +285,7 @@ class NormcapApp(QtWidgets.QApplication):
 
     def _set_last_update_check_time(self, newest_version: str) -> None:
         if newest_version is not None:
-            today = time.strftime("%Y-%m-%d", time.gmtime())
+            today = time.strftime(constants.DATE_FORMAT, time.gmtime())
             self.settings.setValue("last-update-check", today)
 
     @QtCore.Slot(str)
