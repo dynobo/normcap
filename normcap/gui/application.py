@@ -76,6 +76,15 @@ class NormcapApp(QtWidgets.QApplication):
         self.com.on_exit_application.connect(self._exit_application)
         self.com.on_region_selected.connect(self._run_detection)
 
+        # If NormCap got activated via DBus, only process action then quit.
+        if args.get("dbus_activation", False):
+            self.com.on_action_finished.connect(
+                lambda: self.com.on_exit_application.emit(0)
+            )
+            # Otherwise exit after timeout
+            QtCore.QTimer.singleShot(1000, lambda: self.com.on_exit_application.emit(0))
+            return
+
         # Ensure that only a single instance of NormCap is running.
         self._socket_server = SocketServer()
         if not self._socket_server.is_first_instance:
@@ -99,16 +108,6 @@ class NormcapApp(QtWidgets.QApplication):
         self.screenshot_handler_name = args.get("screenshot_handler")
         self.clipboard_handler_name = args.get("clipboard_handler")
         self.notification_handler_name = args.get("notification_handler")
-
-        # TODO: Move more to top?
-        if args.get("dbus_activation", False):
-            # Skip UI setup. Just wait for ActionActivate signal to happen the exit
-            self.com.on_action_finished.connect(
-                lambda: self.com.on_exit_application.emit(0)
-            )
-            # Otherwise exit after timeout
-            QtCore.QTimer.singleShot(1000, lambda: self.com.on_exit_application.emit(0))
-            return
 
         # Check if have screenshot permission and try to request if needed
         self._verify_screenshot_permission()

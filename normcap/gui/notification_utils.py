@@ -189,7 +189,7 @@ def get_action_label(text_type: TextType) -> str:
     if text_type == TextType.MAIL:
         # L10N: Button text of notification action in Linux.
         action_name = _("Compose Email")
-    if text_type == TextType.PHONE_NUMBER:
+    elif text_type == TextType.PHONE_NUMBER:
         # L10N: Button text of notification action in Linux.
         action_name = _("Call Number")
     elif text_type == TextType.URL:

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from normcap.detection.models import TextDetector, TextType
+from normcap.detection.models import PlaintextTextTypes, TextDetector, TextType
 from normcap.gui import notification_utils
 
 
@@ -228,3 +228,30 @@ def test_open_ocr_result(monkeypatch, text, text_type, expected_urls):
     if urls[0].toString().startswith("file://"):
         tempfile_text = Path(urls[0].toLocalFile()).read_text()
         assert tempfile_text == text
+
+
+def test_get_action_label_plaintext_types():
+    # GIVEN any plain text type
+    # WHEN the the function is called
+    text_labels = [
+        notification_utils.get_action_label(text_type=t) for t in PlaintextTextTypes
+    ]
+
+    # THEN the action label should be the same
+    assert all(s == "Open in Editor" for s in text_labels)
+
+
+def test_get_action_label_other_types():
+    # GIVEN any other text type then plain text
+    # WHEN the the function is called
+    non_text_types = [t for t in TextType if t not in PlaintextTextTypes]
+    non_text_labels = [
+        notification_utils.get_action_label(text_type=t) for t in non_text_types
+    ]
+
+    # THEN the action label should never be open the one for plain text
+    #   AND every text type should result in a different label
+    assert all(s != "Open in Editor" for s in non_text_labels), list(
+        zip(non_text_types, non_text_labels, strict=True)
+    )
+    assert len(set(non_text_labels)) == len(non_text_labels)
