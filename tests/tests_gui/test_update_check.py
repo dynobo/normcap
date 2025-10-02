@@ -25,7 +25,7 @@ def test_update_checker_triggers_checked_signal(monkeypatch, qtbot, packaged):
 
     # WHEN the update check is performed
     with qtbot.waitSignal(checker.com.on_version_checked, timeout=5000) as result:
-        checker.com.check.emit()
+        checker.check_for_updates()
 
     # THEN a signal should be send with the new version
     #    and the version should also be displayed in the message
@@ -151,7 +151,7 @@ def test_on_download_finished(
         with qtbot.wait_signal(
             checker.com.on_version_checked, timeout=200, raising=False
         ) as result:
-            checker.com.check.emit()
+            checker.check_for_updates()
 
     # THEN the update message is (not) shown with certain text
     #    and certain messages are logged
