@@ -6,9 +6,9 @@ import sys
 import time
 from typing import Any
 
-from PySide6 import QtCore, QtGui, QtNetwork, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import __version__, clipboard, notification, screenshot
+from normcap import clipboard, notification, screenshot
 from normcap.detection import detector, ocr
 from normcap.detection.models import DetectionMode, TextDetector, TextType
 from normcap.gui import (
@@ -24,6 +24,7 @@ from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.models import Days, Rect, Screen, Seconds
 from normcap.gui.settings import Settings
+from normcap.gui.socket_server import SocketServer
 from normcap.gui.tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
@@ -46,10 +47,6 @@ class NormcapApp(QtWidgets.QApplication):
     """Main NormCap application logic."""
 
     # Used for singleton:
-    _socket_name = f"v{__version__}-normcap"
-    _socket_out: QtNetwork.QLocalSocket | None = None
-    _socket_in: QtNetwork.QLocalSocket | None = None
-    _socket_server: QtNetwork.QLocalServer | None = None
 
     _EXIT_DELAY: Seconds = 5  # To keep tray icon visible for a while
     _UPDATE_CHECK_INTERVAL: Days = 7
@@ -80,12 +77,14 @@ class NormcapApp(QtWidgets.QApplication):
         self.com.on_region_selected.connect(self._run_detection)
 
         # Ensure that only a single instance of NormCap is running.
-        if self._other_instance_is_running():
+        self._socket_server = SocketServer()
+        if not self._socket_server.is_first_instance:
             self.com.on_exit_application.emit(0)
             return
 
-        # Start listening to socket for other instances
-        self._create_socket_server()
+        self._socket_server.com.on_capture_message.connect(
+            lambda: self._show_windows(delay_screenshot=True)
+        )
 
         # Init settings
         self.settings = Settings(init_settings=args)
@@ -232,6 +231,10 @@ class NormcapApp(QtWidgets.QApplication):
 
     def _show_windows(self, delay_screenshot: bool) -> None:
         """Initialize child windows with method depending on system."""
+        if self.windows:
+            logger.debug("Capture window(s) already open. Doing nothing.")
+            return
+
         screenshots = self._take_screenshots(delay=delay_screenshot)
 
         for idx, image in enumerate(screenshots):
@@ -476,74 +479,28 @@ class NormcapApp(QtWidgets.QApplication):
 
         self.settings.setValue("language", active_languages)
 
-    def _other_instance_is_running(self) -> bool:
-        """Test if connection to another NormCap instance socket can be established."""
-        self._socket_out = QtNetwork.QLocalSocket(self)
-        self._socket_out.connectToServer(self._socket_name)
-        if self._socket_out.waitForConnected():
-            logger.debug("Another instance is already running. Sending capture signal.")
-            self._socket_out.write(b"capture")
-            self._socket_out.waitForBytesWritten(1000)
-            return True
-
-        return False
-
-    # TODO: Carve out socket logic into own module?
-    def _create_socket_server(self) -> None:
-        """Open socket server to listen for other NormCap instances."""
-        if self._socket_out:
-            self._socket_out.close()
-            self._socket_out = None
-        QtNetwork.QLocalServer().removeServer(self._socket_name)
-        self._socket_server = QtNetwork.QLocalServer(self)
-        self._socket_server.newConnection.connect(self._on_socket_connect)
-        self._socket_server.listen(self._socket_name)
-        logger.debug("Listen on local socket %s.", self._socket_server.serverName())
-
-    @QtCore.Slot()
-    def _on_socket_connect(self) -> None:
-        """Open incoming socket to listen for messages from other NormCap instances."""
-        if not self._socket_server:
-            return
-        self._socket_in = self._socket_server.nextPendingConnection()
-        if self._socket_in:
-            logger.debug("Connect to incoming socket.")
-            self._socket_in.readyRead.connect(self._on_socket_ready_read)
-
-    @QtCore.Slot()
-    def _on_socket_ready_read(self) -> None:
-        """Process messages received from other NormCap instances."""
-        if not self._socket_in:
-            return
-
-        message = self._socket_in.readAll().data().decode("utf-8", errors="ignore")
-        if message != "capture":
-            return
-
-        logger.info("Received socket signal to capture.")
-        if self.windows:
-            logger.debug("Capture window(s) already open. Doing nothing.")
-            return
-
-        self._show_windows(delay_screenshot=True)
-
     @QtCore.Slot(bool)
     def _exit_application(self, delay: Seconds = 0) -> None:
-        # Unregister the singleton server
-        if self._socket_server:
-            self._socket_server.close()
-            self._socket_server.removeServer(self._socket_name)
-            self._socket_server = None
-
         if delay:
             QtCore.QTimer.singleShot(int(delay * 1000), self._exit_application)
-        else:
+            return
+
+        if hasattr(self, "tray"):
+            # Hide avoids having the icon dangling in system tray for a few seconds
+            # (Tray wasn't created if another instance was already running)
             self.tray.hide()
-            logger.info("Exit normcap")
-            logger.debug(
-                "Debug images saved in %s%snormcap", utils.tempfile.gettempdir(), os.sep
-            )
-            self.exit(0)
+
+        if hasattr(self, "_socket_server"):
+            self._socket_server.close()
+
+        logger.info("Exit normcap")
+        logger.debug("Debug images in %s%snormcap", utils.tempfile.gettempdir(), os.sep)
+
+        # Not sure why, but quit doesn't work reliably if called directly
+        QtCore.QTimer.singleShot(0, lambda: self.quit())
+
+        # Use harsher fallback if quit() didn't work
+        QtCore.QTimer.singleShot(500, lambda: sys.exit(1))
 
     @QtCore.Slot()
     def _minimize_to_tray_or_exit(self, delay: Seconds) -> None:
