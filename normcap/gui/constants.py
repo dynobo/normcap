@@ -1,7 +1,17 @@
 """Global constant strings."""
 
+import os
+
 from normcap.gui.localization import _
 from normcap.gui.models import Urls
+
+APP_ID = "com.github.dynobo.normcap"
+if os.environ.get("NORMCAP_DEV"):
+    # This alternative app id is meant for normcap developers only. It allows to
+    # setup two different NormCap versions (e.g. a stable one mand one for development)
+    # with different .desktop laucherns, which both can ask for permission to talk to
+    # DBus Portal.
+    APP_ID += "-dev"
 
 URLS = Urls(
     releases="https://github.com/dynobo/normcap/releases",

@@ -88,6 +88,8 @@ sudo zypper install python3-devel tesseract-ocr tesseract-ocr-devel wl-clipboard
 # Install normcap
 pip install normcap
 
+#TODO: Describe service and desktop file setup
+
 # Run
 ./normcap
 ```

@@ -7,7 +7,7 @@ from typing import Any, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.gui import constants
+from normcap.gui.constants import APP_ID, OPEN_ISSUE_TEXT
 from normcap.gui.localization import _
 from normcap.screenshot import models
 from normcap.screenshot.main import get_available_handlers
@@ -83,7 +83,7 @@ def _macos_open_privacy_settings() -> None:
 def macos_reset_screenshot_permission() -> None:
     """Use tccutil to reset permissions for current application."""
     logger.info("Reset screen recording permissions for com.github.dynobo.normcap")
-    cmd = ["tccutil", "reset", "ScreenCapture", "com.github.dynobo.normcap"]
+    cmd = ["tccutil", "reset", "ScreenCapture", APP_ID]
     try:
         completed_proc = subprocess.run(  # noqa: S603
             cmd,
@@ -145,7 +145,7 @@ class DbusPortalPermissionDialog(QtWidgets.QDialog):
         footer_hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
         footer_hbox.setContentsMargins(0, 0, 2, 0)
 
-        open_issue_text = QtWidgets.QLabel(constants.OPEN_ISSUE_TEXT)
+        open_issue_text = QtWidgets.QLabel(OPEN_ISSUE_TEXT)
 
         # L10N: Permission request dialog button
         ok_button = QtWidgets.QPushButton(_("Ok"))

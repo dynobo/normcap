@@ -9,6 +9,7 @@ from PySide6 import QtCore, QtGui
 
 from normcap.detection.models import PlaintextTextTypes, TextDetector, TextType
 from normcap.gui import system_info
+from normcap.gui.constants import APP_ID
 from normcap.gui.localization import _, translate
 from normcap.notification.models import NotificationAction
 
@@ -19,7 +20,7 @@ def _get_shared_temp_dir() -> Path:
     """Get a temporary directory suitable for beeing opened as URI."""
     if system_info.is_flatpak():
         if xdg_runtime_dir := os.getenv("XDG_RUNTIME_DIR"):
-            temp_dir = Path(xdg_runtime_dir) / "app" / "com.github.dynobo.normcap"
+            temp_dir = Path(xdg_runtime_dir) / "app" / APP_ID
         else:
             temp_dir = Path.home() / ".cache" / "normcap-temp"
     else:
