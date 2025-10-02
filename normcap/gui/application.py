@@ -77,8 +77,7 @@ class NormcapApp(QtWidgets.QApplication):
         if self.dbus_service:
             self.dbus_service.action_activated.connect(self._handle_action_activate)
         self.com.on_exit_application.connect(self._exit_application)
-        self.com.on_region_selected.connect(self._close_windows)
-        self.com.on_region_selected.connect(self._trigger_detect)
+        self.com.on_region_selected.connect(self._run_detection)
 
         # Ensure that only a single instance of NormCap is running.
         if self._other_instance_is_running():
@@ -211,10 +210,10 @@ class NormcapApp(QtWidgets.QApplication):
             debug_language_manager=self._DEBUG_LANGUAGE_MANAGER,
         )
         window.com.on_esc_key_pressed.connect(
-            lambda: self._minimize_or_exit_application(delay=0)
+            lambda: self._minimize_to_tray_or_exit(delay=0)
         )
         window.com.on_esc_key_pressed.connect(
-            lambda: self._minimize_or_exit_application(delay=0)
+            lambda: self._minimize_to_tray_or_exit(delay=0)
         )
         window.com.on_region_selected.connect(self.com.on_region_selected)
 
@@ -225,7 +224,7 @@ class NormcapApp(QtWidgets.QApplication):
             )
             window.menu_button.com.on_show_introduction.connect(self.show_introduction)
             window.menu_button.com.on_close.connect(
-                lambda: self._minimize_or_exit_application(delay=0)
+                lambda: self._minimize_to_tray_or_exit(delay=0)
             )
 
         window.set_fullscreen()
@@ -248,10 +247,11 @@ class NormcapApp(QtWidgets.QApplication):
         if window_count < 1:
             return
         logger.debug("Hide %s window%s", window_count, "s" if window_count > 1 else "")
-        QtWidgets.QApplication.restoreOverrideCursor()
-        QtWidgets.QApplication.processEvents()
+        self.restoreOverrideCursor()
         for window in self.windows.values():
-            window.close()
+            QtCore.QTimer.singleShot(0, window.close)
+            self.processEvents()
+
         self.windows = {}
         self.com.on_windows_closed.emit()
 
@@ -289,11 +289,13 @@ class NormcapApp(QtWidgets.QApplication):
             QtCore.QUrl(url, QtCore.QUrl.ParsingMode.TolerantMode)
         )
         logger.debug("Opened uri with result=%s", result)
-        self._minimize_or_exit_application(delay=0)
+        self._minimize_to_tray_or_exit(delay=0)
 
     @QtCore.Slot()
-    def _trigger_detect(self, rect: Rect, screen_idx: int) -> None:
+    def _run_detection(self, rect: Rect, screen_idx: int) -> None:
         """Crop screenshot, perform content recognition on it and process result."""
+        self._close_windows()
+
         cropped_screenshot = utils.crop_image(
             image=self.screens[screen_idx].screenshot, rect=rect
         )
@@ -302,7 +304,7 @@ class NormcapApp(QtWidgets.QApplication):
         image_area = cropped_screenshot.width() * cropped_screenshot.height()
         if image_area < minimum_image_area:
             logger.warning("Area of %spx is too small. Skip detection.", image_area)
-            self._minimize_or_exit_application(delay=0)
+            self._minimize_to_tray_or_exit(delay=0)
             return
 
         tessdata_path = system_info.get_tessdata_path(
@@ -341,7 +343,7 @@ class NormcapApp(QtWidgets.QApplication):
                 text=result.text, text_type=result.text_type, detector=result.detector
             )
 
-        self._minimize_or_exit_application(delay=self._EXIT_DELAY)
+        self._minimize_to_tray_or_exit(delay=self._EXIT_DELAY)
         self.tray.show_completion_icon()
 
     def _copy_to_clipboard(self, text: str) -> None:
@@ -538,7 +540,7 @@ class NormcapApp(QtWidgets.QApplication):
             self.exit(0)
 
     @QtCore.Slot()
-    def _minimize_or_exit_application(self, delay: Seconds) -> None:
+    def _minimize_to_tray_or_exit(self, delay: Seconds) -> None:
         self._close_windows()
         if self.settings.value("tray", type=bool):
             return
