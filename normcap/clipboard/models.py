@@ -54,6 +54,9 @@ class Handler(enum.IntEnum):
     # - Seems to work a bit more robust on wayland than xclip
     XSEL = enum.auto()
 
+    # For linux with wayland (creates temporary helper window)
+    QT_WAYLAND = enum.auto()
+
     # For linux with xorg or wayland
     # - Seems not very robust on wayland
     # - Seems not to work from within Flatpak ("Display not found")
