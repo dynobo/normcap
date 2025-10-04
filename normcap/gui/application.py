@@ -152,9 +152,10 @@ class NormcapApp(QtWidgets.QApplication):
             show_on_startup=show_intro,
             parent=self.windows[0] if self.windows else None,
         ).exec()
+
         if result == introduction.Choice.SHOW:
             self.settings.setValue("show-introduction", True)
-        if result == introduction.Choice.DONT_SHOW:
+        elif result == introduction.Choice.DONT_SHOW:
             self.settings.setValue("show-introduction", False)
 
     @QtCore.Slot()
