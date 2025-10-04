@@ -12,7 +12,7 @@
 - Fix crash on `NormCap.exe --help`. ([#783](https://github.com/dynobo/normcap/issues/783))
 
 **Linux**:
-- Add notification actions for FlatPak package.
+- Add clickable desktop notifications in FlatPak package.
 - Add a new clipboard-handler `qt_wayland` to improve reliabilty of writing to clipboard on Wayland systems.
 
 ## v0.6.0 (2025-08-31)

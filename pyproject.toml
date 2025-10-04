@@ -117,8 +117,8 @@ format = [
   { cmd = "mdformat --align-semantic-breaks-in-lists --end-of-line keep" },
 ]
 chart = [
-  { cmd = "pydeps normcap --max-bacon=2 --noise-level=0 -o=pydeps.png -T=png" },
-  { cmd = "pydeps normcap --max-bacon=1 --noise-level=0 -o=pydeps_internal.png -T=png" },
+  { cmd = "pydeps normcap --max-bacon=2 -o=pydeps.png -T=png" },
+  { cmd = "pydeps normcap --max-bacon=1 -o=pydeps_internal.png -T=png" },
 ]
 bundle = [ { ref = "locales-compile" }, { cmd = "python bundle/build.py" } ]
 bundle-dev = [
