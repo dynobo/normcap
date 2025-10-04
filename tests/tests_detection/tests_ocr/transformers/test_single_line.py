@@ -1,6 +1,6 @@
 import pytest
 
-from normcap.detection.ocr.transformers import single_line
+from normcap.detection.ocr.transformers.single_line import SingleLineTransformer
 
 
 @pytest.mark.parametrize(
@@ -15,9 +15,10 @@ from normcap.detection.ocr.transformers import single_line
 def test_single_line_transformer_transform(ocr_result, words, transformed_expected):
     """Check some transformations from raw to url."""
     ocr_result.words = [{"text": w} for w in words]
-    transformed = single_line.transform(ocr_result)
+    transformed = SingleLineTransformer.transform(ocr_result)
 
-    assert transformed == transformed_expected
+    assert len(transformed) == 1
+    assert transformed == [transformed_expected]
 
 
 @pytest.mark.parametrize(
@@ -33,6 +34,6 @@ def test_single_line_transformer_transform(ocr_result, words, transformed_expect
 def test_single_line_transformer_score(ocr_result, words, score_expected):
     """Check some transformations from raw to url."""
     ocr_result.words = words
-    score = single_line.score(ocr_result)
+    score = SingleLineTransformer().score(ocr_result)
 
     assert score == score_expected

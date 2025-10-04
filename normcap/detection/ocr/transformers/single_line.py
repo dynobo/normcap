@@ -1,31 +1,33 @@
 """Transformer to handle very simple single line text selection."""
 
-from normcap.detection.ocr.models import OcrResult
+from normcap.detection.ocr.models import OcrResult, TransformerProtocol
 
 
-def score(ocr_result: OcrResult) -> float:
-    """Calc score based on amount of lines.
+class SingleLineTransformer(TransformerProtocol):
+    @staticmethod
+    def score(ocr_result: OcrResult) -> float:
+        """Calc score based on amount of lines.
 
-    Args:
-        ocr_result: Recognized text and meta information.
+        Args:
+            ocr_result: Recognized text and meta information.
 
-    Returns:
-       Score between 0-100 (100 = more likely).
-    """
-    if len(ocr_result.text) == 0:
-        return 1
+        Returns:
+           Score between 0-100 (100 = more likely).
+        """
+        if len(ocr_result.text) == 0:
+            return 1
 
-    return 50 if ocr_result.num_lines == 1 else 0
+        return 50 if ocr_result.num_lines == 1 else 0
 
+    @staticmethod
+    def transform(ocr_result: OcrResult) -> list[str]:
+        """Just transform into single line of text.
 
-def transform(ocr_result: OcrResult) -> str:
-    """Just transform into single line of text.
+        Args:
+            ocr_result: Recognized text and meta information.
 
-    Args:
-        ocr_result: Recognized text and meta information.
-
-    Returns:
-        Single line of text.
-    """
-    # Just return concatenated text
-    return ocr_result.text.strip()
+        Returns:
+            Single line of text.
+        """
+        # Just return concatenated text
+        return [ocr_result.text.strip()]

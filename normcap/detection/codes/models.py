@@ -5,7 +5,6 @@ class CodeType(str, enum.Enum):
     NONE = "NONE"
     QR = "QR"
     BARCODE = "BARCODE"
-    QR_AND_BARCODE = "QR_AND_BARCODE"
 
 
 class TextType(str, enum.Enum):

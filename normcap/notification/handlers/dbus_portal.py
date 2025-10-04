@@ -1,3 +1,4 @@
+import json
 import logging
 import sys
 
@@ -102,7 +103,7 @@ def notify(
                     "s",
                     f"app.{ACTION_NAME_NOTIFICATION_CLICKED}",
                 ),
-                "target": ("as", action.args),
+                "target": ("s", json.dumps(action.args)),
             }
             for action in actions
         ]

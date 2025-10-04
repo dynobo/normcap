@@ -123,7 +123,7 @@ def ocr_result() -> OcrResult:
         ),
         image=QtGui.QImage(),
         transformer_scores={},
-        parsed="",
+        parsed=[""],
         words=[
             {
                 "level": 1,

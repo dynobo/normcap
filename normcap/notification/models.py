@@ -10,7 +10,7 @@ ACTION_NAME_NOTIFICATION_CLICKED = "notification_clicked"
 class NotificationAction:
     label: str
     func: Callable
-    args: list[str] | None
+    args: list[tuple[str, str]] | None
 
 
 class HandlerProtocol(Protocol):

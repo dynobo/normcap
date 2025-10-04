@@ -38,7 +38,6 @@ class TextDetector(str, enum.Enum):
     OCR_PARSED = "OCR_PARSED"
     QR = "QR"
     BARCODE = "BARCODE"
-    QR_AND_BARCODE = "QR_AND_BARCODE"
 
 
 class DetectionResult(NamedTuple):
