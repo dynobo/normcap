@@ -323,8 +323,7 @@ class NormcapApp(QtWidgets.QApplication):
 
         tessdata_path = system_info.get_tessdata_path(
             config_directory=system_info.config_directory(),
-            is_flatpak_package=system_info.is_flatpak(),
-            is_briefcase_package=system_info.is_briefcase_package(),
+            is_packaged=system_info.is_packaged(),
         )
         tesseract_bin_path = system_info.get_tesseract_bin_path(
             is_briefcase_package=system_info.is_briefcase_package()
@@ -441,8 +440,7 @@ class NormcapApp(QtWidgets.QApplication):
             ),
             tessdata_path=system_info.get_tessdata_path(
                 config_directory=system_info.config_directory(),
-                is_briefcase_package=system_info.is_briefcase_package(),
-                is_flatpak_package=system_info.is_flatpak(),
+                is_packaged=system_info.is_packaged(),
             ),
         )
         self._sanitize_language_setting()
