@@ -7,7 +7,8 @@ from typing import Any, cast
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.gui.constants import APP_ID, OPEN_ISSUE_TEXT
+from normcap import app_id
+from normcap.gui.constants import OPEN_ISSUE_TEXT
 from normcap.gui.localization import _
 from normcap.screenshot import models
 from normcap.screenshot.main import get_available_handlers
@@ -83,7 +84,7 @@ def _macos_open_privacy_settings() -> None:
 def macos_reset_screenshot_permission() -> None:
     """Use tccutil to reset permissions for current application."""
     logger.info("Reset screen recording permissions for com.github.dynobo.normcap")
-    cmd = ["tccutil", "reset", "ScreenCapture", APP_ID]
+    cmd = ["tccutil", "reset", "ScreenCapture", app_id]
     try:
         completed_proc = subprocess.run(  # noqa: S603
             cmd,

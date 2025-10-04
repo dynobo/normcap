@@ -3,8 +3,8 @@ import logging
 from jeepney.io.blocking import Proxy, open_dbus_connection
 from jeepney.wrappers import MessageGenerator, new_method_call
 
-from normcap.gui import system_info
-from normcap.gui.constants import APP_ID
+from normcap import app_id
+from normcap.notification import system_info
 from normcap.notification.models import (
     ACTION_NAME_NOTIFICATION_CLICKED,
     NotificationAction,
@@ -119,7 +119,7 @@ def notify(
             }
             logger.info(notification_data)
 
-            proxy.add_notification(APP_ID, notification_data)
+            proxy.add_notification(app_id, notification_data)
             return True
 
     except Exception:

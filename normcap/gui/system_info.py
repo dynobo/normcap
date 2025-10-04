@@ -11,7 +11,7 @@ from platform import python_version
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as pyside_version
 
-from normcap import __version__
+from normcap import __version__, app_id
 from normcap.gui.localization import translate
 from normcap.gui.models import DesktopEnvironment, Screen
 
@@ -218,6 +218,7 @@ def to_dict() -> dict:
     return {
         "normcap_version": __version__,
         "python_version": python_version(),
+        "app_id": app_id,
         "cli_args": " ".join(sys.argv),
         "is_briefcase_package": is_briefcase_package(),
         "is_flatpak_package": is_flatpak(),
@@ -242,6 +243,8 @@ def to_dict() -> dict:
         "envs": {
             "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX", None),
             "LD_LIBRARY_PATH": os.environ.get("LD_LIBRARY_PATH", None),
+            "APP_ID": os.environ.get("APP_ID"),
+            "DESKTOP_STARTUP_ID": os.environ.get("DESKTOP_STARTUP_ID"),
         },
         "screens": screens(),
     }
