@@ -43,7 +43,7 @@ def _image_to_memoryview(image: QtGui.QImage) -> memoryview:
 
 def _get_text_type_and_transform(text: str) -> tuple[str, TextType]:
     """Estimate the type of text based on the content."""
-    if text.startswith("http"):
+    if text.startswith("https://") or text.startswith("http://"):
         text_type = TextType.URL
     elif text.startswith("tel:"):
         text = text.removeprefix("tel:")
@@ -104,7 +104,6 @@ def _detect_codes_via_zxing(
 
         text = code.strip()
         text, text_type = _get_text_type_and_transform(text)
-        logger.debug("Code detection: %s [%s, %s]", text, text_type, code_type)
         yield text, text_type, code_type
 
 
@@ -123,10 +122,8 @@ def detect_codes(image: QtGui.QImage) -> list[DetectionResult]:
     image_buffer = _image_to_memoryview(image)
 
     results = []
-    for text, code_text_type, code_type in _detect_codes_via_zxing(image=image_buffer):
+    for text, text_type, code_type in _detect_codes_via_zxing(image=image_buffer):
         text_detector = TextDetector[code_type.value]
-        # TODO: [HIGH] Set text type to URL heuristically
-        text_type = TextType[code_text_type.value]
         results.append(
             DetectionResult(text=text, text_type=text_type, detector=text_detector)
         )
