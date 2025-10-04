@@ -5,11 +5,9 @@ import subprocess
 import sys
 from typing import Any, cast
 
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import QtWidgets
 
 from normcap import app_id
-from normcap.gui.constants import OPEN_ISSUE_TEXT
-from normcap.gui.localization import _
 from normcap.screenshot import models
 from normcap.screenshot.main import get_available_handlers
 
@@ -105,92 +103,9 @@ def macos_reset_screenshot_permission() -> None:
         macos_request_screenshot_permission()
 
 
-# TODO: Pull the permission dialog out to gui
-class DbusPortalPermissionDialog(QtWidgets.QDialog):
-    def __init__(
-        self,
-        parent: QtWidgets.QWidget | None = None,
-    ) -> None:
-        super().__init__(parent)
-        # L10N: Title of screenshot permission dialog only shown on Linux + Wayland.
-        title = _("NormCap - Screenshot Permission")
-        # L10N: Text of screenshot permission dialog only shown on Linux + Wayland.
-        text = _(
-            "<h3>Request screenshot permission?</h3>"
-            "<p>NormCap needs permission to take screenshots, which is essential"
-            "<br> for its functionality. It appears these permissions are "
-            "currently missing.</p>"
-            "<p>Click 'OK' to trigger a system prompt requesting access.<br>"
-            "Please allow this, otherwise NormCap may not work properly.</p>"
-        )
-
-        self.setWindowTitle(title)
-        self.setWindowIcon(QtGui.QIcon(":normcap"))
-        self.setMinimumSize(600, 300)
-        self.setModal(True)
-
-        main_vbox = QtWidgets.QVBoxLayout()
-        main_vbox.addWidget(self._create_message(text))
-        main_vbox.addStretch()
-        main_vbox.addLayout(self._create_footer())
-        self.setLayout(main_vbox)
-
-    @staticmethod
-    def _create_message(text: str) -> QtWidgets.QLabel:
-        message = QtWidgets.QLabel(text)
-        message.setWordWrap(True)
-        return message
-
-    def _create_footer(self) -> QtWidgets.QLayout:
-        footer_hbox = QtWidgets.QHBoxLayout()
-        footer_hbox.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
-        footer_hbox.setContentsMargins(0, 0, 2, 0)
-
-        open_issue_text = QtWidgets.QLabel(OPEN_ISSUE_TEXT)
-
-        # L10N: Permission request dialog button
-        ok_button = QtWidgets.QPushButton(_("Ok"))
-        ok_button.clicked.connect(self.accept_button_pressed)
-        ok_button.setDefault(True)
-
-        # L10N: Permission request dialog button
-        cancle_button = QtWidgets.QPushButton(_("Cancel"))
-        cancle_button.clicked.connect(self.reject_button_pressed)
-
-        footer_hbox.addWidget(open_issue_text)
-        footer_hbox.addStretch()
-        footer_hbox.addWidget(ok_button)
-        footer_hbox.addWidget(cancle_button)
-        return footer_hbox
-
-    def accept_button_pressed(self) -> None:
-        if not dbus_portal:
-            raise ModuleNotFoundError(
-                "Portal permission requested, but dbus_portal could not been imported!"
-            )
-
-        self.setEnabled(False)
-
-        screenshots = []
-        try:
-            logger.debug("Request screenshot.")
-            screenshots = dbus_portal.capture()
-        except TimeoutError:
-            logger.warning("Timeout when taking screenshot!")
-        except PermissionError:
-            logger.warning("Missing permission for taking screenshot!")
-
-        self.setEnabled(True)
-        self.setResult(len(screenshots) > 0)
-        self.hide()
-
-    def reject_button_pressed(self) -> None:
-        logger.warning("Screenshot permission dialog was canceled!")
-        self.setResult(False)
-        self.hide()
-
-
-def _dbus_portal_has_screenshot_permission() -> bool:
+def _dbus_portal_has_screenshot_permission(
+    request_portal_dialog: type[QtWidgets.QDialog],
+) -> bool:
     if not dbus_portal:
         raise ModuleNotFoundError(
             "Portal permission requested, but dbus_portal could not been imported!"
@@ -205,7 +120,7 @@ def _dbus_portal_has_screenshot_permission() -> bool:
         return True
 
     logger.info("Trying to request permissions via dialog.")
-    permissions_granted = DbusPortalPermissionDialog().exec()
+    permissions_granted = request_portal_dialog(dbus_portal.capture()).exec()
     if not permissions_granted:
         logger.warning("Requesting screenshot permissions on Wayland failed!")
         return False
@@ -213,7 +128,17 @@ def _dbus_portal_has_screenshot_permission() -> bool:
     return True
 
 
-def has_screenshot_permission() -> bool:
+def has_screenshot_permission(request_portal_dialog: type[QtWidgets.QDialog]) -> bool:
+    """Check and ask for screenshot permissions.
+
+    Args:
+        request_portal_dialog: Qt Dialog which takes as init arg a callable which
+            queries dbus portal for screenshot. The dialog should return True, if
+            screenshots could be retrieved or False if not.
+
+    Returns:
+        If a handler with screenshot permissions was found.
+    """
     logger.debug("Checking screenshot permission")
 
     if sys.platform == "win32":
@@ -230,6 +155,6 @@ def has_screenshot_permission() -> bool:
         )
 
     if primary_handler == models.Handler.DBUS_PORTAL:
-        return _dbus_portal_has_screenshot_permission()
+        return _dbus_portal_has_screenshot_permission(request_portal_dialog)
 
     return True

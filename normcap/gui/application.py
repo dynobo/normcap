@@ -174,7 +174,7 @@ class NormcapApp(QtWidgets.QApplication):
         elif system_info.display_manager_is_wayland():
             text = constants.PERMISSIONS_TEXT_WAYLAND
 
-        permissions_dialog.PermissionDialog(text=text).exec()
+        permissions_dialog.MissingPermissionDialog(text=text).exec()
         self.com.on_exit_application.emit(delay)
 
     def _get_dbus_service(self) -> DBusApplicationService | None:
@@ -199,7 +199,9 @@ class NormcapApp(QtWidgets.QApplication):
 
     def _verify_screenshot_permission(self) -> None:
         if not self.settings.value("has-screenshot-permission", type=bool):
-            if screenshot.has_screenshot_permission():
+            if screenshot.has_screenshot_permission(
+                request_portal_dialog=permissions_dialog.RequestDbusPermissionDialog
+            ):
                 self.settings.setValue("has-screenshot-permission", True)
             else:
                 self.show_permissions_info()
