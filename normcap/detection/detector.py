@@ -5,12 +5,7 @@ from pathlib import Path
 from PySide6 import QtGui
 
 from normcap.detection import codes, ocr
-from normcap.detection.models import (
-    DetectionMode,
-    DetectionResult,
-    TextDetector,
-    TextType,
-)
+from normcap.detection.models import DetectionMode, DetectionResult
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +17,7 @@ def detect(
     language: str,
     detect_mode: DetectionMode,
     parse_text: bool,
-) -> DetectionResult:
+) -> list[DetectionResult]:
     ocr_result = None
     codes_result = None
 
@@ -53,4 +48,4 @@ def detect(
         return ocr_result
 
     logger.debug("No codes or text found!")
-    return DetectionResult(text="", text_type=TextType.NONE, detector=TextDetector.NONE)
+    return []

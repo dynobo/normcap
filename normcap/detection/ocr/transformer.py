@@ -9,11 +9,11 @@ from normcap.detection.ocr.models import OcrResult, Transformer, TransformerProt
 logger = logging.getLogger(__name__)
 
 _transformers: dict[Transformer, TransformerProtocol] = {
-    Transformer.SINGLE_LINE: transformers.single_line,
-    Transformer.MULTI_LINE: transformers.multi_line,
-    Transformer.PARAGRAPH: transformers.paragraph,
-    Transformer.MAIL: transformers.email_address,
-    Transformer.URL: transformers.url,
+    Transformer.SINGLE_LINE: transformers.single_line.SingleLineTransformer(),
+    Transformer.MULTI_LINE: transformers.multi_line.MultiLineTransformer(),
+    Transformer.PARAGRAPH: transformers.paragraph.ParagraphTransformer(),
+    Transformer.MAIL: transformers.email_address.EmailTransformer(),
+    Transformer.URL: transformers.url.UrlTransformer(),
 }
 
 
@@ -47,15 +47,15 @@ def _clean(text: str) -> str:
     return text  # unnecessary return for clarity
 
 
-def _post_process(ocr_result: OcrResult) -> str:
+def _post_process(ocr_result: OcrResult) -> list[str]:
     """Apply postprocessing to transformed output."""
-    text = ocr_result.parsed
-    text = _clean(text)
+    texts = ocr_result.parsed
+    texts = [_clean(t) for t in texts]
     # ONHOLD: Check tesseract issue if whitespace workaround still necessary:
     # https://github.com/tesseract-ocr/tesseract/issues/2702
     if ocr_result.tess_args.is_language_without_spaces():
-        text = text.replace(" ", "")
-    return text
+        texts = [t.replace(" ", "") for t in texts]
+    return texts
 
 
 def _calc_scores(ocr_result: OcrResult) -> dict[Transformer, float]:

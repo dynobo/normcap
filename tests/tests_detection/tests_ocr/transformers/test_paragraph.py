@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from normcap.detection.ocr.transformers import paragraph
+from normcap.detection.ocr.transformers.paragraph import ParagraphTransformer
 
 
 @pytest.mark.parametrize(
@@ -35,7 +35,10 @@ from normcap.detection.ocr.transformers import paragraph
 def test_url_paragraph_transforms(ocr_result, words, transformed_expected):
     """Check some transformations from raw to url."""
     ocr_result.words = words
-    paragraph.score(ocr_result)
-    transformed = paragraph.transform(ocr_result)
+    transformer = ParagraphTransformer()
+    transformer.score(ocr_result)
+    transformed = transformer.transform(ocr_result)
 
-    assert transformed == transformed_expected
+    assert len(transformed) == 1
+
+    assert transformed[0] == transformed_expected

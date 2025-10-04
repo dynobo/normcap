@@ -8,7 +8,12 @@ from pathlib import Path
 from PySide6 import QtCore, QtGui
 
 from normcap import app_id
-from normcap.detection.models import PlaintextTextTypes, TextDetector, TextType
+from normcap.detection.models import (
+    DetectionResult,
+    PlaintextTextTypes,
+    TextDetector,
+    TextType,
+)
 from normcap.gui import system_info
 from normcap.gui.localization import _, translate
 from normcap.notification.models import NotificationAction
@@ -31,6 +36,7 @@ def _get_shared_temp_dir() -> Path:
 
 
 def _open_uris(urls: list[str]) -> None:
+    logger.info("urls %s", urls)
     for url in urls:
         logger.debug("Opening URI %s …", url)
         result = QtGui.QDesktopServices.openUrl(
@@ -49,134 +55,182 @@ def _get_line_ending(text: str) -> str:
     return "\n"  # Unix/Linux-style line endings
 
 
-def perform_action(text: str, text_type: TextType | None) -> None:
+def perform_action(texts_and_types: list) -> None:
     logger.debug("Notification clicked.")
 
+    texts = [t[0] for t in texts_and_types]
+    unique_text_types = list({t[1] for t in texts_and_types})
+    line_sep = _get_line_ending(text="".join(texts))
+    logger.info("unique %s", unique_text_types)
+
     urls = []
-    if text_type == TextType.URL:
-        urls = text.split()
-    elif text_type == TextType.MAIL:
-        urls = [f"mailto:{text.replace(',', ';').replace(' ', '')}"]
-    elif text_type == TextType.PHONE_NUMBER:
-        urls = [f"tel:{text.replace(' ', '').replace('-', '').replace('/', '')}"]
-    elif text_type == TextType.VCARD:
-        temp_file = _get_shared_temp_dir() / "normcap_result.vcf"
-        temp_file.write_text(text)
-        urls = [temp_file.as_uri()]
-    elif text_type == TextType.VEVENT:
-        temp_file = _get_shared_temp_dir() / "normcap_result.ics"
-        line_sep = _get_line_ending(text)
-        temp_file.write_text(f"BEGIN:VCALENDAR{line_sep}{text}{line_sep}END:VCALENDAR")
-        urls = [temp_file.as_uri()]
-    else:
-        temp_file = _get_shared_temp_dir() / "normcap_result.txt"
-        temp_file.write_text(text)
-        urls = [temp_file.as_uri()]
+    match unique_text_types:
+        case [TextType.URL]:
+            urls = texts
+        case [TextType.MAIL]:
+            urls = [f"mailto:{t.replace(',', ';').replace(' ', '')}" for t in texts]
+        case [TextType.PHONE_NUMBER]:
+            urls = [
+                f"tel:{t.replace(' ', '').replace('-', '').replace('/', '')}"
+                for t in texts
+            ]
+        case [TextType.VCARD]:
+            text = line_sep.join(texts)
+            temp_file = _get_shared_temp_dir() / "normcap_result.vcf"
+            temp_file.write_text(text)
+            urls = [temp_file.as_uri()]
+        case [TextType.VEVENT]:
+            text = line_sep.join(texts)
+            text = f"BEGIN:VCALENDAR{line_sep}{text}{line_sep}END:VCALENDAR"
+            temp_file = _get_shared_temp_dir() / "normcap_result.ics"
+            temp_file.write_text(text)
+            urls = [temp_file.as_uri()]
+        case _:
+            temp_file = _get_shared_temp_dir() / "normcap_result.txt"
+            temp_file.write_text(line_sep.join(texts))
+            urls = [temp_file.as_uri()]
 
     _open_uris(urls)
 
 
 def get_actions(
-    text: str, text_type: TextType, action_func: Callable
+    detection_results: list[DetectionResult], action_func: Callable
 ) -> list[NotificationAction]:
+    text_types = [r.text_type for r in detection_results]
+
     actions = [
         NotificationAction(
-            label=get_action_label(text_type=text_type),
+            label=get_action_label(text_types=text_types),
             func=action_func,
-            args=[text, text_type],
+            args=[(d.text, d.text_type) for d in detection_results],
         )
     ]
-    if text_type not in PlaintextTextTypes:
-        # Add open in editor action (if first action isn't that action)
+    if not set(text_types).issubset(set(PlaintextTextTypes)):
         actions.append(
             NotificationAction(
-                label=get_action_label(text_type=TextType.NONE),
+                label=get_action_label(text_types=[TextType.NONE]),
                 func=action_func,
-                args=[text, TextType.NONE],
+                args=[(d.text, TextType.NONE) for d in detection_results],
             )
         )
     return actions
 
 
-def get_title(text: str, text_type: TextType, detector: TextDetector) -> str:
-    if not text or len(text.strip()) == 0:
+def _get_code_postfix(detection_results: list[DetectionResult]) -> str:
+    if not detection_results:
         # L10N: Notification title when nothing got detected
         return _("Nothing captured!")
 
-    if detector == TextDetector.QR:
-        count = text.count(os.linesep) + 1 if text_type == TextType.MULTI_LINE else 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 QR code detected", "{count} QR codes detected", count
-        ).format(count=count)
-    elif detector == TextDetector.BARCODE:
-        count = text.count(os.linesep) + 1 if text_type == TextType.MULTI_LINE else 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 barcode detected", "{count} barcodes detected", count
-        ).format(count=count)
-    elif detector == TextDetector.QR_AND_BARCODE:
-        count = text.count(os.linesep) + 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 code detected", "{count} codes detected", count
-        ).format(count=count)
-    elif text_type == TextType.PARAGRAPH:
-        count = text.count(os.linesep * 2) + 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 paragraph captured", "{count} paragraphs captured", count
-        ).format(count=count)
-    elif text_type == TextType.MAIL:
-        count = text.count("@")
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 email captured", "{count} emails captured", count
-        ).format(count=count)
-    elif text_type == TextType.SINGLE_LINE:
-        count = text.count(" ") + 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 word captured", "{count} words captured", count
-        ).format(count=count)
-    elif text_type == TextType.MULTI_LINE:
-        count = text.count(os.linesep) + 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 line captured", "{count} lines captured", count
-        ).format(count=count)
-    elif text_type == TextType.URL:
-        count = text.count(os.linesep) + 1
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 URL captured", "{count} URLs captured", count
-        ).format(count=count)
-    else:
-        count = len(text)
-        # Count linesep only as single char:
-        count -= (len(os.linesep) - 1) * text.count(os.linesep)
-        # L10N: Notification title.
-        # Do NOT translate the variables in curly brackets "{some_variable}"!
-        title = translate.ngettext(
-            "1 character captured", "{count} characters captured", count
-        ).format(count=count)
+    detectors = [r.detector for r in detection_results]
+    unique_detectors = list(set(detectors))
+
+    count = len(detection_results)
+
+    match unique_detectors:
+        case [TextDetector.QR]:
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            postfix = translate.ngettext(
+                "in 1 QR code", "in {count} QR codes", count
+            ).format(count=count)
+        case [TextDetector.BARCODE]:
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            postfix = translate.ngettext(
+                "in 1 barcode", "in {count} barcodes", count
+            ).format(count=count)
+        case [TextDetector.BARCODE, TextDetector.QR]:
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            postfix = translate.ngettext("in 1 code", "in {count} codes", count).format(
+                count=count
+            )
+        case _:
+            postfix = ""
+
+    return postfix
+
+
+def _get_elements_description(detection_results: list[DetectionResult]) -> str:
+    unqiue_text_types = list({r.text_type for r in detection_results})
+    count = len(detection_results)
+
+    match unqiue_text_types:
+        case [TextType.MAIL]:
+            count = sum(d.text.count("@") for d in detection_results)
+            # l10n: notification title.
+            # do not translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 email captured", "{count} emails captured", count
+            ).format(count=count)
+        case [TextType.URL]:
+            count = len(detection_results)
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 URL captured", "{count} URLs captured", count
+            ).format(count=count)
+        case [TextType.PHONE_NUMBER]:
+            count = len(detection_results)
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 phone number captured", "{count} phone numbers captured", count
+            ).format(count=count)
+        case [TextType.VEVENT]:
+            count = len(detection_results)
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 calendar event captured", "{count} calender events captured", count
+            ).format(count=count)
+        case [TextType.VCARD]:
+            count = len(detection_results)
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 contact captured", "{count} contact captured", count
+            ).format(count=count)
+        case [TextType.PARAGRAPH]:
+            count = sum(d.text.count(os.linesep * 2) for d in detection_results) + 1
+            title = translate.ngettext(
+                "1 paragraph captured", "{count} paragraphs captured", count
+            ).format(count=count)
+        case [TextType.MULTI_LINE]:
+            count = sum(d.text.count(os.linesep) + 1 for d in detection_results)
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 line captured", "{count} lines captured", count
+            ).format(count=count)
+        case _:
+            count = sum(d.text.count(" ") + 1 for d in detection_results)
+            # L10N: Notification title.
+            # Do NOT translate the variables in curly brackets "{some_variable}"!
+            title = translate.ngettext(
+                "1 word captured", "{count} words captured", count
+            ).format(count=count)
+
     return title
 
 
-def get_text(text: str) -> str:
-    if not text or len(text.strip()) == 0:
-        # L10N: Notification text when nothing got detected
-        text = _("Please try again.")
+def get_title(detection_results: list[DetectionResult]) -> str:
+    if not detection_results:
+        # L10N: Notification title when nothing got detected
+        return _("Nothing captured!")
 
-    text = text.strip().replace(os.linesep, " ")
+    description = _get_elements_description(detection_results=detection_results)
+    postfix = _get_code_postfix(detection_results=detection_results)
+    return f"{description} {postfix}"
+
+
+def get_text(detection_results: list[DetectionResult]) -> str:
+    if not detection_results:
+        # L10N: Notification text when nothing got detected
+        return _("Please try again.")
+
+    text = " ".join(d.text.strip().replace(os.linesep, " ") for d in detection_results)
+
     shortened = textwrap.shorten(text, width=45, placeholder=" […]").strip()
     if shortened == "[…]":
         # We have one long word which shorten() can not handle
@@ -185,23 +239,25 @@ def get_text(text: str) -> str:
     return shortened
 
 
-def get_action_label(text_type: TextType) -> str:
-    if text_type == TextType.MAIL:
-        # L10N: Button text of notification action in Linux.
-        action_name = _("Compose Email")
-    elif text_type == TextType.PHONE_NUMBER:
-        # L10N: Button text of notification action in Linux.
-        action_name = _("Call Number")
-    elif text_type == TextType.URL:
-        # L10N: Button text of notification action in Linux.
-        action_name = _("Open in Browser")
-    elif text_type == TextType.VCARD:
-        # L10N: Button text of notification action in Linux.
-        action_name = _("Import to Adressbook")
-    elif text_type == TextType.VEVENT:
-        # L10N: Button text of notification action in Linux.
-        action_name = _("Import to Calendar")
-    else:
-        # L10N: Button text of notification action in Linux.
-        action_name = _("Open in Editor")
+def get_action_label(text_types: list[TextType]) -> str:
+    unique_text_types = list(set(text_types))
+    match unique_text_types:
+        case [TextType.MAIL]:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Compose Email")
+        case [TextType.PHONE_NUMBER]:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Call Number")
+        case [TextType.URL]:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Open in Browser")
+        case [TextType.VCARD]:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Import to Adressbook")
+        case [TextType.VEVENT]:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Import to Calendar")
+        case _:
+            # L10N: Button text of notification action in Linux.
+            action_name = _("Open in Editor")
     return action_name

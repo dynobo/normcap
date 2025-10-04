@@ -94,7 +94,7 @@ testcases: tuple[TestCase, ...] = (
     ),
     TestCase(
         image_path=image_dir / "03_parse_emails.png",
-        expected_text="peter.parker@test.com, HArDToReAd@test.com, 0815@test.com",
+        expected_text="peter.parker@test.com\nHArDToReAd@test.com\n0815@test.com",
         expected_text_type=[TextType.MAIL],
         expected_text_detector=[TextDetector.OCR_PARSED],
     ),
@@ -244,7 +244,7 @@ testcases: tuple[TestCase, ...] = (
             "OCR powered screen-capture tool to capture information instead of "
             f"images{os.linesep}"
             f"https://github.com/dynobo/normcap{os.linesep}"
-            "mailto:dynobo@example.com?subject=NormCap&body=Your Text Here"
+            "dynobo@example.com?subject=NormCap&body=Your Text Here"
         ),
         expected_text_type=[TextType.MULTI_LINE],
         expected_text_detector=[TextDetector.QR],

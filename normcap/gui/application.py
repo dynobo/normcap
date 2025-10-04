@@ -1,5 +1,6 @@
 """Start main application logic."""
 
+import json
 import logging
 import os
 import sys
@@ -10,7 +11,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import app_id, clipboard, notification, screenshot
 from normcap.detection import detector, ocr
-from normcap.detection.models import DetectionMode, TextDetector, TextType
+from normcap.detection.models import DetectionMode, DetectionResult
 from normcap.gui import (
     constants,
     introduction,
@@ -184,10 +185,14 @@ class NormcapApp(QtWidgets.QApplication):
         return dbus_service
 
     @QtCore.Slot(str, list)
-    def _handle_action_activate(self, action_name: str, parameter: list) -> None:
+    def _handle_action_activate(
+        self, action_name: str, list_of_json: list[str]
+    ) -> None:
+        text_and_types: list[tuple[str, str]] = json.loads(list_of_json[0])
+        logger.info("text_and_types %s", text_and_types)
+
         if action_name == ACTION_NAME_NOTIFICATION_CLICKED:
-            text, text_type = parameter
-            notification_utils.perform_action(text=text, text_type=text_type)
+            notification_utils.perform_action(texts_and_types=text_and_types)
             self.com.on_action_finished.emit()
 
     def _verify_screenshot_permission(self) -> None:
@@ -327,7 +332,7 @@ class NormcapApp(QtWidgets.QApplication):
         if bool(self.settings.value("detect-text", type=bool)):
             detection_mode |= DetectionMode.TESSERACT
 
-        result = detector.detect(
+        results = detector.detect(
             image=cropped_screenshot,
             tesseract_bin_path=tesseract_bin_path,
             tessdata_path=tessdata_path,
@@ -336,17 +341,17 @@ class NormcapApp(QtWidgets.QApplication):
             parse_text=bool(self.settings.value("parse-text", type=bool)),
         )
 
-        if result.text and self.cli_mode:
-            self._print_to_stdout_and_exit(text=result.text)
-        elif result.text:
-            self._copy_to_clipboard(text=result.text)
+        result_text = os.linesep.join(r.text for r in results)
+
+        if result_text and self.cli_mode:
+            self._print_to_stdout_and_exit(text=result_text)
+        elif result_text:
+            self._copy_to_clipboard(text=result_text)
         else:
             logger.warning("Nothing detected on selected region.")
 
         if self.settings.value("notification", type=bool):
-            self._send_notification(
-                text=result.text, text_type=result.text_type, detector=result.detector
-            )
+            self._send_notification(detection_results=results)
 
         self._minimize_to_tray_or_exit(delay=self._EXIT_DELAY)
         self.tray.show_completion_icon()
@@ -373,16 +378,11 @@ class NormcapApp(QtWidgets.QApplication):
         print(text, file=sys.stdout)  # noqa: T201
         self.com.on_exit_application.emit(0)
 
-    def _send_notification(
-        self, text: str, text_type: TextType, detector: TextDetector
-    ) -> None:
-        title = notification_utils.get_title(
-            text=text, text_type=text_type, detector=detector
-        )
-        message = notification_utils.get_text(text=text)
+    def _send_notification(self, detection_results: list[DetectionResult]) -> None:
+        title = notification_utils.get_title(detection_results=detection_results)
+        message = notification_utils.get_text(detection_results=detection_results)
         actions = notification_utils.get_actions(
-            text=text,
-            text_type=text_type,
+            detection_results=detection_results,
             action_func=self._handle_action_activate,
         )
 

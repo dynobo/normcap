@@ -2,6 +2,7 @@
 
 import logging
 import os
+from collections.abc import Generator
 
 import zxingcpp
 from PySide6 import QtGui
@@ -66,7 +67,7 @@ def _get_text_type_and_transform(text: str) -> tuple[str, TextType]:
 
 def _detect_codes_via_zxing(
     image: memoryview,
-) -> tuple[str, TextType, CodeType] | None:
+) -> Generator[tuple[str, TextType, CodeType], None, None]:
     """Decode QR and barcodes from image.
 
     Args:
@@ -83,7 +84,7 @@ def _detect_codes_via_zxing(
         return None
 
     codes = [result.text for result in results if result.text]
-    code_types = {r.format for r in results}
+    code_types = [r.format for r in results]
 
     qr_formats = {
         zxingcpp.BarcodeFormat.QRCode,
@@ -91,24 +92,23 @@ def _detect_codes_via_zxing(
         zxingcpp.BarcodeFormat.MicroQRCode,
     }
 
-    if code_types.issubset(qr_formats):
-        code_type = CodeType.QR
-    elif not code_types.intersection(qr_formats):
-        code_type = CodeType.BARCODE
-    else:
-        code_type = CodeType.QR_AND_BARCODE
-
     logger.info("Found %s codes", len(codes))
 
-    if len(codes) == 1:
-        text = codes[0].strip()
+    for code, code_format in zip(codes, code_types, strict=True):
+        if code_format in qr_formats:
+            code_type = CodeType.QR
+        elif code_format not in (qr_formats):
+            code_type = CodeType.BARCODE
+        else:
+            raise ValueError()
+
+        text = code.strip()
         text, text_type = _get_text_type_and_transform(text)
-        return text, text_type, code_type
+        logger.debug("Code detection: %s [%s, %s]", text, text_type, code_type)
+        yield text, text_type, code_type
 
-    return os.linesep.join(codes), TextType.MULTI_LINE, code_type
 
-
-def detect_codes(image: QtGui.QImage) -> DetectionResult | None:
+def detect_codes(image: QtGui.QImage) -> list[DetectionResult]:
     """Decode & decode QR and barcodes from image.
 
     Args:
@@ -122,13 +122,16 @@ def detect_codes(image: QtGui.QImage) -> DetectionResult | None:
     # ONHOLD: Switch to using QImage directly, when a new zxingcpp is released
     image_buffer = _image_to_memoryview(image)
 
-    if detections := _detect_codes_via_zxing(image=image_buffer):
-        text, code_text_type, code_type = detections
-        logger.debug("Code detection results: %s [%s]", text, code_type)
+    results = []
+    for text, code_text_type, code_type in _detect_codes_via_zxing(image=image_buffer):
         text_detector = TextDetector[code_type.value]
         # TODO: [HIGH] Set text type to URL heuristically
         text_type = TextType[code_text_type.value]
-        return DetectionResult(text=text, text_type=text_type, detector=text_detector)
+        results.append(
+            DetectionResult(text=text, text_type=text_type, detector=text_detector)
+        )
 
-    logger.debug("No codes found")
-    return None
+    if not results:
+        logger.debug("No codes found")
+
+    return results
