@@ -163,7 +163,9 @@ class NormcapApp(QtWidgets.QApplication):
         delay = 0
 
         if sys.platform == "darwin":
-            calling_app = "NormCap" if system_info.is_prebuilt_package() else "Terminal"
+            calling_app = (
+                "NormCap" if system_info.is_briefcase_package() else "Terminal"
+            )
             text = constants.PERMISSIONS_TEXT_MACOS.format(application=calling_app)
 
         elif system_info.is_flatpak():
@@ -280,7 +282,7 @@ class NormcapApp(QtWidgets.QApplication):
         if not self._is_time_for_update_check():
             return
 
-        self.checker = UpdateChecker(packaged=system_info.is_prebuilt_package())
+        self.checker = UpdateChecker(packaged=system_info.is_packaged())
         self.checker.com.on_version_checked.connect(self._set_last_update_check_time)
         self.checker.com.on_click_get_new_version.connect(self._open_url_and_hide)
 
