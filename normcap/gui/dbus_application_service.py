@@ -45,37 +45,45 @@ class DBusApplicationService(QtCore.QObject):
         Returns:
             True if service was successfully registered, False otherwise
         """
-        if not self._bus.isConnected():
-            logger.error("Cannot connect to DBus session bus")
-            return False
+        try:
+            if not self._bus.isConnected():
+                logger.error("Cannot connect to DBus session bus")
+                return False
 
-        # Register the service name
-        if not self._bus.registerService(SERVICE_NAME):
-            error = self._bus.lastError()
-            logger.error(
-                "Failed to register DBus service '%s': %s",
-                SERVICE_NAME,
-                error.message(),
-            )
-            return False
+            # Register the service name
+            if not self._bus.registerService(SERVICE_NAME):
+                error = self._bus.lastError()
+                logger.error(
+                    "Failed to register DBus service '%s': %s",
+                    SERVICE_NAME,
+                    error.message(),
+                )
+                return False
 
-        # Register the object with specific interface name
-        if not self._bus.registerObject(
-            OBJECT_PATH,
-            INTERFACE_NAME,
-            self,
-            QtDBus.QDBusConnection.RegisterOption.ExportAllSlots,
-        ):
-            error = self._bus.lastError()
-            logger.error(
-                "Failed to register DBus object '%s': %s", OBJECT_PATH, error.message()
-            )
-            self._bus.unregisterService(SERVICE_NAME)
-            return False
+            # Register the object with specific interface name
+            if not self._bus.registerObject(
+                OBJECT_PATH,
+                INTERFACE_NAME,
+                self,
+                QtDBus.QDBusConnection.RegisterOption.ExportAllSlots,
+            ):
+                error = self._bus.lastError()
+                logger.error(
+                    "Failed to register DBus object '%s': %s",
+                    OBJECT_PATH,
+                    error.message(),
+                )
+                self._bus.unregisterService(SERVICE_NAME)
+                return False
 
-        self._registered = True
-        logger.info("DBus activation service registered: %s", SERVICE_NAME)
-        return True
+            self._registered = True
+            logger.info("DBus activation service registered: %s", SERVICE_NAME)
+
+        except Exception:
+            logger.exception("Unable to register dbus service.")
+            return False
+        else:
+            return True
 
     def unregister_service(self) -> None:
         """Unregister the DBus service."""
