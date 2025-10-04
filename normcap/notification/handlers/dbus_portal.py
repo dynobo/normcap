@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from jeepney.io.blocking import Proxy, open_dbus_connection
 from jeepney.wrappers import MessageGenerator, new_method_call
@@ -55,7 +56,10 @@ class DBusIntrospectable(MessageGenerator):
 
 
 def is_compatible() -> bool:
-    return system_info.is_flatpak()
+    if sys.platform != "linux":
+        return False
+
+    return system_info.is_dbus_service_running()
 
 
 def is_installed() -> bool:
