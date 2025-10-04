@@ -8,12 +8,12 @@ import logging
 
 from PySide6 import QtCore, QtDBus
 
-from normcap.gui.constants import APP_ID
+from normcap import app_id
 
 logger = logging.getLogger(__name__)
 
-SERVICE_NAME = APP_ID
-OBJECT_PATH = f"/{APP_ID.replace('.', '/')}"
+SERVICE_NAME = app_id
+OBJECT_PATH = f"/{app_id.replace('.', '/')}"
 INTERFACE_NAME = "org.freedesktop.Application"
 
 

@@ -8,7 +8,7 @@ from typing import Any
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap import clipboard, notification, screenshot
+from normcap import app_id, clipboard, notification, screenshot
 from normcap.detection import detector, ocr
 from normcap.detection.models import DetectionMode, TextDetector, TextType
 from normcap.gui import (
@@ -19,7 +19,6 @@ from normcap.gui import (
     system_info,
     utils,
 )
-from normcap.gui.constants import APP_ID
 from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.models import Days, Rect, Screen, Seconds
@@ -60,14 +59,14 @@ class NormcapApp(QtWidgets.QApplication):
         self.setQuitOnLastWindowClosed(False)
 
         # Set application identity for portal recognition
-        self.setApplicationName(APP_ID)
-        self.setDesktopFileName(f"{APP_ID}.desktop")
+        self.setApplicationName(app_id)
+        self.setDesktopFileName(f"{app_id}")
 
         self.com = Communicate(parent=self)
 
         # Create DBus Service to listen for notification actions and activations
         self.dbus_service = (
-            self._get_dbus_service() if system_info.is_flatpak() else None
+            self._get_dbus_service() if sys.platform == "linux" else None
         )
 
         # Connect to signals
