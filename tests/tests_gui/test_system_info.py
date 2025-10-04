@@ -240,8 +240,7 @@ def test_get_tessdata_path(
 
             path_briefcase = system_info.get_tessdata_path(
                 config_directory=system_info.config_directory(),
-                is_briefcase_package=is_briefcase,
-                is_flatpak_package=is_flatpak,
+                is_packaged=system_info.is_packaged(),
             )
 
             path_end = (
@@ -269,8 +268,7 @@ def test_get_tessdata_path_warn_on_win32(monkeypatch, caplog):
                 caplog.clear()
                 _ = system_info.get_tessdata_path(
                     config_directory=system_info.config_directory(),
-                    is_briefcase_package=system_info.is_briefcase_package(),
-                    is_flatpak_package=system_info.is_flatpak(),
+                    is_packaged=system_info.is_packaged(),
                 )
             assert "TESSDATA_PREFIX" in caplog.records[0].msg
 

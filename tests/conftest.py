@@ -106,8 +106,7 @@ def tesseract_cmd() -> Path:
 def tessdata_path() -> Path | None:
     return system_info.get_tessdata_path(
         config_directory=system_info.config_directory(),
-        is_briefcase_package=system_info.is_briefcase_package(),
-        is_flatpak_package=system_info.is_flatpak(),
+        is_packaged=system_info.is_packaged(),
     )
 
 

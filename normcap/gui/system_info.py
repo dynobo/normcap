@@ -193,11 +193,9 @@ def get_tesseract_bin_path(is_briefcase_package: bool) -> Path:
     )
 
 
-def get_tessdata_path(
-    config_directory: Path, is_briefcase_package: bool, is_flatpak_package: bool
-) -> Path | None:
+def get_tessdata_path(config_directory: Path, is_packaged: bool) -> Path | None:
     """Decide which path for tesseract language files to use."""
-    if is_briefcase_package or is_flatpak_package:
+    if is_packaged:
         tessdata_path = config_directory / "tessdata"
         return tessdata_path.resolve()
 
@@ -236,8 +234,7 @@ def to_dict() -> dict:
         ),
         "tessdata_path": get_tessdata_path(
             config_directory=config_directory(),
-            is_briefcase_package=is_briefcase_package(),
-            is_flatpak_package=is_flatpak(),
+            is_packaged=is_packaged(),
         ),
         "envs": {
             "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX", None),
