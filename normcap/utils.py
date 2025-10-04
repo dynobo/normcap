@@ -16,7 +16,7 @@ from normcap.gui.settings import DEFAULT_SETTINGS
 from normcap.notification import Handler as NotificationHandler
 from normcap.screenshot import Handler as ScreenshotHandler
 
-logger = logging.getLogger("normcap")
+logger = logging.getLogger(__name__)
 
 
 _ISSUES_URLS = "https://github.com/dynobo/normcap/issues/new"
@@ -221,8 +221,14 @@ def init_logger(log_level: str = "WARNING", log_file: Path | None = None) -> Non
         log_file.parent.mkdir(parents=True, exist_ok=True)
         handlers.append(logging.FileHandler(log_file, mode="w"))
 
-    logging.basicConfig(format=log_format, datefmt=datefmt, handlers=handlers)
-    logger.setLevel(log_level)
+    logging.basicConfig(
+        format=log_format,
+        datefmt=datefmt,
+        handlers=handlers,
+        level=log_level,
+        force=True,
+    )
+    logger.setLevel(level=log_level)
 
 
 def hook_exceptions(
