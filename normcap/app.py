@@ -94,7 +94,7 @@ def _init_normcap() -> QtWidgets.QApplication:
     )
     _prepare_envs()
 
-    if system_info.is_prebuilt_package():
+    if system_info.is_packaged():
         tessdata_path = system_info.get_tessdata_path(
             config_directory=system_info.config_directory(),
             is_briefcase_package=system_info.is_briefcase_package(),

@@ -225,7 +225,7 @@ class Window(QtWidgets.QMainWindow):
 
         menu_button = MenuButton(
             settings=self.settings,
-            language_manager=system_info.is_prebuilt_package(),
+            language_manager=system_info.is_packaged(),
             installed_languages=self.installed_languages,
         )
         return menu_button

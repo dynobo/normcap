@@ -101,8 +101,7 @@ def is_flatpak() -> bool:
     return os.getenv("FLATPAK_ID") is not None
 
 
-def is_prebuilt_package() -> bool:
-    # TODO: [HIGH] Fix usage of this function and rename!
+def is_packaged() -> bool:
     return is_briefcase_package() or is_flatpak()
 
 
