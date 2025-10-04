@@ -65,7 +65,7 @@ def test_prepare_logging(monkeypatch, arg_value, expected_level, caplog):
     app._prepare_logging(getattr(args, "verbosity", "ERROR"))
     logger = logging.getLogger("normcap")
 
-    assert logger.level == expected_level
+    assert logger.getEffectiveLevel() == expected_level
     assert sys.excepthook == utils.hook_exceptions
 
 

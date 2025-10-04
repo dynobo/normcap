@@ -52,7 +52,7 @@ def _prepare_logging(log_level: str, log_file: Path | None = None) -> None:
     sys.excepthook = utils.hook_exceptions
 
     utils.init_logger(log_level=log_level.upper(), log_file=log_file)
-    logger = logging.getLogger("normcap")
+    logger = logging.getLogger(__name__)
     logger.info("Start NormCap v%s", __version__)
 
     # Wrap QT logging output
