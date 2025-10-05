@@ -24,7 +24,7 @@ def detect(
     if DetectionMode.CODES in detect_mode:
         start_time = time.time()
         codes_result = codes.detector.detect_codes(image)
-        logger.debug("Code detection took %s s", f"{time.time() - start_time:.4f}.")
+        logger.debug("Code detection took %s", f"{time.time() - start_time:.4f}s")
 
     if codes_result:
         logger.debug("Codes detected, skipping OCR.")

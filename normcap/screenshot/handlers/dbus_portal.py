@@ -118,8 +118,6 @@ class OrgFreedesktopPortalScreenshot(QtCore.QObject):
             self.on_exception.emit(RuntimeError(msg))
             return
 
-        logger.debug("Request accepted")
-
     def _get_timeout_timer(self, timeout_sec: int) -> QtCore.QTimer:
         def _timeout_triggered() -> None:
             msg = f"No response from xdg-portal within {timeout_sec}s!"

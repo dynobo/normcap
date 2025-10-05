@@ -74,7 +74,7 @@ class NormcapApp(QtWidgets.QApplication):
         if self.dbus_service:
             self.dbus_service.action_activated.connect(self._handle_action_activate)
         self.com.on_exit_application.connect(self._exit_application)
-        self.com.on_region_selected.connect(self._run_detection)
+        self.com.on_region_selected.connect(self._start_processing)
 
         # If NormCap got activated via DBus, only process action then quit.
         if args.get("dbus_activation", False):
@@ -181,10 +181,8 @@ class NormcapApp(QtWidgets.QApplication):
     def _get_dbus_service(self) -> DBusApplicationService | None:
         dbus_service = DBusApplicationService(self)
         if not dbus_service.register_service():
-            logger.error("Failed to register DBus activation service")
             return None
 
-        logger.debug("Registered DBus activation service")
         return dbus_service
 
     @QtCore.Slot(str, list)
@@ -307,10 +305,19 @@ class NormcapApp(QtWidgets.QApplication):
         self._minimize_to_tray_or_exit(delay=0)
 
     @QtCore.Slot()
-    def _run_detection(self, rect: Rect, screen_idx: int) -> None:
-        """Crop screenshot, perform content recognition on it and process result."""
+    def _start_processing(self, rect: Rect, screen_idx: int) -> None:
         self._close_windows()
 
+        if self.tray:
+            self.tray.show_processing_icon()
+
+        QtCore.QTimer.singleShot(
+            20, lambda: self._run_detection(rect=rect, screen_idx=screen_idx)
+        )
+
+    @QtCore.Slot()
+    def _run_detection(self, rect: Rect, screen_idx: int) -> None:
+        """Crop screenshot, perform content recognition on it and process result."""
         cropped_screenshot = utils.crop_image(
             image=self.screens[screen_idx].screenshot, rect=rect
         )
