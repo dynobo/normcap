@@ -96,7 +96,7 @@ def is_installed() -> bool:
     Returns:
         System has all necessary dependencies
     """
-    # TODO: Test Kwin inspection on KDE
+    # TODO: [HIGH] Test Kwin inspection on KDE
     try:
         with open_dbus_connection() as router:
             proxy = Proxy(DBusKWin(), router)

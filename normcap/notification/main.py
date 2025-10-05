@@ -19,23 +19,26 @@ def get_available_handlers() -> list[Handler]:
         h for h in Handler if _notification_handlers[h].is_compatible()
     ]
     logger.debug(
-        "Compatible capture handlers: %s", [h.name for h in compatible_handlers]
+        "Compatible notification handlers: %s", [h.name for h in compatible_handlers]
     )
 
     available_handlers = [
         n for n in compatible_handlers if _notification_handlers[n].is_installed()
     ]
-    logger.debug("Available capture handlers: %s", [h.name for h in available_handlers])
+    logger.debug(
+        "Available notification handlers: %s", [h.name for h in available_handlers]
+    )
 
     if not compatible_handlers:
         logger.error(
-            "None of the implemented capture handlers is compatible with this system!"
+            "None of the implemented notification handlers is compatible with this "
+            "system!"
         )
         return []
 
     if not available_handlers:
         logger.error(
-            "No working capture handler found for your system. "
+            "No working notification handler found for your system. "
             "The preferred handler on your system would be %s but can't be "
             "used due to missing dependencies. %s",
             compatible_handlers[0].name,
@@ -45,8 +48,8 @@ def get_available_handlers() -> list[Handler]:
 
     if compatible_handlers[0] != available_handlers[0]:
         logger.warning(
-            "The preferred capture handler on your system would be %s but can't be "
-            "used due to missing dependencies. %s",
+            "The preferred notification handler on your system would be %s but can't "
+            "be used due to missing dependencies. %s",
             compatible_handlers[0].name,
             _notification_handlers[compatible_handlers[0]].install_instructions,
         )

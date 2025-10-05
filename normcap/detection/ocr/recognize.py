@@ -40,7 +40,7 @@ def get_text_from_image(
     parse: bool = True,
     resize_factor: float | None = None,
     padding_size: int | None = None,
-) -> DetectionResult:
+) -> list[DetectionResult]:
     """Apply OCR on selected image section."""
     image = enhance.preprocess(image, resize_factor=resize_factor, padding=padding_size)
     _save_image_in_temp_folder(image, postfix="_enhanced")
@@ -67,11 +67,13 @@ def get_text_from_image(
     logger.debug("OCR detections:\n%s", ",\n".join(str(w) for w in result.words))
 
     if not parse:
-        return DetectionResult(
-            text=result.text,
-            text_type=TextType.SINGLE_LINE,
-            detector=TextDetector.OCR_RAW,
-        )
+        return [
+            DetectionResult(
+                text=result.text,
+                text_type=TextType.SINGLE_LINE,
+                detector=TextDetector.OCR_RAW,
+            )
+        ]
 
     result = transformer.apply(result)
     logger.debug("Parsed text:\n%s", result.parsed)
@@ -80,8 +82,13 @@ def get_text_from_image(
         if result.best_scored_transformer
         else TextType.SINGLE_LINE
     )
-    return DetectionResult(
-        text=result.parsed,
-        text_type=text_type,
-        detector=TextDetector.OCR_PARSED,
-    )
+
+    detections = [
+        DetectionResult(
+            text=s,
+            text_type=text_type,
+            detector=TextDetector.OCR_PARSED,
+        )
+        for s in result.parsed
+    ]
+    return detections

@@ -1,11 +1,14 @@
+import json
 import logging
+import sys
 
 from jeepney.io.blocking import Proxy, open_dbus_connection
 from jeepney.wrappers import MessageGenerator, new_method_call
 
-from normcap.gui import system_info
+from normcap import app_id
+from normcap.notification import system_info
 from normcap.notification.models import (
-    NAME_NOTIFICATION_CLICKED_ACTION,
+    ACTION_NAME_NOTIFICATION_CLICKED,
     NotificationAction,
 )
 
@@ -54,7 +57,10 @@ class DBusIntrospectable(MessageGenerator):
 
 
 def is_compatible() -> bool:
-    return system_info.is_flatpak()
+    if sys.platform != "linux":
+        return False
+
+    return system_info.is_dbus_service_running()
 
 
 def is_installed() -> bool:
@@ -95,9 +101,9 @@ def notify(
                 "label": ("s", action.label),
                 "action": (
                     "s",
-                    f"app.{NAME_NOTIFICATION_CLICKED_ACTION}",
+                    f"app.{ACTION_NAME_NOTIFICATION_CLICKED}",
                 ),
-                "target": ("as", action.args),
+                "target": ("s", json.dumps(action.args)),
             }
             for action in actions
         ]
@@ -105,7 +111,6 @@ def notify(
         with open_dbus_connection() as connection:
             proxy = Proxy(DBusNotificationPortal(), connection)
 
-            notification_app_id = "com.github.dynobo.normcap"
             notification_data: dict[str, tuple[str, object]] = {
                 "title": ("s", title),
                 "body": ("s", message),
@@ -119,7 +124,7 @@ def notify(
             }
             logger.info(notification_data)
 
-            proxy.add_notification(notification_app_id, notification_data)
+            proxy.add_notification(app_id, notification_data)
             return True
 
     except Exception:

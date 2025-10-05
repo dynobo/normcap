@@ -156,6 +156,12 @@ DEFAULT_SETTINGS = (
 )
 
 
+class Communicate(QtCore.QObject):
+    """Settings's communication bus."""
+
+    on_value_changed = QtCore.Signal(str, object)
+
+
 class Settings(QtCore.QSettings):
     """Provide interface to persisted user settings."""
 
@@ -173,8 +179,10 @@ class Settings(QtCore.QSettings):
             super().__init__(str(ini_file), QtCore.QSettings.IniFormat)
         else:
             super().__init__(organization, application=application, parent=parent)
-        self.setFallbacksEnabled(False)
+
         self.init_settings: dict = init_settings or {}
+        self.setFallbacksEnabled(False)
+        self.com = Communicate()
         self._prepare_and_sync()
 
     def _prepare_and_sync(self) -> None:
@@ -209,13 +217,25 @@ class Settings(QtCore.QSettings):
                 self.setValue(key, value)
 
     def _update_from_init_settings(self) -> None:
+        non_persisted_settings = {
+            "reset",
+            "verbosity",
+            "log-file",
+            "version",
+            "cli-mode",
+            "background-mode",
+            "screenshot-handler",
+            "clipboard-handler",
+            "notification-handler",
+            "dbus-activation",
+        }
         for key, value in self.init_settings.items():
             # TODO: Migrate setting keys to underscore instead minus
             setting_key = key.replace("_", "-")
             if self.contains(setting_key):
                 if value is not None:
                     self.setValue(setting_key, value)
-            elif setting_key in {"reset", "verbosity"}:
+            elif setting_key in non_persisted_settings:
                 continue
             else:
                 logger.debug(
@@ -231,6 +251,15 @@ class Settings(QtCore.QSettings):
 
             # Update version setting
             self.setValue("current-version", __version__)
+
+    def setValue(self, key: str, value: object) -> None:  # noqa: N802 # all lowercase
+        old_value = self.value(key)
+        super().setValue(key, value)
+        if old_value != value:
+            logger.debug(
+                "Setting '%s' changed from '%s' to '%s'", key, old_value, value
+            )
+            self.com.on_value_changed.emit(key, value)
 
     def reset(self) -> None:
         """Remove all existing settings and values."""

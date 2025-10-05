@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 class Communicate(QtCore.QObject):
     """TrayMenus' communication bus."""
 
-    check = QtCore.Signal()  # request a version check
     on_version_checked = QtCore.Signal(str)  # newest available version
     on_click_get_new_version = QtCore.Signal(str)  # url to new version
 
@@ -33,7 +32,6 @@ class UpdateChecker(QtWidgets.QWidget):
         self.packaged = packaged
 
         self.com = Communicate(parent=self)
-        self.com.check.connect(self._check)
 
         self.downloader = Downloader()
         self.downloader.com.on_download_finished.connect(self._on_download_finished)
@@ -47,8 +45,8 @@ class UpdateChecker(QtWidgets.QWidget):
         self.message_box = self._create_message_box()
 
     @QtCore.Slot()
-    def _check(self) -> None:
-        """Start the update check."""
+    def check_for_updates(self) -> None:
+        """Check if the current version is the latest or if a newer is available."""
         logger.debug("Search for new version on %s", self.url)
         self.downloader.get(self.url, timeout=10)
 

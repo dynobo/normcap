@@ -1,3 +1,4 @@
+import logging
 from decimal import DivisionByZero
 
 from normcap.screenshot import system_info
@@ -79,6 +80,7 @@ def test_gnome_version_on_linux_unknown_exception(monkeypatch, caplog):
 
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
     monkeypatch.setattr(system_info.subprocess, "check_output", mocked_subprocess)
+    caplog.set_level(logging.WARNING)
 
     version = system_info.get_gnome_version()
     assert not version

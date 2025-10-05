@@ -1,12 +1,11 @@
 import pytest
 
 from normcap.detection import ocr
-from normcap.gui import tray
 from normcap.gui.settings import Settings
 
 
 def test_debug_language_manager_is_deactivated(qapp):
-    assert not tray.SystemTray._testing_language_manager
+    assert not qapp._DEBUG_LANGUAGE_MANAGER
 
 
 @pytest.mark.parametrize(
@@ -25,9 +24,9 @@ def test_sanitize_active_language(qapp, monkeypatch, active, available, sanitize
     settings = Settings(organization="normcap_TEST")
     try:
         settings.setValue("language", active)
-        tray_cls = tray.SystemTray
-        tray_cls.settings = settings
-        tray_cls._sanitize_language_setting(tray_cls, installed_languages=available)
+        qapp.settings = settings
+        qapp.installed_languages = available
+        qapp._sanitize_language_setting()
         assert settings.value("language") == sanitized
     finally:
         for k in settings.allKeys():

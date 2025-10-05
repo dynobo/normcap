@@ -11,11 +11,14 @@ from .testcases import testcases
 @pytest.mark.parametrize("testcase", testcases)
 def test_remove_spaces_in_chi(testcase, tesseract_cmd):
     image = QtGui.QImage(testcase.image_path)
-    result = ocr.recognize.get_text_from_image(
+    results = ocr.recognize.get_text_from_image(
         tesseract_bin_path=tesseract_cmd,
         image=image,
         languages=testcase.lang.split(","),
     )
+
+    assert len(results) == 1
+    result = results[0]
 
     similarity = SequenceMatcher(None, result.text, testcase.transformed).ratio()
 

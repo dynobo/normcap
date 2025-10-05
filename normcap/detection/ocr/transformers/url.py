@@ -2,10 +2,9 @@
 
 import functools
 import logging
-import os
 import re
 
-from normcap.detection.ocr.models import OcrResult
+from normcap.detection.ocr.models import OcrResult, TransformerProtocol
 from normcap.detection.ocr.transformers import url_tlds
 
 logger = logging.getLogger(__name__)
@@ -46,38 +45,42 @@ def _extract_urls(text: str) -> list[str]:
     return [url for url in all_urls if _has_valid_tld(url=url)]
 
 
-def score(ocr_result: OcrResult) -> float:
-    """Calculate score based on chars in URLs vs overall chars.
+class UrlTransformer(TransformerProtocol):
+    @staticmethod
+    def score(ocr_result: OcrResult) -> float:
+        """Calculate score based on chars in URLs vs overall chars.
 
-    Args:
-        ocr_result: Recognized text and meta information.
+        Args:
+            ocr_result: Recognized text and meta information.
 
-    Returns:
-        score between 0-100 (100 = more likely)
-    """
-    text = ocr_result.text
-    urls = _extract_urls(text)
-    logger.info("%s URLs found %s", len(urls), ": " + " ".join(urls) if urls else "")
+        Returns:
+            score between 0-100 (100 = more likely)
+        """
+        text = ocr_result.text
+        urls = _extract_urls(text)
+        logger.info(
+            "%s URLs found %s", len(urls), ": " + " ".join(urls) if urls else ""
+        )
 
-    # Calc chars & ratio
-    url_chars = sum(len(e) for e in urls)
-    all_chars = max([len(text), 1])
-    ratio = url_chars / all_chars
-    logger.debug("%s/%s (%s) chars in urls", url_chars, all_chars, ratio)
+        # Calc chars & ratio
+        url_chars = sum(len(e) for e in urls)
+        all_chars = max([len(text), 1])
+        ratio = url_chars / all_chars
+        logger.debug("%s/%s (%s) chars in urls", url_chars, all_chars, ratio)
 
-    return round(100 * min(ratio * 0.85, 1), 2)
+        return round(100 * min(ratio * 0.85, 1), 2)
 
+    @staticmethod
+    def transform(ocr_result: OcrResult) -> list[str]:
+        """Parse URLs and return as newline separated string.
 
-def transform(ocr_result: OcrResult) -> str:
-    """Parse URLs and return as newline separated string.
+        Args:
+            ocr_result: Recognized text and meta information.
 
-    Args:
-        ocr_result: Recognized text and meta information.
+        Returns:
+            URL(s)
+        """
+        logger.info("Apply url transformer")
+        urls = _extract_urls(ocr_result.text)
 
-    Returns:
-        URL(s), separated bye newline
-    """
-    logger.info("Apply url transformer")
-    urls = _extract_urls(ocr_result.text)
-
-    return os.linesep.join(urls)
+        return urls

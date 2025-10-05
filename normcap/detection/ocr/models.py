@@ -95,7 +95,7 @@ class OcrResult:
     words: list[dict]  # Words+metadata detected by OCR
     image: QtGui.QImage
     transformer_scores: dict[Transformer, float] = field(default_factory=dict)
-    parsed: str = ""  # Transformed result
+    parsed: list[str] = field(default_factory=list)  # Transformed result
 
     def _count_unique_sections(self, level: str) -> int:
         postfix = "_num"
@@ -119,13 +119,17 @@ class OcrResult:
         return 0
 
     @property
-    def text(self) -> str:
-        """Provides the resulting text of the OCR.
+    def texts(self) -> list[str]:
+        """Provides the resulting text(s) of the OCR as list.
 
-        If parsed text (compiled by a transformer) is available, return that one,
-        otherwise fallback to un-parseds.
+        If parsed text (compiled by a transformer) is available, return the list of
+        parse elements, otherwise fallback to un-parseds.
         """
-        return self.parsed or self.add_linebreaks()
+        return self.parsed or [self.add_linebreaks()]
+
+    @property
+    def text(self) -> str:
+        return self.add_linebreaks()
 
     def add_linebreaks(
         self,
@@ -200,7 +204,7 @@ class TransformerProtocol(Protocol):
         """
         ...  # pragma: no cover
 
-    def transform(self, ocr_result: OcrResult) -> str:
+    def transform(self, ocr_result: OcrResult) -> list[str]:
         """Apply a transformation to the detected text.
 
         Arguments:

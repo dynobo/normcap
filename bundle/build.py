@@ -17,15 +17,16 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if sys.platform == "win32":
-        WindowsBriefcase().create()
-        WindowsBriefcaseZip().create()
+    match sys.platform:
+        case "win32":
+            WindowsBriefcase().create()
+            WindowsBriefcaseZip().create()
 
-    elif sys.platform == "darwin":
-        MacBriefcase().create()
+        case "darwin":
+            MacBriefcase().create()
 
-    elif sys.platform == "linux":
-        LinuxBriefcase().create()
+        case "linux":
+            LinuxBriefcase().create()
 
-    else:
-        raise RuntimeError(f"Unknown platform '{sys.platform}'.")
+        case _:
+            raise RuntimeError(f"Unknown platform '{sys.platform}'.")

@@ -11,7 +11,7 @@ from platform import python_version
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as pyside_version
 
-from normcap import __version__
+from normcap import __version__, app_id
 from normcap.gui.localization import translate
 from normcap.gui.models import DesktopEnvironment, Screen
 
@@ -101,8 +101,7 @@ def is_flatpak() -> bool:
     return os.getenv("FLATPAK_ID") is not None
 
 
-def is_prebuilt_package() -> bool:
-    # TODO: Fix usage of this function and rename!
+def is_packaged() -> bool:
     return is_briefcase_package() or is_flatpak()
 
 
@@ -194,11 +193,9 @@ def get_tesseract_bin_path(is_briefcase_package: bool) -> Path:
     )
 
 
-def get_tessdata_path(
-    config_directory: Path, is_briefcase_package: bool, is_flatpak_package: bool
-) -> Path | None:
+def get_tessdata_path(config_directory: Path, is_packaged: bool) -> Path | None:
     """Decide which path for tesseract language files to use."""
-    if is_briefcase_package or is_flatpak_package:
+    if is_packaged:
         tessdata_path = config_directory / "tessdata"
         return tessdata_path.resolve()
 
@@ -218,6 +215,7 @@ def to_dict() -> dict:
     return {
         "normcap_version": __version__,
         "python_version": python_version(),
+        "app_id": app_id,
         "cli_args": " ".join(sys.argv),
         "is_briefcase_package": is_briefcase_package(),
         "is_flatpak_package": is_flatpak(),
@@ -236,12 +234,13 @@ def to_dict() -> dict:
         ),
         "tessdata_path": get_tessdata_path(
             config_directory=config_directory(),
-            is_briefcase_package=is_briefcase_package(),
-            is_flatpak_package=is_flatpak(),
+            is_packaged=is_packaged(),
         ),
         "envs": {
             "TESSDATA_PREFIX": os.environ.get("TESSDATA_PREFIX", None),
             "LD_LIBRARY_PATH": os.environ.get("LD_LIBRARY_PATH", None),
+            "APP_ID": os.environ.get("APP_ID"),
+            "DESKTOP_STARTUP_ID": os.environ.get("DESKTOP_STARTUP_ID"),
         },
         "screens": screens(),
     }

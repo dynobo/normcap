@@ -1,21 +1,25 @@
 import pytest
 
-from normcap.detection.ocr.transformers import url
+from normcap.detection.ocr.transformers.url import UrlTransformer, _has_valid_tld
 
 
 @pytest.mark.parametrize(
     ("words", "transformed_expected"),
     [
-        (("@", "https://www.si.org/s?q=a,b&pg=2"), "https://www.si.org/s?q=a,b&pg=2"),
-        (("wWw.qithub,com",), "https://www.github.com"),
-        (("https", "://", "dynobo,org"), "https://dynobo.org"),
-        (("https://", "gooqle.com"), "https://google.com"),
+        (("@", "https://www.si.org/s?q=a,b&pg=2"), ["https://www.si.org/s?q=a,b&pg=2"]),
+        (("wWw.qithub,com",), ["https://www.github.com"]),
+        (("https", "://", "dynobo,org"), ["https://dynobo.org"]),
+        (("https://", "gooqle.com"), ["https://google.com"]),
+        (
+            ("www.github.com", "https", "://dynobo.org"),
+            ["https://www.github.com", "https://dynobo.org"],
+        ),
     ],
 )
 def test_url_transformer_transform(ocr_result, words, transformed_expected):
     """Check some transformations from raw to url."""
     ocr_result.words = [{"text": w} for w in words]
-    transformed = url.transform(ocr_result)
+    transformed = UrlTransformer.transform(ocr_result)
 
     assert transformed == transformed_expected
 
@@ -30,7 +34,7 @@ def test_url_transformer_transform(ocr_result, words, transformed_expected):
 )
 def test_url_transformer_score(ocr_result, words, score_expected):
     ocr_result.words = [{"text": w} for w in words]
-    score = url.score(ocr_result)
+    score = UrlTransformer().score(ocr_result)
 
     assert score == score_expected
 
@@ -55,4 +59,4 @@ def test_url_transformer_score(ocr_result, words, score_expected):
 )
 def test_url_has_valid_tld(potential_url, expected_validity):
     """Check some transformations from raw to url."""
-    assert url._has_valid_tld(potential_url) == expected_validity
+    assert _has_valid_tld(potential_url) == expected_validity

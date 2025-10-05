@@ -152,8 +152,8 @@ def _run_tesseract(
                 postfix="_processed_by_tesseract",
             )
             _move_to_normcap_temp_dir(
-                input_file=Path(f"{input_image_path}.png_debug.pdf"),
-                postfix="_processed_by_tesseract",
+                input_file=Path(f"{input_image_path}_debug.pdf"),
+                postfix="_segmented_by_tesseract",
             )
 
         with Path(f"{input_image_path}.tsv").open(encoding="utf-8") as fh:
@@ -168,12 +168,13 @@ def _tsv_to_list_of_dict(tsv_lines: list[list[str]]) -> list[dict]:
     words: list[dict] = [{} for _ in range(len(tsv_lines))]
     for idx, line in enumerate(tsv_lines):
         for field, value in zip(fields, line, strict=False):
-            if field == "text":
-                words[idx][field] = value
-            elif field == "conf":
-                words[idx][field] = float(value)
-            else:
-                words[idx][field] = int(value)
+            match field:
+                case "text":
+                    words[idx][field] = value
+                case "conf":
+                    words[idx][field] = float(value)
+                case _:
+                    words[idx][field] = int(value)
 
     # Filter empty words
     words = [w for w in words if "text" in w]

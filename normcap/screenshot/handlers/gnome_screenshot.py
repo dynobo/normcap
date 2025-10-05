@@ -15,9 +15,21 @@ install_instructions = (
     "Install the package `gnome-screenshot` using your system's package manager."
 )
 
+# ONHOLD: Remove gnome-screenshot handler on EOL of Gnome 48
+# It got removed from gnome core apps and therefore lost trusted access to screenshot.
+LAST_GNOME_VERSION_SUPPORTED = 48
+
 
 def is_compatible() -> bool:
-    return system_info.is_gnome() and not system_info.is_flatpak()
+    if not system_info.is_gnome() or system_info.is_flatpak():
+        return False
+
+    if gnome_version := system_info.get_gnome_version():
+        gnome_major = int(gnome_version.split(".")[0])
+        return gnome_major <= LAST_GNOME_VERSION_SUPPORTED
+
+    # Assume the best and try this handler
+    return True
 
 
 def is_installed() -> bool:

@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-14, macos-15, windows-2022, windows-2025, ubuntu-22.04, ubuntu-24.04]
+        os: [macos-14, macos-15, windows-2022, windows-2025, ubuntu-22.04, ubuntu-24.04]
     steps:
       # Setup environment
       - uses: actions/checkout@v5.0.0
@@ -118,7 +118,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-15, windows-2025, ubuntu-24.04]
+        os: [macos-14, macos-15, windows-2025, ubuntu-24.04]
     steps:
       - uses: actions/checkout@v5.0.0
 
@@ -162,7 +162,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-15, windows-2025, ubuntu-24.04]
+        os: [macos-14, macos-15, windows-2025, ubuntu-24.04]
     steps:
       - uses: actions/checkout@v5.0.0
 
@@ -245,7 +245,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-15, windows-2025, ubuntu-24.04]
+        os: [macos-14, macos-15, windows-2025, ubuntu-24.04]
     steps:
       - uses: actions/checkout@v5.0.0
 
