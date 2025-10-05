@@ -152,8 +152,8 @@ def _run_tesseract(
                 postfix="_processed_by_tesseract",
             )
             _move_to_normcap_temp_dir(
-                input_file=Path(f"{input_image_path}.png_debug.pdf"),
-                postfix="_processed_by_tesseract",
+                input_file=Path(f"{input_image_path}_debug.pdf"),
+                postfix="_segmented_by_tesseract",
             )
 
         with Path(f"{input_image_path}.tsv").open(encoding="utf-8") as fh:

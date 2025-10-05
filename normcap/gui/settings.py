@@ -217,13 +217,25 @@ class Settings(QtCore.QSettings):
                 self.setValue(key, value)
 
     def _update_from_init_settings(self) -> None:
+        non_persisted_settings = {
+            "reset",
+            "verbosity",
+            "log-file",
+            "version",
+            "cli-mode",
+            "background-mode",
+            "screenshot-handler",
+            "clipboard-handler",
+            "notification-handler",
+            "dbus-activation",
+        }
         for key, value in self.init_settings.items():
             # TODO: Migrate setting keys to underscore instead minus
             setting_key = key.replace("_", "-")
             if self.contains(setting_key):
                 if value is not None:
                     self.setValue(setting_key, value)
-            elif setting_key in {"reset", "verbosity"}:
+            elif setting_key in non_persisted_settings:
                 continue
             else:
                 logger.debug(
