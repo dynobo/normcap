@@ -6,11 +6,11 @@ from jeepney.io.blocking import Proxy, open_dbus_connection
 from jeepney.wrappers import MessageGenerator, new_method_call
 
 from normcap import app_id
-from normcap.notification import system_info
 from normcap.notification.models import (
     ACTION_NAME_NOTIFICATION_CLICKED,
     NotificationAction,
 )
+from normcap.platform import system_info
 
 logger = logging.getLogger(__name__)
 

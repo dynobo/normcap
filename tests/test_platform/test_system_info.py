@@ -1,11 +1,12 @@
 import logging
 import sys
+from decimal import DivisionByZero
 from pathlib import Path
 
 import pytest
 
-from normcap.gui import system_info
-from normcap.gui.models import DesktopEnvironment, Screen
+from normcap.platform import system_info
+from normcap.platform.models import DesktopEnvironment, Screen
 
 
 def test_display_manager_is_wayland(monkeypatch):
@@ -78,6 +79,7 @@ def test_desktop_environment_gnome(monkeypatch, envs, expected_environment):
 
 def test_is_briefcase_package():
     assert not system_info.is_briefcase_package()
+    system_info.is_briefcase_package.cache_clear()
 
     temp_app_packages = Path(__file__).resolve().parents[3] / "app_packages"
     is_briefcase = False
@@ -92,6 +94,7 @@ def test_is_briefcase_package():
 
 def test_is_flatpak(monkeypatch):
     assert not system_info.is_flatpak()
+    system_info.is_flatpak.cache_clear()
 
     with monkeypatch.context() as m:
         m.setenv("FLATPAK_ID", "123")
@@ -274,3 +277,153 @@ def test_get_tessdata_path_warn_on_win32(monkeypatch, caplog):
 
     finally:
         data_file.unlink()
+
+
+@pytest.mark.parametrize(
+    ("xdg_session_type", "wayland_display", "platform", "expected_result"),
+    [
+        ("wayland", "wayland", "linux", True),
+        ("wayland", "", "linux", True),
+        ("", "wayland", "linux", True),
+        ("", "", "linux", False),
+        ("wayland", "wayland", "win32", False),
+        ("wayland", "wayland", "darwin", False),
+    ],
+)
+def test_os_has_wayland_display_manager(
+    monkeypatch, xdg_session_type, wayland_display, platform, expected_result
+):
+    monkeypatch.setenv("XDG_SESSION_TYPE", xdg_session_type)
+    monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
+    monkeypatch.setattr(system_info.sys, "platform", platform)
+
+    assert system_info.has_wayland_display_manager() == expected_result
+
+
+@pytest.mark.parametrize(
+    ("platform", "desktop", "expected_result"),
+    [
+        ("linux", "awesome", True),
+        ("linux", "gnome", False),
+        ("win32", "awesome", False),
+        ("darwin", "awesome", False),
+    ],
+)
+def test_os_has_awesome_wm(monkeypatch, platform, desktop, expected_result):
+    with monkeypatch.context() as m:
+        m.setenv("XDG_CURRENT_DESKTOP", desktop)
+        m.setattr(system_info.sys, "platform", platform)
+        assert system_info.has_awesome_wm() == expected_result
+
+
+@pytest.mark.parametrize(
+    ("platform", "xdg_desktop", "gnome_desktop", "gnome_shell", "expected_result"),
+    [
+        ("linux", "gnome", "gnome", "/usr/bin/gnome-shell", "33.3.0"),
+        ("linux", "kde", "", "/usr/bin/gnome-shell", ""),
+        ("darwin", "", "", "", ""),
+        ("darwin", "", "", "/usr/bin/gnome-shell", ""),
+        ("win32", "", "", "", ""),
+    ],
+)
+def test_get_gnome_version(
+    platform, xdg_desktop, gnome_desktop, gnome_shell, expected_result, monkeypatch
+):
+    monkeypatch.setenv("XDG_CURRENT_DESKTOP", xdg_desktop)
+    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", gnome_desktop)
+    monkeypatch.setattr(system_info.sys, "platform", platform)
+    monkeypatch.setattr(
+        system_info.shutil,
+        "which",
+        lambda x: gnome_shell if x == "gnome-shell" else None,
+    )
+    monkeypatch.setattr(
+        system_info.subprocess, "check_output", lambda *_, **__: "GNOME Shell 33.3.0"
+    )
+
+    assert system_info.get_gnome_version() == expected_result
+
+
+# TODO: Parametrize tests?
+def test_display_manager_is_wayland_on_windows(monkeypatch):
+    monkeypatch.setattr(system_info.sys, "platform", "win32")
+    is_wayland = system_info.has_wayland_display_manager()
+    assert is_wayland is False
+
+
+def test_display_manager_is_wayland_on_linux_xdg_session_type(monkeypatch):
+    monkeypatch.setattr(system_info.sys, "platform", "linux")
+
+    monkeypatch.setenv("XDG_SESSION_TYPE", "wayland")
+    monkeypatch.setenv("WAYLAND_DISPLAY", "")
+    is_wayland = system_info.has_wayland_display_manager()
+    system_info.has_wayland_display_manager.cache_clear()
+    assert is_wayland is True
+
+    monkeypatch.setenv("XDG_SESSION_TYPE", "")
+    monkeypatch.setenv("WAYLAND_DISPLAY", "wayland-0")
+    is_wayland = system_info.has_wayland_display_manager()
+    system_info.has_wayland_display_manager.cache_clear()
+    assert is_wayland is True
+
+    monkeypatch.setenv("XDG_SESSION_TYPE", "gnome-shell")
+    monkeypatch.setenv("WAYLAND_DISPLAY", "")
+    is_wayland = system_info.has_wayland_display_manager()
+    assert is_wayland is False
+
+
+def test_gnome_version_on_windows(monkeypatch):
+    monkeypatch.setattr(system_info.sys, "platform", "win32")
+    version = system_info.get_gnome_version()
+    assert not version
+
+
+def test_gnome_version_on_linux_from_cmd(monkeypatch):
+    monkeypatch.setattr(system_info.sys, "platform", "linux")
+    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
+    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "wayland")
+    monkeypatch.setattr(system_info.shutil, "which", lambda _: True)
+    system_info.get_gnome_version.cache_clear()
+    version = system_info.get_gnome_version()
+    assert not version
+
+    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
+    monkeypatch.setattr(
+        system_info.subprocess,
+        "check_output",
+        lambda *args, **kwargs: "GNOME Shell 33.3\n",
+    )
+    system_info.get_gnome_version.cache_clear()
+    version = system_info.get_gnome_version()
+    assert str(version) == "33.3"
+
+
+def test_gnome_version_on_linux_without_gnome_shell(monkeypatch):
+    monkeypatch.setattr(system_info.sys, "platform", "linux")
+    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
+    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
+    system_info.get_gnome_version.cache_clear()
+    version = system_info.get_gnome_version()
+    assert not version
+
+    monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "some-id")
+    monkeypatch.setattr(system_info.shutil, "which", lambda _: False)
+    system_info.get_gnome_version.cache_clear()
+    version = system_info.get_gnome_version()
+    assert not version
+
+
+def test_gnome_version_on_linux_unknown_exception(monkeypatch, caplog):
+    monkeypatch.setattr(system_info.sys, "platform", "linux")
+    monkeypatch.setattr(system_info.shutil, "which", lambda _: True)
+
+    def mocked_subprocess(*args, **kwargs):
+        raise DivisionByZero()
+
+    monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
+    monkeypatch.setattr(system_info.subprocess, "check_output", mocked_subprocess)
+    caplog.set_level(logging.WARNING)
+
+    version = system_info.get_gnome_version()
+    assert not version
+    assert "exception when trying to get gnome version" in caplog.text.lower()

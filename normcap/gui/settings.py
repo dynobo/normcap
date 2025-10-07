@@ -4,7 +4,7 @@ from PySide6 import QtCore
 
 from normcap import __version__
 from normcap.gui.models import Setting
-from normcap.gui.system_info import config_directory, is_portable_windows_package
+from normcap.platform.system_info import config_directory, is_portable_windows_package
 
 logger = logging.getLogger(__name__)
 

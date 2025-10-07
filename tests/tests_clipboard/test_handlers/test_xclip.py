@@ -5,8 +5,8 @@ import uuid
 
 import pytest
 
-from normcap.clipboard import system_info
 from normcap.clipboard.handlers import xclip
+from normcap.platform import system_info
 
 
 @pytest.mark.parametrize(

@@ -3,7 +3,7 @@ import subprocess
 import pytest
 from PySide6 import QtCore, QtGui
 
-from normcap.screenshot import system_info
+from normcap.platform import system_info
 from normcap.screenshot.handlers import grim
 
 

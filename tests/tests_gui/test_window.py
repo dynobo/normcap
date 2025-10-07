@@ -1,7 +1,8 @@
 import pytest
 from PySide6 import QtCore, QtGui
 
-from normcap.gui import models, window
+from normcap.gui import window
+from normcap.platform.models import Screen
 
 
 @pytest.mark.gui
@@ -19,7 +20,7 @@ def test_window_get_scale_factor(
     # GIVEN a screenshot of a certain size
     #   and a certain (Qt) screen size
     image = QtGui.QImage(QtCore.QSize(*img_size), QtGui.QImage.Format.Format_RGB32)
-    screen = models.Screen(
+    screen = Screen(
         device_pixel_ratio=1.0,
         left=0,
         top=0,
@@ -43,7 +44,7 @@ def test_window_get_scale_factor(
 def test_window_get_scale_factor_raises_if_missing(qtbot, temp_settings):
     # GIVEN a certain (Qt) screen size
     image = QtGui.QImage(QtCore.QSize(640, 480), QtGui.QImage.Format.Format_RGB32)
-    screen = models.Screen(
+    screen = Screen(
         device_pixel_ratio=1.0,
         left=0,
         top=0,
@@ -71,7 +72,7 @@ def test_window_esc_key_pressed(qtbot, temp_settings):
     #   with a screenshot of a certain size
     #   on a certain (Qt) screen size
     image = QtGui.QImage(600, 400, QtGui.QImage.Format.Format_RGB32)
-    screen = models.Screen(
+    screen = Screen(
         device_pixel_ratio=1.0,
         left=0,
         top=0,
@@ -97,7 +98,7 @@ def test_window_esc_key_pressed_while_selecting(qtbot, temp_settings):
     #   with a screenshot of a certain size
     #   on a certain (Qt) screen size
     image = QtGui.QImage(600, 400, QtGui.QImage.Format.Format_RGB32)
-    screen = models.Screen(
+    screen = Screen(
         device_pixel_ratio=1.0,
         left=0,
         top=0,

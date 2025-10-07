@@ -19,11 +19,10 @@ if platform.system() == "linux":
 import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from normcap.clipboard import system_info as clipboard_system_info
 from normcap.detection.ocr.models import OEM, PSM, OcrResult, TessArgs
 from normcap.detection.ocr.transformers import email_address, url
-from normcap.gui import application, menu_button, system_info
-from normcap.screenshot import system_info as screengrab_system_info
+from normcap.gui import application, menu_button
+from normcap.platform import system_info
 
 
 @pytest.fixture(scope="session")
@@ -51,14 +50,27 @@ def qapp_args():
 
 @pytest.fixture(autouse=True)
 def _clear_caches():
-    screengrab_system_info.get_gnome_version.cache_clear()
-    clipboard_system_info.get_gnome_version.cache_clear()
-    url._extract_urls.cache_clear()
-    email_address._extract_emails.cache_clear()
-    system_info.desktop_environment.cache_clear()
-    system_info.display_manager_is_wayland.cache_clear()
-    system_info.get_tesseract_bin_path.cache_clear()
-    system_info.config_directory.cache_clear()
+    cached_funcs = [
+        url._extract_urls,
+        email_address._extract_emails,
+        system_info.desktop_environment,
+        system_info.display_manager_is_wayland,
+        system_info.get_tesseract_bin_path,
+        system_info.config_directory,
+        system_info.is_briefcase_package,
+        system_info.is_appimage_package,
+        system_info.is_flatpak,
+        system_info.is_packaged,
+        system_info.is_kde,
+        system_info.is_gnome,
+        system_info.get_tessdata_path,
+        system_info.has_wlroots_compositor,
+        system_info.has_wayland_display_manager,
+        system_info.get_gnome_version,
+        system_info.has_awesome_wm,
+    ]
+    for func in cached_funcs:
+        func.cache_clear()
 
 
 @pytest.fixture
@@ -71,14 +83,14 @@ def temp_settings(qapp):
 @pytest.fixture
 def menu_btn(temp_settings):
     return menu_button.MenuButton(
-        settings=temp_settings, language_manager=True, installed_languages=["eng"]
+        settings=temp_settings, show_language_manager=True, installed_languages=["eng"]
     )
 
 
 @pytest.fixture
 def menu_btn_without_lang_man(temp_settings):
     return menu_button.MenuButton(
-        settings=temp_settings, language_manager=False, installed_languages=["eng"]
+        settings=temp_settings, show_language_manager=False, installed_languages=["eng"]
     )
 
 

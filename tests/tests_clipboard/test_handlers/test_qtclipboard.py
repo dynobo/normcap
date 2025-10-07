@@ -3,8 +3,8 @@ import uuid
 
 import pytest
 
-from normcap.clipboard import system_info
 from normcap.clipboard.handlers import qtclipboard
+from normcap.platform import system_info
 
 real_import = builtins.__import__
 

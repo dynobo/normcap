@@ -8,7 +8,7 @@ from types import TracebackType
 from PySide6 import QtCore
 
 from normcap import __version__
-from normcap.gui import system_info
+from normcap.platform import system_info
 
 logger = logging.getLogger(__name__)
 

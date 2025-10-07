@@ -18,10 +18,10 @@ from typing import cast
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import positioning
-from normcap.gui import system_info
 from normcap.gui.menu_button import MenuButton
-from normcap.gui.models import DesktopEnvironment, Rect, Screen
 from normcap.gui.settings import Settings
+from normcap.platform import system_info
+from normcap.platform.models import DesktopEnvironment, Rect, Screen
 
 logger = logging.getLogger(__name__)
 
@@ -220,12 +220,10 @@ class Window(QtWidgets.QMainWindow):
         self.image_container.setPixmap(pixmap)
 
     def _create_menu_button(self) -> QtWidgets.QWidget:
-        if self.debug_language_manager:
-            system_info.is_briefcase_package = lambda: True
-
         menu_button = MenuButton(
             settings=self.settings,
-            language_manager=system_info.is_packaged(),
+            show_language_manager=self.debug_language_manager
+            or system_info.is_packaged(),
             installed_languages=self.installed_languages,
         )
         return menu_button
