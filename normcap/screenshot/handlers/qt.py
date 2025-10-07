@@ -2,7 +2,7 @@ import logging
 
 from PySide6 import QtGui, QtWidgets
 
-from normcap.screenshot import system_info
+from normcap.platform import system_info
 
 logger = logging.getLogger(__name__)
 

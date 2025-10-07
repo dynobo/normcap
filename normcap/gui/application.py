@@ -17,18 +17,19 @@ from normcap.gui import (
     introduction,
     notification_utils,
     permissions_dialog,
-    system_info,
     utils,
 )
 from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
-from normcap.gui.models import Days, Rect, Screen, Seconds
+from normcap.gui.models import Days, Seconds
 from normcap.gui.settings import Settings
 from normcap.gui.socket_server import SocketServer
 from normcap.gui.tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
 from normcap.notification.models import ACTION_NAME_NOTIFICATION_CLICKED
+from normcap.platform import system_info
+from normcap.platform.models import Rect, Screen
 
 logger = logging.getLogger(__name__)
 
@@ -307,9 +308,6 @@ class NormcapApp(QtWidgets.QApplication):
     @QtCore.Slot()
     def _start_processing(self, rect: Rect, screen_idx: int) -> None:
         self._close_windows()
-
-        if self.tray:
-            self.tray.show_processing_icon()
 
         QtCore.QTimer.singleShot(
             20, lambda: self._run_detection(rect=rect, screen_idx=screen_idx)

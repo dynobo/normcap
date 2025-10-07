@@ -9,8 +9,8 @@ from PySide6 import QtWidgets
 
 from normcap import argparser, environment
 from normcap import logger_config as logger_
-from normcap.gui import system_info
 from normcap.gui.application import NormcapApp
+from normcap.platform import system_info
 
 logger = logging.getLogger(__name__)
 

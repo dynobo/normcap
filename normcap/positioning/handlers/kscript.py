@@ -9,8 +9,8 @@ from jeepney.io.blocking import Proxy, open_dbus_connection
 from jeepney.wrappers import Message, MessageGenerator, new_method_call
 from PySide6 import QtWidgets
 
-from normcap.gui import system_info
-from normcap.gui.models import DesktopEnvironment, Screen
+from normcap.platform import system_info
+from normcap.platform.models import DesktopEnvironment, Screen
 
 logger = logging.getLogger(__name__)
 

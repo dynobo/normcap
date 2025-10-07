@@ -3,8 +3,8 @@ import shutil
 import subprocess
 import sys
 
-from normcap.notification import system_info
 from normcap.notification.models import NotificationAction
+from normcap.platform import system_info
 
 logger = logging.getLogger(__name__)
 

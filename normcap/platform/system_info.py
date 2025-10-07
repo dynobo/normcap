@@ -3,7 +3,9 @@
 import functools
 import logging
 import os
+import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 from platform import python_version
@@ -12,8 +14,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as pyside_version
 
 from normcap import __version__, app_id
-from normcap.gui.localization import translate
-from normcap.gui.models import DesktopEnvironment, Screen
+from normcap.platform.models import DesktopEnvironment, Screen
 
 logger = logging.getLogger(__name__)
 
@@ -88,19 +89,18 @@ def is_portable_windows_package() -> bool:
     return portable_file.is_file()
 
 
+@functools.cache
 def is_briefcase_package() -> bool:
     app_path = Path(__file__).resolve().parents[2]
     return app_path.is_dir() and (app_path.parent / "app_packages").is_dir()
 
 
+@functools.cache
 def is_appimage_package() -> bool:
     return os.getenv("APPIMAGE") is not None
 
 
-def is_flatpak() -> bool:
-    return os.getenv("FLATPAK_ID") is not None
-
-
+@functools.cache
 def is_packaged() -> bool:
     return is_briefcase_package() or is_flatpak()
 
@@ -193,6 +193,7 @@ def get_tesseract_bin_path(is_briefcase_package: bool) -> Path:
     )
 
 
+@functools.cache
 def get_tessdata_path(config_directory: Path, is_packaged: bool) -> Path | None:
     """Decide which path for tesseract language files to use."""
     if is_packaged:
@@ -208,6 +209,130 @@ def get_tessdata_path(config_directory: Path, is_packaged: bool) -> Path | None:
         logger.warning("Missing tessdata directory. (Is TESSDATA_PREFIX variable set?)")
 
     return None
+
+
+@functools.cache
+def is_gnome() -> bool:
+    if sys.platform != "linux" and "bsd" not in sys.platform:
+        return False
+
+    xdg_current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+    gnome_desktop_session_id = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
+
+    if gnome_desktop_session_id == "this-is-deprecated":
+        gnome_desktop_session_id = ""
+
+    return bool(gnome_desktop_session_id) or ("gnome" in xdg_current_desktop)
+
+
+@functools.cache
+def is_kde() -> bool:
+    if sys.platform != "linux" and "bsd" not in sys.platform:
+        return False
+
+    desktop_session = os.environ.get("DESKTOP_SESSION", "").lower()
+    kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()
+    return bool(kde_full_session) or ("kde-plasma" in desktop_session)
+
+
+@functools.cache
+def is_flatpak() -> bool:
+    if sys.platform != "linux" and "bsd" not in sys.platform:
+        return False
+
+    return os.getenv("FLATPAK_ID") is not None
+
+
+@functools.cache
+def has_awesome_wm() -> bool:
+    if sys.platform != "linux" and "bsd" not in sys.platform:
+        return False
+
+    return "awesome" in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+
+
+@functools.cache
+def has_wlroots_compositor() -> bool:
+    """Check if wlroots compositor is running, as grim only supports wlroots.
+
+    Certainly not wlroots based are: KDE, GNOME and Unity.
+    Others are likely wlroots based.
+    """
+    if not has_wayland_display_manager():
+        return False
+
+    kde_full_session = os.environ.get("KDE_FULL_SESSION", "").lower()
+    xdg_current_desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+    desktop_session = os.environ.get("DESKTOP_SESSION", "").lower()
+    gnome_desktop_session_id = os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
+    if gnome_desktop_session_id == "this-is-deprecated":
+        gnome_desktop_session_id = ""
+
+    return not (
+        gnome_desktop_session_id
+        or "gnome" in xdg_current_desktop
+        or kde_full_session
+        or "kde-plasma" in desktop_session
+        or "unity" in xdg_current_desktop
+    )
+
+
+@functools.cache
+def has_wayland_display_manager() -> bool:
+    """Identify relevant display managers (Linux)."""
+    if sys.platform != "linux" and "bsd" not in sys.platform:
+        return False
+
+    xdg_session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
+    has_wayland_display_env = bool(os.environ.get("WAYLAND_DISPLAY", ""))
+    return "wayland" in xdg_session_type or has_wayland_display_env
+
+
+def is_dbus_service_running() -> bool:
+    # TODO: Improve dbus service check.
+    # E.g. try to call the following async (to still be able to process the request)
+    # dbus-send --session --print-reply --dest=com.github.dynobo.normcap_dev \
+    #    /com/github/dynobo/normcap_dev org.freedesktop.DBus.Introspectable.Introspect
+    app = QtGui.QGuiApplication.instance()
+    if not app:
+        return False
+
+    service = getattr(app, "dbus_service", None)
+    return getattr(service, "_registered", False)
+
+
+@functools.cache
+def get_gnome_version() -> str:
+    """Detect Gnome version of current session.
+
+    Returns:
+        Version string or empty string if not detected.
+    """
+    if sys.platform != "linux" and "bsd" not in sys.platform:
+        return ""
+
+    if (
+        not os.environ.get("GNOME_DESKTOP_SESSION_ID", "")
+        and "gnome" not in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+    ):
+        return ""
+
+    if not shutil.which("gnome-shell"):
+        return ""
+
+    try:
+        output = subprocess.check_output(
+            ["gnome-shell", "--version"],  # noqa: S607
+            shell=False,
+            text=True,
+        )
+        if result := re.search(r"\s+([\d\.]+)", output.strip()):
+            gnome_version = result.groups()[0]
+    except Exception as e:
+        logger.warning("Exception when trying to get gnome version from cli %s", e)
+        return ""
+    else:
+        return gnome_version
 
 
 def to_dict() -> dict:
@@ -226,7 +351,6 @@ def to_dict() -> dict:
         "pyside6_version": pyside_version,
         "qt_version": QtCore.qVersion(),
         "qt_library_path": ", ".join(QtCore.QCoreApplication.libraryPaths()),
-        "locale": translate.info().get("language", "DEFAULT"),
         "config_directory": config_directory(),
         "resources_path": get_resources_path(),
         "tesseract_path": get_tesseract_bin_path(

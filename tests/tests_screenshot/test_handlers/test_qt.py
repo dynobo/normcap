@@ -1,7 +1,7 @@
 import pytest
 from PySide6 import QtGui
 
-from normcap.screenshot import system_info
+from normcap.platform import system_info
 from normcap.screenshot.handlers.qt import capture
 
 

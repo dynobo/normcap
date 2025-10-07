@@ -1,7 +1,7 @@
 import logging
 from typing import Any, cast
 
-from normcap.clipboard import system_info
+from normcap.platform import system_info
 
 try:
     from PySide6 import QtGui

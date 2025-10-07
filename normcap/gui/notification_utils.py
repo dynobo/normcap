@@ -14,9 +14,9 @@ from normcap.detection.models import (
     TextDetector,
     TextType,
 )
-from normcap.gui import system_info
 from normcap.gui.localization import _, translate
 from normcap.notification.models import NotificationAction
+from normcap.platform import system_info
 
 logger = logging.getLogger(__name__)
 

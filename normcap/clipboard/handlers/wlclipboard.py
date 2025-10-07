@@ -3,7 +3,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from normcap.clipboard import system_info
+from normcap.platform import system_info
 
 logger = logging.getLogger(__name__)
 

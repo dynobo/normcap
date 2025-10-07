@@ -4,8 +4,8 @@ import logging
 
 from PySide6 import QtWidgets
 
-from normcap.gui.constants import URLS
-from normcap.gui.models import Screen
+from normcap.gui.constants import URLS  # TODO: Remove
+from normcap.platform.models import Screen
 from normcap.positioning.handlers import kscript, window_calls
 from normcap.positioning.models import Handler, HandlerProtocol
 

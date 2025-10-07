@@ -3,7 +3,7 @@ from importlib import resources
 from pathlib import Path
 
 from normcap import environment
-from normcap.gui import system_info
+from normcap.platform import system_info
 
 
 def test_prepare_env():

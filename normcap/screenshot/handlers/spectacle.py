@@ -6,7 +6,7 @@ from pathlib import Path
 
 from PySide6 import QtGui
 
-from normcap.screenshot import system_info
+from normcap.platform import system_info
 from normcap.screenshot.post_processing import split_full_desktop_to_screens
 
 logger = logging.getLogger(__name__)

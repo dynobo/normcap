@@ -4,7 +4,7 @@ import shutil
 import signal
 from pathlib import Path
 
-from normcap.gui import system_info
+from normcap.platform import system_info
 
 logger = logging.getLogger(__name__)
 

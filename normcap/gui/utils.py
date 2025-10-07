@@ -5,7 +5,7 @@ from pathlib import Path
 
 from PySide6 import QtCore, QtGui
 
-from normcap.gui.models import Rect
+from normcap.platform.models import Rect
 
 logger = logging.getLogger(__name__)
 
