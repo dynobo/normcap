@@ -7,14 +7,16 @@ here.
 
 import logging
 from enum import Enum
+from typing import TypeAlias
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap.gui import resources  # noqa: F401 (loads resources!)
 from normcap.gui.localization import _
-from normcap.gui.models import Seconds
 
 logger = logging.getLogger(__name__)
+
+Seconds: TypeAlias = float
 
 
 class Icon(Enum):

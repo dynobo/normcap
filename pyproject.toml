@@ -28,8 +28,8 @@ classifiers = [
   "Operating System :: MacOS",
 ]
 dependencies = [
-  "shiboken6==6.9.3",
-  "PySide6-Essentials==6.9.3",
+  "shiboken6==6.10.0",
+  "PySide6-Essentials==6.10.0",
   "jeepney==0.9.0",
   "zxing-cpp==2.3.0",
 ]
@@ -91,7 +91,13 @@ locales-compile = "python bundle/l10n.py"
 locales-update = "python bundle/l10n.py --update-all"
 locales-create = "python bundle/l10n.py --create-new"
 
-security = "pip-audit"
+icons-compile = [
+  { cmd = "pyside6-rcc normcap/resources/icons/resources.qrc -o normcap/gui/resources.py" },
+  { cmd = "sed -i '1i # ruff: noqa' normcap/gui/resources.py" },
+]
+
+# ONHOLD Remove vulnerability ignore after release of pip > 25.2
+security = "pip-audit --ignore-vuln GHSA-4xh5-x5gv-qwph"
 
 version = "tbump"
 
@@ -117,8 +123,8 @@ format = [
   { cmd = "mdformat --align-semantic-breaks-in-lists --end-of-line keep" },
 ]
 chart = [
-  { cmd = "pydeps normcap --max-bacon=2 -o=pydeps.png -T=png -x='*.models'" },
-  { cmd = "pydeps normcap --max-bacon=1 -o=pydeps_internal.png -T=png" },
+  { cmd = "pydeps normcap --max-bacon=2 -o=pydeps.xdot -T=xdot" },
+  { cmd = "pydeps normcap --max-bacon=1 -o=pydeps_internal.xdot -T=xdot" },
 ]
 bundle = [ { ref = "locales-compile" }, { cmd = "python bundle/build.py" } ]
 bundle-dev = [
