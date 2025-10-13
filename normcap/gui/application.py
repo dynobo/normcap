@@ -5,7 +5,7 @@ import logging
 import os
 import sys
 import time
-from typing import Any
+from typing import Any, TypeAlias
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -21,7 +21,6 @@ from normcap.gui import (
 )
 from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.language_manager import LanguageManager
-from normcap.gui.models import Days, Seconds
 from normcap.gui.settings import Settings
 from normcap.gui.socket_server import SocketServer
 from normcap.gui.tray import SystemTray
@@ -32,6 +31,9 @@ from normcap.platform import system_info
 from normcap.platform.models import Rect, Screen
 
 logger = logging.getLogger(__name__)
+
+Days: TypeAlias = int
+Seconds: TypeAlias = float
 
 
 class Communicate(QtCore.QObject):
@@ -49,8 +51,8 @@ class NormcapApp(QtWidgets.QApplication):
 
     # Used for singleton:
 
-    _EXIT_DELAY: Seconds = 5  # To keep tray icon visible for a while
-    _UPDATE_CHECK_INTERVAL: Days = 7
+    _EXIT_DELAY_SECONDS: float = 5  # To keep tray icon visible for a while
+    _UPDATE_CHECK_INTERVAL_DAYS: int = 7
 
     # Only for testing purposes: forcefully enables language manager in settings menu
     # (Normally language manager is only available in pre-build version)
@@ -268,7 +270,7 @@ class NormcapApp(QtWidgets.QApplication):
     def _is_time_for_update_check(self) -> bool:
         """Test if the time of last update exceeds the days of update interval."""
         seconds_per_day = 60 * 60 * 24
-        update_interval_seconds = seconds_per_day * self._UPDATE_CHECK_INTERVAL
+        update_interval_seconds = seconds_per_day * self._UPDATE_CHECK_INTERVAL_DAYS
 
         cutoff_date = time.gmtime(time.time() - update_interval_seconds)
         cutoff_date_str = time.strftime(constants.DATE_FORMAT, cutoff_date)
@@ -362,7 +364,7 @@ class NormcapApp(QtWidgets.QApplication):
         if self.settings.value("notification", type=bool):
             self._send_notification(detection_results=results)
 
-        self._minimize_to_tray_or_exit(delay=self._EXIT_DELAY)
+        self._minimize_to_tray_or_exit(delay=self._EXIT_DELAY_SECONDS)
         self.tray.show_completion_icon()
 
     def _copy_to_clipboard(self, text: str) -> None:

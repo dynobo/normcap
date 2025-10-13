@@ -2,6 +2,7 @@
 # Edit at https://www.gitignore.io/?templates=python
 
 # Own
+*.xdot
 .virtualenvs/
 .vscode/
 .ruff_cache/
