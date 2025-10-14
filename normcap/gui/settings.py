@@ -104,6 +104,16 @@ DEFAULT_SETTINGS = (
         nargs=None,
     ),
     Setting(
+        key="strip-whitespaces",
+        flag="",
+        type_=_parse_str_to_bool,
+        value=False,
+        help_="Strip whitespaces and line breaks in Chinese text recognition.",
+        choices=(True, False),
+        cli_arg=True,
+        nargs=None,
+    ),
+    Setting(
         key="current-version",
         flag="_c",
         type_=str,

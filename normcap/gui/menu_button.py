@@ -300,6 +300,26 @@ class MenuButton(QtWidgets.QToolButton):
         )
         menu.addAction(action)
 
+
+        # Smart whitespace stripping for CJK text
+        # L10N: Entry in main menu's 'Post-processing' section
+        action = QtGui.QAction(_("Strip whitespaces (Smart)"), postprocessing_group)
+        action.setObjectName("strip-whitespaces")
+        action.setCheckable(True)
+        action.setChecked(bool(self.settings.value("strip-whitespaces", type=bool)))
+        # L10N: Tooltip of main menu's 'strip whitespaces' entry. Use <56 chars p. line.
+        action.setToolTip(
+            _(
+                "Smart removal of unwanted whitespace in CJK text:\n"
+                "• Remove spaces between CJK characters\n"
+                "• Keep spaces between English words\n"
+                "• Remove soft line breaks (forced by layout)\n"
+                "• Keep hard line breaks (after punctuation)\n"
+                "Works well for mixed Chinese-English text."
+            )
+        )
+        menu.addAction(action)
+
     def _add_detection_section(self, menu: QtWidgets.QMenu) -> None:
         detection_group = QtGui.QActionGroup(menu)
         detection_group.setObjectName("detection_group")

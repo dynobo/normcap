@@ -295,6 +295,7 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
     @QtCore.Slot()
     def _trigger_detect(self, rect: Rect, screen_idx: int) -> None:
         """Crop screenshot, perform content recognition on it and process result."""
+        # Log image identity to detect if we're using stale screenshots
         cropped_screenshot = utils.crop_image(
             image=self.screens[screen_idx].screenshot, rect=rect
         )
@@ -318,18 +319,34 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
         detection_mode = DetectionMode(0)
         if bool(self.settings.value("detect-codes", type=bool)):
             detection_mode |= DetectionMode.CODES
+        
+        # Defensive reading of strip-whitespaces setting
+        _strip_ws_raw = self.settings.value("strip-whitespaces", type=bool)
+        _strip_ws = bool(_strip_ws_raw)
+        logger.debug(
+            "strip-whitespaces setting: raw=%r (type=%s), converted=%r",
+            _strip_ws_raw, type(_strip_ws_raw).__name__, _strip_ws
+        )
         if bool(self.settings.value("detect-text", type=bool)):
             detection_mode |= DetectionMode.TESSERACT
 
-        result = detector.detect(
-            image=cropped_screenshot,
-            tesseract_bin_path=tesseract_bin_path,
-            tessdata_path=tessdata_path,
-            language=self.settings.value("language"),
-            detect_mode=detection_mode,
-            parse_text=bool(self.settings.value("parse-text", type=bool)),
-        )
+        try:
+            result = detector.detect(
+                image=cropped_screenshot,
+                tesseract_bin_path=tesseract_bin_path,
+                tessdata_path=tessdata_path,
+                language=self.settings.value("language"),
+                detect_mode=detection_mode,
+                parse_text=bool(self.settings.value("parse-text", type=bool)),
+                strip_whitespaces=_strip_ws,
+            )
+        except Exception as exc:
+            # Return empty result on exception
+            from normcap.detection.models import DetectionResult, TextType, TextDetector
+            result = DetectionResult(text="", text_type=TextType.NONE, detector=TextDetector.NONE)
 
+
+        # Defensive check: ensure result.text is actually a string
         if result.text and self.cli_mode:
             self._print_to_stdout_and_exit(text=result.text)
         elif result.text:

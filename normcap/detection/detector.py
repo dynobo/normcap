@@ -22,6 +22,7 @@ def detect(
     language: str,
     detect_mode: DetectionMode,
     parse_text: bool,
+    strip_whitespaces: bool,
 ) -> DetectionResult:
     ocr_result = None
     codes_result = None
@@ -44,6 +45,7 @@ def detect(
             tessdata_path=tessdata_path,
             parse=parse_text,
             resize_factor=2,
+            strip_whitespaces=strip_whitespaces,
             padding_size=80,
         )
         logger.debug("OCR detection took %s s", f"{time.time() - start_time:.4f}.")

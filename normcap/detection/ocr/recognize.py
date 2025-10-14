@@ -38,6 +38,7 @@ def get_text_from_image(
     tesseract_bin_path: PathLike,
     tessdata_path: PathLike | str | None = None,
     parse: bool = True,
+    strip_whitespaces: bool = False,
     resize_factor: float | None = None,
     padding_size: int | None = None,
 ) -> DetectionResult:
@@ -67,13 +68,17 @@ def get_text_from_image(
     logger.debug("OCR detections:\n%s", ",\n".join(str(w) for w in result.words))
 
     if not parse:
+        # Even without parsing, apply smart whitespace stripping if enabled
+        raw_text = result.text
+        if strip_whitespaces and transformer._should_strip_whitespaces(tess_args.lang):
+            raw_text = transformer._strip_chinese_whitespaces(raw_text)
         return DetectionResult(
-            text=result.text,
+            text=raw_text,
             text_type=TextType.SINGLE_LINE,
             detector=TextDetector.OCR_RAW,
         )
 
-    result = transformer.apply(result)
+    result = transformer.apply(result, strip_whitespaces=strip_whitespaces)
     logger.debug("Parsed text:\n%s", result.parsed)
     text_type = (
         TextType[result.best_scored_transformer.value]
