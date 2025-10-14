@@ -328,7 +328,9 @@ class SystemTray(QtWidgets.QSystemTrayIcon):
             language=self.settings.value("language"),
             detect_mode=detection_mode,
             parse_text=bool(self.settings.value("parse-text", type=bool)),
+            strip_whitespaces=bool(self.settings.value("fix-ocr-spacing", type=bool)),
         )
+
 
         if result.text and self.cli_mode:
             self._print_to_stdout_and_exit(text=result.text)

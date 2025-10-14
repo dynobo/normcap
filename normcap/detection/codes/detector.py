@@ -105,7 +105,8 @@ def _detect_codes_via_zxing(
         text, text_type = _get_text_type_and_transform(text)
         return text, text_type, code_type
 
-    return os.linesep.join(codes), TextType.MULTI_LINE, code_type
+    result_text = os.linesep.join(codes)
+    return result_text, TextType.MULTI_LINE, code_type
 
 
 def detect_codes(image: QtGui.QImage) -> DetectionResult | None:

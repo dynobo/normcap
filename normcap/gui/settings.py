@@ -104,6 +104,16 @@ DEFAULT_SETTINGS = (
         nargs=None,
     ),
     Setting(
+        key="fix-ocr-spacing",
+        flag="",
+        type_=_parse_str_to_bool,
+        value=False,
+        help_="Fix spacing artifacts in CJK text recognition (removes extra spaces between characters).",
+        choices=(True, False),
+        cli_arg=True,
+        nargs=None,
+    ),
+    Setting(
         key="current-version",
         flag="_c",
         type_=str,
