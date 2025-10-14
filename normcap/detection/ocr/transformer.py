@@ -68,9 +68,6 @@ def _post_process(ocr_result: OcrResult, strip_whitespaces: bool = False) -> str
     return text
 
 
-
-
-
 def _should_strip_whitespaces(lang: str) -> bool:
     """Check if language contains CJK characters that benefit from smart stripping.
     
