@@ -63,7 +63,7 @@ def _post_process(ocr_result: OcrResult, strip_whitespaces: bool = False) -> str
     )
     if strip_whitespaces and _should_strip_whitespaces(ocr_result.tess_args.lang):
         logger.debug("Before smart stripping: %s", repr(text[:100]))
-        text = _strip_chinese_whitespaces(text)
+        text = _smart_strip_cjk_whitespaces(text)
         logger.debug("After smart stripping: %s", repr(text[:100]))
     return text
 
@@ -81,8 +81,8 @@ def _should_strip_whitespaces(lang: str) -> bool:
     )
 
 
-def _strip_chinese_whitespaces(text: str) -> str:
-    """Smart whitespace stripping for CJK text mixed with Latin text.
+def _smart_strip_cjk_whitespaces(text: str) -> str:
+    """Strip whitespaces from CJK text using smart algorithm.
     
     Rules:
     - Remove spaces between CJK characters only (keep spaces for English words)

@@ -104,5 +104,5 @@ def test_should_strip_whitespaces(lang, expected):
 )
 def test_strip_chinese_whitespaces(input_text, expected):
     """Test smart whitespace stripping for CJK text mixed with Latin text."""
-    result = transformer._strip_chinese_whitespaces(input_text)
+    result = transformer._smart_strip_cjk_whitespaces(input_text)
     assert result == expected

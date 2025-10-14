@@ -71,7 +71,7 @@ def get_text_from_image(
         # Even without parsing, apply smart whitespace stripping if enabled
         raw_text = result.text
         if strip_whitespaces and transformer._should_strip_whitespaces(tess_args.lang):
-            raw_text = transformer._strip_chinese_whitespaces(raw_text)
+            raw_text = transformer._smart_strip_cjk_whitespaces(raw_text)
         return DetectionResult(
             text=raw_text,
             text_type=TextType.SINGLE_LINE,

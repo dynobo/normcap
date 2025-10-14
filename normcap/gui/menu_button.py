@@ -301,21 +301,20 @@ class MenuButton(QtWidgets.QToolButton):
         menu.addAction(action)
 
 
-        # Smart whitespace stripping for CJK text
+        # Fix OCR spacing artifacts in CJK text
         # L10N: Entry in main menu's 'Post-processing' section
-        action = QtGui.QAction(_("Strip whitespaces (Smart)"), postprocessing_group)
-        action.setObjectName("strip-whitespaces")
+        action = QtGui.QAction(_("Fix OCR spacing"), postprocessing_group)
+        action.setObjectName("fix-ocr-spacing")
         action.setCheckable(True)
-        action.setChecked(bool(self.settings.value("strip-whitespaces", type=bool)))
-        # L10N: Tooltip of main menu's 'strip whitespaces' entry. Use <56 chars p. line.
+        action.setChecked(bool(self.settings.value("fix-ocr-spacing", type=bool)))
+        # L10N: Tooltip of main menu's 'Fix OCR spacing' entry. Use <56 chars p. line.
         action.setToolTip(
             _(
-                "Smart removal of unwanted whitespace in CJK text:\n"
+                "Removes spacing artifacts in CJK text:\n"
                 "• Remove spaces between CJK characters\n"
                 "• Keep spaces between English words\n"
-                "• Remove soft line breaks (forced by layout)\n"
-                "• Keep hard line breaks (after punctuation)\n"
-                "Works well for mixed Chinese-English text."
+                "• Remove soft line breaks\n"
+                "• Keep hard line breaks after punctuation"
             )
         )
         menu.addAction(action)
