@@ -97,6 +97,7 @@ def test_is_flatpak(monkeypatch):
     system_info.is_flatpak.cache_clear()
 
     with monkeypatch.context() as m:
+        m.setattr(sys, "platform", "linux")
         m.setenv("FLATPAK_ID", "123")
         assert system_info.is_flatpak()
 

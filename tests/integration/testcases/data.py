@@ -94,7 +94,7 @@ testcases: tuple[TestCase, ...] = (
     ),
     TestCase(
         image_path=image_dir / "03_parse_emails.png",
-        expected_text="peter.parker@test.com\nHArDToReAd@test.com\n0815@test.com",
+        expected_text=f"peter.parker@test.com{os.linesep}HArDToReAd@test.com{os.linesep}0815@test.com",
         expected_text_type=[TextType.MAIL],
         expected_text_detector=[TextDetector.OCR_PARSED],
     ),

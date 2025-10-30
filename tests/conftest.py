@@ -16,6 +16,9 @@ if platform.system() == "linux":
     # via a `.env.test` file.
     os.environ["QT_QPA_PLATFORM"] = "xcb"
 
+# On macOS, the tests fail due to debugging output by QT. This silences those:
+os.environ["QT_LOGGING_RULES"] = "*.debug=false"
+
 import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
 

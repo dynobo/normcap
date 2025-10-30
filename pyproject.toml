@@ -301,7 +301,7 @@ cleanup_paths = [
 ]
 
 [tool.briefcase.app.normcap.macOS]
-min_os_version = "12.0"
+min_os_version = "13.0"
 requires = [ "std-nslog==1.0.3" ]
 universal_build = true
 

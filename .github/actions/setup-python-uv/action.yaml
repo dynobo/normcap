@@ -6,9 +6,9 @@ runs:
   steps:
 
     - name: install uv
-      uses: astral-sh/setup-uv@v3
+      uses: astral-sh/setup-uv@v7
       with:
-        version: "0.4.30"
+        version: "0.9.5"
         enable-cache: true
 
     - uses: actions/setup-python@v6
