@@ -311,7 +311,7 @@ use_full_install_path = false
 [tool.briefcase.app.normcap.linux.appimage]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
 template_branch = "v0.3.25"
-manylinux = "manylinux_2_28"
+manylinux = "manylinux_2_34"
 manylinux_image_tag = "latest"
 system_requires = [
   "wget",
@@ -337,8 +337,6 @@ RUN dnf install -y ./tesseract-langpack-osd-5.0.0.rpm
 RUN dnf install -y ./tesseract-langpack-eng-5.0.0.rpm
 RUN dnf install -y ./tesseract-5.3.0-5.1.x86_64.rpm
 
-RUN wget https://pkgs.sysadmins.ws/el8/base/x86_64/raven-release.el8.noarch.rpm
-RUN rpm -ivh raven-release*.rpm
 RUN dnf update -y
 RUN dnf install -y \
   qt6-qtwayland \
