@@ -48,11 +48,11 @@ def test_prepare_logging(monkeypatch, arg_value, expected_level, caplog):
 
 def test_qt_log_wrapper(qtlog, caplog):
     logger = logging.getLogger(__name__).root
-    logger.setLevel("DEBUG")
-    QtCore.qDebug("should_show_in_qtlog_only")  # type: ignore # Wrong in PySide?
+    logger.setLevel("INFO")
+    QtCore.qInfo("should_show_in_qtlog_only")
 
     QtCore.qInstallMessageHandler(logger_config._qt_log_wrapper)
-    QtCore.qDebug("should_show_in_logger_only")  # type: ignore # Wrong in PySide?
+    QtCore.qInfo("should_show_in_logger_only")
 
     qt_log_entries = [m.message.strip() for m in qtlog.records]
     assert len(qt_log_entries) == 1
@@ -61,7 +61,7 @@ def test_qt_log_wrapper(qtlog, caplog):
     assert "should_show_in_qtlog_only" not in caplog.text
     assert "should_show_in_logger_only" in caplog.text
     assert "[QT]" in caplog.text
-    assert "debug" in caplog.text
+    assert "info" in caplog.text
 
 
 def test_qt_log_wrapper_silence_opentype_warning(caplog):
@@ -69,7 +69,7 @@ def test_qt_log_wrapper_silence_opentype_warning(caplog):
     logger.setLevel("DEBUG")
     QtCore.qInstallMessageHandler(logger_config._qt_log_wrapper)
 
-    QtCore.qDebug("Warning, OpenType support missing for OpenSans")  # type: ignore
+    QtCore.qInfo("Warning, OpenType support missing for OpenSans")  # type: ignore
 
     assert "[qt]" not in caplog.text.lower()
     assert "error" not in caplog.text.lower()
@@ -80,7 +80,7 @@ def test_qt_log_wrapper_no_platform_as_error(caplog):
     logger.setLevel("DEBUG")
     QtCore.qInstallMessageHandler(logger_config._qt_log_wrapper)
 
-    QtCore.qDebug("could not load the qt platform")
+    QtCore.qInfo("could not load the qt platform")
 
     assert "could not load the qt platform" in caplog.text
     assert "[qt]" in caplog.text.lower()
@@ -103,7 +103,7 @@ def test_qt_log_wrapper_platform_plugin_error_on_x(
     QtCore.qInstallMessageHandler(logger_config._qt_log_wrapper)
 
     # WHEN the error caused by missing dependencies is logged
-    QtCore.qDebug(
+    QtCore.qInfo(
         "this application failed to start because no qt platform plugin could be "
         "initialized. reinstalling the application may fix this problem."
     )
