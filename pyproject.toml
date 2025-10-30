@@ -96,8 +96,7 @@ icons-compile = [
   { cmd = "sed -i '1i # ruff: noqa' normcap/gui/resources.py" },
 ]
 
-# ONHOLD Remove vulnerability ignore after release of pip > 25.2
-security = "pip-audit --ignore-vuln GHSA-4xh5-x5gv-qwph"
+security = "pip-audit"
 
 version = "tbump"
 
