@@ -53,7 +53,7 @@ def is_compatible() -> bool:
 
 
 def is_installed() -> bool:
-    # ONHOLD: Wait for feedback on new qt_wayland handler, then remove wlclipboard
+    # ONHOLD: Wait for feedback on qt on wayland handler, then remove wlclipboard
     #  from FlatPak
     if not (wl_copy_bin := shutil.which("wl-copy")):
         return False
