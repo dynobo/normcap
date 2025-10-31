@@ -213,6 +213,7 @@ def test_get_tesseract_path_missing_binary_raises(monkeypatch):
 def test_get_tesseract_path_missing_tesseract_raises(monkeypatch):
     with monkeypatch.context() as m:
         m.setattr(info.shutil, "which", lambda _: False)
+        m.setattr(info, "is_briefcase_package", lambda: False)
         with pytest.raises(RuntimeError, match="No Tesseract binary found"):
             _ = info.get_tesseract_bin_path(
                 is_briefcase_package=info.is_briefcase_package()

@@ -22,6 +22,7 @@ os.environ["QT_LOGGING_RULES"] = "*.debug=false"
 import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
 
+from normcap import clipboard
 from normcap.detection.ocr.models import OEM, PSM, OcrResult, TessArgs
 from normcap.detection.ocr.transformers import email_address, url
 from normcap.gui import application, menu_button
@@ -55,6 +56,7 @@ def qapp_args():
 def _clear_caches():
     cached_funcs = [
         url._extract_urls,
+        clipboard.get_available_handlers,
         email_address._extract_emails,
         info.desktop_environment,
         info.display_manager_is_wayland,

@@ -251,6 +251,7 @@ class NormcapApp(QtWidgets.QApplication):
             self._create_window(index)
 
     @QtCore.Slot()
+    @utils.single_instance_slot
     def _close_windows(self) -> None:
         """Hide all windows of normcap."""
         window_count = len(self.windows)
@@ -367,14 +368,9 @@ class NormcapApp(QtWidgets.QApplication):
 
     def _copy_to_clipboard(self, text: str) -> None:
         """Copy results to clipboard."""
-        if self.clipboard_handler_name:
-            logger.debug(
-                "Copy text to clipboard with %s",
-                self.clipboard_handler_name.upper(),
-            )
-            clipboard.copy_with_handler(
-                text=text, handler_name=self.clipboard_handler_name
-            )
+        if handler_name := self.clipboard_handler_name:
+            logger.debug("Copy text to clipboard with %s", handler_name.upper())
+            clipboard.copy_with_handler(text=text, handler_name=handler_name)
         else:
             logger.debug("Copy text to clipboard")
             clipboard.copy(text=text)

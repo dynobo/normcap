@@ -1,6 +1,8 @@
 import logging
 import tempfile
 import time
+from collections.abc import Callable
+from functools import wraps
 from pathlib import Path
 
 from PySide6 import QtCore, QtGui
@@ -8,6 +10,30 @@ from PySide6 import QtCore, QtGui
 from normcap.system.models import Rect
 
 logger = logging.getLogger(__name__)
+
+
+def single_instance_slot(func: Callable) -> Callable:
+    mutex = QtCore.QMutex()
+    running = {"flag": False}
+
+    @wraps(func)
+    def wrapper(*args: tuple, **kwargs: dict) -> None:
+        locker = QtCore.QMutexLocker(mutex)
+        if running["flag"]:
+            logger.debug("Skip %s() as already running.", {func.__name__})
+            return
+        running["flag"] = True
+        locker.unlock()
+
+        try:
+            func(*args, **kwargs)
+        finally:
+            locker.relock()
+            running["flag"] = False
+            locker.unlock()
+        return
+
+    return wrapper
 
 
 def crop_image(image: QtGui.QImage, rect: Rect) -> QtGui.QImage:

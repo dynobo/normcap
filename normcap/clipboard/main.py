@@ -1,4 +1,5 @@
 import logging
+from functools import cache
 
 from normcap.clipboard.models import Handler, HandlerProtocol
 
@@ -68,6 +69,7 @@ def copy(text: str) -> bool:
     return False
 
 
+@cache
 def get_available_handlers() -> list[Handler]:
     compatible_handlers = [h for h in Handler if _clipboard_handlers[h].is_compatible()]
     logger.debug(

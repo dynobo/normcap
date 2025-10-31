@@ -13,7 +13,6 @@
 
 **Linux**:
 - Add clickable desktop notifications in FlatPak package.
-- Add a new clipboard-handler `qt_wayland` to improve reliabilty of writing to clipboard on Wayland systems.
 
 ## v0.6.0 (2025-08-31)
 
