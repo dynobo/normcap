@@ -1,4 +1,5 @@
 import logging
+import time
 from typing import Any, cast
 
 from normcap.system import info
@@ -18,11 +19,17 @@ try:
             # L10N: Introduction window title
             self.setWindowTitle("NormCap - Clipboard Helper")
             self.setWindowIcon(QtGui.QIcon(":normcap"))
-            self.setMaximumSize(1, 1)
+            self.setMaximumSize(200, 200)
             self.setModal(False)
+            QtCore.QTimer.singleShot(150, self._focus)
             self.text = text
 
+            self.minimum_correct_reads = 3000
+            self.timeout_s = 2.0
+            self.correct_reads = 0
+
             self.app = QtGui.QGuiApplication.instance()
+            self.start_time = time.time()
 
             self.copy_timer = QtCore.QTimer(self, interval=50)
             self.copy_timer.timeout.connect(self._copy)
@@ -32,8 +39,9 @@ try:
             self.read_timer.timeout.connect(self._read)
             self.read_timer.start()
 
-            self.minimum_correct_reads = 3
-            self.correct_reads = 0
+        def _focus(self) -> None:
+            self.activateWindow()
+            self.raise_()
 
         def _copy(self) -> None:
             cb = self.app.clipboard()  # type: ignore  # Type hint wrong in PySide6?
@@ -50,6 +58,17 @@ try:
             # reliably set. (Maybe the text got chached for the first read? Or it
             # requires some time to sync with system clipboard?)
             if self.correct_reads >= self.minimum_correct_reads:
+                logger.debug(
+                    "Correct reads: %s; Time passed: %s",
+                    self.correct_reads,
+                    time.time() - self.start_time,
+                )
+                self._close()
+
+            if time.time() - self.start_time >= self.timeout_s:
+                logger.warning(
+                    "Copying to clipboard might have failed with handler 'qt_wayland'."
+                )
                 self._close()
 
         def _close(self) -> None:

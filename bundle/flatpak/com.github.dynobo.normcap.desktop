@@ -9,5 +9,6 @@ Exec=normcap
 Icon=com.github.dynobo.normcap
 Terminal=false
 Type=Application
+StartupNotify=true
 Categories=Utility;Office;
 Keywords=Text;Extraction;OCR;

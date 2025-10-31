@@ -67,6 +67,7 @@ class IntroductionDialog(QtWidgets.QDialog):
         main_vbox.addLayout(self._create_footer())
         main_vbox.addStretch()
         self.setLayout(main_vbox)
+        QtCore.QTimer.singleShot(100, self.activateWindow)
 
     @property
     def sections_data(self) -> list[Section]:
