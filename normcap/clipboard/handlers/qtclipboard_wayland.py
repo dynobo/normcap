@@ -1,4 +1,5 @@
 import logging
+import time
 from typing import Any, cast
 
 from normcap.platform import system_info
@@ -18,11 +19,16 @@ try:
             # L10N: Introduction window title
             self.setWindowTitle("NormCap - Clipboard Helper")
             self.setWindowIcon(QtGui.QIcon(":normcap"))
-            self.setMaximumSize(1, 1)
-            self.setModal(False)
+            self.setMaximumSize(20, 20)
+            self.setModal(True)
             self.text = text
 
+            self.minimum_correct_reads = 20
+            self.timeout_s = 2.0
+            self.correct_reads = 0
+
             self.app = QtGui.QGuiApplication.instance()
+            self.start_time = time.time()
 
             self.copy_timer = QtCore.QTimer(self, interval=50)
             self.copy_timer.timeout.connect(self._copy)
@@ -31,9 +37,6 @@ try:
             self.read_timer = QtCore.QTimer(self, interval=50)
             self.read_timer.timeout.connect(self._read)
             self.read_timer.start()
-
-            self.minimum_correct_reads = 3
-            self.correct_reads = 0
 
         def _copy(self) -> None:
             cb = self.app.clipboard()  # type: ignore  # Type hint wrong in PySide6?
@@ -50,6 +53,17 @@ try:
             # reliably set. (Maybe the text got chached for the first read? Or it
             # requires some time to sync with system clipboard?)
             if self.correct_reads >= self.minimum_correct_reads:
+                logger.debug(
+                    "Correct reads: %s; Time passed: %s",
+                    self.correct_reads,
+                    time.time() - self.start_time,
+                )
+                self._close()
+
+            if time.time() - self.start_time >= self.timeout_s:
+                logger.warning(
+                    "Copying to clipboard might have failed with handler 'qt_wayland'."
+                )
                 self._close()
 
         def _close(self) -> None:
@@ -92,7 +106,7 @@ def copy(text: str) -> None:
     # By using dialog.show() we use the main event loop from the application, but to
     # avoid immediate garbage collection, we need to keep a reference to it.
     _dialog_reference.append(dialog)
-    dialog.show()
+    dialog.exec()
 
 
 def is_compatible() -> bool:
