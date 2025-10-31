@@ -4,7 +4,7 @@ import shutil
 import signal
 from pathlib import Path
 
-from normcap.platform import system_info
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -64,10 +64,10 @@ def copy_traineddata_files(target_dir: Path | None) -> None:
     if target_dir.is_dir() and list(target_dir.glob("*.traineddata")):
         return
 
-    if system_info.is_flatpak():
+    if info.is_flatpak():
         src_path = Path("/app/share/tessdata")
-    elif system_info.is_briefcase_package():
-        src_path = system_info.get_resources_path() / "tessdata"
+    elif info.is_briefcase_package():
+        src_path = info.get_resources_path() / "tessdata"
     else:
         return
 
@@ -84,9 +84,9 @@ def prepare() -> None:
     # Allow closing QT app with CTRL+C in terminal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    if system_info.display_manager_is_wayland():
+    if info.display_manager_is_wayland():
         _set_environ_for_wayland()
-    if system_info.is_flatpak():
+    if info.is_flatpak():
         _set_environ_for_flatpak()
-    if system_info.is_appimage_package():
+    if info.is_appimage_package():
         _set_environ_for_appimage()

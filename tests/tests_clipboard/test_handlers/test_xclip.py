@@ -6,7 +6,7 @@ import uuid
 import pytest
 
 from normcap.clipboard.handlers import xclip
-from normcap.platform import system_info
+from normcap.system import info
 
 
 @pytest.mark.parametrize(
@@ -29,7 +29,7 @@ def test_xclip_is_compatible(
     monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
     monkeypatch.setenv("XDG_SESSION_TYPE", xdg_session_type)
 
-    monkeypatch.setattr(system_info.sys, "platform", platform)
+    monkeypatch.setattr(info.sys, "platform", platform)
     monkeypatch.setattr(
         xclip.shutil, "which", lambda *args: "xclip" in args and has_xclip
     )

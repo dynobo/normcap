@@ -8,7 +8,7 @@ from types import TracebackType
 from PySide6 import QtCore
 
 from normcap import __version__
-from normcap.platform import system_info
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ def _init_logger(log_level: str = "WARNING", log_file: Path | None = None) -> No
         and sys.platform == "win32"
         and logging.getLevelName(log_level) < logging.WARNING
     ):
-        log_file = system_info.desktop_dir() / "normcap.log"
+        log_file = info.desktop_dir() / "normcap.log"
 
     if log_file:
         log_file.parent.mkdir(parents=True, exist_ok=True)
@@ -76,7 +76,7 @@ def _hook_exceptions(
     logger.critical(
         "Uncaught exception!", exc_info=(exc_type, exc_value, exc_traceback)
     )
-    logger.critical("System info: %s", system_info.to_dict())
+    logger.critical("System info: %s", info.to_dict())
     logger.critical(
         "Unfortunately, NormCap has to be terminated due to an unknown problem.\n"
         "Please help improve NormCap by reporting this error, including the output "

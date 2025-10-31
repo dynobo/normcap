@@ -1,7 +1,7 @@
 import logging
 from typing import Any, cast
 
-from normcap.platform import system_info
+from normcap.system import info
 
 try:
     from PySide6 import QtGui
@@ -30,7 +30,7 @@ def is_compatible() -> bool:
     if not QtGui:
         return False
 
-    return not system_info.has_wayland_display_manager()
+    return not info.has_wayland_display_manager()
 
 
 def is_installed() -> bool:

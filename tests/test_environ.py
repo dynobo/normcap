@@ -3,7 +3,7 @@ from importlib import resources
 from pathlib import Path
 
 from normcap import environment
-from normcap.platform import system_info
+from normcap.system import info
 
 
 def test_prepare_env():
@@ -55,7 +55,7 @@ def test_set_environ_for_flatpak(monkeypatch):
 
 def test_copy_traineddata_files_briefcase(tmp_path, monkeypatch):
     # Create placeholder for traineddata files, if they don't exist
-    monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
+    monkeypatch.setattr(info, "is_briefcase_package", lambda: True)
     with resources.as_file(resources.files("normcap.resources")) as file_path:
         resource_path = Path(file_path)
     (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
@@ -85,7 +85,7 @@ def test_copy_traineddata_files_briefcase(tmp_path, monkeypatch):
 
 def test_copy_traineddata_files_flatpak(tmp_path, monkeypatch):
     # Create placeholder for traineddata files, if they don't exist
-    monkeypatch.setattr(environment.system_info, "is_flatpak", lambda: True)
+    monkeypatch.setattr(environment.info, "is_flatpak", lambda: True)
     with resources.as_file(resources.files("normcap.resources")) as file_path:
         resource_path = Path(file_path)
     (resource_path / "tessdata" / "placeholder_1.traineddata").touch()
@@ -139,7 +139,7 @@ def test_copy_traineddata_files_not_copying(tmp_path, monkeypatch):
         assert not txts
 
         # Copying within package but with target_path=None should do nothing
-        monkeypatch.setattr(system_info, "is_briefcase_package", lambda: True)
+        monkeypatch.setattr(info, "is_briefcase_package", lambda: True)
         environment.copy_traineddata_files(target_dir=None)
 
         traineddatas = list(tessdata_path.glob("*.traineddata"))

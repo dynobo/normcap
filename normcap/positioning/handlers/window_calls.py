@@ -6,8 +6,8 @@ from jeepney.io.blocking import Proxy, open_dbus_connection
 from jeepney.wrappers import Message, MessageGenerator, new_method_call
 from PySide6 import QtWidgets
 
-from normcap.platform import system_info
-from normcap.platform.models import DesktopEnvironment, Screen
+from normcap.system import info
+from normcap.system.models import DesktopEnvironment, Screen
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ def is_compatible() -> bool:
     Returns:
         System could be capable of using this method
     """
-    return system_info.desktop_environment() == DesktopEnvironment.GNOME
+    return info.desktop_environment() == DesktopEnvironment.GNOME
 
 
 def is_installed() -> bool:

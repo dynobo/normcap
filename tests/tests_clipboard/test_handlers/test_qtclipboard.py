@@ -4,7 +4,7 @@ import uuid
 import pytest
 
 from normcap.clipboard.handlers import qtclipboard
-from normcap.platform import system_info
+from normcap.system import info
 
 real_import = builtins.__import__
 
@@ -23,7 +23,7 @@ real_import = builtins.__import__
 def test_qtclipboard_is_compatible(monkeypatch, platform, wayland_display, result):
     monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
     monkeypatch.setenv("XDG_SESSION_TYPE", "")
-    monkeypatch.setattr(system_info.sys, "platform", platform)
+    monkeypatch.setattr(info.sys, "platform", platform)
     assert qtclipboard.is_compatible() == result
 
 
@@ -35,7 +35,7 @@ def test_qtclipboard_is_compatible_without_pyside6(monkeypatch, mock_import):
 
 
 @pytest.mark.skipif(
-    system_info.has_wayland_display_manager(), reason="non-Wayland specific test"
+    info.has_wayland_display_manager(), reason="non-Wayland specific test"
 )
 def test_qtclipboard_copy(qapp):
     text = "test"

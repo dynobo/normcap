@@ -5,36 +5,36 @@ from pathlib import Path
 
 import pytest
 
-from normcap.platform import system_info
-from normcap.platform.models import DesktopEnvironment, Screen
+from normcap.system import info
+from normcap.system.models import DesktopEnvironment, Screen
 
 
 def test_display_manager_is_wayland(monkeypatch):
     monkeypatch.setenv("XDG_SESSION_TYPE", "")
     monkeypatch.setenv("WAYLAND_DISPLAY", "wayland")
-    system_info.display_manager_is_wayland.cache_clear()
-    assert system_info.display_manager_is_wayland()
+    info.display_manager_is_wayland.cache_clear()
+    assert info.display_manager_is_wayland()
 
     monkeypatch.setenv("XDG_SESSION_TYPE", "wayland")
     monkeypatch.setenv("WAYLAND_DISPLAY", "")
-    system_info.display_manager_is_wayland.cache_clear()
-    assert system_info.display_manager_is_wayland()
+    info.display_manager_is_wayland.cache_clear()
+    assert info.display_manager_is_wayland()
 
 
 def test_display_manager_is_not_wayland(monkeypatch):
     monkeypatch.setenv("WAYLAND_DISPLAY", "")
     monkeypatch.setenv("XDG_SESSION_TYPE", "x11")
-    system_info.display_manager_is_wayland.cache_clear()
-    assert not system_info.display_manager_is_wayland()
+    info.display_manager_is_wayland.cache_clear()
+    assert not info.display_manager_is_wayland()
 
     monkeypatch.setenv("WAYLAND_DISPLAY", "")
     monkeypatch.setenv("XDG_SESSION_TYPE", "something")
-    system_info.display_manager_is_wayland.cache_clear()
-    assert not system_info.display_manager_is_wayland()
+    info.display_manager_is_wayland.cache_clear()
+    assert not info.display_manager_is_wayland()
 
 
 def test_desktop_environment():
-    assert system_info.desktop_environment() in DesktopEnvironment
+    assert info.desktop_environment() in DesktopEnvironment
 
 
 @pytest.mark.parametrize(
@@ -59,7 +59,7 @@ def test_desktop_environment():
 )
 def test_desktop_environment_gnome(monkeypatch, envs, expected_environment):
     # GIVEN a certain set of environment variables have certain values
-    system_info.desktop_environment.cache_clear()
+    info.desktop_environment.cache_clear()
     env_vars = [
         "GNOME_DESKTOP_SESSION_ID",
         "KDE_FULL_SESSION",
@@ -71,21 +71,21 @@ def test_desktop_environment_gnome(monkeypatch, envs, expected_environment):
         monkeypatch.setenv(var, envs.get(var, ""))
 
     # WHEN we try to identify the desktop environment
-    environment = system_info.desktop_environment()
+    environment = info.desktop_environment()
 
     # THEN it should be the one matching the environment variable
     assert environment == expected_environment
 
 
 def test_is_briefcase_package():
-    assert not system_info.is_briefcase_package()
-    system_info.is_briefcase_package.cache_clear()
+    assert not info.is_briefcase_package()
+    info.is_briefcase_package.cache_clear()
 
     temp_app_packages = Path(__file__).resolve().parents[3] / "app_packages"
     is_briefcase = False
     try:
         temp_app_packages.mkdir()
-        is_briefcase = system_info.is_briefcase_package()
+        is_briefcase = info.is_briefcase_package()
     finally:
         temp_app_packages.rmdir()
 
@@ -93,17 +93,17 @@ def test_is_briefcase_package():
 
 
 def test_is_flatpak(monkeypatch):
-    assert not system_info.is_flatpak()
-    system_info.is_flatpak.cache_clear()
+    assert not info.is_flatpak()
+    info.is_flatpak.cache_clear()
 
     with monkeypatch.context() as m:
         m.setattr(sys, "platform", "linux")
         m.setenv("FLATPAK_ID", "123")
-        assert system_info.is_flatpak()
+        assert info.is_flatpak()
 
 
 def test_screens(qtbot):
-    screens = system_info.screens()
+    screens = info.screens()
     assert len(screens) >= 1
     assert all(isinstance(s, Screen) for s in screens)
     assert isinstance(screens[0], Screen)
@@ -115,26 +115,26 @@ def test_config_directory_on_windows(monkeypatch, tmp_path):
     with monkeypatch.context() as m:
         m.setattr(sys, "platform", "win32")
         m.setenv("LOCALAPPDATA", str(tmp_path.absolute()))
-        system_info.config_directory.cache_clear()
-        assert system_info.config_directory() == tmp_path / "normcap"
+        info.config_directory.cache_clear()
+        assert info.config_directory() == tmp_path / "normcap"
 
         m.setenv("LOCALAPPDATA", "")
         m.setenv("APPDATA", str(tmp_path.absolute()))
-        system_info.config_directory.cache_clear()
-        assert system_info.config_directory() == tmp_path / "normcap"
+        info.config_directory.cache_clear()
+        assert info.config_directory() == tmp_path / "normcap"
 
         m.setenv("LOCALAPPDATA", "")
         m.setenv("APPDATA", "")
-        system_info.config_directory.cache_clear()
+        info.config_directory.cache_clear()
         with pytest.raises(ValueError, match="Could not determine the appdata"):
-            _ = system_info.config_directory()
+            _ = info.config_directory()
 
 
 def test_config_directory_on_linux_macos(monkeypatch, tmp_path):
     with monkeypatch.context() as m:
         m.setattr(sys, "platform", "linux")
         m.setenv("XDG_CONFIG_HOME", str(tmp_path.absolute()))
-        config_dir = system_info.config_directory()
+        config_dir = info.config_directory()
     assert config_dir == tmp_path / "normcap"
 
 
@@ -142,13 +142,13 @@ def test_config_directory_fallback(monkeypatch):
     with monkeypatch.context() as m:
         m.setattr(sys, "platform", "unknown")
         m.delenv("XDG_CONFIG_HOME", raising=False)
-        config_dir = system_info.config_directory()
+        config_dir = info.config_directory()
     assert config_dir.name == "normcap"
     assert config_dir.parent.name == ".config"
 
 
 def test_to_dict():
-    string = system_info.to_dict()
+    string = info.to_dict()
     expected = [
         "cli_args",
         "is_briefcase_package",
@@ -180,11 +180,11 @@ def test_to_dict():
 )
 def test_get_tesseract_path_in_briefcase(monkeypatch, platform, binary, directory):
     with monkeypatch.context() as m:
-        m.setattr(system_info, "is_briefcase_package", lambda: True)
-        m.setattr(system_info.Path, "exists", lambda *args: True)
-        m.setattr(system_info.sys, "platform", platform)
-        path = system_info.get_tesseract_bin_path(
-            is_briefcase_package=system_info.is_briefcase_package()
+        m.setattr(info, "is_briefcase_package", lambda: True)
+        m.setattr(info.Path, "exists", lambda *args: True)
+        m.setattr(info.sys, "platform", platform)
+        path = info.get_tesseract_bin_path(
+            is_briefcase_package=info.is_briefcase_package()
         )
     assert path.name == binary
     assert path.parent.name == directory
@@ -192,30 +192,30 @@ def test_get_tesseract_path_in_briefcase(monkeypatch, platform, binary, director
 
 def test_get_tesseract_path_unknown_platform_raises(monkeypatch):
     with monkeypatch.context() as m:
-        m.setattr(system_info, "is_briefcase_package", lambda: True)
-        m.setattr(system_info.Path, "exists", lambda *args: True)
-        m.setattr(system_info.sys, "platform", "unknown")
+        m.setattr(info, "is_briefcase_package", lambda: True)
+        m.setattr(info.Path, "exists", lambda *args: True)
+        m.setattr(info.sys, "platform", "unknown")
         with pytest.raises(ValueError, match="Platform unknown is not supported"):
-            _ = system_info.get_tesseract_bin_path(
-                is_briefcase_package=system_info.is_briefcase_package()
+            _ = info.get_tesseract_bin_path(
+                is_briefcase_package=info.is_briefcase_package()
             )
 
 
 def test_get_tesseract_path_missing_binary_raises(monkeypatch):
     with monkeypatch.context() as m:
-        m.setattr(system_info, "is_briefcase_package", lambda: True)
+        m.setattr(info, "is_briefcase_package", lambda: True)
         with pytest.raises(RuntimeError, match="Could not locate Tesseract binary"):
-            _ = system_info.get_tesseract_bin_path(
-                is_briefcase_package=system_info.is_briefcase_package()
+            _ = info.get_tesseract_bin_path(
+                is_briefcase_package=info.is_briefcase_package()
             )
 
 
 def test_get_tesseract_path_missing_tesseract_raises(monkeypatch):
     with monkeypatch.context() as m:
-        m.setattr(system_info.shutil, "which", lambda _: False)
+        m.setattr(info.shutil, "which", lambda _: False)
         with pytest.raises(RuntimeError, match="No Tesseract binary found"):
-            _ = system_info.get_tesseract_bin_path(
-                is_briefcase_package=system_info.is_briefcase_package()
+            _ = info.get_tesseract_bin_path(
+                is_briefcase_package=info.is_briefcase_package()
             )
 
 
@@ -231,20 +231,20 @@ def test_get_tesseract_path_missing_tesseract_raises(monkeypatch):
 def test_get_tessdata_path(
     monkeypatch, caplog, is_briefcase, is_flatpak, has_prefix, expected_path_end
 ):
-    data_file = system_info.config_directory() / "tessdata" / "mocked.traineddata"
+    data_file = info.config_directory() / "tessdata" / "mocked.traineddata"
     data_file.parent.mkdir(parents=True, exist_ok=True)
     data_file.touch(exist_ok=True)
 
     try:
         with monkeypatch.context() as m:
-            m.setattr(system_info, "is_briefcase_package", lambda: is_briefcase)
-            m.setattr(system_info, "is_flatpak", lambda: is_flatpak)
+            m.setattr(info, "is_briefcase_package", lambda: is_briefcase)
+            m.setattr(info, "is_flatpak", lambda: is_flatpak)
             if has_prefix:
                 m.setenv("TESSDATA_PREFIX", f"{data_file.resolve().parents[1]}")
 
-            path_briefcase = system_info.get_tessdata_path(
-                config_directory=system_info.config_directory(),
-                is_packaged=system_info.is_packaged(),
+            path_briefcase = info.get_tessdata_path(
+                config_directory=info.config_directory(),
+                is_packaged=info.is_packaged(),
             )
 
             path_end = (
@@ -257,22 +257,22 @@ def test_get_tessdata_path(
 
 
 def test_get_tessdata_path_warn_on_win32(monkeypatch, caplog):
-    data_file = system_info.config_directory() / "tessdata" / "mocked.traineddata"
+    data_file = info.config_directory() / "tessdata" / "mocked.traineddata"
     data_file.parent.mkdir(parents=True, exist_ok=True)
     data_file.touch(exist_ok=True)
 
     try:
         with monkeypatch.context() as m:
-            m.setattr(system_info, "is_briefcase_package", lambda: False)
-            m.setattr(system_info, "is_flatpak", lambda: False)
+            m.setattr(info, "is_briefcase_package", lambda: False)
+            m.setattr(info, "is_flatpak", lambda: False)
             m.setenv("TESSDATA_PREFIX", "")
 
-            monkeypatch.setattr(system_info.sys, "platform", "win32")
+            monkeypatch.setattr(info.sys, "platform", "win32")
             with caplog.at_level(logging.WARNING):
                 caplog.clear()
-                _ = system_info.get_tessdata_path(
-                    config_directory=system_info.config_directory(),
-                    is_packaged=system_info.is_packaged(),
+                _ = info.get_tessdata_path(
+                    config_directory=info.config_directory(),
+                    is_packaged=info.is_packaged(),
                 )
             assert "TESSDATA_PREFIX" in caplog.records[0].msg
 
@@ -296,9 +296,9 @@ def test_os_has_wayland_display_manager(
 ):
     monkeypatch.setenv("XDG_SESSION_TYPE", xdg_session_type)
     monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
-    monkeypatch.setattr(system_info.sys, "platform", platform)
+    monkeypatch.setattr(info.sys, "platform", platform)
 
-    assert system_info.has_wayland_display_manager() == expected_result
+    assert info.has_wayland_display_manager() == expected_result
 
 
 @pytest.mark.parametrize(
@@ -313,8 +313,8 @@ def test_os_has_wayland_display_manager(
 def test_os_has_awesome_wm(monkeypatch, platform, desktop, expected_result):
     with monkeypatch.context() as m:
         m.setenv("XDG_CURRENT_DESKTOP", desktop)
-        m.setattr(system_info.sys, "platform", platform)
-        assert system_info.has_awesome_wm() == expected_result
+        m.setattr(info.sys, "platform", platform)
+        assert info.has_awesome_wm() == expected_result
 
 
 @pytest.mark.parametrize(
@@ -332,99 +332,99 @@ def test_get_gnome_version(
 ):
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", xdg_desktop)
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", gnome_desktop)
-    monkeypatch.setattr(system_info.sys, "platform", platform)
+    monkeypatch.setattr(info.sys, "platform", platform)
     monkeypatch.setattr(
-        system_info.shutil,
+        info.shutil,
         "which",
         lambda x: gnome_shell if x == "gnome-shell" else None,
     )
     monkeypatch.setattr(
-        system_info.subprocess, "check_output", lambda *_, **__: "GNOME Shell 33.3.0"
+        info.subprocess, "check_output", lambda *_, **__: "GNOME Shell 33.3.0"
     )
 
-    assert system_info.get_gnome_version() == expected_result
+    assert info.get_gnome_version() == expected_result
 
 
 # TODO: Parametrize tests?
 def test_display_manager_is_wayland_on_windows(monkeypatch):
-    monkeypatch.setattr(system_info.sys, "platform", "win32")
-    is_wayland = system_info.has_wayland_display_manager()
+    monkeypatch.setattr(info.sys, "platform", "win32")
+    is_wayland = info.has_wayland_display_manager()
     assert is_wayland is False
 
 
 def test_display_manager_is_wayland_on_linux_xdg_session_type(monkeypatch):
-    monkeypatch.setattr(system_info.sys, "platform", "linux")
+    monkeypatch.setattr(info.sys, "platform", "linux")
 
     monkeypatch.setenv("XDG_SESSION_TYPE", "wayland")
     monkeypatch.setenv("WAYLAND_DISPLAY", "")
-    is_wayland = system_info.has_wayland_display_manager()
-    system_info.has_wayland_display_manager.cache_clear()
+    is_wayland = info.has_wayland_display_manager()
+    info.has_wayland_display_manager.cache_clear()
     assert is_wayland is True
 
     monkeypatch.setenv("XDG_SESSION_TYPE", "")
     monkeypatch.setenv("WAYLAND_DISPLAY", "wayland-0")
-    is_wayland = system_info.has_wayland_display_manager()
-    system_info.has_wayland_display_manager.cache_clear()
+    is_wayland = info.has_wayland_display_manager()
+    info.has_wayland_display_manager.cache_clear()
     assert is_wayland is True
 
     monkeypatch.setenv("XDG_SESSION_TYPE", "gnome-shell")
     monkeypatch.setenv("WAYLAND_DISPLAY", "")
-    is_wayland = system_info.has_wayland_display_manager()
+    is_wayland = info.has_wayland_display_manager()
     assert is_wayland is False
 
 
 def test_gnome_version_on_windows(monkeypatch):
-    monkeypatch.setattr(system_info.sys, "platform", "win32")
-    version = system_info.get_gnome_version()
+    monkeypatch.setattr(info.sys, "platform", "win32")
+    version = info.get_gnome_version()
     assert not version
 
 
 def test_gnome_version_on_linux_from_cmd(monkeypatch):
-    monkeypatch.setattr(system_info.sys, "platform", "linux")
+    monkeypatch.setattr(info.sys, "platform", "linux")
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "wayland")
-    monkeypatch.setattr(system_info.shutil, "which", lambda _: True)
-    system_info.get_gnome_version.cache_clear()
-    version = system_info.get_gnome_version()
+    monkeypatch.setattr(info.shutil, "which", lambda _: True)
+    info.get_gnome_version.cache_clear()
+    version = info.get_gnome_version()
     assert not version
 
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
     monkeypatch.setattr(
-        system_info.subprocess,
+        info.subprocess,
         "check_output",
         lambda *args, **kwargs: "GNOME Shell 33.3\n",
     )
-    system_info.get_gnome_version.cache_clear()
-    version = system_info.get_gnome_version()
+    info.get_gnome_version.cache_clear()
+    version = info.get_gnome_version()
     assert str(version) == "33.3"
 
 
 def test_gnome_version_on_linux_without_gnome_shell(monkeypatch):
-    monkeypatch.setattr(system_info.sys, "platform", "linux")
+    monkeypatch.setattr(info.sys, "platform", "linux")
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "")
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "unity")
-    system_info.get_gnome_version.cache_clear()
-    version = system_info.get_gnome_version()
+    info.get_gnome_version.cache_clear()
+    version = info.get_gnome_version()
     assert not version
 
     monkeypatch.setenv("GNOME_DESKTOP_SESSION_ID", "some-id")
-    monkeypatch.setattr(system_info.shutil, "which", lambda _: False)
-    system_info.get_gnome_version.cache_clear()
-    version = system_info.get_gnome_version()
+    monkeypatch.setattr(info.shutil, "which", lambda _: False)
+    info.get_gnome_version.cache_clear()
+    version = info.get_gnome_version()
     assert not version
 
 
 def test_gnome_version_on_linux_unknown_exception(monkeypatch, caplog):
-    monkeypatch.setattr(system_info.sys, "platform", "linux")
-    monkeypatch.setattr(system_info.shutil, "which", lambda _: True)
+    monkeypatch.setattr(info.sys, "platform", "linux")
+    monkeypatch.setattr(info.shutil, "which", lambda _: True)
 
     def mocked_subprocess(*args, **kwargs):
         raise DivisionByZero()
 
     monkeypatch.setenv("XDG_CURRENT_DESKTOP", "gnome")
-    monkeypatch.setattr(system_info.subprocess, "check_output", mocked_subprocess)
+    monkeypatch.setattr(info.subprocess, "check_output", mocked_subprocess)
     caplog.set_level(logging.WARNING)
 
-    version = system_info.get_gnome_version()
+    version = info.get_gnome_version()
     assert not version
     assert "exception when trying to get gnome version" in caplog.text.lower()

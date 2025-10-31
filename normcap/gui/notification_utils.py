@@ -16,14 +16,14 @@ from normcap.detection.models import (
 )
 from normcap.gui.localization import _, translate
 from normcap.notification.models import NotificationAction
-from normcap.platform import system_info
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
 
 def _get_shared_temp_dir() -> Path:
     """Get a temporary directory suitable for beeing opened as URI."""
-    if system_info.is_flatpak():
+    if info.is_flatpak():
         if xdg_runtime_dir := os.getenv("XDG_RUNTIME_DIR"):
             temp_dir = Path(xdg_runtime_dir) / "app" / app_id
         else:

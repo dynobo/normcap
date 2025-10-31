@@ -3,8 +3,8 @@ import subprocess
 import pytest
 from PySide6 import QtCore, QtGui
 
-from normcap.platform import system_info
 from normcap.screenshot.handlers import grim
+from normcap.system import info
 
 
 @pytest.mark.gui
@@ -14,7 +14,7 @@ from normcap.screenshot.handlers import grim
 )
 def test_capture_on_wayland(qapp):
     # GIVEN a linux system with grim support (Linux with compatible Wayland Compositor)
-    assert system_info.has_wayland_display_manager()
+    assert info.has_wayland_display_manager()
 
     # WHEN screenshot is taking using QT
     images = grim.capture()
@@ -59,10 +59,10 @@ def test_capture_with_grim_mocked(monkeypatch, caplog, qapp):
         screenshot.save(image_path)
         return subprocess.CompletedProcess(args="", returncode=0, stdout="", stderr="")
 
-    monkeypatch.setattr(system_info.sys, "platform", "linux")
+    monkeypatch.setattr(info.sys, "platform", "linux")
     monkeypatch.setattr(grim.shutil, "which", lambda *_: "/some/path")
     monkeypatch.setattr(grim.subprocess, "run", mocked_run)
-    monkeypatch.setattr(system_info, "has_wlroots_compositor", lambda: True)
+    monkeypatch.setattr(info, "has_wlroots_compositor", lambda: True)
     monkeypatch.setenv("WAYLAND_DISPLAY", "wayland")
 
     assert grim.is_compatible()

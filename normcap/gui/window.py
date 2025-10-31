@@ -20,8 +20,8 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from normcap import positioning
 from normcap.gui.menu_button import MenuButton
 from normcap.gui.settings import Settings
-from normcap.platform import system_info
-from normcap.platform.models import DesktopEnvironment, Rect, Screen
+from normcap.system import info
+from normcap.system.models import DesktopEnvironment, Rect, Screen
 
 logger = logging.getLogger(__name__)
 
@@ -222,8 +222,7 @@ class Window(QtWidgets.QMainWindow):
     def _create_menu_button(self) -> QtWidgets.QWidget:
         menu_button = MenuButton(
             settings=self.settings,
-            show_language_manager=self.debug_language_manager
-            or system_info.is_packaged(),
+            show_language_manager=self.debug_language_manager or info.is_packaged(),
             installed_languages=self.installed_languages,
         )
         return menu_button
@@ -249,7 +248,7 @@ class Window(QtWidgets.QMainWindow):
         # Using scaled window dims to fit sizing with dpr in case scaling is enabled
         # See: https://github.com/dynobo/normcap/issues/397
         if (
-            system_info.display_manager_is_wayland()
+            info.display_manager_is_wayland()
             and self.screen_.size == self.screen_.screenshot.size().toTuple()
             and self.screen_.device_pixel_ratio != 1
         ):
@@ -259,13 +258,13 @@ class Window(QtWidgets.QMainWindow):
         else:
             self.setGeometry(*self.screen_.geometry)
 
-        if system_info.desktop_environment() != DesktopEnvironment.UNITY:
+        if info.desktop_environment() != DesktopEnvironment.UNITY:
             # On some DEs, setting a fixed window size can enforce the correct size.
             # However, on Unity, it breaks the full screen view.
             self.setMinimumSize(self.geometry().size())
             self.setMaximumSize(self.geometry().size())
 
-        if system_info.display_manager_is_wayland():
+        if info.display_manager_is_wayland():
             # For unknown reason .showFullScreen() on Ubuntu 24.04 does not show the
             # window. Showing the Window in normal state upfront seems to help.
             # (It seems like .setWindowState(WindowFullScreen) should not be set before
@@ -278,7 +277,7 @@ class Window(QtWidgets.QMainWindow):
         # On Wayland, setting geometry doesn't move the window to the right screen, as
         # only the compositor is allowed to do this. That's why in case of multi-display
         # setups, we need to use hacks to position the window:
-        if system_info.display_manager_is_wayland():
+        if info.display_manager_is_wayland():
             # The delay should ensure window is active & registered in window manager.
             QtCore.QTimer.singleShot(
                 20, lambda: positioning.move(window=self, screen=self.screen_)

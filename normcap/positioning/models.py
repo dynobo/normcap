@@ -3,7 +3,7 @@ from typing import Protocol
 
 from PySide6 import QtWidgets
 
-from normcap.platform.models import Screen
+from normcap.system.models import Screen
 
 
 class HandlerProtocol(Protocol):

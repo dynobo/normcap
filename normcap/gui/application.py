@@ -27,8 +27,8 @@ from normcap.gui.tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
 from normcap.notification.models import ACTION_NAME_NOTIFICATION_CLICKED
-from normcap.platform import system_info
-from normcap.platform.models import Rect, Screen
+from normcap.system import info
+from normcap.system.models import Rect, Screen
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +104,7 @@ class NormcapApp(QtWidgets.QApplication):
             self.settings.reset()
 
         # Init state
-        self.screens: list[Screen] = system_info.screens()
+        self.screens: list[Screen] = info.screens()
         self.windows: dict[int, Window] = {}
         self.cli_mode = args.get("cli_mode", False)
         self.installed_languages = ["eng"]
@@ -167,15 +167,13 @@ class NormcapApp(QtWidgets.QApplication):
         delay = 0
 
         if sys.platform == "darwin":
-            calling_app = (
-                "NormCap" if system_info.is_briefcase_package() else "Terminal"
-            )
+            calling_app = "NormCap" if info.is_briefcase_package() else "Terminal"
             text = constants.PERMISSIONS_TEXT_MACOS.format(application=calling_app)
 
-        elif system_info.is_flatpak():
+        elif info.is_flatpak():
             text = constants.PERMISSIONS_TEXT_FLATPAK
 
-        elif system_info.display_manager_is_wayland():
+        elif info.display_manager_is_wayland():
             text = constants.PERMISSIONS_TEXT_WAYLAND
 
         permissions_dialog.MissingPermissionDialog(text=text).exec()
@@ -249,7 +247,7 @@ class NormcapApp(QtWidgets.QApplication):
         for idx, image in enumerate(screenshots):
             self.screens[idx].screenshot = image
 
-        for index in range(len(system_info.screens())):
+        for index in range(len(info.screens())):
             self._create_window(index)
 
     @QtCore.Slot()
@@ -286,7 +284,7 @@ class NormcapApp(QtWidgets.QApplication):
         if not self._is_time_for_update_check():
             return
 
-        self.checker = UpdateChecker(packaged=system_info.is_packaged())
+        self.checker = UpdateChecker(packaged=info.is_packaged())
         self.checker.com.on_version_checked.connect(self._set_last_update_check_time)
         self.checker.com.on_click_get_new_version.connect(self._open_url_and_hide)
 
@@ -329,12 +327,12 @@ class NormcapApp(QtWidgets.QApplication):
             self._minimize_to_tray_or_exit(delay=0)
             return
 
-        tessdata_path = system_info.get_tessdata_path(
-            config_directory=system_info.config_directory(),
-            is_packaged=system_info.is_packaged(),
+        tessdata_path = info.get_tessdata_path(
+            config_directory=info.config_directory(),
+            is_packaged=info.is_packaged(),
         )
-        tesseract_bin_path = system_info.get_tesseract_bin_path(
-            is_briefcase_package=system_info.is_briefcase_package()
+        tesseract_bin_path = info.get_tesseract_bin_path(
+            is_briefcase_package=info.is_briefcase_package()
         )
 
         detection_mode = DetectionMode(0)
@@ -443,12 +441,12 @@ class NormcapApp(QtWidgets.QApplication):
 
     def _update_installed_languages(self) -> None:
         self.installed_languages = ocr.tesseract.get_languages(
-            tesseract_cmd=system_info.get_tesseract_bin_path(
-                is_briefcase_package=system_info.is_briefcase_package()
+            tesseract_cmd=info.get_tesseract_bin_path(
+                is_briefcase_package=info.is_briefcase_package()
             ),
-            tessdata_path=system_info.get_tessdata_path(
-                config_directory=system_info.config_directory(),
-                is_packaged=system_info.is_packaged(),
+            tessdata_path=info.get_tessdata_path(
+                config_directory=info.config_directory(),
+                is_packaged=info.is_packaged(),
             ),
         )
         self._sanitize_language_setting()
@@ -458,7 +456,7 @@ class NormcapApp(QtWidgets.QApplication):
         """Open url in default browser, then hide to tray or exit."""
         logger.debug("Loading language manager …")
         self.language_window = LanguageManager(
-            tessdata_path=system_info.config_directory() / "tessdata",
+            tessdata_path=info.config_directory() / "tessdata",
             parent=self.windows[0],
         )
         self.language_window.com.on_open_url.connect(self._open_url_and_hide)

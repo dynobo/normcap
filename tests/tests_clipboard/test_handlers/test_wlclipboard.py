@@ -6,7 +6,7 @@ import uuid
 import pytest
 
 from normcap.clipboard.handlers import wlclipboard
-from normcap.platform import system_info
+from normcap.system import info
 
 
 @pytest.mark.parametrize(
@@ -26,8 +26,8 @@ def test_wlcopy_is_compatible(
 ):
     monkeypatch.setenv("WAYLAND_DISPLAY", wayland_display)
     monkeypatch.setenv("XDG_SESSION_TYPE", xdg_session_type)
-    monkeypatch.setattr(system_info.sys, "platform", platform)
-    monkeypatch.setattr(system_info, "get_gnome_version", lambda *_: gnome_version)
+    monkeypatch.setattr(info.sys, "platform", platform)
+    monkeypatch.setattr(info, "get_gnome_version", lambda *_: gnome_version)
 
     assert wlclipboard.is_compatible() == result
 
@@ -40,7 +40,7 @@ def test_wlcopy_is_compatible(
     ],
 )
 def test_wlcopy_is_installed(platform, has_wlcopy, result, monkeypatch):
-    monkeypatch.setattr(system_info.sys, "platform", platform)
+    monkeypatch.setattr(info.sys, "platform", platform)
     monkeypatch.setattr(
         wlclipboard.shutil, "which", lambda *args: "wl-copy" in args and has_wlcopy
     )

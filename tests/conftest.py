@@ -25,7 +25,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from normcap.detection.ocr.models import OEM, PSM, OcrResult, TessArgs
 from normcap.detection.ocr.transformers import email_address, url
 from normcap.gui import application, menu_button
-from normcap.platform import system_info
+from normcap.system import info
 
 
 @pytest.fixture(scope="session")
@@ -56,21 +56,21 @@ def _clear_caches():
     cached_funcs = [
         url._extract_urls,
         email_address._extract_emails,
-        system_info.desktop_environment,
-        system_info.display_manager_is_wayland,
-        system_info.get_tesseract_bin_path,
-        system_info.config_directory,
-        system_info.is_briefcase_package,
-        system_info.is_appimage_package,
-        system_info.is_flatpak,
-        system_info.is_packaged,
-        system_info.is_kde,
-        system_info.is_gnome,
-        system_info.get_tessdata_path,
-        system_info.has_wlroots_compositor,
-        system_info.has_wayland_display_manager,
-        system_info.get_gnome_version,
-        system_info.has_awesome_wm,
+        info.desktop_environment,
+        info.display_manager_is_wayland,
+        info.get_tesseract_bin_path,
+        info.config_directory,
+        info.is_briefcase_package,
+        info.is_appimage_package,
+        info.is_flatpak,
+        info.is_packaged,
+        info.is_kde,
+        info.is_gnome,
+        info.get_tessdata_path,
+        info.has_wlroots_compositor,
+        info.has_wayland_display_manager,
+        info.get_gnome_version,
+        info.has_awesome_wm,
     ]
     for func in cached_funcs:
         func.cache_clear()
@@ -112,16 +112,14 @@ def dbus_portal(qapp):
 
 @pytest.fixture
 def tesseract_cmd() -> Path:
-    return system_info.get_tesseract_bin_path(
-        is_briefcase_package=system_info.is_briefcase_package()
-    )
+    return info.get_tesseract_bin_path(is_briefcase_package=info.is_briefcase_package())
 
 
 @pytest.fixture
 def tessdata_path() -> Path | None:
-    return system_info.get_tessdata_path(
-        config_directory=system_info.config_directory(),
-        is_packaged=system_info.is_packaged(),
+    return info.get_tessdata_path(
+        config_directory=info.config_directory(),
+        is_packaged=info.is_packaged(),
     )
 
 

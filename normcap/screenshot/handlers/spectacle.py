@@ -6,8 +6,8 @@ from pathlib import Path
 
 from PySide6 import QtGui
 
-from normcap.platform import system_info
 from normcap.screenshot.post_processing import split_full_desktop_to_screens
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ install_instructions = (
 
 
 def is_compatible() -> bool:
-    return system_info.is_kde() and not system_info.is_flatpak()
+    return info.is_kde() and not info.is_flatpak()
 
 
 def is_installed() -> bool:
