@@ -3,7 +3,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from normcap.platform import system_info
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ install_instructions = (
 
 def copy(text: str) -> None:
     """Use wl-clipboard package to copy text to system clipboard."""
-    if gnome_version := system_info.get_gnome_version():
+    if gnome_version := info.get_gnome_version():
         gnome_major = int(gnome_version.split(".")[0])
         last_working_gnome_version = 44
         if gnome_major > last_working_gnome_version:
@@ -40,13 +40,13 @@ def copy(text: str) -> None:
 
 
 def is_compatible() -> bool:
-    if not system_info.has_wayland_display_manager():
+    if not info.has_wayland_display_manager():
         return False
 
-    if system_info.has_awesome_wm():
+    if info.has_awesome_wm():
         return False
 
-    if system_info.is_flatpak():
+    if info.is_flatpak():
         return True
 
     return True

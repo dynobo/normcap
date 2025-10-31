@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 from normcap.notification.models import NotificationAction
-from normcap.platform import system_info
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ def notify(
     which doesn't feel very solid.
     """
     logger.debug("Send notification via notify-send")
-    icon_path = system_info.get_resources_path() / "icons" / "notification.png"
+    icon_path = info.get_resources_path() / "icons" / "notification.png"
 
     # Escape chars interpreted by notify-send
     message = message.replace("\\", "\\\\")

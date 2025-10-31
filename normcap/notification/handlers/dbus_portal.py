@@ -10,7 +10,7 @@ from normcap.notification.models import (
     ACTION_NAME_NOTIFICATION_CLICKED,
     NotificationAction,
 )
-from normcap.platform import system_info
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +60,7 @@ def is_compatible() -> bool:
     if sys.platform != "linux":
         return False
 
-    return system_info.is_dbus_service_running()
+    return info.is_dbus_service_running()
 
 
 def is_installed() -> bool:

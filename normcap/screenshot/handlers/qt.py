@@ -2,7 +2,7 @@ import logging
 
 from PySide6 import QtGui, QtWidgets
 
-from normcap.platform import system_info
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +10,7 @@ install_instructions = ""
 
 
 def is_compatible() -> bool:
-    return not system_info.has_wayland_display_manager()
+    return not info.has_wayland_display_manager()
 
 
 def is_installed() -> bool:

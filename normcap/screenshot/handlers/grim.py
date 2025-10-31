@@ -6,8 +6,8 @@ from pathlib import Path
 
 from PySide6 import QtGui
 
-from normcap.platform import system_info
 from normcap.screenshot.post_processing import split_full_desktop_to_screens
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ install_instructions = "Install the package `grim` using your system's package m
 
 
 def is_compatible() -> bool:
-    return system_info.has_wlroots_compositor() and not system_info.is_flatpak()
+    return info.has_wlroots_compositor() and not info.is_flatpak()
 
 
 def is_installed() -> bool:

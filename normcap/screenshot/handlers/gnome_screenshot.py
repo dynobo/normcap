@@ -6,8 +6,8 @@ from pathlib import Path
 
 from PySide6 import QtGui
 
-from normcap.platform import system_info
 from normcap.screenshot.post_processing import split_full_desktop_to_screens
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -21,10 +21,10 @@ LAST_GNOME_VERSION_SUPPORTED = 48
 
 
 def is_compatible() -> bool:
-    if not system_info.is_gnome() or system_info.is_flatpak():
+    if not info.is_gnome() or info.is_flatpak():
         return False
 
-    if gnome_version := system_info.get_gnome_version():
+    if gnome_version := info.get_gnome_version():
         gnome_major = int(gnome_version.split(".")[0])
         return gnome_major <= LAST_GNOME_VERSION_SUPPORTED
 

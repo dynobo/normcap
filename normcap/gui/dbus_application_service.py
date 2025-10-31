@@ -125,6 +125,41 @@ class DBusApplicationService(QtCore.QObject):
 
         return True
 
+    @QtCore.Slot(list, dict, result=bool)
+    def Open(self, uris: list, platform_data: dict) -> bool:  # noqa: N802
+        """DBus method: called when a file is opened with the application.
+
+        This method implements the standard org.freedesktop.Application.Activate
+        method and can be called via DBus to activate NormCap.
+
+        Args:
+            uris: List containing the file names as uris
+            platform_data: Dictionary containing platform-specific data such as
+                          desktop-startup-id and activation-token
+
+        Returns:
+            True if activation was handled successfully
+        """
+        # Extract useful information from platform data
+        activation_token = platform_data.get("activation-token", "")
+
+        logger.info(
+            (
+                "Activated via org.freedesktop.Application.Open with "
+                "platform_data: %s, uris: %s"
+            ),
+            platform_data,
+            uris,
+        )
+
+        # Convert to list format for consistency with existing signal
+        params = [activation_token] if activation_token else []
+
+        # Emit signal for the main application to handle
+        self.activated.emit(params)
+
+        return True
+
     @QtCore.Slot(str, list, dict, result=bool)
     def ActivateAction(  # noqa: N802
         self, action_name: str, params: list, platform_data: dict

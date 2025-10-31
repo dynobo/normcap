@@ -2,7 +2,7 @@ import pytest
 from PySide6 import QtCore, QtGui
 
 from normcap.gui import window
-from normcap.platform.models import Screen
+from normcap.system.models import Screen
 
 
 @pytest.mark.gui

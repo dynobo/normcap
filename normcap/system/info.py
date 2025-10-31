@@ -14,7 +14,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6 import __version__ as pyside_version
 
 from normcap import __version__, app_id
-from normcap.platform.models import DesktopEnvironment, Screen
+from normcap.system.models import DesktopEnvironment, Screen
 
 logger = logging.getLogger(__name__)
 

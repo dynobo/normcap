@@ -3,7 +3,7 @@ import shutil
 import pytest
 
 from normcap import clipboard
-from normcap.platform import system_info
+from normcap.system import info
 
 
 def test_copy():
@@ -28,7 +28,7 @@ def test_copy_without_compatible_handler_fails(monkeypatch):
 
 
 @pytest.mark.skipif(
-    system_info.has_wayland_display_manager()
+    info.has_wayland_display_manager()
     and not (shutil.which("wl-copy") or shutil.which("xclip")),
     reason="Needs wl-cop or xclip",
 )

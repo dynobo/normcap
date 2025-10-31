@@ -4,7 +4,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from normcap.platform import system_info
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ def is_compatible() -> bool:
     if sys.platform != "linux" and "bsd" not in sys.platform:
         return False
 
-    return not system_info.is_flatpak()
+    return not info.is_flatpak()
 
 
 def is_installed() -> bool:

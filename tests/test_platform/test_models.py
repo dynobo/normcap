@@ -1,6 +1,6 @@
 import pytest
 
-from normcap.platform.models import Rect, Screen
+from normcap.system.models import Rect, Screen
 
 
 def test_rect_properties():

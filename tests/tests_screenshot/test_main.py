@@ -2,9 +2,9 @@ import pytest
 from PySide6 import QtGui
 
 from normcap import screenshot
-from normcap.platform import system_info
 from normcap.screenshot.handlers import dbus_portal, gnome_screenshot, grim
 from normcap.screenshot.models import Handler
+from normcap.system import info
 
 
 @pytest.mark.gui
@@ -55,12 +55,12 @@ def test_get_available_handlers(
     has_gnome_screenshot,
     expected_handler,
 ):
-    monkeypatch.setattr(system_info.sys, "platform", sys_platform)
-    monkeypatch.setattr(system_info, "has_wayland_display_manager", lambda: is_wayland)
+    monkeypatch.setattr(info.sys, "platform", sys_platform)
+    monkeypatch.setattr(info, "has_wayland_display_manager", lambda: is_wayland)
     monkeypatch.setattr(dbus_portal, "is_installed", lambda: is_wayland)
-    monkeypatch.setattr(system_info, "has_wlroots_compositor", lambda: is_wlroots)
-    monkeypatch.setattr(system_info, "get_gnome_version", lambda: gnome_version)
-    monkeypatch.setattr(system_info, "is_gnome", lambda: bool(gnome_version))
+    monkeypatch.setattr(info, "has_wlroots_compositor", lambda: is_wlroots)
+    monkeypatch.setattr(info, "get_gnome_version", lambda: gnome_version)
+    monkeypatch.setattr(info, "is_gnome", lambda: bool(gnome_version))
 
     def _mocked_which(cmd):
         if cmd == "grim" and has_grim:

@@ -1,7 +1,7 @@
 import logging
 from typing import Any, cast
 
-from normcap.platform import system_info
+from normcap.system import info
 
 _dialog_reference: list = []
 try:
@@ -96,7 +96,7 @@ def copy(text: str) -> None:
 
 
 def is_compatible() -> bool:
-    return QtGui is not None and system_info.has_wayland_display_manager()
+    return QtGui is not None and info.has_wayland_display_manager()
 
 
 def is_installed() -> bool:

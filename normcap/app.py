@@ -10,7 +10,7 @@ from PySide6 import QtWidgets
 from normcap import argparser, environment
 from normcap import logger_config as logger_
 from normcap.gui.application import NormcapApp
-from normcap.platform import system_info
+from normcap.system import info
 
 logger = logging.getLogger(__name__)
 
@@ -31,14 +31,14 @@ def _init_normcap() -> QtWidgets.QApplication:
     )
     environment.prepare()
 
-    if system_info.is_packaged():
-        tessdata_path = system_info.get_tessdata_path(
-            config_directory=system_info.config_directory(),
-            is_packaged=system_info.is_packaged(),
+    if info.is_packaged():
+        tessdata_path = info.get_tessdata_path(
+            config_directory=info.config_directory(),
+            is_packaged=info.is_packaged(),
         )
         environment.copy_traineddata_files(target_dir=tessdata_path)
 
-    logger.debug("System info:\n%s", system_info.to_dict())
+    logger.debug("System info:\n%s", info.to_dict())
     return NormcapApp(args=vars(args))
 
 
