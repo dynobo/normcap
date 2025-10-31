@@ -44,7 +44,8 @@ def _init_normcap() -> QtWidgets.QApplication:
 
 def run() -> NoReturn:
     """Run the main application."""
-    sys.exit(_init_normcap().exec())
+    app = _init_normcap()
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":
