@@ -8,19 +8,20 @@ msgstr ""
 "Project-Id-Version: NormCap 0.5.9\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2025-04-20 22:46+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-11-10 06:51+0000\n"
+"Last-Translator: Mohammad Khani <soheyl637@gmail.com>\n"
+"Language-Team: Persian <https://hosted.weblate.org/projects/normcap/ui/fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.15-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: normcap/gui/constants.py:38
 msgid "<h3>NormCap is missing the permission for screen capture.</h3>"
-msgstr ""
+msgstr "<h3>NormCap دسترسی برای ضبط صفحه را ندارد.</h3>"
 
 #: normcap/gui/constants.py:44
 #, python-brace-format
