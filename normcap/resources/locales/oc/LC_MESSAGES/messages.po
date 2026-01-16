@@ -8,19 +8,20 @@ msgstr ""
 "Project-Id-Version: NormCap 0.5.9\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2025-04-20 22:46+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-01-17 00:01+0000\n"
+"Last-Translator: Quentin PAGÈS <quentinantonin@free.fr>\n"
+"Language-Team: Occitan <https://hosted.weblate.org/projects/normcap/ui/oc/>\n"
 "Language: oc\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: normcap/gui/constants.py:38
 msgid "<h3>NormCap is missing the permission for screen capture.</h3>"
-msgstr ""
+msgstr "<h3>NormCap a pas l'autorizacion de prendre de capturas d'ecran.</h3>"
 
 #: normcap/gui/constants.py:44
 #, python-brace-format
@@ -58,37 +59,37 @@ msgstr ""
 #. Generic error message when any download failed.
 #: normcap/gui/downloader.py:59
 msgid "Download error."
-msgstr ""
+msgstr "Fracàs de telecargament."
 
 #. Introduction window title
 #: normcap/gui/introduction.py:51
 msgid "Introduction to NormCap"
-msgstr ""
+msgstr "Introduccion a NormCap"
 
 #. Introduction window checkbox
 #: normcap/gui/introduction.py:57
 msgid "Show on startup"
-msgstr ""
+msgstr "Mostrar a l'aviada"
 
 #. Introduction window button
 #: normcap/gui/introduction.py:60
 msgid "Ok"
-msgstr ""
+msgstr "D'acòrdi"
 
 #. Introduction window shortcut for pasting on Linux and Windows
 #: normcap/gui/introduction.py:77
 msgid "Ctrl + v"
-msgstr ""
+msgstr "Ctrl + v"
 
 #. Introduction window shortcut for pasting on macOS
 #: normcap/gui/introduction.py:79
 msgid "Cmd + v"
-msgstr ""
+msgstr "Cmd + V"
 
 #. Introduction window step title
 #: normcap/gui/introduction.py:83
 msgid "1. Select area"
-msgstr ""
+msgstr "1. Seleccionatz una zòna"
 
 #: normcap/gui/introduction.py:86
 msgid ""
@@ -143,29 +144,29 @@ msgstr ""
 #. Language Manager section
 #: normcap/gui/language_manager.py:45
 msgid "Installed:"
-msgstr ""
+msgstr "Installat :"
 
 #. Language Manager button
 #: normcap/gui/language_manager.py:48
 msgid "Delete"
-msgstr ""
+msgstr "Suprimir"
 
 #. Language Manager section
 #: normcap/gui/language_manager.py:55
 msgid "Available:"
-msgstr ""
+msgstr "Disponible :"
 
 #. Language Manager button
 #: normcap/gui/language_manager.py:58
 msgid "Download"
-msgstr ""
+msgstr "Telecargar"
 
 #. Language Manager button
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/language_manager.py:67
 #: normcap/gui/menu_button.py:411
 msgid "Close"
-msgstr ""
+msgstr "Tampar"
 
 #. Language Manager link to directory on file system
 #: normcap/gui/language_manager.py:73
@@ -175,17 +176,17 @@ msgstr ""
 #. Language Manager error message box title
 #: normcap/gui/language_manager.py:98
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. Language Manager error message box text
 #: normcap/gui/language_manager.py:100
 msgid "Language download failed!"
-msgstr ""
+msgstr "Fracàs del telecargament de la lenga !"
 
 #. Language Manager information message box title
 #: normcap/gui/language_manager.py:130
 msgid "Information"
-msgstr ""
+msgstr "Informacions"
 
 #: normcap/gui/language_manager.py:133
 msgid ""
@@ -203,32 +204,32 @@ msgstr ""
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:202
 msgid "Settings"
-msgstr ""
+msgstr "Paramètres"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:206
 msgid "Detection"
-msgstr ""
+msgstr "Deteccion"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:210
 msgid "Post-processing"
-msgstr ""
+msgstr "Pòsttractament"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:214
 msgid "Languages"
-msgstr ""
+msgstr "Lengas"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:218
 msgid "Application"
-msgstr ""
+msgstr "Aplicacion"
 
 #. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:238
 msgid "Show notification"
-msgstr ""
+msgstr "Mostrar la notificacion"
 
 #: normcap/gui/menu_button.py:244
 msgid ""
@@ -251,7 +252,7 @@ msgstr ""
 #. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:269
 msgid "Check for update"
-msgstr ""
+msgstr "Cercar las mesas a jorn"
 
 #: normcap/gui/menu_button.py:276
 msgid ""
