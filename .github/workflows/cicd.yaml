@@ -217,7 +217,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["javascript", "python"]
+        language: ["python"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5.0.0
