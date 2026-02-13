@@ -501,7 +501,7 @@ class NormcapApp(QtWidgets.QApplication):
         logger.debug("Debug images in %s%snormcap", utils.tempfile.gettempdir(), os.sep)
 
         # Not sure why, but quit doesn't work reliably if called directly
-        QtCore.QTimer.singleShot(0, lambda: self.quit())
+        QtCore.QTimer.singleShot(0, self.quit)
 
         # Use harsher fallback if quit() didn't work
         QtCore.QTimer.singleShot(500, lambda: sys.exit(1))
