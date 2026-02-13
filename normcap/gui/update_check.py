@@ -139,7 +139,7 @@ class UpdateChecker(QtWidgets.QWidget):
             logging.debug("Discarding pre-release version %s", other)
             return False
 
-        current = current.split("-")[0]
+        current = current.split("-", maxsplit=1)[0]
         current_version = [int(c) for c in current.split(".")]
         other_version = [int(c) for c in other.split(".")]
         return other_version > current_version

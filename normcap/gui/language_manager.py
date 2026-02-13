@@ -121,7 +121,7 @@ class LanguageManager(QtWidgets.QDialog):
     @QtCore.Slot(bytes, str)
     def _on_download_finished(self, data: bytes, url: str) -> None:
         """Save language to tessdata folder."""
-        file_name = url.split("/")[-1]
+        file_name = url.rsplit("/", maxsplit=1)[-1]
         with Path(self.tessdata_path / file_name).open(mode="wb") as fh:
             fh.write(data)
         self._update_models()
