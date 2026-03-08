@@ -8,19 +8,20 @@ msgstr ""
 "Project-Id-Version: NormCap 0.5.9\n"
 "Report-Msgid-Bugs-To: dynobo@mailbox.org\n"
 "POT-Creation-Date: 2025-04-20 22:46+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-03-09 08:09+0000\n"
+"Last-Translator: Jiri Grönroos <jiri.gronroos@iki.fi>\n"
+"Language-Team: Finnish <https://hosted.weblate.org/projects/normcap/ui/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.17-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: normcap/gui/constants.py:38
 msgid "<h3>NormCap is missing the permission for screen capture.</h3>"
-msgstr ""
+msgstr "<h3>NormCapilta puuttuu oikeus näytönkaappaukseen.</h3>"
 
 #: normcap/gui/constants.py:44
 #, python-brace-format
@@ -28,6 +29,8 @@ msgid ""
 "<small>If this doesn't resolve the issue, please <a "
 "href='{issues_url}'>report it as a bug</a> on GitHub.</small>"
 msgstr ""
+"<small>Jos tämä ei ratkaise ongelmaa, <a href=\"{issues_url}\">ilmoita "
+"ongelmasta</a> GitHubiin.</small>"
 
 #: normcap/gui/constants.py:53
 #, python-brace-format
@@ -38,6 +41,11 @@ msgid ""
 "permissions for <b><u>all</u></b> applications by running the following "
 "command in a terminal:</p>{command}"
 msgstr ""
+"{headline}<p>Kun käynnistät NormCapin ensimmäisen kerran, sinulta pyydetään "
+"lupaa ottaa tai jakaa kuvakaappauksia.</p><p>Jos kieltäydyit antamasta "
+"lupaa, tai lupaa ei edes kysytty, voit pyrkiä nollaamaan kuvakaappauksen "
+"käyttöoikeudet <b><u>kaikille</u></b> sovelluksille suorittamalla seuraavan "
+"komennon päätteessä:</p>{command}"
 
 #: normcap/gui/constants.py:71
 #, python-brace-format
@@ -45,6 +53,8 @@ msgid ""
 "{headline}<p>Grant it by running the following command in a "
 "terminal:</p>{command}"
 msgstr ""
+"{headline}<p>Myönnä se suorittamalla seuraava komento päätteessä:</p>"
+"{command}"
 
 #: normcap/gui/constants.py:80
 #, python-brace-format
@@ -58,59 +68,63 @@ msgstr ""
 #. Generic error message when any download failed.
 #: normcap/gui/downloader.py:59
 msgid "Download error."
-msgstr ""
+msgstr "Latausvirhe."
 
 #. Introduction window title
 #: normcap/gui/introduction.py:51
 msgid "Introduction to NormCap"
-msgstr ""
+msgstr "NormCapin esittely"
 
 #. Introduction window checkbox
 #: normcap/gui/introduction.py:57
 msgid "Show on startup"
-msgstr ""
+msgstr "Näytä käynnistyksen yhteydessä"
 
 #. Introduction window button
 #: normcap/gui/introduction.py:60
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 #. Introduction window shortcut for pasting on Linux and Windows
 #: normcap/gui/introduction.py:77
 msgid "Ctrl + v"
-msgstr ""
+msgstr "Ctrl + V"
 
 #. Introduction window shortcut for pasting on macOS
 #: normcap/gui/introduction.py:79
 msgid "Cmd + v"
-msgstr ""
+msgstr "Cmd + V"
 
 #. Introduction window step title
 #: normcap/gui/introduction.py:83
 msgid "1. Select area"
-msgstr ""
+msgstr "1. Valitse alue"
 
 #: normcap/gui/introduction.py:86
 msgid ""
 "Wait until a pink border appears around your screen, then select the desired"
 " capture area."
 msgstr ""
+"Odota, kunnes pinkki reunus ilmestyy näytölle, ja valitse sitten haluttu "
+"alue."
 
 #. Introduction window step title
 #: normcap/gui/introduction.py:93
 msgid "2. Wait for detection"
-msgstr ""
+msgstr "2. Odota havaintoa"
 
 #: normcap/gui/introduction.py:96
 msgid ""
 "Processing takes time. Wait for a notification or a color change of the "
 "system tray icon."
 msgstr ""
+"Käsittely saattaa kestää hetken. Odota ilmoitusta tai ilmoitusalueen "
+"kuvakkeen värin muuttumista."
 
 #. Introduction window step title
 #: normcap/gui/introduction.py:103
 msgid "3. Paste from clipboard"
-msgstr ""
+msgstr "3. Liitä leikepöydältä"
 
 #: normcap/gui/introduction.py:106
 #, python-brace-format
@@ -118,54 +132,57 @@ msgid ""
 "The detection result will be copied to your system's clipboard. Paste it "
 "into any application ({shortcut})."
 msgstr ""
+"Havaitsemisen tulokset kopioidaan järjestelmän leikepöydälle. Liitä "
+"leikepöydän sisältö mihin tahansa sovellukseen ({shortcut})."
 
 #. Introduction window step title
 #: normcap/gui/introduction.py:117
 msgid "Settings & more"
-msgstr ""
+msgstr "Asetukset ja muuta"
 
 #: normcap/gui/introduction.py:120
 msgid ""
 "Open the menu using the gear icon in the upper right corner of corner your "
 "screen."
 msgstr ""
+"Avaa valikko näytön oikeassa yläkulmassa olevasta hammasrattaan kuvakkeesta."
 
 #. Introduction window headline
 #: normcap/gui/introduction.py:130
 msgid "Basic Usage"
-msgstr ""
+msgstr "Peruskäyttö"
 
 #. Title of Language Manager
 #: normcap/gui/language_manager.py:32
 msgid "Manage Languages"
-msgstr ""
+msgstr "Hallitse kieliä"
 
 #. Language Manager section
 #: normcap/gui/language_manager.py:45
 msgid "Installed:"
-msgstr ""
+msgstr "Asennettu:"
 
 #. Language Manager button
 #: normcap/gui/language_manager.py:48
 msgid "Delete"
-msgstr ""
+msgstr "Poista"
 
 #. Language Manager section
 #: normcap/gui/language_manager.py:55
 msgid "Available:"
-msgstr ""
+msgstr "Saatavilla:"
 
 #. Language Manager button
 #: normcap/gui/language_manager.py:58
 msgid "Download"
-msgstr ""
+msgstr "Lataa"
 
 #. Language Manager button
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/language_manager.py:67
 #: normcap/gui/menu_button.py:411
 msgid "Close"
-msgstr ""
+msgstr "Sulje"
 
 #. Language Manager link to directory on file system
 #: normcap/gui/language_manager.py:73
@@ -175,23 +192,25 @@ msgstr ""
 #. Language Manager error message box title
 #: normcap/gui/language_manager.py:98
 msgid "Error"
-msgstr ""
+msgstr "Virhe"
 
 #. Language Manager error message box text
 #: normcap/gui/language_manager.py:100
 msgid "Language download failed!"
-msgstr ""
+msgstr "Kielen lataus epäonnistui!"
 
 #. Language Manager information message box title
 #: normcap/gui/language_manager.py:130
 msgid "Information"
-msgstr ""
+msgstr "Tiedot"
 
 #: normcap/gui/language_manager.py:133
 msgid ""
 "It is not possible to delete all languages. NormCap needs at least one to "
 "function correctly."
 msgstr ""
+"Kaikkia kieliä ei voi poistaa. NormCap tarvitsee vähintään yhden kielen "
+"toimiakseen oikein."
 
 #: normcap/gui/menu_button.py:153
 msgid ""
@@ -199,70 +218,79 @@ msgid ""
 "system. To install additional languages, please refer to the documentation "
 "of that Tesseract installation."
 msgstr ""
+"Tämä NormCapin asennus käyttää järjestelmääsi asennettua Tesseract-binääriä. "
+"Jos haluat asentaa lisää kieliä, tutustu kyseisen Tesseract-asennuksen "
+"dokumentaatioon."
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:202
 msgid "Settings"
-msgstr ""
+msgstr "Asetukset"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:206
 msgid "Detection"
-msgstr ""
+msgstr "Havaitseminen"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:210
 msgid "Post-processing"
-msgstr ""
+msgstr "Jälkikäsittely"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:214
 msgid "Languages"
-msgstr ""
+msgstr "Kielet"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:218
 msgid "Application"
-msgstr ""
+msgstr "Sovellus"
 
 #. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:238
 msgid "Show notification"
-msgstr ""
+msgstr "Näytä ilmoitus"
 
 #: normcap/gui/menu_button.py:244
 msgid ""
 "Show status information via your system's desktop\n"
 "notification center."
 msgstr ""
+"Näytä tilatiedot järjestelmäsi työpöydän\n"
+"ilmoituskeskuksessa."
 
 #. Extension "Show notification"-Tooltip on macOS and Windows.
 #. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:255
 msgid "Keep in system tray"
-msgstr ""
+msgstr "Pidä ilmoitusalueella"
 
 #: normcap/gui/menu_button.py:262
 msgid ""
 "Keep NormCap running in the background. Another\n"
 "capture can be triggered via the tray icon."
 msgstr ""
+"Pidä NormCap käynnissä taustalla. Uusi kaappaus\n"
+"on mahdollista ottaa ilmoitusalueen kuvakkeen avulla."
 
 #. Entry in main menu's 'setting' section
 #: normcap/gui/menu_button.py:269
 msgid "Check for update"
-msgstr ""
+msgstr "Tarkista päivitykset"
 
 #: normcap/gui/menu_button.py:276
 msgid ""
 "Frequently fetch NormCap's releases online and display\n"
 "a message if a new version is available."
 msgstr ""
+"Nouda säännöllisesti NormCapin julkaisuja verkosta\n"
+"ja näytä viesti, jos uusi versio on saatavilla."
 
 #. Entry in main menu's 'Detection' section
 #: normcap/gui/menu_button.py:288
 msgid "Parse text"
-msgstr ""
+msgstr "Jäsennä teksti"
 
 #: normcap/gui/menu_button.py:295
 msgid ""
@@ -275,78 +303,80 @@ msgstr ""
 
 #: normcap/gui/menu_button.py:309
 msgid "Text"
-msgstr ""
+msgstr "Teksti"
 
 #. Tooltip of main menu's 'Text' entry. Use <56 chars p. line.
 #: normcap/gui/menu_button.py:314
 msgid "Tries to detect text in the selected region using OCR."
-msgstr ""
+msgstr "Yrittää havaita tekstiä valitulta alueelta OCR:ää käyttäen."
 
 #. Entry in main menu's 'Detection' section
 #: normcap/gui/menu_button.py:318
 msgid "QR && Barcodes"
-msgstr ""
+msgstr "QR- ja viivakoodit"
 
 #: normcap/gui/menu_button.py:325
 msgid ""
 "Detects Barcodes and QR codes. If one or more codes are found,\n"
 "text detection (OCR) is skipped and only the codes' data is returned."
 msgstr ""
+"Havaitsee viiva- ja QR-koodeja. Jos yksi tai useampi koodi löytyy,\n"
+"tekstin havaitseminen (OCR) ohitetaan ja vain koodien data palautetaan."
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: normcap/gui/menu_button.py:353
 msgid "add/remove …"
-msgstr ""
+msgstr "lisää/poista…"
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:357
 msgid "… need more?"
-msgstr ""
+msgstr "… tarvitsetko lisää?"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:366
 msgid "About"
-msgstr ""
+msgstr "Tietoja"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:374
 msgid "Introduction"
-msgstr ""
+msgstr "Esittely"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:379
 msgid "Website"
-msgstr ""
+msgstr "Verkkosivusto"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:384
 msgid "FAQs"
-msgstr ""
+msgstr "UKK:t"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:389
 msgid "Source code"
-msgstr ""
+msgstr "Lähdekoodi"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:394
 msgid "Releases"
-msgstr ""
+msgstr "Julkaisut"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:399
 msgid "Report a problem"
-msgstr ""
+msgstr "Ilmoita ongelmasta"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:404
 msgid "Donate for coffee"
-msgstr ""
+msgstr "Lahjoita kahvi"
 
 #. Tooltip of main menu's 'close' entry. Use <56 chars p. line.
 #: normcap/gui/menu_button.py:414
 msgid "Exit NormCap, or minimize to system tray (if enabled)."
-msgstr ""
+msgstr "Lopeta NormCap, tai pienennä ilmoitusalueelle (jos käytössä)."
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -354,8 +384,8 @@ msgstr ""
 #, python-brace-format
 msgid "1 QR code detected"
 msgid_plural "{count} QR codes detected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 QR-koodi havaittu"
+msgstr[1] "{count} QR-koodia havaittu"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -363,8 +393,8 @@ msgstr[1] ""
 #, python-brace-format
 msgid "1 barcode detected"
 msgid_plural "{count} barcodes detected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 viivakoodi havaittu"
+msgstr[1] "{count} viivakoodia havaittu"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -372,8 +402,8 @@ msgstr[1] ""
 #, python-brace-format
 msgid "1 code detected"
 msgid_plural "{count} codes detected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 koodi havaittu"
+msgstr[1] "{count} koodia havaittu"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -381,8 +411,8 @@ msgstr[1] ""
 #, python-brace-format
 msgid "1 paragraph captured"
 msgid_plural "{count} paragraphs captured"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 kappale kaapattu"
+msgstr[1] "{count} kappaletta kaapattu"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -390,8 +420,8 @@ msgstr[1] ""
 #, python-brace-format
 msgid "1 email captured"
 msgid_plural "{count} emails captured"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 sähköposti kaapattu"
+msgstr[1] "{count} sähköpostia kaapattu"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -399,8 +429,8 @@ msgstr[1] ""
 #, python-brace-format
 msgid "1 word captured"
 msgid_plural "{count} words captured"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 sana kaapattu"
+msgstr[1] "{count} sanaa kaapattu"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -408,8 +438,8 @@ msgstr[1] ""
 #, python-brace-format
 msgid "1 line captured"
 msgid_plural "{count} lines captured"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 rivi kaapattu"
+msgstr[1] "{count} riviä kaapattu"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -417,8 +447,8 @@ msgstr[1] ""
 #, python-brace-format
 msgid "1 URL captured"
 msgid_plural "{count} URLs captured"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 verkko-osoite kaapattu"
+msgstr[1] "{count} verkko-osoitetta kaapattu"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -426,79 +456,79 @@ msgstr[1] ""
 #, python-brace-format
 msgid "1 character captured"
 msgid_plural "{count} characters captured"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 merkki kaapattu"
+msgstr[1] "{count} merkkiä kaapattu"
 
 #. Notification title
 #: normcap/gui/notification.py:115
 msgid "Nothing captured!"
-msgstr ""
+msgstr "Mitään ei kaapattu!"
 
 #. Notification text
 #: normcap/gui/notification.py:117
 msgid "Please try again."
-msgstr ""
+msgstr "Yritä uudelleen."
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:241
 msgid "Compose Email"
-msgstr ""
+msgstr "Lähetä sähköpostiviesti"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:244
 msgid "Call Number"
-msgstr ""
+msgstr "Soita numeroon"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:247
 msgid "Open in Browser"
-msgstr ""
+msgstr "Avaa selaimessa"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:250
 msgid "Import to Adressbook"
-msgstr ""
+msgstr "Tuo osoitekirjaan"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:253
 msgid "Import to Calendar"
-msgstr ""
+msgstr "Tuo kalenteriin"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:256
 msgid "Open in Editor"
-msgstr ""
+msgstr "Avaa muokkaimessa"
 
 #. Permission dialog window title
 #: normcap/gui/permissions.py:23
 msgid "NormCap - Missing Permissions!"
-msgstr ""
+msgstr "NormCap - Puuttuvat käyttöoikeudet!"
 
 #. Permission dialog button
 #. Tray menu entry for exiting NormCap completely.
 #: normcap/gui/permissions.py:53
 #: normcap/gui/tray.py:480
 msgid "Exit"
-msgstr ""
+msgstr "Lopeta"
 
 #. Tray menu entry
 #: normcap/gui/tray.py:473
 msgid "Capture"
-msgstr ""
+msgstr "Kaappaa"
 
 #. Update available dialog box.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/update_check.py:81
 #, python-brace-format
 msgid "NormCap v{version} is available."
-msgstr ""
+msgstr "NormCapin versio {version} on saatavilla."
 
 #. Update available dialog box.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/update_check.py:84
 #, python-brace-format
 msgid "You have v{version}"
-msgstr ""
+msgstr "Sinulla on versio {version}"
 
 #: normcap/gui/update_check.py:89
 msgid ""
@@ -507,6 +537,9 @@ msgid ""
 "\n"
 "Do you want to visit the release website now?"
 msgstr ""
+"Voit ladata NormCapin uuden version käyttöjärjestelmällesi GitHubista.\n"
+"\n"
+"Haluatko siirtyä nyt julkaisujen verkkosivulle?"
 
 #: normcap/gui/update_check.py:96
 msgid ""
@@ -515,3 +548,7 @@ msgid ""
 "\n"
 "Do you want to view the changelog on GitHub now?"
 msgstr ""
+"Voit päivittää NormCapin komentoriviltä, esimerkiksi suorittamalla 'pip "
+"install normcap --upgrade'.\n"
+"\n"
+"Haluatko nähdä muutoslokin GitHubista nyt?"
