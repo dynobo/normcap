@@ -29,9 +29,9 @@ jobs:
         os: [macos-14, macos-15, windows-2022, windows-2025, ubuntu-22.04, ubuntu-24.04]
     steps:
       # Setup environment
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
         if: ${{ github.event_name != 'workflow_dispatch' }}
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
         if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           ref: ${{ inputs.refToBuild }}
@@ -120,7 +120,7 @@ jobs:
       matrix:
         os: [macos-14, macos-15, windows-2025, ubuntu-24.04]
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
 
       - uses: ./.github/actions/setup-python-uv
 
@@ -131,9 +131,9 @@ jobs:
     name: Test flatpak build
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6.2.0
         with:
           python-version: "3.13"
 
@@ -164,7 +164,7 @@ jobs:
       matrix:
         os: [macos-14, macos-15, windows-2025, ubuntu-24.04]
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
 
       - uses: ./.github/actions/setup-python-uv
 
@@ -187,7 +187,7 @@ jobs:
     name: Test documentation build
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
 
       - uses: ./.github/actions/setup-python-uv
 
@@ -200,7 +200,7 @@ jobs:
     if: github.repository_owner == 'dynobo'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
       - name: Coveralls Finished
         uses: coverallsapp/github-action@v2.3.6
         with:
@@ -220,16 +220,16 @@ jobs:
         language: ["python"]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.2
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4.31.2
+        uses: github/codeql-action/init@v4.35.1
         with:
           languages: ${{ matrix.language }}
           queries: security-extended
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v4.31.2
+        uses: github/codeql-action/autobuild@v4.35.1
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4.31.2
+        uses: github/codeql-action/analyze@v4.35.1
 
   deploy-briefcase:
     name: Briefcase build & draft release
@@ -247,7 +247,7 @@ jobs:
       matrix:
         os: [macos-14, macos-15, windows-2025, ubuntu-24.04]
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
 
       - uses: ./.github/actions/setup-python-uv
 
@@ -256,7 +256,7 @@ jobs:
         run: uv run poe bundle
       - name: Draft release
         if: github.repository == 'dynobo/normcap'
-        uses: ncipollo/release-action@v1.20.0
+        uses: ncipollo/release-action@v1.21.0
         with:
           body:
             See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG) for
@@ -292,7 +292,7 @@ jobs:
       # Used to sign the release's artifacts with sigstore-python.
       id-token: write
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
 
       - uses: ./.github/actions/setup-python-uv
 
@@ -314,7 +314,7 @@ jobs:
       && github.repository_owner == 'dynobo'
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
 
       - uses: ./.github/actions/setup-python-uv
 
