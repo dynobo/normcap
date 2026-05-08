@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-04-20 22:46+0200\n"
-"PO-Revision-Date: 2026-04-16 20:09+0000\n"
+"PO-Revision-Date: 2026-05-09 14:11+0000\n"
 "Last-Translator: tomasteixeira07 <tomasteixeira93@gmail.com>\n"
 "Language-Team: Portuguese (Portugal) <https://hosted.weblate.org/projects/"
 "normcap/ui/pt_PT/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"X-Generator: Weblate 2026.5-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: normcap/gui/constants.py:38
@@ -54,6 +54,8 @@ msgid ""
 "{headline}<p>Grant it by running the following command in a "
 "terminal:</p>{command}"
 msgstr ""
+"{headline}<p>Conceda-o executando o seguinte comando em um terminal:</p>"
+"{command}"
 
 #: normcap/gui/constants.py:80
 #, python-brace-format
@@ -63,6 +65,8 @@ msgid ""
 "href='x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture'>Privacy"
 " & Security'</a>.</p>"
 msgstr ""
+"<h3>'{application}' não tem permissão para 'Gravar o ecrã'.</h3><p>Garanta-a "
+"via 'Definições do Sistema' → '<a>Privacidade &amp; Segurança'</a>.</p>"
 
 #. Generic error message when any download failed.
 #: normcap/gui/downloader.py:59
@@ -228,14 +232,13 @@ msgstr "Configurações"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:206
-#, fuzzy
 msgid "Detection"
-msgstr "2. Aguarde a detecção"
+msgstr "Deteção"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:210
 msgid "Post-processing"
-msgstr ""
+msgstr "Pós-processamento"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:214
@@ -289,12 +292,10 @@ msgstr ""
 
 #. Entry in main menu's 'Detection' section
 #: normcap/gui/menu_button.py:288
-#, fuzzy
 msgid "Parse text"
-msgstr "analisar"
+msgstr "Processar o texto"
 
 #: normcap/gui/menu_button.py:295
-#, fuzzy
 msgid ""
 "Tries to determine the text's type (e.g. line,\n"
 "paragraph, URL, email) and formats the output\n"
@@ -304,29 +305,33 @@ msgid ""
 msgstr ""
 "Tenta determinar o tipo do texto (por exemplo, linha,\n"
 "parágrafo, URL, e-mail) e formata a saída\n"
-"consequentemente.\n"
-"Se o resultado for inesperado, tente o modo 'raw'."
+"em conformidade.\n"
+"Desativa-o para devolver o texto exatamente como foi detetado\n"
+"pelo software de Reconhecimento Ótico de Caracteres."
 
 #: normcap/gui/menu_button.py:309
-#, fuzzy
 msgid "Text"
-msgstr "Sair"
+msgstr "Texto"
 
 #. Tooltip of main menu's 'Text' entry. Use <56 chars p. line.
 #: normcap/gui/menu_button.py:314
 msgid "Tries to detect text in the selected region using OCR."
-msgstr ""
+msgstr "Tenta detetar o texto da região selecionada usando OCR."
 
 #. Entry in main menu's 'Detection' section
 #: normcap/gui/menu_button.py:318
 msgid "QR && Barcodes"
-msgstr ""
+msgstr "QR &amp;&amp; Código de Barras"
 
 #: normcap/gui/menu_button.py:325
 msgid ""
 "Detects Barcodes and QR codes. If one or more codes are found,\n"
 "text detection (OCR) is skipped and only the codes' data is returned."
 msgstr ""
+"Deteta códigos de barra e códigos QR. Se um ou mais códigos são "
+"encontrados,\n"
+"a deteção de texto (OCR) é ignorada e apenas os dados do código são "
+"devolvidos."
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: normcap/gui/menu_button.py:353
@@ -335,7 +340,6 @@ msgstr "adicionar/remover …"
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:357
-#, fuzzy
 msgid "… need more?"
 msgstr "… precisa de mais?"
 
@@ -390,8 +394,8 @@ msgstr "Saia do NormCap ou minimize a bandeja do sistema (se ativada)."
 #, python-brace-format
 msgid "1 QR code detected"
 msgid_plural "{count} QR codes detected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 código QR detetado"
+msgstr[1] "{count} QR códigos detetados"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -399,17 +403,17 @@ msgstr[1] ""
 #, python-brace-format
 msgid "1 barcode detected"
 msgid_plural "{count} barcodes detected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 código de barras detetado"
+msgstr[1] "{count} códigos de barras detetados"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:43
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "1 code detected"
 msgid_plural "{count} codes detected"
-msgstr[0] "1 palavra capturada"
-msgstr[1] "{count} palavras capturadas"
+msgstr[0] "1 código detetado"
+msgstr[1] "{count} códigos detetados"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -478,37 +482,37 @@ msgstr "Por favor, tente novamente."
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:241
 msgid "Compose Email"
-msgstr ""
+msgstr "Compor o E-mail"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:244
 msgid "Call Number"
-msgstr ""
+msgstr "Número de Chamada"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:247
 msgid "Open in Browser"
-msgstr ""
+msgstr "Abrir no navegador"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:250
 msgid "Import to Adressbook"
-msgstr ""
+msgstr "importar para a Agenda"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:253
 msgid "Import to Calendar"
-msgstr ""
+msgstr "Importar para o Calendário"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:256
 msgid "Open in Editor"
-msgstr ""
+msgstr "Abrir no Editor"
 
 #. Permission dialog window title
 #: normcap/gui/permissions.py:23
 msgid "NormCap - Missing Permissions!"
-msgstr ""
+msgstr "NormCap - Faltam Permissões!"
 
 #. Permission dialog button
 #. Tray menu entry for exiting NormCap completely.
