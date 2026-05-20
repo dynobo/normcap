@@ -1,3 +1,4 @@
+import functools
 import logging
 
 from normcap.clipboard.models import Handler, HandlerProtocol
@@ -13,7 +14,6 @@ from .handlers import (
 )
 
 logger = logging.getLogger(__name__)
-
 
 # TODO: Think about implementing a _real_ success check
 #       by implementing "read from clipboard" for all handlers and check if the text can
@@ -77,6 +77,7 @@ def copy(text: str) -> bool:
     return False
 
 
+@functools.cache
 def get_available_handlers() -> list[Handler]:
     compatible_handlers = [h for h in Handler if _clipboard_handlers[h].is_compatible()]
     logger.debug(

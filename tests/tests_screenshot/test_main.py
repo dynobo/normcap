@@ -57,6 +57,8 @@ def test_get_available_handlers(
 ):
     monkeypatch.setattr(info.sys, "platform", sys_platform)
     monkeypatch.setattr(info, "has_wayland_display_manager", lambda: is_wayland)
+    monkeypatch.setattr(info, "display_manager_is_wayland", lambda: is_wayland)
+    monkeypatch.setattr(info, "is_kde", lambda: False)
     monkeypatch.setattr(dbus_portal, "is_installed", lambda: is_wayland)
     monkeypatch.setattr(info, "has_wlroots_compositor", lambda: is_wlroots)
     monkeypatch.setattr(info, "get_gnome_version", lambda: gnome_version)

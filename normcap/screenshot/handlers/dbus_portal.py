@@ -29,8 +29,12 @@ install_instructions = ""
 # We started with a 7 seconds timeout, but this turned out to be too low for at least
 # one user, therefore it got increased.
 #
-# ONHOLD: Check in 2024 if the portal was updated to always return a response message.
-TIMEOUT_SECONDS = 10
+# Reduced from 10s to 5s. Both GNOME (gnome-shell >=41) and KDE portals typically
+# respond within 1-2s. The original ONHOLD comment asked to revisit in 2024 once
+# portals were expected to always return a response; it is now 2026 and both major
+# portal implementations do so reliably. 5s still gives ample margin for slow
+# hardware while catching misconfigured systems much faster than 10s.
+TIMEOUT_SECONDS = 5
 
 
 @dataclass(frozen=True)

@@ -22,9 +22,13 @@ os.environ["QT_LOGGING_RULES"] = "*.debug=false"
 import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
 
+from normcap.clipboard import main as clipboard_main
 from normcap.detection.ocr.models import OEM, PSM, OcrResult, TessArgs
 from normcap.detection.ocr.transformers import email_address, url
 from normcap.gui import application, menu_button
+from normcap.positioning import main as positioning_main
+from normcap.positioning.handlers import kwin6
+from normcap.screenshot import main as screenshot_main
 from normcap.system import info
 
 
@@ -74,6 +78,13 @@ def _clear_caches():
     ]
     for func in cached_funcs:
         func.cache_clear()
+
+    # Reset handler caches so monkeypatched is_compatible()/is_installed() in one
+    # test don't pollute subsequent tests.
+    screenshot_main.get_available_handlers.cache_clear()
+    clipboard_main.get_available_handlers.cache_clear()
+    positioning_main.get_available_handlers.cache_clear()
+    kwin6._get_plasma_major_version.cache_clear()
 
 
 @pytest.fixture

@@ -68,6 +68,7 @@ def _run_command(cmd_args: list[str]) -> str:
             capture_output=True,
             text=True,
             check=False,
+            timeout=30,
             **kwargs,
         )
         _raise_on_error(proc)
@@ -77,6 +78,11 @@ def _run_command(cmd_args: list[str]) -> str:
         )
     except FileNotFoundError as e:
         raise FileNotFoundError("Could not find Tesseract binary") from e
+    except subprocess.TimeoutExpired as e:
+        raise TimeoutError(
+            f"Tesseract timed out after {e.timeout}s — "
+            "the image may be too complex or the system under heavy load."
+        ) from e
     return out_str
 
 

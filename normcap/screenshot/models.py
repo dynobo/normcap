@@ -48,6 +48,9 @@ class Handler(enum.IntEnum):
     # For linux with wayland and Gnome
     GNOME_SCREENSHOT = enum.auto()
 
+    # For linux with wayland and KDE Plasma 6 (preferred over SPECTACLE)
+    KWIN_SCREENSHOT2 = enum.auto()
+
     # For linux with wayland and KDE
     SPECTACLE = enum.auto()
 

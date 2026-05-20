@@ -1,3 +1,4 @@
+import functools
 import logging
 
 from PySide6 import QtGui
@@ -23,6 +24,7 @@ _capture_handlers: dict[Handler, HandlerProtocol] = {
 }
 
 
+@functools.cache
 def get_available_handlers() -> list[Handler]:
     compatible_handlers = [h for h in Handler if _capture_handlers[h].is_compatible()]
     logger.debug(
