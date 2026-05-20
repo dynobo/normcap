@@ -1,11 +1,12 @@
 """Hacks for moving windows to a certain screen on Wayland."""
 
+import functools
 import logging
 
 from PySide6 import QtWidgets
 
 from normcap.gui.constants import URLS  # TODO: Remove
-from normcap.positioning.handlers import kscript, window_calls
+from normcap.positioning.handlers import kscript, kwin6, window_calls
 from normcap.positioning.models import Handler, HandlerProtocol
 from normcap.system.models import Screen
 
@@ -15,10 +16,12 @@ logger = logging.getLogger(__name__)
 _positioning_handlers: dict[Handler, HandlerProtocol] = {
     Handler.WINDOW_CALLS: window_calls,
     # TODO: Add Window Calls Extended handler
+    Handler.KWIN6: kwin6,
     Handler.KSCRIPT: kscript,
 }
 
 
+@functools.cache
 def get_available_handlers() -> list[Handler]:
     compatible_handlers = [
         h for h in Handler if _positioning_handlers[h].is_compatible()
@@ -97,8 +100,9 @@ def move(window: QtWidgets.QMainWindow, screen: Screen) -> None:
         window: Qt Window to be re-positioned.
         screen: Geometry of the target screen.
     """
-    for handler in get_available_handlers():
-        _move(handler=handler, window=window, screen=screen)
+    handlers = get_available_handlers()
+    if handlers:
+        _move(handler=handlers[0], window=window, screen=screen)
         return
 
     logger.error(

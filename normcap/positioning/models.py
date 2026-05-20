@@ -40,5 +40,8 @@ class Handler(enum.IntEnum):
     # Preferable on Wayland + Gnome
     WINDOW_CALLS = enum.auto()
 
-    # Might work on some Wayland + KDE. The newer the system, the less likely to work.
+    # KDE Plasma 6+ (Wayland) — uses updated workspace.windowList() JS API
+    KWIN6 = enum.auto()
+
+    # KDE Plasma <= 5.70 — uses deprecated workspace.clientList() JS API
     KSCRIPT = enum.auto()
