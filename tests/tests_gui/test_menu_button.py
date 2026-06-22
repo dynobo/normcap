@@ -131,6 +131,13 @@ def test_settings_group(menu_btn):
         assert setting_value == action.isChecked()
 
 
+def test_menu_has_visible_check_indicators(menu_btn):
+    stylesheet = menu_btn.menu().styleSheet()
+
+    assert "QMenu::indicator:checked" in stylesheet
+    assert "QMenu::indicator:unchecked" in stylesheet
+
+
 def test_show_message_box(qapp, monkeypatch, menu_btn):
     # GIVEN a menu button and a mocked QMessageBox.exec() method
     exec_args = []

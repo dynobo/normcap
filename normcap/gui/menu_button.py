@@ -29,9 +29,8 @@ QMenu::scroller {
     )
 }
 QMenu::item {
-    padding: 3px 16px 3px 16px;
+    padding: 3px 22px 3px 28px;
     background-color: transparent;
-    right: 10px;
     color: white;
 }
 QMenu::item:disabled {
@@ -41,7 +40,17 @@ QMenu::item:selected {
     background-color: rgba(150,150,150,0.5);
 }
 QMenu::indicator {
-    right: -5px;
+    width: 11px;
+    height: 11px;
+    left: 8px;
+}
+QMenu::indicator:unchecked {
+    border: 1px solid rgba(255,255,255,0.6);
+    background-color: transparent;
+}
+QMenu::indicator:checked {
+    border: 1px solid $COLOR;
+    background-color: $COLOR;
 }
 QMenu::left-arrow,
 QMenu::right-arrow  {
