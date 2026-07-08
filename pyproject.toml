@@ -9,7 +9,8 @@ description = "OCR-powered screen-capture tool to capture information instead of
 keywords = [ "screenshot", "ocr", "capture", "clipboard" ]
 readme = "README.md"
 requires-python = ">=3.10"
-license.file = "LICENSE"
+license = "GPL-3.0+"
+license-files = [ "LICENSE" ]
 authors = [ { name = "dynobo", email = "dynobo@mailbox.org" } ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -55,7 +56,7 @@ artifacts = [ "*.mo" ]
 [dependency-groups]
 dev = [
   "babel>=2.12.1",
-  "briefcase==0.3.25", # pinned because building relies on it!
+  "briefcase==0.4.4", # pinned because building relies on it!
   "coverage[toml]>=6.5",
   "coveralls>=3.3.1",
   "mdformat-gfm>=0.3.6",
@@ -310,7 +311,7 @@ use_full_install_path = false
 
 [tool.briefcase.app.normcap.linux.appimage]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
-template_branch = "v0.3.25"
+template_branch = "v0.4.4"
 manylinux = "manylinux_2_34"
 manylinux_image_tag = "latest"
 system_requires = [
@@ -348,7 +349,7 @@ RUN dnf install -y \
 
 RUN git clone https://github.com/bugaevc/wl-clipboard.git
 RUN cd wl-clipboard \
-  && git checkout tags/v2.2.1 -b v2.2.1-branch \
+  && git checkout tags/v2.3.0 -b v2.3.0-branch \
   && meson setup build \
   && cd build \
   && ninja \

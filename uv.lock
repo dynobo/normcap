@@ -108,11 +108,14 @@ wheels = [
 
 [[package]]
 name = "binaryornot"
-version = "0.6.0"
+version = "0.4.4"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/86/72/4755b85101f37707c71526a301c1203e413c715a0016ecb592de3d2dcfff/binaryornot-0.6.0.tar.gz", hash = "sha256:cc8d57cfa71d74ff8c28a7726734d53a851d02fad9e3a5581fb807f989f702f0", size = 478718, upload-time = "2026-03-08T16:26:28.804Z" }
+dependencies = [
+    { name = "chardet" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a7/fe/7ebfec74d49f97fc55cd38240c7a7d08134002b1e14be8c3897c0dd5e49b/binaryornot-0.4.4.tar.gz", hash = "sha256:359501dfc9d40632edc9fac890e19542db1a287bbcfa58175b66658392018061", size = 371054, upload-time = "2017-08-03T15:55:25.08Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cd/0c/31cfaa6b56fe23488ecb993bc9fc526c0d84d89607decdf2a10776426c2e/binaryornot-0.6.0-py3-none-any.whl", hash = "sha256:900adfd5e1b821255ba7e63139b0396b14c88b9286e74e03b6f51e0200331337", size = 14185, upload-time = "2026-03-08T16:26:27.466Z" },
+    { url = "https://files.pythonhosted.org/packages/24/7e/f7b6f453e6481d1e233540262ccbfcf89adcd43606f44a028d7f5fae5eb2/binaryornot-0.4.4-py2.py3-none-any.whl", hash = "sha256:b8b71173c917bddcd2c16070412e369c3ed7f0528926f70cac18a6c97fd563e4", size = 9006, upload-time = "2017-08-03T15:55:31.23Z" },
 ]
 
 [[package]]
@@ -126,10 +129,12 @@ wheels = [
 
 [[package]]
 name = "briefcase"
-version = "0.3.25"
+version = "0.4.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "binaryornot" },
     { name = "build" },
+    { name = "chardet" },
     { name = "cookiecutter" },
     { name = "dmgbuild", marker = "sys_platform == 'darwin'" },
     { name = "gitpython" },
@@ -141,14 +146,15 @@ dependencies = [
     { name = "python-dateutil" },
     { name = "rich" },
     { name = "setuptools" },
+    { name = "tenacity" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "tomli-w" },
     { name = "truststore" },
     { name = "wheel" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/75/8d/21ce522fd95d994cb56a315784dc2967591a89a9845727dec25c1b7c36ee/briefcase-0.3.25.tar.gz", hash = "sha256:0d3ca50714da8bed30e80ea33f322e6b8be7e80a1fb651814d98561aa269de72", size = 2555978, upload-time = "2025-08-26T00:54:50.609Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/91/79/f6fa74fd99cc521f59bdc0094f268b4d8720fcbb977443dd69cb8e6b7d49/briefcase-0.4.4.tar.gz", hash = "sha256:e6e1a9d6811e2436fa2bfb2ecafdd12605e3920473946c09562fb9c9526e60ac", size = 2675906, upload-time = "2026-07-08T01:41:34.156Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/51/ba/657177303ee14a2c44b3402dd1a48b232ce9d3f671296afadd3e6785f12f/briefcase-0.3.25-py3-none-any.whl", hash = "sha256:813bbf3d4d28080c115fa93ac35a11f050c8d394ad76b9a2e54a4be4773b5c8b", size = 249311, upload-time = "2025-08-26T00:54:48.709Z" },
+    { url = "https://files.pythonhosted.org/packages/fa/49/d7ffd855159c4371e7783a34ac92791af5fe838777059b9290c06d504086/briefcase-0.4.4-py3-none-any.whl", hash = "sha256:667b5e0c4d25c388efef822d1f5b0381c57619d198dad6ed2b7e323f7460baf4", size = 291828, upload-time = "2026-07-08T01:41:31.478Z" },
 ]
 
 [[package]]
@@ -192,6 +198,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/c9/c7/424b75da314c1045981bd9777432fad05a9e0c69daa4ed7e308bbaffe405/certifi-2026.6.17.tar.gz", hash = "sha256:024c88eeec92ca068db80f02b8b07c9cef7b9fe261d1d535abfd5abd6f6af432", size = 134594, upload-time = "2026-06-17T10:31:07.894Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ef/2f/c5464532e965badff2f4c4c1a3a83f5697f0d7c407ed0cda44aaa99bb451/certifi-2026.6.17-py3-none-any.whl", hash = "sha256:2227dcbaafe0d2f59279d1762ddddc37783ed4354594f194ffc31d20f41fc3db", size = 133289, upload-time = "2026-06-17T10:31:06.348Z" },
+]
+
+[[package]]
+name = "chardet"
+version = "5.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f3/0d/f7b6ab21ec75897ed80c17d79b15951a719226b9fababf1e40ea74d69079/chardet-5.2.0.tar.gz", hash = "sha256:1b3b6ff479a8c414bc3fa2c0852995695c4a026dcd6d0633b2dd092ca39c1cf7", size = 2069618, upload-time = "2023-08-01T19:23:02.662Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/38/6f/f5fbc992a329ee4e0f288c1fe0e2ad9485ed064cac731ed2fe47dcc38cbf/chardet-5.2.0-py3-none-any.whl", hash = "sha256:e1cf59446890a00105fe7b7912492ea04b6e6f06d4b742b2c788469e34c82970", size = 199385, upload-time = "2023-08-01T19:23:00.661Z" },
 ]
 
 [[package]]
@@ -1292,7 +1307,7 @@ analysis = [
 ]
 dev = [
     { name = "babel", specifier = ">=2.12.1" },
-    { name = "briefcase", specifier = "==0.3.25" },
+    { name = "briefcase", specifier = "==0.4.4" },
     { name = "coverage", extras = ["toml"], specifier = ">=6.5" },
     { name = "coveralls", specifier = ">=3.3.1" },
     { name = "mdformat-frontmatter", specifier = ">=2.0.1" },
@@ -2048,6 +2063,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ab/1f/d02379532311192521a20b3597dc0f01bd37596e950a6cb40795ae9acb94/tbump-6.11.0.tar.gz", hash = "sha256:385e710eedf0a8a6ff959cf1e9f3cfd17c873617132fc0ec5f629af0c355c870", size = 28642, upload-time = "2023-09-09T11:22:59.039Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/48/41/c21994a64efe86ed81c1a0935aeec840548839a37a7f3716f74a75e54fc2/tbump-6.11.0-py3-none-any.whl", hash = "sha256:6b181fe6f3ae84ce0b9af8cc2009a8bca41ded34e73f623a7413b9684f1b4526", size = 35607, upload-time = "2023-09-09T11:22:56.581Z" },
+]
+
+[[package]]
+name = "tenacity"
+version = "9.1.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/47/c6/ee486fd809e357697ee8a44d3d69222b344920433d3b6666ccd9b374630c/tenacity-9.1.4.tar.gz", hash = "sha256:adb31d4c263f2bd041081ab33b498309a57c77f9acf2db65aadf0898179cf93a", size = 49413, upload-time = "2026-02-07T10:45:33.841Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d7/c1/eb8f9debc45d3b7918a32ab756658a0904732f75e555402972246b0b8e71/tenacity-9.1.4-py3-none-any.whl", hash = "sha256:6095a360c919085f28c6527de529e76a06ad89b23659fa881ae0649b867a9d55", size = 28926, upload-time = "2026-02-07T10:45:32.24Z" },
 ]
 
 [[package]]
