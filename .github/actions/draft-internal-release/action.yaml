@@ -19,7 +19,7 @@ runs:
         ls -la bundle/
 
     - name: Draft internal release
-      uses: ncipollo/release-action@v1.18.0
+      uses: ncipollo/release-action@v1.21.0
       # It's possible, that the run lacks release permissions (e.g. on forks).
       # This is not crucial, so we just silence the error.
       continue-on-error: true
