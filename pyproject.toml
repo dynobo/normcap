@@ -28,10 +28,10 @@ classifiers = [
   "Operating System :: MacOS",
 ]
 dependencies = [
-  "shiboken6==6.10.0",
-  "PySide6-Essentials==6.10.0",
+  "shiboken6==6.11.1",
+  "PySide6-Essentials==6.11.1",
   "jeepney==0.9.0",
-  "zxing-cpp==2.3.0",
+  "zxing-cpp==3.1.0",
 ]
 
 [project.optional-dependencies]
@@ -82,6 +82,7 @@ dev = [
   "types-toml>=0.10.8.1",
   "typing-extensions>=4.4.0",
   "poethepoet>=0.29.0",
+  "pre-commit>=4.6.0",
 ]
 analysis = [ "radon>=5.1.0", "viztracer>=0.15.3", "vulture>=2.4" ]
 
