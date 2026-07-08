@@ -23,6 +23,7 @@ from normcap.gui import (
 from normcap.gui.dbus_application_service import DBusApplicationService
 from normcap.gui.detector import DetectionWorker
 from normcap.gui.language_manager import LanguageManager
+from normcap.gui.processing_dialog import ProcessingDialog
 from normcap.gui.settings import Settings
 from normcap.gui.socket_server import SocketServer
 from normcap.gui.tray import SystemTray
@@ -70,6 +71,7 @@ class NormcapApp(QtWidgets.QApplication):
         self.setDesktopFileName(f"{app_id}")
 
         self.com = Communicate(parent=self)
+        self.processing_dialog: ProcessingDialog | None = None
         self.detection_thread: QtCore.QThread
 
         # Create DBus Service to listen for notification actions and activations
@@ -322,13 +324,17 @@ class NormcapApp(QtWidgets.QApplication):
             cb_handler = available_handlers[0]
 
         return cb_handler == Handler.QT
-    @QtCore.Slot()
-    def _start_processing(self, rect: Rect, screen_idx: int) -> None:
-        self._close_windows()
 
-        QtCore.QTimer.singleShot(
-            20, lambda: self._run_detection(rect=rect, screen_idx=screen_idx)
-        )
+    def _open_processing_dialog(self) -> None:
+        """Open small dialog as processing indicator.
+
+        Mainly used for Wayland with QT clipboard handler, as on Wayland apps need
+        a window to be allowed clipboard access.
+        """
+        if not self.processing_dialog:
+            self.processing_dialog = ProcessingDialog()
+
+        QtCore.QTimer.singleShot(1, self.processing_dialog.exec)
 
     @QtCore.Slot()
     def _crop_image(self, rect: Rect, screen_idx: int) -> None:
@@ -350,9 +356,9 @@ class NormcapApp(QtWidgets.QApplication):
     @utils.single_instance_slot
     def _start_detection(self, image: QtGui.QImage) -> None:
         # Close main window and (conditinally) open processing dialog
-        # if info.has_wayland_display_manager() and self._qt_clipboard_handler_used():
-        #    # On Wayland, a focused window is necessary to copy to clipboard with qt:
-        #    self._open_processing_dialog()
+        if info.has_wayland_display_manager() and self._qt_clipboard_handler_used():
+            # On Wayland, a focused window is necessary to copy to clipboard with qt:
+            self._open_processing_dialog()
 
         QtCore.QTimer.singleShot(10, self._close_windows)
 
@@ -402,6 +408,10 @@ class NormcapApp(QtWidgets.QApplication):
         else:
             logger.debug("Copy text to clipboard")
             clipboard.copy(text=text)
+
+        if self.processing_dialog:
+            self.processing_dialog.close()
+
         self.com.on_copied_to_clipboard.emit()
 
     @QtCore.Slot(str)
