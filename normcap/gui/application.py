@@ -10,8 +10,9 @@ from typing import Any, TypeAlias
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from normcap import app_id, clipboard, notification, screenshot
-from normcap.detection import detector, ocr
-from normcap.detection.models import DetectionMode, DetectionResult
+from normcap.clipboard.models import Handler
+from normcap.detection import ocr
+from normcap.detection.models import DetectionResult
 from normcap.gui import (
     constants,
     introduction,
@@ -20,6 +21,7 @@ from normcap.gui import (
     utils,
 )
 from normcap.gui.dbus_application_service import DBusApplicationService
+from normcap.gui.detector import DetectionWorker
 from normcap.gui.language_manager import LanguageManager
 from normcap.gui.settings import Settings
 from normcap.gui.socket_server import SocketServer
@@ -42,6 +44,7 @@ class Communicate(QtCore.QObject):
     on_exit_application = QtCore.Signal(float)
     on_copied_to_clipboard = QtCore.Signal()
     on_region_selected = QtCore.Signal(Rect, int)
+    on_image_cropped = QtCore.Signal(QtGui.QImage)
     on_action_finished = QtCore.Signal()
     on_windows_closed = QtCore.Signal()
 
@@ -67,6 +70,7 @@ class NormcapApp(QtWidgets.QApplication):
         self.setDesktopFileName(f"{app_id}")
 
         self.com = Communicate(parent=self)
+        self.detection_thread: QtCore.QThread
 
         # Create DBus Service to listen for notification actions and activations
         self.dbus_service = (
@@ -77,7 +81,8 @@ class NormcapApp(QtWidgets.QApplication):
         if self.dbus_service:
             self.dbus_service.action_activated.connect(self._handle_action_activate)
         self.com.on_exit_application.connect(self._exit_application)
-        self.com.on_region_selected.connect(self._start_processing)
+        self.com.on_region_selected.connect(self._crop_image)
+        self.com.on_image_cropped.connect(self._start_detection)
 
         # If NormCap got activated via DBus, only process action then quit.
         if args.get("dbus_activation", False):
@@ -115,7 +120,7 @@ class NormcapApp(QtWidgets.QApplication):
         # Check if have screenshot permission and try to request if needed
         self._verify_screenshot_permission()
 
-        # Show intro (and delay screenshot to not capute the intro)
+        # Show intro (and delay screenshot to not capture the intro)
         if (
             args.get("show_introduction") is None
             and self.settings.value("show-introduction", type=bool)
@@ -190,6 +195,7 @@ class NormcapApp(QtWidgets.QApplication):
     def _handle_action_activate(
         self, action_name: str, list_of_json: list[str]
     ) -> None:
+        """Executed when a DBUS desktop notification got clicked."""
         text_and_types: list[tuple[str, str]] = json.loads(list_of_json[0])
         logger.info("text_and_types %s", text_and_types)
 
@@ -278,7 +284,8 @@ class NormcapApp(QtWidgets.QApplication):
 
         return last_check_date_str > cutoff_date_str
 
-    def _add_update_checker(self) -> None:
+    def _init_update_checker(self) -> None:
+        """If update checking is enabled and its time, schedule update check."""
         if not self.settings.value("update", type=bool):
             return
 
@@ -292,6 +299,7 @@ class NormcapApp(QtWidgets.QApplication):
         QtCore.QTimer.singleShot(500, self.checker.check_for_updates)
 
     def _set_last_update_check_time(self, newest_version: str) -> None:
+        """Save last update check time to settings."""
         if newest_version is not None:
             today = time.strftime(constants.DATE_FORMAT, time.gmtime())
             self.settings.setValue("last-update-check", today)
@@ -306,6 +314,14 @@ class NormcapApp(QtWidgets.QApplication):
         logger.debug("Opened uri with result=%s", result)
         self._minimize_to_tray_or_exit(delay=0)
 
+    def _qt_clipboard_handler_used(self) -> bool:
+        if self.clipboard_handler_name:
+            cb_handler = Handler[self.clipboard_handler_name.upper()]
+
+        elif available_handlers := clipboard.get_available_handlers():
+            cb_handler = available_handlers[0]
+
+        return cb_handler == Handler.QT
     @QtCore.Slot()
     def _start_processing(self, rect: Rect, screen_idx: int) -> None:
         self._close_windows()
@@ -315,42 +331,54 @@ class NormcapApp(QtWidgets.QApplication):
         )
 
     @QtCore.Slot()
-    def _run_detection(self, rect: Rect, screen_idx: int) -> None:
-        """Crop screenshot, perform content recognition on it and process result."""
-        cropped_screenshot = utils.crop_image(
-            image=self.screens[screen_idx].screenshot, rect=rect
-        )
-
-        minimum_image_area = 100
-        image_area = cropped_screenshot.width() * cropped_screenshot.height()
-        if image_area < minimum_image_area:
-            logger.warning("Area of %spx is too small. Skip detection.", image_area)
+    def _crop_image(self, rect: Rect, screen_idx: int) -> None:
+        # Skip processing of very small areas
+        minimum_image_area = 200
+        selected_area = rect.width * rect.height
+        if selected_area < minimum_image_area:
+            logger.warning("Area of %spx is too small. Skip detection.", selected_area)
             self._minimize_to_tray_or_exit(delay=0)
             return
 
-        tessdata_path = info.get_tessdata_path(
-            config_directory=info.config_directory(),
-            is_packaged=info.is_packaged(),
+        # Crop
+        cropped_screenshot = utils.crop_image(
+            image=self.screens[screen_idx].screenshot, rect=rect
         )
-        tesseract_bin_path = info.get_tesseract_bin_path(
-            is_briefcase_package=info.is_briefcase_package()
-        )
+        self.com.on_image_cropped.emit(cropped_screenshot)
 
-        detection_mode = DetectionMode(0)
-        if bool(self.settings.value("detect-codes", type=bool)):
-            detection_mode |= DetectionMode.CODES
-        if bool(self.settings.value("detect-text", type=bool)):
-            detection_mode |= DetectionMode.TESSERACT
+    @QtCore.Slot()
+    @utils.single_instance_slot
+    def _start_detection(self, image: QtGui.QImage) -> None:
+        # Close main window and (conditinally) open processing dialog
+        # if info.has_wayland_display_manager() and self._qt_clipboard_handler_used():
+        #    # On Wayland, a focused window is necessary to copy to clipboard with qt:
+        #    self._open_processing_dialog()
 
-        results = detector.detect(
-            image=cropped_screenshot,
-            tesseract_bin_path=tesseract_bin_path,
-            tessdata_path=tessdata_path,
-            language=self.settings.value("language"),
-            detect_mode=detection_mode,
+        QtCore.QTimer.singleShot(10, self._close_windows)
+
+        # Prepare DetectionWorker to run in separate thread
+        self.detection_thread = QtCore.QThread()
+        self.detection_worker = DetectionWorker(
+            image=image,
+            detect_text=bool(self.settings.value("detect-text", type=bool)),
+            detect_codes=bool(self.settings.value("detect-codes", type=bool)),
             parse_text=bool(self.settings.value("parse-text", type=bool)),
+            language=self.settings.value("language"),
         )
+        self.detection_worker.moveToThread(self.detection_thread)
 
+        self.detection_thread.started.connect(self.detection_worker.run_detection)
+        self.detection_thread.finished.connect(self.detection_thread.deleteLater)
+
+        self.detection_worker.com.on_result.connect(self._process_result)
+        self.detection_worker.com.on_finished.connect(self.detection_thread.quit)
+        self.detection_worker.com.on_finished.connect(self.detection_worker.deleteLater)
+
+        self.detection_thread.start(priority=QtCore.QThread.Priority.HighestPriority)
+
+    @QtCore.Slot()
+    def _process_result(self, results: list[DetectionResult]) -> None:
+        """Crop screenshot, perform content recognition on it and process result."""
         result_text = os.linesep.join(r.text for r in results)
 
         if result_text and self.cli_mode:
@@ -432,7 +460,7 @@ class NormcapApp(QtWidgets.QApplication):
         By running this async of __init__(),  its runtime of ~30ms doesn't
         contribute to the delay until the GUI becomes active for the user on startup.
         """
-        self._add_update_checker()
+        self._init_update_checker()
         self._update_installed_languages()
 
     def _update_installed_languages(self) -> None:
