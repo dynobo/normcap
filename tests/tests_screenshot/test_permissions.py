@@ -64,7 +64,7 @@ def test_macos_reset_screenshot_permission_logs_error(monkeypatch, caplog):
 
 def test_has_screenshot_permission(qapp):
     result = permissions.has_screenshot_permission(
-        request_portal_dialog=RequestDbusPermissionDialog
+        request_portal_dialog=RequestDbusPermissionDialog(capture_func=lambda: ...)
     )
     assert isinstance(result, bool)
 
@@ -74,7 +74,7 @@ def test_has_screenshot_permission_raises(monkeypatch, qapp):
     monkeypatch.setattr(permissions, "get_available_handlers", lambda: [])
     with pytest.raises(RuntimeError, match="screenshot method"):
         _ = permissions.has_screenshot_permission(
-            request_portal_dialog=RequestDbusPermissionDialog
+            request_portal_dialog=RequestDbusPermissionDialog(capture_func=lambda: ...)
         )
 
 

@@ -223,7 +223,7 @@ class Window(QtWidgets.QMainWindow):
         pixmap.convertFromImage(self.screen_.screenshot)
         self.image_container.setPixmap(pixmap)
 
-    def _create_menu_button(self) -> QtWidgets.QWidget:
+    def _create_menu_button(self) -> MenuButton:
         menu_button = MenuButton(
             settings=self.settings,
             show_language_manager=self.debug_language_manager or info.is_packaged(),

@@ -41,6 +41,9 @@ class CheckedCall:
 
 # TODO: Think about pulling ctype imports and context managers out
 def copy(text: str) -> None:  # noqa: PLR0915
+    if sys.platform != "win32":
+        raise RuntimeError(f"Windows specific windll.copy() called on {sys.platform}!")
+
     from ctypes.wintypes import (
         BOOL,
         DWORD,
@@ -55,7 +58,7 @@ def copy(text: str) -> None:  # noqa: PLR0915
         UINT,
     )
 
-    windll = ctypes.windll  # type:ignore  # not available on non-Windows systems
+    windll = ctypes.windll
     msvcrt = ctypes.CDLL("msvcrt")
 
     safeCreateWindowExA = CheckedCall(windll.user32.CreateWindowExA)  # noqa: N806

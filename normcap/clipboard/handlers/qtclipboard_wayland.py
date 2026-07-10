@@ -22,7 +22,7 @@ try:
             self.setModal(False)
             self.text = text
 
-            self.app = QtGui.QGuiApplication.instance()
+            self.app = QtGui.QGuiApplication.instance() or QtGui.QGuiApplication()
 
             self.copy_timer = QtCore.QTimer(self, interval=50)
             self.copy_timer.timeout.connect(self._copy)
@@ -47,7 +47,7 @@ try:
                 self.correct_reads += 1
 
             # At least two clipboard reads are necessary to confirm clipboard text was
-            # reliably set. (Maybe the text got chached for the first read? Or it
+            # reliably set. (Maybe the text got cached for the first read? Or it
             # requires some time to sync with system clipboard?)
             if self.correct_reads >= self.minimum_correct_reads:
                 self._close()
@@ -66,6 +66,9 @@ except ImportError:
             pass
 
         def exec(self) -> None:
+            pass
+
+        def show(self) -> None:
             pass
 
 
