@@ -20,8 +20,8 @@ class WindowsBriefcase(BuilderBase):
         """Download openssl needed for QNetwork https connections."""
         # For mirrors see: https://wiki.openssl.org/index.php/Binaries
         # openssl_url = "http://mirror.firedaemon.com/OpenSSL/openssl-1.1.1q.zip"
-        # openssl_url = "http://wiki.overbyte.eu/arch/openssl-1.1.1q-win64.zip"
-        openssl_url = "https://indy.fulgan.com/SSL/openssl-1.0.2u-x64_86-win64.zip"
+        # openssl_url = "https://indy.fulgan.com/SSL/openssl-1.0.2u-x64_86-win64.zip"
+        openssl_url = "https://wiki.overbyte.eu/arch/openssl-4.0.1-win64.zip"
         target_path = self.PROJECT_PATH / "normcap" / "resources" / "openssl"
         target_path.mkdir(exist_ok=True)
         zip_path = self.BUILD_PATH / "openssl.zip"
