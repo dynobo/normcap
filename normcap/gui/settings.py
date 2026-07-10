@@ -176,7 +176,7 @@ class Settings(QtCore.QSettings):
     ) -> None:
         if is_portable_windows_package():
             ini_file = (config_directory() / f"{application}.ini").resolve()
-            super().__init__(str(ini_file), QtCore.QSettings.IniFormat)
+            super().__init__(str(ini_file), QtCore.QSettings.Format.IniFormat)
         else:
             super().__init__(organization, application=application, parent=parent)
 

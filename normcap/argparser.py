@@ -35,7 +35,7 @@ def _patch_print_help(parser: argparse.ArgumentParser) -> argparse.ArgumentParse
             # Avoid crash/error.
             pass
 
-    parser.print_help = patched_print_help  # type: ignore
+    parser.print_help = patched_print_help
     return parser
 
 

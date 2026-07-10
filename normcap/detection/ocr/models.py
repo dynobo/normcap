@@ -192,7 +192,8 @@ class OcrResult:
 class TransformerProtocol(Protocol):
     """Transformer protocol."""
 
-    def score(self, ocr_result: OcrResult) -> float:
+    @staticmethod
+    def score(ocr_result: OcrResult) -> float:
         """Determines the likelihood of the transformer to fit to the ocr result.
 
         Arguments:
@@ -204,7 +205,8 @@ class TransformerProtocol(Protocol):
         """
         ...  # pragma: no cover
 
-    def transform(self, ocr_result: OcrResult) -> list[str]:
+    @staticmethod
+    def transform(ocr_result: OcrResult) -> list[str]:
         """Apply a transformation to the detected text.
 
         Arguments:

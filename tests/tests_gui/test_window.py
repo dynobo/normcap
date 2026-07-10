@@ -59,7 +59,7 @@ def test_window_get_scale_factor_raises_if_missing(qtbot, temp_settings):
     win = window.Window(
         screen=screen, index=0, settings=temp_settings, installed_languages=["eng"]
     )
-    win.screen_.screenshot = None
+    win.screen_.screenshot = QtGui.QImage()
 
     # THEN an exception should be raised when trying to calculate the scale factor
     with pytest.raises(ValueError, match="image is missing"):

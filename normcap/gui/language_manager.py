@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 
 from PySide6 import QtCore, QtWidgets
+from typing_extensions import override
 
 from normcap.gui import constants
 from normcap.gui.downloader import Downloader
@@ -264,14 +265,24 @@ class LanguageModel(QtCore.QAbstractTableModel):
         self.languages: list = languages or []
 
     def data(
-        self, index: QtCore.QModelIndex, role: QtCore.Qt.ItemDataRole
+        self,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+        role: int = 0,
     ) -> str | QtCore.QSize | None:
         if role == QtCore.Qt.ItemDataRole.DisplayRole:
             return self.languages[index.row()][index.column()]
         return None
 
-    def rowCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802 # lowercase
+    @override
+    def rowCount(
+        self,
+        parent: QtCore.QModelIndex | QtCore.QPersistentModelIndex | None = None,
+    ) -> int:
         return len(self.languages)
 
-    def columnCount(self, index: QtCore.QModelIndex) -> int:  # noqa: N802 # lowercase
+    @override
+    def columnCount(
+        self,
+        parent: QtCore.QModelIndex | QtCore.QPersistentModelIndex | None = None,
+    ) -> int:
         return len(self.languages[0]) if self.languages else 0
