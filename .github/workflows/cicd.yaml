@@ -119,7 +119,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-15, windows-2025, ubuntu-24.04]
+        os: [macos-15, windows-2025, ubuntu-26.04]
     steps:
       - uses: actions/checkout@v7.0.0
 
@@ -163,7 +163,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-15, windows-2025, ubuntu-24.04]
+        os: [macos-15, windows-2025, ubuntu-26.04]
     steps:
       - uses: actions/checkout@v7.0.0
 
@@ -246,7 +246,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-15, windows-2025, ubuntu-24.04]
+        os: [macos-15, windows-2025, ubuntu-26.04]
     steps:
       - uses: actions/checkout@v7.0.0
 
