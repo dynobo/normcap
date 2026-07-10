@@ -27,6 +27,7 @@ from normcap.gui.tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
 from normcap.notification.models import ACTION_NAME_NOTIFICATION_CLICKED
+from normcap.screenshot.handlers import dbus_portal
 from normcap.system import info
 from normcap.system.models import Rect, Screen
 
@@ -200,7 +201,9 @@ class NormcapApp(QtWidgets.QApplication):
     def _verify_screenshot_permission(self) -> None:
         if not self.settings.value("has-screenshot-permission", type=bool):
             if screenshot.has_screenshot_permission(
-                request_portal_dialog=permissions_dialog.RequestDbusPermissionDialog
+                request_portal_dialog=permissions_dialog.RequestDbusPermissionDialog(
+                    capture_func=dbus_portal.capture
+                )
             ):
                 self.settings.setValue("has-screenshot-permission", True)
             else:

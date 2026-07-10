@@ -1,4 +1,5 @@
 import logging
+from typing import cast
 
 from normcap.notification.models import Handler, HandlerProtocol, NotificationAction
 
@@ -7,10 +8,11 @@ from .handlers import dbus_portal, notify_send, qt
 logger = logging.getLogger(__name__)
 
 
+# ONHOLD: Casts are necessary due to ty bug: https://github.com/astral-sh/ty/issues/931
 _notification_handlers: dict[Handler, HandlerProtocol] = {
-    Handler.DBUS_PORTAL: dbus_portal,
-    Handler.NOTIFY_SEND: notify_send,
-    Handler.QT: qt,
+    Handler.DBUS_PORTAL: cast(HandlerProtocol, dbus_portal),
+    Handler.NOTIFY_SEND: cast(HandlerProtocol, notify_send),
+    Handler.QT: cast(HandlerProtocol, qt),
 }
 
 

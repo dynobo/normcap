@@ -65,8 +65,10 @@ class MissingPermissionDialog(QtWidgets.QDialog):
 
 
 class RequestDbusPermissionDialog(QtWidgets.QDialog):
-    def __init__(self, capture_func: Callable) -> None:
-        super().__init__()
+    def __init__(
+        self, capture_func: Callable, parent: QtWidgets.QWidget | None = None
+    ) -> None:
+        super().__init__(parent=parent)
         # L10N: Title of screenshot permission dialog only shown on Linux + Wayland.
         title = _("NormCap - Screenshot Permission")
         # L10N: Text of screenshot permission dialog only shown on Linux + Wayland.

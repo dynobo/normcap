@@ -1,6 +1,7 @@
 """Hacks for moving windows to a certain screen on Wayland."""
 
 import logging
+from typing import cast
 
 from PySide6 import QtWidgets
 
@@ -12,10 +13,11 @@ from normcap.system.models import Screen
 logger = logging.getLogger(__name__)
 
 
+# ONHOLD: Casts are necessary due to ty bug: https://github.com/astral-sh/ty/issues/931
 _positioning_handlers: dict[Handler, HandlerProtocol] = {
-    Handler.WINDOW_CALLS: window_calls,
+    Handler.WINDOW_CALLS: cast(HandlerProtocol, window_calls),
     # TODO: Add Window Calls Extended handler
-    Handler.KSCRIPT: kscript,
+    Handler.KSCRIPT: cast(HandlerProtocol, kscript),
 }
 
 

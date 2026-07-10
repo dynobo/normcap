@@ -74,7 +74,7 @@ class SocketServer(QtCore.QObject):
         if not self._in:
             return
 
-        message = self._in.readAll().data().decode("utf-8", errors="ignore")
+        message = bytes(self._in.readAll().data()).decode("utf-8", errors="ignore")
         logger.info("Received socket message '%s'", message)
 
         if message == "capture":

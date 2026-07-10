@@ -17,11 +17,15 @@ def test_resources_complete(qtbot):
 
     tree = ET.parse(icons_path / "resources.qrc")  # noqa: S314
     root = tree.getroot()
-    icons_qrc = [el.text for el in root.find("qresource").findall("file")]
+    qresource = root.find("qresource")
+    assert qresource is not None
+    icons_qrc = [el.text for el in qresource.findall("file")]
 
     assert set(icons_qrc) == set(icon_files)
 
     for icon in icons_qrc:
+        if icon is None:
+            continue
         stem = icon.split(".")[0]
         assert QtGui.QIcon(f":{stem}").availableSizes(), stem
 

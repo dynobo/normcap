@@ -12,7 +12,9 @@ from normcap.screenshot.permissions import has_screenshot_permission
 @pytest.mark.skipif(sys.platform != "linux", reason="Linux specific test")
 @pytest.mark.skipif("GITHUB_ACTIONS" in os.environ, reason="Skip on Action Runner")
 def test_synchronized_capture(dbus_portal, qapp):
-    if not has_screenshot_permission(request_portal_dialog=RequestDbusPermissionDialog):
+    if not has_screenshot_permission(
+        request_portal_dialog=RequestDbusPermissionDialog(capture_func=lambda: ...)
+    ):
         pytest.xfail(
             "Root UI application which started this test has no screenshot permission!"
         )

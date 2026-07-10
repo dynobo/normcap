@@ -357,6 +357,10 @@ ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/NormCap.AppDir/usr/app_packages/shibo
 USER brutus
 """
 
+[tool.ty.src]
+include = ["normcap/**/*.py", "tests/**/*.py", "bundle/**/*.py"]
+exclude = ["hatch_build.py"]
+
 [tool.tbump.version]
 current = "0.6.0"
 regex = '''
