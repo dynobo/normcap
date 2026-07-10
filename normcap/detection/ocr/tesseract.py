@@ -29,7 +29,7 @@ def get_short_path(long_path: str) -> str:
         )
 
     # bind the Win32 API
-    _GetShortPathName = ctypes.windll.kernel32.GetShortPathNameW  # type:ignore  # noqa: N806
+    _GetShortPathName = ctypes.windll.kernel32.GetShortPathNameW  # noqa: N806
     _GetShortPathName.argtypes = [
         wintypes.LPCWSTR,  # lpLongPath
         wintypes.LPWSTR,  # lpShortPath
@@ -40,13 +40,13 @@ def get_short_path(long_path: str) -> str:
     # first call to get required buffer size
     needed = _GetShortPathName(long_path, None, 0)
     if needed == 0:
-        raise ctypes.WinError()  # type:ignore  # not available on non-Windows systems
+        raise ctypes.WinError()  # not available on non-Windows systems
 
     # allocate buffer and fetch the short path
     buf = ctypes.create_unicode_buffer(needed)
     result = _GetShortPathName(long_path, buf, needed)
     if result == 0:
-        raise ctypes.WinError()  # type:ignore  # not available on non-Windows systems
+        raise ctypes.WinError()  # not available on non-Windows systems
 
     return buf.value
 

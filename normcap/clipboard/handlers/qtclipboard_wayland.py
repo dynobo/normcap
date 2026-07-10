@@ -61,7 +61,7 @@ try:
 except ImportError:
     QtGui = cast(Any, None)
 
-    class ClipboardDialog:  # type: ignore
+    class ClipboardDialog:
         def __init__(self, text: str, parent: object = None) -> None:
             pass
 
