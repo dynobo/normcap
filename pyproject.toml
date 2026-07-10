@@ -308,6 +308,9 @@ universal_build = true
 
 [tool.briefcase.app.normcap.windows]
 use_full_install_path = false
+installer_background = "bundle/imgs/normcap_install_bg.bmp"
+installer_banner = "bundle/imgs/normcap_install_top.bmp"
+pre_uninstall_script = "bundle/scripts/uninstall_tessdata.bat"
 
 [tool.briefcase.app.normcap.linux.appimage]
 template = "https://github.com/beeware/briefcase-linux-appimage-template"
