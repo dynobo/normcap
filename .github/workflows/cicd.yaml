@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-15, windows-2022, windows-2025, ubuntu-22.04, ubuntu-24.04]
+        os: [macos-15, macos-26, windows-2022, windows-2025, ubuntu-22.04, ubuntu-24.04]
     steps:
       # Setup environment
       - uses: actions/checkout@v7.0.0
@@ -72,6 +72,7 @@ jobs:
       - name: Prepare macOS
         if: startsWith(matrix.os, 'macos')
         run: |
+          brew trust --formula coverallsapp/coveralls/coveralls
           brew install tesseract tesseract-lang dylibbundler
           brew info tesseract
 
