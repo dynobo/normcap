@@ -8,7 +8,7 @@ from normcap.gui import resources
 
 
 def test_resources_complete(qtbot):
-    icons_path = Path(importlib_resources.files("normcap.resources")) / "icons"
+    icons_path = Path(str(importlib_resources.files("normcap.resources"))) / "icons"
     icon_files = [f.name for f in icons_path.glob("*.png")]
 
     assert resources.qt_resource_data
@@ -17,11 +17,15 @@ def test_resources_complete(qtbot):
 
     tree = ET.parse(icons_path / "resources.qrc")  # noqa: S314
     root = tree.getroot()
-    icons_qrc = [el.text for el in root.find("qresource").findall("file")]
+    qresource = root.find("qresource")
+    assert qresource is not None
+    icons_qrc = [el.text for el in qresource.findall("file")]
 
     assert set(icons_qrc) == set(icon_files)
 
     for icon in icons_qrc:
+        if icon is None:
+            continue
         stem = icon.split(".")[0]
         assert QtGui.QIcon(f":{stem}").availableSizes(), stem
 
@@ -32,9 +36,9 @@ def test_cleanup_resources():
 
 
 def test_resources_png_and_svg_exist_for_all_icons(qtbot):
-    icons_path = Path(importlib_resources.files("normcap.resources")) / "icons"
+    icons_path = Path(str(importlib_resources.files("normcap.resources"))) / "icons"
     source_icons_path = (
-        Path(importlib_resources.files("normcap")).parent
+        Path(str(importlib_resources.files("normcap"))).parent
         / "assets"
         / "resources"
         / "icons"
@@ -46,7 +50,7 @@ def test_resources_png_and_svg_exist_for_all_icons(qtbot):
 
 
 def test_all_icon_can_be_loaded(qapp):
-    icons_path = Path(importlib_resources.files("normcap.resources")) / "icons"
+    icons_path = Path(str(importlib_resources.files("normcap.resources"))) / "icons"
     icon_names = [f.stem for f in icons_path.glob("*.png")]
 
     for icon in icon_names:

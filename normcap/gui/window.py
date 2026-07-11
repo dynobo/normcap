@@ -48,7 +48,7 @@ class UiContainerLabel(QtWidgets.QLabel):
 
         self.debug_info: DebugInfo | None = None
 
-        self.rect: QtCore.QRect = QtCore.QRect()
+        self.selection_rect: QtCore.QRect = QtCore.QRect()
         self.rect_pen = QtGui.QPen(self.color, 2, QtCore.Qt.PenStyle.DashLine)
         self.get_parse_text = parse_text_func
 
@@ -104,27 +104,31 @@ class UiContainerLabel(QtWidgets.QLabel):
         """Draw selection rectangle and mode indicator icon."""
         super().paintEvent(event)
 
-        if not (self.rect or self.debug_info):
+        if not (self.selection_rect or self.debug_info):
             return
 
         painter = QtGui.QPainter(self)
-        self.rect = self.rect.normalized()
+        self.selection_rect = self.selection_rect.normalized()
 
         if self.debug_info:
-            self._draw_debug_infos(painter, self.rect)
+            self._draw_debug_infos(painter, self.selection_rect)
 
-        if not self.rect:
+        if not self.selection_rect:
             return
 
         painter.setPen(self.rect_pen)
-        painter.drawRect(self.rect)
+        painter.drawRect(self.selection_rect)
 
         if self.get_parse_text():
             selection_icon = QtGui.QIcon(":parse")
         else:
             selection_icon = QtGui.QIcon(":raw")
         selection_icon.paint(
-            painter, self.rect.right() - 24, self.rect.top() - 30, 24, 24
+            painter,
+            self.selection_rect.right() - 24,
+            self.selection_rect.top() - 30,
+            24,
+            24,
         )
 
         painter.end()
@@ -219,7 +223,7 @@ class Window(QtWidgets.QMainWindow):
         pixmap.convertFromImage(self.screen_.screenshot)
         self.image_container.setPixmap(pixmap)
 
-    def _create_menu_button(self) -> QtWidgets.QWidget:
+    def _create_menu_button(self) -> MenuButton:
         menu_button = MenuButton(
             settings=self.settings,
             show_language_manager=self.debug_language_manager or info.is_packaged(),
@@ -285,7 +289,7 @@ class Window(QtWidgets.QMainWindow):
 
     def clear_selection(self) -> None:
         self.selection_rect = QtCore.QRect()
-        self.ui_container.rect = self.selection_rect
+        self.ui_container.selection_rect = self.selection_rect
         self.update()
 
     def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:  # noqa: N802
@@ -315,7 +319,7 @@ class Window(QtWidgets.QMainWindow):
             self.selection_rect = QtCore.QRect()
             self.selection_rect.setTopLeft(event.position().toPoint())
             self.selection_rect.setBottomRight(event.position().toPoint())
-            self.ui_container.rect = self.selection_rect
+            self.ui_container.selection_rect = self.selection_rect
             self.update()
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802
@@ -323,7 +327,7 @@ class Window(QtWidgets.QMainWindow):
         super().mouseMoveEvent(event)
         if self.selection_rect:
             self.selection_rect.setBottomRight(event.position().toPoint())
-            self.ui_container.rect = self.selection_rect
+            self.ui_container.selection_rect = self.selection_rect
             self.update()
 
     def mouseReleaseEvent(self, event: QtGui.QMouseEvent) -> None:  # noqa: N802

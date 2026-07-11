@@ -104,7 +104,7 @@ def macos_reset_screenshot_permission() -> None:
 
 
 def _dbus_portal_has_screenshot_permission(
-    request_portal_dialog: type[QtWidgets.QDialog],
+    request_portal_dialog: QtWidgets.QDialog,
 ) -> bool:
     if not dbus_portal:
         raise ModuleNotFoundError(
@@ -120,7 +120,7 @@ def _dbus_portal_has_screenshot_permission(
         return True
 
     logger.info("Trying to request permissions via dialog.")
-    permissions_granted = request_portal_dialog(dbus_portal.capture()).exec()
+    permissions_granted = request_portal_dialog.exec()
     if not permissions_granted:
         logger.warning("Requesting screenshot permissions on Wayland failed!")
         return False
@@ -128,7 +128,9 @@ def _dbus_portal_has_screenshot_permission(
     return True
 
 
-def has_screenshot_permission(request_portal_dialog: type[QtWidgets.QDialog]) -> bool:
+def has_screenshot_permission(
+    request_portal_dialog: QtWidgets.QDialog,
+) -> bool:
     """Check and ask for screenshot permissions.
 
     Args:

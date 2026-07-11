@@ -1,4 +1,5 @@
 import logging
+from typing import cast
 
 from PySide6 import QtGui
 
@@ -14,12 +15,13 @@ from normcap.screenshot.models import Handler, HandlerProtocol
 logger = logging.getLogger(__name__)
 
 
+# ONHOLD: Casts are necessary due to ty bug: https://github.com/astral-sh/ty/issues/931
 _capture_handlers: dict[Handler, HandlerProtocol] = {
-    Handler.QT: qt,
-    Handler.GNOME_SCREENSHOT: gnome_screenshot,
-    Handler.GRIM: grim,
-    Handler.SPECTACLE: spectacle,
-    Handler.DBUS_PORTAL: dbus_portal,
+    Handler.QT: cast(HandlerProtocol, qt),
+    Handler.GNOME_SCREENSHOT: cast(HandlerProtocol, gnome_screenshot),
+    Handler.GRIM: cast(HandlerProtocol, grim),
+    Handler.SPECTACLE: cast(HandlerProtocol, spectacle),
+    Handler.DBUS_PORTAL: cast(HandlerProtocol, dbus_portal),
 }
 
 

@@ -1,4 +1,5 @@
 import logging
+from typing import cast
 
 from normcap.clipboard.models import Handler, HandlerProtocol
 
@@ -20,14 +21,15 @@ logger = logging.getLogger(__name__)
 #       be retrieved from clipboard after copy().
 
 
+# ONHOLD: Casts are necessary due to ty bug: https://github.com/astral-sh/ty/issues/931
 _clipboard_handlers: dict[Handler, HandlerProtocol] = {
-    Handler.WINDLL: windll,
-    Handler.PBCOPY: pbcopy,
-    Handler.QT: qtclipboard,
-    Handler.XSEL: xsel,
-    Handler.QT_WAYLAND: qtclipboard_wayland,
-    Handler.XCLIP: xclip,
-    Handler.WLCLIPBOARD: wlclipboard,
+    Handler.WINDLL: cast(HandlerProtocol, windll),
+    Handler.PBCOPY: cast(HandlerProtocol, pbcopy),
+    Handler.QT: cast(HandlerProtocol, qtclipboard),
+    Handler.XSEL: cast(HandlerProtocol, xsel),
+    Handler.QT_WAYLAND: cast(HandlerProtocol, qtclipboard_wayland),
+    Handler.XCLIP: cast(HandlerProtocol, xclip),
+    Handler.WLCLIPBOARD: cast(HandlerProtocol, wlclipboard),
 }
 
 

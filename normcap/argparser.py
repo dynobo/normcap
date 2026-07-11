@@ -1,13 +1,18 @@
+from __future__ import annotations
+
 import argparse
 import sys
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING
 
 from normcap import __version__
 from normcap.clipboard import Handler as ClipboardHandler
 from normcap.gui.settings import DEFAULT_SETTINGS
 from normcap.notification import Handler as NotificationHandler
 from normcap.screenshot import Handler as ScreenshotHandler
+
+if TYPE_CHECKING:
+    from _typeshed import SupportsWrite
 
 
 def _patch_print_help(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
@@ -24,7 +29,9 @@ def _patch_print_help(parser: argparse.ArgumentParser) -> argparse.ArgumentParse
 
     print_help = parser.print_help
 
-    def patched_print_help(file: Any = None) -> None:  # noqa: ANN401
+    def patched_print_help(
+        self: argparse.ArgumentParser, file: SupportsWrite[str] | None = None
+    ) -> None:
         try:
             with Path("CON").open("w", encoding="utf-8") as console:
                 console.write("\r\033[K")
@@ -32,10 +39,9 @@ def _patch_print_help(parser: argparse.ArgumentParser) -> argparse.ArgumentParse
                 console.write("\r\n\r\nPress Enter to continue ...")
                 console.flush()
         except Exception:  # noqa:S110  # except with pass
-            # Avoid crash/error.
             pass
 
-    parser.print_help = patched_print_help  # type: ignore
+    parser.print_help = patched_print_help
     return parser
 
 

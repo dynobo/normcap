@@ -10,7 +10,10 @@ from normcap.clipboard.handlers import windll
 @contextmanager
 def clipboard_blocked():
     # Block Clipboard from being opened
-    from ctypes import windll as c_windll  # type: ignore  # unknown on non-win32
+    if sys.platform != "win32":
+        raise RuntimeError(f"Windows specific windll.copy() called on {sys.platform}!")
+
+    from ctypes import windll as c_windll
     from ctypes.wintypes import BOOL, HWND
 
     OpenClipboard = c_windll.user32.OpenClipboard  # noqa: N806
@@ -53,7 +56,7 @@ def test_windll_copy():
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Non-Windows specific test")
 def test_windll_copy_on_non_win32():
-    with pytest.raises(AttributeError):
+    with pytest.raises(RuntimeError):
         windll.copy(text="this is a test")
 
 

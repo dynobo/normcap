@@ -27,6 +27,7 @@ from normcap.gui.tray import SystemTray
 from normcap.gui.update_check import UpdateChecker
 from normcap.gui.window import Window
 from normcap.notification.models import ACTION_NAME_NOTIFICATION_CLICKED
+from normcap.screenshot.handlers import dbus_portal
 from normcap.system import info
 from normcap.system.models import Rect, Screen
 
@@ -104,7 +105,7 @@ class NormcapApp(QtWidgets.QApplication):
             self.settings.reset()
 
         # Init state
-        self.screens: list[Screen] = info.screens()
+        self.display_screens: list[Screen] = info.screens()
         self.windows: dict[int, Window] = {}
         self.cli_mode = args.get("cli_mode", False)
         self.installed_languages = ["eng"]
@@ -200,7 +201,9 @@ class NormcapApp(QtWidgets.QApplication):
     def _verify_screenshot_permission(self) -> None:
         if not self.settings.value("has-screenshot-permission", type=bool):
             if screenshot.has_screenshot_permission(
-                request_portal_dialog=permissions_dialog.RequestDbusPermissionDialog
+                request_portal_dialog=permissions_dialog.RequestDbusPermissionDialog(
+                    capture_func=dbus_portal.capture
+                )
             ):
                 self.settings.setValue("has-screenshot-permission", True)
             else:
@@ -209,7 +212,7 @@ class NormcapApp(QtWidgets.QApplication):
     def _create_window(self, index: int) -> None:
         """Open a child window for the specified screen."""
         window = Window(
-            screen=self.screens[index],
+            screen=self.display_screens[index],
             index=index,
             settings=self.settings,
             installed_languages=self.installed_languages,
@@ -245,7 +248,7 @@ class NormcapApp(QtWidgets.QApplication):
         screenshots = self._take_screenshots(delay=delay_screenshot)
 
         for idx, image in enumerate(screenshots):
-            self.screens[idx].screenshot = image
+            self.display_screens[idx].screenshot = image
 
         for index in range(len(info.screens())):
             self._create_window(index)
@@ -317,7 +320,7 @@ class NormcapApp(QtWidgets.QApplication):
     def _run_detection(self, rect: Rect, screen_idx: int) -> None:
         """Crop screenshot, perform content recognition on it and process result."""
         cropped_screenshot = utils.crop_image(
-            image=self.screens[screen_idx].screenshot, rect=rect
+            image=self.display_screens[screen_idx].screenshot, rect=rect
         )
 
         minimum_image_area = 100

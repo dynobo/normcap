@@ -69,7 +69,7 @@ def test_qt_log_wrapper_silence_opentype_warning(caplog):
     logger.setLevel("DEBUG")
     QtCore.qInstallMessageHandler(logger_config._qt_log_wrapper)
 
-    QtCore.qInfo("Warning, OpenType support missing for OpenSans")  # type: ignore
+    QtCore.qInfo("Warning, OpenType support missing for OpenSans")
 
     assert "[qt]" not in caplog.text.lower()
     assert "error" not in caplog.text.lower()
