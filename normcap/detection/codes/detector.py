@@ -4,7 +4,6 @@ import logging
 import os
 from collections.abc import Generator
 
-import zxingcpp
 from PySide6 import QtGui
 
 from normcap.detection.codes.models import CodeType
@@ -76,12 +75,14 @@ def _detect_codes_via_zxing(
     Returns:
         URL(s), separated bye newline
     """
+    import zxingcpp  # lazy import to avoid startup cost when unused
+
     logger.info("Detect Barcodes and QR Codes")
 
     results = zxingcpp.read_barcodes(image)
 
     if not results:
-        return None
+        return
 
     codes = [result.text for result in results if result.text]
     code_types = [r.format for r in results]
@@ -95,12 +96,7 @@ def _detect_codes_via_zxing(
     logger.info("Found %s codes", len(codes))
 
     for code, code_format in zip(codes, code_types, strict=True):
-        if code_format in qr_formats:
-            code_type = CodeType.QR
-        elif code_format not in (qr_formats):
-            code_type = CodeType.BARCODE
-        else:
-            raise ValueError()
+        code_type = CodeType.QR if code_format in qr_formats else CodeType.BARCODE
 
         text = code.strip()
         text, text_type = _get_text_type_and_transform(text)
