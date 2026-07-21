@@ -36,7 +36,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-build = [ "babel", "toml" ]
+build = [ "babel", "tomli"]
 
 [project.urls]
 Homepage = "https://dynobo.github.io/normcap/"
@@ -78,9 +78,8 @@ dev = [
   "rope>=1.7.0",
   "ruff>=0.0.239",
   "tbump>=6.9.0",
-  "toml>=0.10.2",
+  "tomli>=2.0.1; python_version < '3.11'",
   "types-retry>=0.9.9.4",
-  "types-toml>=0.10.8.1",
   "typing-extensions>=4.4.0",
   "poethepoet>=0.29.0",
 ]

@@ -7,9 +7,13 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
-import toml
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib
 from babel.messages.frontend import CommandLineInterface
 
 LOCALES_PATH = Path(__file__).resolve().parents[1] / "normcap" / "resources" / "locales"
@@ -24,9 +28,9 @@ def _get_version() -> str:
     except Exception:
         print("Could not import __version__. Fallback to pyproject.toml.")  # noqa: T201
         with (Path(__file__).resolve().parents[1] / "pyproject.toml").open(
-            encoding="utf8"
+            "b", encoding="utf8"
         ) as toml_file:
-            pyproject_toml = toml.load(toml_file)
+            pyproject_toml = tomllib.load(toml_file)
         version = pyproject_toml["tool"]["briefcase"]["version"]
 
     return version
