@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-04-20 22:46+0200\n"
-"PO-Revision-Date: 2025-04-12 15:36+0000\n"
-"Last-Translator: dynobo <dynobo@mailbox.org>\n"
+"PO-Revision-Date: 2026-08-10 08:58+0000\n"
+"Last-Translator: coolvitto <coolzdaddy55@gmail.com>\n"
 "Language: ja_JP\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/normcap/ui/ja/>"
 "\n"
@@ -18,10 +18,11 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #: normcap/gui/constants.py:38
 msgid "<h3>NormCap is missing the permission for screen capture.</h3>"
-msgstr ""
+msgstr "<h3>NormCapに画面キャプチャの権限がありません。</h3>"
 
 #: normcap/gui/constants.py:44
 #, python-brace-format
@@ -29,6 +30,8 @@ msgid ""
 "<small>If this doesn't resolve the issue, please <a "
 "href='{issues_url}'>report it as a bug</a> on GitHub.</small>"
 msgstr ""
+"<small>この操作で問題が解決しない場合は、GitHubで<a href=\"{issues_url}\">"
+"バグとして報告</a>してください。</small>"
 
 #: normcap/gui/constants.py:53
 #, python-brace-format
@@ -39,6 +42,11 @@ msgid ""
 "permissions for <b><u>all</u></b> applications by running the following "
 "command in a terminal:</p>{command}"
 msgstr ""
+"{headline}<p>NormCapを初めて起動する際に、スクリーンショットの撮影または共有"
+"の許可を求めるプロンプトが表示されます。</p><p>許可を拒否した場合やプロンプト"
+"が表示されなかった場合は、ターミナルで以下のコマンドを実行して、<b><u>すべて"
+"の</u></b>アプリケーションのスクリーンショット権限をリセットしてみてください"
+"。</p>{command}"
 
 #: normcap/gui/constants.py:71
 #, python-brace-format
@@ -46,6 +54,8 @@ msgid ""
 "{headline}<p>Grant it by running the following command in a "
 "terminal:</p>{command}"
 msgstr ""
+"{headline}<p>ターミナルで以下のコマンドを実行して権限を付与してください。</p>"
+"{command}"
 
 #: normcap/gui/constants.py:80
 #, python-brace-format
@@ -55,6 +65,8 @@ msgid ""
 "href='x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture'>Privacy"
 " & Security'</a>.</p>"
 msgstr ""
+"<h3>'{application}' に '画面収録' の権限がありません。</h3><p>'システム環境設"
+"定' → '<a>プライバシーとセキュリティ'</a> から権限を付与してください。</p>"
 
 #. Generic error message when any download failed.
 #: normcap/gui/downloader.py:59
@@ -207,14 +219,13 @@ msgstr "設定"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:206
-#, fuzzy
 msgid "Detection"
-msgstr "2. 検出待ち"
+msgstr "検出"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:210
 msgid "Post-processing"
-msgstr ""
+msgstr "後処理"
 
 #. Section title in Main Menu
 #: normcap/gui/menu_button.py:214
@@ -268,12 +279,10 @@ msgstr ""
 
 #. Entry in main menu's 'Detection' section
 #: normcap/gui/menu_button.py:288
-#, fuzzy
 msgid "Parse text"
-msgstr "解析モード"
+msgstr "テキストを解析"
 
 #: normcap/gui/menu_button.py:295
-#, fuzzy
 msgid ""
 "Tries to determine the text's type (e.g. line,\n"
 "paragraph, URL, email) and formats the output\n"
@@ -281,31 +290,32 @@ msgid ""
 "Turn it off to return the text exactly as detected\n"
 "by the Optical Character Recognition Software."
 msgstr ""
-"テキストの種類 (行、段落、URL、電子メールなど) を判別し、\n"
-"それに応じて出力をフォーマットします。\n"
-"結果が予期しないものである場合は、\n"
-"代わりに「raw」モードを試してください。"
+"テキストのタイプ（例：行、段落、URL、電子メール）を\n"
+"判別し、それに応じて出力をフォーマットします。\n"
+"オフにすると、OCRソフトウェアによって検出された\n"
+"そのままのテキストを返します。"
 
 #: normcap/gui/menu_button.py:309
-#, fuzzy
 msgid "Text"
-msgstr "終了"
+msgstr "テキスト"
 
 #. Tooltip of main menu's 'Text' entry. Use <56 chars p. line.
 #: normcap/gui/menu_button.py:314
 msgid "Tries to detect text in the selected region using OCR."
-msgstr ""
+msgstr "選択した領域内のテキストを OCR で検出しようとします。"
 
 #. Entry in main menu's 'Detection' section
 #: normcap/gui/menu_button.py:318
 msgid "QR && Barcodes"
-msgstr ""
+msgstr "QR コードとバーコード"
 
 #: normcap/gui/menu_button.py:325
 msgid ""
 "Detects Barcodes and QR codes. If one or more codes are found,\n"
 "text detection (OCR) is skipped and only the codes' data is returned."
 msgstr ""
+"バーコードと QR コードを検出します。1つ以上のコードが見つかった場合、\n"
+"テキスト検出 (OCR) はスキップされ、コードのデータのみが返されます。"
 
 #. Entry in main menu's 'Languages' section. Shown in prebuilt package.
 #: normcap/gui/menu_button.py:353
@@ -314,9 +324,8 @@ msgstr "追加/削除 …"
 
 #. Entry in main menu's 'Languages' section. Shown in Python package.
 #: normcap/gui/menu_button.py:357
-#, fuzzy
 msgid "… need more?"
-msgstr "… さらに必要ですか?"
+msgstr "… さらに必要？"
 
 #. Entry in main menu's 'Application' section.
 #: normcap/gui/menu_button.py:366
@@ -369,7 +378,7 @@ msgstr "NormCap を終了するか、システム トレイに最小化します
 #, python-brace-format
 msgid "1 QR code detected"
 msgid_plural "{count} QR codes detected"
-msgstr[0] ""
+msgstr[0] "{count} 件の QR コードを検出"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -377,15 +386,15 @@ msgstr[0] ""
 #, python-brace-format
 msgid "1 barcode detected"
 msgid_plural "{count} barcodes detected"
-msgstr[0] ""
+msgstr[0] "{count} 件のバーコードを検出"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
 #: normcap/gui/notification.py:43
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "1 code detected"
 msgid_plural "{count} codes detected"
-msgstr[0] "{count} キャプチャされた単語"
+msgstr[0] "{count} 件のコードを検出"
 
 #. Notification title.
 #. Do NOT translate the variables in curly brackets "{some_variable}"!
@@ -448,37 +457,37 @@ msgstr "もう一度試してください。"
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:241
 msgid "Compose Email"
-msgstr ""
+msgstr "メールを作成"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:244
 msgid "Call Number"
-msgstr ""
+msgstr "コールナンバー"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:247
 msgid "Open in Browser"
-msgstr ""
+msgstr "ブラウザで開く"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:250
 msgid "Import to Adressbook"
-msgstr ""
+msgstr "アドレス帳にインポート"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:253
 msgid "Import to Calendar"
-msgstr ""
+msgstr "カレンダーにインポート"
 
 #. Button text of notification action in Linux.
 #: normcap/gui/notification.py:256
 msgid "Open in Editor"
-msgstr ""
+msgstr "エディタで開く"
 
 #. Permission dialog window title
 #: normcap/gui/permissions.py:23
 msgid "NormCap - Missing Permissions!"
-msgstr ""
+msgstr "NormCap - 権限がありません！"
 
 #. Permission dialog button
 #. Tray menu entry for exiting NormCap completely.
