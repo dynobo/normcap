@@ -8,7 +8,7 @@ class DetectionMode(enum.Flag):
 
 
 # ONHOLD: Switch to StrEnum when Python 3.11
-class TextType(str, enum.Enum):
+class TextType(enum.StrEnum):
     """Describe format/content of the detected text."""
 
     NONE = "NONE"
@@ -30,7 +30,7 @@ PlaintextTextTypes = [
 ]
 
 
-class TextDetector(str, enum.Enum):
+class TextDetector(enum.StrEnum):
     """Specifies the source of the detected text."""
 
     NONE = "NONE"

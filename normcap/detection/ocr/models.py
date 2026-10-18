@@ -39,7 +39,7 @@ class OEM(enum.IntEnum):
     DEFAULT = 3  # Run both and combine results - best accuracy.
 
 
-class Transformer(str, enum.Enum):
+class Transformer(enum.StrEnum):
     SINGLE_LINE = "SINGLE_LINE"
     MULTI_LINE = "MULTI_LINE"
     PARAGRAPH = "PARAGRAPH"
