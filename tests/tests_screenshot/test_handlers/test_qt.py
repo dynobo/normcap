@@ -3,7 +3,6 @@ import sys
 import pytest
 from PySide6 import QtGui
 
-from normcap.screenshot import permissions
 from normcap.screenshot.handlers.qt import capture
 from normcap.system import info
 
@@ -12,6 +11,10 @@ from normcap.system import info
 @pytest.mark.skipif(
     info.has_wayland_display_manager(), reason="Non-Wayland specific test"
 )
+@pytest.mark.skipif(
+    sys.platform == "darwin",
+    reason="Requires granting macOS 'Screen Recording' permission.",
+)  # ONHOLD: Check if still necessary with PySide > 6.12
 def test_capture_on_non_wayland(qapp):
     # GIVEN any operating system
     # WHEN screenshot is taking using QT
@@ -19,10 +22,6 @@ def test_capture_on_non_wayland(qapp):
     # THEN there should be at least one image
     assert images
     assert all(isinstance(i, QtGui.QImage) for i in images)
-
-    if sys.platform == "darwin" and not permissions.macos_has_screen_capture_access():
-        pytest.skip("Requires granting macOS 'Screen Recording' permission")
-
     # AND the size should not be (0, 0). Qt >= 6.12 captures via ScreenCaptureKit on
     # macOS, which returns empty images without the screen recording permission.
     assert all(i.size().toTuple() != (0, 0) for i in images)

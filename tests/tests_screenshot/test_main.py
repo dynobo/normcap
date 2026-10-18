@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 from PySide6 import QtGui
 
@@ -8,6 +10,10 @@ from normcap.system import info
 
 
 @pytest.mark.gui
+@pytest.mark.skipif(
+    sys.platform == "darwin",
+    reason="Requires granting macOS 'Screen Recording' permission.",
+)  # ONHOLD: Check if still necessary with PySide > 6.12
 def test_capture(qapp):
     # GIVEN any system (with display server)
     # WHEN screenshots are taken

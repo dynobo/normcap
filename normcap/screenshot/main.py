@@ -64,6 +64,12 @@ def get_available_handlers() -> list[Handler]:
 
 
 def _capture(handler: Handler) -> list[QtGui.QImage]:
+    """Capture screen using a single handler.
+
+    Returns:
+        Single image for every screen, or empty list if the capture failed or only
+        empty images (e.g. Qt's ScreenCaptureKit grab on macOS) have been returned.
+    """
     capture_handler = _capture_handlers[handler]
     if not capture_handler.is_compatible():
         logger.warning("%s's capture() called on incompatible system!", handler.name)
@@ -72,9 +78,20 @@ def _capture(handler: Handler) -> list[QtGui.QImage]:
     except Exception:
         logger.exception("%s's capture() failed!", handler.name)
         return []
-    else:
-        logger.info("Screen captured using %s", handler.name)
-        return images
+
+    empty_count = sum(1 for image in images if image.isNull())
+    if empty_count:
+        logger.warning(
+            "%s's capture() returned %d of %d empty image(s)!",
+            handler.name,
+            empty_count,
+            len(images),
+        )
+    if images and empty_count == len(images):
+        return []
+
+    logger.info("Screen captured using %s", handler.name)
+    return images
 
 
 def capture_with_handler(handler_name: str) -> list[QtGui.QImage]:

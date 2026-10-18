@@ -22,8 +22,9 @@ def capture() -> list[QtGui.QImage]:
 
     Works well on X11, fails on multi monitor macOS.
 
-    On macOS, Qt >= 6.12 captures via ScreenCaptureKit, which requires the
-    "Screen Recording" permission. Without it, empty images are returned.
+    On macOS, Qt >= 6.12 captures via ScreenCaptureKit, which can return empty
+    images, e.g. when the "Screen Recording" permission is missing or when the
+    capture times out.
     """
     images = []
     for screen in QtWidgets.QApplication.screens():
