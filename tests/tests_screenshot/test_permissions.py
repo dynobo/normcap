@@ -15,6 +15,61 @@ def test_macos_has_screenshot_permission(caplog):
     assert isinstance(result, bool)
 
 
+class _MockedCoreGraphics:
+    """Stand-in for the CoreGraphics library returned by ctypes."""
+
+    def __init__(self, has_screen_capture_access: bool) -> None:
+        self.has_screen_capture_access = has_screen_capture_access
+
+    def CGPreflightScreenCaptureAccess(self) -> int:  # noqa: N802 # ctypes API
+        return int(self.has_screen_capture_access)
+
+
+@pytest.mark.skipif(sys.platform == "darwin", reason="non-macOS specific test")
+def test_macos_has_screen_capture_access_on_non_macos(caplog):
+    with caplog.at_level(logging.WARNING):
+        result = permissions._macos_has_screen_capture_access()
+    assert "couldn't detect" in caplog.text.lower()
+    assert result is True
+
+
+@pytest.mark.parametrize("has_screen_capture_access", [True, False])
+def test_macos_has_screen_capture_access(monkeypatch, has_screen_capture_access):
+    monkeypatch.setattr(
+        permissions,
+        "_macos_load_core_graphics",
+        lambda: _MockedCoreGraphics(has_screen_capture_access),
+    )
+    result = permissions._macos_has_screen_capture_access()
+    assert result is has_screen_capture_access
+
+
+def test_macos_has_screen_capture_access_does_not_reset_permission(monkeypatch):
+    monkeypatch.setattr(
+        permissions, "_macos_load_core_graphics", lambda: _MockedCoreGraphics(False)
+    )
+    monkeypatch.setattr(
+        permissions,
+        "macos_reset_screenshot_permission",
+        lambda: pytest.fail("A read-only check must not reset permissions!"),
+    )
+    assert permissions._macos_has_screen_capture_access() is False
+
+
+def test_macos_has_screenshot_permission_resets_if_not_granted(monkeypatch):
+    monkeypatch.setattr(
+        permissions, "_macos_load_core_graphics", lambda: _MockedCoreGraphics(False)
+    )
+    reset_calls = []
+    monkeypatch.setattr(
+        permissions,
+        "macos_reset_screenshot_permission",
+        lambda: reset_calls.append(True),
+    )
+    assert permissions._macos_has_screenshot_permission() is False
+    assert reset_calls
+
+
 @pytest.mark.skipif(sys.platform == "darwin", reason="non-macOS specific test")
 def test_macos_has_screenshot_permission_on_non_macos(caplog):
     with caplog.at_level(logging.WARNING):

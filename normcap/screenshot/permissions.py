@@ -27,8 +27,11 @@ def _macos_load_core_graphics() -> ctypes.CDLL:
     raise RuntimeError("Couldn't load CoreGraphics")
 
 
-def _macos_has_screenshot_permission() -> bool:
-    """Use CoreGraphics to check if application has screen recording permissions.
+def _macos_has_screen_capture_access() -> bool:
+    """Check if application has screen recording permissions (read-only).
+
+    In contrast to `_macos_has_screenshot_permission()`, this doesn't reset or
+    request the permission, hence it's safe to use e.g. for skipping tests.
 
     Returns:
         True if permissions are available or can't be detected.
@@ -37,9 +40,20 @@ def _macos_has_screenshot_permission() -> bool:
         cg = _macos_load_core_graphics()
         has_permission = bool(cg.CGPreflightScreenCaptureAccess())
     except Exception as e:
-        has_permission = True
         logger.warning("Couldn't detect screen recording permission: %s", e)
-        logger.warning("Assuming screen recording permission is %s", has_permission)
+        logger.warning("Assuming screen recording permission is %s", True)
+        return True
+
+    return has_permission
+
+
+def _macos_has_screenshot_permission() -> bool:
+    """Use CoreGraphics to check if application has screen recording permissions.
+
+    Returns:
+        True if permissions are available or can't be detected.
+    """
+    has_permission = _macos_has_screen_capture_access()
 
     if not has_permission:
         # Reset privacy permission in case of new NormCap version. This is necessary

@@ -17,7 +17,9 @@ if platform.system() == "linux":
     os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 # On macOS, the tests fail due to debugging output by QT. This silences those:
-os.environ["QT_LOGGING_RULES"] = "*.debug=false"
+# `qt.qpa.screen` warnings are disabled by default (Qt declares the category with
+# QtCriticalMsg), but they contain valuable diagnostics for failing captures.
+os.environ["QT_LOGGING_RULES"] = "*.debug=false;qt.qpa.screen.warning=true"
 
 import pytest
 from PySide6 import QtCore, QtGui, QtWidgets
