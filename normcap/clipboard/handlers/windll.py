@@ -13,7 +13,7 @@ import ctypes
 import logging
 import sys
 import time
-from collections.abc import Iterator
+from collections.abc import Generator
 from ctypes import c_size_t, c_wchar, c_wchar_p, get_errno, sizeof
 from typing import Any
 
@@ -122,7 +122,7 @@ def copy(text: str) -> None:  # noqa: PLR0915
     CF_UNICODETEXT = 13  # noqa: N806 (lowercase)
 
     @contextlib.contextmanager
-    def window() -> Iterator[HWND]:
+    def window() -> Generator[HWND]:
         """Context that provides a valid Windows hwnd."""
         # we really just need the hwnd, so setting "STATIC"
         # as predefined lpClass is just fine.
@@ -135,7 +135,7 @@ def copy(text: str) -> None:  # noqa: PLR0915
             safeDestroyWindow(hwnd)
 
     @contextlib.contextmanager
-    def clipboard(hwnd: HWND) -> Iterator:
+    def clipboard(hwnd: HWND) -> Generator:
         """Open the clipboard and prevents other apps from modifying its content."""
         # We may not get the clipboard handle immediately because
         # some other application is accessing it (?)
