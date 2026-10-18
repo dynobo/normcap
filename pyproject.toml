@@ -64,8 +64,7 @@ dev = [
   "mdformat-simple-breaks>=0.0.1",
   "mdformat-mkdocs>=2.0.1",
   "mdformat-frontmatter>=2.0.1",
-  "mkdocs-material==9.6.16", # pinned because docs rely on it!
-  "mkdocs-glightbox>=0.3.5",
+  "zensical==0.0.71", # pinned because docs rely on it!
   "pip-audit>=2.5.5",
   "prek>=0.1.6",
   "pydeps>=1.11.0",
@@ -100,8 +99,8 @@ security = "pip-audit"
 
 version = "tbump"
 
-docs-serve = "mkdocs serve"
-docs-build = "mkdocs build"
+docs-serve = "zensical serve"
+docs-build = "zensical build"
 
 test = [
   { cmd = "pytest" },

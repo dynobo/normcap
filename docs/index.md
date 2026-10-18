@@ -66,7 +66,7 @@ Use Tesseract's diverse [language models](https://tesseract-ocr.github.io/tessdo
 
 Detection is performed on your device and no telemetry data is collected.
 
-[:octicons-arrow-right-24: Learn more](faqs.md#is-any-data-send-to-the-internet)
+[:octicons-arrow-right-24: Learn more](faqs.md#is-any-data-sent-to-the-internet)
 
 </div>
 
@@ -90,7 +90,7 @@ Scan QR codes and barcodes to extract their information.
 
 Email addresses and URLs are detected and handled accordingly.
 
-[:octicons-arrow-right-24: Learn more](usage.md#capture-modes)
+[:octicons-arrow-right-24: Learn more](usage.md#post-processing)
 
 </div>
 
@@ -101,8 +101,6 @@ Email addresses and URLs are detected and handled accordingly.
 
 Supports any number of displays with any scaling setting.
 
-[:octicons-arrow-right-24: Learn more](usage.md#multi-monitor-support)
-
 </div>
 
 <div class="card" markdown>
@@ -111,8 +109,6 @@ Supports any number of displays with any scaling setting.
 ---
 
 Available for Windows :material-microsoft-windows: & macOS :material-apple: & Linux :material-linux:.
-
-[:octicons-arrow-right-24: Download](#)
 
 </div>
 

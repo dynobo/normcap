@@ -208,7 +208,7 @@ some feedback regarding this topic!
 </details>
 
 <details class="question" markdown>
-<summary>Is any data send to the internet?</summary>
+<summary>Is any data sent to the internet?</summary>
 
 ### Is any data sent to the internet?
 
