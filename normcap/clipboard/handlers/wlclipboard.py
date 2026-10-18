@@ -27,8 +27,7 @@ def copy(text: str) -> None:
 
     wl_copy_bin = shutil.which("wl-copy")
     if not wl_copy_bin:
-        logger.error("Could not find `wl-copy!`")
-        return
+        raise FileNotFoundError("Could not find `wl-copy!`")
 
     subprocess.run(  # noqa: S603
         args=[wl_copy_bin],
