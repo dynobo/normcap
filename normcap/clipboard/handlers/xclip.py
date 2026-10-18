@@ -16,8 +16,13 @@ install_instructions = (
 
 def copy(text: str) -> None:
     """Use xclip package to copy text to system clipboard."""
-    subprocess.run(
-        args=["xclip", "-selection", "clipboard", "-in"],
+    xclip_bin = shutil.which("xclip")
+    if not xclip_bin:
+        logger.error("Could not find `xclip`!")
+        return
+
+    subprocess.run(  # noqa: S603
+        args=[xclip_bin, "-selection", "clipboard", "-in"],
         shell=False,
         input=text,
         encoding="utf-8",

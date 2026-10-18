@@ -15,6 +15,7 @@ def detect(
     tesseract_bin_path: Path,
     tessdata_path: Path | None,
     language: str,
+    *,
     detect_mode: DetectionMode,
     parse_text: bool,
 ) -> list[DetectionResult]:

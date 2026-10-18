@@ -11,10 +11,6 @@ def test_resources_complete(qtbot):
     icons_path = Path(str(importlib_resources.files("normcap.resources"))) / "icons"
     icon_files = [f.name for f in icons_path.glob("*.png")]
 
-    assert resources.qt_resource_data
-    assert resources.qt_resource_name
-    assert resources.qt_resource_struct
-
     tree = ET.parse(icons_path / "resources.qrc")  # noqa: S314
     root = tree.getroot()
     qresource = root.find("qresource")

@@ -219,7 +219,7 @@ def bundle_tesseract_windows_ub_mannheim(builder: BuilderBase) -> None:
     url = "https://picnico.de/tesseract-ocr-w64-setup-5.4.0.20240606.exe"
     # which is my own mirror of:
     # https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.4.0.20240606.exe
-    urllib.request.urlretrieve(url, installer_path)  # noqa: S310
+    urllib.request.urlretrieve(url, installer_path)
 
     if not installer_path.exists():
         raise FileNotFoundError("Downloading of tesseract binaries might have failed!")

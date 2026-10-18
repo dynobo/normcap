@@ -25,7 +25,7 @@ class WindowsBriefcase(BuilderBase):
         target_path = self.PROJECT_PATH / "normcap" / "resources" / "openssl"
         target_path.mkdir(exist_ok=True)
         zip_path = self.BUILD_PATH / "openssl.zip"
-        urllib.request.urlretrieve(openssl_url, zip_path)  # noqa: S310
+        urllib.request.urlretrieve(openssl_url, zip_path)
         with zipfile.ZipFile(zip_path, "r") as zip_ref:
             zip_ref.extractall(target_path)
 
