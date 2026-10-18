@@ -5,7 +5,7 @@
 ## v0.7.0 (upcoming)
 
 **All systems:**
-- 🗲 Breaking: Drop support for Python 3.9.
+- 🗲 Breaking: Drop support for Python 3.10.
 - Fix unresposive window when selecting larger screen regions.
 
 **Windows**:

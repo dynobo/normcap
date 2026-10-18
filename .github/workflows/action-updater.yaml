@@ -10,11 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
         with:
           token: ${{ secrets.WORKFLOW_SECRET }}
 
       - name: Run GitHub Actions Version Updater
-        uses: saadmk11/github-actions-version-updater@v0.9.0
+        uses: saadmk11/github-actions-version-updater@v1.0.1
         with:
           token: ${{ secrets.WORKFLOW_SECRET }}
+          # Local composite actions pin third-party actions too; they live
+          # outside .github/workflows, so they need an explicit location.
+          # Directories are scanned recursively.
+          extra_workflow_locations: ".github/actions"
