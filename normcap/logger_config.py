@@ -47,7 +47,8 @@ def _init_logger(log_level: str = "WARNING", log_file: Path | None = None) -> No
     if (
         log_file is None
         and sys.platform == "win32"
-        and logging.getLevelName(log_level) < logging.WARNING
+        and logging.getLevelNamesMapping().get(log_level.upper(), logging.WARNING)
+        < logging.WARNING
     ):
         log_file = info.desktop_dir() / "normcap.log"
 
