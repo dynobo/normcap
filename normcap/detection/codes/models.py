@@ -1,13 +1,13 @@
 import enum
 
 
-class CodeType(str, enum.Enum):
+class CodeType(enum.StrEnum):
     NONE = "NONE"
     QR = "QR"
     BARCODE = "BARCODE"
 
 
-class TextType(str, enum.Enum):
+class TextType(enum.StrEnum):
     """Describe format/content of the detected text."""
 
     NONE = "NONE"
