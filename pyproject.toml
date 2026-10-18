@@ -30,10 +30,10 @@ classifiers = [
   "Operating System :: MacOS",
 ]
 dependencies = [
-  "shiboken6==6.11.1",
-  "PySide6-Essentials==6.11.1",
+  "shiboken6==6.12.0",
+  "PySide6-Essentials==6.12.0",
   "jeepney==0.9.0",
-  "zxing-cpp==3.1.0",
+  "zxing-cpp==3.1.1",
 ]
 
 [project.optional-dependencies]
@@ -294,7 +294,7 @@ cleanup_paths = [
 ]
 
 [tool.briefcase.app.normcap.macOS]
-min_os_version = "13.0"
+min_os_version = "14.0"
 requires = [ "std-nslog==1.0.3" ]
 universal_build = true
 
