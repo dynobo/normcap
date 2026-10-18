@@ -18,8 +18,7 @@ def copy(text: str) -> None:
     """Use xsel package to copy text to system clipboard."""
     xsel_bin = shutil.which("xsel")
     if not xsel_bin:
-        logger.error("Could not find `xsel`!")
-        return
+        raise FileNotFoundError("Could not find `xsel`!")
 
     subprocess.run(  # noqa: S603
         args=[xsel_bin, "--clipboard", "--input"],

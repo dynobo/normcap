@@ -18,8 +18,7 @@ def copy(text: str) -> None:
     """Use xclip package to copy text to system clipboard."""
     xclip_bin = shutil.which("xclip")
     if not xclip_bin:
-        logger.error("Could not find `xclip`!")
-        return
+        raise FileNotFoundError("Could not find `xclip`!")
 
     subprocess.run(  # noqa: S603
         args=[xclip_bin, "-selection", "clipboard", "-in"],
