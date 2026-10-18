@@ -16,8 +16,13 @@ install_instructions = (
 
 def copy(text: str) -> None:
     """Use xsel package to copy text to system clipboard."""
-    subprocess.run(
-        args=["xsel", "--clipboard", "--input"],
+    xsel_bin = shutil.which("xsel")
+    if not xsel_bin:
+        logger.error("Could not find `xsel`!")
+        return
+
+    subprocess.run(  # noqa: S603
+        args=[xsel_bin, "--clipboard", "--input"],
         shell=False,
         input=text,
         encoding="utf-8",

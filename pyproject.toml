@@ -197,7 +197,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*" = [ "PLR2004", "S101", "TID252", "ANN", "D" ]
+"tests/**/*" = [ "PLR2004", "PLR0917", "S101", "TID252", "ANN", "D" ]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -358,8 +358,8 @@ USER brutus
 """
 
 [tool.ty.src]
-include = ["normcap/**/*.py", "tests/**/*.py", "bundle/**/*.py"]
-exclude = ["hatch_build.py"]
+include = [ "normcap/**/*.py", "tests/**/*.py", "bundle/**/*.py" ]
+exclude = [ "hatch_build.py" ]
 
 [tool.tbump.version]
 current = "0.6.0"

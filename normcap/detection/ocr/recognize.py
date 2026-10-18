@@ -37,6 +37,7 @@ def get_text_from_image(
     image: QtGui.QImage,
     tesseract_bin_path: PathLike,
     tessdata_path: PathLike | str | None = None,
+    *,
     parse: bool = True,
     resize_factor: float | None = None,
     padding_size: int | None = None,

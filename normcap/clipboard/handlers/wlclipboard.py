@@ -25,8 +25,13 @@ def copy(text: str) -> None:
                 gnome_version,
             )
 
-    subprocess.run(
-        args=["wl-copy"],
+    wl_copy_bin = shutil.which("wl-copy")
+    if not wl_copy_bin:
+        logger.error("Could not find `wl-copy!`")
+        return
+
+    subprocess.run(  # noqa: S603
+        args=[wl_copy_bin],
         shell=False,
         input=text,
         encoding="utf-8",
