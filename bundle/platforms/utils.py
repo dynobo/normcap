@@ -5,12 +5,12 @@ import re
 import shutil
 import subprocess
 import sys
+import tomllib
 import urllib.request
 from abc import ABC, abstractmethod
 from pathlib import Path
 from textwrap import dedent
 
-import toml
 from retry import retry
 
 
@@ -88,8 +88,8 @@ class BuilderBase(ABC):
         if "--dev" in sys.argv:
             return "0.0.1"
 
-        with Path(self.PYPROJECT_PATH).open(encoding="utf8") as toml_file:
-            pyproject_toml = toml.load(toml_file)
+        with Path(self.PYPROJECT_PATH).open("rb") as toml_file:
+            pyproject_toml = tomllib.load(toml_file)
         return pyproject_toml["project"]["version"]
 
     @staticmethod
