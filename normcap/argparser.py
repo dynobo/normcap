@@ -15,34 +15,23 @@ if TYPE_CHECKING:
     from _typeshed import SupportsWrite
 
 
-def _patch_print_help(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
-    """Patch print_help to write directly to console handle on Windows.
+class _WindowsArgumentParser(argparse.ArgumentParser):
+    """ArgumentParser variant that prints help to the Windows console.
 
     This is a workaround for the quirk of briefcase packaged GUI apps on Windows,
-    where sys.stdout and sys.stderr are not available. Therefore, we use windll api
-    to directly write the help text to the console.
+    where sys.stdout and sys.stderr are not available. Therefore, we use the CON
+    device to directly write the help text to the console.
     """
-    if sys.platform != "win32":
-        raise RuntimeError(
-            f"Windows specific _patch_print_help() got called on {sys.platform} system!"
-        )
 
-    print_help = parser.print_help
-
-    def patched_print_help(
-        self: argparse.ArgumentParser, file: SupportsWrite[str] | None = None
-    ) -> None:
+    def print_help(self, file: SupportsWrite[str] | None = None) -> None:
         try:
             with Path("CON").open("w", encoding="utf-8") as console:
                 console.write("\r\033[K")
-                print_help(file=console)
+                super().print_help(file=console)
                 console.write("\r\n\r\nPress Enter to continue ...")
                 console.flush()
-        except Exception:  # noqa:S110  # except with pass
+        except Exception:  # noqa: S110  # except with pass
             pass
-
-    parser.print_help = patched_print_help
-    return parser
 
 
 def _create_argparser() -> argparse.ArgumentParser:
@@ -51,7 +40,12 @@ def _create_argparser() -> argparse.ArgumentParser:
     Returns:
         The configured argument parser.
     """
-    parser = argparse.ArgumentParser(
+    parser_cls: type[argparse.ArgumentParser] = argparse.ArgumentParser
+    if sys.platform == "win32" and sys.stdout is None:
+        # ONHOLD: After briefcase update: Check if workaround is still necessary
+        parser_cls = _WindowsArgumentParser
+
+    parser = parser_cls(
         prog="normcap",
         description=(
             "OCR-powered screen-capture tool to capture information instead of images."
@@ -137,10 +131,6 @@ def _create_argparser() -> argparse.ArgumentParser:
         action="store_true",
         help=argparse.SUPPRESS,
     )
-
-    if sys.platform == "win32" and sys.stdout is None:
-        # ONHOLD: After briefcase update: Check if patch still necessary
-        parser = _patch_print_help(parser)
 
     return parser
 
