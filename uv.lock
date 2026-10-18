@@ -1149,7 +1149,6 @@ dependencies = [
 [package.optional-dependencies]
 build = [
     { name = "babel" },
-    { name = "toml" },
 ]
 
 [package.dev-dependencies]
@@ -1182,10 +1181,8 @@ dev = [
     { name = "rope" },
     { name = "ruff" },
     { name = "tbump" },
-    { name = "toml" },
     { name = "ty" },
     { name = "types-retry" },
-    { name = "types-toml" },
     { name = "typing-extensions" },
 ]
 
@@ -1195,7 +1192,6 @@ requires-dist = [
     { name = "jeepney", specifier = "==0.9.0" },
     { name = "pyside6-essentials", specifier = "==6.11.1" },
     { name = "shiboken6", specifier = "==6.11.1" },
-    { name = "toml", marker = "extra == 'build'" },
     { name = "zxing-cpp", specifier = "==3.1.0" },
 ]
 provides-extras = ["build"]
@@ -1230,10 +1226,8 @@ dev = [
     { name = "rope", specifier = ">=1.7.0" },
     { name = "ruff", specifier = ">=0.0.239" },
     { name = "tbump", specifier = ">=6.9.0" },
-    { name = "toml", specifier = ">=0.10.2" },
     { name = "ty", specifier = ">=0.0.58" },
     { name = "types-retry", specifier = ">=0.9.9.4" },
-    { name = "types-toml", specifier = ">=0.10.8.1" },
     { name = "typing-extensions", specifier = ">=4.4.0" },
 ]
 
@@ -1964,15 +1958,6 @@ wheels = [
 ]
 
 [[package]]
-name = "toml"
-version = "0.10.2"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f", size = 22253, upload-time = "2020-11-01T01:40:22.204Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b", size = 16588, upload-time = "2020-11-01T01:40:20.672Z" },
-]
-
-[[package]]
 name = "tomli"
 version = "2.5.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2118,15 +2103,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/b4/e9/0e448a0475f86fb36c68a7ca35c6d2ea06b7f599d763514328fe34913eba/types_retry-0.9.9.20260408.tar.gz", hash = "sha256:3f98fa62ec027449383f5c019cceacc784c1dbab4760989ddab421f7b8407d92", size = 7778, upload-time = "2026-04-08T04:32:27.274Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ca/f5/d6d49f1e99ae6e40fb6a9861e6cb78018cfbeff546fd5e5ab2a3719f3fe1/types_retry-0.9.9.20260408-py3-none-any.whl", hash = "sha256:f1d0677e03235fa04b66332d4ec004211dbf85b08b863e19b7dfcbf604622c50", size = 7618, upload-time = "2026-04-08T04:32:26.482Z" },
-]
-
-[[package]]
-name = "types-toml"
-version = "0.10.8.20260518"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/4b/11/6ece999e91f2ccb848ab4420f3f4816e78ac0541f739e6864affdaaa5737/types_toml-0.10.8.20260518.tar.gz", hash = "sha256:80e10facd24fdeda9d5c672187d72be3ac284843788d67f5aae59e3e016db6fe", size = 9419, upload-time = "2026-05-18T06:02:16.719Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/91/25/489751806bf5c95e4007f8e17409199c54d31e49ffbea07c5729b1286c8e/types_toml-0.10.8.20260518-py3-none-any.whl", hash = "sha256:0e564ab05f6fde62a315b3b5a9b6624fda569399795d30a37e64705a70459303", size = 9669, upload-time = "2026-05-18T06:02:15.86Z" },
 ]
 
 [[package]]
