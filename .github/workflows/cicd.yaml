@@ -144,13 +144,19 @@ jobs:
           flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
       - name: Clone git clone
+        shell: bash
         run: |
+          REPO="${{ github.event.pull_request.head.repo.full_name || github.repository }}"
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          echo "Using repo: $REPO"
+          echo "Using branch: $BRANCH"
           git clone https://github.com/flathub/com.github.dynobo.normcap.git
 
       - name: Run build script
         run: |
           cd com.github.dynobo.normcap
-          python update.py --keep --bundle ${{ github.head_ref || github.ref_name }}
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          python update.py --keep --bundle "$BRANCH"
 
       - name: Draft internal release
         uses: ./.github/actions/draft-internal-release

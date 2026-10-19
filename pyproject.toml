@@ -65,7 +65,6 @@ dev = [
   "mdformat-mkdocs>=2.0.1",
   "mdformat-frontmatter>=2.0.1",
   "zensical==0.0.71", # pinned because docs rely on it!
-  "pip-audit>=2.5.5",
   "prek>=0.1.6",
   "pydeps>=1.11.0",
   "pytest-cov>=4.0.0",
@@ -81,6 +80,7 @@ dev = [
   "typing-extensions>=4.4.0",
   "poethepoet>=0.29.0",
   "ty>=0.0.58",
+  "zizmor>=1.31.1",
 ]
 analysis = [ "radon>=5.1.0", "viztracer>=0.15.3", "vulture>=2.4" ]
 
@@ -95,7 +95,10 @@ icons-compile = [
   { cmd = "sed -i '1i # ruff: noqa' normcap/gui/resources.py" },
 ]
 
-security = "pip-audit"
+security = [
+  { cmd = "uv audit --preview-features audit-command" },
+  { cmd = "zizmor .github/workflows" },
+]
 
 version = "tbump"
 
