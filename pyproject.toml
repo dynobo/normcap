@@ -97,7 +97,7 @@ icons-compile = [
 
 security = [
   { cmd = "uv audit --preview-features audit-command" },
-  { cmd = "zizmor .github" },
+  { cmd = "zizmor --offline .github" },
 ]
 
 version = "tbump"
