@@ -5,13 +5,19 @@ on:
     # Automatically run on every Sunday
     - cron:  '0 0 * * 0'
 
+permissions: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # The updater pushes with a plain `git push` and never passes the token
+      # itself, so it relies on the PAT that checkout persists in the git
+      # config. Nothing in this job uploads the workspace, which is why the
+      # credential can't leak through an artifact.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
+        with: # zizmor: ignore[artipacked] required by the updater, see above
           token: ${{ secrets.WORKFLOW_SECRET }}
 
       - name: Run GitHub Actions Version Updater

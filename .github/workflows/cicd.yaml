@@ -31,12 +31,15 @@ jobs:
       # Setup environment
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: ${{ github.event_name != 'workflow_dispatch' }}
+        with:
+          persist-credentials: false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           ref: ${{ inputs.refToBuild }}
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-python-uv
+      - uses: $/.github/actions/setup-python-uv
 
       - name: Prepare Linux
         if: startsWith(matrix.os, 'ubuntu')
@@ -122,8 +125,10 @@ jobs:
         os: [macos-15, windows-2025, ubuntu-26.04]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-python-uv
+      - uses: $/.github/actions/setup-python-uv
 
       - name: Test build python package
         run: uv build
@@ -133,6 +138,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -161,7 +168,7 @@ jobs:
           python update.py --keep --bundle "$BRANCH"
 
       - name: Draft internal release
-        uses: ./.github/actions/draft-internal-release
+        uses: $/.github/actions/draft-internal-release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -174,8 +181,10 @@ jobs:
         os: [macos-15, windows-2025, ubuntu-26.04]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-python-uv
+      - uses: $/.github/actions/setup-python-uv
 
       - name: Test build briefcase package
         shell: bash -l {0}
@@ -188,7 +197,7 @@ jobs:
           find build/normcap || true
 
       - name: Draft internal release
-        uses: ./.github/actions/draft-internal-release
+        uses: $/.github/actions/draft-internal-release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -197,8 +206,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-python-uv
+      - uses: $/.github/actions/setup-python-uv
 
       - name: Build documentation
         run: uv run poe docs-build
@@ -210,6 +221,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Coveralls Finished
         uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
         with:
@@ -230,6 +243,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Initialize CodeQL
         uses: github/codeql-action/init@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         with:
@@ -257,8 +272,10 @@ jobs:
         os: [macos-15, windows-2025, ubuntu-26.04]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-python-uv
+      - uses: $/.github/actions/setup-python-uv
 
       - name: Build package briefcase
         shell: bash -l {0}
@@ -302,8 +319,10 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-python-uv
+      - uses: $/.github/actions/setup-python-uv
 
       - name: Build Python package
         run: uv build
@@ -324,8 +343,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-python-uv
+      - uses: $/.github/actions/setup-python-uv
 
       - name: Build documentation
         run: uv run poe docs-build
