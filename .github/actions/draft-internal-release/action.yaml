@@ -9,8 +9,8 @@ inputs:
 runs:
   using: 'composite'
   steps:
-      # For security reasons, github doesn't allow setting envvars using expressions
-      # directly. Therefore, we need an extra step:
+      # For security reasons, github doesn't allow setting envvars using
+      # expressions directly. Therefore, we need an extra step:
     - name: Set current date as step output
       id: date
       shell: bash -l {0}
