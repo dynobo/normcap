@@ -19,9 +19,14 @@ concurrency:
   group: cicd-${{ github.ref }}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
   test:
     name: Lint & Test
+    permissions:
+      checks: write
+      contents: read
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -118,6 +123,8 @@ jobs:
 
   test-python-package:
     name: Test Python package build
+    permissions:
+      contents: read
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -135,6 +142,9 @@ jobs:
 
   test-flatpak:
     name: Test flatpak build
+    permissions:
+      # Needed to create the internal draft release below.
+      contents: write
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -174,6 +184,9 @@ jobs:
 
   test-briefcase:
     name: Test Briefcase build
+    permissions:
+      # Needed to create the internal draft release below.
+      contents: write
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -203,6 +216,8 @@ jobs:
 
   test-documentation:
     name: Test documentation build
+    permissions:
+      contents: read
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -216,6 +231,9 @@ jobs:
 
   coveralls:
     name: Upload coverage
+    permissions:
+      checks: write
+      contents: read
     needs: test
     if: github.repository_owner == 'dynobo'
     runs-on: ubuntu-latest
@@ -257,6 +275,9 @@ jobs:
 
   deploy-briefcase:
     name: Briefcase build & draft release
+    permissions:
+      # Needed to create/update the draft release and upload artifacts.
+      contents: write
     needs:
       - test
       - test-briefcase
@@ -314,6 +335,8 @@ jobs:
     needs: deploy-briefcase
     runs-on: ubuntu-24.04
     permissions:
+      # Used to build the package from the checked out sources.
+      contents: read
       # Used to authenticate to PyPI via OIDC.
       # Used to sign the release's artifacts with sigstore-python.
       id-token: write
@@ -334,6 +357,9 @@ jobs:
 
   release-documentation:
     name: Deploy github pages
+    permissions:
+      # Needed to push the built documentation to the gh-pages branch.
+      contents: write
     needs:
       - test
       - test-documentation
