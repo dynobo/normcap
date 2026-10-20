@@ -178,9 +178,18 @@ jobs:
           python update.py --keep --bundle "$BRANCH"
 
       - name: Draft internal release
-        uses: $/.github/actions/draft-internal-release
+        uses: $/.github/actions/draft-release
+        # It's possible, that the run lacks release permissions (e.g. on forks).
+        # This is not crucial, so we just silence the error.
+        continue-on-error: true
+        if: github.repository_owner == 'dynobo'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: internal
+          title: Internal
+          body: Only for internal tests. Should not be published.
+          prerelease: true
+          artifacts: "*/*.dmg */*.AppImage */*.msi */*.zip */*.flatpak"
 
   test-briefcase:
     name: Test Briefcase build
@@ -210,9 +219,18 @@ jobs:
           find build/normcap || true
 
       - name: Draft internal release
-        uses: $/.github/actions/draft-internal-release
+        uses: $/.github/actions/draft-release
+        # It's possible, that the run lacks release permissions (e.g. on forks).
+        # This is not crucial, so we just silence the error.
+        continue-on-error: true
+        if: github.repository_owner == 'dynobo'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: internal
+          title: Internal
+          body: Only for internal tests. Should not be published.
+          prerelease: true
+          artifacts: "*/*.dmg */*.AppImage */*.msi */*.zip */*.flatpak"
 
   test-documentation:
     name: Test documentation build
@@ -302,17 +320,15 @@ jobs:
         shell: bash -l {0}
         run: uv run poe bundle
       - name: Draft release
+        uses: $/.github/actions/draft-release
         if: github.repository == 'dynobo/normcap'
-        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
-          body:
-            See [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG) for
-            details.
-          artifacts: "*/*.+(dmg|AppImage|msi|zip)"
-          artifactErrorsFailBuild: false
-          allowUpdates: true
-          draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+          body: >-
+            See the
+            [CHANGELOG](https://github.com/dynobo/normcap/blob/main/CHANGELOG)
+            for details.
       - name: FTP upload windows package
         if: startsWith(matrix.os, 'windows') && github.repository == 'dynobo/normcap'
         uses: SamKirkland/FTP-Deploy-Action@110f9186c050f71550953127052e77650219c287 # v4.4.0

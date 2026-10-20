@@ -1,0 +1,67 @@
+name: Draft Release
+description: Create a draft release and upload the built artifacts to it
+
+inputs:
+  token:
+    description: "A Github PAT with write access to the repository's releases"
+    required: true
+  tag:
+    description: 'Tag the draft release belongs to'
+    required: true
+  title:
+    description: 'Title of the release, defaults to the tag'
+    required: false
+    default: ''
+  body:
+    description: 'Release notes, a UTC timestamp is appended to them'
+    required: false
+    default: ''
+  prerelease:
+    description: 'Mark the release as prerelease'
+    required: false
+    default: 'false'
+  artifacts:
+    description: 'Space separated glob patterns of the assets to upload'
+    required: false
+    default: '*/*.dmg */*.AppImage */*.msi */*.zip'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Draft release
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        GH_REPO: ${{ github.repository }}
+        TAG: ${{ inputs.tag }}
+        TITLE: ${{ inputs.title }}
+        BODY: ${{ inputs.body }}
+        PRERELEASE: ${{ inputs.prerelease }}
+        ARTIFACTS: ${{ inputs.artifacts }}
+      run: |
+        stamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+        BODY="$BODY"$'\n\n'"$stamp"
+
+        # Jobs of the same matrix may race on creating the draft, hence the
+        # tolerant `gh release create`.
+        if gh release view "$TAG" >/dev/null 2>&1; then
+          gh release edit "$TAG" --notes "$BODY"
+        else
+          extra=()
+          if [ "$PRERELEASE" = 'true' ]; then
+            extra+=( --prerelease )
+          fi
+          gh release create "$TAG" \
+            --title "${TITLE:-$TAG}" \
+            --notes "$BODY" \
+            --draft \
+            "${extra[@]}" || true
+        fi
+
+        # Expand the patterns here to detect the "nothing built" case, since
+        # `gh release upload` requires at least one asset argument.
+        shopt -s nullglob
+        assets=( $ARTIFACTS )
+        if [ ${#assets[@]} -gt 0 ]; then
+          gh release upload "$TAG" "${assets[@]}" --clobber
+        fi
