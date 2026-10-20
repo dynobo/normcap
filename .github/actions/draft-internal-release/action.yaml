@@ -11,22 +11,23 @@ runs:
   steps:
       # For security reasons, github doesn't allow setting envvars using expressions
       # directly. Therefore, we need an extra step:
-    - name: Set current date as env variable
+    - name: Set current date as step output
+      id: date
       shell: bash -l {0}
       run: |
-        echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+        echo "now=$(date +'%Y-%m-%dT%H:%M:%S')" >> "$GITHUB_OUTPUT"
         ls -la
         ls -la bundle/
 
     - name: Draft internal release
-      uses: ncipollo/release-action@v1.21.0
+      uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
       # It's possible, that the run lacks release permissions (e.g. on forks).
       # This is not crucial, so we just silence the error.
       continue-on-error: true
       if: github.repository_owner == 'dynobo'
       with:
         name: Internal
-        body: "Only for internal tests. Should not be published. [${{ env.NOW }}]"
+        body: "Only for internal tests. Should not be published. [${{ steps.date.outputs.now }}]"
         repo: normcap
         owner: dynobo
         artifacts: "*/*.+(dmg|AppImage|msi|zip|flatpak|app)"
