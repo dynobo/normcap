@@ -160,22 +160,19 @@ jobs:
           sudo apt update && sudo apt install -y flatpak flatpak-builder
           flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-      - name: Clone git clone
+      - name: Clone flathub repo
         shell: bash
-        env:
-          REPO: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-          BRANCH: ${{ github.head_ref || github.ref_name }}
-        run: |
-          echo "Using repo: $REPO"
-          echo "Using branch: $BRANCH"
-          git clone https://github.com/flathub/com.github.dynobo.normcap.git
+        run: git clone https://github.com/flathub/com.github.dynobo.normcap.git
 
       - name: Run build script
         env:
-          BRANCH: ${{ github.head_ref || github.ref_name }}
+          SOURCE: >-
+            ${{ github.event_name == 'workflow_dispatch'
+            && inputs.refToBuild
+            || github.sha }}
         run: |
           cd com.github.dynobo.normcap
-          python update.py --keep --bundle "$BRANCH"
+          python update.py --keep --bundle "$SOURCE"
 
       - name: Draft internal release
         uses: $/.github/actions/draft-release
