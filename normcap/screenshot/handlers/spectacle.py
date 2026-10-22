@@ -41,6 +41,7 @@ def capture() -> list[QtGui.QImage]:
                 "--fullscreen",
                 "--background",
                 "--nonotify",
+                "--no-decoration",
                 f"--output={image_path.resolve()}",
             ],
             shell=False,
